@@ -39,13 +39,11 @@ public class AudioManager : MonoBehaviour
         }
         DontDestroyOnLoad(gameObject);
 
-        audioBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, "audio"));
-        if (audioBundle == null)
+        if (audioBundle != null)
         {
-            Debug.Log("Failed to load Audio");
             return;
         }
-
+        audioBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, "audio"));
         clips = new Dictionary<string, AudioClip>();
     }
 
