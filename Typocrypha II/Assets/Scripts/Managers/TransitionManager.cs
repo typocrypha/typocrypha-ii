@@ -20,6 +20,7 @@ public class TransitionManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
+            return;
         }
         DontDestroyOnLoad(gameObject);
     }
@@ -30,16 +31,17 @@ public class TransitionManager : MonoBehaviour
     /// <param name="sceneName">Name of scene to transition to.</param>
     public void TransitionScene(string sceneName)
     {
-        GameObject obj = Instantiate(loadingScreenPrefab, this.transform);
-        LoadingScreen loadingScreen = obj.GetComponent<LoadingScreen>();
-        AsyncOperation loadOp = SceneManager.LoadSceneAsync(sceneName);
-        loadOp.allowSceneActivation = false;
-        StartCoroutine(TransitionSceneCR(loadingScreen, loadOp));
+        StartCoroutine(TransitionSceneCR(sceneName));
     }
 
     // Displays loading progress and switches scenes when done loading.
-    IEnumerator TransitionSceneCR(LoadingScreen loadingScreen, AsyncOperation loadOp)
+    IEnumerator TransitionSceneCR(string sceneName)
     {
+        GameObject obj = Instantiate(loadingScreenPrefab, this.transform);
+        LoadingScreen loadingScreen = obj.GetComponent<LoadingScreen>();
+        yield return new WaitUntil(() => loadingScreen.ReadyToLoad);
+        AsyncOperation loadOp = SceneManager.LoadSceneAsync(sceneName);
+        loadOp.allowSceneActivation = false;
         // Internal progress will stop at 0.9 when done loading
         while (loadOp.progress < 0.9f) 
         {
@@ -47,7 +49,7 @@ public class TransitionManager : MonoBehaviour
             yield return null;
         }
         loadingScreen.Progress = 1.0f;
-        yield return new WaitWhile(() => !loadingScreen.Done);
+        yield return new WaitUntil(() => loadingScreen.DoneLoading);
         loadOp.allowSceneActivation = true;
     }
 }

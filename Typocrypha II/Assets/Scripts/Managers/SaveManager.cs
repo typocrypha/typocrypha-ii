@@ -5,7 +5,7 @@ using System;
 // Made with the help of Thomas Bryant during his time at UCSC.
 
 /// <summary>
-/// Container for actual save data. Put all data to be saved here.
+/// Container for actual save data.
 /// Namely, write data to 'SaveManager.instance.loaded'.
 /// </summary>
 [Serializable]
@@ -37,6 +37,7 @@ public class SaveManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
+            return;
         }
         DontDestroyOnLoad(gameObject);
     }

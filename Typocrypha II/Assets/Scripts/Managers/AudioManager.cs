@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 using System.IO;
 
 /// <summary>
@@ -16,14 +18,12 @@ public class AudioManager : MonoBehaviour
     public static AudioManager instance = null; // Global static instance
 
     AssetBundle audioBundle; // Asset bundle containing all clips
-    Dictionary<string, AudioClip> clips; // Maps filename to loaded Audio Clips
 
     public AudioClip this[string clipName] // Allows access to audio clips by name
     {
         get
         {
-            Load(clipName);
-            return clips[clipName];
+            return audioBundle.LoadAsset<AudioClip>(clipName);
         }
     }
 
@@ -33,50 +33,13 @@ public class AudioManager : MonoBehaviour
         {
             instance = this;
         } 
-        else
+        else 
         {
             Destroy(gameObject);
+            return;
         }
         DontDestroyOnLoad(gameObject);
 
-        if (audioBundle != null)
-        {
-            return;
-        }
         audioBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, "audio"));
-        clips = new Dictionary<string, AudioClip>();
-    }
-
-    /// <summary>
-    /// Load clip by name if not already loaded.
-    /// </summary>
-    public void Load(string clipName)
-    {
-        if (!clips.ContainsKey(clipName))
-        {
-            if (audioBundle.Contains(clipName))
-            {
-                clips.Add(clipName, audioBundle.LoadAsset<AudioClip>(clipName));
-            }
-            else
-            {
-                throw new System.Exception("Trying to load audio asset that doesnt exist:" + clipName);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Load all AudioClips.
-    /// </summary>
-    public void LoadAll()
-    {
-        AudioClip[] allClips = audioBundle.LoadAllAssets<AudioClip>();
-        foreach (AudioClip clip in allClips)
-        {
-            if (!clips.ContainsKey(clip.name))
-            {
-                clips.Add(clip.name, clip);
-            }
-        }
     }
 }

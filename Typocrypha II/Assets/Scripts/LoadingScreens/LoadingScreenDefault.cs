@@ -17,6 +17,7 @@ public class LoadingScreenDefault : LoadingScreen
     {
         loadingPercent.text = 0f.ToString() + "%";
         animator = GetComponent<Animator>();
+        StartCoroutine(CheckFading());
     }
 
     public override float Progress
@@ -24,25 +25,35 @@ public class LoadingScreenDefault : LoadingScreen
         set
         {
             loadingPercent.text = (value * 100).ToString() + "%";
-            // When done loading, start fading animation. Animator handles destruction.
+            // When done loading, start fading out animation. Animator handles destruction.
             if (value == 1.0f)
             {
                 animator.SetBool("DoneLoading", true);
-                StartCoroutine(CheckFading());
+                _done = true;
             }
         }
     }
 
-    // When done fading, set Done.
+    // When done fading in, set Done.
     IEnumerator CheckFading()
     {
         yield return new WaitWhile(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime < .9f);
-        _done = true;
+        _ready = true;
     }
 
-    // Done is set when loading screen starts fading.
+    // Ready is set when loading screen faded in.
+    bool _ready = false;
+    public override bool ReadyToLoad
+    {
+        get
+        {
+            return _ready;
+        }
+    }
+
+    // Done is set when scene is loaded.
     bool _done = false;
-    public override bool Done
+    public override bool DoneLoading
     {
         get
         {

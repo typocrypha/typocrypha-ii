@@ -5,7 +5,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
-// Preprocesses all macros and effects in a dialogue item
+/// <summary>
+/// Processes dialogue from graph into dialog item and dialog box.
+/// </summary>
 public class DialogParser : MonoBehaviour
 {
 	public static DialogParser instance = null; // Global static reference
@@ -13,9 +15,9 @@ public class DialogParser : MonoBehaviour
 	Dictionary<string, System.Type> FXTextMap; // Reference FXText effects by name
 	Stack<FXText.FXTextBase> FXTextStack; // Stack for managing nested effects
 	char[] optDelim = new char[1] { ',' }; // Option delimiter
-    char[] FXTextDelim = new char[2] { '|', '\\' };
-    char[] TextEventDelim = new char[3] { '[' , ']' , '=' };
-    char[] macroDelim = new char[2] { '{', '}' }
+    char[] FXTextDelim = new char[2] { '|', '\\' }; // FXText delimiters
+    char[] TextEventDelim = new char[3] { '[' , ']' , '=' }; // TextEvent delimiters
+    char[] macroDelim = new char[2] { '{', '}' } // Macro delimiters
 ;
 	void Awake()
     {
@@ -44,7 +46,7 @@ public class DialogParser : MonoBehaviour
     /// </summary>
     /// <param name="dialogItem"></param>
     /// <param name="dialogBox"></param>
-    /// <returns></returns>
+    /// <returns>Parsed text.</returns>
 	public string Parse(DialogItem dialogItem, DialogBox dialogBox)
     {
 		//Debug.Log ("parse:" + d_item.text);
@@ -98,7 +100,7 @@ public class DialogParser : MonoBehaviour
 
 	// Parses an effect's ending tag, and matches with top of effect stack
 	void ParseEffectEnd(int startPos, string text, StringBuilder parsed, DialogItem dialogItem) 
-{
+    {
 		int endPos = text.IndexOf (FXTextDelim[1], startPos) - 1;
 		string fxName = text.Substring (startPos, endPos - startPos + 1);
         FXText.FXTextBase top = FXTextStack.Pop ();

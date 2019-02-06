@@ -43,9 +43,10 @@ public class DialogBox : MonoBehaviour
     /// <summary>
     /// Initializes dialogue box and starts text scroll.
     /// </summary>
-    /// <param name="lineData">Dialog line data to display.</param>
-    public void StartDialogBox(DialogItem lineData)
+    /// <param name="dialogItem">Dialog line data to display.</param>
+    public void StartDialogBox(DialogItem dialogItem)
     {
+        this.dialogItem = dialogItem;
         StartCoroutine(StartTextScrollCR());
 	}
 

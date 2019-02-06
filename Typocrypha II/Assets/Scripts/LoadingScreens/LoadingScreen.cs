@@ -18,9 +18,17 @@ public abstract class LoadingScreen : MonoBehaviour
     }
 
     /// <summary>
+    /// Returns true if ready to start loading scene.
+    /// </summary>
+    public abstract bool ReadyToLoad
+    {
+        get;
+    }
+
+    /// <summary>
     /// Returns true if ready to load next scene.
     /// </summary>
-    public abstract bool Done
+    public abstract bool DoneLoading
     {
         get;
     }

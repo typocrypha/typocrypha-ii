@@ -20,6 +20,7 @@ public class CameraManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
+            return;
         }
         DontDestroyOnLoad(gameObject);
     }
