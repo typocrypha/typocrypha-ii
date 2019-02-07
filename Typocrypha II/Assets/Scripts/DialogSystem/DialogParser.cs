@@ -10,6 +10,8 @@ using UnityEngine;
 /// </summary>
 public class DialogParser : MonoBehaviour
 {
+    public static DialogParser instance = null;
+
 	Dictionary<string, System.Type> FXTextMap; // Reference FXText effects by name
 	Stack<FXText.FXTextBase> FXTextStack; // Stack for managing nested effects
 	char[] optDelim = new char[1] { ',' }; // Option delimiter
@@ -19,6 +21,16 @@ public class DialogParser : MonoBehaviour
 ;
 	void Awake()
     {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(this);
+            return;
+        }
+
 		FXTextMap = new Dictionary<string, System.Type> () { 
 			{"color", typeof(FXText.Color)},
 			{"shake", typeof(FXText.Offset)},

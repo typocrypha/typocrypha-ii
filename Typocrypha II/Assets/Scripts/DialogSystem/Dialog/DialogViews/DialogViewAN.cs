@@ -7,28 +7,24 @@ using UnityEngine;
 /// </summary>
 public class DialogViewAN : DialogView
 {
-    public GameObject dialogBoxPrefab; // Prefab for dialogue box
     public GameObject screenFrame; // Screen frame object
     public RectTransform ANContent; // Content of scroll view
     public GameObject spacebar_icon_an; // Spacebar icon AN view
     public Animator animator_spacebar_an; // Spacebar icon key animator
 
-    public override DialogBox NewDialog(DialogItem data)
+    public override DialogBox PlayDialog(DialogItem data)
     {
         #region Check Arguments
-        DialogItemAN item = data as DialogItemAN;
-        if (item == null)
+        DialogItemAN dialogItem = data as DialogItemAN;
+        if (dialogItem == null)
         {
-            throw new System.Exception("Incorrect Type of dialog Item for the AN view mode (requires DialogItemAN)");
+            throw new System.Exception("Incorrect Type of dialog Item for the AN " +
+                                       "view mode (requires DialogItemAN)");
         }
         #endregion
-
-        #region Instantiate and initialize new Dialog box
-        GameObject obj = GameObject.Instantiate(dialogBoxPrefab, ANContent);
-        DialogBox dialogBox = obj.GetComponent<DialogBox>();
-        #endregion
-
-        dialogBox.StartDialogBox(item);
+        
+        DialogBox dialogBox = Instantiate(dialogBoxPrefab, ANContent).GetComponent<DialogBox>();
+        dialogBox.StartDialogBox(dialogItem);
         return dialogBox;
     }
 
@@ -39,7 +35,7 @@ public class DialogViewAN : DialogView
     }
 
     // Clear all AN dialogue
-    public void clearLog()
+    public void ClearLog()
     {
         
     }

@@ -8,12 +8,12 @@ using UnityEngine.UI;
 /// </summary>
 public class DialogBox : MonoBehaviour
 {
-    public float _scrollDelay = 0.1f; // Delay in showing characters for text scroll
-    public float scrollDelay
+    public float scrollDelay = 0.1f; // Delay in showing characters for text scroll
+    public float ScrollDelay
     {
         get
         {
-            return _scrollDelay /* * scrollScale*/; // Scale based on speed changes
+            return scrollDelay /* * scrollScale*/; // Scale based on speed changes
         }
     }
     public int speechInterval = 3; // Number of character scrolls before speech sfx plays
@@ -35,19 +35,17 @@ public class DialogBox : MonoBehaviour
             return scrollCR == null;
         }
     }
-    
-    void Awake()
-    {
-    }
 
     /// <summary>
-    /// Initializes dialogue box and starts text scroll.
+    /// Initializes dialogue box (parses tags) and starts text scroll.
     /// </summary>
     /// <param name="dialogItem">Dialog line data to display.</param>
     public void StartDialogBox(DialogItem dialogItem)
     {
         this.dialogItem = dialogItem;
-        StartCoroutine(StartTextScrollCR());
+        DialogParser.instance.Parse(dialogItem, this);
+        // RESIZE DIALOGBOX
+        StartCoroutine(TextScrollCR());
 	}
 
     /// <summary>
@@ -58,22 +56,19 @@ public class DialogBox : MonoBehaviour
 		//TextEvents.main.stopEvents();
 		//TextEvents.main.reset ();
 		//yield return TextEvents.main.finishUp (d_item.text_events);
-        if (scrollCR != null)
-		 	StopCoroutine (scrollCR);
+        if (!IsDone)
+        {
+            StopCoroutine(scrollCR);
+        }
 		scrollCR = null;
-	}
-
-	// Starts scrolling text
-	IEnumerator StartTextScrollCR()
-    {
-		yield return new WaitWhile (() => scrollCR != null);
-		scrollCR = StartCoroutine (TextScrollCR ());
+        hideText.ind[1] = dialogItem.text.Length - 1;
 	}
 
 	// Scrolls text character by character
 	IEnumerator TextScrollCR()
     {
         Debug.Log(dialogItem.text);
+        hideText.ind[0] = 0;
 		while (hideText.ind[1] < dialogItem.text.Length)
         {
             int pos = hideText.ind[1];
@@ -86,7 +81,7 @@ public class DialogBox : MonoBehaviour
 			}
             if (pos % speechInterval == 0) audioSpeech.Play();
             hideText.ind [1]++; // Advance text position
-            yield return new WaitForSeconds(scrollDelay);
+            yield return new WaitForSeconds(ScrollDelay);
 		}
 		yield return StartCoroutine(CheckEvents (dialogItem.text.Length)); // Play events at end of text
 		scrollCR = null;

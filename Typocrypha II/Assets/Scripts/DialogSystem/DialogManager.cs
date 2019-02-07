@@ -6,22 +6,23 @@ using UnityEngine.UI;
 /// <summary>
 /// Starts and manages dialog sequences.
 /// </summary>
-[RequireComponent(typeof(DialogParser))]
 public class DialogManager : MonoBehaviour
 {
     public bool startOnAwake = true; // Should dialog start when scene starts up?
-
-    DialogParser dialogParser; // Parses dialog items
 
     // DIALOG GRAPH PARSER FIELD 
 
     void Awake()
     {
-        dialogParser = GetComponent<DialogParser>();
         if (startOnAwake)
         {
             NextDialog();
         }
+    }
+
+    void Update()
+    {
+        // CHECK NEXT DIALOG INPUT
     }
 
     /// <summary>
@@ -29,9 +30,9 @@ public class DialogManager : MonoBehaviour
     /// </summary>
     public void NextDialog()
     {
-        // FIGURE OUT VIEW
-        // GET DIALOG ITEM FROM GRAPH PARSER
-        //DialogItem dialogItem = dialogParser.Parse(dialogItem, dialogBox);
+        DialogView dialogView = null; // FIGURE OUT VIEW
+        DialogItem dialogItem = null; // GET DIALOG ITEM FROM GRAPH PARSER
+        DialogBox dialogBox = dialogView.PlayDialog(dialogItem); // Play Dialog
     }
 }
 

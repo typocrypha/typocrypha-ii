@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class DialogViewVN : DialogView
 {
-    public GameObject dialogBoxPrefab;
     public SpriteRenderer spacebar;
     public Animator spacebarAnimator;
 
@@ -23,31 +22,32 @@ public class DialogViewVN : DialogView
         codecSprite = obj.transform.Find("CodecSprite").GetComponent<SpriteRenderer>();
     }
 
-    public override DialogBox NewDialog(DialogItem data)
-    {
-        #region Check Arguments
-        DialogItemVN item = data as DialogItemVN;
-        if(item == null)
-        {
-            throw new System.Exception("Incorrect Type of dialog Item for the VN view mode (requires DialogItemVN)");
-        }
-        #endregion
-
-        nameText.text = item.speakerName;
-        if(item.mcSprite != null)
-        {
-            mcSprite.sprite = item.mcSprite;
-        }
-        if (item.codecSprite != null)
-        {
-            codecSprite.sprite = item.codecSprite;
-        }
-        dialogBox.StartDialogBox(item);
-        return dialogBox;
-    }
-
     public override void SetEnabled(bool e)
     {
         gameObject.SetActive(e);
+    }
+
+    public override DialogBox PlayDialog(DialogItem data)
+    {
+        #region Check Arguments
+        DialogItemVN dialogItem = data as DialogItemVN;
+        if(dialogItem == null)
+        {
+            throw new System.Exception("Incorrect Type of dialog Item for the VN " +
+                                       "view mode (requires DialogItemVN)");
+        }
+        #endregion
+
+        nameText.text = dialogItem.speakerName;
+        if(dialogItem.mcSprite != null)
+        {
+            mcSprite.sprite = dialogItem.mcSprite;
+        }
+        if (dialogItem.codecSprite != null)
+        {
+            codecSprite.sprite = dialogItem.codecSprite;
+        }
+        dialogBox.StartDialogBox(dialogItem);
+        return dialogBox;
     }
 }

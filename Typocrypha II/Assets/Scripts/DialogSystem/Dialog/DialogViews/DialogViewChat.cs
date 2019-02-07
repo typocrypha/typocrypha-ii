@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum IconSide { LEFT, RIGHT, BOTH, NONE }; // Side which icon displays
+
 /// <summary>
 /// Chat style dialog. i.e. chatboxes on scrollable feed.
 /// </summary>
 public class DialogViewChat : DialogView
 {
-    public GameObject dialogBoxPrefab; // Prefab for dialogue box object
     public RectTransform ChatContent; // Content of chat scroll view (contains dialogue boxes)
     public Scrollbar scrollBar; // Scroll bar of chat dialogue window
-    public GameObject spacebar_icon_chat; // Spacebar icon CHAT view
-    public Animator animator_spacebar_chat; // Spacebar icon key animator
+    public GameObject spaceBarIcon; // Spacebar icon
+    public Animator spaceBarAnimator; // Spacebar icon animator
     public float defaultWindowHeight = 16f; // Default chat window height
     public float scrollBarTime = 0.15f; // Time it takes to automatically update window
 
@@ -24,12 +25,15 @@ public class DialogViewChat : DialogView
         windowHeight = defaultWindowHeight;
     }
 
-    public override DialogBox NewDialog(DialogItem data)
+    public override DialogBox PlayDialog(DialogItem data)
     {
         #region Check Arguments
         DialogItemChat item = data as DialogItemChat;
         if (item == null)
-            throw new System.Exception("Incorrect Type of dialog Item for the Chat view mode (requires DialogItemChat)");
+        {
+            throw new System.Exception("Incorrect Type of dialog Item for the Chat " +
+                                       "view mode (requires DialogItemChat)");
+        }
         #endregion
 
         #region Instantiate and initialize new Dialog box
@@ -59,12 +63,12 @@ public class DialogViewChat : DialogView
         gameObject.SetActive(e);
         if (!e)
         {
-            clearLog();
+            ClearLog();
         }
     }
 
     // Remove all chat messages
-    public void clearLog()
+    public void ClearLog()
     {
         bool skipSpacer = true; // Skip initial spacer object
         foreach (Transform child in ChatContent)
