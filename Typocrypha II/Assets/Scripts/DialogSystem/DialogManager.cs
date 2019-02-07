@@ -10,11 +10,10 @@ using UnityEngine.UI;
 public class DialogManager : MonoBehaviour
 {
     public bool startOnAwake = true; // Should dialog start when scene starts up?
-    public DialogBox dialogBoxPrefab; // Prefab of base dialog box.
 
-    DialogParser dialogParser; // Parses graph dialog into dialog items.
+    DialogParser dialogParser; // Parses dialog items
 
-    // DIALOG GRAPH FIELD 
+    // DIALOG GRAPH PARSER FIELD 
 
     void Awake()
     {
@@ -31,8 +30,8 @@ public class DialogManager : MonoBehaviour
     public void NextDialog()
     {
         // FIGURE OUT VIEW
-        DialogBox dialogBox = Instantiate(dialogBoxPrefab);
-        DialogItem dialogItem = dialogParser.Parse(dialogBox);
+        // GET DIALOG ITEM FROM GRAPH PARSER
+        //DialogItem dialogItem = dialogParser.Parse(dialogItem, dialogBox);
     }
 }
 

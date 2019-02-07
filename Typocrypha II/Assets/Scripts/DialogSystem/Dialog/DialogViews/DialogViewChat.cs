@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Chat style dialog. i.e. chatboxes on scrollable feed.
+/// </summary>
 public class DialogViewChat : DialogView
 {
     public GameObject dialogBoxPrefab; // Prefab for dialogue box object
@@ -21,7 +24,7 @@ public class DialogViewChat : DialogView
         windowHeight = defaultWindowHeight;
     }
 
-    public override DialogBox newDialog(DialogItem data)
+    public override DialogBox NewDialog(DialogItem data)
     {
         #region Check Arguments
         DialogItemChat item = data as DialogItemChat;
@@ -46,12 +49,12 @@ public class DialogViewChat : DialogView
         DialogBox dialogBox = obj.GetComponent<DialogBox>();
         #endregion
 
-        dialogBox.dialogBoxStart(item);
-        setWindowSize(dialogBox.setBoxHeight() + ChatContent.GetComponent<VerticalLayoutGroup>().spacing);
+        dialogBox.StartDialogBox(item);
+        //setWindowSize(dialogBox.setBoxHeight() + ChatContent.GetComponent<VerticalLayoutGroup>().spacing);
         return dialogBox;
     }
 
-    public override void setEnabled(bool e)
+    public override void SetEnabled(bool e)
     {
         gameObject.SetActive(e);
         if (!e)

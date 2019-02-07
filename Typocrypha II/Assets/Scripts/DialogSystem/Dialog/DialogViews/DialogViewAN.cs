@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Audio novel style dialog. i.e. Floating text over full background.
+/// </summary>
 public class DialogViewAN : DialogView
 {
     public GameObject dialogBoxPrefab; // Prefab for dialogue box
@@ -10,12 +13,14 @@ public class DialogViewAN : DialogView
     public GameObject spacebar_icon_an; // Spacebar icon AN view
     public Animator animator_spacebar_an; // Spacebar icon key animator
 
-    public override DialogBox newDialog(DialogItem data)
+    public override DialogBox NewDialog(DialogItem data)
     {
         #region Check Arguments
         DialogItemAN item = data as DialogItemAN;
         if (item == null)
+        {
             throw new System.Exception("Incorrect Type of dialog Item for the AN view mode (requires DialogItemAN)");
+        }
         #endregion
 
         #region Instantiate and initialize new Dialog box
@@ -27,7 +32,7 @@ public class DialogViewAN : DialogView
         return dialogBox;
     }
 
-    public override void setEnabled(bool e)
+    public override void SetEnabled(bool e)
     {
         gameObject.SetActive(e);
         screenFrame.SetActive(!e);

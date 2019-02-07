@@ -30,18 +30,16 @@ public class DialogParser : MonoBehaviour
 	}
 
 	/// <summary>
-    /// Parses dialog from graph.
-    /// Dialog text has tags and effects processes.
-    /// FXText effect components are attached to dialog box.
+    /// Parses dialog in dialog item.
+    /// Parses tags and adds FXText components to dialog box.
     /// </summary>
+    /// <param name="dialogItem">Dialog item to modify and parse.</param>
     /// <param name="dialogBox">Dialog box that will hold dialog.</param>
-    /// <returns>Parsed dialog as a dialog item.</returns>
-	public DialogItem Parse(DialogBox dialogBox /*, GRAPH*/)
+	public void Parse(DialogItem dialogItem, DialogBox dialogBox)
     {
         //Debug.Log ("parse:" + d_item.text);
-        DialogItem dialogItem = new DialogItem();
 		StringBuilder parsed = new StringBuilder(); // Processes string
-		string text = SubstituteMacros(dialogItem.text); // CHANGE
+		string text = SubstituteMacros(dialogItem.text); 
 		dialogItem.FXTextList = new List<FXText.FXTextBase>();
 		dialogItem.TextEventList = new List<TextEvent>();
 		bool tag = false; // Are we parsing a tag?
@@ -76,7 +74,6 @@ public class DialogParser : MonoBehaviour
 			}
 		}
         dialogItem.text = parsed.ToString();
-		return dialogItem;
 	}
     
     // Parses an effect's starting tag, and adds it to the stack;
