@@ -10,8 +10,6 @@ using UnityEngine;
 /// </summary>
 public class DialogParser : MonoBehaviour
 {
-	public static DialogParser instance = null; // Global static reference
-
 	Dictionary<string, System.Type> FXTextMap; // Reference FXText effects by name
 	Stack<FXText.FXTextBase> FXTextStack; // Stack for managing nested effects
 	char[] optDelim = new char[1] { ',' }; // Option delimiter
@@ -21,14 +19,6 @@ public class DialogParser : MonoBehaviour
 ;
 	void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(this);
-        }
 		FXTextMap = new Dictionary<string, System.Type> () { 
 			{"color", typeof(FXText.Color)},
 			{"shake", typeof(FXText.Offset)},
@@ -40,18 +30,18 @@ public class DialogParser : MonoBehaviour
 	}
 
 	/// <summary>
-    /// Parses dialog item.
+    /// Parses dialog from graph.
     /// Dialog text has tags and effects processes.
     /// FXText effect components are attached to dialog box.
     /// </summary>
-    /// <param name="dialogItem"></param>
-    /// <param name="dialogBox"></param>
-    /// <returns>Parsed text.</returns>
-	public string Parse(DialogItem dialogItem, DialogBox dialogBox)
+    /// <param name="dialogBox">Dialog box that will hold dialog.</param>
+    /// <returns>Parsed dialog as a dialog item.</returns>
+	public DialogItem Parse(DialogBox dialogBox /*, GRAPH*/)
     {
-		//Debug.Log ("parse:" + d_item.text);
+        //Debug.Log ("parse:" + d_item.text);
+        DialogItem dialogItem = new DialogItem();
 		StringBuilder parsed = new StringBuilder(); // Processes string
-		string text = SubstituteMacros(dialogItem.text);
+		string text = SubstituteMacros(dialogItem.text); // CHANGE
 		dialogItem.FXTextList = new List<FXText.FXTextBase>();
 		dialogItem.TextEventList = new List<TextEvent>();
 		bool tag = false; // Are we parsing a tag?
@@ -85,7 +75,8 @@ public class DialogParser : MonoBehaviour
 				}
 			}
 		}
-		return parsed.ToString ();
+        dialogItem.text = parsed.ToString();
+		return dialogItem;
 	}
     
     // Parses an effect's starting tag, and adds it to the stack;
@@ -113,7 +104,8 @@ public class DialogParser : MonoBehaviour
 	}
 
 	// Parses a Text Event
-	int parseTextEvent(int startPos, string text, StringBuilder parsed, DialogItem dialogItem) {
+	int parseTextEvent(int startPos, string text, StringBuilder parsed, DialogItem dialogItem)
+    {
 		int endPos = text.IndexOf (TextEventDelim[1], startPos);
 		int eqPos = text.IndexOf (TextEventDelim[2], startPos);
 		string evt;
@@ -128,7 +120,7 @@ public class DialogParser : MonoBehaviour
 			evt = text.Substring (startPos + 1, eqPos - startPos - 1);
 			opt = text.Substring (eqPos + 1, endPos - eqPos - 1).Split (optDelim);
 		}
-		dialogItem.TextEventList.Add(new TextEvent(evt, opt));
+		dialogItem.TextEventList.Add(new TextEvent(evt, opt, startPos));
 		//Debug.Log ("  text_event:" + evt + ":" + opt.Aggregate("", (acc, next) => acc + "," + next));
 		return endPos;
 	}
@@ -151,7 +143,6 @@ public class DialogParser : MonoBehaviour
 				//Debug.Log ("  macro:" + macro.Aggregate("", (acc, next) => acc + "," + next));
 				string[] opt = macro.Skip (1).Take (macro.Length - 1).ToArray ();
 				string sub = TextMacros.main.macro_map [macro[0]] (opt);
-				//Debug.Log ("    macro sub:" + sub);
 				trueStr.Append (sub);
 				i = endPos + 1;
 			}

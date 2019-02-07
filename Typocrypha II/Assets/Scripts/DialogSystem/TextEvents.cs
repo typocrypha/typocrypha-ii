@@ -11,12 +11,14 @@ public delegate IEnumerator TextEventDel(string[] opt);
 /// Struct to contain a text event.
 /// </summary>
 public struct TextEvent
-{
-	public string evt;
-	public string[] opt;
-	public TextEvent(string evt, string[] opt) {
+{ 
+	public string evt; // Name of event
+	public string[] opt; // Options of event
+    public int pos; // Position in text of event
+	public TextEvent(string evt, string[] opt, int pos) {
 		this.evt = evt;
 		this.opt = opt;
+        this.pos = pos;
 	}
 }
 

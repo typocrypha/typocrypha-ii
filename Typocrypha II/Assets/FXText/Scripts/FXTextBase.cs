@@ -7,6 +7,7 @@ namespace FXText
 {
     // Base class for FXText
     // Attach child classes to an object with a Text component to apply effect
+    [RequireComponent(typeof(Text))]
     public abstract class FXTextBase : BaseMeshEffect
     {
         public List<int> ind; // List of text indices to apply effect on: in between consecutive pairs
