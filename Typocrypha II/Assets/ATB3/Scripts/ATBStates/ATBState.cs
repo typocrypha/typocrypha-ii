@@ -19,6 +19,10 @@ namespace ATB3
         NullATBTransition = 0, // Use this transition to represent a non-existing transition in your system
         Stun,
         ChargeFinish,
+        CastStart,
+        CastPerform,
+        CastEnd,
+        ChargeStart,
         ExitStun,
     }
 
@@ -60,7 +64,31 @@ namespace ATB3
     public abstract class ATBState
     {
         protected ATBStateID stateID;
-        public ATBStateID ID { get { return stateID; } }
+        public ATBStateID ID { get { return stateID; } set { stateID = value; } }
+        private ATBActor owner; 
+        public ATBActor Owner { get { return owner; } set { owner = value; } }
+        private ATBStateMachine source;
+        public ATBStateMachine Source { get { return source; } set { source = value;  } }
+        public float timePassed = 0.0f;    // Amount of time spent in the state
+
+        // Constructor for ATBState
+        // (assigns an ATBActor as an owner for the State to run functions)
+        public ATBState()
+        {
+            owner = null;
+            source = null;
+        }
+        public ATBState(ATBActor actor, ATBStateMachine machine)
+        {
+            owner = actor;
+            source = machine;
+        }
+
+        // set owner for the ATBState
+        public void SetOwner(ATBActor actor)
+        {
+            owner = actor;
+        }
 
         // Call upon entering given state
         public abstract void OnEnter();

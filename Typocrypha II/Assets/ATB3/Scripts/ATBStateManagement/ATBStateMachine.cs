@@ -8,6 +8,11 @@ namespace ATB3
     // STATE MACHINE
     // Machine contained in all Actors to manage individual states.
     //================================================================//
+    // Frankensteined from this example:
+    // http://wiki.unity3d.com/index.php/Finite_State_Machine
+    // A Finite State Machine System based on Chapter 3.1 of Game Programming Gems 1 by Eric Dybsand
+    // Written by Roberto Cezar Bianchini, July 2010
+    // ===============================================================//
 
     public abstract class ATBStateMachine : MonoBehaviour
     {
@@ -15,12 +20,16 @@ namespace ATB3
         // PROPERTIES                                                     //
         //----------------------------------------------------------------//
 
+        // ATBActor that owns this state machine
+        // (drag and drop the desired ATBActor component in the Unity editor)
+        public ATBActor owner;
+
         // map of all the machine's transitions and their end point states
         // (override and define this in individual child state machines)
         private Dictionary<ATBTransition, ATBStateID> transitionMap = new Dictionary<ATBTransition, ATBStateID>();
         // list of all the states allowed in this machine 
         // (because you have to call [new ATBStateBlah()] for each state, add to list on awake())
-        private List<ATBState> states;
+        private List<ATBState> states = new List<ATBState>();
 
         // The only way one can change the state of the machine is by performing a transition
         // Don't change the CurrentState directly (unless initializing with SetState())
@@ -39,7 +48,11 @@ namespace ATB3
 
         void Awake()
         {
-            InitializeStates(states);
+            InitializeStates();
+            foreach(ATBState state in states)
+            {
+                state.SetOwner(owner);
+            }
             currentState.OnEnter();
         }
 
@@ -54,7 +67,7 @@ namespace ATB3
 
         // Appends the machine's states to the given state list (should be called on awake)
         // Add your states here!
-        protected abstract void InitializeStates(List<ATBState> stateList);
+        protected abstract void InitializeStates();
 
         /// <summary>
         /// This method places new states inside the FSM,

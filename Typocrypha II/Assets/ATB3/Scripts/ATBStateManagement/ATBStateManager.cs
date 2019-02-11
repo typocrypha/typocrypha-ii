@@ -37,7 +37,7 @@ namespace ATB3
         // Process queue (FIFO: one event per update frame)
         void processQueue()
         {
-            //if (eventQueue.Count == 0) return;
+            if (eventQueue.Count == 0) return;
             //StateEventObj obj = eventQueue[0];
             //this.SendMessage(obj.stateEvent, obj.args);
             //eventQueue.Remove(obj);

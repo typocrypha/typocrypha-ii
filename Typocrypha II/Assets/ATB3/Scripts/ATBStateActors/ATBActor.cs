@@ -19,6 +19,7 @@ namespace ATB3
 
         private bool _paused; // Is the actor paused?
         public ATBStateMachine stateMachine; // State machine for this actor
+        public string actorName; // Name of actor (debug)
 
         public bool pause // Is this actor paused or not?
         {
