@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ATB2
+namespace ATB3
 {
-    public partial class Player : InputCaster
+    public partial class ATBPlayer : InputCaster
     {
         void Start()
         {

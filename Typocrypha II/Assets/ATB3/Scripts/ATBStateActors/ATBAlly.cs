@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ATB2
+namespace ATB3
 {
-    public partial class Ally : InputCaster
+    public partial class ATBAlly : InputCaster
     {
         // UI Objects
         public GameObject healthUI;

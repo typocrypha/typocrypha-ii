@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ATB2
+namespace ATB3
 {
     // UI amount bar with shadowed transitions between amounts
     // To set up in scene, set amount and shadow (with amount layered directly on top of shadow)

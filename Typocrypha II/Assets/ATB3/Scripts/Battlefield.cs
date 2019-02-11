@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using ATB2;
+using ATB3;
 
 // Encapsulates battle info
 public class Battlefield : MonoBehaviour
@@ -9,14 +9,14 @@ public class Battlefield : MonoBehaviour
     public ICaster Player { get { return casters[1,1]; } }
 
     //DEBUG FOR TESTING ATB TWEAKS
-    public Actor[] actorsToAdd;
+    public ATBActor[] actorsToAdd;
 
     #region Row and List Accessor Properties
     public ICaster[] TopRow { get { return casters[0]; } }
     public ICaster[] BottomRow { get { return casters[1]; } }
     public ICaster[] Enemies { get { return castersLists[ICasterType.ENEMY].ToArray(); } }
     public ICaster[] Allies { get { return castersLists[ICasterType.ALLY].ToArray(); } }
-    public List<Actor> Actors { get; } = new List<Actor>();
+    public List<ATBActor> Actors { get; } = new List<ATBActor>();
     #endregion
 
     #region Data and Representative Lists
@@ -57,10 +57,10 @@ public class Battlefield : MonoBehaviour
         toAdd.WorldPos = spaces[pos].transform.position;
         casters[pos] = toAdd;
         castersLists[toAdd.CasterType].Add(toAdd);
-        if (toAdd is Actor) Actors.Add(toAdd as Actor);
+        if (toAdd is ATBActor) Actors.Add(toAdd as ATBActor);
     }
     //Add a non-caster actor to the battlefield
-    public void AddActor(Actor a)
+    public void AddActor(ATBActor a)
     {
         Actors.Add(a);
     }

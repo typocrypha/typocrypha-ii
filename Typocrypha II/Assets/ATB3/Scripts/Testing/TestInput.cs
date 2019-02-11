@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ATB2
+namespace ATB3
 {
     // Testing script for testing events
     public class TestInput : MonoBehaviour
@@ -11,7 +11,7 @@ namespace ATB2
         public InputField input;
         public Text outputText;
         public Image outputImage;
-        public Actor testActor;
+        public ATBActor testActor;
         public List<string> stateNames;
         Dictionary<int, string> stateNameMap = new Dictionary<int, string>();
 

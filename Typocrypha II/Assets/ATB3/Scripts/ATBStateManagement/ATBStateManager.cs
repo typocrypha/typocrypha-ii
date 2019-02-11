@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ATB2
+namespace ATB3
 {
     //================================================================//
     // STATE MANAGER
@@ -10,7 +10,7 @@ namespace ATB2
     // also contains all events that can be sent.
     //================================================================//
 
-    public partial class StateManager : MonoBehaviour
+    public partial class ATBStateManager : MonoBehaviour
     {
         //----------------------------------------------------------------//
         // EVENT DATA                                                     //
@@ -20,8 +20,9 @@ namespace ATB2
         public Battlefield battleField;
         // Events sent
         // static List<StateEventObj> eventQueue = new List<StateEventObj>(); 
+        static List<string> eventQueue = new List<string>();
         // Stack for managing when actors have solo activity (casting)
-        public static Stack<Actor> soloStack = new Stack<Actor>();
+        public static Stack<ATBActor> soloStack = new Stack<ATBActor>();
 
         //----------------------------------------------------------------//
         // STATE MANAGEMENT                                               //
@@ -58,12 +59,12 @@ namespace ATB2
         // Set the pause value of all actors
         void setPauseAll(bool value)
         {
-            foreach (Actor actor in battleField.Actors)
+            foreach (ATBActor actor in battleField.Actors)
                 actor.pause = value;
         }
 
         // Enter solo mode for this actor
-        void enterSolo(Actor soloActor)
+        void enterSolo(ATBActor soloActor)
         {
             if (soloStack.Count == 0)
             {
@@ -77,7 +78,7 @@ namespace ATB2
         }
 
         // Exit solo mode for this actor (should be at top of stack)
-        void exitSolo(Actor soloActor)
+        void exitSolo(ATBActor soloActor)
         {
             if (soloActor != soloStack.Pop())
                 Debug.LogError("StateManager: Solo Stack Mismatch");
@@ -86,7 +87,7 @@ namespace ATB2
             {
                 setPauseAll(false);
                 CastBar.MainBar.focus = true;
-                foreach (Actor actor in battleField.actorsToAdd)
+                foreach (ATBActor actor in battleField.actorsToAdd)
                     actor.isCast = false;
             }
             // Otherwise, give solo to next in stack

@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ATB2
+namespace ATB3
 {
 
     //================================================================//
     // ENEMY ACTOR
-    // Handles the actions performed by enemies on the battlefield.
+    // Handles the actions performed specifically by enemies 
+    // on the battlefield.
     //================================================================//
 
-    public partial class Enemy : Actor
+    public partial class ATBEnemy : ATBActor
     {
         //----------------------------------------------------------------//
         // UI ELEMENTS                                                    //

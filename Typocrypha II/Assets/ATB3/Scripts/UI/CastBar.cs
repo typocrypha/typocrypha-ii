@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ATB2
+namespace ATB3
 {
     // Manages cast bar where player types in spells
     public class CastBar : MonoBehaviour
