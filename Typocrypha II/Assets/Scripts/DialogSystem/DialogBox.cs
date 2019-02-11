@@ -18,9 +18,9 @@ public class DialogBox : MonoBehaviour
     }
     public int speechInterval = 3; // Number of character scrolls before speech sfx plays
 
+    public FXText.Color hideText; // Allows for hiding parts of text (for scrolling)
     public Text dialogText; // Text display component
     public AudioSource audioSpeech; // AudioSource for playing speech sfx
-    public FXText.Color hideText; // Allows for hiding parts of text (for scrolling)
 
     DialogItem dialogItem; // Dialog line data
     Coroutine scrollCR; // Coroutine that scrolls the text
@@ -44,8 +44,9 @@ public class DialogBox : MonoBehaviour
     {
         this.dialogItem = dialogItem;
         DialogParser.instance.Parse(dialogItem, this);
+        dialogText.text = dialogItem.text;
         // RESIZE DIALOGBOX
-        StartCoroutine(TextScrollCR());
+        scrollCR = StartCoroutine(TextScrollCR());
 	}
 
     /// <summary>
@@ -61,7 +62,7 @@ public class DialogBox : MonoBehaviour
             StopCoroutine(scrollCR);
         }
 		scrollCR = null;
-        hideText.ind[1] = dialogItem.text.Length - 1;
+        hideText.ind[0] = dialogItem.text.Length;
 	}
 
 	// Scrolls text character by character
@@ -69,9 +70,10 @@ public class DialogBox : MonoBehaviour
     {
         Debug.Log(dialogItem.text);
         hideText.ind[0] = 0;
-		while (hideText.ind[1] < dialogItem.text.Length)
+        hideText.ind[1] = dialogItem.text.Length;
+        int pos = 0;
+		while (pos < dialogItem.text.Length)
         {
-            int pos = hideText.ind[1];
             yield return StartCoroutine(CheckEvents (pos));
             // PAUSE
 			if (dialogItem.text[pos] == '<') // Skip Unity richtext tags
@@ -80,7 +82,8 @@ public class DialogBox : MonoBehaviour
 				if (pos >= dialogItem.text.Length) break;
 			}
             if (pos % speechInterval == 0) audioSpeech.Play();
-            hideText.ind [1]++; // Advance text position
+            pos++; // Advance text position
+            hideText.ind[0] = pos;
             yield return new WaitForSeconds(ScrollDelay);
 		}
 		yield return StartCoroutine(CheckEvents (dialogItem.text.Length)); // Play events at end of text

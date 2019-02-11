@@ -12,10 +12,6 @@ public class DialogGraphParser : MonoBehaviour
     {
         currNode = graph.getStartNode();
     }
-    private void Start()
-    {
-        currNode = graph.getStartNode();
-    }
     private BaseNode Next()
     {
         if (currNode is BaseNodeOUT)

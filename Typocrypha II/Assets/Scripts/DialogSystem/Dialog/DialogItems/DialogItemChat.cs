@@ -16,4 +16,9 @@ public class DialogItemChat : DialogItem
         this.leftIcon = leftIcon;
         this.rightIcon = rightIcon;
     }
+
+    public override System.Type GetView()
+    {
+        return typeof(DialogViewChat);
+    }
 }

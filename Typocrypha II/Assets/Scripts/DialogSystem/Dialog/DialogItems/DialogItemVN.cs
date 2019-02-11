@@ -13,5 +13,10 @@ public class DialogItemVN : DialogItem
         this.mcSprite = mcSprite;
         this.codecSprite = codecSprite;
     }
+
+    public override System.Type GetView()
+    {
+        return typeof(DialogViewVN);
+    }
 }
 

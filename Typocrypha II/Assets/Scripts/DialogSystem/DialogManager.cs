@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,23 +11,43 @@ using UnityEngine.UI;
 public class DialogManager : MonoBehaviour
 {
     public bool startOnAwake = true; // Should dialog start when scene starts up?
-    private DialogGraphParser graph;
+    public List<DialogView> allViews; // All dialog views (VN, CHAT, etc)
 
-    // DIALOG GRAPH PARSER FIELD 
+    private DialogGraphParser graph; // Dialog graph currently playing.
+    private DialogBox dialogBox; // Latest displayed dialog box.
 
     void Awake()
     {
         if (startOnAwake)
         {
-            graph = GetComponent<DialogGraphParser>();
-            graph.Init();
+            InitDialog();
             NextDialog();
         }
     }
 
     void Update()
     {
-        // CHECK NEXT DIALOG INPUT
+        // Check if submit key is pressed
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            if (dialogBox.IsDone) // If dialog is done, go to next dialog
+            {
+                NextDialog();
+            }
+            else // Otherwise, skip text scroll and dump current text
+            {
+                dialogBox.DumpText();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Initialize dialog parsing (from graph).
+    /// </summary>
+    public void InitDialog()
+    {
+        graph = GetComponent<DialogGraphParser>();
+        graph.Init();
     }
 
     /// <summary>
@@ -34,9 +55,20 @@ public class DialogManager : MonoBehaviour
     /// </summary>
     public void NextDialog()
     {
-        DialogView dialogView = null; // FIGURE OUT VIEW
         DialogItem dialogItem = graph.NextDialog();
-        DialogBox dialogBox = dialogView.PlayDialog(dialogItem); // Play Dialog
+        DialogView dialogView = allViews.Find(v => v.GetType() == dialogItem.GetView());
+        SoloView(dialogView);
+        dialogBox = dialogView.PlayDialog(dialogItem); // Play Dialog
+    }
+
+    // Hide all views except for 'view'
+    void SoloView(DialogView view)
+    {
+        foreach (var dv in allViews)
+        {
+            dv.gameObject.SetActive(false);
+        }
+        view.gameObject.SetActive(true);
     }
 }
 
