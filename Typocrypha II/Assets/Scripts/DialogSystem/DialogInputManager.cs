@@ -10,7 +10,6 @@ using UnityEngine.UI;
 public class DialogInputManager : MonoBehaviour
 {
     public static DialogInputManager instance = null;
-    public static Dictionary<string, string> tmpData; // Temporary data storage.
 
     string target;
 
@@ -25,14 +24,13 @@ public class DialogInputManager : MonoBehaviour
             Destroy(this);
             return;
         }
-
-        tmpData = new Dictionary<string, string>();
+        
         enabled = false;
     }
 
     /// <summary>
     /// Enables current line of dialog for input.
-    /// Input prompt is displayed after text scroll.
+    /// Input prompt is displayed after text is fully displayed.
     /// </summary>
     /// <param name="data">Information about input event.</param>
     public void EnableInput(DialogInputItem data)
@@ -56,7 +54,7 @@ public class DialogInputManager : MonoBehaviour
     /// <param name="value">Submitted value.</param>
     public void SubmitInput(string value)
     {
-        tmpData[target] = value; // Set input value.
+        PlayerDataManager.instance.tmpData[target] = value; // Set input value.
         DialogManager.instance.NextDialog(); // Start next dialog.
         DialogManager.instance.enabled = true; // Re-enable dialog skipping.
     }

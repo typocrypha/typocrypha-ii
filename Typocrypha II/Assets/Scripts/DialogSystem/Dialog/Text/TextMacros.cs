@@ -7,16 +7,26 @@ public delegate string MacroSubDel(string[] opt);
 
 // event class for text macro substitions
 public class TextMacros : MonoBehaviour {
-	public static TextMacros main = null; // global static ref
-	public Dictionary<string, MacroSubDel> macro_map; // for substituting macros
+	public static TextMacros instance = null; // global static ref
+	public Dictionary<string, MacroSubDel> macroMap; // for substituting macros
 	public Dictionary<string, string> color_map; // for color presets (hex representation)
 	public Dictionary<string, System.Tuple<string, string>> character_map; // for character dialogue presets
     public Dictionary<char, char> translate_map;
 
 	void Awake () {
-		if (main == null) main = this;
-		macro_map = new Dictionary<string, MacroSubDel> {
-			{"name", macroNameSub},
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(this);
+            return;
+        }
+		macroMap = new Dictionary<string, MacroSubDel>
+        {
+            {"temp", macroTemp},
+            {"name", macroNameSub},
 			{"NAME", macroNameSub},
 			{"pronoun",macroPronoun},
             {"info", macroInfo},
@@ -70,6 +80,13 @@ public class TextMacros : MonoBehaviour {
             {'z', 'j' }, {'.', ',' }, {',', '.' }
         };
 	}
+
+    // Substitutes appropriate entry from temporary string-string database
+    // input: variable name
+    string macroTemp(string[] opt)
+    {
+        return PlayerDataManager.instance.tmpData[opt[0]];
+    }
 
 	// substitutes player's name
 	// input: NONE
