@@ -6,8 +6,26 @@ using UnityEngine.UI;
 /// <summary>
 /// A single dialog box.
 /// </summary>
-public class DialogBox : MonoBehaviour
+public class DialogBox : MonoBehaviour, IPausable
 {
+    #region IPausable
+    /// <summary>
+    /// Pauses text scroll.
+    /// </summary>
+    bool pause;
+    public bool Pause
+    {
+        get
+        {
+            return pause;
+        }
+        set
+        {
+            pause = value;
+        }
+    }
+    #endregion
+
     public float scrollDelay = 0.1f; // Delay in showing characters for text scroll
     public float ScrollDelay
     {
@@ -51,10 +69,11 @@ public class DialogBox : MonoBehaviour
 	}
 
     /// <summary>
-    /// Remove old text effects.
+    /// Reset dialog box to default state.
     /// </summary>
     public void ResetDialogBox()
     {
+        // Remove old text effects.
         var fxTexts = dialogText.GetComponents<FXText.FXTextBase>();
         foreach (var fxText in fxTexts)
         {
@@ -63,6 +82,7 @@ public class DialogBox : MonoBehaviour
                 Destroy(fxText);
             }
         }
+        Pause = false; // Unpause.
     }
 
     /// <summary>
@@ -70,9 +90,9 @@ public class DialogBox : MonoBehaviour
     /// </summary>
     public void DumpText()
     {
-		//TextEvents.main.stopEvents();
-		//TextEvents.main.reset ();
-		//yield return TextEvents.main.finishUp (d_item.text_events);
+		TextEvents.instance.stopEvents(); // Stop currently running text events.
+        Pause = false; // Unpause.
+        // End text scroll and display all text.
         if (!IsDone)
         {
             StopCoroutine(scrollCR);
@@ -90,18 +110,18 @@ public class DialogBox : MonoBehaviour
 		while (pos < dialogItem.text.Length)
         {
             yield return StartCoroutine(CheckEvents (pos));
-            // PAUSE
-			if (dialogItem.text[pos] == '<') // Skip Unity richtext tags
+            yield return new WaitWhile(() => Pause); // Wait on pause.
+			if (dialogItem.text[pos] == '<') // Skip Unity richtext tags.
             {
 				pos = dialogItem.text.IndexOf ('>', pos + 1) + 1;
 				if (pos >= dialogItem.text.Length) break;
 			}
             if (pos % speechInterval == 0) audioSpeech.Play();
-            pos++; // Advance text position
+            pos++; // Advance text position.
             hideText.ind[0] = pos;
             yield return new WaitForSeconds(ScrollDelay);
 		}
-		yield return StartCoroutine(CheckEvents (dialogItem.text.Length)); // Play events at end of text
+		yield return StartCoroutine(CheckEvents (dialogItem.text.Length)); // Play events at end of text.
 		scrollCR = null;
 	}
 
