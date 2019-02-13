@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -37,7 +38,13 @@ public class DialogViewVN : DialogView
                                        "view mode (requires DialogItemVN)");
         }
         #endregion
-
+        
+        // Reset text effects
+        foreach(var fxText in dialogBox.GetComponents<FXText.FXTextBase>())
+        {
+            Destroy(fxText);
+        }
+        // Set new dialog parameters
         nameText.text = dialogItem.speakerName;
         if(dialogItem.mcSprite != null)
         {

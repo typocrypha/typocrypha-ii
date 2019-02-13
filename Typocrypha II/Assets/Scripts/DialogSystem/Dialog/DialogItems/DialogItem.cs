@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//public enum DialogueType {NORMAL, INPUT}; // Type of player interaction with dialouge
-
 /// <summary>
 /// Represents a single line of dialogue, and all it's effects/events/etc
 /// </summary>

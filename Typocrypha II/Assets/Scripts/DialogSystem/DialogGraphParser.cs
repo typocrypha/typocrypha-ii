@@ -23,6 +23,7 @@ public class DialogGraphParser : MonoBehaviour
     }
     private BaseNode Branch(GameflowBranchNode b)
     {
+        
         return b.toDefaultBranch.connections[0].body as BaseNode;
     }
     /// <summary> Go through the graph, porcessing nodes until a dialog node is reached
@@ -30,7 +31,12 @@ public class DialogGraphParser : MonoBehaviour
     public DialogItem NextDialog()
     {
         currNode = Next();
-        if (currNode is DialogNode)
+        if (currNode is DialogNodeInput) // Check if input
+        {
+            var iNode = currNode as DialogNodeInput;
+            DialogInputManager.instance.EnableInput(new DialogInputItem(iNode.variableName));
+        }
+        if (currNode is DialogNode) // Check if dialog
         {
             if(currNode is DialogNodeVN)
             {

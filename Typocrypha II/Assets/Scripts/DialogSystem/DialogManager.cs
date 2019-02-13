@@ -10,14 +10,26 @@ using UnityEngine.UI;
 [RequireComponent(typeof(DialogGraphParser))]
 public class DialogManager : MonoBehaviour
 {
+    public static DialogManager instance = null;
     public bool startOnAwake = true; // Should dialog start when scene starts up?
     public List<DialogView> allViews; // All dialog views (VN, CHAT, etc)
+    [HideInInspector] public DialogView dialogView; // Currently displayed dialog view.
+    [HideInInspector] public DialogBox dialogBox; // Latest displayed dialog box.
 
     private DialogGraphParser graph; // Dialog graph currently playing.
-    private DialogBox dialogBox; // Latest displayed dialog box.
 
     void Awake()
     {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(this);
+            return;
+        }
+
         if (startOnAwake)
         {
             InitDialog();
@@ -56,9 +68,12 @@ public class DialogManager : MonoBehaviour
     public void NextDialog()
     {
         DialogItem dialogItem = graph.NextDialog();
-        DialogView dialogView = allViews.Find(v => v.GetType() == dialogItem.GetView());
-        SoloView(dialogView);
-        dialogBox = dialogView.PlayDialog(dialogItem); // Play Dialog
+        if (dialogItem != null)
+        {
+            dialogView = allViews.Find(v => v.GetType() == dialogItem.GetView());
+            SoloView(dialogView); // Display proper view
+            dialogBox = dialogView.PlayDialog(dialogItem); // Play Dialog
+        }
     }
 
     // Hide all views except for 'view'
