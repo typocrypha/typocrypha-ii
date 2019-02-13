@@ -15,7 +15,7 @@ public class DialogParser : MonoBehaviour
 	Dictionary<string, System.Type> FXTextMap; // Reference FXText effects by name
 	Stack<FXText.FXTextBase> FXTextStack; // Stack for managing nested effects
 	char[] optDelim = new char[1] { ',' }; // Option delimiter
-    char[] FXTextDelim = new char[2] { '<', '>' }; // FXText delimiters
+    char[] FXTextDelim = new char[2] { '^', '|' }; // FXText delimiters
     char[] TextEventDelim = new char[3] { '[' , ']' , '=' }; // TextEvent delimiters
     char[] macroDelim = new char[2] { '{', '}' } // Macro delimiters
 ;
