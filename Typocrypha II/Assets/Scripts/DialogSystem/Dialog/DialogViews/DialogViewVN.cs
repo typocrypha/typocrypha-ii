@@ -39,11 +39,6 @@ public class DialogViewVN : DialogView
         }
         #endregion
         
-        // Reset text effects
-        foreach(var fxText in dialogBox.GetComponents<FXText.FXTextBase>())
-        {
-            Destroy(fxText);
-        }
         // Set new dialog parameters
         nameText.text = dialogItem.speakerName;
         if(dialogItem.mcSprite != null)

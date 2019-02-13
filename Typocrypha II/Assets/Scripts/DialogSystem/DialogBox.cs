@@ -42,12 +42,28 @@ public class DialogBox : MonoBehaviour
     /// <param name="dialogItem">Dialog line data to display.</param>
     public void StartDialogBox(DialogItem dialogItem)
     {
+        ResetDialogBox();
         this.dialogItem = dialogItem;
         DialogParser.instance.Parse(dialogItem, this);
         dialogText.text = dialogItem.text;
         // RESIZE DIALOGBOX
         scrollCR = StartCoroutine(TextScrollCR());
 	}
+
+    /// <summary>
+    /// Remove old text effects.
+    /// </summary>
+    public void ResetDialogBox()
+    {
+        var fxTexts = dialogText.GetComponents<FXText.FXTextBase>();
+        foreach (var fxText in fxTexts)
+        {
+            if (fxText != hideText)
+            {
+                Destroy(fxText);
+            }
+        }
+    }
 
     /// <summary>
     /// Dumps all remaining text.
