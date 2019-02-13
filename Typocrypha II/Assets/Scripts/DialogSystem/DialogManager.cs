@@ -68,12 +68,9 @@ public class DialogManager : MonoBehaviour
     public void NextDialog()
     {
         DialogItem dialogItem = graph.NextDialog();
-        if (dialogItem != null)
-        {
-            dialogView = allViews.Find(v => v.GetType() == dialogItem.GetView());
-            SoloView(dialogView); // Display proper view
-            dialogBox = dialogView.PlayDialog(dialogItem); // Play Dialog
-        }
+        dialogView = allViews.Find(v => v.GetType() == dialogItem.GetView());
+        SoloView(dialogView); // Display proper view
+        dialogBox = dialogView.PlayDialog(dialogItem); // Play Dialog
     }
 
     // Hide all views except for 'view'
