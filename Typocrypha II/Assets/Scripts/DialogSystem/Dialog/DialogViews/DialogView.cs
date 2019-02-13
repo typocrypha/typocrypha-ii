@@ -11,6 +11,8 @@ public abstract class DialogView : MonoBehaviour
     public GameObject dialogBoxPrefab; // Dialog box prefab specific to view
     public GameObject dialogInputPrefab; // Dialog input prefab specific to view
 
+    public GameObject spaceBar; // Spacebar object
+
     /// <summary>
     /// Enable/Disable this dialog view. Does not disable others.
     /// </summary>

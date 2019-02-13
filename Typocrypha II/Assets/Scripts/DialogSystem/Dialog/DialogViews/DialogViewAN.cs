@@ -9,8 +9,6 @@ public class DialogViewAN : DialogView
 {
     public GameObject screenFrame; // Screen frame object
     public RectTransform ANContent; // Content of scroll view
-    public GameObject spacebar_icon_an; // Spacebar icon AN view
-    public Animator animator_spacebar_an; // Spacebar icon key animator
 
     public override DialogBox PlayDialog(DialogItem data)
     {

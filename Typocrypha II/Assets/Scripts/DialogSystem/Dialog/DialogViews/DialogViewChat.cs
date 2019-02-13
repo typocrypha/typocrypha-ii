@@ -12,8 +12,6 @@ public class DialogViewChat : DialogView
 {
     public RectTransform ChatContent; // Content of chat scroll view (contains dialogue boxes)
     public Scrollbar scrollBar; // Scroll bar of chat dialogue window
-    public GameObject spaceBarIcon; // Spacebar icon
-    public Animator spaceBarAnimator; // Spacebar icon animator
     public float defaultWindowHeight = 16f; // Default chat window height
     public float scrollBarTime = 0.15f; // Time it takes to automatically update window
 
@@ -70,14 +68,8 @@ public class DialogViewChat : DialogView
     // Remove all chat messages
     public void ClearLog()
     {
-        bool skipSpacer = true; // Skip initial spacer object
         foreach (Transform child in ChatContent)
         {
-            if (skipSpacer)
-            {
-                skipSpacer = false;
-                continue;
-            }
             Destroy(child.gameObject);
         }
         resetWindowSize();

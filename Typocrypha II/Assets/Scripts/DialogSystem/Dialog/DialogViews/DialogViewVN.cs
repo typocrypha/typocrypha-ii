@@ -6,9 +6,6 @@ using UnityEngine.UI;
 
 public class DialogViewVN : DialogView
 {
-    public SpriteRenderer spacebar;
-    public Animator spacebarAnimator;
-
     private DialogBox dialogBox; // Visual novel style dialogue box
     private Text nameText; // Text that contains speaker's name for VN style
     private SpriteRenderer mcSprite; // Holds mc's sprite
