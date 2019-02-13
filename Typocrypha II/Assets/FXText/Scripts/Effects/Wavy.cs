@@ -8,9 +8,9 @@ namespace FXText
     // Makes text wave up and down in a sin wave
     public class Wavy : FXTextBase
     {
-        public float amplitude;
-        public float waveLength;
-        public float frequency;
+        public float amplitude = 1f;
+        public float waveLength = 1f;
+        public float frequency = 6f;
         float step;
 
         protected override void onEffect(VertexHelper vh, int pos)

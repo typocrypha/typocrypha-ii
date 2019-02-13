@@ -68,7 +68,6 @@ public class DialogBox : MonoBehaviour
 	// Scrolls text character by character
 	IEnumerator TextScrollCR()
     {
-        Debug.Log(dialogItem.text);
         hideText.ind[0] = 0;
         hideText.ind[1] = dialogItem.text.Length;
         int pos = 0;

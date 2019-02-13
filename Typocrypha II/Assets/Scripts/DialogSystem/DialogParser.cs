@@ -31,12 +31,11 @@ public class DialogParser : MonoBehaviour
             return;
         }
 
-		FXTextMap = new Dictionary<string, System.Type> () { 
-			{"color", typeof(FXText.Color)},
-			{"shake", typeof(FXText.Offset)},
+		FXTextMap = new Dictionary<string, System.Type> ()
+        { 
 			{"scramble", typeof(FXText.Scramble)},
 			{"wave", typeof(FXText.Wavy)},
-			{"color-cycle", typeof(FXText.Cascade)}
+			{"cascade", typeof(FXText.Cascade)}
 		};
 		FXTextStack = new Stack<FXText.FXTextBase> ();
 	}
@@ -49,7 +48,6 @@ public class DialogParser : MonoBehaviour
     /// <param name="dialogBox">Dialog box that will hold dialog.</param>
 	public void Parse(DialogItem dialogItem, DialogBox dialogBox)
     {
-        //Debug.Log ("parse:" + d_item.text);
 		StringBuilder parsed = new StringBuilder(); // Processes string
 		string text = SubstituteMacros(dialogItem.text); 
 		dialogItem.FXTextList = new List<FXText.FXTextBase>();
@@ -93,7 +91,7 @@ public class DialogParser : MonoBehaviour
     {
 		int endPos = text.IndexOf (FXTextDelim[0], startPos) - 1;
 		string fxName = text.Substring (startPos, endPos - startPos + 1);
-        FXText.FXTextBase fx = dialogBox.gameObject.AddComponent(FXTextMap[fxName]) as FXText.FXTextBase;
+        FXText.FXTextBase fx = dialogBox.dialogText.gameObject.AddComponent(FXTextMap[fxName]) as FXText.FXTextBase;
 		fx.ind = new List<int> {parsed.Length, -1};
 		FXTextStack.Push(fx);
 	}
@@ -104,7 +102,7 @@ public class DialogParser : MonoBehaviour
 		int endPos = text.IndexOf (FXTextDelim[1], startPos) - 1;
 		string fxName = text.Substring (startPos, endPos - startPos + 1);
         FXText.FXTextBase top = FXTextStack.Pop ();
-		if (FXTextMap [fxName].GetType () != top.GetType ())
+        if (FXTextMap [fxName] != top.GetType ())
         {
             throw new System.Exception("Mismatched FXTextEffect tags:" + fxName);
         }
