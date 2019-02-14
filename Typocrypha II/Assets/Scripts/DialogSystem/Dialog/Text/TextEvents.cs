@@ -1,9 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.Video;
 
 public delegate IEnumerator TextEventDel(string[] opt);
 
@@ -32,7 +29,6 @@ public class TextEvents : MonoBehaviour
 {
 	public static TextEvents instance = null;
 	public Dictionary<string, TextEventDel> textEventMap; // Map of commands to text event handles.
-    public List<Coroutine> currRunning; // All currently running text events.
 
     void Awake()
     {
@@ -45,11 +41,11 @@ public class TextEvents : MonoBehaviour
             Destroy(this);
             return;
         }
-
-        currRunning = new List<Coroutine>();
+        
         textEventMap = new Dictionary<string, TextEventDel>
         {
             {"pause", Pause},
+            {"shake", ScreenShake }
         };
     }
 
@@ -61,30 +57,12 @@ public class TextEvents : MonoBehaviour
     /// <returns>Coroutine of event (null if none).</returns>
     public Coroutine PlayEvent(string evt, string[] opt)
     {
-        TextEventDel textEvent;
-        if (!textEventMap.TryGetValue(evt, out textEvent))
+        if (!textEventMap.TryGetValue(evt, out TextEventDel textEvent))
         {
             Debug.LogException(new System.Exception("Bad text event parameters:" + evt));
         }
         Coroutine cr = StartCoroutine(textEvent(opt));
-        currRunning.Add(cr);
         return cr;
-    }
-
-    /// <summary>
-    /// Stops all currently running events.
-    /// </summary>
-    public void stopEvents()
-    {
-        while (currRunning.Count != 0)
-        {
-            Coroutine cr = currRunning[0];
-            currRunning.RemoveAt(0);
-            if (cr != null)
-            {
-                StopCoroutine(cr);
-            }
-        }
     }
 
     ///**************************** TEXT EVENTS *****************************/
@@ -93,7 +71,9 @@ public class TextEvents : MonoBehaviour
     /// Pauses text scroll for a fixed amount of time.
     /// Automatically unpauses if text scroll is done.
     /// </summary>
-    /// <param name="opt">[0]:float: Length of pause.</param>
+    /// <param name="opt">
+    /// [0]:float: Length of pause.
+    /// </param>
     IEnumerator Pause(string[] opt)
     {
         DialogManager.instance.dialogBox.Pause = true;
@@ -107,24 +87,20 @@ public class TextEvents : MonoBehaviour
         DialogManager.instance.dialogBox.Pause = false;
     }
 
-    //	// shakes the screen
-    //	// input: [0]: float, length of shake
-    //	//        [1]: float, intensity of shake
-    //	IEnumerator screenShake(string[] opt) {
-    //		Transform cam_tr = main_camera.transform;
-    //		Vector3 old_cam_pos = cam_tr.position;
-    //		float[] opts = opt.Select((string str) => float.Parse(str)).ToArray();
-    //		float curr_time = 0;
-    //		float wait_time = opts [0] / 4;
-    //		while (curr_time < wait_time) {
-    //			Vector3 new_pos = Random.insideUnitCircle * opts [1];
-    //			new_pos.z = old_cam_pos.z;
-    //			cam_tr.position = new_pos;
-    //			yield return new WaitForSeconds (0.06f);
-    //			curr_time += 0.06f;
-    //		}
-    //		cam_tr.position = new Vector3(0,0,-10);
-    //	}
+    /// <summary>
+    /// Shakes the screen.
+    /// </summary>
+    /// <param name="opt">
+    /// [0]: float, intensity of shake.
+    /// [1]: float, length of shake.
+    /// </param>
+    IEnumerator ScreenShake(string[] opt)
+    {
+        Coroutine shake = CameraManager.instance.Shake(float.Parse(opt[0]), float.Parse(opt[1]));
+        yield return new WaitUntil(() => DialogManager.instance.dialogBox.IsDone);
+        CameraManager.instance.ResetCamera();
+        yield return true;
+    }
 
     //	// fades the screen in or out
     //	// input: [0]: [in|out], 'in' re-reveals screen, 'out' hides it

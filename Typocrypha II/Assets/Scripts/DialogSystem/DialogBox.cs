@@ -26,15 +26,24 @@ public class DialogBox : MonoBehaviour, IPausable
     }
     #endregion
 
-    public float scrollDelay = 0.1f; // Delay in showing characters for text scroll
+    #region Constants
+    const float defaultScrollDelay = 0.05f; // Default text scrolling speed.
+    const int defaultSpeechInterval = 3; // Default number of text scrolls before speech sfx plays
+    #endregion
+
+    float scrollDelay; // Delay in showing characters for text scroll.
     public float ScrollDelay
     {
         get
         {
-            return scrollDelay /* * scrollScale*/; // Scale based on speed changes
+            return scrollDelay /* * scrollScale*/; // Scale based on speed changes.
+        }
+        set
+        {
+            scrollDelay = value;
         }
     }
-    public int speechInterval = 3; // Number of character scrolls before speech sfx plays
+    int speechInterval; // Number of character scrolls before speech sfx plays
 
     public FXText.Color hideText; // Allows for hiding parts of text (for scrolling)
     public Text dialogText; // Text display component
@@ -52,6 +61,12 @@ public class DialogBox : MonoBehaviour, IPausable
         {
             return scrollCR == null;
         }
+    }
+
+    void Awake()
+    {
+        ScrollDelay = defaultScrollDelay;
+        speechInterval = defaultSpeechInterval;
     }
 
     /// <summary>
@@ -101,6 +116,7 @@ public class DialogBox : MonoBehaviour, IPausable
 	// Scrolls text character by character
 	IEnumerator TextScrollCR()
     {
+        yield return null;
         hideText.ind[0] = 0;
         hideText.ind[1] = dialogItem.text.Length;
         int pos = 0;
