@@ -82,7 +82,6 @@ public class DialogBox : MonoBehaviour, IPausable
                 Destroy(fxText);
             }
         }
-        Pause = false; // Unpause.
     }
 
     /// <summary>
@@ -90,8 +89,6 @@ public class DialogBox : MonoBehaviour, IPausable
     /// </summary>
     public void DumpText()
     {
-		TextEvents.instance.stopEvents(); // Stop currently running text events.
-        Pause = false; // Unpause.
         // End text scroll and display all text.
         if (!IsDone)
         {
@@ -126,19 +123,15 @@ public class DialogBox : MonoBehaviour, IPausable
 	}
 
 	// Checks for and plays text events
-	IEnumerator CheckEvents(int start_pos)
+	IEnumerator CheckEvents(int startPos)
     {
-        //if (start_pos >= d_item.text_events.Length)
-        //	yield break;
-        //List<TextEvent> evt_list = d_item.text_events [start_pos];
-        //if (evt_list != null && evt_list.Count > 0) {
-        //	foreach (TextEvent t in evt_list) {
-        //		TextEvents.main.evt_queue.Enqueue(TextEvents.main.playEvent (t.evt, t.opt));
-        //		if (t.evt == "pause")
-        //			yield return new WaitForSeconds (float.Parse(t.opt[0]));
-        //	}
-        //	d_item.text_events [start_pos] = null;
-        //}
+        while(dialogItem.TextEventList.Count > 0 && dialogItem.TextEventList[0].pos == startPos)
+        {
+            TextEvent te = dialogItem.TextEventList[0];
+            dialogItem.TextEventList.RemoveAt(0);
+            TextEvents.instance.PlayEvent(te.evt, te.opt);
+            yield return new WaitWhile(() => Pause); // Wait on pause.
+        }
         yield return null;
 	}
 }

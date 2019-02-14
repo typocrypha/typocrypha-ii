@@ -70,7 +70,7 @@ public class DialogParser : MonoBehaviour
 			}
             else if (c == TextEventDelim[0] || c == TextEventDelim[1]) // Text Event
             { 
-				i = parseTextEvent (i, text, parsed, dialogItem);
+				i = ParseTextEvent (i, text, parsed, dialogItem);
 			}
             else if (!tag)
             {
@@ -112,7 +112,7 @@ public class DialogParser : MonoBehaviour
 	}
 
 	// Parses a Text Event
-	int parseTextEvent(int startPos, string text, StringBuilder parsed, DialogItem dialogItem)
+	int ParseTextEvent(int startPos, string text, StringBuilder parsed, DialogItem dialogItem)
     {
 		int endPos = text.IndexOf (TextEventDelim[1], startPos);
 		int eqPos = text.IndexOf (TextEventDelim[2], startPos);

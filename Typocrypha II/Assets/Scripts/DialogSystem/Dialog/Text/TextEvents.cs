@@ -15,7 +15,8 @@ public struct TextEvent
 	public string evt; // Name of event
 	public string[] opt; // Options of event
     public int pos; // Position in text of event
-	public TextEvent(string evt, string[] opt, int pos) {
+	public TextEvent(string evt, string[] opt, int pos)
+    {
 		this.evt = evt;
 		this.opt = opt;
         this.pos = pos;
@@ -24,82 +25,14 @@ public struct TextEvent
 
 /// <summary>
 /// Event class for events during text dialogue.
+/// Individual events are Coroutine handles.
+/// Events should handle by themselves the case where dialog is skipped mid scroll.
 /// </summary>
 public class TextEvents : MonoBehaviour
 {
 	public static TextEvents instance = null;
 	public Dictionary<string, TextEventDel> textEventMap; // Map of commands to text event handles.
     public List<Coroutine> currRunning; // All currently running text events.
-
-//	public SpriteRenderer dimmer; // sprite used to cover screen for fade/dim effects
-//	public GameObject center_text; // for showing floating text in the center
-//	public Camera main_camera; // main camera object
-//	public GameObject dialogue_box; // dialogue box object
-//	public GameObject glitch_effect; // sprite used for glitch effect
-//	public GameObject screen_frame; // screenframe object
-//	public Transform float_text_view; // view for floating text
-//	public GameObject float_d_box_prefab; // floating text dialogue box prefab
-//	public Animator train_animator; // animator component for train
-//	public SpriteRenderer train_sprite; // sprite renderer for train 
-//	public Text train_text; // Text for displaying next destination text
-//	public Animator train_text_animator; // Text animator for displaying next destination text
-//	public Animator eye_frame_animator; // animator for evil eye frame
-//	public GameObject credits_obj; // credits prefab
-//	public VideoPlayer credits_video; // credits video player
-//	public GameObject credits_stinger_obj; // credits stinger prefab
-//	public Sprite[] trainsition_sprites;
-
-//	AssetBundle train_bundle; // asset bundle for train sprites
-
-//	void Awake() {
-//		main = this;
-//		train_bundle = AssetBundle.LoadFromFile (System.IO.Path.Combine(Application.streamingAssetsPath, "train_sprites"));
-//		is_prompt = false;
-//		evt_queue = new Queue<Coroutine> ();
-//		text_event_map = new Dictionary<string, TextEventDel> {
-//			{"screen-shake", screenShake},
-//			{"pause", pause},
-//			{"fade", fade},
-//			{"center-text-scroll", centerTextScroll},
-//			{"center-text-fade", centerTextFade},
-//			{"play-sfx", playSFX},
-//			{"play-music", playMusic},
-//			{"play-bgm", playMusic},
-//			{"stop-music", stopMusic},
-//			{"stop-bgm", stopMusic},
-//			{"fade-music", fadeMusic},
-//			{"fade-bgm", fadeMusic},
-//			{"set-scroll-scale", setScrollScale},
-//			{"set-bg", setBG},
-//			{"hide-text-box", hideTextBox},
-//			{"set-talk-sfx", setTalkSFX},
-//			{"highlight-character", highlightCharacter},
-//			{"sole-highlight", soleHighlight},
-//            {"sole-highlight-codec", soleHighlightCodec},
-//			{"remove-character", removeCharacter},
-//			{"remove-all-character", removeAllCharacter},
-//			{"glitch", glitch},
-//			{"set-name", setName},
-//            {"set-info", setInfo},
-//			{"frame", frame},
-//			{"heal-player", healPlayer},
-//			{"clear-log", clearTextLog},
-//			{"float-text", floatText},
-//			{"multi-float-text", multiFloatText},
-//			{"train-switch", trainSwitch},
-//			{"train-transition", trainTransition},
-//			{"train-sign", trainSign},
-//			{"train-chr-pos", trainChrPos},
-//			{"eye-emote", eyeEmote},
-//			{"train-text", trainTextShow},
-//			{"reset-camera", resetCamera},
-//			{"credits", credits},
-//			{"credits-play", creditsPlay},
-//			{"credits-stinger", creditsStinger},
-//			{"quit-game", quitGame},
-//			{"block-pause", blockPause}
-//		};
-//	}
 
     void Awake()
     {
@@ -113,9 +46,10 @@ public class TextEvents : MonoBehaviour
             return;
         }
 
+        currRunning = new List<Coroutine>();
         textEventMap = new Dictionary<string, TextEventDel>
         {
-            {"pause", pause},
+            {"pause", Pause},
         };
     }
 
@@ -125,7 +59,7 @@ public class TextEvents : MonoBehaviour
     /// <param name="evt">Name of event.</param>
     /// <param name="opt">Parameters to event.</param>
     /// <returns>Coroutine of event (null if none).</returns>
-    public Coroutine playEvent(string evt, string[] opt)
+    public Coroutine PlayEvent(string evt, string[] opt)
     {
         TextEventDel textEvent;
         if (!textEventMap.TryGetValue(evt, out textEvent))
@@ -135,15 +69,6 @@ public class TextEvents : MonoBehaviour
         Coroutine cr = StartCoroutine(textEvent(opt));
         currRunning.Add(cr);
         return cr;
-    }
-
-    // Pauses text scroll for a fixed amount of time.
-    // input: [0]: float, length of pause.
-    IEnumerator pause(string[] opt)
-    {
-        DialogManager.instance.dialogBox.Pause = true;
-        yield return new WaitForSeconds(float.Parse(opt[0]));
-        DialogManager.instance.dialogBox.Pause = false;
     }
 
     /// <summary>
@@ -162,45 +87,25 @@ public class TextEvents : MonoBehaviour
         }
     }
 
-    //	// resets all the parameters that might have been changed
-    //	public void reset() {
-    //		main_camera.transform.position = new Vector3 (0,0,-10);
-    //		//DialogBox.PauseScroll = false;
-    //	}
-
-    //	// finishes up persistent events that might have been skipped (like removing a character)
-    //	public IEnumerator finishUp(List<TextEvent>[] text_events) {
-    //		foreach (List<TextEvent> text_event_pos in text_events) {
-    //			if (text_event_pos == null) continue;
-    //			foreach (TextEvent text_event in text_event_pos) {
-    //				switch (text_event.evt) {
-    //				case "next":
-    //				case "play-music":
-    //				case "play-bgm":
-    //				case "set-scroll-delay":
-    //				case "set-bg":
-    //				case "remove-character":
-    //				case "remove-all-character":
-    //				case "hide-text-box":
-    //					yield return playEvent (text_event.evt, text_event.opt);
-    //					break;
-    //				case "fade": // immediately finish fade
-    //					yield return playEvent (text_event.evt, new string[] {
-    //						text_event.opt [0],
-    //						"0",
-    //						text_event.opt [1],
-    //						text_event.opt [2],
-    //						text_event.opt [3]
-    //					});
-    //					break;
-    //				default:
-    //					break;
-    //				}
-    //			}
-    //		}
-    //	}
-
     ///**************************** TEXT EVENTS *****************************/
+
+    /// <summary>
+    /// Pauses text scroll for a fixed amount of time.
+    /// Automatically unpauses if text scroll is done.
+    /// </summary>
+    /// <param name="opt">[0]:float: Length of pause.</param>
+    IEnumerator Pause(string[] opt)
+    {
+        DialogManager.instance.dialogBox.Pause = true;
+        float time = 0f;
+        float endTime = float.Parse(opt[0]);
+        while (time < endTime && !DialogManager.instance.dialogBox.IsDone)
+        {
+            yield return new WaitForFixedUpdate();
+            time += Time.fixedDeltaTime;
+        }
+        DialogManager.instance.dialogBox.Pause = false;
+    }
 
     //	// shakes the screen
     //	// input: [0]: float, length of shake
@@ -219,14 +124,6 @@ public class TextEvents : MonoBehaviour
     //			curr_time += 0.06f;
     //		}
     //		cam_tr.position = new Vector3(0,0,-10);
-    //	}
-
-    //	// causes dialogue and cutscene to pause: it is recommended to also block
-    //	// input: [0]: float, length of pause
-    //	IEnumerator pause(string[] opt) {
-    //		DialogBox.PauseScroll = true; // pause text scroll
-    //		yield return new WaitForSeconds (float.Parse (opt [0]));
-    //		DialogBox.PauseScroll = false;
     //	}
 
     //	// fades the screen in or out
