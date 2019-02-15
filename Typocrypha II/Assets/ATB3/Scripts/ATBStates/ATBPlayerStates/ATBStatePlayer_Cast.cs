@@ -20,8 +20,8 @@ namespace ATB3
         // Call on fixed update while in given state
         public override void OnUpdate()
         {
-            if (!this.Owner.pause) timer += 1.0f;
-            if (timer >= 60.0f && !this.Owner.pause)
+            timer += Time.deltaTime;
+            if (timer >= 2.0f)
                 Source.PerformTransition(ATBTransition.ToAfterCast);
             return;
         }

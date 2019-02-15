@@ -59,6 +59,8 @@ namespace ATB3
 
         void FixedUpdate()
         {
+            if (owner.pause)
+                return;
             CurrentState.OnUpdate();
         }
 

@@ -25,6 +25,8 @@ namespace ATB3
         ToCharge,
         ExitStun,
         ToIdle,
+        ToAllyMenu,
+        ToCastDisabled,
     }
 
     //================================================================//
