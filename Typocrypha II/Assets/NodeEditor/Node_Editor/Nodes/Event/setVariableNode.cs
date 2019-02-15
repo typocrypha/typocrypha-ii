@@ -6,7 +6,7 @@ namespace Gameflow
 {
 
     [Node(false, "Event/Set Variable", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
-    public class setVariableNode : BaseNodeIO
+    public class SetVariableNode : BaseNodeIO
     {
         public override string Title { get { return "Set Variable"; } }
         public override Vector2 MinSize { get { return new Vector2(150, 50); } }
