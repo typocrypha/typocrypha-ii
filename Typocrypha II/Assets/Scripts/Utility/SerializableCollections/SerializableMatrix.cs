@@ -77,5 +77,6 @@ public class Serializable2DMatrix<T> : IEnumerable<T>
 }
 
 [System.Serializable] public class BoolMatrix2D : Serializable2DMatrix<bool> { public BoolMatrix2D(int rows, int columns) : base(rows, columns) { } }
-[System.Serializable] public class IntMatrix2D : Serializable2DMatrix<bool> { public IntMatrix2D(int rows, int columns) : base(rows, columns) { } }
-[System.Serializable] public class FloatMatrix2D : Serializable2DMatrix<bool> { public FloatMatrix2D(int rows, int columns) : base(rows, columns) { } }
+[System.Serializable] public class IntMatrix2D : Serializable2DMatrix<int> { public IntMatrix2D(int rows, int columns) : base(rows, columns) { } }
+[System.Serializable] public class FloatMatrix2D : Serializable2DMatrix<float> { public FloatMatrix2D(int rows, int columns) : base(rows, columns) { } }
+[System.Serializable] public class GOMatrix2D : Serializable2DMatrix<GameObject> { public GOMatrix2D(int rows, int columns) : base(rows, columns) { } }
