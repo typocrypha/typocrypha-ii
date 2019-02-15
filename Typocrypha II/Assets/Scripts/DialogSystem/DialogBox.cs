@@ -76,9 +76,13 @@ public class DialogBox : MonoBehaviour, IPausable
     public void StartDialogBox(DialogItem dialogItem)
     {
         ResetDialogBox();
+        // Get dialog.
         this.dialogItem = dialogItem;
         DialogParser.instance.Parse(dialogItem, this);
         dialogText.text = dialogItem.text;
+        // Hide all text.
+        hideText.ind[0] = 0;
+        hideText.ind[1] = dialogItem.text.Length;
         // RESIZE DIALOGBOX
         scrollCR = StartCoroutine(TextScrollCR());
 	}
@@ -88,6 +92,8 @@ public class DialogBox : MonoBehaviour, IPausable
     /// </summary>
     public void ResetDialogBox()
     {
+        // Remove old text
+        dialogText.text = "";
         // Remove old text effects.
         var fxTexts = dialogText.GetComponents<FXText.FXTextBase>();
         foreach (var fxText in fxTexts)
@@ -117,8 +123,6 @@ public class DialogBox : MonoBehaviour, IPausable
 	IEnumerator TextScrollCR()
     {
         yield return null;
-        hideText.ind[0] = 0;
-        hideText.ind[1] = dialogItem.text.Length;
         int pos = 0;
 		while (pos < dialogItem.text.Length)
         {

@@ -11,14 +11,11 @@ public enum Pronoun { FEMININE, INCLUSIVE, FIRSTNAME, MASCULINE };
 public class PlayerDataManager : MonoBehaviour
 {
 	public static PlayerDataManager instance = null; // global static ref
-
-	public Sprite[] player_sprites; // all options for player sprites
-	public SpriteRenderer player_sprite_r; // where player sprite is rendered
     public Dictionary<string, string> tmpData; // Temporary pure string-string map
 
-    public string PlayerName { get { return getData("player-name"); } set {setData("player-name", value);} }
+    public string PlayerName { get { return GetData("player-name"); } set {SetData("player-name", value);} }
     private const string lastInputKey = "prompt";
-    public string LastPlayerInput { get { return getData(lastInputKey); } set { setData(lastInputKey, value); } }
+    public string LastPlayerInput { get { return GetData(lastInputKey); } set { SetData(lastInputKey, value); } }
 	public Pronoun player_pronoun { get; set; }
 
     private void Awake()
@@ -34,13 +31,14 @@ public class PlayerDataManager : MonoBehaviour
         }
         else
         {
-            Destroy(this);
+            Destroy(gameObject);
             return;
         }
+        DontDestroyOnLoad(gameObject);
     }
 
     // return an info string from the info map, or throw an exception if one does not exist
-    public string getData(string key)
+    public string GetData(string key)
     {
         if (tmpData.ContainsKey(key))
         {
@@ -51,7 +49,7 @@ public class PlayerDataManager : MonoBehaviour
     }
 
     // set an info string in the info map
-    public void setData(string key, string data)
+    public void SetData(string key, string data)
     {
         if (tmpData.ContainsKey(key))
         {
@@ -62,10 +60,4 @@ public class PlayerDataManager : MonoBehaviour
             tmpData.Add(key, data);
         }
     }
-
-	// set player's pronoun
-	public void setPronoun(int ind)
-    {
-		player_pronoun = (Pronoun)ind;
-	}
 }

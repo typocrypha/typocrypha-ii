@@ -27,7 +27,7 @@ public class DialogGraphParser : MonoBehaviour
         if (b.exprType == GameflowBranchNode.controlExpressionType.Last_Input)
             value = PlayerDataManager.instance.LastPlayerInput;
         else
-            value = PlayerDataManager.instance.getData(b.variableName);
+            value = PlayerDataManager.instance.GetData(b.variableName);
         foreach (var brCase in b.cases)
         {
             if (brCase.type == GameflowBranchNode.BranchCase.CaseType.Regex)
