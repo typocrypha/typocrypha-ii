@@ -59,11 +59,13 @@ namespace ATB3
             while (charge + Time.fixedDeltaTime < chargeTime)
             {
                 // Charge while in charge state
+                //Debug.Log("CHARGING...");
                 do yield return new WaitForFixedUpdate();
-                while (pause || !isCurrentState("Charge"));
+                while (pause || !isCurrentState(ATBStateID.Charge));
                 charge += Time.fixedDeltaTime;
             }
             charge = chargeTime;
+            //Debug.Log("DONE CHARGING");
             //sendEvent("enemyPreCast");
             chargeCRObj = null;
         }

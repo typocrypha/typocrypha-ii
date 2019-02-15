@@ -26,7 +26,7 @@ namespace ATB3
 
         // map of all the machine's transitions and their end point states
         // (override and define this in individual child state machines)
-        private Dictionary<ATBTransition, ATBStateID> transitionMap = new Dictionary<ATBTransition, ATBStateID>();
+        protected Dictionary<ATBTransition, ATBStateID> transitionMap = new Dictionary<ATBTransition, ATBStateID>();
         // list of all the states allowed in this machine 
         // (because you have to call [new ATBStateBlah()] for each state, add to list on awake())
         private List<ATBState> states = new List<ATBState>();
@@ -49,7 +49,8 @@ namespace ATB3
         void Awake()
         {
             InitializeStates();
-            foreach(ATBState state in states)
+            InitializeTransitions();
+            foreach (ATBState state in states)
             {
                 state.SetOwner(owner);
             }
@@ -58,7 +59,7 @@ namespace ATB3
 
         void FixedUpdate()
         {
-            currentState.OnUpdate();
+            CurrentState.OnUpdate();
         }
 
         //----------------------------------------------------------------//
@@ -68,6 +69,7 @@ namespace ATB3
         // Appends the machine's states to the given state list (should be called on awake)
         // Add your states here!
         protected abstract void InitializeStates();
+        protected abstract void InitializeTransitions();
 
         /// <summary>
         /// This method places new states inside the FSM,
@@ -88,21 +90,40 @@ namespace ATB3
             {
                 states.Add(s);
                 currentState = s;
-                currentStateID = s.ID;
+                currentStateID = s.StateID;
+                //Debug.Log(owner.actorName + " intial current state is " + currentStateID.ToString());
                 return;
             }
 
             // Add the state to the List if it's not inside it
             foreach (ATBState state in states)
             {
-                if (state.ID == s.ID)
+                if (state.StateID == s.StateID)
                 {
-                    Debug.LogError("FSM ERROR: Impossible to add state " + s.ID.ToString() +
+                    Debug.LogError("FSM ERROR: Impossible to add state " + s.StateID.ToString() +
                                    " because state has already been added");
                     return;
                 }
             }
             states.Add(s);
+        }
+
+        public void AddTransition(ATBTransition trans, ATBStateID id)
+        {
+            // Check if anyone of the args is invalid
+            if (trans == ATBTransition.NullATBTransition)
+            {
+                Debug.LogError("FSMState ERROR: NullTransition is not allowed for a real transition");
+                return;
+            }
+
+            if (id == ATBStateID.NullATBStateID)
+            {
+                Debug.LogError("FSMState ERROR: NullStateID is not allowed for a real ID");
+                return;
+            }
+
+            transitionMap.Add(trans, id);
         }
 
         /// <summary>
@@ -127,8 +148,8 @@ namespace ATB3
             if (id == ATBStateID.PreviousState)
             {
                 ATBState tempState = previousState;
-                previousStateID = currentState.ID;
-                currentStateID = tempState.ID;
+                previousStateID = currentState.StateID;
+                currentStateID = tempState.StateID;
 
                 // Do the post processing of the state before setting the new one
                 currentState.OnExit();
@@ -153,7 +174,7 @@ namespace ATB3
                 currentStateID = id;
                 foreach (ATBState state in states)
                 {
-                    if (state.ID == currentStateID)
+                    if (state.StateID == currentStateID)
                     {
                         // Do the post processing of the state before setting the new one
                         currentState.OnExit();
@@ -193,7 +214,7 @@ namespace ATB3
                 previousState = currentState;
                 previousStateID = currentStateID;
                 currentState = state;
-                currentStateID = state.ID;
+                currentStateID = state.StateID;
             }
             return;
         }

@@ -161,7 +161,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 54014246}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f5e29ef8e6932c9438b5406924059196, type: 3}
   m_Name: 
@@ -186,12 +186,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 54014246}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a8c5918f465b0114d9c149b97a6cb08c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stateMachine: {fileID: 54014250}
+  StateMachine: {fileID: 0}
+  actorName: 
   isCast: 0
   castBar: {fileID: 1881965308}
   healthUI: {fileID: 0}
@@ -396,6 +397,7 @@ GameObject:
   - component: {fileID: 174588935}
   - component: {fileID: 174588934}
   - component: {fileID: 174588933}
+  - component: {fileID: 174588936}
   m_Layer: 5
   m_Name: EnemyTest_1
   m_TagString: Untagged
@@ -461,10 +463,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b102391bca357784187111215e33ef00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stateMachine: {fileID: 174588935}
+  StateMachine: {fileID: 174588936}
+  actorName: Revolver Ocelot
   isCast: 0
   chargeUI: {fileID: 1886391678}
-  chargeTime: 5
+  chargeTime: 3
 --- !u!95 &174588935
 Animator:
   serializedVersion: 3
@@ -484,6 +487,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &174588936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 174588931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee29449737e302544b35d6c94739153f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  owner: {fileID: 174588934}
 --- !u!1 &239275082
 GameObject:
   m_ObjectHideFlags: 0
@@ -690,7 +706,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 324933814}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f5e29ef8e6932c9438b5406924059196, type: 3}
   m_Name: 
@@ -711,12 +727,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 324933814}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6118bb32e3bc3f94c8ddd61c6eb74cad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stateMachine: {fileID: 324933818}
+  StateMachine: {fileID: 0}
+  actorName: 
   isCast: 0
   castBar: {fileID: 75263164}
 --- !u!95 &324933818
@@ -3341,6 +3358,7 @@ GameObject:
   - component: {fileID: 1930574220}
   - component: {fileID: 1930574219}
   - component: {fileID: 1930574218}
+  - component: {fileID: 1930574221}
   m_Layer: 5
   m_Name: EnemyTest_0
   m_TagString: Untagged
@@ -3406,10 +3424,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b102391bca357784187111215e33ef00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stateMachine: {fileID: 1930574220}
+  StateMachine: {fileID: 1930574221}
+  actorName: Psycho Mantis
   isCast: 0
   chargeUI: {fileID: 1998960455}
-  chargeTime: 3
+  chargeTime: 5
 --- !u!95 &1930574220
 Animator:
   serializedVersion: 3
@@ -3429,6 +3448,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1930574221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1930574216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee29449737e302544b35d6c94739153f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  owner: {fileID: 1930574219}
 --- !u!1 &1938883856
 GameObject:
   m_ObjectHideFlags: 0

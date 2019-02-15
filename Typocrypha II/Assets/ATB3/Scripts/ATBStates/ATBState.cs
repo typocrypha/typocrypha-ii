@@ -17,12 +17,12 @@ namespace ATB3
     public enum ATBTransition
     {
         NullATBTransition = 0, // Use this transition to represent a non-existing transition in your system
-        Stun,
-        ChargeFinish,
-        CastStart,
-        CastPerform,
-        CastEnd,
-        ChargeStart,
+        ToStun,
+        ToPreCast,
+        ToBeforeCast,
+        ToCast,
+        ToAfterCast,
+        ToCharge,
         ExitStun,
     }
 
@@ -63,8 +63,8 @@ namespace ATB3
     [System.Serializable]
     public abstract class ATBState
     {
-        protected ATBStateID stateID;
-        public ATBStateID ID { get { return stateID; } set { stateID = value; } }
+        //protected ATBStateID stateID = 0;
+        public virtual ATBStateID StateID { get { return ATBStateID.NullATBStateID; } }
         private ATBActor owner; 
         public ATBActor Owner { get { return owner; } set { owner = value; } }
         private ATBStateMachine source;

@@ -4,21 +4,10 @@ using UnityEngine;
 
 namespace ATB3
 {
-    public partial class ATBStateEnemy_Stunned : ATBState
+    public class ATBStateEnemy_Stunned : ATBState
     {
         // The ID for this specific ATBState
-        protected new ATBStateID stateID = ATBStateID.Stunned;
-
-        public ATBStateEnemy_Stunned()
-        {
-            Owner = null;
-            Source = null;
-        }
-        public ATBStateEnemy_Stunned(ATBActor actor, ATBStateMachine machine)
-        {
-            Owner = actor;
-            Source = machine;
-        }
+        public override ATBStateID StateID { get { return ATBStateID.Stunned; } }
 
         // Call upon entering given state
         public override void OnEnter()

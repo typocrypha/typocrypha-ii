@@ -18,7 +18,7 @@ namespace ATB3
         //----------------------------------------------------------------//
 
         private bool _paused; // Is the actor paused?
-        public ATBStateMachine stateMachine; // State machine for this actor
+        public ATBStateMachine StateMachine; // State machine for this actor
         public string actorName; // Name of actor (debug)
 
         public bool pause // Is this actor paused or not?
@@ -42,10 +42,10 @@ namespace ATB3
         public abstract void Setup();
 
         // Checks if the current state name matches given string
-        public bool isCurrentState(string stateName)
+        public bool isCurrentState(ATBStateID stateID)
         {
             //return currStateHash == Animator.StringToHash(stateName);
-            return false;
+            return StateMachine.CurrentStateID == stateID;
         }
     }
 }

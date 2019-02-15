@@ -52,7 +52,7 @@ namespace ATB3
                 // Charge while in charge state
                 else
                 {
-                    if (!pause && isCurrentState("Charge"))
+                    if (!pause && isCurrentState(ATBStateID.Charge))
                         mana += manaRate * Time.fixedDeltaTime;
                 }
             }

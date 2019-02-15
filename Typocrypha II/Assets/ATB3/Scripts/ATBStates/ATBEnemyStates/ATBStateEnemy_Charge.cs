@@ -4,26 +4,15 @@ using UnityEngine;
 
 namespace ATB3
 {
-    public partial class ATBStateEnemy_Charge : ATBState
+    public class ATBStateEnemy_Charge : ATBState
     {
         // The ID for this specific ATBState
-        protected new ATBStateID stateID = ATBStateID.Charge;
-
-        public ATBStateEnemy_Charge()
-        {
-            Owner = null;
-            Source = null;
-        }
-        public ATBStateEnemy_Charge(ATBActor actor, ATBStateMachine machine)
-        {
-            Owner = actor;
-            Source = machine;
-        }
+        public override ATBStateID StateID { get { return ATBStateID.Charge; } }
 
         // Call upon entering given state
         public override void OnEnter()
-        {
-            Debug.Log("ENEMY " + this.Owner.actorName + " has ENTERED the CHARGE state!");
+        {    
+            Debug.Log("ENEMY " + this.Owner.actorName + " has ENTERED the CHARGE state! (id: " + StateID.ToString() + ")");
             ((ATBEnemy)this.Owner).startCharge();
         }
 
@@ -31,6 +20,10 @@ namespace ATB3
         public override void OnUpdate()
         {
             // Source.PerformTransition(ATBTransition.ChargeFinish);
+            if (((ATBEnemy)this.Owner).charge >= ((ATBEnemy)this.Owner).chargeTime)
+            {
+                Source.PerformTransition(ATBTransition.ToPreCast);
+            }
             return;
         }
 

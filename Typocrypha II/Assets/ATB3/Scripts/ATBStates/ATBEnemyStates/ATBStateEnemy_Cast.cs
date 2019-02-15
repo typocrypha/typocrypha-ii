@@ -4,21 +4,10 @@ using UnityEngine;
 
 namespace ATB3
 {
-    public partial class ATBStateEnemy_Cast : ATBState
+    public class ATBStateEnemy_Cast : ATBState
     {
         // The ID for this specific ATBState
-        protected new ATBStateID stateID = ATBStateID.Cast;
-
-        public ATBStateEnemy_Cast()
-        {
-            Owner = null;
-            Source = null;
-        }
-        public ATBStateEnemy_Cast(ATBActor actor, ATBStateMachine machine)
-        {
-            Owner = actor;
-            Source = machine;
-        }
+        public override ATBStateID StateID { get { return ATBStateID.Cast; } }
 
         // Call upon entering given state
         public override void OnEnter()
@@ -30,7 +19,7 @@ namespace ATB3
         // Call on fixed update while in given state
         public override void OnUpdate()
         {
-            // Source.PerformTransition(ATBTransition.CastEnd);
+            Source.PerformTransition(ATBTransition.ToAfterCast);
             return;
         }
 
