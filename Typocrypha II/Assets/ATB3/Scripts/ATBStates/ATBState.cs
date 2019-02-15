@@ -24,6 +24,7 @@ namespace ATB3
         ToAfterCast,
         ToCharge,
         ExitStun,
+        ToIdle,
     }
 
     //================================================================//

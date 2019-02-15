@@ -11,6 +11,15 @@ namespace ATB3
             Setup();
         }
 
+        void Update()
+        {
+            if (castBar.input.isFocused && castBar.input.text != "" && Input.GetKey(KeyCode.Return))
+            {
+                cast();
+                castBar.input.text = "";
+            }
+        }
+
         public override void Setup()
         {
             castBar.hidden = false;
@@ -20,6 +29,7 @@ namespace ATB3
         // Called when player enters a spell into the cast bar
         public void cast()
         {
+            StateMachine.PerformTransition(ATBTransition.ToBeforeCast);
             //sendEvent("playerStartCast");
         }
 

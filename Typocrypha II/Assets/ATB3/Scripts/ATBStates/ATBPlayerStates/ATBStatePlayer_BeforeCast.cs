@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ATB3
 {
-    public class ATBStateEnemy_BeforeCast : ATBState
+    public class ATBStatePlayer_BeforeCast : ATBState
     {
         // The ID for this specific ATBState
         public override ATBStateID StateID { get { return ATBStateID.BeforeCast; } }
@@ -12,8 +12,8 @@ namespace ATB3
         // Call upon entering given state
         public override void OnEnter()
         {
-            Debug.Log("ENEMY " + this.Owner.actorName + " has ENTERED the BEFORECAST state!");
-            // THIS IS WHERE THE ENEMY SHOULD GET SOLO'D
+            Debug.Log("PLAYER " + this.Owner.actorName + " has ENTERED the BEFORECAST state!");
+            // THIS IS WHERE THE PLAYER SHOULD GET SOLO'D
             ATBManager.Instance.enterSolo(this.Owner);
             this.Owner.isCast = true;
         }
@@ -28,7 +28,7 @@ namespace ATB3
         // Call upon exiting given state
         public override void OnExit()
         {
-            Debug.Log("ENEMY " + this.Owner.actorName + " has EXITED the BEFORECAST state!");
+            Debug.Log("PLAYER " + this.Owner.actorName + " has EXITED the BEFORECAST state!");
         }
     }
 }

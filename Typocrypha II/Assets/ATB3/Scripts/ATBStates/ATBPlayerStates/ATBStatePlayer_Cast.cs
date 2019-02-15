@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ATB3
 {
-    public class ATBStateEnemy_Cast : ATBState
+    public class ATBStatePlayer_Cast : ATBState
     {
         // The ID for this specific ATBState
         public override ATBStateID StateID { get { return ATBStateID.Cast; } }
@@ -13,7 +13,7 @@ namespace ATB3
         // Call upon entering given state
         public override void OnEnter()
         {
-            Debug.Log("ENEMY " + this.Owner.actorName + " has ENTERED the CAST state!");
+            Debug.Log("PLAYER " + this.Owner.actorName + " has ENTERED the CAST state!");
             timer = 0.0f;
         }
 
@@ -29,7 +29,7 @@ namespace ATB3
         // Call upon exiting given state
         public override void OnExit()
         {
-            Debug.Log("ENEMY " + this.Owner.actorName + " has EXITED the CAST state!");
+            Debug.Log("PLAYER " + this.Owner.actorName + " has EXITED the CAST state!");
         }
     }
 }

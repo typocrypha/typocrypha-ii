@@ -10,8 +10,22 @@ namespace ATB3
     // also contains all events that can be sent.
     //================================================================//
 
-    public partial class ATBStateManager : MonoBehaviour
+    public partial class ATBManager : MonoBehaviour
     {
+        private static ATBManager _instance;
+        public static ATBManager Instance { get { return _instance; } }
+        private void Awake()
+        {
+            if (_instance != null)
+            {
+                Destroy(this.gameObject);
+            }
+            else
+            {
+                _instance = this;
+            }
+        }
+
         //----------------------------------------------------------------//
         // EVENT DATA                                                     //
         //----------------------------------------------------------------//
@@ -64,7 +78,7 @@ namespace ATB3
         }
 
         // Enter solo mode for this actor
-        void enterSolo(ATBActor soloActor)
+        public void enterSolo(ATBActor soloActor)
         {
             if (soloStack.Count == 0)
             {
@@ -78,7 +92,7 @@ namespace ATB3
         }
 
         // Exit solo mode for this actor (should be at top of stack)
-        void exitSolo(ATBActor soloActor)
+        public void exitSolo(ATBActor soloActor)
         {
             if (soloActor != soloStack.Pop())
                 Debug.LogError("StateManager: Solo Stack Mismatch");

@@ -8,17 +8,20 @@ namespace ATB3
     {
         // The ID for this specific ATBState
         public override ATBStateID StateID { get { return ATBStateID.PreCast; } }
+        private float timer = 0.0f;
 
         // Call upon entering given state
         public override void OnEnter()
         {
             Debug.Log("ENEMY " + this.Owner.actorName + " has ENTERED the PRECAST state!");
+            timer = 0.0f;
         }
 
         // Call on fixed update while in given state
         public override void OnUpdate()
         {
-            Source.PerformTransition(ATBTransition.ToBeforeCast);
+            if (!this.Owner.pause) timer += 1.0f;
+            if (timer >= 30.0f && !this.Owner.pause) Source.PerformTransition(ATBTransition.ToBeforeCast);
             return;
         }
 

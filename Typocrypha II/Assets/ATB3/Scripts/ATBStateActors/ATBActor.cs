@@ -29,7 +29,7 @@ namespace ATB3
             }
             set
             {
-                _paused = value ? false : true;
+                _paused = value;
             }
         }
         public bool isCast; // Is the actor in cast sequence? Isn't unset until all chains are finished.

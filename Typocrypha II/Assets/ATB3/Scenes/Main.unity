@@ -309,18 +309,7 @@ MonoBehaviour:
   m_CharacterLimit: 0
   m_OnEndEdit:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 324933817}
-        m_MethodName: cast
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: UnityEngine.UI.InputField+SubmitEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
   m_OnValueChanged:
@@ -467,7 +456,7 @@ MonoBehaviour:
   actorName: Revolver Ocelot
   isCast: 0
   chargeUI: {fileID: 1886391678}
-  chargeTime: 3
+  chargeTime: 4
 --- !u!95 &174588935
 Animator:
   serializedVersion: 3
@@ -670,6 +659,7 @@ GameObject:
   - component: {fileID: 324933818}
   - component: {fileID: 324933817}
   - component: {fileID: 324933816}
+  - component: {fileID: 324933819}
   m_Layer: 5
   m_Name: PlayerTest
   m_TagString: Untagged
@@ -706,7 +696,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 324933814}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f5e29ef8e6932c9438b5406924059196, type: 3}
   m_Name: 
@@ -727,13 +717,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 324933814}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6118bb32e3bc3f94c8ddd61c6eb74cad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StateMachine: {fileID: 0}
-  actorName: 
+  StateMachine: {fileID: 324933819}
+  actorName: Ayin
   isCast: 0
   castBar: {fileID: 75263164}
 --- !u!95 &324933818
@@ -755,6 +745,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &324933819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 324933814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e333f99642d983c499dcb63984e39e3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  owner: {fileID: 324933817}
 --- !u!1 &465768944
 GameObject:
   m_ObjectHideFlags: 0
