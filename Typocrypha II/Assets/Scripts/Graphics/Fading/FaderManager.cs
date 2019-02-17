@@ -54,4 +54,20 @@ public class FaderManager : MonoBehaviour
         }
         solo.FadeAmount = 0;
     }
+
+    /// <summary>
+    /// Fade all except one group, which is completely unfaded.
+    /// </summary>
+    /// <param name="solo">Fader to unfade.</param>
+    /// <param name="fadeAmount">Amount of fade for everything else.</param>
+    /// <param name="fadeColor">Color of fade for everything else.</param>
+    public void Solo(FaderGroup solo, float fadeAmount, Color fadeColor)
+    {
+        foreach (Fader f in allFaders)
+        {
+            f.FadeAmount = fadeAmount;
+            f.FadeColor = fadeColor;
+        }
+        solo.FadeAmount = 0;
+    }
 }
