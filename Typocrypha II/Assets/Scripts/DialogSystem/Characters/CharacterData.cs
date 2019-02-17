@@ -13,7 +13,7 @@ public class CharacterData : ScriptableObject
     public NameMap expressions; // Different facial expressions
     public NameMap codecs; // Different codec sprites
     public Sprite chat_icon; // Chat mode sprite
-    public UnityEngine.AudioClip talk_sfx; // Talking sound effect
+    public AudioClip talk_sfx; // Talking sound effect
 }
 
 // Serializable wrapper for dictionaries

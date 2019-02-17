@@ -10,7 +10,6 @@ public class CameraManager : MonoBehaviour
     public static CameraManager instance = null; // Global static instance.
     public Vector3 basePos = new Vector3(0f, 0f, -10f); // Default camera position.
     public Transform cameraTr; // Transform of the camera.
-    public GameObject faderPrefab; // Prefab of fader plane.
 
     void Awake()
     {

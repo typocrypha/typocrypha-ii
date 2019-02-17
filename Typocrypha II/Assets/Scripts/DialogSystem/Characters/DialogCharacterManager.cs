@@ -55,9 +55,22 @@ public class DialogCharacterManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Changes the pose of a character.
+    /// Generally, should be accompanied by a change in expression.
+    /// </summary>
+    /// <param name="data">Id of character selected.</param>
+    /// <param name="pose">New pose/base sprite.</param>
+    /// <returns>CharacterDialog component of selected character.</returns>
+    public DialogCharacter ChangePose(CharacterData data, string pose)
+    {
+        characterMap[data].Pose = data.poses[pose];
+        return characterMap[data];
+    }
+
+    /// <summary>
     /// Changes the expression of a character.
     /// </summary>
-    /// <param name="data">Id of character to change expression.</param>
+    /// <param name="data">Id of character selected.</param>
     /// <param name="expression">New expression.</param>
     /// <returns>CharacterDialog component of selected character.</returns>
     public DialogCharacter ChangeExpression(CharacterData data, string expression)
