@@ -128,7 +128,7 @@ public class DialogParser : MonoBehaviour
 			evt = text.Substring (startPos + 1, eqPos - startPos - 1);
 			opt = text.Substring (eqPos + 1, endPos - eqPos - 1).Split (optDelim);
 		}
-		dialogItem.TextEventList.Add(new TextEvent(evt, opt, startPos));
+		dialogItem.TextEventList.Add(new TextEvent(evt, opt, parsed.Length));
 		//Debug.Log ("  text_event:" + evt + ":" + opt.Aggregate("", (acc, next) => acc + "," + next));
 		return endPos;
 	}

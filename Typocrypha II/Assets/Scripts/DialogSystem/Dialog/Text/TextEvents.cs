@@ -45,7 +45,8 @@ public class TextEvents : MonoBehaviour
         textEventMap = new Dictionary<string, TextEventDel>
         {
             {"pause", Pause},
-            {"shake", ScreenShake }
+            {"shake", ScreenShake},
+            {"fade-screen", FadeScreen}
         };
     }
 
@@ -65,7 +66,7 @@ public class TextEvents : MonoBehaviour
         return cr;
     }
 
-    ///**************************** TEXT EVENTS *****************************/
+    /**************************** TEXT EVENTS *****************************/
 
     /// <summary>
     /// Pauses text scroll for a fixed amount of time.
@@ -99,7 +100,31 @@ public class TextEvents : MonoBehaviour
         Coroutine shake = CameraManager.instance.Shake(float.Parse(opt[0]), float.Parse(opt[1]));
         yield return new WaitUntil(() => DialogManager.instance.dialogBox.IsDone);
         CameraManager.instance.ResetCamera();
-        yield return true;
+    }
+
+    /// <summary>
+    /// Fades the screen.
+    /// </summary>
+    /// <param name="opt">
+    /// [0]: float, amount of time to get to fade.
+    /// [1]: float, starting amount of fade (0 to 1) (0: No fade).
+    /// [2]: float, ending amount of fade.
+    /// [3-5]: floats, rgb values (normalized) of color.
+    /// </param>
+    IEnumerator FadeScreen(string[] opt)
+    {
+        float time = 0f;
+        float endTime = float.Parse(opt[0]);
+        float init = float.Parse(opt[1]);
+        float target = float.Parse(opt[2]);
+        Color color = new Color(float.Parse(opt[3]), float.Parse(opt[4]), float.Parse(opt[5]), 1f);
+        while (time < endTime && !DialogManager.instance.dialogBox.IsDone)
+        {
+            FaderManager.instance.FadeAll(Mathf.Lerp(init, target, time / endTime), color);
+            yield return new WaitForFixedUpdate();
+            time += Time.fixedDeltaTime;
+        }
+        FaderManager.instance.FadeAll(target, color);
     }
 }
 

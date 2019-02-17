@@ -145,7 +145,7 @@ public class DialogBox : MonoBehaviour, IPausable
 	// Checks for and plays text events
 	IEnumerator CheckEvents(int startPos)
     {
-        while(dialogItem.TextEventList.Count > 0 && dialogItem.TextEventList[0].pos == startPos)
+        while (dialogItem.TextEventList.Count > 0 && dialogItem.TextEventList[0].pos <= startPos)
         {
             TextEvent te = dialogItem.TextEventList[0];
             dialogItem.TextEventList.RemoveAt(0);
