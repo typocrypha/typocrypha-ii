@@ -86,7 +86,15 @@ public class DialogGraphParser : MonoBehaviour
         else if(currNode is SetVariableNode)
         {
             var node = currNode as SetVariableNode;
-            PlayerDataManager.instance.setData(node.variableName, node.variableName);
+            PlayerDataManager.instance.SetData(node.variableName, node.variableName);
+        }
+        else if(currNode is CharacterControlNode)
+        {
+            if (currNode is AddCharacter)
+            {
+                var cNode = currNode as AddCharacter;
+                DialogCharacterManager.instance.AddCharacter(cNode.characterData, cNode.pos);
+            }
         }
         //Process other node types
         //Recursively move to next

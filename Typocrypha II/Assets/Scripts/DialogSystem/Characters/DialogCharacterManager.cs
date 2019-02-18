@@ -13,6 +13,9 @@ public class DialogCharacterManager : MonoBehaviour
     public Color hideTint; // Tint when character is not highlighted.
     Dictionary<CharacterData, DialogCharacter> characterMap; // Map of string ids to characters in scene.
 
+    const string defaultPose = "base";
+    const string defaultExpr = "normal";
+
     void Awake()
     {
         if (instance == null)
@@ -32,7 +35,10 @@ public class DialogCharacterManager : MonoBehaviour
     /// Adds a new character to the scene (given a CharacterData reference).
     /// </summary>
     /// <param name="data">CharacterData of character.</param>
-    /// <returns></returns>
+    /// <param name="baseSprite">Starting pose.</param>
+    /// <param name="expression">Starting expression.</param>
+    /// <param name="pos">Starting position.</param>
+    /// <returns>Reference to created character.</returns>
     public DialogCharacter AddCharacter(CharacterData data, string baseSprite, string expression, Vector2 pos)
     {
         GameObject go = Instantiate(characterPrefab, transform);
@@ -40,6 +46,23 @@ public class DialogCharacterManager : MonoBehaviour
         DialogCharacter dc = go.GetComponent<DialogCharacter>();
         dc.Pose = data.poses[baseSprite];
         dc.Expr = data.expressions[expression];
+        characterMap[data] = dc;
+        return dc;
+    }
+
+    /// <summary>
+    /// Adds a new character to the scene (given a CharacterData reference).
+    /// </summary>
+    /// <param name="data">CharacterData of character.</param>
+    /// <param name="pos">Starting position.</param>
+    /// <returns>Reference to created character.</returns>
+    public DialogCharacter AddCharacter(CharacterData data, Vector2 pos)
+    {
+        GameObject go = Instantiate(characterPrefab, transform);
+        go.transform.position = pos;
+        DialogCharacter dc = go.GetComponent<DialogCharacter>();
+        dc.Pose = data.poses[defaultPose];
+        dc.Expr = data.expressions[defaultExpr];
         characterMap[data] = dc;
         return dc;
     }
