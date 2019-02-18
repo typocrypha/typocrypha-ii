@@ -83,6 +83,11 @@ public class DialogGraphParser : MonoBehaviour
             if (currNode is DialogNodeAN)
                 return new DialogItemAN((currNode as DialogNodeAN).text);
         }
+        else if(currNode is SetVariableNode)
+        {
+            var node = currNode as SetVariableNode;
+            PlayerDataManager.instance.setData(node.variableName, node.variableName);
+        }
         //Process other node types
         //Recursively move to next
         return NextDialog();
