@@ -10,7 +10,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Graphic))]
 public class GraphicFader : Fader
 {
-    Graphic g; // Attached graphic.
+    Graphic graphic; // Attached graphic.
 
     public override float FadeAmount
     {
@@ -29,8 +29,8 @@ public class GraphicFader : Fader
         // Add fader to list of all faders.
         FaderManager.instance.allFaders.Add(this);
         // Add fade material.
-        g = GetComponent<Graphic>();
+        graphic = GetComponent<Graphic>();
         fadeMat = new Material(fadeShader);
-        g.material = fadeMat;
+        graphic.material = fadeMat;
     }
 }

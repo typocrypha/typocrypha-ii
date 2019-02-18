@@ -18,10 +18,9 @@ public class FaderManager : MonoBehaviour
         }
         else
         {
-            Destroy(gameObject);
+            Destroy(this);
             return;
         }
-        DontDestroyOnLoad(gameObject);
 
         allFaders = new List<Fader>();
     }
