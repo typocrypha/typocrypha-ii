@@ -25,9 +25,17 @@ public struct TextEvent
 /// Individual events are Coroutine handles.
 /// Events should handle by themselves the case where dialog is skipped mid scroll.
 /// </summary>
-public class TextEvents : MonoBehaviour
+public class TextEvents : MonoBehaviour, IPausable
 {
-	public static TextEvents instance = null;
+    #region IPausable
+    bool pause = false;
+    public bool Pause
+    {
+        get => pause;
+        set => pause = value; // Pause/unpause text events that take time
+    }
+    #endregion
+    public static TextEvents instance = null;
 	public Dictionary<string, TextEventDel> textEventMap; // Map of commands to text event handles.
 
     void Awake()
@@ -44,7 +52,7 @@ public class TextEvents : MonoBehaviour
         
         textEventMap = new Dictionary<string, TextEventDel>
         {
-            {"pause", Pause},
+            {"pause-dialog", PauseDialog},
             {"shake", ScreenShake},
             {"fade-screen", FadeScreen}
         };
@@ -75,13 +83,14 @@ public class TextEvents : MonoBehaviour
     /// <param name="opt">
     /// [0]:float: Length of pause.
     /// </param>
-    IEnumerator Pause(string[] opt)
+    IEnumerator PauseDialog(string[] opt)
     {
         DialogManager.instance.dialogBox.Pause = true;
         float time = 0f;
         float endTime = float.Parse(opt[0]);
         while (time < endTime && !DialogManager.instance.dialogBox.IsDone)
         {
+            yield return new WaitWhile(() => Pause);
             yield return new WaitForFixedUpdate();
             time += Time.fixedDeltaTime;
         }
@@ -120,6 +129,7 @@ public class TextEvents : MonoBehaviour
         Color color = new Color(float.Parse(opt[3]), float.Parse(opt[4]), float.Parse(opt[5]), 1f);
         while (time < endTime && !DialogManager.instance.dialogBox.IsDone)
         {
+            yield return new WaitWhile(() => Pause);
             FaderManager.instance.FadeAll(Mathf.Lerp(init, target, time / endTime), color);
             yield return new WaitForFixedUpdate();
             time += Time.fixedDeltaTime;

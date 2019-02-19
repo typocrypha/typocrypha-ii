@@ -8,8 +8,21 @@ using UnityEngine.UI;
 /// Starts and manages dialog sequences.
 /// </summary>
 [RequireComponent(typeof(DialogGraphParser))]
-public class DialogManager : MonoBehaviour
+public class DialogManager : MonoBehaviour, IPausable
 {
+    #region IPausable
+    public bool Pause
+    {
+        get => enabled;
+        set
+        {
+            enabled = value; // Disable input checking.
+            dialogBox.Pause = true; // Pause dialog box scrolling.
+            // PAUSE TEXT EVENTS
+        }
+    }
+    #endregion
+
     public static DialogManager instance = null;
     public bool startOnAwake = true; // Should dialog start when scene starts up?
     public List<DialogView> allViews; // All dialog views (VN, CHAT, etc)
