@@ -108,6 +108,11 @@ public class DialogGraphParser : MonoBehaviour
                     DialogCharacterManager.instance.TeleportCharacter(cNode.characterData, cNode.targetPos);
                 }
             }
+            else if (currNode is SetPose)
+            {
+                var cNode = currNode as SetPose;
+                DialogCharacterManager.instance.ChangePose(cNode.characterData, cNode.pose);
+            }
             else if (currNode is SetExpression)
             {
                 var cNode = currNode as SetExpression;
