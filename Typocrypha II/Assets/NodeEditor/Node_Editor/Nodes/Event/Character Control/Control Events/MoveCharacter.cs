@@ -39,15 +39,7 @@ namespace Gameflow
 
         public override void NodeGUI()
         {
-            #region Data
-            GUILayout.Space(5);
-            GUILayout.BeginVertical("Box");
-            GUILayout.BeginHorizontal();
-            GUILayout.Label(new GUIContent("Character", tooltipData), NodeEditorGUI.nodeLabel, GUILayout.Width(65f));
-            characterData = RTEditorGUI.ObjectField(characterData, false, GUILayout.Width(MinSize.x - 100f));
-            GUILayout.EndHorizontal();
-            GUILayout.EndVertical();
-            #endregion
+            base.NodeGUI();
 
             #region Position
             GUILayout.Label(new GUIContent("Position", tooltipPos), NodeEditorGUI.nodeLabelBoldCentered);

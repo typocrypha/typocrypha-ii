@@ -95,6 +95,11 @@ public class DialogGraphParser : MonoBehaviour
                 var cNode = currNode as AddCharacter;
                 DialogCharacterManager.instance.AddCharacter(cNode.characterData, cNode.targetPos);
             }
+            else if (currNode is RemoveCharacter)
+            {
+                var cNode = currNode as RemoveCharacter;
+                DialogCharacterManager.instance.RemoveCharacter(cNode.characterData);
+            }
             else if (currNode is MoveCharacter)
             {
                 var cNode = currNode as MoveCharacter;
