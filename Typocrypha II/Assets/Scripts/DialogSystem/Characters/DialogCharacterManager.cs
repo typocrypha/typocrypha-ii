@@ -78,6 +78,19 @@ public class DialogCharacterManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Moves character immediately to new position.
+    /// </summary>
+    /// <param name="data">CharacterData of character.</param>
+    /// <param name="pos">Target position.</param>
+    /// <returns></returns>
+    public DialogCharacter TeleportCharacter(CharacterData data, Vector2 pos)
+    {
+        DialogCharacter dc = characterMap[data];
+        dc.transform.position = pos;
+        return dc;
+    }
+
+    /// <summary>
     /// Changes the pose of a character.
     /// Generally, should be accompanied by a change in expression.
     /// </summary>

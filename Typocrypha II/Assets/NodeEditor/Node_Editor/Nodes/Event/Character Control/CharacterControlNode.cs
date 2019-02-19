@@ -15,5 +15,9 @@ namespace Gameflow
         public override bool AllowRecursion { get { return true; } }
 
         public CharacterData characterData;
+
+        #region Tooltip Strings
+        protected const string tooltipData = "The selected character's CharacterData";
+        #endregion
     }
 }

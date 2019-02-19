@@ -2,54 +2,64 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using NodeEditorFramework;
+using NodeEditorFramework.Utilities;
+
+using System;
+using Gameflow.GUIUtilities;
 
 namespace Gameflow
 {
-    public class MoveCharacter// : CharacterControlNode.EventData
+    public enum CharacterMovementType
     {
-        public enum MovementType
-        {
-            Set_Position,
-            Fade_In,
-            Fade_Out,
-            Crossfade,
-            Slide,
-        }
-        public MovementType moveType = MovementType.Set_Position;
+        Teleport, // Immediately move character.
+        Animation // Apply animation clip to character position. (UNIMPLEMENTED)
+    }
+    [Node(false, "Event/Character/Move Character", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
+    public class MoveCharacter : CharacterControlNode
+    {
+        public const string ID = "Move Character Node";
+        public override string GetID { get { return ID; } }
+
+        public override string Title { get { return "Move Character"; } }
+        public override Vector2 MinSize { get { return new Vector2(250, 60); } }
+
+        public CharacterMovementType movementType = CharacterMovementType.Teleport;
         public Vector2 targetPos = new Vector2(0, 0);
-        public float time = 1.0f;
-        private int addLines = 0;
 
-        //#region GUI
-        //public override void doGUI(Rect rect)
-        //{
-        //    Rect UIrect = new Rect(rect);
-        //    UIrect.height = EditorGUIUtility.singleLineHeight;
-        //    GUI.Label(UIrect, new GUIContent("Move Character", ""), new GUIStyle(GUIStyle.none) { alignment = TextAnchor.MiddleCenter });
-        //    UIrect.y += EditorGUIUtility.singleLineHeight + 1;
-        //    characterName = GUI.TextField(UIrect, characterName);
-        //    UIrect.y += EditorGUIUtility.singleLineHeight + 1;
-        //    moveType = (MovementType)EditorGUI.EnumPopup(UIrect, moveType);
-        //    UIrect.y += EditorGUIUtility.singleLineHeight + 1;
-        //    if (moveType != MovementType.Set_Position)
-        //    {
-        //        time = EditorGUI.FloatField(UIrect, time);
-        //        UIrect.y += EditorGUIUtility.singleLineHeight + 1;
-        //        addLines = 1;
-        //    }
-        //    else
-        //        addLines = 0;
-        //    targetPos = EditorGUI.Vector2Field(UIrect, "", targetPos);
-        //}
+        #region Tooltip Strings
+        protected const string tooltipPos = "Where to position character (center pivot)";
+        #endregion
 
-        //public override float Height
-        //{
-        //    get
-        //    {
-        //        return EditorGUIUtility.singleLineHeight * (4 + addLines) + (4 + addLines);
-        //    }
-        //}
-        //#endregion
+        protected override void OnCreate()
+        {
+            characterData = null;
+            targetPos = Vector2.zero;
+        }
+
+        public override void NodeGUI()
+        {
+            #region Data
+            GUILayout.Space(5);
+            GUILayout.BeginVertical("Box");
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(new GUIContent("Character", tooltipData), NodeEditorGUI.nodeLabel, GUILayout.Width(65f));
+            characterData = RTEditorGUI.ObjectField(characterData, false, GUILayout.Width(MinSize.x - 100f));
+            GUILayout.EndHorizontal();
+            GUILayout.EndVertical();
+            #endregion
+
+            #region Position
+            GUILayout.Label(new GUIContent("Position", tooltipPos), NodeEditorGUI.nodeLabelBoldCentered);
+            GUILayout.Space(20);
+            GUILayout.BeginHorizontal();
+            GUIStyle dialogTextStyle = new GUIStyle(GUI.skin.textArea);
+            dialogTextStyle.wordWrap = true;
+            targetPos = EditorGUI.Vector2Field(new Rect(4, 50, MinSize.x - 10, 20), "", targetPos);
+            GUILayout.EndHorizontal();
+            #endregion
+        }
+
     }
 
 }

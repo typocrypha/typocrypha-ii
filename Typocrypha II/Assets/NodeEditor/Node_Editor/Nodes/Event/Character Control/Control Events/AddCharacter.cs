@@ -19,17 +19,16 @@ namespace Gameflow
         public override string Title { get { return "Add Character"; } }
         public override Vector2 MinSize { get { return new Vector2(250, 60); } }
 
-        public Vector2 pos;
+        public Vector2 targetPos = new Vector2(0, 0);
 
         #region Tooltip Strings
-        private const string tooltipData = "The selected character's CharacterData";
         protected const string tooltipPos = "Where to position character (center pivot)";
         #endregion
 
         protected override void OnCreate()
         {
             characterData = null;
-            pos = Vector2.zero;
+            targetPos = Vector2.zero;
         }
 
         public override void NodeGUI()
@@ -50,7 +49,7 @@ namespace Gameflow
             GUILayout.BeginHorizontal();
             GUIStyle dialogTextStyle = new GUIStyle(GUI.skin.textArea);
             dialogTextStyle.wordWrap = true;
-            pos = EditorGUI.Vector2Field(new Rect(4, 50, MinSize.x - 10, 20), "", pos);
+            targetPos = EditorGUI.Vector2Field(new Rect(4, 50, MinSize.x - 10, 20), "", targetPos);
             GUILayout.EndHorizontal();
             #endregion
         }

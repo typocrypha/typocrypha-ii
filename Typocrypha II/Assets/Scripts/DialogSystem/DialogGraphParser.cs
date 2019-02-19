@@ -93,7 +93,15 @@ public class DialogGraphParser : MonoBehaviour
             if (currNode is AddCharacter)
             {
                 var cNode = currNode as AddCharacter;
-                DialogCharacterManager.instance.AddCharacter(cNode.characterData, cNode.pos);
+                DialogCharacterManager.instance.AddCharacter(cNode.characterData, cNode.targetPos);
+            }
+            else if (currNode is MoveCharacter)
+            {
+                var cNode = currNode as MoveCharacter;
+                if (cNode.movementType == CharacterMovementType.Teleport)
+                {
+                    DialogCharacterManager.instance.TeleportCharacter(cNode.characterData, cNode.targetPos);
+                }
             }
         }
         //Process other node types
