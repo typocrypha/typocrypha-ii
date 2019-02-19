@@ -27,8 +27,10 @@ namespace Gameflow
             GUILayout.Space(5);
             GUILayout.BeginVertical("Box");
             GUILayout.BeginHorizontal();
+            GUILayout.Space(5);
             GUILayout.Label(new GUIContent("Character", tooltipData), NodeEditorGUI.nodeLabel, GUILayout.Width(65f));
             characterData = RTEditorGUI.ObjectField(characterData, false, GUILayout.Width(MinSize.x - 100f));
+            GUILayout.Space(5);
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
             #endregion
