@@ -49,6 +49,7 @@
 
 				fixed4 frag(v2f IN) : SV_Target {
 					fixed4 OUT = SpriteFrag(IN);
+					OUT.rgb = OUT.rgb * _RendererColor;
 					OUT.rgb = OUT.rgb * (1 - _FadeAmount) + (_FadeAmount * _FadeColor.rgb);
 					return OUT;
 				}

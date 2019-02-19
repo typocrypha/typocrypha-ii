@@ -12,7 +12,7 @@ public class PauseHandle
 
     public bool Pause
     {
-        get => pauseCount == 0;
+        get => pauseCount != 0;
         set
         {
             if (value)

@@ -13,7 +13,7 @@ public class DialogViewVN : DialogView
 
     private void Awake()
     {
-        GameObject obj = GameObject.Instantiate(dialogBoxPrefab, transform, false);
+        GameObject obj = Instantiate(dialogBoxPrefab, transform, false);
         dialogBox = obj.GetComponent<DialogBox>();
         nameText = obj.transform.Find("NameText").GetComponent<Text>();
         mcSprite = obj.transform.Find("PlayerSprite").GetComponent<SpriteRenderer>();
