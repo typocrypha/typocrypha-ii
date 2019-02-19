@@ -12,17 +12,11 @@ public class DialogBox : MonoBehaviour, IPausable
     /// <summary>
     /// Pauses text scroll.
     /// </summary>
-    bool pause;
+    PauseHandle ph = new PauseHandle();
     public bool Pause
     {
-        get
-        {
-            return pause;
-        }
-        set
-        {
-            pause = value;
-        }
+        get => ph.Pause;
+        set => ph.Pause = value;
     }
     #endregion
 

@@ -11,14 +11,16 @@ using UnityEngine.UI;
 public class DialogManager : MonoBehaviour, IPausable
 {
     #region IPausable
+    PauseHandle ph = new PauseHandle();
     public bool Pause
     {
-        get => enabled;
+        get => ph.Pause;
         set
         {
-            enabled = value; // Disable input checking.
-            dialogBox.Pause = true; // Pause dialog box scrolling.
-            // PAUSE TEXT EVENTS
+            ph.Pause = value;
+            enabled = ph.Pause; // Disable input checking.
+            dialogBox.Pause = ph.Pause; // Pause dialog box scrolling.
+            TextEvents.instance.Pause = ph.Pause; // Pause text events.
         }
     }
     #endregion

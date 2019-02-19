@@ -28,11 +28,11 @@ public struct TextEvent
 public class TextEvents : MonoBehaviour, IPausable
 {
     #region IPausable
-    bool pause = false;
+    PauseHandle ph = new PauseHandle();
     public bool Pause
     {
-        get => pause;
-        set => pause = value; // Pause/unpause text events that take time
+        get => ph.Pause;
+        set => ph.Pause = value; // Pause/unpause text events that take time
     }
     #endregion
     public static TextEvents instance = null;
