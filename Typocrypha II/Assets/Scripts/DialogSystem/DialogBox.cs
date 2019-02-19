@@ -12,11 +12,11 @@ public class DialogBox : MonoBehaviour, IPausable
     /// <summary>
     /// Pauses text scroll.
     /// </summary>
-    PauseHandle ph = new PauseHandle();
-    public bool Pause
+    PauseHandle ph;
+    public PauseHandle PH { get => ph; }
+
+    public void OnPause(bool b)
     {
-        get => ph.Pause;
-        set => ph.Pause = value;
     }
     #endregion
 
@@ -28,14 +28,8 @@ public class DialogBox : MonoBehaviour, IPausable
     float scrollDelay; // Delay in showing characters for text scroll.
     public float ScrollDelay
     {
-        get
-        {
-            return scrollDelay /* * scrollScale*/; // Scale based on speed changes.
-        }
-        set
-        {
-            scrollDelay = value;
-        }
+        get => scrollDelay; // ADD SCALE FACTOR
+        set => scrollDelay = value;
     }
     int speechInterval; // Number of character scrolls before speech sfx plays
 
@@ -51,14 +45,12 @@ public class DialogBox : MonoBehaviour, IPausable
     /// </summary>
     public bool IsDone
     {
-        get
-        {
-            return scrollCR == null;
-        }
+        get => scrollCR == null;
     }
 
     void Awake()
     {
+        ph = new PauseHandle(OnPause);
         ScrollDelay = defaultScrollDelay;
         speechInterval = defaultSpeechInterval;
     }
@@ -121,7 +113,7 @@ public class DialogBox : MonoBehaviour, IPausable
 		while (pos < dialogItem.text.Length)
         {
             yield return StartCoroutine(CheckEvents (pos));
-            yield return new WaitWhile(() => Pause); // Wait on pause.
+            yield return new WaitWhile(() => ph.Pause); // Wait on pause.
 			if (dialogItem.text[pos] == '<') // Skip Unity richtext tags.
             {
 				pos = dialogItem.text.IndexOf ('>', pos + 1) + 1;
@@ -144,7 +136,7 @@ public class DialogBox : MonoBehaviour, IPausable
             TextEvent te = dialogItem.TextEventList[0];
             dialogItem.TextEventList.RemoveAt(0);
             TextEvents.instance.PlayEvent(te.evt, te.opt);
-            yield return new WaitWhile(() => Pause); // Wait on pause.
+            yield return new WaitWhile(() => ph.Pause); // Wait on pause.
         }
         yield return null;
 	}

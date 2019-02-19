@@ -11,17 +11,14 @@ using UnityEngine.UI;
 public class DialogManager : MonoBehaviour, IPausable
 {
     #region IPausable
-    PauseHandle ph = new PauseHandle();
-    public bool Pause
+    PauseHandle ph;
+    public PauseHandle PH { get => ph; }
+
+    public void OnPause(bool b)
     {
-        get => ph.Pause;
-        set
-        {
-            ph.Pause = value;
-            enabled = ph.Pause; // Disable input checking.
-            dialogBox.Pause = ph.Pause; // Pause dialog box scrolling.
-            TextEvents.instance.Pause = ph.Pause; // Pause text events.
-        }
+        enabled = !b; // Disable input checking.
+        dialogBox.PH.Pause = b; // Pause dialog box scrolling.
+        TextEvents.instance.PH.Pause = b; // Pause text events.
     }
     #endregion
 
@@ -45,6 +42,7 @@ public class DialogManager : MonoBehaviour, IPausable
             return;
         }
 
+        ph = new PauseHandle(OnPause);
         if (startOnAwake)
         {
             InitDialog();

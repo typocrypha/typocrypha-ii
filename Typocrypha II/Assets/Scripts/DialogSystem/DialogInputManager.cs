@@ -44,7 +44,7 @@ public class DialogInputManager : MonoBehaviour
     {
         yield return new WaitWhile(() => DialogManager.instance.dialogBox.IsDone); // COULD HAVE SYNCHRO ISSUES
         yield return new WaitUntil(() => DialogManager.instance.dialogBox.IsDone); // THAT IS, SPEEDRUN TECH
-        DialogManager.instance.enabled = false; // Disable player skipping dialog.
+        DialogManager.instance.PH.Pause = true; // Disable player skipping dialog.
         DialogManager.instance.dialogView.DisplayInput(data); // Display dialog.
     }
 
@@ -56,6 +56,6 @@ public class DialogInputManager : MonoBehaviour
     {
         PlayerDataManager.instance.tmpData[target] = value; // Set input value.
         DialogManager.instance.NextDialog(); // Start next dialog.
-        DialogManager.instance.enabled = true; // Re-enable dialog skipping.
+        DialogManager.instance.PH.Pause = false; // Re-enable dialog skipping.
     }
 }

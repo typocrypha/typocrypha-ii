@@ -126,4 +126,36 @@ public class DialogCharacterManager : MonoBehaviour
         characterMap[data].Highlight(on);
         return characterMap[data];
     }
+
+    /// <summary>
+    /// Highlight one character and unhighlight all others.
+    /// </summary>
+    /// <param name="data">Id of selected character.</param>
+    /// <returns>CharacterDialog component of selected character.</returns>
+    public DialogCharacter SoloHighlightCharacter(CharacterData data)
+    {
+        foreach(var kvp in characterMap)
+        {
+            kvp.Value.Highlight(false);
+        }
+        characterMap[data].Highlight(true);
+        return characterMap[data];
+    }
+
+    /// <summary>
+    /// Finds character data (in scene) that matches given alias.
+    /// </summary>
+    /// <param name="alias">Alias of character you want to find.</param>
+    /// <returns>CharacterData found. 'null' if none found.</returns>
+    public CharacterData CharacterDataByName(string alias)
+    {
+        foreach(var kvp in characterMap)
+        {
+            if (kvp.Key.aliases.Contains(alias))
+            {
+                return kvp.Key;
+            }
+        }
+        return null;
+    }
 }

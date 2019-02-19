@@ -82,6 +82,7 @@ public class TextMacros : MonoBehaviour {
     // input: variable name
     string macroTemp(string[] opt)
     {
+        Debug.Log(opt[0]);
         return PlayerDataManager.instance.tmpData[opt[0]];
     }
 

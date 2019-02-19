@@ -22,6 +22,7 @@ public class PlayerDataManager : MonoBehaviour
     {
         tmpData = new Dictionary<string, string> { };
         tmpData.Add("player-name", "???");
+        tmpData.Add(lastInputKey, "");
     }
 
     void Start() {

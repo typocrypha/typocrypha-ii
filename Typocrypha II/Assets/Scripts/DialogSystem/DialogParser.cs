@@ -140,6 +140,7 @@ public class DialogParser : MonoBehaviour
     /// <returns>Text with substitutions.</returns>
     public string SubstituteMacros(string text)
     {
+        Debug.Log(text);
 		StringBuilder trueStr = new StringBuilder ();
 		for (int i = 0; i < text.Length;)
         {

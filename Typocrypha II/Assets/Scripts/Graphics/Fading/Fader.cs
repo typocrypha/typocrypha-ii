@@ -29,4 +29,9 @@ public abstract class Fader : MonoBehaviour
         get;
         set;
     }
+
+    void OnDestroy()
+    {
+        FaderManager.instance.allFaders.Remove(this);
+    }
 }

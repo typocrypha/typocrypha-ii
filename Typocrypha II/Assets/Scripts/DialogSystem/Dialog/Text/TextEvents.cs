@@ -28,13 +28,14 @@ public struct TextEvent
 public class TextEvents : MonoBehaviour, IPausable
 {
     #region IPausable
-    PauseHandle ph = new PauseHandle();
-    public bool Pause
+    PauseHandle ph;
+    public PauseHandle PH { get => ph; }
+
+    public void OnPause(bool b)
     {
-        get => ph.Pause;
-        set => ph.Pause = value; // Pause/unpause text events that take time
     }
     #endregion
+
     public static TextEvents instance = null;
 	public Dictionary<string, TextEventDel> textEventMap; // Map of commands to text event handles.
 
@@ -49,7 +50,8 @@ public class TextEvents : MonoBehaviour, IPausable
             Destroy(this);
             return;
         }
-        
+
+        ph = new PauseHandle(OnPause);
         textEventMap = new Dictionary<string, TextEventDel>
         {
             {"pause-dialog", PauseDialog},
@@ -85,16 +87,16 @@ public class TextEvents : MonoBehaviour, IPausable
     /// </param>
     IEnumerator PauseDialog(string[] opt)
     {
-        DialogManager.instance.dialogBox.Pause = true;
+        DialogManager.instance.dialogBox.PH.Pause = true;
         float time = 0f;
         float endTime = float.Parse(opt[0]);
         while (time < endTime && !DialogManager.instance.dialogBox.IsDone)
         {
-            yield return new WaitWhile(() => Pause);
+            yield return new WaitWhile(() => PH.Pause);
             yield return new WaitForFixedUpdate();
             time += Time.fixedDeltaTime;
         }
-        DialogManager.instance.dialogBox.Pause = false;
+        DialogManager.instance.dialogBox.PH.Pause = false;
     }
 
     /// <summary>
@@ -129,7 +131,7 @@ public class TextEvents : MonoBehaviour, IPausable
         Color color = new Color(float.Parse(opt[3]), float.Parse(opt[4]), float.Parse(opt[5]), 1f);
         while (time < endTime && !DialogManager.instance.dialogBox.IsDone)
         {
-            yield return new WaitWhile(() => Pause);
+            yield return new WaitWhile(() => PH.Pause);
             FaderManager.instance.FadeAll(Mathf.Lerp(init, target, time / endTime), color);
             yield return new WaitForFixedUpdate();
             time += Time.fixedDeltaTime;

@@ -66,6 +66,12 @@ public class DialogGraphParser : MonoBehaviour
             if(currNode is DialogNodeVN)
             {
                 var dNode = currNode as DialogNodeVN;
+                // Highlight speaking character.
+                var cd = DialogCharacterManager.instance.CharacterDataByName(dNode.characterName);
+                if (cd != null)
+                {
+                    DialogCharacterManager.instance.SoloHighlightCharacter(cd);
+                }
                 return new DialogItemVN(dNode.text, dNode.characterName, dNode.mcSprite, dNode.codecSprite);
             }
             if(currNode is DialogNodeChat)

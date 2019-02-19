@@ -5,8 +5,16 @@ using UnityEngine;
 /// <summary>
 /// Manages camera effects.
 /// </summary>
-public class CameraManager : MonoBehaviour
+public class CameraManager : MonoBehaviour, IPausable
 {
+    #region IPausable
+    PauseHandle ph;
+    public PauseHandle PH { get => ph; }
+
+    public void OnPause(bool b)
+    {
+    }
+    #endregion
     public static CameraManager instance = null; // Global static instance.
     public Vector3 basePos = new Vector3(0f, 0f, -10f); // Default camera position.
     public Transform cameraTr; // Transform of the camera.
@@ -23,6 +31,8 @@ public class CameraManager : MonoBehaviour
             return;
         }
         DontDestroyOnLoad(gameObject);
+
+        ph = new PauseHandle(OnPause);
     }
 
     /// <summary>
@@ -57,12 +67,14 @@ public class CameraManager : MonoBehaviour
     // Coroutine for shaking
     IEnumerator _Shake(float intensity, float length, float damp)
     {
-        float endTime = Time.time + length;
-        while (Time.time < endTime)
+        float time = 0;
+        while (time < length)
         {
-            float ratio = Mathf.Pow((endTime - Time.time) / length, damp);
+            yield return new WaitWhile(() => PH.Pause);
+            float ratio = Mathf.Pow((length - time) / length, damp);
             Shake(intensity * ratio);
-            yield return null;
+            yield return new WaitForFixedUpdate();
+            time += Time.fixedDeltaTime;
         }
         cameraTr.position = basePos;
     }
