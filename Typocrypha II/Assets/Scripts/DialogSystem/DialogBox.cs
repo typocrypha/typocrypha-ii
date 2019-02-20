@@ -23,6 +23,7 @@ public class DialogBox : MonoBehaviour, IPausable
     #region Constants
     const float defaultScrollDelay = 0.05f; // Default text scrolling speed.
     const int defaultSpeechInterval = 3; // Default number of text scrolls before speech sfx plays
+    const float textPad = 16f; // Padding between text rect and dialog box rect.
     #endregion
 
     float scrollDelay; // Delay in showing characters for text scroll.
@@ -111,7 +112,7 @@ public class DialogBox : MonoBehaviour, IPausable
     public void SetBoxHeight()
     {
         RectTransform rectTr = GetComponent<RectTransform>();
-        rectTr.sizeDelta = new Vector2(rectTr.sizeDelta.x, dialogText.preferredHeight);
+        rectTr.sizeDelta = new Vector2(rectTr.sizeDelta.x, dialogText.preferredHeight + textPad);
     }
 
     /// <summary>

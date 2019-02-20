@@ -28,7 +28,6 @@ namespace Gameflow
         {
             base.OnCreate();
             characterName = "PROMPT";
-            expression = string.Empty;
             variableName = "variable-name";
             showChoicePrompt = false;
             choicePromptText = new string[3];

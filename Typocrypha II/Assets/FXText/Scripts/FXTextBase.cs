@@ -18,6 +18,11 @@ namespace FXText
         {
             base.Start();
             textComp = GetComponent<Text>();
+        }
+
+        new void OnEnable()
+        {
+            StopAllCoroutines();
             StartCoroutine(effectCR());
         }
 

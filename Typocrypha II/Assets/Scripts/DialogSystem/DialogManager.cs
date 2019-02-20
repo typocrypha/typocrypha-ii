@@ -81,8 +81,13 @@ public class DialogManager : MonoBehaviour, IPausable
     public void NextDialog()
     {
         DialogItem dialogItem = graph.NextDialog();
-        dialogView = allViews.Find(v => v.GetType() == dialogItem.GetView());
-        SoloView(dialogView); // Display proper view
+        // Get and display proper view.
+        DialogView view = allViews.Find(v => v.GetType() == dialogItem.GetView());
+        if (view != dialogView)
+        {
+            dialogView = view;
+            SoloView(dialogView); 
+        }
         dialogBox = dialogView.PlayDialog(dialogItem); // Play Dialog
     }
 

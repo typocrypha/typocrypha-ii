@@ -34,7 +34,7 @@ public class DialogViewChat : DialogView
         }
         #endregion
 
-        #region Instantiate and initialize new Dialog box
+        #region Instantiate and initialize new Dialog boxDialogueRightIcon
         GameObject obj = GameObject.Instantiate(dialogBoxPrefab, ChatContent);
         Image leftIcon = obj.transform.Find("DialogueLeftIcon").GetComponent<Image>();
         Image rightIcon = obj.transform.Find("DialogueRightIcon").GetComponent<Image>();
@@ -52,7 +52,7 @@ public class DialogViewChat : DialogView
         #endregion
 
         dialogBox.StartDialogBox(item);
-        setWindowSize(dialogBox.GetBoxHeight() + ChatContent.GetComponent<VerticalLayoutGroup>().spacing);
+        SetWindowSize(dialogBox.GetBoxHeight() + ChatContent.GetComponent<VerticalLayoutGroup>().spacing);
         return dialogBox;
     }
 
@@ -72,35 +72,35 @@ public class DialogViewChat : DialogView
         {
             Destroy(child.gameObject);
         }
-        resetWindowSize();
+        ResetWindowSize();
     }
 
     #region chat window height management
     // Increases window size to fit new dialogue box
-    void setWindowSize(float boxHeight)
+    void SetWindowSize(float boxHeight)
     {
         windowHeight += boxHeight;
         ChatContent.sizeDelta = new Vector2(ChatContent.sizeDelta.x, windowHeight);
-        stopSlideScroll();
-        slideScrollCR = StartCoroutine(slideScroll());
+        StopSlideScroll();
+        slideScrollCR = StartCoroutine(SlideScroll());
     }
     
     // Resets height of chat window
-    void resetWindowSize()
+    void ResetWindowSize()
     {
         windowHeight = defaultWindowHeight;
         ChatContent.sizeDelta = new Vector2(ChatContent.sizeDelta.x, windowHeight);
-        stopSlideScroll();
+        StopSlideScroll();
     }
 
     // Stops slide adjustment of window
-    void stopSlideScroll()
+    void StopSlideScroll()
     {
         if (slideScrollCR != null) StopCoroutine(slideScrollCR);
     }
 
     // Coroutine that smoothly slides scroll bar to bottom
-    IEnumerator slideScroll()
+    IEnumerator SlideScroll()
     {
         yield return new WaitUntil(() => scrollBar.value > Mathf.Epsilon);
         float vel = 0;
