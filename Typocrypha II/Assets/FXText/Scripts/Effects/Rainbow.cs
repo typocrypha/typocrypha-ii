@@ -15,15 +15,19 @@ namespace FXText
 
         protected override IEnumerator effectCR()
         {
-            rainbowColors = new UnityEngine.Color[]
+            if (rainbowColors == null)
             {
-                UnityEngine.Color.red,
-                new UnityEngine.Color(1f,0.5f,0f,1f),
-                UnityEngine.Color.yellow,
-                UnityEngine.Color.green,
-                UnityEngine.Color.blue,
-                new UnityEngine.Color(1f,0f,1f,1f)
-            };
+                rainbowColors = new UnityEngine.Color[]
+                {
+                    UnityEngine.Color.red,
+                    new UnityEngine.Color(1f,0.5f,0f,1f),
+                    UnityEngine.Color.yellow,
+                    UnityEngine.Color.green,
+                    UnityEngine.Color.blue,
+                    new UnityEngine.Color(1f,0f,1f,1f)
+                };
+            }
+
             while(true)
             {
                 step++;
