@@ -52,7 +52,7 @@ public class DialogViewChat : DialogView
         #endregion
 
         dialogBox.StartDialogBox(item);
-        //setWindowSize(dialogBox.setBoxHeight() + ChatContent.GetComponent<VerticalLayoutGroup>().spacing);
+        setWindowSize(dialogBox.GetBoxHeight() + ChatContent.GetComponent<VerticalLayoutGroup>().spacing);
         return dialogBox;
     }
 

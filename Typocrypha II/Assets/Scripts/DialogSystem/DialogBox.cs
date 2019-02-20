@@ -69,7 +69,7 @@ public class DialogBox : MonoBehaviour, IPausable
         // Hide all text.
         hideText.ind[0] = 0;
         hideText.ind[1] = dialogItem.text.Length;
-        // RESIZE DIALOGBOX
+        SetBoxHeight();
         scrollCR = StartCoroutine(TextScrollCR());
 	}
 
@@ -104,6 +104,24 @@ public class DialogBox : MonoBehaviour, IPausable
 		scrollCR = null;
         hideText.ind[0] = dialogItem.text.Length;
 	}
+
+    /// <summary>
+    /// Set dialog box's height based on amount of text.
+    /// </summary>
+    public void SetBoxHeight()
+    {
+        RectTransform rectTr = GetComponent<RectTransform>();
+        rectTr.sizeDelta = new Vector2(rectTr.sizeDelta.x, dialogText.preferredHeight);
+    }
+
+    /// <summary>
+    /// Get dialog box's height.
+    /// </summary>
+    /// <returns></returns>
+    public float GetBoxHeight()
+    {
+        return GetComponent<RectTransform>().sizeDelta.y;
+    }
 
 	// Scrolls text character by character
 	IEnumerator TextScrollCR()
