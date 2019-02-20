@@ -32,11 +32,13 @@ public class DialogParser : MonoBehaviour
         }
 
 		FXTextMap = new Dictionary<string, System.Type> ()
-        { 
+        {
+            {"color", typeof(FXText.Color) },
 			{"scramble", typeof(FXText.Scramble)},
 			{"wave", typeof(FXText.Wavy)},
 			{"cascade", typeof(FXText.Cascade)},
-            {"shake", typeof(FXText.Shake)}
+            {"shake", typeof(FXText.Shake)},
+            {"rainbow", typeof(FXText.Rainbow) }
         };
 		FXTextStack = new Stack<FXText.FXTextBase> ();
 	}

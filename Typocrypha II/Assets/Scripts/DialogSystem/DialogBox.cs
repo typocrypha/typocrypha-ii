@@ -34,10 +34,10 @@ public class DialogBox : MonoBehaviour, IPausable
     }
     int speechInterval; // Number of character scrolls before speech sfx plays
 
-    public FXText.Color hideText; // Allows for hiding parts of text (for scrolling)
     public Text dialogText; // Text display component
     public AudioSource audioSpeech; // AudioSource for playing speech sfx
 
+    FXText.Color hideText; // Allows for hiding parts of text (for scrolling)
     DialogItem dialogItem; // Dialog line data
     Coroutine scrollCR; // Coroutine that scrolls the text
 
@@ -68,6 +68,9 @@ public class DialogBox : MonoBehaviour, IPausable
         DialogParser.instance.Parse(dialogItem, this);
         dialogText.text = dialogItem.text;
         // Hide all text.
+        hideText = dialogText.gameObject.AddComponent<FXText.Color>();
+        hideText.ind = new List<int> { 0, 0 };
+        hideText.color = Color.clear;
         hideText.ind[0] = 0;
         hideText.ind[1] = dialogItem.text.Length;
         SetBoxHeight();
