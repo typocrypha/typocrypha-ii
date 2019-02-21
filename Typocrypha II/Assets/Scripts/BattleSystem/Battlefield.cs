@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using ATB3;
 
 
 /// Encapsulates battle info. Singleton that is availible from Battlefield.instance
@@ -15,22 +16,22 @@ public class Battlefield : MonoBehaviour
         DeleteOther,
         DeleteOtherOnlyIfSpaceIsOccupied,
     }
+    public static Battlefield instance;
     public int Columns { get; } = 3;
     public int Rows { get; } = 2;
-
-    public static Battlefield instance;
     public Player Player { get => (Casters.FirstOrDefault((obj) => obj.GetComponent<Player>() != null))?.GetComponent<Player>(); }
 
-    //DEBUG FOR TESTING ATB TWEAKS
-    public Actor[] actorsToAdd;
+    #region Debug Fields
+    public ATBActor[] actorsToAdd;
     public FieldObject[] objectsToAdd;
+    #endregion
 
     #region Row and List Accessor Properties
     public FieldObject[] TopRow { get { return field[0]; } }
     public FieldObject[] BottomRow { get { return field[1]; } }
     public Caster[] Enemies { get => Casters.Select((obj) => obj.GetComponent<Caster>()).Where((obj) => obj != null && obj.CasterType == Caster.Type.Enemy).ToArray(); }
     public Caster[] Allies { get => Casters.Select((obj) => obj.GetComponent<Caster>()).Where((obj) => obj != null && obj.CasterType == Caster.Type.Ally).ToArray(); }
-    public List<Actor> Actors { get; } = new List<Actor>();
+    public List<ATBActor> Actors { get; } = new List<ATBActor>();
     public List<Caster> Casters { get; } = new List<Caster>();
     #endregion
 
@@ -59,7 +60,7 @@ public class Battlefield : MonoBehaviour
         spaces[1, 0] = spaceTransforms[4];
         spaces[1, 1] = spaceTransforms[5];
         spaces[1, 2] = spaceTransforms[6];
-        //Actors.AddRange(actorsToAdd);
+        Actors.AddRange(actorsToAdd);
         for (int i = 0; i < objectsToAdd.Length; ++i)
             Add(objectsToAdd[i], new Position(i / 3, i % 3));
     }
@@ -72,11 +73,11 @@ public class Battlefield : MonoBehaviour
         toAdd.FieldPos = pos;
         toAdd.transform.position = spaces[pos].transform.position;
         field[pos] = toAdd;
-        var actor = toAdd.GetComponent<Actor>();
+        var actor = toAdd.GetComponent<ATBActor>();
         if (toAdd != null) Actors.Add(actor);
     }
     /// <summary> Add a actor that is not necessarily a FieldObject and is not in a field position </summary> 
-    public void AddActor(Actor a)
+    public void AddActor(ATBActor a)
     {
         Actors.Add(a);
     }
@@ -108,6 +109,7 @@ public class Battlefield : MonoBehaviour
         Casters.Clear();
     }
     #endregion
+
     /// <summary> Move a Field Object to another position. Doesn't move if the position was occupied </summary> 
     public bool Move(Position position, Position target, MoveOption option)
     {
