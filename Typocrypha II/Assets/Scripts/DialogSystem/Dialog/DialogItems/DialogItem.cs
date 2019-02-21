@@ -7,12 +7,14 @@ using UnityEngine;
 /// </summary>
 public abstract class DialogItem
 {
-    public string text; // Text of dialog
-    public List<FXText.FXTextBase> FXTextList; // List of all FXText effects
-    public List<TextEvent> TextEventList; // List of all Text events
-    public DialogItem(string text)
+    public string text; // Text of dialog.
+    public AudioClip voice; // Voice blip audio clip.
+    public List<FXText.FXTextBase> FXTextList; // List of all FXText effects.
+    public List<TextEvent> TextEventList; // List of all Text events.
+    public DialogItem(string text, AudioClip voice)
     {
         this.text = text;
+        this.voice = voice;
     }
 
     /// <summary>

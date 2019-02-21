@@ -8,8 +8,8 @@ public class DialogItemChat : DialogItem
     public Sprite leftIcon; // Icon for left speaker icon (CHAT MODE) 
     public Sprite rightIcon; // Icon for right speaker icon (CHAT MODE)
     public IconSide iconSide; // Side where icon shows (CHAT MODE)
-    public DialogItemChat(string text, string speakerName, IconSide iconSide, 
-                          Sprite leftIcon = null, Sprite rightIcon = null) : base(text)
+    public DialogItemChat(string text, AudioClip voice, string speakerName, IconSide iconSide, 
+                          Sprite leftIcon = null, Sprite rightIcon = null) : base(text, voice)
     {
         this.speakerName = speakerName;
         this.iconSide = iconSide;

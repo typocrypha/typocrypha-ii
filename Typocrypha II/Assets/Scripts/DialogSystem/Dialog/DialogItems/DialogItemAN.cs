@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DialogItemAN : DialogItem
 {
-    public DialogItemAN(string text) : base(text) { }
+    public DialogItemAN(string text, AudioClip voice) : base(text, voice) { }
 
     public override System.Type GetView()
     {

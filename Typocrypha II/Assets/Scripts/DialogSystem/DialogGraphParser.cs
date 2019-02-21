@@ -63,16 +63,15 @@ public class DialogGraphParser : MonoBehaviour
         }
         if (currNode is DialogNode)
         {
-            if(currNode is DialogNodeVN)
+            var cd = DialogCharacterManager.instance.CharacterDataByName((currNode as DialogNode).characterName);
+            AudioClip voice = null;
+            if (cd != null) voice = cd.talk_sfx;
+            if (currNode is DialogNodeVN)
             {
                 var dNode = currNode as DialogNodeVN;
                 // Highlight speaking character.
-                var cd = DialogCharacterManager.instance.CharacterDataByName(dNode.characterName);
-                if (cd != null)
-                {
-                    DialogCharacterManager.instance.SoloHighlightCharacter(cd);
-                }
-                return new DialogItemVN(dNode.text, dNode.characterName, dNode.mcSprite, dNode.codecSprite);
+                if (cd != null) DialogCharacterManager.instance.SoloHighlightCharacter(cd);
+                return new DialogItemVN(dNode.text, voice, dNode.characterName, dNode.mcSprite, dNode.codecSprite);
             }
             if(currNode is DialogNodeChat)
             {
@@ -84,10 +83,10 @@ public class DialogGraphParser : MonoBehaviour
                 else if (dNode.rightIcon != null)
                     iconSide = IconSide.RIGHT;
                 #endregion
-                return new DialogItemChat(dNode.text, dNode.characterName, iconSide, dNode.leftIcon, dNode.rightIcon);
+                return new DialogItemChat(dNode.text, voice, dNode.characterName, iconSide, dNode.leftIcon, dNode.rightIcon);
             }
             if (currNode is DialogNodeAN)
-                return new DialogItemAN((currNode as DialogNodeAN).text);
+                return new DialogItemAN((currNode as DialogNodeAN).text, voice);
         }
         else if (currNode is SetVariableNode)
         {

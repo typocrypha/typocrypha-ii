@@ -21,8 +21,8 @@ public class DialogBox : MonoBehaviour, IPausable
     #endregion
 
     #region Constants
-    const float defaultScrollDelay = 0.05f; // Default text scrolling speed.
-    const int defaultSpeechInterval = 3; // Default number of text scrolls before speech sfx plays
+    const float defaultScrollDelay = 0.02f; // Default text scrolling speed.
+    const int defaultSpeechInterval = 2; // Default number of text scrolls before speech sfx plays
     const float textPad = 16f; // Padding between text rect and dialog box rect.
     #endregion
 
@@ -35,7 +35,7 @@ public class DialogBox : MonoBehaviour, IPausable
     int speechInterval; // Number of character scrolls before speech sfx plays
 
     public Text dialogText; // Text display component
-    public AudioSource audioSpeech; // AudioSource for playing speech sfx
+    public AudioSource voiceAS; // AudioSource for playing speech sfx
 
     FXText.Color hideText; // Allows for hiding parts of text (for scrolling)
     DialogItem dialogItem; // Dialog line data
@@ -74,6 +74,8 @@ public class DialogBox : MonoBehaviour, IPausable
         hideText.ind[0] = 0;
         hideText.ind[1] = dialogItem.text.Length;
         SetBoxHeight();
+        // Set voice sfx.
+        voiceAS.clip = dialogItem.voice;
         scrollCR = StartCoroutine(TextScrollCR());
 	}
 
@@ -141,7 +143,7 @@ public class DialogBox : MonoBehaviour, IPausable
 				pos = dialogItem.text.IndexOf ('>', pos + 1) + 1;
 				if (pos >= dialogItem.text.Length) break;
 			}
-            if (pos % speechInterval == 0) audioSpeech.Play();
+            if (pos % speechInterval == 0) voiceAS.Play();
             pos++; // Advance text position.
             hideText.ind[0] = pos;
             yield return new WaitForSeconds(ScrollDelay);
