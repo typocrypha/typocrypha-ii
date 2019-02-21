@@ -125,6 +125,18 @@ public class DialogGraphParser : MonoBehaviour
                 DialogCharacterManager.instance.ChangeExpression(cNode.characterData, cNode.expr);
             }
         }
+        else if (currNode is SetBackgroundNode)
+        {
+            var node = currNode as SetBackgroundNode;
+            if (node.bgType == SetBackgroundNode.BgType.Sprite)
+            {
+                BackgroundManager.instance.SetBackground(node.bgSprite);
+            }
+            else
+            {
+                BackgroundManager.instance.SetBackground(node.bgPrefab);
+            }
+        }
         //Process other node types
         //Recursively move to next
         return NextDialog();

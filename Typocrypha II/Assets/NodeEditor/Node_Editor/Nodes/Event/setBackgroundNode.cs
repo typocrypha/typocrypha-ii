@@ -7,8 +7,8 @@ using NodeEditorFramework.Utilities;
 
 namespace Gameflow
 {
-    [Node(false, "Event/Set Background", new System.Type[] { typeof(GameflowCanvas) })]
-    public class setBackgroundNode : BaseNodeIO
+    [Node(false, "Event/Set Background", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
+    public class SetBackgroundNode : BaseNodeIO
     {
         #region Editor
         public enum BgType
