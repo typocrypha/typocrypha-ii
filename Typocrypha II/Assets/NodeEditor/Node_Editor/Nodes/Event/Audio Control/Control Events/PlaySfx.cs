@@ -2,26 +2,40 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using NodeEditorFramework;
+using NodeEditorFramework.Utilities;
+
+using System;
+using Gameflow.GUIUtilities;
 
 namespace Gameflow
 {
-    public class PlaySfx// : AudioControlNode.EventData
+    [Node(false, "Event/Audio/Play SFX", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
+    public class PlaySfx : AudioControlNode
     {
-        public AudioClip bgm;
-        //public override void doGUI(Rect rect)
-        //{
-        //    Rect UIrect = new Rect(rect);
-        //    UIrect.height = EditorGUIUtility.singleLineHeight;
-        //    GUI.Label(UIrect, new GUIContent("Play Sfx", ""), new GUIStyle(GUIStyle.none) { alignment = TextAnchor.MiddleCenter });
-        //    UIrect.y += EditorGUIUtility.singleLineHeight + 1;
-        //    bgm = EditorGUI.ObjectField(UIrect, bgm, typeof(AudioClip), false) as AudioClip;
-        //}
-        //public override float Height
-        //{
-        //    get
-        //    {
-        //        return EditorGUIUtility.singleLineHeight * 2 + 2;
-        //    }
-        //}
+        public const string ID = "Play SFX Node";
+        public override string GetID { get { return ID; } }
+
+        public override string Title { get { return "Play SFX"; } }
+        public override Vector2 MinSize { get { return new Vector2(250, 60); } }
+
+        public AudioClip sfx;
+
+        #region Tooltip Strings
+        const string tooltipSfx = "AudioClip to play as sfx.";
+        #endregion
+
+        public override void NodeGUI()
+        {
+            #region SFX
+            GUILayout.Space(5);
+            GUILayout.BeginVertical("Box");
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(new GUIContent("SFX", tooltipSfx), NodeEditorGUI.nodeLabel, GUILayout.Width(65f));
+            sfx = RTEditorGUI.ObjectField(sfx, false, GUILayout.Width(MinSize.x - 100f));
+            GUILayout.EndHorizontal();
+            GUILayout.EndVertical();
+            #endregion
+        }
     }
 }

@@ -148,6 +148,11 @@ public class DialogGraphParser : MonoBehaviour
                 var node = currNode as PauseBgm;
                 AudioManager.instance.PauseBGM(node.pause);
             }
+            else if (currNode is PlaySfx)
+            {
+                var node = currNode as PlaySfx;
+                AudioManager.instance.PlaySFX(node.sfx);
+            }
         }
         //Process other node types
         //Recursively move to next

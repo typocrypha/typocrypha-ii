@@ -8,7 +8,7 @@ using System.IO;
 
 /// <summary>
 /// Management of audio assets by filename.
-/// Not for playback use.
+/// Also allows simple playback.
 /// </summary>
 /// <example>
 /// <c>AudioManager.instance["clip name"]</c>
@@ -17,6 +17,7 @@ public class AudioManager : MonoBehaviour
 {
     public static AudioManager instance = null; // Global static instance.
     public AudioSource[] bgm; // Audio sources for playing bgms. Should have 2 audio sources (for crossfading).
+    public AudioSource sfx; // Audio source for playing simple sfx.
 
     AssetBundle audioBundle; // Asset bundle containing all clips.
 
@@ -90,5 +91,13 @@ public class AudioManager : MonoBehaviour
         if (pause) bgm[0].Pause();
         else bgm[0].UnPause();
     }
-    
+
+    /// <summary>
+    /// Plays an sfx once.
+    /// </summary>
+    /// <param name="clip">Clip to play.</param>
+    public void PlaySFX(AudioClip clip)
+    {
+        sfx.PlayOneShot(clip);
+    }
 }
