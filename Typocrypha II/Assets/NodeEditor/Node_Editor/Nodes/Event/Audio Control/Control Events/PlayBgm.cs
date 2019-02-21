@@ -24,7 +24,7 @@ namespace Gameflow
 
         #region Tooltip Strings
         const string tooltipBgm = "AudioClip to play as bgm.";
-        const string tooltipFade = "Time over which audio clip fades in.";
+        const string tooltipFade = "Volume curve over which audio clip fades in.";
         #endregion
 
         public override void NodeGUI()

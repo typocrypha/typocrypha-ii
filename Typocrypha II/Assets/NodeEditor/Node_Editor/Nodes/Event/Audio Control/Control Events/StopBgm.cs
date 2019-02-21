@@ -2,27 +2,38 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using NodeEditorFramework;
+using NodeEditorFramework.Utilities;
+
+using System;
+using Gameflow.GUIUtilities;
 
 namespace Gameflow
 {
-    public class StopBgm //: AudioControlNode.EventData
+    [Node(false, "Event/Audio/Stop BGM", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
+    public class StopBgm : AudioControlNode
     {
-        public float fadeOut;
-        //public override void doGUI(Rect rect)
-        //{
-        //    Rect UIrect = new Rect(rect);
-        //    UIrect.height = EditorGUIUtility.singleLineHeight;
-        //    GUI.Label(UIrect, new GUIContent("Stop Bgm", ""), new GUIStyle(GUIStyle.none) { alignment = TextAnchor.MiddleCenter });
-        //    UIrect.y += EditorGUIUtility.singleLineHeight + 1;
-        //    GUI.Label(new Rect(UIrect.position, new Vector2(60, EditorGUIUtility.singleLineHeight)), new GUIContent("Fade Time"), GUI.skin.label);
-        //    fadeOut = EditorGUI.FloatField(new Rect(UIrect.position + new Vector2(65, 0), new Vector2(UIrect.width - 65, EditorGUIUtility.singleLineHeight)), fadeOut);
-        //}
-        //public override float Height
-        //{
-        //    get
-        //    {
-        //        return lineHeight * 2;
-        //    }
-        //}
+        public const string ID = "Stop BGM Node";
+        public override string GetID { get { return ID; } }
+
+        public override string Title { get { return "Stop BGM"; } }
+        public override Vector2 MinSize { get { return new Vector2(250, 60); } }
+        
+        public AnimationCurve fadeCurve;
+
+        #region Tooltip Strings
+        const string tooltipFade = "Volume curve over which audio clip fades out.";
+        #endregion
+
+        public override void NodeGUI()
+        {
+            #region FadeIn
+            GUILayout.Label(new GUIContent("Fade Out Curve", tooltipFade), NodeEditorGUI.nodeLabelBoldCentered);
+            GUILayout.BeginVertical();
+            GUILayout.Space(100);
+            fadeCurve = EditorGUI.CurveField(new Rect(4, 15, MinSize.x - 10, 100), fadeCurve);
+            GUILayout.EndVertical();
+            #endregion
+        }
     }
 }

@@ -143,6 +143,11 @@ public class DialogGraphParser : MonoBehaviour
                 var node = currNode as PlayBgm;
                 AudioManager.instance.PlayBGM(node.bgm, node.fadeCurve);
             }
+            else if (currNode is StopBgm)
+            {
+                var node = currNode as StopBgm;
+                AudioManager.instance.StopBGM(node.fadeCurve);
+            }
             else if (currNode is PauseBgm)
             {
                 var node = currNode as PauseBgm;
