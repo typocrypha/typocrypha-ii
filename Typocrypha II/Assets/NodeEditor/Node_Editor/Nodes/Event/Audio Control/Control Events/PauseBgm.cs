@@ -2,23 +2,41 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using NodeEditorFramework;
+using NodeEditorFramework.Utilities;
+
+using System;
+using Gameflow.GUIUtilities;
 
 namespace Gameflow
 {
-    public class PauseBgm //: AudioControlNode.EventData
+    [Node(false, "Event/Audio/Pause BGM", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
+    public class PauseBgm : AudioControlNode
     {
-        //public override void doGUI(Rect rect)
-        //{
-        //    Rect UIrect = new Rect(rect);
-        //    UIrect.height = EditorGUIUtility.singleLineHeight;
-        //    GUI.Label(UIrect, new GUIContent("Pause Bgm", ""), new GUIStyle(GUIStyle.none) { alignment = TextAnchor.MiddleCenter });
-        //}
-        //public override float Height
-        //{
-        //    get
-        //    {
-        //        return EditorGUIUtility.singleLineHeight * 1 + 1;
-        //    }
-        //}
+        public const string ID = "Pause BGM Node";
+        public override string GetID { get { return ID; } }
+
+        public override string Title { get { return "Pause BGM"; } }
+        public override Vector2 MinSize { get { return new Vector2(250, 60); } }
+
+        public bool pause; // Whether to pause or unpause.
+
+        #region Tooltip Strings
+        const string tooltipPause = "Toggle on to pause, toggle off to unpause.";
+        #endregion
+
+        public override void NodeGUI()
+        {
+            #region Pause
+            GUILayout.Space(5);
+            GUILayout.BeginVertical("Box");
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(new GUIContent("Pause", tooltipPause), NodeEditorGUI.nodeLabel, GUILayout.Width(65f));
+            pause = RTEditorGUI.Toggle(pause, new GUIContent());
+            GUILayout.EndHorizontal();
+            GUILayout.EndVertical();
+            #endregion
+        }
+
     }
 }

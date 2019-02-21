@@ -137,6 +137,19 @@ public class DialogGraphParser : MonoBehaviour
                 BackgroundManager.instance.SetBackground(node.bgPrefab);
             }
         }
+        else if (currNode is AudioControlNode)
+        {
+            if (currNode is PlayBgm)
+            {
+                var node = currNode as PlayBgm;
+                AudioManager.instance.PlayBGM(node.bgm, node.fadeCurve);
+            }
+            else if (currNode is PauseBgm)
+            {
+                var node = currNode as PauseBgm;
+                AudioManager.instance.PauseBGM(node.pause);
+            }
+        }
         //Process other node types
         //Recursively move to next
         return NextDialog();
