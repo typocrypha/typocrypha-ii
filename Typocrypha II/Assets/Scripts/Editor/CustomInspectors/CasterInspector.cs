@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using SerializableCollections.GUIUtils;
 
 [CustomEditor(typeof(Caster), true)]
 public class CasterInspector : Editor
@@ -26,12 +27,12 @@ public class CasterInspector : Editor
         //if (data.overrideSpawnSfx = EditorGUILayout.ToggleLeft(new GUIContent("Set Spawn Sfx"), data.overrideSpawnSfx, GUILayout.Width(togglewidth)))
         //    data.spawnSfx = EditorGUILayout.ObjectField(GUIContent.none, data.spawnSfx, typeof(AudioClip), false, GUILayout.Width(refWidth)) as AudioClip;
         //EditorGUILayout.EndHorizontal()
-        EditorUtils.Slider();
+        EditorUtils.Separator();
         // Stat GUI
         EditorUtils.CasterStatsGUILayout(data.Stats);
-        EditorUtils.Slider();
+        EditorUtils.Separator();
         // Tag GUI
-        //data.tags.doGUILayout("Tags");
+        EditorUtils.CasterTagDictionaryGUILayout(data.Tags);
         EditorUtils.SetSceneDirtyIfGUIChanged(target);
     }
 }

@@ -29,6 +29,7 @@ public class Caster : FieldObject
     public int Health { get; set; }
     public int Stagger { get; set; }
     public bool Stunned { get; }
-    public BattleStatus BStatus { get; } 
-    //CasterTagDictionary Tags { get; }
+    public BattleStatus BStatus { get; }
+    [SerializeField] private CasterTagDictionary _tags;
+    public CasterTagDictionary Tags { get => _tags; set => _tags = value; }
 }

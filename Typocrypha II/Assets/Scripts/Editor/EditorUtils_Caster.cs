@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using SerializableCollections.GUIUtils;
+using System.Linq;
 
 public static partial class EditorUtils
 {
@@ -34,5 +36,71 @@ public static partial class EditorUtils
             data += ("Evade " + (stats.Evade < 0 ? "" : "+") + stats.Evade);
         if (!string.IsNullOrEmpty(data))
             EditorGUILayout.PrefixLabel(data, new GUIStyle(GUI.skin.label) { wordWrap = true });
+    }
+    public static void CasterTagDictionaryGUILayout(CasterTagDictionary dict)
+    {
+        #region Adding
+        Event e = Event.current;
+        if (e.type == EventType.ExecuteCommand && e.commandName == "ObjectSelectorClosed")
+        {
+            CasterTag item = EditorGUIUtility.GetObjectPickerObject() as CasterTag;
+            if (item == null)
+                return;
+            dict.Add(item);
+            e.Use();
+            return;
+        }
+        GUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("Tags: " + dict.TopLevelTags.Count(), Bold, GUILayout.MaxWidth(120));
+        GUILayout.Space(-20);
+        if (GUILayout.Button("+"))
+            EditorGUIUtility.ShowObjectPicker<CasterTag>(null, false, "", 1);
+        GUILayout.EndHorizontal();
+        Separator();
+        #endregion
+
+        EditorGUI.indentLevel++;
+        CasterTag toDelete = default;
+        bool delete = false;
+        CasterTag[] items = dict.TopLevelTags.ToArray();
+        System.Array.Sort(items);
+        foreach (var item in items)
+        {
+            GUILayout.BeginHorizontal();
+            CasterTagGUI(item);
+            GUILayout.FlexibleSpace();
+            if (GUILayout.Button("-", GUILayout.Width(45)))
+            {
+                toDelete = item;
+                delete = true;
+            }
+            GUILayout.EndHorizontal();
+        }
+        if (delete)
+            dict.Remove(toDelete);
+        EditorGUI.indentLevel--;
+        Separator();
+    }
+    public static void CasterTagGUI(CasterTag data)
+    {
+        GUILayout.BeginVertical();
+        EditorGUILayout.LabelField(data.name + " (" + data.displayName + ")", new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold }, GUILayout.Width(240));
+        EditorGUI.indentLevel++;    
+        if (data.subTags.Count > 0)
+        {
+            EditorGUILayout.PrefixLabel("Subtags: ", new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold });
+            foreach (var tag in data.subTags)
+                doSubtagNames(tag);
+        }
+        EditorGUI.indentLevel--;
+        EditorGUILayout.EndVertical();
+    }
+    private static void doSubtagNames(CasterTag data)
+    {
+        EditorGUI.indentLevel++;
+        EditorGUILayout.LabelField(data.name, new GUIStyle(GUI.skin.label), GUILayout.Width(240));
+        foreach (var tag in data.subTags)
+            doSubtagNames(tag);
+        EditorGUI.indentLevel--;
     }
 }

@@ -7,9 +7,17 @@ using UnityEditor.Experimental.SceneManagement;
 
 public static partial class EditorUtils
 {
-    public static void Slider()
+    public static void Separator()
     {
         EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+    }
+    /// <summary>Easy shortcut to the bold label text style</summary>
+    public static GUIStyle Bold
+    {
+        get
+        {
+            return new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold };
+        }
     }
     public static T EnumPopup<T>(GUIContent label, T enumData, params GUILayoutOption[] options) where T : System.Enum
     {
