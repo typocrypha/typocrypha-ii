@@ -8,8 +8,28 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer), typeof(Animator))]
 public class DialogSpacebar : MonoBehaviour
 {
-    SpriteRenderer sr;
-    Animator animator;
+    /// <summary>
+    /// Spacebar display states.
+    /// </summary>
+    public enum State
+    {
+        skip, // Pressing space will skip current text scroll and display whole line.
+        next, // Pressing space will go to next line of dialog.
+        blocked // Cannot press space.
+    }
+    static DialogSpacebar curr = null;
+    public static DialogSpacebar Curr // Currently active spacebar.
+    {
+        get => curr;
+    }
+    public State Press // Spacebar press state.
+    {
+        get => (State)animator.GetInteger("SpacebarState");
+        set => animator.SetInteger("SpacebarState", (int)value);
+    }
+
+    SpriteRenderer sr; // Sprite renderer for spacebar.
+    Animator animator; // Animator for spacebar.
 
     void Awake()
     {
@@ -17,9 +37,21 @@ public class DialogSpacebar : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    // Check state of dialog, and update visuals appropriately.
+    void OnEnable()
+    {
+        curr = this;
+    }
+
+    // Check dialog state and update spacebar state.
     void Update()
     {
-
+        State newState = Press;
+        if (DialogManager.instance.PH.Pause) newState = State.blocked;
+        else
+        {
+            if (DialogManager.instance.dialogBox.IsDone) newState = State.next;
+            else newState = State.skip;
+        }
+        if (newState != Press) Press = newState;
     }
 }

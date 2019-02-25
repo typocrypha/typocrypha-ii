@@ -91,7 +91,7 @@ public class DialogManager : MonoBehaviour, IPausable
         dialogBox = dialogView.PlayDialog(dialogItem); // Play Dialog
     }
 
-    // Hide all views except for 'view'
+    // Hide all views except for current.
     void SoloView(DialogView view)
     {
         foreach (var dv in allViews)
