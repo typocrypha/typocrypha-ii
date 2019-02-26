@@ -32,11 +32,12 @@ namespace FXText
             textComp.SetVerticesDirty();
         }
 
+        List<UIVertex> stream = new List<UIVertex>();
+
         // Called when graphic is redrawn (forced update every fixed update frame)
         public override void ModifyMesh(VertexHelper vh)
         {
             if (ind == null || ind.Count == 0 || ind.Count % 2 != 0) return;
-            List<UIVertex> stream = new List<UIVertex>();
             vh.GetUIVertexStream(stream);
 
             // Apply effect to each individual letter rect

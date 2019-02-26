@@ -7,7 +7,6 @@ using UnityEngine;
 /// </summary>
 public class DialogViewAN : DialogView
 {
-    public GameObject screenFrame; // Screen frame object
     public RectTransform ANContent; // Content of scroll view
 
     public override DialogBox PlayDialog(DialogItem data)
@@ -29,7 +28,6 @@ public class DialogViewAN : DialogView
     public override void SetEnabled(bool e)
     {
         gameObject.SetActive(e);
-        screenFrame.SetActive(!e);
     }
 
     // Clear all AN dialogue
