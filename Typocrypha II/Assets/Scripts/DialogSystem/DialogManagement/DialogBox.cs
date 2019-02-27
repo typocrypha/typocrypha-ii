@@ -21,7 +21,7 @@ public class DialogBox : MonoBehaviour, IPausable
     #endregion
 
     #region Constants
-    const float defaultScrollDelay = 0.02f; // Default text scrolling speed.
+    const float defaultScrollDelay = 0.01f; // Default text scrolling speed.
     const int defaultSpeechInterval = 2; // Default number of text scrolls before speech sfx plays
     const float textPad = 16f; // Padding between text rect and dialog box rect.
     #endregion
