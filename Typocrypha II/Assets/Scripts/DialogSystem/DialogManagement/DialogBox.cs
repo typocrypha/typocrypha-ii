@@ -90,10 +90,7 @@ public class DialogBox : MonoBehaviour, IPausable
         var fxTexts = dialogText.GetComponents<FXText.FXTextBase>();
         foreach (var fxText in fxTexts)
         {
-            if (fxText != hideText)
-            {
-                Destroy(fxText);
-            }
+            Destroy(fxText);
         }
     }
 

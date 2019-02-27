@@ -10,20 +10,19 @@ namespace FXText
     {
         public Color32 color; // Color of text
 
-        protected override IEnumerator effectCR()
+        protected override IEnumerator EffectCR()
         {
             yield return null;
         }
 
-        protected override void onEffect(VertexHelper vh, int pos)
+        protected override void OnEffect(List<UIVertex> verts, int pos)
         {
-            int start = pos * 4;
-            for (int k = start; k < start + 4; k++)
+            UIVertex vt;
+            for (int i = 0; i < verts.Count; i++)
             {
-                UIVertex vert = new UIVertex();
-                vh.PopulateUIVertex(ref vert, k);
-                vert.color = color;
-                vh.SetUIVertex(vert, k);
+                vt = verts[i];
+                vt.color = color;
+                verts[i] = vt;
             }
         }
     }

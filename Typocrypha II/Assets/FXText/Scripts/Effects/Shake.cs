@@ -12,24 +12,23 @@ namespace FXText
         Vector3[] offset;
         int step;
 
-        const int scrambleSize = 16;
+        const int randSize = 16;
 
-        protected override void onEffect(VertexHelper vh, int pos)
+        protected override void OnEffect(List<UIVertex> verts, int pos)
         {
-            int start = pos * 4;
-            for (int k = start; k < start + 4; k++)
+            UIVertex vt;
+            for (int i = 0; i < verts.Count; i++)
             {
-                UIVertex vert = new UIVertex();
-                vh.PopulateUIVertex(ref vert, k);
-                vert.position += offset[(pos + step) % scrambleSize];
-                vh.SetUIVertex(vert, k);
+                vt = verts[i];
+                vt.position += offset[(pos + step) % randSize];
+                verts[i] = vt;
             }
         }
 
-        protected override IEnumerator effectCR()
+        protected override IEnumerator EffectCR()
         {
-            offset = new Vector3[scrambleSize];
-            for (int i = 0; i < scrambleSize; i++)
+            offset = new Vector3[randSize];
+            for (int i = 0; i < randSize; i++)
             {
                 offset[i] = (Vector3)(Random.insideUnitCircle * intensity);
             }

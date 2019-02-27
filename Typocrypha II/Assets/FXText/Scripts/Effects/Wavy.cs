@@ -13,22 +13,21 @@ namespace FXText
         public float frequency = 6f;
         float step;
 
-        protected override void onEffect(VertexHelper vh, int pos)
+        protected override void OnEffect(List<UIVertex> verts, int pos)
         {
-            int start = pos * 4;
+            UIVertex vt;
             float height = 0f;
             if (waveLength > 0)
                 height = Mathf.Sin((step * frequency) + (pos / waveLength)) * amplitude;
-            for (int k = start; k < start + 4; k++)
+            for(int i = 0; i < verts.Count; i++)
             {
-                UIVertex vert = new UIVertex();
-                vh.PopulateUIVertex(ref vert, k);
-                vert.position += Vector3.up * height;
-                vh.SetUIVertex(vert, k);
+                vt = verts[i];
+                vt.position += Vector3.up * height;
+                verts[i] = vt;
             }
         }
 
-        protected override IEnumerator effectCR()
+        protected override IEnumerator EffectCR()
         {
             while(true)
             {

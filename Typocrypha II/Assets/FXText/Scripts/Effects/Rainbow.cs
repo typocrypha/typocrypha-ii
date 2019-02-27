@@ -13,7 +13,7 @@ namespace FXText
         static UnityEngine.Color[] rainbowColors;
         
 
-        protected override IEnumerator effectCR()
+        protected override IEnumerator EffectCR()
         {
             if (rainbowColors == null)
             {
@@ -35,15 +35,14 @@ namespace FXText
             }
         }
 
-        protected override void onEffect(VertexHelper vh, int pos)
+        protected override void OnEffect(List<UIVertex> verts, int pos)
         {
-            int start = pos * 4;
-            for (int k = start; k < start + 4; k++)
+            UIVertex vt;
+            for (int i = 0; i < verts.Count; i++)
             {
-                UIVertex vert = new UIVertex();
-                vh.PopulateUIVertex(ref vert, k);
-                vert.color = rainbowColors[((k/4) + step) % rainbowColors.Length];
-                vh.SetUIVertex(vert, k);
+                vt = verts[i];
+                vt.color = rainbowColors[(pos + step) % rainbowColors.Length];
+                verts[i] = vt;
             }
         }
     }

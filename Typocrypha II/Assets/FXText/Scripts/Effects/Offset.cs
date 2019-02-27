@@ -10,20 +10,19 @@ namespace FXText
     {
         public Vector3 offset; // Offset from base position
 
-        protected override IEnumerator effectCR()
+        protected override IEnumerator EffectCR()
         {
             yield return null;
         }
 
-        protected override void onEffect(VertexHelper vh, int pos)
+        protected override void OnEffect(List<UIVertex> verts, int pos)
         {
-            int start = pos * 4;
-            for (int k = start; k < start + 4; k++)
+            UIVertex vt;
+            for (int i = 0; i < verts.Count; i++)
             {
-                UIVertex vert = new UIVertex();
-                vh.PopulateUIVertex(ref vert, k);
-                vert.position += offset;
-                vh.SetUIVertex(vert, k);
+                vt = verts[i];
+                vt.position += offset;
+                verts[i] = vt;
             }
         }
     }

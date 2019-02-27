@@ -35,8 +35,7 @@ public class DialogParser : MonoBehaviour
         {
             {"color", typeof(FXText.Color) },
 			{"scramble", typeof(FXText.Scramble)},
-			{"wave", typeof(FXText.Wavy)},
-			{"cascade", typeof(FXText.Cascade)},
+			{"wavy", typeof(FXText.Wavy)},
             {"shake", typeof(FXText.Shake)},
             {"rainbow", typeof(FXText.Rainbow) }
         };
