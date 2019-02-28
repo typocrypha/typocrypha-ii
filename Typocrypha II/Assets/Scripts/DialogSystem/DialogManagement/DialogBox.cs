@@ -29,7 +29,7 @@ public class DialogBox : MonoBehaviour, IPausable
     float scrollDelay; // Delay in showing characters for text scroll.
     public float ScrollDelay
     {
-        get => scrollDelay; // ADD SCALE FACTOR
+        get => scrollDelay * (float)PlayerDataManager.instance[PlayerDataManager.textDelayScale];
         set => scrollDelay = value;
     }
     int speechInterval; // Number of character scrolls before speech sfx plays
@@ -52,8 +52,6 @@ public class DialogBox : MonoBehaviour, IPausable
     void Awake()
     {
         ph = new PauseHandle(OnPause);
-        ScrollDelay = defaultScrollDelay;
-        speechInterval = defaultSpeechInterval;
     }
 
     /// <summary>
@@ -84,6 +82,9 @@ public class DialogBox : MonoBehaviour, IPausable
     /// </summary>
     public void ResetDialogBox()
     {
+        // Reset parameters
+        ScrollDelay = defaultScrollDelay;
+        speechInterval = defaultSpeechInterval;
         // Remove old text
         dialogText.text = "";
         // Remove old text effects.
@@ -143,7 +144,15 @@ public class DialogBox : MonoBehaviour, IPausable
             if (pos % speechInterval == 0) voiceAS.Play();
             pos++; // Advance text position.
             hideText.ind[0] = pos;
-            yield return new WaitForSeconds(ScrollDelay);
+            if (ScrollDelay > 0f)
+            {
+                yield return new WaitForSeconds(ScrollDelay);
+            }
+            else // If scale is at 0, skip all text.
+            {
+                hideText.ind[0] = dialogItem.text.Length;
+                break;
+            }
 		}
 		yield return StartCoroutine(CheckEvents (dialogItem.text.Length)); // Play events at end of text.
 		scrollCR = null;

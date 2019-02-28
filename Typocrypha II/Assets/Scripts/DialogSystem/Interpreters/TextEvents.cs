@@ -56,7 +56,8 @@ public class TextEvents : MonoBehaviour, IPausable
         {
             {"pause-dialog", PauseDialog},
             {"shake", ScreenShake},
-            {"fade-screen", FadeScreen}
+            {"fade-screen", FadeScreen},
+            {"text-delay", TextDelay}
         };
     }
 
@@ -137,6 +138,18 @@ public class TextEvents : MonoBehaviour, IPausable
             time += Time.fixedDeltaTime;
         }
         FaderManager.instance.FadeAll(target, color);
+    }
+
+    /// <summary>
+    /// Sets the text scroll speed. Only lasts for current dialog box.
+    /// </summary>
+    /// <param name="opt">
+    /// [0]: float, amount of seconds delay between character reveals.
+    /// </param>
+    IEnumerator TextDelay(string[] opt)
+    {
+        DialogManager.instance.dialogBox.ScrollDelay = float.Parse(opt[0]);
+        yield return null;
     }
 }
 

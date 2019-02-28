@@ -25,9 +25,9 @@ public class DialogGraphParser : MonoBehaviour
     {
         string value = string.Empty;
         if (b.exprType == GameflowBranchNode.controlExpressionType.Last_Input)
-            value = PlayerDataManager.instance.LastPlayerInput;
+            value = PlayerDataManager.instance[PlayerDataManager.lastInputKey].ToString();
         else
-            value = PlayerDataManager.instance.GetData(b.variableName);
+            value = PlayerDataManager.instance[b.variableName].ToString();
         foreach (var brCase in b.cases)
         {
             if (brCase.type == GameflowBranchNode.BranchCase.CaseType.Regex)
@@ -91,7 +91,7 @@ public class DialogGraphParser : MonoBehaviour
         else if (currNode is SetVariableNode)
         {
             var node = currNode as SetVariableNode;
-            PlayerDataManager.instance.SetData(node.variableName, node.variableName);
+            PlayerDataManager.instance[node.variableName] = node.value;
         }
         else if (currNode is CharacterControlNode)
         {

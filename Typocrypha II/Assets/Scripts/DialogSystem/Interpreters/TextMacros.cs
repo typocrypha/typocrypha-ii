@@ -78,12 +78,12 @@ public class TextMacros : MonoBehaviour {
         };
 	}
 
-    // Substitutes appropriate entry from temporary string-string database
+    // Substitutes appropriate entry from temporary string-object database
     // input: variable name
     string macroTemp(string[] opt)
     {
         Debug.Log(opt[0]);
-        return PlayerDataManager.instance.tmpData[opt[0]];
+        return PlayerDataManager.instance.tmpData[opt[0]].ToString();
     }
 
 	// substitutes player's name
