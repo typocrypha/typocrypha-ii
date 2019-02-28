@@ -32,6 +32,7 @@ public class Battlefield : MonoBehaviour
     public Caster[] Enemies { get => Casters.Select((obj) => obj.GetComponent<Caster>()).Where((obj) => obj != null && obj.CasterState == Caster.State.Enemy).ToArray(); }
     public Caster[] Allies { get => Casters.Select((obj) => obj.GetComponent<Caster>()).Where((obj) => obj != null && obj.CasterState == Caster.State.Ally).ToArray(); }
     public List<ATBActor> Actors { get; } = new List<ATBActor>();
+    public List<Caster> ExternalCasters { get => Casters.Where((obj) => !obj.FieldPos.IsLegal) as List<Caster>; }
     public List<Caster> Casters { get; } = new List<Caster>();
     #endregion
 
@@ -101,6 +102,27 @@ public class Battlefield : MonoBehaviour
     public Caster GetCaster(Position pos) => GetObject(pos) as Caster;
     /// <summary> Get the field object </summary> 
     public FieldObject GetObject(Position pos) => field[pos];
+    /// <summary> Destroy an object on the field </summary>
+    public void Destroy(Position pos)
+    {
+        var obj = field[pos];
+        if (obj != null)
+            Destroy(obj);
+    }
+    /// <sumaary> Clear the data and destroy all of the game objects </sumaary>
+    public void DestroyAllAndClear()
+    {
+        foreach (var obj in field)
+            if(obj != null)
+                Destroy(obj.gameObject);
+        foreach (var obj in Actors)
+            if (obj != null)
+                Destroy(obj.gameObject);
+        foreach (var obj in Casters)
+            if (obj != null)
+                Destroy(obj.gameObject);
+        Clear();
+    }
     /// <summary> Clear the data and representative lists </summary> 
     public void Clear()
     {
@@ -142,11 +164,13 @@ public class Battlefield : MonoBehaviour
                 SetPosition(other, position, false);
                 return true;
             case MoveOption.DeleteOther:
+                Destroy(other.FieldPos);
                 SetPosition(self, target);
                 return true;
             case MoveOption.DeleteOtherOnlyIfSpaceIsOccupied:
                 if (other == null)
                     return false;
+                Destroy(other.FieldPos);
                 SetPosition(self, target);
                 return true;
             default:

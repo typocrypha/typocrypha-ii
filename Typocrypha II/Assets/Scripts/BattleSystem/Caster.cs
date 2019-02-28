@@ -9,7 +9,7 @@ public class Caster : FieldObject
         None = -1,
         Player,
         Enemy,
-        Neuteral,
+        Neutral,
         Ally,
     }
     public enum BattleStatus
