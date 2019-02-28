@@ -13,7 +13,7 @@ public class CastManager : MonoBehaviour
             Destroy(this);
     }
 
-    public void Cast(Caster caster, Battlefield.Position target, )
+    public void Cast(Caster caster, Battlefield.Position target)
     {
 
     }
