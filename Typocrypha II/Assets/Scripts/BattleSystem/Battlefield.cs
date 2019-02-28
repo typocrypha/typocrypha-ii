@@ -6,8 +6,39 @@ using ATB3;
 
 
 /// Encapsulates battle info. Singleton that is availible from Battlefield.instance
-public class Battlefield : MonoBehaviour
+public class Battlefield : MonoBehaviour, IPausable
 {
+    #region IPausable
+    /// <summary>
+    /// Pauses battle.
+    /// </summary>
+    PauseHandle ph;
+    public PauseHandle PH { get => ph; }
+
+    /// <summary>
+    /// Pauses all actors. (May pause other things: to be implemented).
+    /// </summary>
+    /// <param name="b">Whether to pause or not.</param>
+    public void OnPause(bool b)
+    {
+        if (b)
+        {
+            foreach (var actor in Actors) actor.pause = true;
+        }
+        else
+        {
+            if (ATBManager.soloStack.Count == 0)
+            {
+                foreach (var actor in Actors) actor.pause = false;
+            }
+            else
+            {
+                ATBManager.soloStack.Peek().pause = false;
+            }
+        }
+    }
+    #endregion
+
     public enum MoveOption
     {
         Move,
@@ -44,9 +75,15 @@ public class Battlefield : MonoBehaviour
     private void Awake()
     {
         if (instance == null)
+        {
             instance = this;
+        }
         else
+        {
             Destroy(this);
+            return;
+        }
+        ph = new PauseHandle(OnPause);
     }
 
     //Initialize space objects from children
