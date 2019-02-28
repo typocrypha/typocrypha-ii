@@ -29,9 +29,7 @@ namespace ATB3
         //----------------------------------------------------------------//
         // EVENT DATA                                                     //
         //----------------------------------------------------------------//
-
-        // Overall battle state
-        public Battlefield battleField;
+        
         // Events sent
         // static List<StateEventObj> eventQueue = new List<StateEventObj>(); 
         static List<string> eventQueue = new List<string>();
@@ -73,7 +71,7 @@ namespace ATB3
         // Set the pause value of all actors
         void setPauseAll(bool value)
         {
-            foreach (ATBActor actor in battleField.Actors)
+            foreach (ATBActor actor in Battlefield.instance.Actors)
                 actor.pause = value;
         }
 
@@ -101,7 +99,7 @@ namespace ATB3
             {
                 setPauseAll(false);
                 CastBar.MainBar.focus = true;
-                foreach (ATBActor actor in battleField.actorsToAdd)
+                foreach (ATBActor actor in Battlefield.instance.Actors)
                     actor.isCast = false;
             }
             // Otherwise, give solo to next in stack
