@@ -9,6 +9,7 @@ using UnityEngine;
 public class PauseManager : MonoBehaviour
 {
     public static PauseManager instance = null;
+    public GameObject pauseMenu; // Pause menu Canvas.
     bool pause = false; // Global pause state.
 
     public List<PauseHandle> allPausable; // All pausable scripts' pause handles.
@@ -51,6 +52,8 @@ public class PauseManager : MonoBehaviour
     // Open/Close pause menu
     void PauseMenu(bool value)
     {
-        Debug.Log("pause:" + value);
+        pauseMenu.SetActive(value);
+        if (value) FaderManager.instance.FadeAll(0.5f, Color.black);
+        else       FaderManager.instance.FadeAll(0.0f, Color.black);
     }
 }
