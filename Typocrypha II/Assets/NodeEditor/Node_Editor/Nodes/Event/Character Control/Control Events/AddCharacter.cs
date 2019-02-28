@@ -2,37 +2,48 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using NodeEditorFramework;
+using NodeEditorFramework.Utilities;
+
+using System;
+using Gameflow.GUIUtilities;
 
 namespace Gameflow
 {
-    public class AddCharacter : CharacterControlNode.EventData
+    [Node(false, "Event/Character/Add Character", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
+    public class AddCharacter : CharacterControlNode
     {
-        public string startingPose = "base pose";
-        public string startingExpression = "base expression";
-        public Vector2 pos = new Vector2(0, 0);
+        public const string ID = "Add Character Node";
+        public override string GetID { get { return ID; } }
 
-        //#region GUI
-        //public override void doGUI(Rect rect)
-        //{
-        //    Rect UIrect = new Rect(rect);
-        //    UIrect.height = EditorGUIUtility.singleLineHeight;
-        //    GUI.Label(UIrect, new GUIContent("Add Character", ""), new GUIStyle(GUIStyle.none) { alignment = TextAnchor.MiddleCenter });
-        //    UIrect.y += EditorGUIUtility.singleLineHeight + 1;
-        //    characterName = GUI.TextField(UIrect, characterName);
-        //    UIrect.y += EditorGUIUtility.singleLineHeight + 1;
-        //    startingPose = GUI.TextField(UIrect, startingPose);
-        //    UIrect.y += EditorGUIUtility.singleLineHeight + 1;
-        //    startingExpression = GUI.TextField(UIrect, startingExpression);
-        //    UIrect.y += EditorGUIUtility.singleLineHeight + 1;
-        //    pos = EditorGUI.Vector2Field(UIrect, "", pos);
-        //}
-        //public override float Height
-        //{
-        //    get
-        //    {
-        //        return EditorGUIUtility.singleLineHeight * 5 + 5;
-        //    }
-        //}
-        //#endregion
+        public override string Title { get { return "Add Character"; } }
+        public override Vector2 MinSize { get { return new Vector2(250, 60); } }
+
+        public Vector2 targetPos = new Vector2(0, 0);
+
+        #region Tooltip Strings
+        protected const string tooltipPos = "Where to position character (center pivot)";
+        #endregion
+
+        protected override void OnCreate()
+        {
+            characterData = null;
+            targetPos = Vector2.zero;
+        }
+
+        public override void NodeGUI()
+        {
+            base.NodeGUI();
+
+            #region Position
+            GUILayout.Label(new GUIContent("Position", tooltipPos), NodeEditorGUI.nodeLabelBoldCentered);
+            GUILayout.Space(20);
+            GUILayout.BeginHorizontal();
+            GUIStyle dialogTextStyle = new GUIStyle(GUI.skin.textArea);
+            dialogTextStyle.wordWrap = true;
+            targetPos = EditorGUI.Vector2Field(new Rect(4, 50, MinSize.x - 10, 20), "", targetPos);
+            GUILayout.EndHorizontal();
+            #endregion
+        }
     }
 }

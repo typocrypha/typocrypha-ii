@@ -23,7 +23,7 @@ namespace FXText
 
         const int maxLength = 256; // Max number of characters
 
-        protected override IEnumerator effectCR()
+        protected override IEnumerator EffectCR()
         {
             startTime = Time.fixedTime;
             offsets = new Vector3[maxLength];
@@ -49,15 +49,14 @@ namespace FXText
             }
         }
 
-        protected override void onEffect(VertexHelper vh, int pos)
+        protected override void OnEffect(List<UIVertex> verts, int pos)
         {
-            int start = pos * 4;
-            for (int k = start; k < start + 4; k++)
+            UIVertex vt;
+            for (int i = 0; i < verts.Count; i++)
             {
-                UIVertex vert = new UIVertex();
-                vh.PopulateUIVertex(ref vert, k);
-                vert.position += offsets[pos];
-                vh.SetUIVertex(vert, k);
+                vt = verts[i];
+                vt.position += offsets[pos];
+                verts[i] = vt;
             }
         }
     }

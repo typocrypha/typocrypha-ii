@@ -5,11 +5,19 @@ using UnityEngine;
 /// <summary>
 /// Manages camera effects.
 /// </summary>
-public class CameraManager : MonoBehaviour
+public class CameraManager : MonoBehaviour, IPausable
 {
-    public static CameraManager instance = null; // Global static instance
-    public Transform cameraTr; // Transform of the camera
-    public GameObject faderPrefab; // Prefab of fader plane
+    #region IPausable
+    PauseHandle ph;
+    public PauseHandle PH { get => ph; }
+
+    public void OnPause(bool b)
+    {
+    }
+    #endregion
+    public static CameraManager instance = null; // Global static instance.
+    public Vector3 basePos = new Vector3(0f, 0f, -10f); // Default camera position.
+    public Transform cameraTr; // Transform of the camera.
 
     void Awake()
     {
@@ -23,28 +31,51 @@ public class CameraManager : MonoBehaviour
             return;
         }
         DontDestroyOnLoad(gameObject);
+
+        ph = new PauseHandle(OnPause);
     }
 
     /// <summary>
-    /// Shakes camera.
+    /// Reset camera properties.
+    /// </summary>
+    public void ResetCamera()
+    {
+        StopAllCoroutines();
+        cameraTr.position = basePos;
+    }
+
+    /// <summary>
+    /// Shakes camera for some amount of time.
     /// </summary>
     /// <param name="intensity">Amount of shaking.</param>
     /// <param name="length">Length of shaking in seconds.</param>
-    public void Shake(float intensity, float length)
+    /// <param name="damp">[>0]: Amount of dampening (0 is no dampening).</param>
+    public Coroutine Shake(float intensity, float length, float damp = 1f)
     {
-        StartCoroutine(_Shake(intensity, length));
+        return StartCoroutine(_Shake(intensity, length, damp));
+    }
+
+    /// <summary>
+    /// Shake camera once (just shifts randomly).
+    /// </summary>
+    /// <param name="intensity">Amount of shaking.</param>
+    public void Shake(float intensity)
+    {
+        cameraTr.position = basePos + (Vector3)(Random.insideUnitCircle * intensity);
     }
 
     // Coroutine for shaking
-    IEnumerator _Shake(float intensity, float length)
+    IEnumerator _Shake(float intensity, float length, float damp)
     {
-        float endTime = Time.time + length;
-        Vector3 oldPos = cameraTr.position;
-        while (Time.time < endTime)
+        float time = 0;
+        while (time < length)
         {
-            cameraTr.position = oldPos + (Vector3)Random.insideUnitCircle;
-            yield return null;
+            yield return new WaitWhile(() => PH.Pause);
+            float ratio = Mathf.Pow((length - time) / length, damp);
+            Shake(intensity * ratio);
+            yield return new WaitForFixedUpdate();
+            time += Time.fixedDeltaTime;
         }
-        cameraTr.position = oldPos;
+        cameraTr.position = basePos;
     }
 }

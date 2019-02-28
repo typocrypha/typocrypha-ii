@@ -2,20 +2,31 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using NodeEditorFramework;
+using NodeEditorFramework.Utilities;
+
+using System;
+using Gameflow.GUIUtilities;
 
 namespace Gameflow
 {
-    public class RemoveCharacter// : CharacterControlNode.EventData
+    [Node(false, "Event/Character/Remove Character", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
+    public class RemoveCharacter : CharacterControlNode
     {
-        //#region GUI
-        //public override void doGUI(Rect rect)
-        //{
-        //    Rect UIrect = new Rect(rect);
-        //    UIrect.height = EditorGUIUtility.singleLineHeight;
-        //    GUI.Label(UIrect, new GUIContent("Remove Character", ""), new GUIStyle(GUIStyle.none) { alignment = TextAnchor.MiddleCenter });
-        //    UIrect.y += EditorGUIUtility.singleLineHeight;
-        //    characterName = GUI.TextField(UIrect, characterName);
-        //}
-        //#endregion
+        public const string ID = "Remove Character Node";
+        public override string GetID { get { return ID; } }
+
+        public override string Title { get { return "Remove Character"; } }
+        public override Vector2 MinSize { get { return new Vector2(250, 60); } }
+
+        protected override void OnCreate()
+        {
+            characterData = null;
+        }
+
+        public override void NodeGUI()
+        {
+            base.NodeGUI();
+        }
     }
 }

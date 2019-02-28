@@ -15,8 +15,6 @@ namespace Gameflow
         public override string Title { get { return "VN Dialog"; } }
         public override Vector2 MinSize { get { return new Vector2(250, 60); } }
 
-        public string expression;
-
         #region Ayin + Codec Debug Fields
         public Sprite mcSprite;
         public Sprite codecSprite;
@@ -34,7 +32,6 @@ namespace Gameflow
         protected override void OnCreate()
         {
             characterName = "Character Name";
-            expression = "Expression";
             text = "Insert dialog text here";
         }
 
@@ -46,11 +43,6 @@ namespace Gameflow
             GUILayout.Label(new GUIContent("Name", tooltip_name), GUILayout.Width(45f));
             characterName = GUILayout.TextField(characterName, GUILayout.Width(MinSize.x - 65));
             GUILayout.EndHorizontal();
-            GUILayout.BeginHorizontal();
-            GUILayout.Label(new GUIContent("Expr", tooltip_expr), NodeEditorGUI.nodeLabelLeft, GUILayout.Width(45f));
-            expression = GUILayout.TextField(expression, GUILayout.Width(MinSize.x - 65));
-            GUILayout.EndHorizontal();
-            GUILayout.Space(3);
             GUILayout.EndVertical();
 
             GUILayout.Label(new GUIContent("Dialog Text", tooltip_text), NodeEditorGUI.nodeLabelBoldCentered);
