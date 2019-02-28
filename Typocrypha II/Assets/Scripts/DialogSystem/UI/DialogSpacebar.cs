@@ -17,13 +17,6 @@ public class DialogSpacebar : MonoBehaviour
         next, // Pressing space will go to next line of dialog.
         blocked // Cannot press space.
     }
-    // Map enum state to animator trigger label.
-    Dictionary<State, string> stateMap = new Dictionary<State, string>
-    {
-        {State.skip, "Skip" },
-        {State.next, "Next" },
-        {State.blocked, "Blocked" },
-    };
 
     static DialogSpacebar curr = null;
     public static DialogSpacebar Curr // Currently active spacebar.
@@ -37,7 +30,7 @@ public class DialogSpacebar : MonoBehaviour
         set
         {
             currState = value;
-            animator.SetTrigger(stateMap[value]);
+            animator.SetFloat("Spacebar", (int)value);
         }
     }
 
