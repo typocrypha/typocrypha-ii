@@ -5,6 +5,9 @@ using NodeEditorFramework;
 
 namespace Gameflow
 {
+    /// <summary>
+    /// Hide the dialog canvas when dialog ends.
+    /// </summary>
     [Node(false, "Gameflow/EndAndHide", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
     public class EndAndHide : GameflowEndNode
     {

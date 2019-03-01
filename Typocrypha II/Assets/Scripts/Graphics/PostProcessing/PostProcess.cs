@@ -7,17 +7,17 @@ using UnityEngine;
 /// </summary>
 public class PostProcess : MonoBehaviour
 {
-	public static List<PostProcess> allPostProcesses = null; // List of all post process effects
-	public Material mat; // Material for shader effect
+	public static Dictionary<string, PostProcess> postProcessMap = null; // List of all post process effects
+    public Material mat; // Material for shader effect
     public Dictionary<string, float> shaderParams; // Shader property parameters (mapped by name)
 
 	void Awake()
     {
-        if (allPostProcesses == null)
+        if (postProcessMap == null)
         {
-            allPostProcesses = new List<PostProcess>();
+            postProcessMap = new Dictionary<string, PostProcess>();
         }
-		allPostProcesses.Add (this);
+        postProcessMap[mat.name] = this;
         shaderParams = new Dictionary<string, float>();
 	}
 

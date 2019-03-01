@@ -71,6 +71,12 @@ public class DialogGraphParser : MonoBehaviour
                 Init();
                 return NextDialog();
             }
+            else if (currNode is EndAndTransition) // Transitions scenes.
+            {
+                var node = currNode as EndAndTransition;
+                TransitionManager.instance.TransitionScene(node.nextScene, node.loadingScreen);
+                return null;
+            }
         }
         if (currNode is DialogNodeInput) // If input, set up input manager
         {
