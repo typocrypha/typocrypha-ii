@@ -16,14 +16,14 @@ public class CasterStats
     [SerializeField] private float staggerTime = 5f;
     public float StaggerTime { get { return staggerTime; } set { staggerTime = value > 0 ? value : 0; } }
     [SerializeField] private int atk;
-    public int Atk { get { return atk; } set { atk = statRange.clamp(value); } }
+    public int Atk { get { return atk; } set { atk = statRange.Clamp(value); } }
     [SerializeField] private int def;
-    public int Def { get { return def; } set { def = statRange.clamp(value); } }
+    public int Def { get { return def; } set { def = statRange.Clamp(value); } }
     [SerializeField] private int spd;
-    public int Spd { get { return spd; } set { spd = statRange.clamp(value); } }
+    public int Spd { get { return spd; } set { spd = statRange.Clamp(value); } }
     [SerializeField] private int acc;
-    public int Acc { get { return acc; } set { acc = statRange.clamp(value); } }
+    public int Acc { get { return acc; } set { acc = statRange.Clamp(value); } }
     [SerializeField] private int evade;
-    public int Evade { get { return evade; } set { evade = statRange.clamp(value); } }
+    public int Evade { get { return evade; } set { evade = statRange.Clamp(value); } }
     #endregion
 }

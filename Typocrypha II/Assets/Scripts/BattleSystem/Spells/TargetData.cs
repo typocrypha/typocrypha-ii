@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 
 //Contains targeting data and associated targeting modification methods
 [System.Serializable]
@@ -22,26 +21,30 @@ public class TargetData
         List<Battlefield.Position> ret = new List<Battlefield.Position>();
 
         #region Calculate Column Shift and Flipping
-        bool flip = casterPos.Row == 0; // True if on top row, false if not
+        // Flip the pattern if the caster is on the upper row
+        bool flip = casterPos.Row == 0; 
+        IntRange colRange = new IntRange(0, pattern.Columns - 1);
         int colShift = 0;
         if (type == Type.Targeted)
         {
             // If targeting your own row, invert the current flip
             flip ^= (casterPos.Row == targetPos.Row);
-            colShift = 1 - (targetPos.Col);
+            colShift = targetPos.Col - 1;
         }
         else if (type == Type.CasterCentered)
-            colShift = 1 - (targetPos.Col);
+        {
+            colShift = casterPos.Col - 1;
+        }
         #endregion
 
         #region Find Targets
-        BoolMatrix2D targets = flip ? pattern.rotated180() as BoolMatrix2D : pattern;
-        int startCol = System.Math.Max(0, colShift);
-        int endCol = System.Math.Min(colShift, targets.Columns);
+        colRange.Shift(-colShift);
+        colRange.Limit(0, pattern.Columns - 1);
+        var targets = flip ? pattern.RowsFlipped() : pattern;
         for (int row = 0; row < targets.Rows; ++row)
-            for (int col = startCol; col < endCol; ++col)
+            foreach(int col in colRange)
                 if (targets[row, col])
-                    ret.Add(new Battlefield.Position(row, col - colShift));
+                    ret.Add(new Battlefield.Position(row, col + colShift));
         #endregion
 
         return ret;

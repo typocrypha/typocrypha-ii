@@ -42,7 +42,7 @@ public class RootWordInspector : Editor
     {
         var word = target as RootWord;
         EditorGUILayout.LabelField("Root Word: " + word.name);
-        EditorGUILayout.TextField(new GUIContent("Display Name"), word.displayName);
+        word.displayName = EditorGUILayout.TextField(new GUIContent("Display Name"), word.displayName);
         EditorUtils.Separator();
         GUILayout.Label(new GUIContent("Description"), new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold });
         word.description = EditorGUILayout.TextArea(word.description, new GUIStyle(GUI.skin.textArea) { wordWrap = true }, GUILayout.MinHeight(EditorGUIUtility.singleLineHeight * 2));
