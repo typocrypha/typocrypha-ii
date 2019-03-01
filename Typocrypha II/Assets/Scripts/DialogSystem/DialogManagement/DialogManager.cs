@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using Gameflow;
 
 /// <summary>
 /// Starts and manages dialog sequences.
@@ -28,7 +29,7 @@ public class DialogManager : MonoBehaviour, IPausable
     [HideInInspector] public DialogView dialogView; // Currently displayed dialog view.
     [HideInInspector] public DialogBox dialogBox; // Latest displayed dialog box.
 
-    private DialogGraphParser graph; // Dialog graph currently playing.
+    private DialogGraphParser graphParser; // Dialog graph currently playing.
 
     void Awake()
     {
@@ -43,10 +44,10 @@ public class DialogManager : MonoBehaviour, IPausable
         }
 
         ph = new PauseHandle(OnPause);
+        graphParser = GetComponent<DialogGraphParser>();
         if (startOnAwake)
         {
-            InitDialog();
-            NextDialog();
+            StartDialog();
         }
     }
 
@@ -67,12 +68,23 @@ public class DialogManager : MonoBehaviour, IPausable
     }
 
     /// <summary>
-    /// Initialize dialog parsing (from graph).
+    /// Start new dialog graph.
     /// </summary>
-    public void InitDialog()
+    /// <param name="graph">Graph object to start.</param>
+    public void StartDialog(DialogCanvas graph)
     {
-        graph = GetComponent<DialogGraphParser>();
-        graph.Init();
+        graphParser.Graph = graph;
+        graphParser.Init();
+        NextDialog();
+    }
+
+    /// <summary>
+    /// Start new dialog graph. Implicitly uses graph already in parser.
+    /// </summary>
+    public void StartDialog()
+    {
+        graphParser.Init();
+        NextDialog();
     }
 
     /// <summary>
@@ -80,7 +92,7 @@ public class DialogManager : MonoBehaviour, IPausable
     /// </summary>
     public void NextDialog()
     {
-        DialogItem dialogItem = graph.NextDialog();
+        DialogItem dialogItem = graphParser.NextDialog();
         // Get and display proper view.
         DialogView view = allViews.Find(v => v.GetType() == dialogItem.GetView());
         if (view != dialogView)

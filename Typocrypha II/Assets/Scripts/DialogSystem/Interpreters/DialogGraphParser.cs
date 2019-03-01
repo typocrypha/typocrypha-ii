@@ -6,6 +6,7 @@ using Gameflow;
 public class DialogGraphParser : MonoBehaviour
 {
     [SerializeField] private DialogCanvas graph = null;
+    public DialogCanvas Graph { set => graph = value; }
     private BaseNode currNode = null;
     /// <summary> Initialized the root node (for if next dialogue is called in DialogManager's awake function </summary>
     public void Init()
