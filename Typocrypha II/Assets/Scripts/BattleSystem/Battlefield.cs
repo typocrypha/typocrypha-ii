@@ -23,13 +23,15 @@ public class Battlefield : MonoBehaviour, IPausable
     {
         if (b)
         {
-            foreach (var actor in Actors) actor.pause = true;
+            foreach (var actor in Actors)
+                if (actor != null) actor.pause = true;
         }
         else
         {
             if (ATBManager.soloStack.Count == 0)
             {
-                foreach (var actor in Actors) actor.pause = false;
+                foreach (var actor in Actors)
+                    if (actor != null) actor.pause = false;
             }
             else
             {

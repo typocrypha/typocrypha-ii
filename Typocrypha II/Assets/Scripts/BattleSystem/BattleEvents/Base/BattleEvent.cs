@@ -5,8 +5,18 @@ using UnityEngine;
 /// <summary>
 /// Manages a single event that can occur during battle.
 /// </summary>
-public class BattleEvent : MonoBehaviour
+public class BattleEvent : MonoBehaviour, IPausable
 {
+    #region IPausable
+    PauseHandle ph;
+    public PauseHandle PH { get => ph; }
+
+    public void OnPause(bool b)
+    {
+        enabled = !b; // Disable condition checking.
+    }
+    #endregion
+
     public enum Logic
     {
         And, // All conditions must be true.
@@ -16,9 +26,11 @@ public class BattleEvent : MonoBehaviour
     public Logic logic = Logic.And;
     BattleEventCondition[] conditions; // All conditions to check.
     BattleEventFunction[] functions; // All functions to run.
+    bool done = false; // Has battle event been executed?
 
     void Awake()
     {
+        ph = new PauseHandle(OnPause);
         conditions = GetComponents<BattleEventCondition>();
         functions = GetComponents<BattleEventFunction>();
     }
@@ -26,6 +38,7 @@ public class BattleEvent : MonoBehaviour
     // Check conditions each frame.
     void Update()
     {
+        if (done) return;
         if (CheckAll()) RunAll();
     }
 
@@ -51,5 +64,6 @@ public class BattleEvent : MonoBehaviour
     {
         foreach(var func in functions)
             func.Run();
+        done = true;
     }
 }

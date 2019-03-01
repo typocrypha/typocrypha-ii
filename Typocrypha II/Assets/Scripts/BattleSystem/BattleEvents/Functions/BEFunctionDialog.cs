@@ -12,7 +12,8 @@ public class BEFunctionDialog : BattleEventFunction
 
     public override void Run()
     {
-        DialogManager.instance.gameObject.SetActive(true);
+        Debug.Log(DialogManager.instance);
+        DialogManager.instance.Display(true);
         DialogManager.instance.StartDialog(graph);
     }
 }

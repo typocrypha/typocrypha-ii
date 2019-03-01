@@ -18,7 +18,7 @@ public class DialogManager : MonoBehaviour, IPausable
     public void OnPause(bool b)
     {
         enabled = !b; // Disable input checking.
-        dialogBox.PH.Pause = b; // Pause dialog box scrolling.
+        if (dialogBox != null) dialogBox.PH.Pause = b; // Pause dialog box scrolling.
         TextEvents.instance.PH.Pause = b; // Pause text events.
     }
     #endregion
@@ -103,6 +103,16 @@ public class DialogManager : MonoBehaviour, IPausable
             SoloView(dialogView); 
         }
         dialogBox = dialogView.PlayDialog(dialogItem); // Play Dialog
+    }
+
+    /// <summary>
+    /// Show/Hide dialog UI/characters/etc. DOES NOT pause.
+    /// </summary>
+    /// <param name="show">If true, display dialog. Otherwise, hide.</param>
+    public void Display(bool show)
+    {
+        if (show) transform.position = Vector3.zero;
+        else transform.Translate(30f, 0f, 0f);
     }
 
     // Hide all views except for current.

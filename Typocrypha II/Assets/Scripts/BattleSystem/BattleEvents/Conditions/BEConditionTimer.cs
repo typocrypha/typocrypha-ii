@@ -10,7 +10,7 @@ public class BEConditionTimer : BattleEventCondition
     public float time = 10f;
     bool done;
 
-    void Awake()
+    void Start()
     {
         StartCoroutine(Timer());
     }
@@ -23,7 +23,13 @@ public class BEConditionTimer : BattleEventCondition
     IEnumerator Timer()
     {
         done = false;
-        yield return new WaitForSeconds(time);
+        float currTime = 0f;
+        while (currTime < time)
+        {
+            yield return new WaitWhile(() => battleEvent.PH.Pause);
+            yield return new WaitForFixedUpdate();
+            currTime += Time.fixedDeltaTime;
+        }
         done = true;
     }
 }

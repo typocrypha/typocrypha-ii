@@ -8,6 +8,13 @@ using UnityEngine;
 [RequireComponent(typeof(BattleEvent))]
 public abstract class BattleEventFunction : MonoBehaviour
 {
+    protected BattleEvent battleEvent; // Battle event management code.
+
+    protected void Awake()
+    {
+        battleEvent = GetComponent<BattleEvent>();
+    }
+
     /// <summary>
     /// Execute function.
     /// </summary>

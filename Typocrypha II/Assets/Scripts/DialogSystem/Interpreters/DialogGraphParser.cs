@@ -61,7 +61,7 @@ public class DialogGraphParser : MonoBehaviour
         {
             if (currNode is EndAndHide)
             {
-                DialogManager.instance.gameObject.SetActive(false);
+                DialogManager.instance.Display(false);
                 return null;
             }
             else if (currNode is EndAndGoto) // Immediately start new dialog graph.
