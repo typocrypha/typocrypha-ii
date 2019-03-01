@@ -57,6 +57,21 @@ public class DialogGraphParser : MonoBehaviour
     public DialogItem NextDialog()
     {
         currNode = Next();
+        if (currNode is GameflowEndNode)
+        {
+            if (currNode is EndAndHide)
+            {
+                DialogManager.instance.gameObject.SetActive(false);
+                return null;
+            }
+            else if (currNode is EndAndGoto) // Immediately start new dialog graph.
+            {
+                var node = currNode as EndAndGoto;
+                Graph = node.nextDialog;
+                Init();
+                return NextDialog();
+            }
+        }
         if (currNode is DialogNodeInput) // If input, set up input manager
         {
             var iNode = currNode as DialogNodeInput;

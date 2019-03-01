@@ -3,7 +3,7 @@ using NodeEditorFramework;
 
 namespace Gameflow
 {
-    [Node(false, "Gameflow/End", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
+    [Node(true, "Gameflow/End", new System.Type[] { typeof(GameflowCanvas) })]
     public class GameflowEndNode : BaseNode
     {
         public const string ID = "Gameflow End Node";

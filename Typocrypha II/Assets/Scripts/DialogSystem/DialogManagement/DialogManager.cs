@@ -73,6 +73,7 @@ public class DialogManager : MonoBehaviour, IPausable
     /// <param name="graph">Graph object to start.</param>
     public void StartDialog(DialogCanvas graph)
     {
+        gameObject.SetActive(true);
         graphParser.Graph = graph;
         graphParser.Init();
         NextDialog();
@@ -93,6 +94,7 @@ public class DialogManager : MonoBehaviour, IPausable
     public void NextDialog()
     {
         DialogItem dialogItem = graphParser.NextDialog();
+        if (dialogItem == null) return;
         // Get and display proper view.
         DialogView view = allViews.Find(v => v.GetType() == dialogItem.GetView());
         if (view != dialogView)
