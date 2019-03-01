@@ -273,6 +273,10 @@ public class Battlefield : MonoBehaviour, IPausable
             _row = row;
             _col = col;
         }
+        public override string ToString()
+        {
+            return "(" + _row + ", " + _col + ")";
+        }
         public bool Equals(Position other)
         {
             return Row == other.Row && Col == other.Col;

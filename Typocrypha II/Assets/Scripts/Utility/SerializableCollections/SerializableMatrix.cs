@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class IntRange
+public class IntRange : IEnumerable<int>
 {
     public int Count { get { return max - min + 1; } }
     public int min;
@@ -13,7 +13,7 @@ public class IntRange
     {
         this.min = min;
         this.max = max;
-        if (!isValid())
+        if (!IsValid)
             throw new System.ArgumentException("Min: " + min + " and " + "Max: " + max + " is an invalid range");
     }
     public IntRange(int minMax)
@@ -22,24 +22,41 @@ public class IntRange
         max = minMax;
     }
 
-    public bool isValid()
-    {
-        return min <= max;
-    }
-    public bool contains(int item)
+    public bool IsValid => min <= max;
+    public bool Contains(int item)
     {
         return (item >= min) && (item <= max);
     }
-    public int clamp(int value)
+    public int Clamp(int value)
     {
         if (value <= max)
             return value >= min ? value : min;
         return max;
     }
-    public void shift(int shiftBy)
+    public void Shift(int shiftBy)
     {
         min += shiftBy;
         max += shiftBy;
+    }
+    /// <summary> Constrain the range such that its min is not less than the lower limit and its max is not greater than the upper limit</summary>
+    public void Limit(int lowerLimit, int upperLimit)
+    {
+        min = Mathf.Max(min, lowerLimit);
+        max = Mathf.Min(max, upperLimit);
+    }
+
+    public override string ToString() => "(" + min + " - " + max + ")";
+
+    public IEnumerator<int> GetEnumerator()
+    {
+        int curr = min - 1;
+        while (curr < max)
+            yield return ++curr;
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }
 
@@ -60,8 +77,10 @@ public class Serializable2DMatrix<T> : IEnumerable<T>
         Columns = columns;
         _data = new T[rows * columns];
     }
-    private Serializable2DMatrix(T[] data)
+    private Serializable2DMatrix(T[] data, int rows, int columns)
     {
+        Rows = rows;
+        Columns = columns;
         _data = data;
     }
     //Warning: shallow copy if reference type!
@@ -69,17 +88,26 @@ public class Serializable2DMatrix<T> : IEnumerable<T>
     {
         T[] rot = new T[_data.Length];
         _data.CopyTo(rot, 0);
-        for (IntRange range = new IntRange(0, Columns - 1); range.max < rot.Length; range.shift(Rows))
+        for (IntRange range = new IntRange(0, Columns - 1); range.max < rot.Length; range.Shift(Rows))
             System.Array.Reverse(rot, range.min, Columns);
-        return new Serializable2DMatrix<T>(rot);
+        return new Serializable2DMatrix<T>(rot, Columns, Rows);
     }
     //Warning: shallow clone if reference type!
     public Serializable2DMatrix<T> rotated180()
     {
         T[] rot = new T[_data.Length];
-        for (IntRange range = new IntRange(0, Columns - 1); range.max < rot.Length; range.shift(Rows))
-            System.Array.ConstrainedCopy(_data, range.min, rot, rot.Length - range.max, Columns);
-        return new Serializable2DMatrix<T>(rot);
+        _data.CopyTo(rot, 0);
+        System.Array.Reverse(rot);
+        return new Serializable2DMatrix<T>(rot, Rows, Columns);
+    }
+    //Warning: shallow clone if reference type!
+    public Serializable2DMatrix<T> RowsFlipped()
+    {
+        T[] rot = new T[_data.Length];
+        int j = _data.Length - Columns;
+        for (int i = 0; i < _data.Length; i += Columns, j -= Columns)
+            System.Array.ConstrainedCopy(_data, j, rot, i, Columns);            
+        return new Serializable2DMatrix<T>(rot, Rows, Columns);
     }
 
     public T this[int row, int col]
