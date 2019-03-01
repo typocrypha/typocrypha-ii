@@ -17,16 +17,17 @@ public class TargetData
     public BoolMatrix2D pattern = new BoolMatrix2D(2, 3);
     public Type type = Type.Targeted;
 
-    public List<Battlefield.Position> target(Battlefield.Position casterPos, Battlefield.Position targetPos)
+    public List<Battlefield.Position> Target(Battlefield.Position casterPos, Battlefield.Position targetPos)
     {
         List<Battlefield.Position> ret = new List<Battlefield.Position>();
 
         #region Calculate Column Shift and Flipping
-        bool flip = casterPos.Row == 0; //True if on enemy side, false if not
+        bool flip = casterPos.Row == 0; // True if on top row, false if not
         int colShift = 0;
         if (type == Type.Targeted)
         {
-            flip = flip ^ (casterPos.Row == targetPos.Row);
+            // If targeting your own row, invert the current flip
+            flip ^= (casterPos.Row == targetPos.Row);
             colShift = 1 - (targetPos.Col);
         }
         else if (type == Type.CasterCentered)
