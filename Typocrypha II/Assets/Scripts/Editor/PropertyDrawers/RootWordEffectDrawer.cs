@@ -3,13 +3,13 @@
 //using UnityEngine;
 //using UnityEditor;
 
-//[CustomPropertyDrawer(typeof(TestRootEffect))]
-//public class TestRootEffectDrawer : PropertyDrawer
+//[CustomPropertyDrawer(typeof(RootWordEffect), true)]
+//public class RootWordEffectDrawer : PropertyDrawer
 //{
 //    private static readonly float lineHeight = EditorGUIUtility.singleLineHeight + 1;
 //    public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
 //    {
-//        return (lineHeight) * 7;
+//        return (lineHeight) * 6;
 //    }
 //    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 //    {
@@ -20,13 +20,12 @@
 //        //Initialize properties
 
 //        //Initialize UI variables
-        
+
 //        Rect UIRect = new Rect(position) { height = EditorGUIUtility.singleLineHeight };
-//        EditorGUI.PropertyField(UIRect, property.FindPropertyRelative("debugMessage"));
-//        UIRect.y += lineHeight;
-//        EditorGUI.PropertyField(UIRect, property.FindPropertyRelative("effect"));
-//        UIRect.y += lineHeight;
+//        //EditorGUI.PropertyField(UIRect, property.FindPropertyRelative("effect"));
+//        //UIRect.y += lineHeight;
 //        UIRect.height = lineHeight * 5;
+//        var patProp = property.FindPropertyRelative("pattern");
 //        EditorGUI.PropertyField(UIRect, property.FindPropertyRelative("pattern"));
 
 

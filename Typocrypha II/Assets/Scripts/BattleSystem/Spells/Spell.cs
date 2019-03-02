@@ -21,12 +21,18 @@ public class Spell
     /// <summary> Cast the spell's effect with a given caster at a given target position </summary>
     public void Cast (Caster caster, Battlefield.Position target)
     {
-        foreach(var root in roots)
+        caster.StartCoroutine(CastCR(caster, target));
+        //Do post-cast visualization?
+    }
+
+    private IEnumerator CastCR(Caster caster, Battlefield.Position target)
+    {
+        foreach (var root in roots)
         {
-            foreach(var effect in root.effects)
+            foreach (var effect in root.effects)
             {
                 var targets = effect.pattern.Target(caster.FieldPos, target);
-                foreach(var t in targets)
+                foreach (var t in targets)
                 {
                     var targetCaster = Battlefield.instance.GetCaster(t);
                     if (targetCaster == null)
@@ -34,16 +40,48 @@ public class Spell
                     else
                     {
                         effect.Cast(caster, targetCaster); //TODO: add effect logging?
-                        if(effect.effect != null)
-                        {
-                            var effectVisual = Object.Instantiate(effect.effect);
-                            effectVisual.transform.position = Battlefield.instance.GetSpace(t);
-                        }                           
+                        yield return caster.StartCoroutine(DoSpellEffect(effect, t));
                         //Break if enemy killed?
                     }
                 }
             }
         }
-        //Do post-cast visualization?
+    }
+
+    public IEnumerator DoSpellEffect(RootWordEffect effect, Battlefield.Position target)
+    {
+        switch (effect.effectType)
+        {
+            case RootWordEffect.EffectType.Single:
+                yield return new WaitUntilAnimationComplete(
+                    AnimationPlayer.instance.playAnimation(effect.effectPackets[0].clip, 
+                    Battlefield.instance.GetSpace(target), 2));
+                break;
+            case RootWordEffect.EffectType.Sequence:
+                foreach(var packet in effect.effectPackets)
+                {
+                    yield return new WaitUntilAnimationComplete(
+                        AnimationPlayer.instance.playAnimation(packet.clip,
+                        Battlefield.instance.GetSpace(target), 2));
+                }
+                break;
+            case RootWordEffect.EffectType.Parallel:
+                for(int i = 0; i < effect.effectPackets.Count; ++i)
+                {
+                    AnimationPlayer.instance.playAnimation(effect.effectPackets[i].clip, Battlefield.instance.GetSpace(target));
+                }
+                if(effect.effectPackets.Count > 0)
+                    yield return new WaitUntilAnimationComplete(
+                        AnimationPlayer.instance.playAnimation(effect.effectPackets[0].clip,
+                        Battlefield.instance.GetSpace(target), 2));
+                break;
+            case RootWordEffect.EffectType.Prefab:
+                if (effect.effectPrefab != null)
+                {
+                    var effectVisual = Object.Instantiate(effect.effectPrefab);
+                    effectVisual.transform.position = Battlefield.instance.GetSpace(target);
+                }
+                break;
+        }
     }
 }
