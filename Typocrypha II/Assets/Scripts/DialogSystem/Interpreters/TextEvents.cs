@@ -37,7 +37,8 @@ public class TextEvents : MonoBehaviour, IPausable
     #endregion
 
     public static TextEvents instance = null;
-	public Dictionary<string, TextEventDel> textEventMap; // Map of commands to text event handles.
+    // Map of commands to text event handles.
+    public Dictionary<string, TextEventDel> textEventMap;
 
     void Awake()
     {
@@ -57,7 +58,8 @@ public class TextEvents : MonoBehaviour, IPausable
             {"pause-dialog", PauseDialog},
             {"shake", ScreenShake},
             {"fade-screen", FadeScreen},
-            {"text-delay", TextDelay}
+            {"text-delay", TextDelay},
+            {"float-text", FloatText }
         };
     }
 
@@ -149,6 +151,20 @@ public class TextEvents : MonoBehaviour, IPausable
     IEnumerator TextDelay(string[] opt)
     {
         DialogManager.instance.dialogBox.ScrollDelay = float.Parse(opt[0]);
+        yield return null;
+    }
+
+    /// <summary>
+    /// Spawns a single line of floating text.
+    /// </summary>
+    /// <param name="opt">
+    /// [0]: string, line to display.
+    /// [1-2]: float, x-y coordinate position.
+    /// </param>
+    IEnumerator FloatText(string[] opt)
+    {
+        Vector2 pos = new Vector2(float.Parse(opt[1]), float.Parse(opt[2]));
+        FloatDialog.instance.SpawnFloatDialog(opt[0], pos);
         yield return null;
     }
 }

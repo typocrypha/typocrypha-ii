@@ -128,7 +128,7 @@ public class DialogBox : MonoBehaviour, IPausable
     }
 
 	// Scrolls text character by character
-	IEnumerator TextScrollCR()
+	protected IEnumerator TextScrollCR()
     {
         yield return null;
         int pos = 0;

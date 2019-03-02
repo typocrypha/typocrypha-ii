@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Dialog line data for audio novel style dialog.
+/// </summary>
 public class DialogItemAN : DialogItem
 {
     public DialogItemAN(string text, AudioClip voice) : base(text, voice) { }
