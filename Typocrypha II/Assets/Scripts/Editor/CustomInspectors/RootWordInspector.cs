@@ -48,5 +48,7 @@ public class RootWordInspector : Editor
         word.description = EditorGUILayout.TextArea(word.description, new GUIStyle(GUI.skin.textArea) { wordWrap = true }, GUILayout.MinHeight(EditorGUIUtility.singleLineHeight * 2));
         EditorUtils.Separator();
         rList.DoLayoutList();
+        if (GUI.changed)
+            EditorUtility.SetDirty(this);
     }
 }

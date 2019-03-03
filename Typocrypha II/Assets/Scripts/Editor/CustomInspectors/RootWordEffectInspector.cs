@@ -62,5 +62,8 @@ public class RootWordEffectInspector : Editor
         }
         EditorUtils.Separator();
         EditorGUILayout.PropertyField(serializedObject.FindProperty("pattern"));
+        serializedObject.ApplyModifiedProperties();
+        if (GUI.changed)
+            EditorUtility.SetDirty(this);
     }
 }
