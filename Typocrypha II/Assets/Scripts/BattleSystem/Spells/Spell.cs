@@ -55,14 +55,14 @@ public class Spell
             case RootWordEffect.EffectType.Single:
                 yield return new WaitUntilAnimationComplete(
                     AnimationPlayer.instance.playAnimation(effect.effectPackets[0].clip, 
-                    Battlefield.instance.GetSpace(target), 2));
+                    Battlefield.instance.GetSpace(target), 1));
                 break;
             case RootWordEffect.EffectType.Sequence:
                 foreach(var packet in effect.effectPackets)
                 {
                     yield return new WaitUntilAnimationComplete(
                         AnimationPlayer.instance.playAnimation(packet.clip,
-                        Battlefield.instance.GetSpace(target), 2));
+                        Battlefield.instance.GetSpace(target), 1));
                 }
                 break;
             case RootWordEffect.EffectType.Parallel:
@@ -73,7 +73,7 @@ public class Spell
                 if(effect.effectPackets.Count > 0)
                     yield return new WaitUntilAnimationComplete(
                         AnimationPlayer.instance.playAnimation(effect.effectPackets[0].clip,
-                        Battlefield.instance.GetSpace(target), 2));
+                        Battlefield.instance.GetSpace(target), 1));
                 break;
             case RootWordEffect.EffectType.Prefab:
                 if (effect.effectPrefab != null)

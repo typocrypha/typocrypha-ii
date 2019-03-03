@@ -23,6 +23,14 @@ public static partial class EditorUtils
     {
         return (T)EditorGUILayout.EnumPopup(label, enumData, options);
     }
+    public static T ObjectField<T>(T obj, bool allowSceneObjects, params GUILayoutOption[] options) where T : UnityEngine.Object
+    {
+        return EditorGUILayout.ObjectField(obj, typeof(T), allowSceneObjects, options) as T;
+    }
+    public static T ObjectField<T>(GUIContent label, T obj, bool allowSceneObjects, params GUILayoutOption[] options) where T : UnityEngine.Object
+    {
+        return EditorGUILayout.ObjectField(label, obj, typeof(T), allowSceneObjects, options) as T;
+    }
     public static void SetSceneDirtyIfGUIChanged(Object target)
     {
         if (GUI.changed)
