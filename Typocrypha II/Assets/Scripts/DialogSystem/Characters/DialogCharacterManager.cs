@@ -143,6 +143,19 @@ public class DialogCharacterManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Apply animation clip to character.
+    /// </summary>
+    /// <param name="data">Id of selected character.</param>
+    /// <param name="clip">Animation clip to apply.</param>
+    /// <returns>CharacterDialog component of selected character.</returns>
+    public DialogCharacter AnimateCharacter(CharacterData data, AnimationClip clip)
+    {
+        characterMap[data].overrideAnimator[DialogCharacter.baseAnimationClip] = clip;
+        characterMap[data].animator.Play(DialogCharacter.baseAnimatorState);
+        return characterMap[data];
+    }
+
+    /// <summary>
     /// Finds character data (in scene) that matches given alias.
     /// </summary>
     /// <param name="alias">Alias of character you want to find.</param>

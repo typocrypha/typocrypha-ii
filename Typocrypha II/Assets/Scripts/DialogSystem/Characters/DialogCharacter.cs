@@ -10,6 +10,16 @@ public class DialogCharacter : MonoBehaviour
     public SpriteRenderer baseSprite; // Base sprite renderer (the pose).
     public SpriteRenderer exprSprite; // Expression sprite renderer (face).
     public Animator animator; // Animator for character.
+    [HideInInspector]public AnimatorOverrideController overrideAnimator; // Override animator.
+
+    public const string baseAnimatorState = "Base";
+    public const string baseAnimationClip = "DialogCharacterBase";
+
+    void Awake()
+    {
+        overrideAnimator = new AnimatorOverrideController(animator.runtimeAnimatorController);
+        animator.runtimeAnimatorController = overrideAnimator;
+    }
 
     public Sprite Pose // Set/get the character's pose.
     {
