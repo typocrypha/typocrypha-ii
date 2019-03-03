@@ -59,6 +59,27 @@ MonoBehaviour:
   - {fileID: 4084041016793927675}
   - {fileID: 4084041016456558858}
   - {fileID: 4084041016308471051}
+  onNextDialog:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  onDisplayAll:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4084041016394960712}
+        m_MethodName: ResetCharacters
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
   dialogView: {fileID: 0}
   dialogBox: {fileID: 0}
 --- !u!114 &4084041017365127636
@@ -85,7 +106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1667dd51552cf9641bf31667e7c9460b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  graph: {fileID: 11400000, guid: 00c63e1b018ea84439a387b13e8a962d, type: 2}
+  graph: {fileID: 11400000, guid: 089d2aaa08b52d5489f20013a2fd71d2, type: 2}
 --- !u!114 &4084041017365127635
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -197,6 +218,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 503578581637883930}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4084041016394960712 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4490229187035899730, guid: 203949331776f884bb276d04f29a19e8,
+    type: 3}
+  m_PrefabInstance: {fileID: 503578581637883930}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f05df667e8fa1c4e9f5270578fd771b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1045161332481588020
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -424,7 +457,7 @@ PrefabInstance:
     - target: {fileID: 9000580581694442008, guid: aba71ac219197624e81ad7994971995b,
         type: 3}
       propertyPath: m_Name
-      value: DialogViewFloat
+      value: FloatDialog
       objectReference: {fileID: 0}
     - target: {fileID: 8794569143971023959, guid: aba71ac219197624e81ad7994971995b,
         type: 3}
@@ -545,11 +578,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 0.013888889
-      objectReference: {fileID: 0}
-    - target: {fileID: 6905060594313605025, guid: aba71ac219197624e81ad7994971995b,
-        type: 3}
-      propertyPath: m_RenderMode
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6905060594313605025, guid: aba71ac219197624e81ad7994971995b,
         type: 3}
@@ -743,6 +771,12 @@ PrefabInstance:
       objectReference: {fileID: 8691632212284722939}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f6696b9a073ca18449d13ade6054f755, type: 3}
+--- !u!224 &4084041016308471055 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7363827781748584011, guid: f6696b9a073ca18449d13ade6054f755,
+    type: 3}
+  m_PrefabInstance: {fileID: 6817605344998980420}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &4084041016308471051 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7363827781748584015, guid: f6696b9a073ca18449d13ade6054f755,
@@ -827,12 +861,6 @@ MonoBehaviour:
   m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!224 &4084041016308471055 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 7363827781748584011, guid: f6696b9a073ca18449d13ade6054f755,
-    type: 3}
-  m_PrefabInstance: {fileID: 6817605344998980420}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &9202050122733279974
 PrefabInstance:
   m_ObjectHideFlags: 0

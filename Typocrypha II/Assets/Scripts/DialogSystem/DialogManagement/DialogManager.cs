@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.Events;
 using Gameflow;
 
 /// <summary>
@@ -26,6 +26,8 @@ public class DialogManager : MonoBehaviour, IPausable
     public static DialogManager instance = null;
     public bool startOnAwake = true; // Should dialog start when scene starts up?
     public List<DialogView> allViews; // All dialog views (VN, CHAT, etc)
+    public UnityEvent onNextDialog; // Event called when a new dialog line is started.
+    public UnityEvent onSkip; // Event called when user manually skips text scroll.
     [HideInInspector] public DialogView dialogView; // Currently displayed dialog view.
     [HideInInspector] public DialogBox dialogBox; // Latest displayed dialog box.
 
@@ -103,6 +105,7 @@ public class DialogManager : MonoBehaviour, IPausable
             SoloView(dialogView); 
         }
         dialogBox = dialogView.PlayDialog(dialogItem); // Play Dialog
+        onNextDialog.Invoke();
     }
 
     /// <summary>

@@ -107,7 +107,8 @@ public class DialogBox : MonoBehaviour, IPausable
         }
 		scrollCR = null;
         hideText.ind[0] = dialogItem.text.Length;
-	}
+        DialogManager.instance.onSkip.Invoke();
+    }
 
     /// <summary>
     /// Set dialog box's height based on amount of text.

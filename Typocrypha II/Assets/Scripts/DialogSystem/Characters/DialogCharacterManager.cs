@@ -150,9 +150,31 @@ public class DialogCharacterManager : MonoBehaviour
     /// <returns>CharacterDialog component of selected character.</returns>
     public DialogCharacter AnimateCharacter(CharacterData data, AnimationClip clip)
     {
-        characterMap[data].overrideAnimator[DialogCharacter.baseAnimationClip] = clip;
-        characterMap[data].animator.Play(DialogCharacter.baseAnimatorState);
+        if (clip.isLooping) // Set idle animation to looped clip.
+        {
+            characterMap[data].overrideAnimator[DialogCharacter.idleAnimationClip] = clip;
+            characterMap[data].animator.Play(DialogCharacter.idleAnimatorState);
+        }
+        else // Play animation once. 
+        {
+            characterMap[data].animator.ResetTrigger("Reset");
+            characterMap[data].overrideAnimator[DialogCharacter.onceAnimationClip] = clip;
+            characterMap[data].animator.Play(DialogCharacter.onceAnimatorState);
+        }
         return characterMap[data];
+    }
+
+    /// <summary>
+    /// Reset certain dynamic properties of dialog characters.
+    /// Resets animation state to idle animation.
+    /// </summary>
+    public void ResetCharacters()
+    {
+        foreach (var dc in characterMap.Values)
+        {
+            dc.PivotPosition = Vector2.zero;
+            dc.animator.SetTrigger("Reset");
+        }
     }
 
     /// <summary>

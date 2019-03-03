@@ -7,13 +7,21 @@ using UnityEngine;
 /// </summary>
 public class DialogCharacter : MonoBehaviour
 {
+    public Transform pivotTr; // Transform of pivot position.
+    public Vector2 PivotPosition
+    {
+        get => pivotTr.localPosition;
+        set => pivotTr.localPosition = value;
+    }
     public SpriteRenderer baseSprite; // Base sprite renderer (the pose).
     public SpriteRenderer exprSprite; // Expression sprite renderer (face).
     public Animator animator; // Animator for character.
     [HideInInspector]public AnimatorOverrideController overrideAnimator; // Override animator.
 
-    public const string baseAnimatorState = "Base";
-    public const string baseAnimationClip = "DialogCharacterBase";
+    public const string idleAnimatorState = "Idle";
+    public const string onceAnimatorState = "Once";
+    public const string idleAnimationClip = "DialogCharacterIdle";
+    public const string onceAnimationClip = "DialogCharacterOnce";
 
     void Awake()
     {
