@@ -108,17 +108,17 @@ public static partial class EditorUtils
             {
                 EditorGUILayout.PrefixLabel("Subtags: ", new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold });
                 foreach (var tag in data.subTags)
-                    doSubtagNames(tag);
+                    DoSubtagNames(tag);
             }
             EditorGUI.indentLevel--;
             EditorGUILayout.EndVertical();
         }
-        private static void doSubtagNames(CasterTag data)
+        private static void DoSubtagNames(CasterTag data)
         {
             EditorGUI.indentLevel++;
             EditorGUILayout.LabelField(data.name, new GUIStyle(GUI.skin.label), GUILayout.Width(240));
             foreach (var tag in data.subTags)
-                doSubtagNames(tag);
+                DoSubtagNames(tag);
             EditorGUI.indentLevel--;
         }
     }
