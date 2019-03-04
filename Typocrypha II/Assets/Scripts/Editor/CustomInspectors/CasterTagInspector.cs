@@ -7,6 +7,7 @@ using SerializableCollections.GUIUtils;
 [CustomEditor(typeof(CasterTag))]
 public class CasterTagInspector : Editor
 {
+    private bool viewCumulative = true;
     public override void OnInspectorGUI()
     {
         CasterTag tag = target as CasterTag;
@@ -14,18 +15,35 @@ public class CasterTagInspector : Editor
         EditorUtils.Separator();
         tag.displayName = EditorGUILayout.TextField(new GUIContent("Display Name"), tag.displayName);
         EditorUtils.Separator();
+        if (tag.subTags.Count > 0)
+        {
+            viewCumulative = EditorGUILayout.ToggleLeft("Cumulative Stats", viewCumulative);
+            if(viewCumulative)
+            {
+                var statMod = new CasterStats();
+                statMod.AddInPlace(tag.statMods);
+                foreach (var mod in tag.subTags)
+                    statMod.AddInPlace(mod.statMods);
+                EditorUtils.CasterUtils.CasterStatsLabelLayout(statMod);
+
+            }
+        }
+        
+
+        EditorUtils.Separator();
         EditorGUILayout.LabelField("Stat Modifiers", new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold, alignment = TextAnchor.MiddleCenter });
         if (tag.statMods != null)
-            EditorUtils.CasterStatsGUILayout(tag.statMods, true);
+            EditorUtils.CasterUtils.CasterStatsGUILayout(tag.statMods);
+
         EditorGUILayout.Space();
         EditorUtils.Separator();
         if (tag.subTags != null)
         {
-            tag.subTags.DoGUILayout(EditorUtils.CasterTagGUI, tag.subTags.ObjPickerAddGUI, "SubTags");
+            tag.subTags.DoGUILayout(EditorUtils.CasterUtils.CasterTagGUI, tag.subTags.ObjPickerAddGUI, "SubTags");
             if (tag.subTags.Contains(tag))
                 tag.subTags.Remove(tag);
         }
         if (GUI.changed)
-            EditorUtility.SetDirty(tag);
+            EditorUtility.SetDirty(target);
     }
 }

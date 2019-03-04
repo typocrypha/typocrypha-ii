@@ -8,7 +8,7 @@ public class Caster : FieldObject
     {
         None = -1,
         Player,
-        Enemy,
+        Hostile,
         Neutral,
         Ally,
     }
@@ -24,12 +24,19 @@ public class Caster : FieldObject
     [SerializeField] private State _type;
     public State CasterState { get => _type; set => _type = value; }
 
-    [SerializeField] private CasterStats _stats;
-    public CasterStats Stats { get => _stats; set => _stats = value; }
+    
     public int Health { get; set; }
+    public int Armor { get; set; }
+    public int SP { get; set; }
     public int Stagger { get; set; }
     public bool Stunned { get; }
     public BattleStatus BStatus { get; }
     [SerializeField] private CasterTagDictionary _tags;
     public CasterTagDictionary Tags { get => _tags; set => _tags = value; }
+    public CasterStats Stats { get => _tags.statMod; }
+
+    private void Awake()
+    {
+        _tags.RecalculateStats();
+    }
 }

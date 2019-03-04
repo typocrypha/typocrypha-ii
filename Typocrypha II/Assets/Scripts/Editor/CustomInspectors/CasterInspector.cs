@@ -29,10 +29,11 @@ public class CasterInspector : Editor
         //EditorGUILayout.EndHorizontal()
         EditorUtils.Separator();
         // Stat GUI
-        EditorUtils.CasterStatsGUILayout(data.Stats);
+        data.Tags.RecalculateStats();
+        EditorUtils.CasterUtils.CasterStatsLabelLayout(data.Stats);
         EditorUtils.Separator();
         // Tag GUI
-        EditorUtils.CasterTagDictionaryGUILayout(data.Tags);
+        EditorUtils.CasterUtils.CasterTagDictionaryGUILayout(data.Tags);
         EditorUtils.SetSceneDirtyIfGUIChanged(target);
     }
 }
