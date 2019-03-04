@@ -65,12 +65,17 @@ public class DialogBox : MonoBehaviour, IPausable
         this.dialogItem = dialogItem;
         DialogParser.instance.Parse(dialogItem, this);
         dialogText.text = dialogItem.text;
+        // Add text shadow.
+        var shadow = dialogText.gameObject.AddComponent<Shadow>();
+        shadow.effectDistance = new Vector2(2, -2);
+        shadow.effectColor = Color.black;
         // Hide all text.
         hideText = dialogText.gameObject.AddComponent<FXText.Color>();
         hideText.ind = new List<int> { 0, 0 };
         hideText.color = Color.clear;
         hideText.ind[0] = 0;
         hideText.ind[1] = dialogItem.text.Length;
+        // Set box size based on text.
         SetBoxHeight();
         // Set voice sfx.
         voiceAS.clip = dialogItem.voice;
@@ -90,9 +95,9 @@ public class DialogBox : MonoBehaviour, IPausable
         // Remove old text effects.
         var fxTexts = dialogText.GetComponents<FXText.FXTextBase>();
         foreach (var fxText in fxTexts)
-        {
             Destroy(fxText);
-        }
+        if (dialogText.gameObject.GetComponent<Shadow>() != null)
+            Destroy(dialogText.gameObject.GetComponent<Shadow>());
     }
 
     /// <summary>

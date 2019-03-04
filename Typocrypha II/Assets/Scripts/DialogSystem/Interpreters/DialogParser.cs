@@ -37,7 +37,8 @@ public class DialogParser : MonoBehaviour
 			{"scramble", typeof(FXText.Scramble)},
 			{"wavy", typeof(FXText.Wavy)},
             {"shake", typeof(FXText.Shake)},
-            {"rainbow", typeof(FXText.Rainbow) }
+            {"rainbow", typeof(FXText.Rainbow) },
+            {"tips", typeof(FXText.TIPS) }
         };
 		FXTextStack = new Stack<FXText.FXTextBase> ();
 	}

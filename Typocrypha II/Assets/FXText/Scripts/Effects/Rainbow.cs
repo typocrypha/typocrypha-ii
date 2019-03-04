@@ -5,13 +5,15 @@ using UnityEngine.UI;
 
 namespace FXText
 {
+    /// <summary>
+    /// Rainbow xolor changing effect.
+    /// </summary>
     public class Rainbow : FXTextBase
     {
         public float period = 0.1f; // Time period between changes.
 
         int step;
         static UnityEngine.Color[] rainbowColors;
-        
 
         protected override IEnumerator EffectCR()
         {

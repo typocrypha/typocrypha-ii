@@ -24,7 +24,7 @@ public class DialogManager : MonoBehaviour, IPausable
     #endregion
 
     public static DialogManager instance = null;
-    public bool startOnAwake = true; // Should dialog start when scene starts up?
+    public bool startOnStart = true; // Should dialog start when scene starts up?
     public List<DialogView> allViews; // All dialog views (VN, CHAT, etc)
     public UnityEvent onNextDialog; // Event called when a new dialog line is started.
     public UnityEvent onSkip; // Event called when user manually skips text scroll.
@@ -47,10 +47,11 @@ public class DialogManager : MonoBehaviour, IPausable
 
         ph = new PauseHandle(OnPause);
         graphParser = GetComponent<DialogGraphParser>();
-        if (startOnAwake)
-        {
-            StartDialog();
-        }
+    }
+
+    void Start()
+    {
+        if (startOnStart) StartDialog();
     }
 
     void Update()

@@ -120,6 +120,7 @@ public class DialogGraphParser : MonoBehaviour
             if (currNode is AddCharacter)
             {
                 var cNode = currNode as AddCharacter;
+                Debug.Log(DialogCharacterManager.instance);
                 DialogCharacterManager.instance.AddCharacter(cNode.characterData, cNode.targetPos);
             }
             else if (currNode is RemoveCharacter)
