@@ -17,13 +17,14 @@ public class Spell
         //TODO: Search for modifiers. apply modifiers
     }
 
-    //TODO: add waiting/coroutine for spell visualization
     /// <summary> Cast the spell's effect with a given caster at a given target position </summary>
     public void Cast (Caster caster, Battlefield.Position target)
     {
         caster.StartCoroutine(CastCR(caster, target));
         //Do post-cast visualization?
     }
+
+    private const float delayBetweenTargets = 0.1f;
 
     private IEnumerator CastCR(Caster caster, Battlefield.Position target)
     {
@@ -32,18 +33,22 @@ public class Spell
             foreach (var effect in root.effects)
             {
                 var targets = effect.pattern.Target(caster.FieldPos, target);
+                Coroutine spellCR = null;
                 foreach (var t in targets)
                 {
-                    var targetCaster = Battlefield.instance.GetCaster(t);
+                    var targetCaster = Battlefield.instance.GetCaster(t);                   
                     if (targetCaster == null)
-                        Debug.Log("No target in targeted space: " + t);
+                        Debug.Log("No target in targeted space: " + t); //Play no target graphx
                     else
                     {
                         effect.Cast(caster, targetCaster); //TODO: add effect logging?
-                        yield return caster.StartCoroutine(DoSpellEffect(effect, t));
+                        spellCR = caster.StartCoroutine(DoSpellEffect(effect, t));
+                        yield return new WaitForSeconds(delayBetweenTargets);
                         //Break if enemy killed?
-                    }
+                    }                 
                 }
+                if(spellCR != null)
+                    yield return spellCR;
             }
         }
     }
@@ -55,14 +60,14 @@ public class Spell
             case RootWordEffect.EffectType.Single:
                 yield return new WaitUntilAnimationComplete(
                     AnimationPlayer.instance.playAnimation(effect.effectPackets[0].clip, 
-                    Battlefield.instance.GetSpace(target), 1));
+                    Battlefield.instance.GetSpace(target), 1f));
                 break;
             case RootWordEffect.EffectType.Sequence:
                 foreach(var packet in effect.effectPackets)
                 {
                     yield return new WaitUntilAnimationComplete(
                         AnimationPlayer.instance.playAnimation(packet.clip,
-                        Battlefield.instance.GetSpace(target), 1));
+                        Battlefield.instance.GetSpace(target), 1f));
                 }
                 break;
             case RootWordEffect.EffectType.Parallel:
@@ -73,13 +78,16 @@ public class Spell
                 if(effect.effectPackets.Count > 0)
                     yield return new WaitUntilAnimationComplete(
                         AnimationPlayer.instance.playAnimation(effect.effectPackets[0].clip,
-                        Battlefield.instance.GetSpace(target), 1));
+                        Battlefield.instance.GetSpace(target), 1f));
                 break;
             case RootWordEffect.EffectType.Prefab:
                 if (effect.effectPrefab != null)
                 {
                     var effectVisual = Object.Instantiate(effect.effectPrefab);
                     effectVisual.transform.position = Battlefield.instance.GetSpace(target);
+                    var fxComponent = effectVisual.GetComponent<SpellFx>();
+                    if (fxComponent != null)
+                        yield return fxComponent.StartCoroutine(fxComponent.PlayEffect());
                 }
                 break;
         }
