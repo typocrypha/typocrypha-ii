@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 namespace Typocrypha
 {
@@ -12,6 +13,7 @@ namespace Typocrypha
     {
         public static Keyboard instance = null;
         public Dictionary<char, Key> keyMap; // Map from characters to keyboard keys.
+        public TMP_InputField inputBar; // Input field for typing.
 
         void Awake()
         {
@@ -30,6 +32,33 @@ namespace Typocrypha
             GetComponent<KeyboardBuilder>().BuildKeyboard(); // Construct keyboard.
             foreach(Transform key in transform.Find("Keys")) // Add keys to map.
                 keyMap[key.gameObject.name[0]] = key.GetComponent<Key>();
+        }
+
+        string frameInput = "";
+
+        // Check use input.
+        void Update()
+        {
+            if (Input.inputString.Length > 0)
+            {
+                frameInput = Input.inputString;
+                foreach (var c in keyMap.Keys)
+                {
+                    if (frameInput.Contains(c.ToString()))
+                    {
+                        keyMap[c].onPress();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Called when input bar is submitted. (Handle set in editor).
+        /// </summary>
+        /// <param name="inputString">Submitted string.</param>
+        public void OnSubmit(string inputString)
+        {
+            Debug.Log(inputString);
         }
     }
 }

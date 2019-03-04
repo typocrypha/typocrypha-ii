@@ -10,7 +10,7 @@ namespace Typocrypha
     /// Key order is constructed based on a format string:
     ///   [a-z] : Display that letter key.
     ///   [\n]  : Start a new row of keys.
-    ///   [ {float} ] : Offset horizontally.
+    ///   [ {float} ] : Offset horizontally (space delimited).
     ///   
     /// Example formats:
     ///   qwerty: qwertyuiop\n 0.4 asdfghjkl\n 1.2 zxcvbnm
