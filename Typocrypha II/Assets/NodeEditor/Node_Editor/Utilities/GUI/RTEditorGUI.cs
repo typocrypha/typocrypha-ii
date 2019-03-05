@@ -637,13 +637,35 @@ namespace NodeEditorFramework.Utilities
 			return obj;
 		}
 
-		#endregion
+        #endregion
 
-		#region Popups
+        #region Curve Field
+        public static AnimationCurve CurveField(Rect position, AnimationCurve value)
+        {
+            #if UNITY_EDITOR
+            if (!Application.isPlaying)
+                return UnityEditor.EditorGUI.CurveField(position, value);
+            #endif
+            return null;
+        }
+        #endregion
 
-		// TODO: Implement RT Popup
+        #region Vector2Field
+        public static Vector2 Vector2Field(Rect position, string label, Vector2 value)
+        {
+        #if UNITY_EDITOR
+            if (!Application.isPlaying)
+                return UnityEditor.EditorGUI.Vector2Field(position, label, value);
+        #endif
+            return Vector2.zero;
+        }
+        #endregion
 
-		public static System.Enum EnumPopup (System.Enum selected, params GUILayoutOption[] options) 
+        #region Popups
+
+        // TODO: Implement RT Popup
+
+        public static System.Enum EnumPopup (System.Enum selected, params GUILayoutOption[] options) 
 		{
 			return EnumPopup (GUIContent.none, selected, options);
 		}

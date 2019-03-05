@@ -19,6 +19,9 @@ public class TIPSEntryDataInspector : Editor
         if (data.searchTerms == null) data.searchTerms = new NameSet();
         NameSetGUI("Search Terms", data.searchTerms);
 
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+        data.entryPrefab = EditorGUILayout.ObjectField(data.entryPrefab, typeof(GameObject), false) as GameObject;
+
         if (GUI.changed) EditorUtility.SetDirty(data);
     }
 

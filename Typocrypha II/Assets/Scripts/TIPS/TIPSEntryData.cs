@@ -10,4 +10,5 @@ using UnityEngine;
 public class TIPSEntryData : ScriptableObject
 {
     public NameSet searchTerms; // Set of all searchable terms.
+    public GameObject entryPrefab; // Prefab object for the entry.
 }

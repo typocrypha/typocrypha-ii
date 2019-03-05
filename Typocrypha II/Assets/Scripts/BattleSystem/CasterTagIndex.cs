@@ -8,7 +8,7 @@ public static class CasterTagIndex
     private static readonly Dictionary<string, CasterTag> allTags = build();
     private static Dictionary<string, CasterTag> build()
     {
-        List<CasterTag> tags = AssetUtils.GetAssetList<CasterTag>(path);
+        List<CasterTag> tags = null;//AssetUtils.GetAssetList<CasterTag>(path);
         Dictionary<string, CasterTag> _allTags = new Dictionary<string, CasterTag>();
         foreach (CasterTag tag in tags)
         {

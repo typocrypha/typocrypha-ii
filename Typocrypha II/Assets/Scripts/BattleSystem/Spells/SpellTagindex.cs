@@ -8,7 +8,7 @@ public static class SpellTagIndex
     private static readonly Dictionary<string, SpellTag> allTags = build();
     private static Dictionary<string, SpellTag> build()
     {
-        List<SpellTag> tags = AssetUtils.GetAssetList<SpellTag>(path);
+        List<SpellTag> tags = null;//AssetUtils.GetAssetList<SpellTag>(path);
         Dictionary<string, SpellTag> _allTags = new Dictionary<string, SpellTag>();
         foreach (SpellTag tag in tags)
         {

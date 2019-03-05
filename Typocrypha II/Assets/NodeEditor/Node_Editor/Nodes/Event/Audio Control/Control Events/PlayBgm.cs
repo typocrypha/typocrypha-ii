@@ -43,7 +43,7 @@ namespace Gameflow
             GUILayout.Label(new GUIContent("Fade In Curve", tooltipFade), NodeEditorGUI.nodeLabelBoldCentered);
             GUILayout.BeginVertical();
             GUILayout.Space(100);
-            fadeCurve = EditorGUI.CurveField(new Rect(4, 50, MinSize.x - 10, 100), fadeCurve);
+            fadeCurve = RTEditorGUI.CurveField(new Rect(4, 50, MinSize.x - 10, 100), fadeCurve);
             GUILayout.EndVertical();
             #endregion
         }

@@ -41,7 +41,7 @@ namespace Gameflow
             GUILayout.BeginHorizontal();
             GUIStyle dialogTextStyle = new GUIStyle(GUI.skin.textArea);
             dialogTextStyle.wordWrap = true;
-            targetPos = EditorGUI.Vector2Field(new Rect(4, 50, MinSize.x - 10, 20), "", targetPos);
+            targetPos = RTEditorGUI.Vector2Field(new Rect(4, 50, MinSize.x - 10, 20), "", targetPos);
             GUILayout.EndHorizontal();
             #endregion
         }
