@@ -85,9 +85,13 @@ public class DialogGraphParser : MonoBehaviour
         }
         if (currNode is DialogNode)
         {
-            var cd = DialogCharacterManager.instance.CharacterDataByName((currNode as DialogNode).characterName);
+            var cNode = currNode as DialogNode;
+            // Get speaking SFX if valid name.
+            var cd = DialogCharacterManager.instance.CharacterDataByName(cNode.characterName);
             AudioClip voice = null;
             if (cd != null) voice = cd.talk_sfx;
+            // Set TIPS search.
+            TIPSManager.instance.CurrSearchable = cNode.tipsData;
             if (currNode is DialogNodeVN)
             {
                 var dNode = currNode as DialogNodeVN;

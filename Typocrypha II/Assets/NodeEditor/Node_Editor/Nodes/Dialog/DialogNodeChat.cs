@@ -21,43 +21,29 @@ namespace Gameflow
         public Sprite rightIcon;
 
         #region Tooltip Strings
-        private const string tooltip_name = "The speaking character's name (optional). Used to set speaking sfx if not overriden by text events";
-        protected const string tooltip_text = "The text to be displayed. Can substitute text macros using {macro-name,args}, and call text events using [event-name,args]";
+        private const string tooltipSprite = "Sprites on the left and right side of the chat box.";
         #endregion
 
         protected override void OnCreate()
         {
+            base.OnCreate();
             characterName = "Name (optional)";
-            text = "Insert dialog text here";
         }
 
         public override void NodeGUI()
         {
-            GUILayout.Space(5);
-            GUILayout.BeginVertical("Box");
-            GUILayout.BeginHorizontal();
-            GUILayout.Label(new GUIContent("Name", tooltip_name), NodeEditorGUI.nodeLabel, GUILayout.Width(45f));
-            characterName = GUILayout.TextField(characterName, GUILayout.Width(MinSize.x - 65));
-            GUILayout.EndHorizontal();
-            GUILayout.EndVertical();
+            NameGUI();
+            TextGUI();
 
-            #region Text Field
-            GUILayout.Label(new GUIContent("Dialog Text", tooltip_text), NodeEditorGUI.nodeLabelBoldCentered);
-            GUILayout.BeginHorizontal();
-            GUIStyle dialogTextStyle = new GUIStyle(GUI.skin.textArea);
-            dialogTextStyle.wordWrap = true;
-            text = GUILayout.TextArea(text, dialogTextStyle, GUILayout.MinHeight(RTEditorGUI.lineHeight * 5));
-            GUILayout.EndHorizontal();
             //Don't know why this code needs to be here exactly, but it makes everything nicer? maybe add to some static stuff?
             GUILayout.BeginHorizontal();
             RTEditorGUI.labelWidth = 90;
             GUILayout.EndHorizontal();
-            #endregion
 
             #region Icon Sprites
             GUILayout.BeginVertical("Box");
             GUILayout.Space(3);
-            GUILayout.Label(new GUIContent("left       || Icons ||       right", tooltip_name), NodeEditorGUI.nodeLabelBoldCentered);
+            GUILayout.Label(new GUIContent("left       || Icons ||       right", tooltipSprite), NodeEditorGUI.nodeLabelBoldCentered);
             GUILayout.BeginHorizontal();
             GUILayout.Space(10);
             leftIcon = RTEditorGUI.ObjectField(leftIcon, false, GUILayout.Width(65f), GUILayout.Height(65f));

@@ -41,7 +41,7 @@ public class PauseManager : MonoBehaviour
     }
 
     // Pause/Unpause all pausable scripts.
-    void PauseAll(bool value)
+    public void PauseAll(bool value)
     {
         foreach(var ph in allPausable)
         {
