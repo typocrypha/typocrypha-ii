@@ -39,15 +39,31 @@ namespace Typocrypha
         // Check use input.
         void Update()
         {
-            if (Input.inputString.Length > 0)
+            /*
+            frameInput = Input.inputString;
+            foreach (var c in keyMap.Keys)
             {
-                frameInput = Input.inputString;
-                foreach (var c in keyMap.Keys)
+                
+                if (frameInput.Contains(c.ToString()))
                 {
-                    if (frameInput.Contains(c.ToString()))
-                    {
-                        keyMap[c].onPress();
-                    }
+                    keyMap[c].onPress();
+                    keyMap[c].Highlight(true);
+                }
+                else
+                {
+                    keyMap[c].Highlight(false);
+                }
+            }
+            */
+            foreach (var c in keyMap)
+            {
+                if (Input.GetKey(c.Key.ToString()))
+                {
+                    c.Value.Highlight(true);
+                }
+                else
+                {
+                    c.Value.Highlight(false);
                 }
             }
         }
