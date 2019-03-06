@@ -9,15 +9,15 @@ public delegate IEnumerator TextEventDel(string[] opt);
 /// </summary>
 public struct TextEvent
 { 
-	public string evt; // Name of event
-	public string[] opt; // Options of event
+    public string evt; // Name of event
+    public string[] opt; // Options of event
     public int pos; // Position in text of event
-	public TextEvent(string evt, string[] opt, int pos)
+    public TextEvent(string evt, string[] opt, int pos)
     {
-		this.evt = evt;
-		this.opt = opt;
+        this.evt = evt;
+        this.opt = opt;
         this.pos = pos;
-	}
+    }
 }
 
 /// <summary>
@@ -55,6 +55,7 @@ public class TextEvents : MonoBehaviour, IPausable
         ph = new PauseHandle(OnPause);
         textEventMap = new Dictionary<string, TextEventDel>
         {
+            {"test", Test },
             {"pause-dialog", PauseDialog},
             {"shake", ScreenShake},
             {"fade-screen", FadeScreen},
@@ -80,6 +81,16 @@ public class TextEvents : MonoBehaviour, IPausable
     }
 
     /**************************** TEXT EVENTS *****************************/
+
+    /// <summary>
+    /// Test text event.
+    /// </summary>
+    /// <param name="opt">NONE</param>
+    IEnumerator Test(string[] opt)
+    {
+        Debug.Log("test");
+        yield return null;
+    }
 
     /// <summary>
     /// Pauses text scroll for a fixed amount of time.

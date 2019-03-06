@@ -39,22 +39,6 @@ namespace Typocrypha
         // Check use input.
         void Update()
         {
-            /*
-            frameInput = Input.inputString;
-            foreach (var c in keyMap.Keys)
-            {
-                
-                if (frameInput.Contains(c.ToString()))
-                {
-                    keyMap[c].onPress();
-                    keyMap[c].Highlight(true);
-                }
-                else
-                {
-                    keyMap[c].Highlight(false);
-                }
-            }
-            */
             foreach (var c in keyMap)
             {
                 if (Input.GetKey(c.Key.ToString()))

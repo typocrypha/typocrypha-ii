@@ -16,9 +16,10 @@ public class DialogParser : MonoBehaviour
 	Stack<FXText.FXTextBase> FXTextStack; // Stack for managing nested effects
 	char[] optDelim = new char[1] { ',' }; // Option delimiter
     char[] FXTextDelim = new char[2] { '^', '|' }; // FXText delimiters
-    char[] TextEventDelim = new char[3] { '[' , ']' , '=' }; // TextEvent delimiters
-    char[] macroDelim = new char[2] { '{', '}' } // Macro delimiters
-;
+    char[] TextEventDelim = new char[2] { '[' , ']' }; // TextEvent delimiters
+    char[] macroDelim = new char[2] { '{', '}' }; // Macro delimiters
+    char[] escapeChar = new char[1] { '\\' }; // Escape character
+
 	void Awake()
     {
         if (instance == null)
@@ -76,7 +77,11 @@ public class DialogParser : MonoBehaviour
 			}
             else if (!tag)
             {
-				if(c == '’')
+                if(c == escapeChar[0])
+                {
+                    parsed.Append(text[++i]);
+                }
+				else if(c == '’')
                 {
 					parsed.Append ("'");
 				}
@@ -117,21 +122,13 @@ public class DialogParser : MonoBehaviour
 	int ParseTextEvent(int startPos, string text, StringBuilder parsed, DialogItem dialogItem)
     {
 		int endPos = text.IndexOf (TextEventDelim[1], startPos);
-		int eqPos = text.IndexOf (TextEventDelim[2], startPos);
 		string evt;
 		string[] opt;
-		if (eqPos == -1 || eqPos > endPos) // If no '='
-        { 
-			evt = text.Substring (startPos + 1, endPos - startPos - 1);
-			opt = new string[0]; 
-		}
-        else
-        {
-			evt = text.Substring (startPos + 1, eqPos - startPos - 1);
-			opt = text.Substring (eqPos + 1, endPos - eqPos - 1).Split (optDelim);
-		}
+		opt = text.Substring (startPos + 1, endPos - startPos - 1).Split (optDelim, escapeChar);
+        evt = opt[0];
+        opt = opt.Skip<string>(1).ToArray<string>();
 		dialogItem.TextEventList.Add(new TextEvent(evt, opt, parsed.Length));
-		//Debug.Log ("  text_event:" + evt + ":" + opt.Aggregate("", (acc, next) => acc + "," + next));
+		//Debug.Log ("text_event:" + evt + ":" + opt.Aggregate("", (acc, next) => acc + ":" + next));
 		return endPos;
 	}
 
@@ -148,8 +145,8 @@ public class DialogParser : MonoBehaviour
 			if (text [i] == macroDelim[0])
             {
 				int startPos = i + 1;
-				int endPos = text.IndexOf (macroDelim[1], startPos);
-				string[] macro = text.Substring (startPos, endPos - startPos).Split(optDelim);
+				int endPos = text.IndexOf (macroDelim[1], startPos, escapeChar);
+				string[] macro = text.Substring (startPos, endPos - startPos).Split(optDelim, escapeChar);
 				//Debug.Log ("  macro:" + macro.Aggregate("", (acc, next) => acc + "," + next));
 				string[] opt = macro.Skip (1).Take (macro.Length - 1).ToArray ();
 				string sub = TextMacros.instance.macroMap [macro[0]] (opt);
