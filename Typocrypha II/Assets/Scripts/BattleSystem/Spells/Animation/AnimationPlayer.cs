@@ -20,7 +20,7 @@ public class AnimationPlayer : MonoBehaviour {
 	}
 	
     //Plays any one-shot animation clip and returns the play time as a float
-    public CompletionData playAnimation(AnimationClip clip, Vector2 pos, float speed = 1f)
+    public CompletionData Play(AnimationClip clip, Vector2 pos, float speed = 1f)
     {
         GameObject display = Instantiate(animationHolderPrefab);
         display.transform.position = pos;
@@ -46,7 +46,7 @@ public class AnimationPlayer : MonoBehaviour {
 }
 
 //Wait until the given CompletionData's time has elapsed, or the end trigger is set, whichever comes first
-public class WaitUntilAnimationComplete : CustomYieldInstruction
+public class WaitUntilAnimComplete : CustomYieldInstruction
 {
     AnimationPlayer.CompletionData data;
     private float elapsedTime = 0;
@@ -57,7 +57,7 @@ public class WaitUntilAnimationComplete : CustomYieldInstruction
             return data.keepPlaying && ((elapsedTime += Time.deltaTime) < data.time);
         }
     }
-    public WaitUntilAnimationComplete(AnimationPlayer.CompletionData data)
+    public WaitUntilAnimComplete(AnimationPlayer.CompletionData data)
     {
         this.data = data;
     }

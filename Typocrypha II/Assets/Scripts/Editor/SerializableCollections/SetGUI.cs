@@ -52,7 +52,7 @@ namespace SerializableCollections
                     return;
                 }
                 if (GUILayout.Button("+"))
-                    EditorGUIUtility.ShowObjectPicker<CasterTag>(null, false, "", 1);
+                    EditorGUIUtility.ShowObjectPicker<T>(null, false, "", 1);
             }
 
             public static void GenericMenuAddGUI<T>(this SerializableSet<T> set, GenericMenu menu)

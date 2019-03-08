@@ -21,10 +21,6 @@ public class TargetDataDrawer : PropertyDrawer
         // Draw label
         //position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
 
-        // Don't make child fields be indented
-        //var indent = EditorGUI.indentLevel;
-        //EditorGUI.indentLevel = 0;
-
         //Initialize properties
         var arrayProp = property.FindPropertyRelative("pattern").FindPropertyRelative("_data");
         var typeProp = property.FindPropertyRelative("type");

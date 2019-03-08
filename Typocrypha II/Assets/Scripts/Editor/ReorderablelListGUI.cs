@@ -5,7 +5,7 @@ using UnityEditor;
 
 namespace GUIUtils
 {
-    /// <summary> A class to help display lists with a custom reorderable GUI. 
+    /// <summary> A class to help display lists with a custom reorderable GUI.
     /// Currently based on UnityEditorInternal code. </summary>
     public class RListGUI<T>
     {
@@ -59,6 +59,33 @@ namespace GUIUtils
         public void DoLayoutList()
         {
             list.DoLayoutList();
+        }
+        public void DoList(Rect rect)
+        {
+            list.DoList(rect);
+        }
+    }
+
+    public class RListGUIProperty
+    {
+        public delegate void ElementGUI(SerializedProperty element, int index, Rect rect);
+        public delegate GenericMenu Dropdown();
+        public float Height => list.GetHeight() + EditorGUIUtility.singleLineHeight;
+
+        private UnityEditorInternal.ReorderableList list = null;
+        public RListGUIProperty(SerializedProperty prop, GUIContent label)
+        {
+            list = new UnityEditorInternal.ReorderableList(prop.serializedObject, prop, true, true, true, true);
+            list.drawHeaderCallback = (Rect rect) =>
+            {
+                EditorGUI.LabelField(rect, label, new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold });
+            };
+            list.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
+            {
+                if (index >= list.count || list.count <= 0)//Fixes error if .doGUI removes an element from the list
+                    return;
+                EditorGUI.PropertyField(rect, prop.GetArrayElementAtIndex(index), GUIContent.none);
+            };
         }
         public void DoList(Rect rect)
         {
