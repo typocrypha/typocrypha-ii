@@ -36,12 +36,13 @@ public class SpellManager : MonoBehaviour
     
     private IEnumerator CastCR(RootWord[] roots, Caster caster, Battlefield.Position target)
     {
+        List<Coroutine> crList = new List<Coroutine>();
         foreach (var root in roots)
         {
             foreach (var effect in root.effects)
             {
                 var targets = effect.pattern.Target(caster.FieldPos, target);
-                Coroutine spellCR = null;
+                crList.Clear();
                 foreach (var t in targets)
                 {
                     var targetCaster = Battlefield.instance.GetCaster(t);                   
@@ -51,19 +52,18 @@ public class SpellManager : MonoBehaviour
                         noTargetEffect.transform.position = Battlefield.instance.GetSpace(t);
                         var fxComponent = noTargetEffect.GetComponent<SpellFx>();
                         if (fxComponent != null)
-                            spellCR = fxComponent.StartCoroutine(fxComponent.PlayEffect());
+                            crList.Add(fxComponent.StartCoroutine(fxComponent.PlayEffect()));
                     }
                     else
                     {
                         effect.Cast(caster, targetCaster); //TODO: add effect logging?
-                        spellCR = StartCoroutine(effect.fx.Play(Battlefield.instance.GetSpace(t)));
+                        crList.Add(StartCoroutine(effect.fx.Play(Battlefield.instance.GetSpace(t))));
                         yield return new WaitForSeconds(delayBetweenTargets);
                         //Break if enemy killed?
                     }                 
                 }
-                //Replace with list
-                if(spellCR != null)
-                    yield return spellCR;
+                foreach (var cr in crList)
+                    yield return cr;
             }
         }
     }
