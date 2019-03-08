@@ -54,7 +54,9 @@ namespace Typocrypha
                         go.name = c.ToString();
                         go.transform.localPosition = currPos;
                         go.transform.localScale = Vector2.one * keySize;
-                        go.GetComponent<Key>().tmp.text = c.ToString().ToUpper();
+                        Key key = go.GetComponent<Key>();
+                        key.letter = c;
+                        key.letterText.text = c.ToString().ToUpper();
                         currPos.x += keySize + hSpacing;
                         i++;
                         break;

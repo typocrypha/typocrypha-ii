@@ -36,19 +36,23 @@ namespace Typocrypha
 
         string frameInput = "";
 
-        // Check use input.
+        // Check user input.
         void Update()
         {
             foreach (var c in keyMap)
             {
                 if (Input.GetKey(c.Key.ToString()))
                 {
-                    c.Value.Highlight(true);
+                    c.Value.Highlight = true;
                 }
                 else
                 {
-                    c.Value.Highlight(false);
+                    c.Value.Highlight = false;
                 }
+            }
+            foreach (var c in Input.inputString)
+            {
+                keyMap[c].onPress?.Invoke();
             }
         }
 
@@ -59,6 +63,19 @@ namespace Typocrypha
         public void OnSubmit(string inputString)
         {
             Debug.Log(inputString);
+        }
+
+        /// <summary>
+        /// Apply an effect to a list of keys.
+        /// </summary>
+        /// <param name="affected">List of characters effect.</param>
+        /// <param name="effectPrefab">Prefab of effect (contains functionality and visual/audio effects.</param>
+        public void ApplyEffect(string affected, GameObject effectPrefab) 
+        {
+            foreach(char c in affected)
+            {
+                keyMap[c].ApplyEffect(effectPrefab);
+            }
         }
     }
 }
