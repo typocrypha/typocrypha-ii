@@ -9,7 +9,6 @@ public class RootWordEffectInspector : Editor
 {
     public override void OnInspectorGUI()
     {
-        //base.OnInspectorGUI();
         var effect = target as RootWordEffect;
         EditorGUILayout.PropertyField(serializedObject.FindProperty("fx"));
         EditorUtils.Separator();

@@ -49,7 +49,7 @@ public class TargetDataDrawer : PropertyDrawer
         UIRect.y += lineHeight;
 
         //Draw Bottom row
-        string bottomRowLabel = (TargetData.Type)typeProp.enumValueIndex == TargetData.Type.Targeted ? "Other Row" : "Ally Row";
+        string bottomRowLabel = (TargetData.Type)typeProp.enumValueIndex == TargetData.Type.Targeted ? "Other Row" : "Caster Row";
         EditorGUI.PrefixLabel(new Rect(UIRect) { width = labelWidth }, new GUIContent(bottomRowLabel));
         checkRect = new Rect(UIRect) { width = checkWidth, x = UIRect.x + labelWidth + 3 };
         EditorGUI.PropertyField(checkRect, arrayProp.GetArrayElementAtIndex(3), GUIContent.none);

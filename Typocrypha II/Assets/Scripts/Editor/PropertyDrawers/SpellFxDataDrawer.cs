@@ -58,7 +58,6 @@ public class SpellFxDataDrawer : PropertyDrawer
                 EditorGUI.PropertyField(UIRect, property.FindPropertyRelative("effectPrefab"));
                 break;
         }
-
         EditorGUI.EndProperty();
     }
 }
