@@ -25,14 +25,14 @@ public class TIPSManager : MonoBehaviour, IPausable
         set
         {
             currSearchable = value;
-            if (currSearchable == null)
-            {
-                TIPSTab.GetComponent<SpriteRenderer>().color = Color.white;
-            }
-            else
-            {
-                TIPSTab.GetComponent<SpriteRenderer>().color = Color.blue;
-            }
+            //if (currSearchable == null)
+            //{
+            //    TIPSTab.GetComponent<SpriteRenderer>().color = Color.white;
+            //}
+            //else
+            //{
+            //    TIPSTab.GetComponent<SpriteRenderer>().color = Color.blue;
+            //}
         }
     }
     public GameObject TIPSTab; // TIPS tab to notify when new entries are added.
@@ -41,6 +41,7 @@ public class TIPSManager : MonoBehaviour, IPausable
     public InputField TIPSsearch; // TIPS search bar.
 
     TIPSEntryData[] allTIPS; // List of all TIPS entries.
+    GameObject currEntry; // Currently displayed entry.
 
     void Awake()
     {
@@ -82,13 +83,30 @@ public class TIPSManager : MonoBehaviour, IPausable
     /// <param name="term">Search term.</param>
     public void OpenEntry(string term)
     {
+        if (currEntry != null) Destroy(currEntry);
         // IF NOT FOUND, THEN DISPLAY DEFAULT NONE FOUND
         foreach(var entry in allTIPS)
         {
             if (entry.searchTerms.Contains(term))
             {
-                Instantiate(entry.entryPrefab, TIPSContent);
+                currEntry = Instantiate(entry.entryPrefab, TIPSContent);
             }
+        }
+    }
+
+    /// <summary>
+    /// Signal with TIPS tab that a new entry has been discovered (or turn off).
+    /// </summary>
+    /// <param name="on">Whether to turn signal on or off.</param>
+    public void SignalEntry(bool on)
+    {
+        if (on)
+        {
+            TIPSTab.GetComponent<SpriteRenderer>().color = Color.blue;
+        }
+        else
+        {
+            TIPSTab.GetComponent<SpriteRenderer>().color = Color.white;
         }
     }
 }

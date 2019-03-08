@@ -60,7 +60,8 @@ public class TextEvents : MonoBehaviour, IPausable
             {"shake", ScreenShake},
             {"fade-screen", FadeScreen},
             {"text-delay", TextDelay},
-            {"float-text", FloatText }
+            {"float-text", FloatText },
+            {"tips-entry",SignalEntry }
         };
     }
 
@@ -176,6 +177,17 @@ public class TextEvents : MonoBehaviour, IPausable
     {
         Vector2 pos = new Vector2(float.Parse(opt[1]), float.Parse(opt[2]));
         FloatDialog.instance.SpawnFloatDialog(opt[0], pos);
+        yield return null;
+    }
+
+    /// <summary>
+    /// Signal TIPS that a new entry has been discovered.
+    /// </summary>
+    /// <param name="opt">
+    /// </param>
+    IEnumerator SignalEntry(string[] opt)
+    {
+        TIPSManager.instance.SignalEntry(true);
         yield return null;
     }
 }
