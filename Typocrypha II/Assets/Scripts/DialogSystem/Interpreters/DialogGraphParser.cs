@@ -175,6 +175,12 @@ public class DialogGraphParser : MonoBehaviour
                 BackgroundManager.instance.SetBackground(node.bgPrefab);
             }
         }
+        else if (currNode is SpawnPrefabNode)
+        {
+            var node = currNode as SpawnPrefabNode;
+            var go = Instantiate(node.prefab);
+            go.transform.position = node.pos;
+        }
         else if (currNode is AudioControlNode)
         {
             if (currNode is PlayBgm)
