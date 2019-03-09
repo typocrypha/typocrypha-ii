@@ -61,6 +61,7 @@ public class DialogCharacterManager : MonoBehaviour
         GameObject go = Instantiate(characterPrefab, transform);
         go.transform.position = pos;
         DialogCharacter dc = go.GetComponent<DialogCharacter>();
+        dc.targetPosition = pos;
         dc.Pose = data.poses[defaultPose];
         dc.Expr = data.expressions[defaultExpr];
         characterMap[data] = dc;
@@ -80,14 +81,67 @@ public class DialogCharacterManager : MonoBehaviour
     /// <summary>
     /// Moves character immediately to new position.
     /// </summary>
-    /// <param name="data">CharacterData of character.</param>
+    /// <param name="data">Id of character selected.</param>
     /// <param name="pos">Target position.</param>
-    /// <returns></returns>
+    /// <returns>CharacterDialog component of selected character.</returns>
     public DialogCharacter TeleportCharacter(CharacterData data, Vector2 pos)
     {
         DialogCharacter dc = characterMap[data];
+        dc.targetPosition = pos;
         dc.transform.position = pos;
         return dc;
+    }
+
+    /// <summary>
+    /// Linearly move character to position in a certain amount of time.
+    /// </summary>
+    /// <param name="data">Id of character selected.</param>
+    /// <param name="pos">Target position.</param>
+    /// <param name="time">Time to get to position.</param>
+    /// <returns>CharacterDialog component of selected character.</returns>
+    public DialogCharacter LerpCharacter(CharacterData data, Vector2 pos, float time)
+    {
+        DialogCharacter dc = characterMap[data];
+        dc.targetPosition = pos;
+        StartCoroutine(LerpCharacterCR(dc, pos, time));
+        return dc;
+    }
+
+    IEnumerator LerpCharacterCR(DialogCharacter dc, Vector2 targetPos, float time)
+    {
+        float currTime = 0f;
+        Vector2 start = dc.transform.position;
+        while (currTime < time)
+        {
+            dc.transform.position = Vector2.Lerp(start, targetPos, currTime / time);
+            yield return new WaitForFixedUpdate();
+            currTime += Time.fixedDeltaTime;
+        }
+    }
+
+    /// <summary>
+    /// Smoothly move character with dampening to target position.
+    /// </summary>
+    /// <param name="data">Id of character selected.</param>
+    /// <param name="pos">Target position.</param>
+    /// <param name="time">Time to get to position.</param>
+    /// <returns>CharacterDialog component of selected character.</returns>
+    public DialogCharacter SmoothDampCharacter(CharacterData data, Vector2 pos, float time)
+    {
+        DialogCharacter dc = characterMap[data];
+        dc.targetPosition = pos;
+        StartCoroutine(SmoothDampCharacterCR(dc, pos, time));
+        return dc;
+    }
+
+    IEnumerator SmoothDampCharacterCR(DialogCharacter dc, Vector2 targetPos, float time)
+    {
+        Vector2 vel = Vector2.zero;
+        while (Vector2.Distance(dc.transform.position, targetPos) > 0.01f)
+        {
+            dc.transform.position = Vector2.SmoothDamp(dc.transform.position, targetPos, ref vel, time);
+            yield return new WaitForFixedUpdate();
+        }
     }
 
     /// <summary>
@@ -170,8 +224,10 @@ public class DialogCharacterManager : MonoBehaviour
     /// </summary>
     public void ResetCharacters()
     {
+        StopAllCoroutines();
         foreach (var dc in characterMap.Values)
         {
+            dc.transform.position = dc.targetPosition;
             dc.PivotPosition = Vector2.zero;
             dc.animator.SetTrigger("Reset");
         }

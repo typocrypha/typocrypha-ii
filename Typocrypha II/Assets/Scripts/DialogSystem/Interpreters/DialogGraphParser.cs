@@ -138,6 +138,14 @@ public class DialogGraphParser : MonoBehaviour
                 {
                     DialogCharacterManager.instance.TeleportCharacter(cNode.characterData, cNode.targetPos);
                 }
+                else if (cNode.movementType == CharacterMovementType.Lerp)
+                {
+                    DialogCharacterManager.instance.LerpCharacter(cNode.characterData, cNode.targetPos, cNode.time);
+                }
+                else if (cNode.movementType == CharacterMovementType.SmoothDamp)
+                {
+                    DialogCharacterManager.instance.SmoothDampCharacter(cNode.characterData, cNode.targetPos, cNode.time);
+                }
             }
             else if (currNode is SetPose)
             {

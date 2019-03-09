@@ -13,6 +13,9 @@ public class DialogCharacter : MonoBehaviour
         get => pivotTr.localPosition;
         set => pivotTr.localPosition = value;
     }
+    // If moving, position character is going to; Otherwise, just current position. 
+    // Used for resetting position when skipping.
+    public Vector2 targetPosition; 
     public SpriteRenderer baseSprite; // Base sprite renderer (the pose).
     public SpriteRenderer exprSprite; // Expression sprite renderer (face).
     public Animator animator; // Animator for character.
