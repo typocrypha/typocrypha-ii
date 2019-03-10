@@ -71,13 +71,14 @@ namespace SerializableCollections
                 //GUILayout.FlexibleSpace();
                 addGUI();
                 GUILayout.EndHorizontal();
-                EditorUtils.Separator();
+                //EditorUtils.Separator();
                 if (set.Count > 0)
                     DoGUILayout(set, display);
             }
 
             private static void DoGUILayout<T>(SerializableSet<T> set, DisplayGUI<T> display)
             {
+                EditorGUILayout.BeginVertical("box");
                 EditorGUI.indentLevel++;
                 T toDelete = default;
                 bool delete = false;
@@ -99,7 +100,8 @@ namespace SerializableCollections
                 if (delete)
                     set.Remove(toDelete);
                 EditorGUI.indentLevel--;
-                EditorUtils.Separator();
+                //EditorUtils.Separator();
+                EditorGUILayout.EndVertical();
             }
         }
     }

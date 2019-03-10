@@ -41,7 +41,7 @@ public class SpellFxDataDrawer : PropertyDrawer
         Rect UIRect = new Rect(position) { height = EditorGUIUtility.singleLineHeight };
         //EditorGUILayout.LabelField(new GUIContent("Animation and Sfx"));
 
-        EditorGUI.PropertyField(UIRect, property.FindPropertyRelative("effectType"), new GUIContent("EffectType"));
+        EditorGUI.PropertyField(UIRect, property.FindPropertyRelative("effectType"), new GUIContent("FxType"));
         UIRect.y += EditorGUIUtility.singleLineHeight + 1;
         switch (property.FindPropertyRelative("effectType").enumValueIndex)
         {

@@ -14,13 +14,17 @@ public class ModifierWordInspector : Editor
         EditorGUILayout.LabelField("Modifer Word: " + word.name);
         word.displayName = EditorGUILayout.TextField(new GUIContent("Display Name"), word.displayName);
         EditorUtils.Separator();
-        GUILayout.Label(new GUIContent("Description"), new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold });
+        EditorGUILayout.LabelField(new GUIContent("Description"), EditorUtils.BoldCentered);
         word.description = EditorGUILayout.TextArea(word.description, new GUIStyle(GUI.skin.textArea) { wordWrap = true }, GUILayout.MinHeight(EditorGUIUtility.singleLineHeight * 2));
         EditorUtils.Separator();
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("fx"));       
+        EditorGUILayout.LabelField("Vfx/Sfx", EditorUtils.BoldCentered);
+        EditorGUILayout.BeginVertical("box");
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("fx"));
+        EditorGUILayout.EndVertical();
         EditorUtils.Separator();
+        EditorGUILayout.LabelField("Game Properties", EditorUtils.BoldCentered);
+        word.direction = EditorUtils.EnumPopup(new GUIContent("Direction"), word.direction);
         word.specialEffect = EditorUtils.ObjectField(new GUIContent("Special Effect", "TODO: Tooltip"), word.specialEffect, false);
-        EditorUtils.Separator();
         word.tagsToAdd.DoGUILayout((tag) => EditorUtils.ObjectField(tag, false), word.tagsToAdd.ObjPickerAddGUI, "Tags to Add");
         serializedObject.ApplyModifiedProperties();
         if (GUI.changed)
