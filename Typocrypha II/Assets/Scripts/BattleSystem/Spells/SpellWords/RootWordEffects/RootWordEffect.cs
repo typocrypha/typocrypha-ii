@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class RootWordEffect : ScriptableObject
 {
     public SpellFxData fx;
-    public SpellTag.TagSet tags = new SpellTag.TagSet();
+    [System.NonSerialized]public SpellTag.TagSet tags = new SpellTag.TagSet();
     public TargetData pattern = new TargetData();
     public abstract void Cast(Caster caster, Caster target);
 }

@@ -22,16 +22,16 @@ public class SpellManager : MonoBehaviour
     {
         StartCoroutine(CastCR(Modify(words), caster, target));
     }
-    //DEBUG: Should probably eventually generate some sort of aggregate spell data
+    
     private RootWord[] Modify(SpellWord[] words)
     {
-        SpellWord[] cloneWords = words.Select((word) => Instantiate(word) as SpellWord).ToArray();
+        SpellWord[] cloneWords = words.Select((word) => word.Clone()).ToArray();
         for(int i = 0; i < cloneWords.Length; ++i)
         {
             var mod = cloneWords[i] as ModifierWord;
-            mod?.Modify(words, i);
+            mod?.Modify(cloneWords, i);
         }
-        return (words.Where((word) => word is RootWord).Select((word) => word as RootWord)).ToArray();
+        return (cloneWords.Where((word) => word is RootWord).Select((word) => word as RootWord)).ToArray();
     }
     
     private IEnumerator CastCR(RootWord[] roots, Caster caster, Battlefield.Position target)

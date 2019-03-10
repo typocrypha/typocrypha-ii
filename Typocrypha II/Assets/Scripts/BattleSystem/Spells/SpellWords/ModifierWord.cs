@@ -62,4 +62,12 @@ public class ModifierWord : SpellWord
             }
         }
     }
+
+    public override SpellWord Clone()
+    {
+        var clone = Instantiate(this);
+        if(specialEffect != null)
+            clone.specialEffect = Instantiate(specialEffect);
+        return clone;
+    }
 }

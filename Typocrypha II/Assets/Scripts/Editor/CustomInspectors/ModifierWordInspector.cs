@@ -28,6 +28,6 @@ public class ModifierWordInspector : Editor
         word.tagsToAdd.DoGUILayout((tag) => EditorUtils.ObjectField(tag, false), word.tagsToAdd.ObjPickerAddGUI, "Tags to Add");
         serializedObject.ApplyModifiedProperties();
         if (GUI.changed)
-            EditorUtility.SetDirty(this);
+            EditorUtility.SetDirty(target);
     }
 }
