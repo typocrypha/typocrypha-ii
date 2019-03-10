@@ -84,6 +84,10 @@ namespace GUIUtils
         }
         #endregion
 
+        public void SetSelected(int index)
+        {
+            list.index = index;
+        }
         public void DoLayoutList()
         {
             list.DoLayoutList();

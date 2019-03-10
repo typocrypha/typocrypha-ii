@@ -8,7 +8,7 @@ using GUIUtils;
 public class RootWordInspector : Editor
 {
 
-    private GUIUtils.RListGUI<RootWordEffect> rList;
+    private RListGUI<RootWordEffect> rList;
     private void OnEnable()
     {
         var word = target as RootWord;
@@ -50,6 +50,8 @@ public class RootWordInspector : Editor
         };
         rList = new RListGUI<RootWordEffect>(word.effects, new GUIContent("Effects"), eGUI, height,
                                             (elem, ind) => DestroyImmediate(elem, true), getMenu);
+        if (word.effects.Count > 0)
+            rList.SetSelected(0);
     }
 
     public override void OnInspectorGUI()
