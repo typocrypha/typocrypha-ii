@@ -39,7 +39,7 @@ namespace SerializableCollections
                 }
             }
 
-            public static void ObjPickerAddGUI<T>(this SerializableSet<T> set) where T : UnityEngine.Object
+            public static void ObjPickerAddGUI<T>(this SerializableSet<T> set, string filter = "", bool allowSceneObjects = false) where T : UnityEngine.Object
             {
                 Event e = Event.current;
                 if (e.type == EventType.ExecuteCommand && e.commandName == "ObjectSelectorClosed")
@@ -52,7 +52,7 @@ namespace SerializableCollections
                     return;
                 }
                 if (GUILayout.Button("+"))
-                    EditorGUIUtility.ShowObjectPicker<T>(null, false, "", 1);
+                    EditorGUIUtility.ShowObjectPicker<T>(null, allowSceneObjects, filter, 1);
             }
 
             public static void GenericMenuAddGUI<T>(this SerializableSet<T> set, GenericMenu menu)

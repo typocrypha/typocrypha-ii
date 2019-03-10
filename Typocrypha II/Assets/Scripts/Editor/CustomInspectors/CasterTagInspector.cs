@@ -39,7 +39,7 @@ public class CasterTagInspector : Editor
         EditorUtils.Separator();
         if (tag.subTags != null)
         {
-            tag.subTags.DoGUILayout(EditorUtils.CasterUtils.CasterTagGUI, tag.subTags.ObjPickerAddGUI, "SubTags");
+            tag.subTags.DoGUILayout(EditorUtils.CasterUtils.CasterTagGUI, () => tag.subTags.ObjPickerAddGUI(), "SubTags");
             if (tag.subTags.Contains(tag))
                 tag.subTags.Remove(tag);
         }

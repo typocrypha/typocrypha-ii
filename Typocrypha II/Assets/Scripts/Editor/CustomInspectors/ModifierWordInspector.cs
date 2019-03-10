@@ -25,7 +25,7 @@ public class ModifierWordInspector : Editor
         EditorGUILayout.LabelField("Game Properties", EditorUtils.BoldCentered);
         word.direction = EditorUtils.EnumPopup(new GUIContent("Direction"), word.direction);
         word.specialEffect = EditorUtils.ObjectField(new GUIContent("Special Effect", "TODO: Tooltip"), word.specialEffect, false);
-        word.tagsToAdd.DoGUILayout((tag) => EditorUtils.ObjectField(tag, false), word.tagsToAdd.ObjPickerAddGUI, "Tags to Add");
+        word.tagsToAdd.DoGUILayout((tag) => EditorUtils.ObjectField(tag, false), () => word.tagsToAdd.ObjPickerAddGUI(), "Tags to Add");
         serializedObject.ApplyModifiedProperties();
         if (GUI.changed)
             EditorUtility.SetDirty(target);

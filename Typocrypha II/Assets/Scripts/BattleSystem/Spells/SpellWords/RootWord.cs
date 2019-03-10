@@ -6,7 +6,13 @@ using System.Linq;
 [CreateAssetMenu(fileName ="RootWord", menuName ="Spell Word/Root")]
 public class RootWord : SpellWord
 {
-    [System.NonSerialized] public List<ModifierWord> modifiers = new List<ModifierWord>();
+    #region Properties when modified (maybe move to distinct class)
+    [System.NonSerialized]
+    public ModifierWord leftMod;
+    [System.NonSerialized]
+    public ModifierWord rightMod;
+    #endregion
+
     public List<RootWordEffect> effects = new List<RootWordEffect>();
     public override SpellWord Clone()
     {

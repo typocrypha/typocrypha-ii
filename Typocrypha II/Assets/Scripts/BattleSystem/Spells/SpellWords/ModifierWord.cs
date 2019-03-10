@@ -48,7 +48,7 @@ public class ModifierWord : SpellWord
                 var word = words[index - 1] as RootWord;
                 foreach (var effect in word.effects)
                     Modify(effect);
-                word.modifiers.Add(this);
+                word.rightMod = this;
             }
         }
         if (direction == Direction.Right || direction == Direction.Bidirectional)
@@ -58,7 +58,7 @@ public class ModifierWord : SpellWord
                 var word = words[index + 1] as RootWord;
                 foreach (var effect in word.effects)
                     Modify(effect);
-                word.modifiers.Add(this);
+                word.leftMod = this;
             }
         }
     }
