@@ -21,10 +21,6 @@ public class TargetDataDrawer : PropertyDrawer
         // Draw label
         //position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
 
-        // Don't make child fields be indented
-        //var indent = EditorGUI.indentLevel;
-        //EditorGUI.indentLevel = 0;
-
         //Initialize properties
         var arrayProp = property.FindPropertyRelative("pattern").FindPropertyRelative("_data");
         var typeProp = property.FindPropertyRelative("type");
@@ -33,7 +29,7 @@ public class TargetDataDrawer : PropertyDrawer
         Rect UIRect = new Rect(position) { height = EditorGUIUtility.singleLineHeight };
 
         #region Actual GUI drawing
-        GUI.Label(UIRect, new GUIContent("Target Pattern", "TODO, tooltip"));
+        GUI.Label(UIRect, new GUIContent("Target Pattern", "TODO, tooltip"), EditorUtils.BoldCentered);
         UIRect.y += lineHeight;
         EditorGUI.PrefixLabel(new Rect(UIRect) { width = labelWidth }, new GUIContent("Type"));
         EditorGUI.PropertyField(new Rect(UIRect) { x = UIRect.x + labelWidth, width = UIRect.width - labelWidth }, typeProp, GUIContent.none);
@@ -53,7 +49,7 @@ public class TargetDataDrawer : PropertyDrawer
         UIRect.y += lineHeight;
 
         //Draw Bottom row
-        string bottomRowLabel = (TargetData.Type)typeProp.enumValueIndex == TargetData.Type.Targeted ? "Other Row" : "Ally Row";
+        string bottomRowLabel = (TargetData.Type)typeProp.enumValueIndex == TargetData.Type.Targeted ? "Other Row" : "Caster Row";
         EditorGUI.PrefixLabel(new Rect(UIRect) { width = labelWidth }, new GUIContent(bottomRowLabel));
         checkRect = new Rect(UIRect) { width = checkWidth, x = UIRect.x + labelWidth + 3 };
         EditorGUI.PropertyField(checkRect, arrayProp.GetArrayElementAtIndex(3), GUIContent.none);

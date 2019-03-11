@@ -8,11 +8,10 @@ using GUIUtils;
 public class RootWordInspector : Editor
 {
 
-    private GUIUtils.RListGUI<RootWordEffect> rList;
+    private RListGUI<RootWordEffect> rList;
     private void OnEnable()
     {
         var word = target as RootWord;
-        var arrProp = serializedObject.FindProperty("effects");
         RListGUI<RootWordEffect>.Dropdown getMenu = () =>
         {
             var menu = new GenericMenu();
@@ -23,19 +22,36 @@ public class RootWordInspector : Editor
                 menu.AddItem(new GUIContent(name), false, (obj) =>
                 {
                     var newItem = ScriptableObject.CreateInstance((System.Type)obj) as RootWordEffect;
-                    //newItem.hideFlags = HideFlags.HideInHierarchy;
+                    newItem.hideFlags = HideFlags.HideInHierarchy;
                     word.effects.Add(newItem);
-                    serializedObject.Update();
                     AssetDatabase.AddObjectToAsset(newItem, target);
                 }
                 , type);
             }
             return menu;
         };
-        rList = new RListGUI<RootWordEffect>(word.effects, new GUIContent("Effects"),
-                                            (elem, ind, rect) => EditorGUI.PropertyField(rect, arrProp.GetArrayElementAtIndex(ind), GUIContent.none),
-                                            (elem, ind) => EditorGUI.GetPropertyHeight(arrProp.GetArrayElementAtIndex(ind)),
-                                            getMenu);
+        RListGUI<RootWordEffect>.ElementGUI eGUI = (elem, ind, sel, rect) =>
+        {
+            EditorGUI.LabelField(rect, new GUIContent(elem.ToString() + " (" + ind + ")"));
+            if (ind == sel)
+            {
+                var editor = Editor.CreateEditor(elem);
+                EditorGUILayout.BeginVertical("box");
+                var selectLabel = new GUIContent("Selected Effect: " + elem.ToString() + " (" + ind + ")");
+                EditorGUILayout.LabelField(selectLabel, new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold});
+                EditorUtils.Separator();
+                editor.OnInspectorGUI();
+                EditorGUILayout.EndVertical();
+            }
+        };
+        RListGUI<RootWordEffect>.ElementHeight height = (elem, ind) =>
+        {
+            return EditorGUIUtility.singleLineHeight;
+        };
+        rList = new RListGUI<RootWordEffect>(word.effects, new GUIContent("Effects"), eGUI, height,
+                                            (elem, ind) => DestroyImmediate(elem, true), getMenu);
+        if (word.effects.Count > 0)
+            rList.SetSelected(0);
     }
 
     public override void OnInspectorGUI()
@@ -48,5 +64,7 @@ public class RootWordInspector : Editor
         word.description = EditorGUILayout.TextArea(word.description, new GUIStyle(GUI.skin.textArea) { wordWrap = true }, GUILayout.MinHeight(EditorGUIUtility.singleLineHeight * 2));
         EditorUtils.Separator();
         rList.DoLayoutList();
+        if (GUI.changed)
+            EditorUtility.SetDirty(this);
     }
 }

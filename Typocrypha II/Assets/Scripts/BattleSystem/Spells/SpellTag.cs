@@ -22,46 +22,12 @@ public class SpellTag : ScriptableObject, System.IComparable<SpellTag>
         {
             return Contains(SpellTagIndex.getTagFromString(tagName));
         }
-#if UNITY_EDITOR
-        public void doGUILayout(string title)
+        public override string ToString()
         {
-            #region Object Picker Message Handling
-            Event e = Event.current;
-            if (e.type == EventType.ExecuteCommand && e.commandName == "ObjectSelectorClosed")
-            {
-                SpellTag t = EditorGUIUtility.GetObjectPickerObject() as SpellTag;
-                if (t == null)
-                    return;
-                Add(t);
-                e.Use();
-                return;
-            }
-            #endregion
-
-            #region Title and Controls
-            GUILayout.BeginHorizontal();
-            GUILayout.Label(title + ": " + Count, new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold });
-            if (GUILayout.Button("+"))
-                EditorGUIUtility.ShowObjectPicker<SpellTag>(null, false, "", 1);
-            GUILayout.EndHorizontal();
-            #endregion
-
-            EditorGUI.indentLevel++;
-            SpellTag toDelete = null;
-            SpellTag[] tags = Items;
-            System.Array.Sort(tags);
-            foreach (var tag in tags)
-            {
-                EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.LabelField(tag.name + " (" + tag.displayName + ")", new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Italic }, GUILayout.Width(240));
-                if (GUILayout.Button("-"))
-                    toDelete = tag;
-                EditorGUILayout.EndHorizontal();
-            }
-            if (tags != null)
-                Remove(toDelete);
-            EditorGUI.indentLevel--;
+            string ret = string.Empty;
+            foreach (var tag in this)
+                ret += tag.name + ", ";
+            return ret.TrimEnd().TrimEnd(',');
         }
-#endif
     }
 }

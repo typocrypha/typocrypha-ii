@@ -5,25 +5,86 @@ using UnityEngine;
 [System.Serializable]
 public class CasterStats
 {
-    public static readonly IntRange statRange = new IntRange(-10, 10);
+    public const int statMax = 10;
+    public const int statMin = -statMax;
+    public const int resourceMax = int.MaxValue;
+    public const int resourceMin = -resourceMax;
 
-    #region Resource Maxes
-    public int maxHP = 100;
-    public int maxStagger = 1;
+    #region Resources
+    [SerializeField] private Stat maxHP = new Stat(resourceMin, resourceMax);
+    public int MaxHP { get => maxHP.Value; set => maxHP.Value = value; }
+    [SerializeField] private Stat maxArmor = new Stat(resourceMin, resourceMax);
+    public int MaxArmor { get => maxArmor.Value; set => maxArmor.Value = value; }
+    [SerializeField] private Stat maxSP = new Stat(resourceMin, resourceMax);
+    public int MaxSP { get => maxSP.Value; set => maxSP.Value = value; }
+    [SerializeField] private Stat maxStagger = new Stat(resourceMin, resourceMax);
+    public int MaxStagger { get => maxStagger.Value; set => maxStagger.Value = value; }
+    [SerializeField] private float staggerTime = 0;
+    public float StaggerTime { get { return staggerTime; } set { staggerTime = value; } }
     #endregion
 
     #region Stats
-    [SerializeField] private float staggerTime = 5f;
-    public float StaggerTime { get { return staggerTime; } set { staggerTime = value > 0 ? value : 0; } }
-    [SerializeField] private int atk;
-    public int Atk { get { return atk; } set { atk = statRange.Clamp(value); } }
-    [SerializeField] private int def;
-    public int Def { get { return def; } set { def = statRange.Clamp(value); } }
-    [SerializeField] private int spd;
-    public int Spd { get { return spd; } set { spd = statRange.Clamp(value); } }
-    [SerializeField] private int acc;
-    public int Acc { get { return acc; } set { acc = statRange.Clamp(value); } }
-    [SerializeField] private int evade;
-    public int Evade { get { return evade; } set { evade = statRange.Clamp(value); } }
+    [SerializeField] private Stat atk = new Stat(statMin, statMax);
+    public int Atk { get => atk.Value; set => atk.Value = value; }
+    [SerializeField] private Stat def = new Stat(statMin, statMax);
+    public int Def { get => def.Value; set => def.Value = value; }
+    [SerializeField] private Stat spd = new Stat(statMin, statMax);
+    public int Spd { get => spd.Value; set => spd.Value = value; }
+    [SerializeField] private Stat acc = new Stat(statMin, statMax);
+    public int Acc { get => acc.Value; set => acc.Value = value; }
+    [SerializeField] private Stat evade = new Stat(statMin, statMax);
+    public int Evade { get => evade.Value; set => evade.Value = value; }
     #endregion
+
+    public void AddInPlace(CasterStats other)
+    {
+        maxHP.AddInPlace(other.maxHP);
+        maxArmor.AddInPlace(other.maxArmor);
+        maxSP.AddInPlace(other.maxSP);
+        maxStagger.AddInPlace(other.maxStagger);
+        staggerTime += other.staggerTime;
+        atk.AddInPlace(other.atk);
+        def.AddInPlace(other.def);
+        spd.AddInPlace(other.spd);
+        acc.AddInPlace(other.acc);
+        evade.AddInPlace(other.evade);
+    }
+    public void SubtractInPlace(CasterStats other)
+    {
+        maxHP.SubtractInPlace(other.maxHP);
+        maxArmor.SubtractInPlace(other.maxArmor);
+        maxSP.SubtractInPlace(other.maxSP);
+        maxStagger.SubtractInPlace(other.maxStagger);
+        staggerTime -= other.staggerTime;
+        atk.SubtractInPlace(other.atk);
+        def.SubtractInPlace(other.def);
+        spd.SubtractInPlace(other.spd);
+        acc.SubtractInPlace(other.acc);
+        evade.SubtractInPlace(other.evade);
+    }
+    [System.Serializable]
+    public class Stat
+    {
+        [SerializeField] private IntRange statRange;
+        [SerializeField] private int overflow = 0;
+        [SerializeField] private int _value;
+        public int ValueUnclamped { get => _value + overflow; set => _value = statRange.Clamp(value, out overflow); }
+        public int Value { get => _value; set => _value = statRange.Clamp(value, out overflow); }
+        public Stat(int min, int max)
+        {
+            statRange = new IntRange(min, max);
+        }
+        public Stat(int min, int max, int value) : this(min, max)
+        {
+            Value = value;
+        }
+        public void AddInPlace(Stat other)
+        {
+            Value = ValueUnclamped + other.ValueUnclamped;
+        }
+        public void SubtractInPlace(Stat other)
+        {
+            Value = ValueUnclamped - other.ValueUnclamped;
+        }
+    }
 }

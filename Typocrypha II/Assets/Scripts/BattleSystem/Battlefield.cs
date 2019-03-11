@@ -62,7 +62,7 @@ public class Battlefield : MonoBehaviour, IPausable
     #region Row and List Accessor Properties
     public FieldObject[] TopRow { get { return field[0]; } }
     public FieldObject[] BottomRow { get { return field[1]; } }
-    public Caster[] Enemies { get => Casters.Select((obj) => obj.GetComponent<Caster>()).Where((obj) => obj != null && obj.CasterState == Caster.State.Enemy).ToArray(); }
+    public Caster[] Enemies { get => Casters.Select((obj) => obj.GetComponent<Caster>()).Where((obj) => obj != null && obj.CasterState == Caster.State.Hostile).ToArray(); }
     public Caster[] Allies { get => Casters.Select((obj) => obj.GetComponent<Caster>()).Where((obj) => obj != null && obj.CasterState == Caster.State.Ally).ToArray(); }
     public List<ATBActor> Actors { get; } = new List<ATBActor>();
     public List<Caster> ExternalCasters { get => Casters.Where((obj) => !obj.FieldPos.IsLegal) as List<Caster>; }

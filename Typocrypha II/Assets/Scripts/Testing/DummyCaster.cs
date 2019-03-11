@@ -8,7 +8,6 @@ public class DummyCaster : Caster
     public Battlefield.Position tPos = new Battlefield.Position(0,0);
     public void Cast()
     {
-        Spell s = new Spell(spellWords);
-        s.Cast(this, tPos);
+        SpellManager.instance.Cast(spellWords, this, tPos);
     }
 }

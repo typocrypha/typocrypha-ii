@@ -21,32 +21,40 @@ public class CasterTagDictionary
             return;
         }
         tags.Add(tag);
-        addWithSubTags(tag);
+        AddWithSubTags(tag);
     }
-    private void addWithSubTags(CasterTag tag)
+    private void AddWithSubTags(CasterTag tag)
     {
         allTags.Add(tag);
+        statMod.AddInPlace(tag.statMods);
         foreach (CasterTag t in tag.subTags)
-            addWithSubTags(t);
+            AddWithSubTags(t);
     }
     public void Remove(CasterTag tag)
     {
         tags.Remove(tag);
-        removeWithSubTags(tag);
+        RemoveWithSubTags(tag);
     }
-    private void removeWithSubTags(CasterTag tag)
+    private void RemoveWithSubTags(CasterTag tag)
     {
         allTags.Remove(tag);
+        statMod.SubtractInPlace(tag.statMods);
         foreach (CasterTag t in tag.subTags)
-            removeWithSubTags(t);
+            RemoveWithSubTags(t);
     }
     #endregion
 
     public IEnumerable<CasterTag> TopLevelTags => tags;
 
-    #region Aggregate Tag Data  (TODO)
+    #region Aggregate Tag Data
+    public void RecalculateStats()
+    {
+        statMod = new CasterStats();
+        foreach (var tag in allTags)
+            statMod.AddInPlace(tag.statMods);
+    }
     public CasterStats statMod;
-    public List<CasterAbility> abilities;
+    //public List<CasterAbility> abilities;
     #endregion
 
     [System.Serializable] private class TagMultiSet : SerializableMultiSet<CasterTag> { }

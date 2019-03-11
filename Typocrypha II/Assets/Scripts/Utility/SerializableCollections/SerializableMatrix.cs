@@ -27,11 +27,32 @@ public class IntRange : IEnumerable<int>
     {
         return (item >= min) && (item <= max);
     }
+    /// <summary> Constrain the input such that it is inside the range </summary>
     public int Clamp(int value)
     {
         if (value <= max)
             return value >= min ? value : min;
         return max;
+    }
+    /// <summary> Constrain the input such that it is inside the range 
+    /// and provide the overflow outside of the range as a signed scalar </summary>
+    public int Clamp(int value, out int overflow)
+    {
+        if (value > max)
+        {
+            overflow = value - max;
+            return max;
+        }
+        else if(value < min)
+        {
+            overflow = value - min;
+            return min;
+        }
+        else
+        {
+            overflow = 0;
+            return value;
+        }
     }
     public void Shift(int shiftBy)
     {
