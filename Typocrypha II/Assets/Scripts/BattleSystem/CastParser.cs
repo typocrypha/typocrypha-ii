@@ -37,7 +37,7 @@ public class CastParser : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            buildDictionary();
+            BuildDictionary();
         }
         else
             Destroy(gameObject);
@@ -45,7 +45,7 @@ public class CastParser : MonoBehaviour
     /// <summary> Returns Valid if the string array represents a valid spell that exists in the given spell dictionary
     /// Returns other ParseResults to indicate different failure conditions 
     /// Returns the parsed spell in out list s </summary>
-    public ParseResults parse(string[] spellwords, out List<SpellWord> s)
+    public ParseResults Parse(string[] spellwords, out List<SpellWord> s)
     {
         s = new List<SpellWord>();
         int roots = 0;
@@ -66,7 +66,7 @@ public class CastParser : MonoBehaviour
                     case TypoResult.CastFailure:
                         return ParseResults.TypoFailure;
                     case TypoResult.ReplaceWord:
-                        SpellWord replacement = replaceTypo(word);
+                        SpellWord replacement = ReplaceTypo(word);
                         s.Add(replacement);
                         if (replacement is RootWord)
                             ++roots;
@@ -95,13 +95,13 @@ public class CastParser : MonoBehaviour
         return ParseResults.Valid;
     }
     /// <summary> Returns a replacement word for a misspelled keyword (WIP) </summary>
-    private SpellWord replaceTypo(string word)
+    private SpellWord ReplaceTypo(string word)
     {
         //TODO: add actual replacement keyword option
         return Words["splash"];
     }
     /// <summary> Build the wor dictionary from the "spellword" assetbundle </summary>
-    private void buildDictionary()
+    private void BuildDictionary()
     {
         var bundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, "spellword"));
         var rootWords = bundle.LoadAllAssets<SpellWord>();
