@@ -11,7 +11,8 @@ public class CasterTagDictionary
     #region Dictionary Functions
     public bool ContainsTag(string tagName)
     {
-        return allTags.Contains(CasterTagIndex.getTagFromString(tagName));
+        throw new System.NotImplementedException("add caster tags assetbundle");
+        //return allTags.Contains(CasterTagIndex.getTagFromString(tagName));
     }
     public void Add(CasterTag tag)
     {
