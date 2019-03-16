@@ -61,7 +61,6 @@ namespace ATB3
         void Awake()
         {
             pos = transform.position;
-            input.onValueChanged.AddListener(keySFX);
             allCastBars.Add(this);
             if (gameObject.name == "PlayerCastBar")
                 _mainBar = this;
@@ -77,17 +76,6 @@ namespace ATB3
         {
             input.text = "";
             GetComponentInChildren<Text>().text = "";
-        }
-
-        // Called on value changed to make typing effects
-        public void keySFX(string value)
-        {
-            /*
-            if (Input.GetKeyDown(KeyCode.Backspace))
-                AudioPlayer.main.playSFX("sfx_backspace");
-            else if (Input.inputString.Length > 0)
-                AudioPlayer.main.playSFX("sfx_type_key");
-            */
         }
 
         // Shows only this cast bar

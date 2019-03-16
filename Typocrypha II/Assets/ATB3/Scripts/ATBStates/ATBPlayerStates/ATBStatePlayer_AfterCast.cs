@@ -12,7 +12,7 @@ namespace ATB3
         // Call upon entering given state
         public override void OnEnter()
         {
-            Debug.Log("PLAYER " + this.Owner.actorName + " has ENTERED the AFTERCAST state!");
+            //Debug.Log("PLAYER " + this.Owner.actorName + " has ENTERED the AFTERCAST state!");
         }
 
         // Call on fixed update while in given state
@@ -25,7 +25,7 @@ namespace ATB3
         // Call upon exiting given state
         public override void OnExit()
         {
-            Debug.Log("PLAYER " + this.Owner.actorName + " has EXITED the BEFORECAST state!");
+            //Debug.Log("PLAYER " + this.Owner.actorName + " has EXITED the BEFORECAST state!");
             // THIS IS WHERE THE ENEMY SHOULD GET NOT SOLO'D
             ATBManager.Instance.exitSolo(this.Owner);
         }

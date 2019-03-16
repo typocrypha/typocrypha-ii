@@ -12,7 +12,7 @@ namespace ATB3
         // Call upon entering given state
         public override void OnEnter()
         {    
-            Debug.Log("ENEMY " + this.Owner.actorName + " has ENTERED the CHARGE state! (id: " + StateID.ToString() + ")");
+            //Debug.Log("ENEMY " + this.Owner.actorName + " has ENTERED the CHARGE state! (id: " + StateID.ToString() + ")");
             ((ATBEnemy)this.Owner).startCharge();
         }
 
@@ -30,7 +30,7 @@ namespace ATB3
         // Call upon exiting given state
         public override void OnExit()
         {
-            Debug.Log("ENEMY " + this.Owner.actorName + " has EXITED the CHARGE state!");
+            //Debug.Log("ENEMY " + this.Owner.actorName + " has EXITED the CHARGE state!");
         }
     }
 }
