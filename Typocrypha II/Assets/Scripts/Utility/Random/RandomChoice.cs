@@ -18,9 +18,9 @@ public static class RandomC
     public static T RandomChoice<T>(T[] items, int[] weights, bool isAbsolute)
     {
         // totalWeight is the sum of all weights, or 1 if absolute
-        int totalWeight = isAbsolute ? 1 : weights.Aggregate((a, b) => a + b);
+        int totalWeight = isAbsolute ? 100 : weights.Aggregate((a, b) => a + b);
 #if DEBUG
-        if (isAbsolute && weights.Aggregate((a, b) => a + b) != 1)
+        if (isAbsolute && weights.Aggregate((a, b) => a + b) != 100)
             throw new System.Exception("Absolute weights do not add up to 100%! Items: " + items.ToString() + " Weights: " + weights.ToString());
 #endif
         int randomNumber = _rand.Next(totalWeight);

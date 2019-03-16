@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using GUIUtils;
+using SerializableCollections.GUIUtils;
 
 [CustomEditor(typeof(RootWordEffect), true)]
 public class RootWordEffectInspector : Editor
@@ -13,8 +13,10 @@ public class RootWordEffectInspector : Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("fx"));
         EditorUtils.Separator();
         EditorGUILayout.PropertyField(serializedObject.FindProperty("pattern"));
+        EditorUtils.Separator();
+        effect.tags.DoGUILayout((tag) => EditorGUILayout.LabelField(tag.name), () => effect.tags.ObjPickerAddGUI(), "Tags");
         serializedObject.ApplyModifiedProperties();
         if (GUI.changed)
-            EditorUtility.SetDirty(this);
+            EditorUtility.SetDirty(target);
     }
 }

@@ -3,19 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public static class CastParser
+public class CastParser : MonoBehaviour
 {
-    public static readonly Dictionary<string, SpellWord> words = build();
-    private static Dictionary<string, SpellWord> build()
-    {
-        var bundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, "spellword"));
-        var rootWords = bundle.LoadAllAssets<SpellWord>();
-        Dictionary<string, SpellWord> _words = new Dictionary<string, SpellWord>();
-        foreach (var word in rootWords)
-            _words.Add(word.name.ToLower(), word);
-        return _words;
-    }
-
     public enum ParseResults
     {
         Valid,
@@ -31,28 +20,41 @@ public static class CastParser
         DropoutWord,
         ReplaceWord,
     }
-    private static readonly WeightedSet<TypoResult> typoActionWeighting = new WeightedSet<TypoResult>()
+    public static CastParser instance = null;
+
+    private readonly WeightedSet<TypoResult> typoActionWeighting = new WeightedSet<TypoResult>()
     {
         { TypoResult.CastFailure, 85 },
         { TypoResult.DropoutWord, 10 },
         { TypoResult.ReplaceWord, 5 }
     };
-
-    private const int maxWords = 5;
-    private const int maxRoots = 3;
-
-    //Returns Valid if the string array represents a valid spell that exists in the given spell dictionary
-    //Returns other ParseResults to indicate different failure conditions
-    public static ParseResults parse(string[] spellwords, out List<SpellWord> s)
+    public int MaxWords { get; } = 5;
+    public int MaxRoots { get; } = 3;
+    public Dictionary<string, SpellWord> Words { get; private set; }
+    /// <summary> Singleton Implementation </summary>
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            BuildDictionary();
+        }
+        else
+            Destroy(gameObject);
+    }
+    /// <summary> Returns Valid if the string array represents a valid spell that exists in the given spell dictionary
+    /// Returns other ParseResults to indicate different failure conditions 
+    /// Returns the parsed spell in out list s </summary>
+    public ParseResults Parse(string[] spellwords, out List<SpellWord> s)
     {
         s = new List<SpellWord>();
         int roots = 0;
         foreach (string word in spellwords)
         {
-            if (words.ContainsKey(word))
+            if (Words.ContainsKey(word))
             {
-                s.Add(words[word]);
-                if (words[word] is RootWord)
+                s.Add(Words[word]);
+                if (Words[word] is RootWord)
                     ++roots;
             }
             else
@@ -64,7 +66,7 @@ public static class CastParser
                     case TypoResult.CastFailure:
                         return ParseResults.TypoFailure;
                     case TypoResult.ReplaceWord:
-                        SpellWord replacement = replaceTypo(word);
+                        SpellWord replacement = ReplaceTypo(word);
                         s.Add(replacement);
                         if (replacement is RootWord)
                             ++roots;
@@ -79,23 +81,32 @@ public static class CastParser
         #region Keyword Number Checks
         if (s.Count <= 0)
             return ParseResults.EmptySpell;
-        if (s.Count > maxWords)
+        if (s.Count > MaxWords)
             return ParseResults.TooManyWords;
         #endregion
 
         #region Root Number Checks
         if (roots <= 0)
             return ParseResults.NoRoot;
-        if (roots > maxRoots)
+        if (roots > MaxRoots)
             return ParseResults.TooManyRoots;
         #endregion
 
         return ParseResults.Valid;
     }
-    //Returns a replacement word for a typo keyword (TODO)
-    private static SpellWord replaceTypo(string word)
+    /// <summary> Returns a replacement word for a misspelled keyword (WIP) </summary>
+    private SpellWord ReplaceTypo(string word)
     {
         //TODO: add actual replacement keyword option
-        return words["splash"];
+        return Words["splash"];
+    }
+    /// <summary> Build the wor dictionary from the "spellword" assetbundle </summary>
+    private void BuildDictionary()
+    {
+        var bundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, "spellword"));
+        var rootWords = bundle.LoadAllAssets<SpellWord>();
+        Words = new Dictionary<string, SpellWord>();
+        foreach (var word in rootWords)
+            Words.Add(word.name.ToLower(), word);
     }
 }

@@ -20,7 +20,8 @@ public class SpellTag : ScriptableObject, System.IComparable<SpellTag>
     {
         public bool Contains(string tagName)
         {
-            return Contains(SpellTagIndex.getTagFromString(tagName));
+            throw new System.NotImplementedException("add spell tag assetbundle");
+            //return Contains(SpellTagIndex.getTagFromString(tagName));
         }
         public override string ToString()
         {

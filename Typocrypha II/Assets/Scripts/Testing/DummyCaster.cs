@@ -10,4 +10,12 @@ public class DummyCaster : Caster
     {
         SpellManager.instance.Cast(spellWords, this, tPos);
     }
+    public void CastString(string spellString)
+    {
+        List<SpellWord> words;// = new List<SpellWord>();
+        var results = CastParser.instance.Parse(spellString.Split('-'), out words);
+        Debug.Log(results);
+        if (results == CastParser.ParseResults.Valid)
+            SpellManager.instance.Cast(words.ToArray(), this, tPos);
+    }
 }
