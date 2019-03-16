@@ -20,10 +20,10 @@ namespace ATB3
         public override void OnUpdate()
         {
             // Source.PerformTransition(ATBTransition.ChargeFinish);
-            if (((ATBAlly)this.Owner).mana >= ((ATBAlly)this.Owner).maxMana)
-            {
-                Source.PerformTransition(ATBTransition.ToBeforeCast);
-            }
+            //if (((ATBAlly)this.Owner).mana >= ((ATBAlly)this.Owner).maxMana)
+            //{
+            //    Source.PerformTransition(ATBTransition.ToBeforeCast);
+            //}
             return;
         }
 

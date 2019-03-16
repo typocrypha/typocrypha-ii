@@ -15,6 +15,7 @@ namespace ATB3
         {
             Debug.Log("ALLY " + this.Owner.actorName + " has ENTERED the CAST state!");
             timer = 0.0f;
+            
         }
 
         // Call on fixed update while in given state
