@@ -13,7 +13,7 @@ namespace ATB3
         public override void OnEnter()
         {    
             //Debug.Log("ALLY " + this.Owner.actorName + " has ENTERED the CHARGE state!");
-            ((ATBAlly)this.Owner).startMana();
+            //((ATBAlly)this.Owner).startMana();
         }
 
         // Call on fixed update while in given state

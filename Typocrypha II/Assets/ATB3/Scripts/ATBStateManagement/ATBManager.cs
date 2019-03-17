@@ -43,13 +43,13 @@ namespace ATB3
         // Check queue for new messages
         void Update()
         {
-            processQueue();
+            //processQueue();
         }
 
         // Process queue (FIFO: one event per update frame)
         void processQueue()
         {
-            if (eventQueue.Count == 0) return;
+            //if (eventQueue.Count == 0) return;
             //StateEventObj obj = eventQueue[0];
             //this.SendMessage(obj.stateEvent, obj.args);
             //eventQueue.Remove(obj);

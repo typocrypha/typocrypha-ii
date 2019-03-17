@@ -67,6 +67,7 @@ namespace ATB3
         {
             castBar.hidden = true;
             castBar.focus = false;
+            startMana();
         }
 
         // Called when ally trigger is called
@@ -78,6 +79,7 @@ namespace ATB3
         // Called when ally cast is entered
         public void cast()
         {
+            StateMachine.PerformTransition(ATBTransition.ToBeforeCast);
             //sendEvent("allyStartCast");
         }
     }
