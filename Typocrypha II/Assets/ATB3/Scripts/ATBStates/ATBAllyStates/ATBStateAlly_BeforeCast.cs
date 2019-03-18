@@ -12,9 +12,6 @@ namespace ATB3
         // Call upon entering given state
         public override void OnEnter()
         {
-            //Debug.Log("ALLY " + this.Owner.actorName + " has ENTERED the BEFORECAST state!");
-            // THIS IS WHERE THE ENEMY SHOULD GET SOLO'D
-            ATBManager.Instance.enterSolo(this.Owner);
             this.Owner.isCast = true;
         }
 

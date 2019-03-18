@@ -78,6 +78,7 @@ namespace ATB3
         // Enter solo mode for this actor
         public void enterSolo(ATBActor soloActor)
         {
+            //Debug.Log("enter:" + soloActor.gameObject.name);
             if (soloStack.Count == 0)
             {
                 setPauseAll(true);
@@ -92,6 +93,7 @@ namespace ATB3
         // Exit solo mode for this actor (should be at top of stack)
         public void exitSolo(ATBActor soloActor)
         {
+            //Debug.Log("exit:" + soloActor.gameObject.name);
             if (soloActor != soloStack.Pop())
                 Debug.LogError("StateManager: Solo Stack Mismatch");
             // If stack is now empty, unpause all actors

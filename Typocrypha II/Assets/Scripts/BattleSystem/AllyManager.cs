@@ -6,8 +6,16 @@ using UnityEngine;
 /// Manages high level ally behaviour in battle.
 /// Primarily checks for ally cast input, and then dispatches.
 /// </summary>
-public class AllyManager : MonoBehaviour
+public class AllyManager : MonoBehaviour, IPausable
 {
+    #region IPausable
+    PauseHandle ph;
+    public PauseHandle PH { get => ph; }
+    public void OnPause(bool b)
+    {
+        Debug.Log("AllyManager pause:" + b);
+    }
+    #endregion
     public static AllyManager instance = null;
     public GameObject lAlly; // Ally in left slot.
     public GameObject rAlly; // Ally in right slot.
@@ -23,21 +31,23 @@ public class AllyManager : MonoBehaviour
             Destroy(this);
             return;
         }
+        ph = new PauseHandle(OnPause);
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.LeftArrow)) AllyTryCast(lAlly);
-        else if (Input.GetKeyDown(KeyCode.RightArrow)) AllyTryCast(rAlly);
+        if (PH.Pause) return;
+        if (Input.GetKeyDown(KeyCode.LeftArrow)) OpenMenu(lAlly);
+        else if (Input.GetKeyDown(KeyCode.RightArrow)) OpenMenu(rAlly);
     }
 
-    // Start casting sequence for ally.
-    // Also checks casting conditions.
-    void AllyTryCast(GameObject ally)
+    // Open ally menu for casting.
+    void OpenMenu(GameObject ally)
     {
-        ATB3.ATBAlly actor = ally.GetComponent<ATB3.ATBAlly>();
-        if (actor.isCurrentState(ATB3.ATBStateID.Cast)) return; // Dont double cast.
-        // CHECK MANA
-        actor.cast(); // TEMP, should open ally menu
+        if (ally != null)
+        {
+            PH.Pause = true;
+            ally.GetComponent<ATB3.ATBAlly>().Menu();
+        }
     }
 }

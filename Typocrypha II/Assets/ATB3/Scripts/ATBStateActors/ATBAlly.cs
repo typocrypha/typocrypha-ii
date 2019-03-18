@@ -9,6 +9,7 @@ namespace ATB3
         // UI Objects
         public GameObject healthUI;
         public GameObject manaUI;
+        public GameObject allyMenu; // Ally menu (for choosing spell).
 
         // Properties
         float _mana; // Current amount of time (seconds) spent charging current spell
@@ -70,17 +71,21 @@ namespace ATB3
             startMana();
         }
 
-        // Called when ally trigger is called
-        public void menu()
+        /// <summary>
+        /// Starts ally menu sequence.
+        /// </summary>
+        public void Menu()
         {
-            //sendEvent("allyMenu");
+            StateMachine.PerformTransition(ATBTransition.ToAllyMenu);
+            allyMenu.SetActive(true);
         }
-
-        // Called when ally cast is entered
-        public void cast()
+        
+        /// <summary>
+        /// Starts cast sequence.
+        /// </summary>
+        public void Cast()
         {
             StateMachine.PerformTransition(ATBTransition.ToBeforeCast);
-            //sendEvent("allyStartCast");
         }
     }
 }
