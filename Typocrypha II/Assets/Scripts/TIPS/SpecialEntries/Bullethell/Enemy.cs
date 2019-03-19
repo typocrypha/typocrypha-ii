@@ -13,7 +13,9 @@ namespace Bullethell
     {
         public enum FiringPattern
         {
-            oneshot
+            none,
+            oneshot,
+            continuous
         }
 
         public GameObject bulletPrefab; // Enemy projectile prefab.
@@ -74,15 +76,31 @@ namespace Bullethell
                 case FiringPattern.oneshot:
                     StartCoroutine(Oneshot());
                     break;
+                case FiringPattern.continuous:
+                    StartCoroutine(Continuous());
+                    break;
+                default:
+                    break;
             }
         }
 
         // Oneshot firing pattern (just fires once).
         IEnumerator Oneshot()
         {
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(1.5f);
             var go = Instantiate(bulletPrefab, transform.parent.parent);
             go.transform.position = transform.position;
+        }
+
+        // Continuous firing pattern (keeps firing).
+        IEnumerator Continuous()
+        {
+            while(true)
+            {
+                yield return new WaitForSeconds(1.5f);
+                var go = Instantiate(bulletPrefab, transform.parent.parent);
+                go.transform.position = transform.position;
+            }
         }
     }
 }

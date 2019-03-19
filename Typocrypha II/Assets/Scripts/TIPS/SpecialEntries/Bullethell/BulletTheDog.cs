@@ -42,10 +42,13 @@ namespace Bullethell
 
         public void OnTriggerEnter2D(Collider2D col)
         {
-            if (!invincible && col.GetComponent<EnemyBullet>() != null)
+            if (!invincible && 
+               (col.GetComponent<EnemyBullet>() != null || 
+                col.GetComponent<Enemy>() != null))
             {
                 currHealth--;
-                Destroy(col.gameObject);
+                if (col.GetComponent<EnemyBullet>() != null)
+                    Destroy(col.gameObject);
                 if (currHealth <= 0)
                 {
                     Debug.Log("DEAD");

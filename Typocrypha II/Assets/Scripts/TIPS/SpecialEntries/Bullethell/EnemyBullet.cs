@@ -9,11 +9,12 @@ namespace Bullethell
     /// </summary>
     public class EnemyBullet : MonoBehaviour
     {
-        public float speed = 0.2f;
+        public float xspeed = 0.2f;
+        public float yspeed = 0f;
 
         void Update()
         {
-            transform.Translate(-speed, 0, 0);
+            transform.Translate(-xspeed, yspeed, 0);
         }
     }
 }
