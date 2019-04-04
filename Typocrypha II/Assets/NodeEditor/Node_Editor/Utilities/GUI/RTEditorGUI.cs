@@ -635,7 +635,27 @@ namespace NodeEditorFramework.Utilities
 				//Debug.Log ("Selecting Object!");
 			}
 			return obj;
-		}
+        }
+
+        /// <summary>
+        /// Provides an object field (with no auto-layouting) both for editor (using default) and for runtime (not yet implemented other that displaying object)
+        /// </summary>
+        public static T ObjectFieldRect<T>(Rect rect, T obj, bool allowSceneObjects) where T : Object
+        {
+            return ObjectFieldRect<T>(rect, GUIContent.none, obj, allowSceneObjects);
+        }
+
+        /// <summary>
+        /// Provides an object field (with no auto-layouting)  both for editor (using default) and for runtime (not yet implemented other that displaying object)
+        /// </summary>
+        public static T ObjectFieldRect<T>(Rect rect, GUIContent label, T obj, bool allowSceneObjects) where T : Object
+        {
+            #if UNITY_EDITOR
+            if (!Application.isPlaying)
+                return UnityEditor.EditorGUI.ObjectField(rect, label, obj, typeof(T), allowSceneObjects) as T;
+            #endif
+            throw new System.NotImplementedException();
+        }
 
         #endregion
 

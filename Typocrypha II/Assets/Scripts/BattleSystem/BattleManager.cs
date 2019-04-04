@@ -2,16 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(BattleGraphParser))]
 public class BattleManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public static BattleManager instance = null;
+    private BattleGraphParser graphParser;
+
+    private void Awake()
     {
-        
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(this);
+            return;
+        }
+        graphParser = GetComponent<BattleGraphParser>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
         
     }

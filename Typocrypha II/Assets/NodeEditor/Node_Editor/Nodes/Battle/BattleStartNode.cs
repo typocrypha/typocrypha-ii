@@ -7,15 +7,16 @@ using NodeEditorFramework.Utilities;
 namespace Gameflow
 {
     [Node(false, "Battle/Start", new System.Type[] { typeof(GameflowCanvas), typeof(BattleCanvas) })]
-    public class BattleStartNode : BattleNode
+    public class BattleStartNode : GameflowStartNode
     {
         public enum TransitionType
         {
             Swirl,
         }
 
-        public const string ID = "Battle Start Node";
+        new public const string ID = "Battle Start Node";
         public override string GetID { get { return ID; } }
+        public override string Title => "Battle Start";
 
         public int numWaves;
         public TransitionType transitionType;

@@ -25,7 +25,8 @@ namespace Gameflow
         //public AllyData[] allyData;
         public GOMatrix2D battleField;
 
-        [SerializeField] private List<BattleEvent> _events;
+        private RListGUI<GameObject> eventGUI;
+        public List<GameObject> battleEvents;
 
         #region Tooltip Strings
         private static string tooltip_music = "Music to play. Leave as None to keep the previous music playing";
@@ -33,50 +34,9 @@ namespace Gameflow
 
         protected override void OnCreate()
         {
-            _events = new List<BattleEvent>();
             battleField = new GOMatrix2D(2, 3);
             //enemyData = new EnemyData[3];
             //allyData = new AllyData[2];
-        }
-
-        public override ScriptableObject[] GetScriptableObjects()
-        {
-            List<ScriptableObject> ret = new List<ScriptableObject>();
-            ret.AddRange(_events.ToArray());
-            foreach (BattleEvent e in _events)
-            {
-                ret.AddRange(e._conditions.ToArray());
-                ret.AddRange(e._functions.ToArray());
-            }
-            return ret.ToArray();
-        }
-
-        protected internal override void CopyScriptableObjects(Func<ScriptableObject, ScriptableObject> replaceSO)
-        {
-            for (int i = 0; i < _events.Count; ++i)
-            {
-                List<BattleEvent.Condition> conditionObjs = new List<BattleEvent.Condition>();
-                List<BattleEvent.Function> functionObjs = new List<BattleEvent.Function>();
-                for (int j = 0; j < _events[i]._conditions.Count; ++j)
-                {
-                    ScriptableObject so = _events[i]._conditions[j];
-                    so = replaceSO(so);
-                    conditionObjs.Add(so as BattleEvent.Condition);
-                }
-                for(int j = 0; j <_events[i]._functions.Count; ++j)
-                {
-                    ScriptableObject so = _events[i]._functions[j];
-                    so = replaceSO(so);
-                    functionObjs.Add(so as BattleEvent.Function);
-                }
-                _events[i] = replaceSO(_events[i]) as BattleEvent;
-                _events[i].node = this;
-                _events[i]._conditions.Clear();
-                _events[i]._conditions.AddRange(conditionObjs);
-                _events[i]._functions.Clear();
-                _events[i]._functions.AddRange(functionObjs);
-
-            }
         }
 
         public override void NodeGUI()
@@ -121,6 +81,17 @@ namespace Gameflow
             GUILayout.Space(2);
             GUILayout.EndVertical();
             #endregion
+
+            if(eventGUI == null)
+            {
+                RListGUI<GameObject>.ElementGUI eGUI = (element, rect) =>
+                {
+                    RTEditorGUI.ObjectFieldRect(rect, element, false);
+                };
+                RListGUI<GameObject>.DefaultElement newItem = () => null;
+                eventGUI = new RListGUI<GameObject>(battleEvents, new GUIContent("Battle Event Prefabs"), eGUI, (e) => RTEditorGUI.lineHeight, newItem);
+            }
+            eventGUI.DoLayoutList();
 
             //Don't know why this code needs to be here exactly, but it makes everything nicer? maybe add to some static stuff?
             GUILayout.BeginHorizontal();
