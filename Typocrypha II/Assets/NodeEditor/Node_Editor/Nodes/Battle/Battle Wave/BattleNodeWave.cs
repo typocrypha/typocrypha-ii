@@ -21,8 +21,6 @@ namespace Gameflow
 
         public string waveTitle;
         public AudioClip music;
-        //public EnemyData[] enemyData;
-        //public AllyData[] allyData;
         public GOMatrix2D battleField;
 
         private RListGUI<GameObject> eventGUI;
@@ -35,8 +33,7 @@ namespace Gameflow
         protected override void OnCreate()
         {
             battleField = new GOMatrix2D(2, 3);
-            //enemyData = new EnemyData[3];
-            //allyData = new AllyData[2];
+            battleEvents = new List<GameObject>();
         }
 
         public override void NodeGUI()
@@ -63,25 +60,21 @@ namespace Gameflow
             GUILayout.BeginHorizontal();
             float objHeight = RTEditorGUI.lineHeight * 1.125f;
             float objWidth = rect.width * 0.33f - 7;
-            //GUILayout.Label(new GUIContent("Enemy Data"), NodeEditorGUI.nodeLabelCentered, GUILayout.Height(objHeight));
-            battleField[0, 0] = RTEditorGUI.ObjectField(battleField[0, 2], false, GUILayout.Width(objWidth), GUILayout.Height(objHeight));
-            battleField[0, 1] = RTEditorGUI.ObjectField(battleField[0, 2], false, GUILayout.Width(objWidth), GUILayout.Height(objHeight));
+            battleField[0, 0] = RTEditorGUI.ObjectField(battleField[0, 0], false, GUILayout.Width(objWidth), GUILayout.Height(objHeight));
+            battleField[0, 1] = RTEditorGUI.ObjectField(battleField[0, 1], false, GUILayout.Width(objWidth), GUILayout.Height(objHeight));
             battleField[0, 2] = RTEditorGUI.ObjectField(battleField[0, 2], false, GUILayout.Width(objWidth), GUILayout.Height(objHeight));
-            //enemyData[0] = EditorGUILayout.ObjectField(enemyData[0], typeof(EnemyData), false, GUILayout.Height(objHeight)) as EnemyData;
-            //enemyData[1] = EditorGUILayout.ObjectField(enemyData[1], typeof(EnemyData), false, GUILayout.Height(objHeight)) as EnemyData;
-            //enemyData[2] = EditorGUILayout.ObjectField(enemyData[2], typeof(EnemyData), false, GUILayout.Height(objHeight)) as EnemyData;
             GUILayout.EndHorizontal();
             GUILayout.Space(2);
             GUILayout.BeginHorizontal();
-            //GUILayout.Label(new GUIContent("Ally Data"), NodeEditorGUI.nodeLabelCentered, GUILayout.Height(objHeight));
-            battleField[1, 0] = RTEditorGUI.ObjectField(battleField[0, 2], false, GUILayout.Width(objWidth), GUILayout.Height(objHeight));
+            battleField[1, 0] = RTEditorGUI.ObjectField(battleField[1, 0], false, GUILayout.Width(objWidth), GUILayout.Height(objHeight));
             GUILayout.Label(new GUIContent("Player"), NodeEditorGUI.nodeLabelCentered, GUILayout.Width(objWidth), GUILayout.Height(objHeight));
-            battleField[1, 2] = RTEditorGUI.ObjectField(battleField[0, 2], false, GUILayout.Width(objWidth), GUILayout.Height(objHeight));
+            battleField[1, 2] = RTEditorGUI.ObjectField(battleField[1, 2], false, GUILayout.Width(objWidth), GUILayout.Height(objHeight));
             GUILayout.EndHorizontal();
             GUILayout.Space(2);
             GUILayout.EndVertical();
             #endregion
 
+            #region Battle Events GUI
             if(eventGUI == null)
             {
                 RListGUI<GameObject>.ElementGUI eGUI = (element, rect) =>
@@ -92,12 +85,12 @@ namespace Gameflow
                 eventGUI = new RListGUI<GameObject>(battleEvents, new GUIContent("Battle Event Prefabs"), eGUI, (e) => RTEditorGUI.lineHeight, newItem);
             }
             eventGUI.DoLayoutList();
+            #endregion
 
             //Don't know why this code needs to be here exactly, but it makes everything nicer? maybe add to some static stuff?
             GUILayout.BeginHorizontal();
             RTEditorGUI.labelWidth = 90;
             GUILayout.EndHorizontal();
-            //ReoderableListGUI.DoLayoutList(_events);
         }
 
     }

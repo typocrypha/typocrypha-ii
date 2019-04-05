@@ -7,10 +7,14 @@ public class BattleGraphParser : GraphParser
 {
     [SerializeField] private BattleCanvas graph;
     public BattleCanvas Graph { set => graph = value; }
-
+    /// <summary> Initialized the root node (for if next dialogue is called in BattleManager's awake function </summary>
+    public void Init()
+    {
+        currNode = graph.getStartNode();
+    }
     /// <summary> Go through the graph, porcessing nodes until a dialog node is reached
     /// When reached, translate into a dialog item and return </summary>
-    public BattleNodeWave NextWave()
+    public BattleWave NextWave()
     {
         currNode = Next();
         if (currNode is GameflowEndNode)
@@ -37,7 +41,14 @@ public class BattleGraphParser : GraphParser
         }
         else if (currNode is BattleNodeWave)
         {
-
+            var node = currNode as BattleNodeWave;
+            return new BattleWave()
+            {
+                waveTitle = node.waveTitle,
+                music = node.music,
+                battleField = node.battleField,
+                battleEvents = node.battleEvents,
+            };
         }
         else if (currNode is SetVariableNode)
         {

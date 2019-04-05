@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using SerializableCollections.GUIUtils;
 
+[CanEditMultipleObjects]
 [CustomEditor(typeof(Caster), true)]
 public class CasterInspector : Editor
 {

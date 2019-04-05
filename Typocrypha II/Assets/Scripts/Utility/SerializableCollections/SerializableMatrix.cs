@@ -85,8 +85,10 @@ public class IntRange : IEnumerable<int>
 public class Serializable2DMatrix<T> : IEnumerable<T>
 {
     [SerializeField] private T[] _data;
-    public int Rows { get; }
-    public int Columns { get; }
+    [SerializeField] private int _rows; 
+    public int Rows { get => _rows; }
+    [SerializeField] private int _cols;
+    public int Columns { get => _cols; }
 
     public Serializable2DMatrix(int rows, int columns)
     {
@@ -94,17 +96,17 @@ public class Serializable2DMatrix<T> : IEnumerable<T>
         if (rows <= 0 || columns <= 0)
             throw new System.ArgumentOutOfRangeException("Matrix dimensions must be >= 0");
 #endif
-        Rows = rows;
-        Columns = columns;
+        _rows = rows;
+        _cols = columns;
         _data = new T[rows * columns];
     }
     private Serializable2DMatrix(T[] data, int rows, int columns)
     {
-        Rows = rows;
-        Columns = columns;
+        _rows = rows;
+        _cols = columns;
         _data = data;
     }
-    //Warning: shallow copy if reference type!
+    // Warning: shallow copy if reference type!
     public Serializable2DMatrix<T> rotated90()
     {
         T[] rot = new T[_data.Length];
@@ -113,7 +115,7 @@ public class Serializable2DMatrix<T> : IEnumerable<T>
             System.Array.Reverse(rot, range.min, Columns);
         return new Serializable2DMatrix<T>(rot, Columns, Rows);
     }
-    //Warning: shallow clone if reference type!
+    // Warning: shallow clone if reference type!
     public Serializable2DMatrix<T> rotated180()
     {
         T[] rot = new T[_data.Length];
@@ -121,7 +123,7 @@ public class Serializable2DMatrix<T> : IEnumerable<T>
         System.Array.Reverse(rot);
         return new Serializable2DMatrix<T>(rot, Rows, Columns);
     }
-    //Warning: shallow clone if reference type!
+    // Warning: shallow clone if reference type!
     public Serializable2DMatrix<T> RowsFlipped()
     {
         T[] rot = new T[_data.Length];

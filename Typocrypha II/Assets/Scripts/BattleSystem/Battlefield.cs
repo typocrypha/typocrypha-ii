@@ -148,7 +148,7 @@ public class Battlefield : MonoBehaviour, IPausable
         if (obj != null)
             Destroy(obj);
     }
-    /// <sumaary> Clear the data and destroy all of the game objects </sumaary>
+    /// <summary> Clear the data and destroy all of the game objects </summary>
     public void DestroyAllAndClear()
     {
         foreach (var obj in field)
