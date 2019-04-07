@@ -92,6 +92,8 @@ public class DialogGraphParser : MonoBehaviour
             if (cd != null) voice = cd.talk_sfx;
             // Set TIPS search.
             TIPSManager.instance.CurrSearchable = cNode.tipsData;
+            // Add to history.
+            DialogHistory.instance.AddHistory(cNode.characterName, cNode.text);
             if (currNode is DialogNodeVN)
             {
                 var dNode = currNode as DialogNodeVN;

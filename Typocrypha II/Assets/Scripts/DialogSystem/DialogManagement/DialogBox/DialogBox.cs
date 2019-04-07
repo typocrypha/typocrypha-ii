@@ -118,10 +118,14 @@ public class DialogBox : MonoBehaviour, IPausable
     /// <summary>
     /// Set dialog box's height based on amount of text.
     /// </summary>
-    public void SetBoxHeight()
+    /// <param name="add">Add on size rather than reset size.</param>
+    public void SetBoxHeight(bool add = false)
     {
         RectTransform rectTr = GetComponent<RectTransform>();
-        rectTr.sizeDelta = new Vector2(rectTr.sizeDelta.x, dialogText.preferredHeight + textPad);
+        if (add) rectTr.sizeDelta = new Vector2(rectTr.sizeDelta.x, rectTr.sizeDelta.y +
+                                                dialogText.preferredHeight + textPad);
+        else rectTr.sizeDelta = new Vector2(rectTr.sizeDelta.x, 
+                                            dialogText.preferredHeight + textPad);
     }
 
     /// <summary>
