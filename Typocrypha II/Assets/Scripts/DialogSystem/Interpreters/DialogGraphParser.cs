@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Gameflow;
 
 public class DialogGraphParser : MonoBehaviour
@@ -13,13 +12,9 @@ public class DialogGraphParser : MonoBehaviour
     public void Init()
     {
         currNode = graph.getStartNode();
-        SaveManager.instance.NewGame(0); // TEMP
-        SaveManager.instance.loaded.currScene = SceneManager.GetActiveScene().name;
-        SaveManager.instance.loaded.nodeCount = 0;
     }
     private BaseNode Next()
-    {
-        SaveManager.instance.loaded.nodeCount++;
+    { 
         if (currNode is BaseNodeOUT)
             return (currNode as BaseNodeOUT).Next;
         else if (currNode is GameflowBranchNode)
@@ -59,9 +54,11 @@ public class DialogGraphParser : MonoBehaviour
 
     /// <summary> Go through the graph, porcessing nodes until a dialog node is reached
     /// When reached, translate into a dialog item and return </summary>
-    public DialogItem NextDialog()
+    /// <param name="next">Should we immediately go to next line?
+    /// i.e. if false, use current value of 'currNode'.</param>
+    public DialogItem NextDialog(bool next = true)
     {
-        currNode = Next();
+        if (next) currNode = Next();
         if (currNode is GameflowEndNode)
         {
             if (currNode is EndAndHide)
@@ -218,9 +215,24 @@ public class DialogGraphParser : MonoBehaviour
 
     /// <summary>
     /// Fast forwards to saved position.
+    /// Only works when no branching.
     /// </summary>
-    public void FastForward()
+    /// <param name="pos">Node (dialog node count) position to fast forward to.</param>
+    public void FastForward(int pos)
     {
+        for (int i = 0; i <= pos;)
+        {
+            if (currNode is BaseNodeOUT)
+            {
+                currNode = (currNode as BaseNodeOUT).Next;
+                if (currNode is DialogNode) i++;
+            }
+            else if (currNode is GameflowBranchNode)
+            {
+                currNode = Branch(currNode as GameflowBranchNode);
+            }
+            else throw new System.NotImplementedException("Reached end of gameflow");
+        }
 
     }
 }

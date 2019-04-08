@@ -15,6 +15,8 @@ public struct GameData
     public string currScene; // Scene that player was in.
     public int nodeCount; // TEMP: how many nodes deep player was in.
 
+    public string bgsprite;
+
     /// <summary>
     /// Set default (new game) values.
     /// </summary>
@@ -56,7 +58,8 @@ public class SaveManager : MonoBehaviour
         loaded = new GameData();
         loaded.SetNewGameDefaults();
         loaded.saveIndex = saveIndex;
-        
+
+        Debug.Log("saving to:" + Application.persistentDataPath + "/savefile" + saveIndex + ".dat");
         FileStream file = new FileStream(Application.persistentDataPath + "/savefile" + saveIndex + ".dat", FileMode.Create);
         BinaryFormatter bf = new BinaryFormatter();
         bf.Serialize(file, loaded);

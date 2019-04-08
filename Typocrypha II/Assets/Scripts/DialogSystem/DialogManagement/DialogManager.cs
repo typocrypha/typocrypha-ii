@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using Gameflow;
 
 /// <summary>
@@ -72,14 +73,14 @@ public class DialogManager : MonoBehaviour, IPausable
 
     /// <summary>
     /// Start new dialog graph.
+    /// May load save if applicable.
     /// </summary>
     /// <param name="graph">Graph object to start.</param>
     public void StartDialog(DialogCanvas graph)
     {
-        gameObject.SetActive(true);
+        gameObject.SetActive(true); // NOTE: Don't remember what this line is for.
         graphParser.Graph = graph;
-        graphParser.Init();
-        NextDialog();
+        StartDialog();
     }
 
     /// <summary>
@@ -88,16 +89,31 @@ public class DialogManager : MonoBehaviour, IPausable
     public void StartDialog()
     {
         graphParser.Init();
-        NextDialog();
+        // Start from beginning of scene if no record.
+        if (SaveManager.instance.loaded.currScene != SceneManager.GetActiveScene().name) 
+        {
+            SaveManager.instance.loaded.currScene = SceneManager.GetActiveScene().name;
+            SaveManager.instance.loaded.nodeCount = -1;
+            NextDialog();
+        }
+        else // Otherwise, load from currently loaded data.
+        {
+            BackgroundManager.instance.Load();
+            graphParser.FastForward(SaveManager.instance.loaded.nodeCount);
+            NextDialog(false);
+        }
     }
 
     /// <summary>
     /// Starts next dialog box.
     /// </summary>
-    public void NextDialog()
+    /// <param name="next">Should we immediately go to next line?
+    /// i.e. if false, use current value of 'currNode' in 'DialogGraphParser'.</param>
+    public void NextDialog(bool next = true)
     {
-        DialogItem dialogItem = graphParser.NextDialog();
+        DialogItem dialogItem = graphParser.NextDialog(next);
         if (dialogItem == null) return;
+
         // Get and display proper view.
         DialogView view = allViews.Find(v => v.GetType() == dialogItem.GetView());
         if (view != dialogView)
@@ -107,6 +123,11 @@ public class DialogManager : MonoBehaviour, IPausable
         }
         dialogBox = dialogView.PlayDialog(dialogItem); // Play Dialog
         onNextDialog.Invoke();
+
+        #region Saving
+        SaveManager.instance.loaded.nodeCount++;
+        BackgroundManager.instance.Save();
+        #endregion
     }
 
     /// <summary>
