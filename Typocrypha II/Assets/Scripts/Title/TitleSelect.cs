@@ -17,14 +17,19 @@ public class TitleSelect : MonoBehaviour, ISelectHandler, IDeselectHandler, ISub
     }
     public void OnSelect(BaseEventData eventData) {
         //Do this on highlight
-        gameObject.GetComponentInChildren<Text>().color = new Color (219f/255f,56f/255f, 202f/255f);
+        Text t = gameObject.GetComponentInChildren<Text>();
+        t.color = new Color (219f/255f,56f/255f, 202f/255f); //magenta
+        t.text = "> " + t.text + " <";
+
         if (!isFirstSelect) asrc.PlayOneShot(selectSFX);
         isFirstSelect = false;
     }
 
     public void OnDeselect(BaseEventData eventData) {
         //Do this on un-highlight
-        gameObject.GetComponentInChildren<Text>().color = Color.white;
+        Text t = gameObject.GetComponentInChildren<Text>();
+        t.color = Color.white;
+        t.text = t.text.Trim(new char[]{'>',' ', ' ', '<'});
     }
 
     public void OnSubmit(BaseEventData eventData) {
