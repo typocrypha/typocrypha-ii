@@ -14,7 +14,7 @@ public class DialogGraphParser : MonoBehaviour
     {
         currNode = graph.getStartNode();
         SaveManager.instance.NewGame(0); // TEMP
-        SaveManager.instance.loaded.currScene = SceneManager.GetActiveScene().ToString();
+        SaveManager.instance.loaded.currScene = SceneManager.GetActiveScene().name;
         SaveManager.instance.loaded.nodeCount = 0;
     }
     private BaseNode Next()
