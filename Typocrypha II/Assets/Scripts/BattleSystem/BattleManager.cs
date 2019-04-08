@@ -11,7 +11,6 @@ public class BattleManager : MonoBehaviour
     public GameObject[] stdBattleEvents;
     // DEBUG (come up with something better later)
     public string totalWaves = string.Empty;
-    public bool leaveOldEnemies = true;
     public Canvas waveTransitionCanvas;
     public GameObject defaultWaveTransitionPrefab = null;
     [Header("Default Spawn FX")]
@@ -67,8 +66,6 @@ public class BattleManager : MonoBehaviour
     {
         ++waveNum;
         var wave = graphParser.NextWave();
-        if (!leaveOldEnemies)
-            Battlefield.instance.DestroyAllAndClear();
         StartCoroutine(StartWaveCR(wave));
     }
 

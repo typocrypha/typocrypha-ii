@@ -106,7 +106,13 @@ public class Battlefield : MonoBehaviour, IPausable
     }
 
     #region Interface Functions
-    /// <summary> Add a caster to the battlefield at given field position
+    /// <summary> Add am object to the battlefield at given field position
+    /// Implicitly add toAdd to the actor list if applicable </summary> 
+    public void SpecialAdd(FieldObject toAdd, Position pos)
+    {
+        
+    }
+    /// <summary> Add am object to the battlefield at given field position
     /// Implicitly add toAdd to the actor list if applicable </summary> 
     public void Add(FieldObject toAdd, Position pos)
     {
