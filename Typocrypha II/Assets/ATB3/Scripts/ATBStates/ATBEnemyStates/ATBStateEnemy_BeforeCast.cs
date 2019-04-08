@@ -12,7 +12,7 @@ namespace ATB3
         // Call upon entering given state
         public override void OnEnter()
         {
-            Debug.Log("ENEMY " + this.Owner.actorName + " has ENTERED the BEFORECAST state!");
+            //Debug.Log("ENEMY " + this.Owner.actorName + " has ENTERED the BEFORECAST state!");
             // THIS IS WHERE THE ENEMY SHOULD GET SOLO'D
             ATBManager.Instance.enterSolo(this.Owner);
             this.Owner.isCast = true;
@@ -28,7 +28,7 @@ namespace ATB3
         // Call upon exiting given state
         public override void OnExit()
         {
-            Debug.Log("ENEMY " + this.Owner.actorName + " has EXITED the BEFORECAST state!");
+            //Debug.Log("ENEMY " + this.Owner.actorName + " has EXITED the BEFORECAST state!");
         }
     }
 }

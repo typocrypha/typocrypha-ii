@@ -160,4 +160,37 @@ public class DialogParser : MonoBehaviour
 		}
 		return trueStr.ToString ();
 	}
+
+    /// <summary>
+    /// Removes all tags from dialog text.
+    /// </summary>
+    /// <param name="text">Dialog text with tags.</param>
+    /// <returns>Dialog text w/o tags.</returns>
+    public string RemoveTags(string text)
+    {
+        var parsed = new StringBuilder();
+        int cnt = 0;
+        for(int i = 0; i < text.Length;)
+        {
+            var c = text[i];
+            if (c == FXTextDelim[0])
+                i = text.IndexOf(FXTextDelim[0], i + 1, escapeChar) + 1;
+            else if (c == FXTextDelim[1])
+                i = text.IndexOf(FXTextDelim[1], i + 1, escapeChar) + 1;
+            else if (c == TextEventDelim[0])
+                i = text.IndexOf(TextEventDelim[1], i + 1, escapeChar) + 1;
+            else if (c == macroDelim[0])
+                i = text.IndexOf(macroDelim[1], i + 1, escapeChar) + 1;
+            else if (escapeChar.Contains(c))
+                i++;
+            else
+            {
+                parsed.Append(c);
+                i++;
+            }
+                
+            if (cnt++ > 100) break;
+        }
+        return parsed.ToString();
+    }
 }

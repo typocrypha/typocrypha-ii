@@ -13,8 +13,9 @@ namespace ATB3
         // Call upon entering given state
         public override void OnEnter()
         {
-            Debug.Log("ALLY " + this.Owner.actorName + " has ENTERED the CAST state!");
+            //Debug.Log("ALLY " + this.Owner.actorName + " has ENTERED the CAST state!");
             timer = 0.0f;
+            
         }
 
         // Call on fixed update while in given state
@@ -29,7 +30,7 @@ namespace ATB3
         // Call upon exiting given state
         public override void OnExit()
         {
-            Debug.Log("ALLY " + this.Owner.actorName + " has EXITED the CAST state!");
+            //Debug.Log("ALLY " + this.Owner.actorName + " has EXITED the CAST state!");
         }
     }
 }

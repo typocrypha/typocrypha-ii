@@ -23,7 +23,3 @@ public abstract class DialogItem
     /// <returns>Type of dialog view.</returns>
     public abstract System.Type GetView();
 }
-
-
-
-

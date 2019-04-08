@@ -12,7 +12,7 @@ namespace ATB3
         // Call upon entering given state
         public override void OnEnter()
         {    
-            Debug.Log("PLAYER " + this.Owner.actorName + " has ENTERED the IDLE state!");
+            //Debug.Log("PLAYER " + this.Owner.actorName + " has ENTERED the IDLE state!");
         }
 
         // Call on fixed update while in given state
@@ -24,7 +24,7 @@ namespace ATB3
         // Call upon exiting given state
         public override void OnExit()
         {
-            Debug.Log("PLAYER " + this.Owner.actorName + " has EXITED the Idle state!");
+            //Debug.Log("PLAYER " + this.Owner.actorName + " has EXITED the Idle state!");
         }
     }
 }

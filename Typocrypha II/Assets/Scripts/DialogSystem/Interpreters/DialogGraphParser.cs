@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Gameflow;
 
 public class DialogGraphParser : MonoBehaviour
@@ -12,9 +13,13 @@ public class DialogGraphParser : MonoBehaviour
     public void Init()
     {
         currNode = graph.getStartNode();
+        SaveManager.instance.NewGame(0); // TEMP
+        SaveManager.instance.loaded.currScene = SceneManager.GetActiveScene().ToString();
+        SaveManager.instance.loaded.nodeCount = 0;
     }
     private BaseNode Next()
     {
+        SaveManager.instance.loaded.nodeCount++;
         if (currNode is BaseNodeOUT)
             return (currNode as BaseNodeOUT).Next;
         else if (currNode is GameflowBranchNode)
@@ -92,6 +97,8 @@ public class DialogGraphParser : MonoBehaviour
             if (cd != null) voice = cd.talk_sfx;
             // Set TIPS search.
             TIPSManager.instance.CurrSearchable = cNode.tipsData;
+            // Add to history.
+            DialogHistory.instance.AddHistory(cNode.characterName, cNode.text);
             if (currNode is DialogNodeVN)
             {
                 var dNode = currNode as DialogNodeVN;
@@ -207,5 +214,13 @@ public class DialogGraphParser : MonoBehaviour
         //Process other node types
         //Recursively move to next
         return NextDialog();
+    }
+
+    /// <summary>
+    /// Fast forwards to saved position.
+    /// </summary>
+    public void FastForward()
+    {
+
     }
 }

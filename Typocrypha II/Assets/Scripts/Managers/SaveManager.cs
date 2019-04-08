@@ -11,13 +11,17 @@ using System;
 [Serializable]
 public struct GameData
 {
-    public int saveIndex; // Index of save (save slot number)
+    public int saveIndex; // Index of save (save slot number).
+    public string currScene; // Scene that player was in.
+    public int nodeCount; // TEMP: how many nodes deep player was in.
 
     /// <summary>
     /// Set default (new game) values.
     /// </summary>
-    public void SetNewGame()
+    public void SetNewGameDefaults()
     {
+        currScene = "newgame";
+        nodeCount = 0;
     }
 }
 
@@ -29,7 +33,8 @@ public class SaveManager : MonoBehaviour
     public static SaveManager instance = null; // Global static reference
     public GameData loaded; // Loaded game data 
 
-    void Awake() {
+    void Awake()
+    {
         if (instance == null)
         {
             instance = this;
@@ -49,7 +54,7 @@ public class SaveManager : MonoBehaviour
     public void NewGame(int saveIndex)
     {
         loaded = new GameData();
-        loaded.SetNewGame();
+        loaded.SetNewGameDefaults();
         loaded.saveIndex = saveIndex;
         
         FileStream file = new FileStream(Application.persistentDataPath + "/savefile" + saveIndex + ".dat", FileMode.Create);
@@ -73,8 +78,10 @@ public class SaveManager : MonoBehaviour
     /// Load the parameters saved into the save file.
     /// </summary>
     /// <param name="saveIndex">Save slot index.</param>
-    public void LoadGame(int saveIndex) {
-        if (File.Exists(Application.persistentDataPath + "/savefile" + saveIndex + ".dat")) {
+    public void LoadGame(int saveIndex)
+    {
+        if (File.Exists(Application.persistentDataPath + "/savefile" + saveIndex + ".dat"))
+        {
             BinaryFormatter bf = new BinaryFormatter();
             FileStream file = File.Open(Application.persistentDataPath + "/savefile" + saveIndex + ".dat", FileMode.Open);
             loaded = (GameData)bf.Deserialize(file);

@@ -16,7 +16,7 @@ public static class StringExtensions
     /// <returns>Index of first occurence of search term. -1 if not found.</returns>
     public static int IndexOf(this string str, char search, int startPos, char[] escapes)
     {
-        for (int i = 0; i < str.Length; i++)
+        for (int i = startPos; i < str.Length; i++)
         {
             char c = str[i];
             if (escapes.Contains(c))

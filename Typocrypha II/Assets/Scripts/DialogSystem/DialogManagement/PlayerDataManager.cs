@@ -7,6 +7,7 @@ public enum Pronoun { FEMININE, INCLUSIVE, FIRSTNAME, MASCULINE };
 /// <summary>
 /// Container class for player data and progress.
 /// Contains several maps for storing data.
+/// Game is generally saved during dialog scenes via 'DialogGraphParser'
 /// </summary>
 public class PlayerDataManager : MonoBehaviour
 {

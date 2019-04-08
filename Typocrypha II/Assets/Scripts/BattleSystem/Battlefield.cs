@@ -102,7 +102,11 @@ public class Battlefield : MonoBehaviour, IPausable
         spaces[1, 2] = spaceTransforms[6];
         Actors.AddRange(actorsToAdd);
         for (int i = 0; i < objectsToAdd.Length; ++i)
-            Add(objectsToAdd[i], new Position(i / 3, i % 3));
+        {
+            if (objectsToAdd[i] != null)
+                Add(objectsToAdd[i], new Position(i / 3, i % 3));
+        }
+            
     }
 
     #region Interface Functions

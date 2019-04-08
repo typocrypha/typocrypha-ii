@@ -92,6 +92,8 @@ public class TIPSManager : MonoBehaviour, IPausable
                 currEntry = Instantiate(entry.entryPrefab, TIPSContent);
             }
         }
+        TIPSsearch.interactable = false; // Deselect input field.
+        TIPSsearch.interactable = true;
     }
 
     /// <summary>

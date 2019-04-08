@@ -12,7 +12,7 @@ namespace ATB3
         // Call upon entering given state
         public override void OnEnter()
         {
-            Debug.Log("ALLY " + this.Owner.actorName + " has ENTERED the ALLYMENU state!");
+            ATBManager.Instance.enterSolo(this.Owner);
         }
 
         // Call on fixed update while in given state
@@ -24,7 +24,7 @@ namespace ATB3
         // Call upon exiting given state
         public override void OnExit()
         {
-            Debug.Log("ALLY " + this.Owner.actorName + " has EXITED the ALLYMENU state!");
+
         }
     }
 }

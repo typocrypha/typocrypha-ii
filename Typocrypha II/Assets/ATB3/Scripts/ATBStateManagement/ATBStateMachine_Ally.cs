@@ -44,7 +44,8 @@ namespace ATB3
             AddTransition(ATBTransition.ToBeforeCast, ATBStateID.BeforeCast);    // If about to cast, go into beforecast state
             AddTransition(ATBTransition.ToCast, ATBStateID.Cast);                // If finishing beforecast, go into cast state
             AddTransition(ATBTransition.ToAfterCast, ATBStateID.AfterCast);      // If performed spell, go into aftercast state
-            AddTransition(ATBTransition.ToCharge, ATBStateID.Charge);             // If ready to charge spell again, go into charge state
+            AddTransition(ATBTransition.ToCharge, ATBStateID.Charge);            // If ready to charge spell again, go into charge state
+            AddTransition(ATBTransition.ToAllyMenu, ATBStateID.AllyMenu);        // Go to ally menu.
         }
     }
 }

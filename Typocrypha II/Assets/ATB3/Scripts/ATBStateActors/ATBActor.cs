@@ -11,7 +11,7 @@ namespace ATB3
     // A generic entity with states in the ATB system.
     //================================================================//
 
-    public abstract class ATBActor : MonoBehaviour
+    public abstract class ATBActor : MonoBehaviour, IPausable
     {
         //----------------------------------------------------------------//
         // PROPERTIES                                                     //
@@ -20,16 +20,25 @@ namespace ATB3
         public ATBStateMachine StateMachine; // State machine for this actor
         public string actorName; // Name of actor (debug)
 
-        private bool _paused; // Is the actor paused?
+        #region IPausable
+        PauseHandle ph;
+        public PauseHandle PH
+        {
+            get => ph;
+        }
+
+        public void OnPause(bool b) { }
+        #endregion
+
         public bool pause // Is this actor paused or not?
         {
             get
             {
-                return _paused;
+                return PH.Pause;
             }
             set
             {
-                _paused = value;
+                PH.Pause = value;
             }
         }
         public bool isCast; // Is the actor in cast sequence? Isn't unset until all chains are finished.
@@ -37,6 +46,11 @@ namespace ATB3
         //----------------------------------------------------------------//
         // GENERIC ACTOR FUNCTIONS                                        //
         //----------------------------------------------------------------//
+
+        void Awake()
+        {
+            ph = new PauseHandle(OnPause);
+        }
 
         // Call to do initial setup on actor
         public abstract void Setup();
