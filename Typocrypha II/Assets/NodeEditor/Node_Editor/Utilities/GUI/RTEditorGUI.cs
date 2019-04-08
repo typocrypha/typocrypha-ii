@@ -706,7 +706,28 @@ namespace NodeEditorFramework.Utilities
 			return selected;
 		}
 
-		public static int Popup (GUIContent label, int selected, string[] displayedOptions) 
+        public static System.Enum EnumFlagsPopup(System.Enum selected, params GUILayoutOption[] options)
+        {
+            return EnumFlagsPopup(GUIContent.none, selected, options);
+        }
+
+        public static System.Enum EnumFlagsPopup(string label, System.Enum selected, params GUILayoutOption[] options)
+        {
+            return EnumFlagsPopup(new GUIContent(label), selected, options);
+        }
+
+        public static System.Enum EnumFlagsPopup(GUIContent label, System.Enum selected, params GUILayoutOption[] options)
+        {
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+                return UnityEditor.EditorGUILayout.EnumFlagsField(label, selected, options);
+#endif
+            label.text += ": " + selected.ToString();
+            GUILayout.Label(label);
+            return selected;
+        }
+
+        public static int Popup (GUIContent label, int selected, string[] displayedOptions) 
 		{
 			#if UNITY_EDITOR
 			if (!Application.isPlaying)

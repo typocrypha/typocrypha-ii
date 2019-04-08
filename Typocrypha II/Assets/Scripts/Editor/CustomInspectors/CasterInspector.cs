@@ -21,7 +21,8 @@ public class CasterInspector : Editor
 
         #region Field Object Data GUI
         data.DisplayName = EditorGUILayout.TextField(new GUIContent("Display Name"), data.DisplayName);
-        data.CasterState = EditorUtils.EnumPopup(new GUIContent("Caster State"), data.CasterState);
+        data.CasterClass = EditorUtils.EnumPopup(new GUIContent("Caster Class"), data.CasterClass);
+        data.CasterState = EditorUtils.EnumPopup(new GUIContent("Caster State"), data.CasterState);     
         data.IsMoveable = EditorGUILayout.Toggle(new GUIContent("Movable"), data.IsMoveable);
         #endregion
 

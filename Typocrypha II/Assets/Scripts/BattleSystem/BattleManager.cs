@@ -17,7 +17,7 @@ public class BattleManager : MonoBehaviour
     public SpellFxData defualtSpawnFx = new SpellFxData();
 
     private BattleGraphParser graphParser;
-    private BattleEvent[] currEvents;
+    private List<BattleEvent> currEvents = new List<BattleEvent>();
     private BattleWave currWave;
     private int waveNum = 0;
 
@@ -47,9 +47,7 @@ public class BattleManager : MonoBehaviour
     public void StartBattle(BattleCanvas graph)
     {
         graphParser.Graph = graph;
-        graphParser.Init();
-        waveNum = 0;
-        NextWave();
+        StartBattle();
     }
 
     /// <summary>
@@ -57,7 +55,9 @@ public class BattleManager : MonoBehaviour
     /// </summary>
     public void StartBattle()
     {
-        graphParser.Init();
+        var startNode = graphParser.Init();
+        var player = Instantiate(startNode.player, transform).GetComponent<FieldObject>();
+        Battlefield.instance.Add(player, new Battlefield.Position(1, 1));
         waveNum = 0;
         NextWave();
     }
@@ -66,6 +66,16 @@ public class BattleManager : MonoBehaviour
     {
         ++waveNum;
         var wave = graphParser.NextWave();
+        Battlefield.instance.ClearAndDestroy(wave.fieldOptions);
+        foreach (var e in currEvents)
+            Destroy(e.gameObject);
+        currEvents.Clear();
+        foreach (var e in stdBattleEvents)
+            currEvents.Add(Instantiate(e).GetComponent<BattleEvent>());
+        foreach (var e in wave.battleEvents)
+            currEvents.Add(Instantiate(e).GetComponent<BattleEvent>());
+        foreach (var e in currEvents)
+            e.PH.Pause = true;
         StartCoroutine(StartWaveCR(wave));
     }
 
@@ -98,6 +108,10 @@ public class BattleManager : MonoBehaviour
             }
         }
         WaveTransition(waveData);
+        //DEBUG, actually sequence after transition later
+        foreach (var e in currEvents)
+            e.PH.Pause = false;
+
     }
 
     private void WaveTransition(BattleWave waveData)
