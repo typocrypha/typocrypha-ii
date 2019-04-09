@@ -10,7 +10,7 @@ using Gameflow;
 /// Starts and manages dialog sequences.
 /// </summary>
 [RequireComponent(typeof(DialogGraphParser))]
-public class DialogManager : MonoBehaviour, IPausable
+public class DialogManager : MonoBehaviour, IPausable, ISavable
 {
     #region IPausable
     PauseHandle ph;
@@ -24,6 +24,19 @@ public class DialogManager : MonoBehaviour, IPausable
     }
     #endregion
 
+    #region ISavable
+    public void Save()
+    {
+        SaveManager.instance.loaded.currScene = SceneManager.GetActiveScene().name;
+        SaveManager.instance.loaded.nodeCount = dialogCounter;
+    }
+
+    public void Load()
+    {
+        dialogCounter = SaveManager.instance.loaded.nodeCount;
+    }
+    #endregion
+
     public static DialogManager instance = null;
     public bool startOnStart = true; // Should dialog start when scene starts up?
     public List<DialogView> allViews; // All dialog views (VN, CHAT, etc)
@@ -31,6 +44,7 @@ public class DialogManager : MonoBehaviour, IPausable
     public UnityEvent onSkip; // Event called when user manually skips text scroll.
     [HideInInspector] public DialogView dialogView; // Currently displayed dialog view.
     [HideInInspector] public DialogBox dialogBox; // Latest displayed dialog box.
+    [HideInInspector] public int dialogCounter; // Number of dialog lines passed.
 
     private DialogGraphParser graphParser; // Dialog graph currently playing.
 
@@ -78,7 +92,6 @@ public class DialogManager : MonoBehaviour, IPausable
     /// <param name="graph">Graph object to start.</param>
     public void StartDialog(DialogCanvas graph)
     {
-        gameObject.SetActive(true); // NOTE: Don't remember what this line is for.
         graphParser.Graph = graph;
         StartDialog();
     }
@@ -89,17 +102,14 @@ public class DialogManager : MonoBehaviour, IPausable
     public void StartDialog()
     {
         graphParser.Init();
-        // Start from beginning of scene if no record.
-        if (SaveManager.instance.loaded.currScene != SceneManager.GetActiveScene().name) 
+        if (dialogCounter <= 0) // Start from beginning of scene if no save file load.
         {
-            SaveManager.instance.loaded.currScene = SceneManager.GetActiveScene().name;
-            SaveManager.instance.loaded.nodeCount = -1;
+            dialogCounter = -1;
             NextDialog();
         }
-        else // Otherwise, load from currently loaded data.
+        else // Otherwise, go to saved position.
         {
-            BackgroundManager.instance.Load();
-            graphParser.FastForward(SaveManager.instance.loaded.nodeCount);
+            graphParser.FastForward(dialogCounter);
             NextDialog(false);
         }
     }
@@ -124,10 +134,7 @@ public class DialogManager : MonoBehaviour, IPausable
         dialogBox = dialogView.PlayDialog(dialogItem); // Play Dialog
         onNextDialog.Invoke();
 
-        #region Saving
-        SaveManager.instance.loaded.nodeCount++;
-        BackgroundManager.instance.Save();
-        #endregion
+        dialogCounter++;
     }
 
     /// <summary>

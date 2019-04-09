@@ -1,21 +1,23 @@
 ﻿using UnityEngine;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
-using System;
+using System.Collections.Generic;
 // Made with the help of Thomas Bryant during his time at UCSC.
 
 /// <summary>
 /// Container for actual save data.
 /// Namely, write data to 'SaveManager.instance.loaded'.
 /// </summary>
-[Serializable]
+[System.Serializable]
 public struct GameData
 {
     public int saveIndex; // Index of save (save slot number).
     public string currScene; // Scene that player was in.
-    public int nodeCount; // TEMP: how many nodes deep player was in.
 
+    public int nodeCount; // TEMP: how many dialog nodes deep player was in.
     public string bgsprite;
+    public string bgm;
+    public List<DialogCharacterManager.CharacterSave> characters;
 
     /// <summary>
     /// Set default (new game) values.
@@ -34,6 +36,11 @@ public class SaveManager : MonoBehaviour
 {
     public static SaveManager instance = null; // Global static reference
     public GameData loaded; // Loaded game data 
+
+    // NOTE: allSavable list is currently NOT updated between scene transitions.
+    //       solution: just search whole scene?
+    public List<GameObject> allSavable; // All savable objects (have component that implement 'ISavable').
+
 
     void Awake()
     {
@@ -59,7 +66,7 @@ public class SaveManager : MonoBehaviour
         loaded.SetNewGameDefaults();
         loaded.saveIndex = saveIndex;
 
-        Debug.Log("saving to:" + Application.persistentDataPath + "/savefile" + saveIndex + ".dat");
+        Debug.Log("making new save:" + Application.persistentDataPath + "/savefile" + saveIndex + ".dat");
         FileStream file = new FileStream(Application.persistentDataPath + "/savefile" + saveIndex + ".dat", FileMode.Create);
         BinaryFormatter bf = new BinaryFormatter();
         bf.Serialize(file, loaded);
@@ -71,6 +78,9 @@ public class SaveManager : MonoBehaviour
     /// </summary>
     public void SaveGame()
     {
+        foreach (var savable in allSavable) savable.GetComponent<ISavable>().Save();
+
+        Debug.Log("saving to:" + Application.persistentDataPath + "/savefile" + loaded.saveIndex + ".dat");
         FileStream file = File.Open(Application.persistentDataPath + "/savefile" + loaded.saveIndex + ".dat", FileMode.Open);
         BinaryFormatter bf = new BinaryFormatter();
         bf.Serialize(file, loaded);
@@ -90,5 +100,13 @@ public class SaveManager : MonoBehaviour
             loaded = (GameData)bf.Deserialize(file);
             file.Close();
         }
+    }
+
+    /// <summary>
+    /// Apply loaded state to scene.
+    /// </summary>
+    public void ApplyState()
+    {
+        foreach (var savable in allSavable) savable.GetComponent<ISavable>().Load();
     }
 }

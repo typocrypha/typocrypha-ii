@@ -5,13 +5,44 @@ using UnityEngine;
 /// <summary>
 /// Manages character sprites during dialog.
 /// </summary>
-public class DialogCharacterManager : MonoBehaviour
+public class DialogCharacterManager : MonoBehaviour, ISavable
 {
+    #region ISavable
+    [System.Serializable]
+    public struct CharacterSave
+    {
+        public string characterName;
+        public string baseSprite;
+        public string expression;
+        public float xpos;
+        public float ypos;
+        public bool highlight;
+    }
+
+    public void Save()
+    {
+        var characters = new List<CharacterSave>();
+        foreach(var kvp in characterMap) characters.Add(kvp.Value.saveData);
+        SaveManager.instance.loaded.characters = characters;
+    }
+
+    public void Load()
+    {
+        foreach (var cs in SaveManager.instance.loaded.characters)
+        {
+            var data = characterDataBundle.LoadAsset<CharacterData>(cs.characterName);
+            AddCharacter(data, cs.baseSprite, cs.expression, new Vector2(cs.xpos, cs.ypos));
+            HighlightCharacter(data, cs.highlight);
+        }
+    }
+    #endregion
+
     public static DialogCharacterManager instance = null;
     public GameObject characterPrefab; // Prefab of dialog character object
-
     public Color hideTint; // Tint when character is not highlighted.
-    Dictionary<CharacterData, DialogCharacter> characterMap; // Map of string ids to characters in scene.
+
+    Dictionary<string, DialogCharacter> characterMap; // Map of string ids to characters in scene.
+    AssetBundle characterDataBundle; // All character data assets.
 
     const string defaultPose = "base";
     const string defaultExpr = "normal";
@@ -28,7 +59,8 @@ public class DialogCharacterManager : MonoBehaviour
             return;
         }
 
-        characterMap = new Dictionary<CharacterData, DialogCharacter>();
+        characterMap = new Dictionary<string, DialogCharacter>();
+        characterDataBundle = AssetBundle.LoadFromFile(System.IO.Path.Combine(Application.streamingAssetsPath, "characterdata"));
     }
 
     /// <summary>
@@ -44,9 +76,11 @@ public class DialogCharacterManager : MonoBehaviour
         GameObject go = Instantiate(characterPrefab, transform);
         go.transform.position = pos;
         DialogCharacter dc = go.GetComponent<DialogCharacter>();
-        dc.Pose = data.poses[baseSprite];
-        dc.Expr = data.expressions[expression];
-        characterMap[data] = dc;
+        characterMap[data.name] = dc;
+        dc.TargetPosition = pos;
+        ChangePose(data, baseSprite);
+        ChangeExpression(data, expression);
+        dc.saveData.characterName = data.name;
         return dc;
     }
 
@@ -58,14 +92,7 @@ public class DialogCharacterManager : MonoBehaviour
     /// <returns>Reference to created character.</returns>
     public DialogCharacter AddCharacter(CharacterData data, Vector2 pos)
     {
-        GameObject go = Instantiate(characterPrefab, transform);
-        go.transform.position = pos;
-        DialogCharacter dc = go.GetComponent<DialogCharacter>();
-        dc.targetPosition = pos;
-        dc.Pose = data.poses[defaultPose];
-        dc.Expr = data.expressions[defaultExpr];
-        characterMap[data] = dc;
-        return dc;
+        return AddCharacter(data, defaultPose, defaultExpr, pos);
     }
 
     /// <summary>
@@ -74,8 +101,8 @@ public class DialogCharacterManager : MonoBehaviour
     /// <param name="data">Id of character to remove.</param>
     public void RemoveCharacter(CharacterData data)
     {
-        Destroy(characterMap[data].gameObject);
-        characterMap.Remove(data);
+        Destroy(characterMap[data.name].gameObject);
+        characterMap.Remove(data.name);
     }
 
     /// <summary>
@@ -86,8 +113,8 @@ public class DialogCharacterManager : MonoBehaviour
     /// <returns>CharacterDialog component of selected character.</returns>
     public DialogCharacter TeleportCharacter(CharacterData data, Vector2 pos)
     {
-        DialogCharacter dc = characterMap[data];
-        dc.targetPosition = pos;
+        DialogCharacter dc = characterMap[data.name];
+        dc.TargetPosition = pos;
         dc.transform.position = pos;
         return dc;
     }
@@ -101,8 +128,8 @@ public class DialogCharacterManager : MonoBehaviour
     /// <returns>CharacterDialog component of selected character.</returns>
     public DialogCharacter LerpCharacter(CharacterData data, Vector2 pos, float time)
     {
-        DialogCharacter dc = characterMap[data];
-        dc.targetPosition = pos;
+        DialogCharacter dc = characterMap[data.name];
+        dc.TargetPosition = pos;
         StartCoroutine(LerpCharacterCR(dc, pos, time));
         return dc;
     }
@@ -128,8 +155,15 @@ public class DialogCharacterManager : MonoBehaviour
     /// <returns>CharacterDialog component of selected character.</returns>
     public DialogCharacter SmoothDampCharacter(CharacterData data, Vector2 pos, float time)
     {
-        DialogCharacter dc = characterMap[data];
-        dc.targetPosition = pos;
+        Debug.Log("before:" + data.name);
+        Debug.Log(characterMap.ContainsKey(data.name));
+        foreach (var kvp in characterMap)
+        {
+
+        }
+        DialogCharacter dc = characterMap[data.name];
+        Debug.Log("after:" + data.name);
+        dc.TargetPosition = pos;
         StartCoroutine(SmoothDampCharacterCR(dc, pos, time));
         return dc;
     }
@@ -149,12 +183,13 @@ public class DialogCharacterManager : MonoBehaviour
     /// Generally, should be accompanied by a change in expression.
     /// </summary>
     /// <param name="data">Id of character selected.</param>
-    /// <param name="pose">New pose/base sprite.</param>
+    /// <param name="baseSprite">New pose/base sprite.</param>
     /// <returns>CharacterDialog component of selected character.</returns>
-    public DialogCharacter ChangePose(CharacterData data, string pose)
+    public DialogCharacter ChangePose(CharacterData data, string baseSprite)
     {
-        characterMap[data].Pose = data.poses[pose];
-        return characterMap[data];
+        characterMap[data.name].Pose = data.poses[baseSprite];
+        characterMap[data.name].saveData.baseSprite = baseSprite;
+        return characterMap[data.name];
     }
 
     /// <summary>
@@ -165,8 +200,9 @@ public class DialogCharacterManager : MonoBehaviour
     /// <returns>CharacterDialog component of selected character.</returns>
     public DialogCharacter ChangeExpression(CharacterData data, string expression)
     {
-        characterMap[data].Expr = data.expressions[expression];
-        return characterMap[data];
+        characterMap[data.name].Expr = data.expressions[expression];
+        characterMap[data.name].saveData.expression = expression;
+        return characterMap[data.name];
     }
 
     /// <summary>
@@ -177,8 +213,8 @@ public class DialogCharacterManager : MonoBehaviour
     /// <returns>CharacterDialog component of selected character.</returns>
     public DialogCharacter HighlightCharacter(CharacterData data, bool on)
     {
-        characterMap[data].Highlight(on);
-        return characterMap[data];
+        characterMap[data.name].Highlight(on);
+        return characterMap[data.name];
     }
 
     /// <summary>
@@ -192,8 +228,8 @@ public class DialogCharacterManager : MonoBehaviour
         {
             kvp.Value.Highlight(false);
         }
-        characterMap[data].Highlight(true);
-        return characterMap[data];
+        characterMap[data.name].Highlight(true);
+        return characterMap[data.name];
     }
 
     /// <summary>
@@ -206,16 +242,16 @@ public class DialogCharacterManager : MonoBehaviour
     {
         if (clip.isLooping) // Set idle animation to looped clip.
         {
-            characterMap[data].overrideAnimator[DialogCharacter.idleAnimationClip] = clip;
-            characterMap[data].animator.Play(DialogCharacter.idleAnimatorState);
+            characterMap[data.name].overrideAnimator[DialogCharacter.idleAnimationClip] = clip;
+            characterMap[data.name].animator.Play(DialogCharacter.idleAnimatorState);
         }
         else // Play animation once. 
         {
-            characterMap[data].animator.ResetTrigger("Reset");
-            characterMap[data].overrideAnimator[DialogCharacter.onceAnimationClip] = clip;
-            characterMap[data].animator.Play(DialogCharacter.onceAnimatorState);
+            characterMap[data.name].animator.ResetTrigger("Reset");
+            characterMap[data.name].overrideAnimator[DialogCharacter.onceAnimationClip] = clip;
+            characterMap[data.name].animator.Play(DialogCharacter.onceAnimatorState);
         }
-        return characterMap[data];
+        return characterMap[data.name];
     }
 
     /// <summary>
@@ -227,7 +263,7 @@ public class DialogCharacterManager : MonoBehaviour
         StopAllCoroutines();
         foreach (var dc in characterMap.Values)
         {
-            dc.transform.position = dc.targetPosition;
+            dc.transform.position = dc.TargetPosition;
             dc.PivotPosition = Vector2.zero;
             dc.animator.SetTrigger("Reset");
         }
@@ -240,13 +276,9 @@ public class DialogCharacterManager : MonoBehaviour
     /// <returns>CharacterData found. 'null' if none found.</returns>
     public CharacterData CharacterDataByName(string alias)
     {
-        foreach(var kvp in characterMap)
-        {
-            if (kvp.Key.aliases.Contains(alias))
-            {
-                return kvp.Key;
-            }
-        }
-        return null;
+        if (characterDataBundle.Contains(alias))
+            return characterDataBundle.LoadAsset<CharacterData>(alias);
+        else
+            return null;
     }
 }

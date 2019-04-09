@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 
 /// <summary>
@@ -17,16 +16,15 @@ public class BackgroundManager : MonoBehaviour, ISavable
 
     public void Load()
     {
-        // TEMP
-        AssetBundle ab = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, "sprite"));
-        bgsr.sprite = ab.LoadAsset<Sprite>(SaveManager.instance.loaded.bgsprite);
-        ab.Unload(false);
+        bgsr.sprite = bgBundle.LoadAsset<Sprite>(SaveManager.instance.loaded.bgsprite);
     }
     #endregion
 
     public static BackgroundManager instance = null;
     public SpriteRenderer bgsr; // Sprite renderer for the background.
     public GameObject bggo; // Gameobject background (for more complicated backgrounds).
+
+    AssetBundle bgBundle; // Background sprite assets.
 
     void Awake()
     {
@@ -40,6 +38,8 @@ public class BackgroundManager : MonoBehaviour, ISavable
             return;
         }
         DontDestroyOnLoad(gameObject);
+
+        bgBundle = AssetBundle.LoadFromFile(System.IO.Path.Combine(Application.streamingAssetsPath, "background"));
     }
 
     /// <summary>

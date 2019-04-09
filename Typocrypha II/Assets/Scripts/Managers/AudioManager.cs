@@ -13,8 +13,20 @@ using System.IO;
 /// <example>
 /// <c>AudioManager.instance["clip name"]</c>
 /// </example>
-public class AudioManager : MonoBehaviour
+public class AudioManager : MonoBehaviour, ISavable
 {
+    #region ISavable
+    public void Save()
+    {
+        SaveManager.instance.loaded.bgm = bgm[bgmInd].clip.name;
+    }
+
+    public void Load()
+    {
+        PlayBGM(this[SaveManager.instance.loaded.bgm]);
+    }
+    #endregion
+
     public static AudioManager instance = null; // Global static instance.
     public AudioSource[] bgm; // Audio sources for playing bgms. Should have 2 audio sources (for crossfading).
     public AudioSource sfx; // Audio source for playing simple sfx.

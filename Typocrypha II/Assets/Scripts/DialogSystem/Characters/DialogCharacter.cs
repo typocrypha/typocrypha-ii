@@ -13,13 +13,11 @@ public class DialogCharacter : MonoBehaviour
         get => pivotTr.localPosition;
         set => pivotTr.localPosition = value;
     }
-    // If moving, position character is going to; Otherwise, just current position. 
-    // Used for resetting position when skipping.
-    public Vector2 targetPosition; 
     public SpriteRenderer baseSprite; // Base sprite renderer (the pose).
     public SpriteRenderer exprSprite; // Expression sprite renderer (face).
     public Animator animator; // Animator for character.
     [HideInInspector]public AnimatorOverrideController overrideAnimator; // Override animator.
+    [HideInInspector]public DialogCharacterManager.CharacterSave saveData; // Serializable state.
 
     public const string idleAnimatorState = "Idle";
     public const string onceAnimatorState = "Once";
@@ -56,6 +54,20 @@ public class DialogCharacter : MonoBehaviour
         }
     }
 
+    // If moving, position character is going to; Otherwise, just current position. 
+    // Used for resetting position when skipping.
+    Vector2 targetPosition;
+    public Vector2 TargetPosition
+    {
+        get => targetPosition;
+        set
+        {
+            targetPosition = value;
+            saveData.xpos = value.x;
+            saveData.ypos = value.y;
+        }
+    }
+
     /// <summary>
     /// Highlight a character on or off.
     /// </summary>
@@ -74,5 +86,6 @@ public class DialogCharacter : MonoBehaviour
                 sr.color = DialogCharacterManager.instance.hideTint;
             }
         }
+        saveData.highlight = on;
     }
 }
