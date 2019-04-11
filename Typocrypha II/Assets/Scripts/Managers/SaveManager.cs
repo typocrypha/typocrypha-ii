@@ -14,6 +14,7 @@ public struct GameData
     public int saveIndex; // Index of save (save slot number).
     public string currScene; // Scene that player was in.
 
+    public PlayerDataManager.SaveData playerData;
     public int nodeCount; // TEMP: how many dialog nodes deep player was in.
     public string bgsprite;
     public string bgm;

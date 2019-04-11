@@ -9,30 +9,79 @@ public enum Pronoun { FEMININE, INCLUSIVE, FIRSTNAME, MASCULINE };
 /// Contains several maps for storing data.
 /// Game is generally saved during dialog scenes via 'DialogGraphParser'
 /// </summary>
-public class PlayerDataManager : MonoBehaviour
+public class PlayerDataManager : MonoBehaviour, ISavable
 {
-	public static PlayerDataManager instance = null; // global static ref
-    public Dictionary<string, object> tmpData; // string-object data map
+    #region ISavable
+    [System.Serializable]
+    public struct SaveData
+    {
+        public Dictionary<string, string> stringMap;
+        public Dictionary<string, int> intMap;
+        public Dictionary<string, float> floatMap;
+        public Dictionary<string, bool> boolMap;
+    }
+
+    // Only saves strings, ints, floats, and bools.
+    public void Save()
+    {
+        var sd = new SaveData();
+        sd.stringMap = new Dictionary<string, string>();
+        sd.intMap = new Dictionary<string, int>();
+        sd.floatMap = new Dictionary<string, float>();
+        sd.boolMap = new Dictionary<string, bool>();
+
+        foreach (var kvp in data)
+        {
+            if (kvp.Value is string)
+                sd.stringMap.Add(kvp.Key, (string)kvp.Value);
+            else if (kvp.Value is int)
+                sd.intMap.Add(kvp.Key, (int)kvp.Value);
+            else if (kvp.Value is float)
+                sd.floatMap.Add(kvp.Key, (float)kvp.Value);
+            else if (kvp.Value is bool)
+                sd.boolMap.Add(kvp.Key, (bool)kvp.Value);
+        }
+
+        SaveManager.instance.loaded.playerData = sd;
+    }
+
+    public void Load()
+    {
+        var sd = SaveManager.instance.loaded.playerData;
+        SetDefaults();
+        foreach (var kvp in sd.stringMap)
+            data.Add(kvp.Key, kvp.Value);
+        foreach (var kvp in sd.intMap)
+            data.Add(kvp.Key, kvp.Value);
+        foreach (var kvp in sd.floatMap)
+            data.Add(kvp.Key, kvp.Value);
+        foreach (var kvp in sd.boolMap)
+            data.Add(kvp.Key, kvp.Value);
+    }
+    #endregion
+
+    public static PlayerDataManager instance = null; // global static ref
+    public Dictionary<string, object> data; // string-object data map
     public object this[string key] // Get/set data from internal data maps
     {
         get
         {
-            if (tmpData.ContainsKey(key))
+            if (data.ContainsKey(key))
             {
-                return tmpData[key];
+                return data[key];
             }
             Debug.LogWarning("PlayerDialogueInfo: no info with key " + key + ", returning null");
             return null;
         }
         set
         {
-            if (tmpData.ContainsKey(key))
+            if (data.ContainsKey(key))
             {
-                tmpData[key] = value;
+                data[key] = value;
             }
             else
             {
-                tmpData.Add(key, value);
+                data.Add(key, value);
             }
         }
     }
@@ -58,15 +107,23 @@ public class PlayerDataManager : MonoBehaviour
         }
         DontDestroyOnLoad(gameObject);
 
-        tmpData = new Dictionary<string, object>
+        SetDefaults();
+    }
+
+    string target = nullKey;
+
+    /// <summary>
+    /// Set default parameters.
+    /// </summary>
+    public void SetDefaults()
+    {
+        data = new Dictionary<string, object>
         {
             { playerName, "???" },
             { lastInputKey, "" },
             { textDelayScale, 1f }
         };
     }
-
-    string target = nullKey;
 
     /// <summary>
     /// Set data target (used mainly for input).
