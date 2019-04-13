@@ -49,6 +49,7 @@ public class BattleGraphParser : GraphParser
                 music = node.music,
                 battleField = node.battleField,
                 battleEvents = node.battleEvents,
+                fieldOptions = node.clearFieldOptions,
             };
         }
         else if (currNode is SetVariableNode)

@@ -210,15 +210,56 @@ public class Battlefield : MonoBehaviour, IPausable
     /// <summary> Clear according to options </summary>
     public void ClearAndDestroy(ClearOptions options)
     {
-        if(options.HasFlag(ClearOptions.ClearEnemies))
-            foreach(var obj in field.Where((c) => c is Caster && (c as Caster).CasterClass == Caster.Class.Other))
-                Destroy(obj);
-        if (options.HasFlag(ClearOptions.ClearAllies))
-            foreach (var obj in field.Where((c) => c is Caster && (c as Caster).CasterClass == Caster.Class.PartyMember))
-                Destroy(obj);
-        if (options.HasFlag(ClearOptions.ClearObjects))
-            foreach (var obj in field.Where((c) => !(c is Caster)))
-                Destroy(obj);
+        if (options == ClearOptions.Nothing)
+            return;
+        int row = 0, col = 0;
+        while (row < field.Rows)
+        {
+            var obj = field[row, col];
+            if (obj == null)
+            {
+                if (++col >= field.Columns)
+                {
+                    col = 0;
+                    ++row;
+                }
+                continue;
+            }
+
+            var caster = obj as Caster;
+            if (caster != null)
+            {
+                if ((caster.CasterClass == Caster.Class.Other && options.HasFlag(ClearOptions.ClearEnemies))
+                    || (caster.CasterClass == Caster.Class.PartyMember && options.HasFlag(ClearOptions.ClearAllies)))
+                {
+                    Destroy(obj.gameObject);
+                    field[row, col] = null;
+                }
+            }
+            else if (options.HasFlag(ClearOptions.ClearObjects))
+            {
+                Destroy(obj.gameObject);
+                field[row, col] = null;
+            }    
+            
+            if (++col >= field.Columns)
+            {
+                col = 0;
+                ++row;
+            }
+        }
+        RecalculateCasters();
+    }
+    /// Reset the caster array after clearing objects
+    private void RecalculateCasters()
+    {
+        Casters.Clear();
+        foreach(var obj in field)
+        {
+            var caster = obj?.GetComponent<Caster>();
+            if (caster != null)
+                Casters.Add(caster);
+        }
     }
     #endregion
 

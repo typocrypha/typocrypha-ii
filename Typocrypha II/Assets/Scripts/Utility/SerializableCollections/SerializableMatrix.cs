@@ -161,7 +161,8 @@ public class Serializable2DMatrix<T> : IEnumerable<T>
     }
     IEnumerator<T> IEnumerable<T>.GetEnumerator()
     {
-        return _data.GetEnumerator() as IEnumerator<T>;
+        for (int i = 0; i < _data.Length; ++i)
+            yield return _data[i];
     }
     #endregion
 }
