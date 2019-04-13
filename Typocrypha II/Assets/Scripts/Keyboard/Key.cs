@@ -13,6 +13,7 @@ namespace Typocrypha
         public delegate void OnPressDel(); // Delegate for when key is pressed.
 
         public char letter; // Letter this key represents.
+        public string output; // What is typed when this key is pressed.
         public OnPressDel onPress; // Delegate called when key is pressed.
         public SpriteRenderer highlight; // Sprite renderer for key highlight.
         public TextMeshPro letterText; // Text for key label.
@@ -28,6 +29,7 @@ namespace Typocrypha
         void Awake()
         {
             Highlight = false;
+            onPress += Output;
         }
 
         /// <summary>
@@ -42,6 +44,12 @@ namespace Typocrypha
             effect.key = this;
             onPress += effect.OnPress;
             effect.OnStart();
+        }
+
+        // Puts output into cast bar (might not be same as letter if effected by something).
+        void Output()
+        {
+            Keyboard.instance.inputBar.text += output;
         }
     }
 }

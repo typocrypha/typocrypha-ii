@@ -52,8 +52,11 @@ namespace Typocrypha
             }
             foreach (var c in Input.inputString)
             {
-                keyMap[c].onPress?.Invoke();
-            }
+                if (keyMap.ContainsKey(c))
+                    keyMap[c].onPress?.Invoke();
+                else if ((int)c == 8 && inputBar.text.Length > 0) // Backspace
+                    inputBar.text = inputBar.text.Substring(0, inputBar.text.Length - 1);
+            }  
         }
 
         /// <summary>

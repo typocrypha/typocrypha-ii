@@ -18,7 +18,7 @@ namespace Typocrypha
 
         public override void Remove()
         {
-            key.onPress = null; // CLear on press handle.
+            key.onPress -= OnPress;
             Destroy(gameObject);
         }
 
