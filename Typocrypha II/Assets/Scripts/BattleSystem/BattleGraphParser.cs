@@ -8,9 +8,10 @@ public class BattleGraphParser : GraphParser
     [SerializeField] private BattleCanvas graph;
     public BattleCanvas Graph { set => graph = value; }
     /// <summary> Initialized the root node (for if next dialogue is called in BattleManager's awake function </summary>
-    public void Init()
+    public BattleStartNode Init()
     {
         currNode = graph.getStartNode();
+        return currNode as BattleStartNode;
     }
     /// <summary> Go through the graph, porcessing nodes until a dialog node is reached
     /// When reached, translate into a dialog item and return </summary>
@@ -48,6 +49,7 @@ public class BattleGraphParser : GraphParser
                 music = node.music,
                 battleField = node.battleField,
                 battleEvents = node.battleEvents,
+                fieldOptions = node.clearFieldOptions,
             };
         }
         else if (currNode is SetVariableNode)

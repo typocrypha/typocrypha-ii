@@ -8,6 +8,7 @@ using UnityEngine;
 /// </summary>
 public class BattleWave
 {
+    public Battlefield.ClearOptions fieldOptions;
     public string waveTitle;
     public AudioClip music;
     public GOMatrix2D battleField;

@@ -49,6 +49,14 @@ public class Battlefield : MonoBehaviour, IPausable
         DeleteOther,
         DeleteOtherOnlyIfSpaceIsOccupied,
     }
+    [System.Flags]
+    public enum ClearOptions
+    {
+        Nothing = 0,
+        ClearEnemies = 1,
+        ClearObjects = 2,
+        ClearAllies = 4,
+    }
     public static Battlefield instance;
     public int Columns { get; } = 3;
     public int Rows { get; } = 2;
@@ -110,11 +118,29 @@ public class Battlefield : MonoBehaviour, IPausable
     }
 
     #region Interface Functions
-    /// <summary> Add am object to the battlefield at given field position
+    /// <summary> Add an object to the battlefield at given field position
+    /// Works differently for allies and enemies
     /// Implicitly add toAdd to the actor list if applicable </summary> 
     public void SpecialAdd(FieldObject toAdd, Position pos)
     {
-        
+        var obj = field[pos];
+        if(obj == null)
+        {
+            Add(toAdd, pos);
+        }
+        else if(toAdd is Caster)
+        {
+            var addCaster = toAdd as Caster;
+            if(addCaster.CasterClass == Caster.Class.Other)
+            {
+
+            }
+            //if(toAdd.c)
+        }
+        else
+        {
+
+        }
     }
     /// <summary> Add am object to the battlefield at given field position
     /// Implicitly add toAdd to the actor list if applicable </summary> 
@@ -124,7 +150,9 @@ public class Battlefield : MonoBehaviour, IPausable
         toAdd.transform.position = spaces[pos].transform.position;
         field[pos] = toAdd;
         var actor = toAdd.GetComponent<ATBActor>();
-        if (toAdd != null) Actors.Add(actor);
+        if (actor != null) Actors.Add(actor);
+        var caster = toAdd.GetComponent<Caster>();
+        if (caster != null) Casters.Add(caster);
     }
     /// <summary> Add a actor that is not necessarily a FieldObject and is not in a field position </summary> 
     public void AddActor(ATBActor a)
@@ -178,6 +206,60 @@ public class Battlefield : MonoBehaviour, IPausable
         field = new FieldMatrix(2, 3);
         Actors.Clear();
         Casters.Clear();
+    }
+    /// <summary> Clear according to options </summary>
+    public void ClearAndDestroy(ClearOptions options)
+    {
+        if (options == ClearOptions.Nothing)
+            return;
+        int row = 0, col = 0;
+        while (row < field.Rows)
+        {
+            var obj = field[row, col];
+            if (obj == null)
+            {
+                if (++col >= field.Columns)
+                {
+                    col = 0;
+                    ++row;
+                }
+                continue;
+            }
+
+            var caster = obj as Caster;
+            if (caster != null)
+            {
+                if ((caster.CasterClass == Caster.Class.Other && options.HasFlag(ClearOptions.ClearEnemies))
+                    || (caster.CasterClass == Caster.Class.PartyMember && options.HasFlag(ClearOptions.ClearAllies)))
+                {
+                    Destroy(obj.gameObject);
+                    field[row, col] = null;
+                }
+            }
+            else if (options.HasFlag(ClearOptions.ClearObjects))
+            {
+                Destroy(obj.gameObject);
+                field[row, col] = null;
+            }    
+            
+            if (++col >= field.Columns)
+            {
+                col = 0;
+                ++row;
+            }
+        }
+        RecalculateCasters();
+    }
+    /// Reset the caster array after clearing objects
+    private void RecalculateCasters()
+    {
+        Casters.Clear();
+        foreach(var obj in field)
+        {
+            var caster = obj?.GetComponent<Caster>();
+            if (caster != null)
+                Casters.Add(caster);
+        }
     }
     #endregion
 
@@ -271,9 +353,9 @@ public class Battlefield : MonoBehaviour, IPausable
     {
         public bool IsLegal { get => _col >= 0 && _col < instance.Columns && _row >= 0 && _row < instance.Rows; }
         [SerializeField] int _row;
-        public int Row { get => _row; set =>_row = Mathf.Clamp(0, _row, instance.Rows); }
+        public int Row { get => _row; set =>_row = value; }
         [SerializeField] int _col;
-        public int Col { get => _col; set => _col = Mathf.Clamp(0, _col, instance.Columns); }
+        public int Col { get => _col; set => _col = value; }
         public Position(int row, int col)
         {
             _row = row;

@@ -17,7 +17,7 @@ public class BattleManager : MonoBehaviour
     public SpellFxData defualtSpawnFx = new SpellFxData();
 
     private BattleGraphParser graphParser;
-    private BattleEvent[] currEvents;
+    private List<BattleEvent> currEvents = new List<BattleEvent>();
     private BattleWave currWave;
     private int waveNum = 0;
 
@@ -47,9 +47,7 @@ public class BattleManager : MonoBehaviour
     public void StartBattle(BattleCanvas graph)
     {
         graphParser.Graph = graph;
-        graphParser.Init();
-        waveNum = 0;
-        NextWave();
+        StartBattle();
     }
 
     /// <summary>
@@ -57,23 +55,60 @@ public class BattleManager : MonoBehaviour
     /// </summary>
     public void StartBattle()
     {
-        graphParser.Init();
+        var startNode = graphParser.Init();
+        var player = Instantiate(startNode.player, transform).GetComponent<FieldObject>();
+        Battlefield.instance.Add(player, new Battlefield.Position(1, 1));
         waveNum = 0;
         NextWave();
+    }
+
+    /// <summary>
+    /// Delete the currently active battle events and add a new collection
+    /// if pause is true, pause all the events immediately after they are added
+    /// if addStd is true, add the standard battle events to the collection
+    /// </summary>
+    public void SetBattleEvents(IEnumerable<GameObject> eventObjects, bool pause = true, bool addStd = true)
+    {
+        // Destroy battle events from previous wave
+        foreach (var e in currEvents)
+            Destroy(e.gameObject);
+        currEvents.Clear();
+        // Add the standard battle events for this battle to the list
+        if(addStd)
+            foreach (var e in stdBattleEvents)
+                currEvents.Add(Instantiate(e).GetComponent<BattleEvent>());
+        // Add the new battle events
+        foreach (var e in eventObjects)
+            currEvents.Add(Instantiate(e).GetComponent<BattleEvent>());
+        // Pause all of the new battle events so they don't activate during the tarnsition
+        if(pause)
+            foreach (var e in currEvents)
+                e.PH.Pause = true;
+    }
+
+    public void AddBattleEvent(BattleEvent battleEvent)
+    {
+        currEvents.Add(battleEvent);
+        // Start it paused if the battleManager is in a paused state
     }
 
     public void NextWave()
     {
         ++waveNum;
         var wave = graphParser.NextWave();
+
+        // Set and pause the battle events
+        SetBattleEvents(wave.battleEvents);
+        // Clear the battlefield according to the clear options in the new wave
+        Battlefield.instance.ClearAndDestroy(wave.fieldOptions);
+
         StartCoroutine(StartWaveCR(wave));
     }
 
     private IEnumerator StartWaveCR(BattleWave waveData)
     {
         var fieldData = waveData.battleField;
-        int row = 0;
-        int col = 0;
+        int row = 0, col = 0;
         while (row < fieldData.Rows)
         {
             if (fieldData[row, col] == null)
@@ -98,10 +133,13 @@ public class BattleManager : MonoBehaviour
             }
         }
         WaveTransition(waveData);
+        //DEBUG, actually sequence after transition later
+        foreach (var e in currEvents)
+            e.PH.Pause = false;
     }
 
     private void WaveTransition(BattleWave waveData)
-    {
+    { 
         GameObject wT = Instantiate(defaultWaveTransitionPrefab, waveTransitionCanvas.transform);
         wT.transform.Find("WaveBanner").GetComponentInChildren<Text>().text = DialogParser.instance.SubstituteMacros(waveData.waveTitle);
         wT.transform.Find("WaveTitle").GetComponentInChildren<Text>().text = "Wave " + waveNum + "/ " + totalWaves;

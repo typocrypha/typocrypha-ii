@@ -3,7 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Caster : FieldObject
-{ 
+{
+    public enum Class
+    {
+        None = -1,
+        Other,
+        Player,
+        PartyMember,
+    }
+
     public enum State
     {
         None = -1,
@@ -23,7 +31,9 @@ public class Caster : FieldObject
 
     [SerializeField] private State _type;
     public State CasterState { get => _type; set => _type = value; }
-   
+    [SerializeField] private Class _casterClass;
+    public Class CasterClass { get => _casterClass; set => _casterClass = value; }
+
     public int Health { get; set; }
     public int Armor { get; set; }
     public int SP { get; set; }

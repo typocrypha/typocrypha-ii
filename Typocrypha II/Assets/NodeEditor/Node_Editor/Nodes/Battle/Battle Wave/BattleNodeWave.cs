@@ -19,6 +19,7 @@ namespace Gameflow
         public override string Title { get { return "Battle Wave"; } }
         public override Vector2 MinSize { get { return new Vector2(300, 60); } }
 
+        public Battlefield.ClearOptions clearFieldOptions;
         public string waveTitle;
         public AudioClip music;
         public GOMatrix2D battleField;
@@ -58,6 +59,10 @@ namespace Gameflow
             GUILayout.BeginVertical("box");
             GUILayout.Label(new GUIContent("Battlefield Data", "TODO: Tooltip"), NodeEditorGUI.nodeLabelBoldCentered);
             GUILayout.BeginHorizontal();
+            GUILayout.Label(new GUIContent("Clear"), GUILayout.Width(45));
+            clearFieldOptions = (Battlefield.ClearOptions)RTEditorGUI.EnumFlagsPopup(clearFieldOptions);
+            GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
             float objHeight = RTEditorGUI.lineHeight * 1.125f;
             float objWidth = rect.width * 0.33f - 7;
             battleField[0, 0] = RTEditorGUI.ObjectField(battleField[0, 0], false, GUILayout.Width(objWidth), GUILayout.Height(objHeight));
@@ -89,7 +94,6 @@ namespace Gameflow
 
             //Don't know why this code needs to be here exactly, but it makes everything nicer? maybe add to some static stuff?
             GUILayout.BeginHorizontal();
-            RTEditorGUI.labelWidth = 90;
             GUILayout.EndHorizontal();
         }
 
