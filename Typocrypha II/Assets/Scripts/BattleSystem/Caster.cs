@@ -34,15 +34,34 @@ public class Caster : FieldObject
     [SerializeField] private Class _casterClass;
     public Class CasterClass { get => _casterClass; set => _casterClass = value; }
 
-    public int Health { get; set; }
+    int health;
+    public int Health
+    {
+        get => health;
+        set
+        {
+            health = value;
+            ui?.onHealthChanged?.Invoke((float)health/Stats.MaxHP);
+        }
+    }
     public int Armor { get; set; }
     public int SP { get; set; }
-    public int Stagger { get; set; }
+    int stagger;
+    public int Stagger
+    {
+        get => stagger;
+        set
+        {
+            stagger = value;
+            ui?.onStaggerChanged?.Invoke(stagger.ToString());
+        }
+    }
     public bool Stunned { get; } = false;
     public BattleStatus BStatus { get; }
     [SerializeField] private CasterTagDictionary _tags;
     public CasterTagDictionary Tags { get => _tags; set => _tags = value; }
     public CasterStats Stats { get => _tags.statMod; }
+    public EnemyUI ui;
 
     private void Awake()
     {
