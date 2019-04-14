@@ -11,6 +11,7 @@ public class EnemyUI : MonoBehaviour
     public Caster caster;
     public UnityEvent_float onHealthChanged; // Pass percentage health.
     public UnityEvent_string onStaggerChanged; // Pass absolute stagger as string.
+    public UnityEvent_string onSpellChanged; // Pass name of spell currently being cast.
 }
 
 [System.Serializable]

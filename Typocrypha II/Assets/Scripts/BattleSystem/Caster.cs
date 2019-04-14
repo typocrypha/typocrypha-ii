@@ -41,7 +41,7 @@ public class Caster : FieldObject
         set
         {
             health = value;
-            ui?.onHealthChanged?.Invoke((float)health/Stats.MaxHP);
+            ui?.onHealthChanged.Invoke((float)health/Stats.MaxHP);
         }
     }
     public int Armor { get; set; }
@@ -53,10 +53,20 @@ public class Caster : FieldObject
         set
         {
             stagger = value;
-            ui?.onStaggerChanged?.Invoke(stagger.ToString());
+            ui?.onStaggerChanged.Invoke(stagger.ToString());
         }
     }
     public bool Stunned { get; } = false;
+    string currSpell;
+    public string CurrSpell
+    {
+        get => currSpell;
+        set
+        {
+            currSpell = value;
+            ui?.onSpellChanged.Invoke(currSpell);
+        }
+    }
     public BattleStatus BStatus { get; }
     [SerializeField] private CasterTagDictionary _tags;
     public CasterTagDictionary Tags { get => _tags; set => _tags = value; }
