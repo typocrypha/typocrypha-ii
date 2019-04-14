@@ -58,8 +58,8 @@ public class CasterInspector : Editor
         // Tag GUI
         EditorUtils.CasterUtils.CasterTagDictionaryGUILayout(data.Tags);
 
-        EditorUtils.SetSceneDirtyIfGUIChanged(target);
-
         data.ui = EditorGUILayout.ObjectField(data.ui, typeof(EnemyUI), true) as EnemyUI;
+
+        EditorUtils.SetSceneDirtyIfGUIChanged(target);
     }
 }
