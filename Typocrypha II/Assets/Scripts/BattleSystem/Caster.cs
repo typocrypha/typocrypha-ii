@@ -54,17 +54,28 @@ public class Caster : FieldObject
         {
             stagger = value;
             ui?.onStaggerChanged.Invoke(stagger.ToString());
+            if (stagger <= 0) ui?.onStun.Invoke();
         }
     }
     public bool Stunned { get; } = false;
-    string currSpell;
-    public string CurrSpell
+    string spell;
+    public string Spell
     {
-        get => currSpell;
+        get => spell;
         set
         {
-            currSpell = value;
-            ui?.onSpellChanged.Invoke(currSpell);
+            spell = value;
+            ui?.onSpellChanged.Invoke(spell);
+        }
+    }
+    float charge;
+    public float Charge
+    {
+        get => charge;
+        set
+        {
+            charge = value;
+            ui?.onChargeChanged.Invoke(charge); // NEEDS TO DIVIDE BY TOTAL
         }
     }
     public BattleStatus BStatus { get; }
