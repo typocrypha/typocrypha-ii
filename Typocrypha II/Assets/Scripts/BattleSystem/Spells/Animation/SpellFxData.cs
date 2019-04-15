@@ -14,7 +14,7 @@ public class SpellFxData
     }
     public EffectType effectType = EffectType.Single;
     public GameObject effectPrefab = null;
-    public List<SpellAnimationPacket> effectPackets = new List<SpellAnimationPacket>() { new SpellAnimationPacket() };
+    public List<AnimationPacket> effectPackets = new List<AnimationPacket>() { new AnimationPacket() };
 
     public IEnumerator Play(Vector2 pos)
     {

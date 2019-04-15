@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class PrintTagsEffect : RootWordEffect
 {
-    public override void Cast(Caster caster, Caster target)
+    public override PopupData Cast(Caster caster, Caster target)
     {
         Debug.Log("Tags on this effect: " + tags);
+        return null;
     }
 }

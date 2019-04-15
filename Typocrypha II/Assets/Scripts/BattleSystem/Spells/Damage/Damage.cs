@@ -9,14 +9,18 @@ public static class Damage
         Standard,
         Custom,
     }
-    public delegate void Formula(DamageEffect effect, Caster caster, Caster target);
+    public delegate PopupData Formula(DamageEffect effect, Caster caster, Caster target);
 
     public static Dictionary<FormulaType, Formula> StandardFormula { get; } = new Dictionary<FormulaType, Formula>
     {
         { FormulaType.Standard, Standard }
     };   
-    private static void Standard(DamageEffect effect, Caster caster, Caster target)
+    private static PopupData Standard(DamageEffect effect, Caster caster, Caster target)
     {
         target.Health -= effect.power;
+        return new PopupData
+        {
+            damage = effect.power,
+        };
     }
 }

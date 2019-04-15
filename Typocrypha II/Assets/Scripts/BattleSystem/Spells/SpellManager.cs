@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+[RequireComponent(typeof(SpellFxManager))]
 public class SpellManager : MonoBehaviour
 {
     private const float delayBetweenTargets = 0.1f;
     public static SpellManager instance;
-    public GameObject noTargetFxPrefab;
     /// <summary> Singleton implementation </summary>
     private void Awake()
     {
@@ -36,6 +36,7 @@ public class SpellManager : MonoBehaviour
     /// <summary> Cast the spell effects and play the associated fx</summary>
     private IEnumerator CastCR(RootWord[] roots, Caster caster, Battlefield.Position target)
     {
+        var casterSpace = Battlefield.instance.GetSpace(caster.FieldPos);
         List<Coroutine> crList = new List<Coroutine>();
         foreach (var root in roots)
         {
@@ -49,17 +50,13 @@ public class SpellManager : MonoBehaviour
                     var targetSpace = Battlefield.instance.GetSpace(t);
                     if (targetCaster == null)
                     {
-                        var noTargetEffect = Instantiate(noTargetFxPrefab);
-                        noTargetEffect.transform.position = targetSpace;
-                        var fxComponent = noTargetEffect.GetComponent<SpellFx>();
-                        if (fxComponent != null)
-                            crList.Add(fxComponent.StartCoroutine(fxComponent.PlayEffect()));
+                        crList.Add(SpellFxManager.instance.NoTargetFx(targetSpace));
                     }
                     else
                     {
-                        effect.Cast(caster, targetCaster); //TODO: add effect logging?
+                        var popupData = effect.Cast(caster, targetCaster); //TODO: add effect logging?
                         var fx = new SpellFxData[] { root.leftMod?.fx, effect.fx, root.rightMod?.fx };
-                        crList.Add(StartCoroutine(FxCR(fx, targetSpace)));
+                        crList.Add(SpellFxManager.instance.Play(fx, popupData, targetSpace, casterSpace));
                         yield return new WaitForSeconds(delayBetweenTargets);
                         //Break if enemy killed?
                     }                 
@@ -69,11 +66,5 @@ public class SpellManager : MonoBehaviour
             }
         }
     }
-    /// <summary> A coroutine to play multiple spell effects in arom to facilitate Modifier Fx with crList</summary>
-    private IEnumerator FxCR(SpellFxData[] fxData, Vector2 pos)
-    {
-        foreach (var fx in fxData)
-            if (fx != null)
-                yield return StartCoroutine(fx.Play(pos));
-    }
+
 }

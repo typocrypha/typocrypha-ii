@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CustomPropertyDrawer(typeof(SpellAnimationPacket))]
+[CustomPropertyDrawer(typeof(AnimationPacket))]
 public class SpellAnimationPacketDrawer : PropertyDrawer
 {
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
