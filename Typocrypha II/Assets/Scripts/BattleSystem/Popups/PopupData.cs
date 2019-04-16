@@ -13,11 +13,11 @@ public enum Effectiveness
     Repel,
 }
 
-
 public class PopupData
 {
     public RootWordEffect effect;
     public List<SpellTag> tags;
     public Effectiveness effectiveness;
     public int damage;
+    public GameObject popupPrefab = null;
 }

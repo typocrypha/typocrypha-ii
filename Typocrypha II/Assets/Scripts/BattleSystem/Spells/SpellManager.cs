@@ -54,7 +54,7 @@ public class SpellManager : MonoBehaviour
                     }
                     else
                     {
-                        var popupData = effect.Cast(caster, targetCaster); //TODO: add effect logging?
+                        var popupData = effect.Cast(caster, targetCaster);
                         var fx = new SpellFxData[] { root.leftMod?.fx, effect.fx, root.rightMod?.fx };
                         crList.Add(SpellFxManager.instance.Play(fx, popupData, targetSpace, casterSpace));
                         yield return new WaitForSeconds(delayBetweenTargets);

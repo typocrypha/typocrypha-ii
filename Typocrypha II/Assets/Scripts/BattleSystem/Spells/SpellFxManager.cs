@@ -10,6 +10,17 @@ public class SpellFxManager : MonoBehaviour
     [SerializeField] private SpellFxData noTargetFx = new SpellFxData();
     [Header("Repel FX")]
     [SerializeField] private SpellFxData repelFx = new SpellFxData();
+    [Header("Default Popup Prefab")]
+    [SerializeField] private GameObject popupPrefab;
+
+    /// <summary> Singleton implementation </summary>
+    private void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
+    }
 
     public Coroutine NoTargetFx(Vector2 pos)
     {
@@ -36,7 +47,7 @@ public class SpellFxManager : MonoBehaviour
             if (fx != null)
                 yield return StartCoroutine(fx.Play(pos));
 
-        //yield return StartCoroutine()
+        yield return StartCoroutine(PlayPopupCr(data, pos, casterPos));
     }
 
     #region Popup Effects
@@ -47,6 +58,12 @@ public class SpellFxManager : MonoBehaviour
     }
     private IEnumerator PlayPopupCr(PopupData data, Vector2 targetPos, Vector2 casterPos)
     {
+        if (data == null)
+            yield break;
+        var popper = Instantiate(data.popupPrefab ?? popupPrefab).GetComponent<PopupBase>();
+
+        popper.PopText(data.damage.ToString(), targetPos, 0.75f);
+
         yield return null;
     }
 

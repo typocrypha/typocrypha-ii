@@ -40,7 +40,7 @@ public class SpellFxData
             {
                 var effectVisual = GameObject.Instantiate(effectPrefab);
                 effectVisual.transform.position = pos;
-                var fxComponent = effectVisual.GetComponent<SpellFx>();
+                var fxComponent = effectVisual.GetComponent<SpellFxBase>();
                 if (fxComponent != null)
                     yield return fxComponent.StartCoroutine(fxComponent.PlayEffect());
             }
