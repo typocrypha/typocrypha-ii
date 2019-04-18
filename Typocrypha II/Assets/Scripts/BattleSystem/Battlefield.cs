@@ -94,11 +94,7 @@ public class Battlefield : MonoBehaviour, IPausable
             return;
         }
         ph = new PauseHandle(OnPause);
-    }
 
-    //Initialize space objects from children
-    private void Start()
-    {
         spaces = new SpaceMatrix(Rows, Columns);
         field = new FieldMatrix(Rows, Columns);
         var spaceTransforms = GetComponentsInChildren<Transform>();
@@ -108,6 +104,20 @@ public class Battlefield : MonoBehaviour, IPausable
         spaces[1, 0] = spaceTransforms[4];
         spaces[1, 1] = spaceTransforms[5];
         spaces[1, 2] = spaceTransforms[6];
+    }
+
+    //Initialize space objects from children
+    private void Start()
+    {
+        //spaces = new SpaceMatrix(Rows, Columns);
+        //field = new FieldMatrix(Rows, Columns);
+        //var spaceTransforms = GetComponentsInChildren<Transform>();
+        //spaces[0, 0] = spaceTransforms[1];
+        //spaces[0, 1] = spaceTransforms[2];
+        //spaces[0, 2] = spaceTransforms[3];
+        //spaces[1, 0] = spaceTransforms[4];
+        //spaces[1, 1] = spaceTransforms[5];
+        //spaces[1, 2] = spaceTransforms[6];
         Actors.AddRange(actorsToAdd);
         for (int i = 0; i < objectsToAdd.Length; ++i)
         {

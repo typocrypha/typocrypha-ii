@@ -32,10 +32,8 @@ namespace Typocrypha
         {
             Transform keys = transform.Find("Keys"); 
             Vector3 currPos = Vector2.zero;
-            int cnt = 0;
             for (int i = 0; i < keyboardFormat.Length;)
             {
-                if (cnt++ > 1000) break;
                 char c = keyboardFormat[i];
                 switch(c)
                 {
@@ -56,6 +54,7 @@ namespace Typocrypha
                         go.transform.localScale = Vector2.one * keySize;
                         Key key = go.GetComponent<Key>();
                         key.letter = c;
+                        key.output = c.ToString();
                         key.letterText.text = c.ToString().ToUpper();
                         currPos.x += keySize + hSpacing;
                         i++;
