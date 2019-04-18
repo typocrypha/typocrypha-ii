@@ -7,10 +7,11 @@ public class PopupDefault : PopupBase
 {
     public GameObject imgHolderPrefab;
     public GameObject textHolderPrefab;
+    public Canvas uiCanvas;
 
     public override Coroutine PopText(string text, Vector2 pos, float time)
-    {
-        var textObj = Instantiate(textHolderPrefab, pos, Quaternion.identity);
+    {      
+        var textObj = Instantiate(textHolderPrefab, Camera.main.WorldToScreenPoint(pos), Quaternion.identity, uiCanvas.transform);
         var textComponent = textObj.GetComponent<Text>();
         var rect = textObj.GetComponent<RectTransform>();
         if (textComponent == null || rect == null)
@@ -40,7 +41,7 @@ public class PopupDefault : PopupBase
 
     public override Coroutine PopImage(Texture2D image, Vector2 pos, float time)
     {
-        var textObj = Instantiate(textHolderPrefab, pos, Quaternion.identity);
+        var textObj = Instantiate(textHolderPrefab, pos, Quaternion.identity, uiCanvas.transform);
         var imgComponent = textObj.GetComponent<Image>();
         var rect = textObj.GetComponent<RectTransform>();
         if (imgComponent == null || rect == null)
