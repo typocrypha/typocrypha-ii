@@ -50,13 +50,17 @@ public class PlayerDataManager : MonoBehaviour, ISavable
         var sd = SaveManager.instance.loaded.playerData;
         SetDefaults();
         foreach (var kvp in sd.stringMap)
-            data.Add(kvp.Key, kvp.Value);
+            if (!data.ContainsKey(kvp.Key))
+                data.Add(kvp.Key, kvp.Value);
         foreach (var kvp in sd.intMap)
-            data.Add(kvp.Key, kvp.Value);
+            if (!data.ContainsKey(kvp.Key))
+                data.Add(kvp.Key, kvp.Value);
         foreach (var kvp in sd.floatMap)
-            data.Add(kvp.Key, kvp.Value);
+            if (!data.ContainsKey(kvp.Key))
+                data.Add(kvp.Key, kvp.Value);
         foreach (var kvp in sd.boolMap)
-            data.Add(kvp.Key, kvp.Value);
+            if (!data.ContainsKey(kvp.Key))
+                data.Add(kvp.Key, kvp.Value);
     }
     #endregion
 
