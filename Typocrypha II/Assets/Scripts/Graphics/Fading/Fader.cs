@@ -32,6 +32,7 @@ public abstract class Fader : MonoBehaviour
 
     void OnDestroy()
     {
+        if (FaderManager.instance == null) return;
         FaderManager.instance.allFaders.Remove(this);
     }
 }

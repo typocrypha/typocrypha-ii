@@ -24,6 +24,7 @@ public class SpriteFader : Fader
 
     void Awake()
     {
+        if (FaderManager.instance == null) return; 
         // Add fader to list of all faders.
         FaderManager.instance.allFaders.Add(this);
         // Append fade shader to list of shaders.
