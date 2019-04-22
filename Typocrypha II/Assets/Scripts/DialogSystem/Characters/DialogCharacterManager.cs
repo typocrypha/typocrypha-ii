@@ -155,14 +155,7 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
     /// <returns>CharacterDialog component of selected character.</returns>
     public DialogCharacter SmoothDampCharacter(CharacterData data, Vector2 pos, float time)
     {
-        Debug.Log("before:" + data.name);
-        Debug.Log(characterMap.ContainsKey(data.name));
-        foreach (var kvp in characterMap)
-        {
-
-        }
         DialogCharacter dc = characterMap[data.name];
-        Debug.Log("after:" + data.name);
         dc.TargetPosition = pos;
         StartCoroutine(SmoothDampCharacterCR(dc, pos, time));
         return dc;
