@@ -72,7 +72,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     void Update()
     {
         // Check if submit key is pressed
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             if (dialogBox.IsDone) // If dialog is done, go to next dialog
             {
