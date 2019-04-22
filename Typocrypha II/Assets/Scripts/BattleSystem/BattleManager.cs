@@ -45,9 +45,13 @@ public class BattleManager : MonoBehaviour, IPausable
         ph = new PauseHandle(OnPause);
     }
 
+    public bool startOnStart = true; // Should battle start when scene starts?
+
     private void Start()
     {
-        StartBattle();
+        // Set so that battle waits for transition
+        TransitionManager.instance.onStartScene.AddListener(StartBattle); 
+        if (startOnStart) StartBattle();
     }
 
     /// <summary>

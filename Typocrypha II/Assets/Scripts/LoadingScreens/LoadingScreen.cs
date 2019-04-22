@@ -7,6 +7,8 @@ using UnityEngine;
 /// </summary>
 public abstract class LoadingScreen : MonoBehaviour
 {
+    public Animator animator; // Loading screen animator
+
     /// <summary>
     /// Handle for setting progress of load. 
     /// Put effects (progress bars etc) based on load progress here.

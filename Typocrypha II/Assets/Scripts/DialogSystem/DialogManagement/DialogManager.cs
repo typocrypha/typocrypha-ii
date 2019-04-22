@@ -66,6 +66,8 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
 
     void Start()
     {
+        // Set so that dialog waits for transition
+        TransitionManager.instance.onStartScene.AddListener(StartDialog);
         if (startOnStart) StartDialog();
     }
 
