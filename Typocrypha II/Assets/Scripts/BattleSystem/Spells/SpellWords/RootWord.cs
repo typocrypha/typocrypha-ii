@@ -13,6 +13,8 @@ public class RootWord : SpellWord
     public ModifierWord rightMod;
     #endregion
 
+    public float cooldown; // Base cooldown time
+
     public List<RootWordEffect> effects = new List<RootWordEffect>();
     public override SpellWord Clone()
     {

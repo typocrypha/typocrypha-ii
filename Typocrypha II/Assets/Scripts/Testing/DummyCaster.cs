@@ -17,7 +17,9 @@ public class DummyCaster : Caster
         var results = CastParser.instance.Parse(spellString.Split('-'), out words);
         Debug.Log(results);
         if (results == CastParser.ParseResults.Valid)
+        {
             SpellManager.instance.Cast(words.ToArray(), this, tPos);
+        }
     }
     private void Update()
     {

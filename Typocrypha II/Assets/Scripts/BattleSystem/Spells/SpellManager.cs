@@ -64,6 +64,7 @@ public class SpellManager : MonoBehaviour
                 foreach (var cr in crList)
                     yield return cr;
             }
+            // START COOLDOWN
         }
     }
 

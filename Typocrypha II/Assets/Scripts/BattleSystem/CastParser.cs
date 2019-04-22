@@ -13,6 +13,7 @@ public class CastParser : MonoBehaviour
         NoRoot,
         TooManyRoots,
         TypoFailure,
+        OnCooldown,
     }
     private enum TypoResult
     {
@@ -44,7 +45,8 @@ public class CastParser : MonoBehaviour
     }
     /// <summary> Returns Valid if the string array represents a valid spell that exists in the given spell dictionary
     /// Returns other ParseResults to indicate different failure conditions 
-    /// Returns the parsed spell in out list s </summary>
+    /// Returns the parsed spell in out list s.
+    /// Also Checks and starts spell cooldowns. </summary>
     public ParseResults Parse(string[] spellwords, out List<SpellWord> s)
     {
         s = new List<SpellWord>();
@@ -55,7 +57,14 @@ public class CastParser : MonoBehaviour
             {
                 s.Add(Words[word]);
                 if (Words[word] is RootWord)
+                {
+                    if (!SpellCooldownManager.instance.cooldowns.ContainsKey(word))
+                        SpellCooldownManager.instance.cooldowns[word] = 0f;
+                    else if (SpellCooldownManager.instance.cooldowns[word] > 0f)
+                        return ParseResults.OnCooldown;
+                    SpellCooldownManager.instance.StartCooldown(word, (Words[word] as RootWord).cooldown);
                     ++roots;
+                }
             }
             else
             {

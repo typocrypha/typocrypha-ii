@@ -15,12 +15,3 @@ public class EnemyUI : MonoBehaviour
     public UnityEvent onStun; // Call when stunned.
     public UnityEvent_string onSpellChanged; // Pass name of spell currently being cast.
 }
-
-[System.Serializable]
-public class UnityEvent_int : UnityEvent<int> { }
-[System.Serializable]
-public class UnityEvent_float : UnityEvent<float> { }
-[System.Serializable]
-public class UnityEvent_string : UnityEvent<string> { }
-[System.Serializable]
-public class UnityEvent_bool : UnityEvent<bool> { }

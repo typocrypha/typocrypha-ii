@@ -63,6 +63,11 @@ public class RootWordInspector : Editor
         GUILayout.Label(new GUIContent("Description"), new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold });
         word.description = EditorGUILayout.TextArea(word.description, new GUIStyle(GUI.skin.textArea) { wordWrap = true }, GUILayout.MinHeight(EditorGUIUtility.singleLineHeight * 2));
         EditorUtils.Separator();
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.Label(new GUIContent("Cooldown"), new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold });
+        word.cooldown = EditorGUILayout.FloatField(word.cooldown);
+        EditorGUILayout.EndHorizontal();
+        EditorUtils.Separator();
         rList.DoLayoutList();
         if (GUI.changed)
             EditorUtility.SetDirty(this);
