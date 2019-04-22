@@ -161,6 +161,12 @@ public class DialogGraphParser : MonoBehaviour
                 var cNode = currNode as SetExpression;
                 DialogCharacterManager.instance.ChangeExpression(cNode.characterData, cNode.expr);
             }
+            else if (currNode is SetBCH)
+            {
+                var cNode = currNode as SetBCH;
+                DialogCharacterManager.instance.ChangeBCH(cNode.characterData, cNode.body, cNode.clothes, cNode.hair);
+
+            }
             else if (currNode is AnimateCharacter)
             {
                 var cNode = currNode as AnimateCharacter;

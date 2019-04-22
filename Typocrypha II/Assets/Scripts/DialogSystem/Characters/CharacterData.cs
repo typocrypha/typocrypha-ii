@@ -11,6 +11,9 @@ public class CharacterData : ScriptableObject
     public NameSet aliases; // Different aliases/names for this character
     public NameMap poses; // Different body poses
     public NameMap expressions; // Different facial expressions
+    public NameMap bodies; // Different base bodies
+    public NameMap clothes; // Different clothes
+    public NameMap hair; // Different hair
     public NameMap codecs; // Different codec sprites
     public Sprite chat_icon; // Chat mode sprite
     public AudioClip talk_sfx; // Talking sound effect

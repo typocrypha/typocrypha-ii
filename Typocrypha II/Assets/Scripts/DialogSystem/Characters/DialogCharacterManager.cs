@@ -110,7 +110,7 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
     /// </summary>
     /// <param name="data">Id of character selected.</param>
     /// <param name="pos">Target position.</param>
-    /// <returns>CharacterDialog component of selected character.</returns>
+    /// <returns>DialogCharacter component of selected character.</returns>
     public DialogCharacter TeleportCharacter(CharacterData data, Vector2 pos)
     {
         DialogCharacter dc = characterMap[data.name];
@@ -125,7 +125,7 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
     /// <param name="data">Id of character selected.</param>
     /// <param name="pos">Target position.</param>
     /// <param name="time">Time to get to position.</param>
-    /// <returns>CharacterDialog component of selected character.</returns>
+    /// <returns>DialogCharacter component of selected character.</returns>
     public DialogCharacter LerpCharacter(CharacterData data, Vector2 pos, float time)
     {
         DialogCharacter dc = characterMap[data.name];
@@ -152,7 +152,7 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
     /// <param name="data">Id of character selected.</param>
     /// <param name="pos">Target position.</param>
     /// <param name="time">Time to get to position.</param>
-    /// <returns>CharacterDialog component of selected character.</returns>
+    /// <returns>DialogCharacter component of selected character.</returns>
     public DialogCharacter SmoothDampCharacter(CharacterData data, Vector2 pos, float time)
     {
         DialogCharacter dc = characterMap[data.name];
@@ -177,10 +177,10 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
     /// </summary>
     /// <param name="data">Id of character selected.</param>
     /// <param name="baseSprite">New pose/base sprite.</param>
-    /// <returns>CharacterDialog component of selected character.</returns>
+    /// <returns>DialogCharacter component of selected character.</returns>
     public DialogCharacter ChangePose(CharacterData data, string baseSprite)
     {
-        characterMap[data.name].Pose = data.poses[baseSprite];
+        characterMap[data.name].PoseSprite = data.poses[baseSprite];
         characterMap[data.name].saveData.baseSprite = baseSprite;
         return characterMap[data.name];
     }
@@ -190,11 +190,27 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
     /// </summary>
     /// <param name="data">Id of character selected.</param>
     /// <param name="expression">New expression.</param>
-    /// <returns>CharacterDialog component of selected character.</returns>
+    /// <returns>DialogCharacter component of selected character.</returns>
     public DialogCharacter ChangeExpression(CharacterData data, string expression)
     {
-        characterMap[data.name].Expr = data.expressions[expression];
+        characterMap[data.name].ExprSprite = data.expressions[expression];
         characterMap[data.name].saveData.expression = expression;
+        return characterMap[data.name];
+    }
+
+    /// <summary>
+    /// Changes the Body, Clothes, and Hair of a character.
+    /// </summary>
+    /// <param name="data">Id of character selected.</param>
+    /// <param name="body">Body id (no change if blank).</param>
+    /// <param name="clothes">Clothes id (no change if blank).</param>
+    /// <param name="hair">Hair id (no change if blank).</param>
+    /// <returns>DialogCharacter component of selected character.</returns>
+    public DialogCharacter ChangeBCH(CharacterData data, string body, string clothes, string hair)
+    {
+        if (body != "") characterMap[data.name].BodySprite = data.expressions[body];
+        if (clothes != "") characterMap[data.name].ClothesSprite = data.expressions[clothes];
+        if (hair != "") characterMap[data.name].HairSprite = data.expressions[hair];
         return characterMap[data.name];
     }
 
@@ -203,7 +219,7 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
     /// </summary>
     /// <param name="data">Id of selected character.</param>
     /// <param name="on">Whether to turn on highlight.</param>
-    /// <returns>CharacterDialog component of selected character.</returns>
+    /// <returns>DialogCharacter component of selected character.</returns>
     public DialogCharacter HighlightCharacter(CharacterData data, bool on)
     {
         characterMap[data.name].Highlight(on);
@@ -214,7 +230,7 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
     /// Highlight one character and unhighlight all others.
     /// </summary>
     /// <param name="data">Id of selected character.</param>
-    /// <returns>CharacterDialog component of selected character.</returns>
+    /// <returns>DialogCharacter component of selected character.</returns>
     public DialogCharacter SoloHighlightCharacter(CharacterData data)
     {
         foreach(var kvp in characterMap)
@@ -230,7 +246,7 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
     /// </summary>
     /// <param name="data">Id of selected character.</param>
     /// <param name="clip">Animation clip to apply.</param>
-    /// <returns>CharacterDialog component of selected character.</returns>
+    /// <returns>DialogCharacter component of selected character.</returns>
     public DialogCharacter AnimateCharacter(CharacterData data, AnimationClip clip)
     {
         if (clip.isLooping) // Set idle animation to looped clip.

@@ -13,8 +13,11 @@ public class DialogCharacter : MonoBehaviour
         get => pivotTr.localPosition;
         set => pivotTr.localPosition = value;
     }
-    public SpriteRenderer baseSprite; // Base sprite renderer (the pose).
+    public SpriteRenderer baseSprite; // Base sprite renderer (the pose). Redundant if body/clothes/hair set.
     public SpriteRenderer exprSprite; // Expression sprite renderer (face).
+    public SpriteRenderer bodySprite; // Body sprite renderer (naked body).
+    public SpriteRenderer clothesSprite; // Clothes sprite renderer (clothes).
+    public SpriteRenderer hairSprite; // Hair sprite renderer (hair).
     public Animator animator; // Animator for character.
     [HideInInspector]public AnimatorOverrideController overrideAnimator; // Override animator.
     [HideInInspector]public DialogCharacterManager.CharacterSave saveData; // Serializable state.
@@ -30,28 +33,34 @@ public class DialogCharacter : MonoBehaviour
         animator.runtimeAnimatorController = overrideAnimator;
     }
 
-    public Sprite Pose // Set/get the character's pose.
+    public Sprite PoseSprite // Set/get the character's pose.
     {
-        get
-        {
-            return baseSprite.sprite;
-        }
-        set
-        {
-            baseSprite.sprite = value;
-        }
+        get => baseSprite.sprite;
+        set => baseSprite.sprite = value;
     }
 
-    public Sprite Expr // Set/get the character's expression.
+    public Sprite ExprSprite // Set/get the character's expression.
     {
-        get
-        {
-            return exprSprite.sprite;
-        }
-        set
-        {
-            exprSprite.sprite = value;
-        }
+        get => exprSprite.sprite;
+        set => exprSprite.sprite = value;
+    }
+
+    public Sprite BodySprite // Set/get the character's body.
+    {
+        get => bodySprite.sprite;
+        set => bodySprite.sprite = value;
+    }
+
+    public Sprite ClothesSprite // Set/get the character's clothes.
+    {
+        get => clothesSprite.sprite;
+        set => clothesSprite.sprite = value;
+    }
+
+    public Sprite HairSprite // Set/get the character's expression.
+    {
+        get => hairSprite.sprite;
+        set => hairSprite.sprite = value;
     }
 
     // If moving, position character is going to; Otherwise, just current position. 

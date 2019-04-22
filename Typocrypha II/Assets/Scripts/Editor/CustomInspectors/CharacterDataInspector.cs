@@ -33,6 +33,24 @@ public class CharacterDataInspector : Editor
         }
         NameMapGUI("Expressions", data.expressions);
         EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+        if (data.bodies == null)
+        {
+            data.bodies = new NameMap();
+        }
+        NameMapGUI("Bodies", data.bodies);
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+        if (data.clothes == null)
+        {
+            data.clothes = new NameMap();
+        }
+        NameMapGUI("Clothes", data.clothes);
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+        if (data.hair == null)
+        {
+            data.hair = new NameMap();
+        }
+        NameMapGUI("Hair", data.hair);
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
         if (data.codecs == null)
         {
             data.codecs = new NameMap();
