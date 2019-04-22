@@ -28,9 +28,8 @@ namespace Typocrypha
         /// <summary>
         /// Create keyboard by spawning key objects in correct locations.
         /// </summary>
-        public void BuildKeyboard()
-        {
-            Transform keys = transform.Find("Keys"); 
+        public void BuildKeyboard(Transform keys)
+        { 
             Vector3 currPos = Vector2.zero;
             for (int i = 0; i < keyboardFormat.Length;)
             {

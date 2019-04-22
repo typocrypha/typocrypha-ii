@@ -14,6 +14,7 @@ namespace Typocrypha
         public static Keyboard instance = null;
         public Dictionary<char, Key> keyMap; // Map from characters to keyboard keys.
         public TMP_InputField inputBar; // Input field for typing.
+        public Transform keys; // Object that holds all the key objects.
 
         void Awake()
         {
@@ -29,12 +30,10 @@ namespace Typocrypha
             DontDestroyOnLoad(gameObject);
 
             keyMap = new Dictionary<char, Key>();
-            GetComponent<KeyboardBuilder>().BuildKeyboard(); // Construct keyboard.
-            foreach(Transform key in transform.Find("Keys")) // Add keys to map.
+            GetComponent<KeyboardBuilder>().BuildKeyboard(keys); // Construct keyboard.
+            foreach(Transform key in keys) // Add keys to map.
                 keyMap[key.gameObject.name[0]] = key.GetComponent<Key>();
         }
-
-        string frameInput = "";
 
         // Check user input.
         void Update()
@@ -56,16 +55,13 @@ namespace Typocrypha
                     keyMap[c].onPress?.Invoke();
                 else if ((int)c == 8 && inputBar.text.Length > 0) // Backspace
                     inputBar.text = inputBar.text.Substring(0, inputBar.text.Length - 1);
-            }  
-        }
-
-        /// <summary>
-        /// Called when input bar is submitted. (Handle set in editor).
-        /// </summary>
-        /// <param name="inputString">Submitted string.</param>
-        public void OnSubmit(string inputString)
-        {
-            Debug.Log(inputString);
+            }
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                Debug.Log(inputBar.text);
+                inputBar.onSubmit.Invoke(inputBar.text);
+                inputBar.text = "";
+            }
         }
 
         /// <summary>
