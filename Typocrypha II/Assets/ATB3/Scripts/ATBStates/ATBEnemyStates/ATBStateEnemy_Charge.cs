@@ -20,7 +20,7 @@ namespace ATB3
         public override void OnUpdate()
         {
             // Source.PerformTransition(ATBTransition.ChargeFinish);
-            if (((ATBEnemy)this.Owner).charge >= ((ATBEnemy)this.Owner).chargeTime)
+            if (((ATBEnemy)this.Owner).caster.Charge >= ((ATBEnemy)this.Owner).caster.ChargeTime)
             {
                 Source.PerformTransition(ATBTransition.ToPreCast);
             }

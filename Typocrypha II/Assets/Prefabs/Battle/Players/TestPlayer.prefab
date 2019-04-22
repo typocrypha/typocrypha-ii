@@ -635,6 +635,8 @@ GameObject:
   - component: {fileID: 1801454539022473940}
   - component: {fileID: 1801454539022473942}
   - component: {fileID: 1801454539022473943}
+  - component: {fileID: 1638030246455156659}
+  - component: {fileID: 4868622499120600318}
   m_Layer: 0
   m_Name: TestPlayer
   m_TagString: Untagged
@@ -784,13 +786,41 @@ MonoBehaviour:
           max: 10
         overflow: 0
         _value: 0
+  ui: {fileID: 0}
   spellWords:
   - {fileID: 11400000, guid: 3d35f5c67835c734db91be2fe7b97278, type: 2}
   - {fileID: 11400000, guid: 1b56332619a42f44cb02763787b07c5a, type: 2}
-  tPos:
-    _row: 0
-    _col: 1
   targetRet: {fileID: 8209475017982436565}
+  separator: 20002d00
+--- !u!114 &1638030246455156659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1801454539022473941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6118bb32e3bc3f94c8ddd61c6eb74cad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  StateMachine: {fileID: 4868622499120600318}
+  actorName: Player
+  isCast: 0
+  currWords: []
+--- !u!114 &4868622499120600318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1801454539022473941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e333f99642d983c499dcb63984e39e3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  owner: {fileID: 1638030246455156659}
 --- !u!1 &8209475017982436565
 GameObject:
   m_ObjectHideFlags: 0

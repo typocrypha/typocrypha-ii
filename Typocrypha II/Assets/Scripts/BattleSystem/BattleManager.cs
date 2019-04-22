@@ -5,8 +5,17 @@ using UnityEngine.UI;
 using Gameflow;
 
 [RequireComponent(typeof(BattleGraphParser))]
-public class BattleManager : MonoBehaviour
+public class BattleManager : MonoBehaviour, IPausable
 {
+    #region IPausable
+    PauseHandle ph;
+    public PauseHandle PH { get => ph; }
+    public void OnPause(bool b) // Pauses battle events
+    {
+        foreach (var e in currEvents)
+            e.PH.Pause = b;
+    }
+    #endregion
     public static BattleManager instance = null;
     public GameObject[] stdBattleEvents;
     // DEBUG (come up with something better later)
@@ -33,6 +42,7 @@ public class BattleManager : MonoBehaviour
             return;
         }
         graphParser = GetComponent<BattleGraphParser>();
+        ph = new PauseHandle(OnPause);
     }
 
     private void Start()
@@ -55,7 +65,7 @@ public class BattleManager : MonoBehaviour
     /// </summary>
     public void StartBattle()
     {
-        //Battlefield.instance.PH.Pause = true;
+        Battlefield.instance.PH.Pause = true;
         var startNode = graphParser.Init();
         var player = Instantiate(startNode.player, transform).GetComponent<FieldObject>();
         Battlefield.instance.Add(player, new Battlefield.Position(1, 1));
@@ -84,9 +94,7 @@ public class BattleManager : MonoBehaviour
         foreach (var e in eventObjects)
             currEvents.Add(Instantiate(e).GetComponent<BattleEvent>());
         // Pause all of the new battle events so they don't activate during the tarnsition
-        if(pause)
-            foreach (var e in currEvents)
-                e.PH.Pause = true;
+        PH.Pause = pause;
     }
 
     public void AddBattleEvent(BattleEvent battleEvent)
@@ -99,7 +107,7 @@ public class BattleManager : MonoBehaviour
     {
         ++waveNum;
         var wave = graphParser.NextWave();
-
+        if (wave == null) return;
         // Set and pause the battle events
         SetBattleEvents(wave.battleEvents);
         // Clear the battlefield according to the clear options in the new wave
@@ -112,6 +120,7 @@ public class BattleManager : MonoBehaviour
     {
         var fieldData = waveData.battleField;
         int row = 0, col = 0;
+        // Spawn all battlefield members
         while (row < fieldData.Rows)
         {
             if (fieldData[row, col] == null)
@@ -135,16 +144,18 @@ public class BattleManager : MonoBehaviour
                 ++row;
             }
         }
-        WaveTransition(waveData);
+        yield return StartCoroutine(WaveTransition(waveData));
         //DEBUG, actually sequence after transition later
-        foreach (var e in currEvents)
-            e.PH.Pause = false;
+        PH.Pause = false; // Unpause battle events
+        Battlefield.instance.PH.Pause = false; 
     }
 
-    private void WaveTransition(BattleWave waveData)
+    private IEnumerator WaveTransition(BattleWave waveData)
     { 
         GameObject wT = Instantiate(defaultWaveTransitionPrefab, waveTransitionCanvas.transform);
         wT.transform.Find("WaveBanner").GetComponentInChildren<Text>().text = DialogParser.instance.SubstituteMacros(waveData.waveTitle);
         wT.transform.Find("WaveTitle").GetComponentInChildren<Text>().text = "Wave " + waveNum + "/ " + totalWaves;
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+        yield return new WaitForSeconds(0.5f);
     }
 }

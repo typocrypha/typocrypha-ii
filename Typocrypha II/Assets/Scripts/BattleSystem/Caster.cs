@@ -34,6 +34,7 @@ public class Caster : FieldObject
     [SerializeField] private Class _casterClass;
     public Class CasterClass { get => _casterClass; set => _casterClass = value; }
 
+    public Battlefield.Position TargetPos { get; set; } = new Battlefield.Position(0,0);
     int health;
     public int Health
     {
@@ -68,14 +69,15 @@ public class Caster : FieldObject
             ui?.onSpellChanged.Invoke(spell);
         }
     }
-    float charge;
+    public float ChargeTime { get; set; } // Total time it takes to charge
+    float charge; // Charge amount (seconds) for enemies
     public float Charge
     {
         get => charge;
         set
         {
             charge = value;
-            ui?.onChargeChanged.Invoke(charge); // NEEDS TO DIVIDE BY TOTAL
+            ui?.onChargeChanged.Invoke(charge/ChargeTime); 
         }
     }
     public BattleStatus BStatus { get; }

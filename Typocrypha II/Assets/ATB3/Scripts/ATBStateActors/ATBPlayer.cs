@@ -4,26 +4,17 @@ using UnityEngine;
 
 namespace ATB3
 {
-    public partial class ATBPlayer : InputCaster
+    public partial class ATBPlayer : ATBActor
     {
+        public List<SpellWord> currWords = new List<SpellWord>();
+
         void Start()
         {
             Setup();
         }
 
-        void Update()
-        {
-            if (castBar.input.isFocused && castBar.input.text != "" && Input.GetKey(KeyCode.Return))
-            {
-                cast();
-                castBar.input.text = "";
-            }
-        }
-
         public override void Setup()
         {
-            castBar.hidden = false;
-            castBar.focus = true;
         }
 
         // Called when player enters a spell into the cast bar

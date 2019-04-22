@@ -15,7 +15,8 @@ public abstract class GraphParser : MonoBehaviour
         else if (currNode is GameflowBranchNode)
             return Branch(currNode as GameflowBranchNode);
         else
-            throw new System.NotImplementedException("Reached end of gameflow");
+            return null;
+            //throw new System.NotImplementedException("Reached end of gameflow");
     }
     protected virtual BaseNode Branch(GameflowBranchNode b)
     {

@@ -13,30 +13,7 @@ namespace ATB3
 
     public partial class ATBEnemy : ATBActor
     {
-        //----------------------------------------------------------------//
-        // UI ELEMENTS                                                    //
-        //----------------------------------------------------------------//
-
-        public GameObject chargeUI;
-
-        //----------------------------------------------------------------//
-        // PROPERTIES                                                     //
-        //----------------------------------------------------------------//
-
-        float _charge; // Current amount of time (seconds) spent charging current spell
-        public float charge
-        {
-            get
-            {
-                return _charge;
-            }
-            set
-            {
-                _charge = value;
-                chargeUI.GetComponent<ShadowBar>().Curr = _charge / chargeTime;
-            }
-        }
-        public float chargeTime; // TESTING: amount of time required to charge currently charging spell
+        public Caster caster; // Associated Caster script.
 
         //----------------------------------------------------------------//
         // CHARGE COROUTINE                                               //
@@ -54,17 +31,17 @@ namespace ATB3
         // Incrementally charges next spell
         IEnumerator chargeCR()
         {
-            chargeUI.GetComponent<ShadowBar>().Reset();
-            _charge = 0f;
-            while (charge + Time.fixedDeltaTime < chargeTime)
+            if (caster.ChargeTime == 0f) caster.ChargeTime = 10f; // DEBUG
+            caster.Charge = 0f;
+            while (caster.Charge + Time.fixedDeltaTime < caster.ChargeTime)
             {
                 // Charge while in charge state
                 //Debug.Log("CHARGING...");
                 do yield return new WaitForFixedUpdate();
                 while (pause || !isCurrentState(ATBStateID.Charge));
-                charge += Time.fixedDeltaTime;
+                caster.Charge += Time.fixedDeltaTime;
             }
-            charge = chargeTime;
+            caster.Charge = caster.ChargeTime;
             //Debug.Log("DONE CHARGING");
             //sendEvent("enemyPreCast");
             chargeCRObj = null;

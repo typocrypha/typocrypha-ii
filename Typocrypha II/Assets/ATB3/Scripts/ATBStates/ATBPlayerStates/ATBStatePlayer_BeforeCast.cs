@@ -6,6 +6,8 @@ namespace ATB3
 {
     public class ATBStatePlayer_BeforeCast : ATBState
     {
+        float time = 0f;
+
         // The ID for this specific ATBState
         public override ATBStateID StateID { get { return ATBStateID.BeforeCast; } }
 
@@ -16,12 +18,15 @@ namespace ATB3
             // THIS IS WHERE THE PLAYER SHOULD GET SOLO'D
             ATBManager.Instance.enterSolo(this.Owner);
             this.Owner.isCast = true;
+            time = 0f;
         }
-
+        
         // Call on fixed update while in given state
         public override void OnUpdate()
         {
-            Source.PerformTransition(ATBTransition.ToCast);
+            if (time < 1f) time += Time.fixedDeltaTime;
+            else
+                Source.PerformTransition(ATBTransition.ToCast);      
             return;
         }
 

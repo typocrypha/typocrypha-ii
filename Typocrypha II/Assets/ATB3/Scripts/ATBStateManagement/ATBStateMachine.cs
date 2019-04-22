@@ -14,8 +14,20 @@ namespace ATB3
     // Written by Roberto Cezar Bianchini, July 2010
     // ===============================================================//
 
-    public abstract class ATBStateMachine : MonoBehaviour
+    public abstract class ATBStateMachine : MonoBehaviour, IPausable
     {
+        #region IPausable
+        PauseHandle ph;
+        public PauseHandle PH
+        {
+            get => ph;
+        }
+
+        public void OnPause(bool b)
+        {
+            enabled = !b;
+        }
+        #endregion
         //----------------------------------------------------------------//
         // PROPERTIES                                                     //
         //----------------------------------------------------------------//
@@ -48,6 +60,7 @@ namespace ATB3
 
         void Awake()
         {
+            ph = new PauseHandle(OnPause);
             InitializeStates();
             InitializeTransitions();
             foreach (ATBState state in states)
@@ -59,8 +72,6 @@ namespace ATB3
 
         void FixedUpdate()
         {
-            if (owner.pause)
-                return;
             CurrentState.OnUpdate();
         }
 

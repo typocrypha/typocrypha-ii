@@ -6,6 +6,8 @@ namespace ATB3
 {
     public class ATBStatePlayer_AfterCast : ATBState
     {
+        float time = 0f;
+
         // The ID for this specific ATBState
         public override ATBStateID StateID { get { return ATBStateID.AfterCast; } }
 
@@ -18,7 +20,9 @@ namespace ATB3
         // Call on fixed update while in given state
         public override void OnUpdate()
         {
-            Source.PerformTransition(ATBTransition.ToIdle);
+            if (time < 1f) time += Time.fixedDeltaTime;
+            else
+                Source.PerformTransition(ATBTransition.ToIdle);
             return;
         }
 

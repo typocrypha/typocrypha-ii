@@ -58,11 +58,6 @@ public class CastParser : MonoBehaviour
                 s.Add(Words[word]);
                 if (Words[word] is RootWord)
                 {
-                    if (!SpellCooldownManager.instance.cooldowns.ContainsKey(word))
-                        SpellCooldownManager.instance.cooldowns[word] = 0f;
-                    else if (SpellCooldownManager.instance.cooldowns[word] > 0f)
-                        return ParseResults.OnCooldown;
-                    SpellCooldownManager.instance.StartCooldown(word, (Words[word] as RootWord).cooldown);
                     ++roots;
                 }
             }

@@ -15,6 +15,7 @@ namespace ATB3
         {
             //Debug.Log("PLAYER " + this.Owner.actorName + " has ENTERED the CAST state!");
             timer = 0.0f;
+            SpellManager.instance.Cast((Owner as ATBPlayer).currWords.ToArray(), Owner.GetComponent<Caster>(), Owner.GetComponent<Caster>().TargetPos);
         }
 
         // Call on fixed update while in given state

@@ -8,7 +8,6 @@ namespace ATB3
     // Actors with a cast bar
     public abstract class InputCaster : ATBActor
     {
-        public CastBar castBar;
     }
 }
 

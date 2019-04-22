@@ -18,6 +18,7 @@ public class BattleGraphParser : GraphParser
     public BattleWave NextWave()
     {
         currNode = Next();
+        if (currNode == null) return null;
         if (currNode is GameflowEndNode)
         {
             if (currNode is EndAndHide)

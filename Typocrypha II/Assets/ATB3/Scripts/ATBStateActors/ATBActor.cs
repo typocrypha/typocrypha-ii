@@ -27,7 +27,10 @@ namespace ATB3
             get => ph;
         }
 
-        public void OnPause(bool b) { }
+        public void OnPause(bool b)
+        {
+            StateMachine.PH.Pause = b;
+        }
         #endregion
 
         public bool pause // Is this actor paused or not?
@@ -50,6 +53,11 @@ namespace ATB3
         void Awake()
         {
             ph = new PauseHandle(OnPause);
+        }
+
+        void Start()
+        {
+            PH.Pause = true;
         }
 
         // Call to do initial setup on actor

@@ -18,7 +18,7 @@ namespace ATB3
         // Call on fixed update while in given state
         public override void OnUpdate()
         {
-            ((ATBEnemy)this.Owner).charge = 0.0f;
+            ((ATBEnemy)this.Owner).caster.Charge = 0.0f;
             Source.PerformTransition(ATBTransition.ToCharge);
             return;
         }

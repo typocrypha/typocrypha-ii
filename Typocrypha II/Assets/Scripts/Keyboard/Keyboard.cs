@@ -63,9 +63,11 @@ namespace Typocrypha
                 if (keyMap.ContainsKey(c))
                     keyMap[c].onPress?.Invoke();
                 else if (c == ' ')
-                    if (inputBar.text.Length > 0 && 
-                        inputBar.text[inputBar.text.Length-1] != ' ')
+                {
+                    if (inputBar.text.Length > 0 &&
+                        inputBar.text[inputBar.text.Length - 1] != ' ')
                         inputBar.text += ' ';
+                }
                 else if ((int)c == 8 && inputBar.text.Length > 0) // Backspace
                     inputBar.text = inputBar.text.Substring(0, inputBar.text.Length - 1);
             }

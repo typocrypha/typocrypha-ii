@@ -14,13 +14,14 @@ public class DialogGraphParser : MonoBehaviour
         currNode = graph.getStartNode();
     }
     private BaseNode Next()
-    { 
+    {
         if (currNode is BaseNodeOUT)
             return (currNode as BaseNodeOUT).Next;
         else if (currNode is GameflowBranchNode)
             return Branch(currNode as GameflowBranchNode);
         else
-            throw new System.NotImplementedException("Reached end of gameflow");
+            //throw new System.NotImplementedException("Error");
+            return null;
     }
     private BaseNode Branch(GameflowBranchNode b)
     {
@@ -59,6 +60,7 @@ public class DialogGraphParser : MonoBehaviour
     public DialogItem NextDialog(bool next = true)
     {
         if (next) currNode = Next();
+        if (currNode == null) return null;
         if (currNode is GameflowEndNode)
         {
             if (currNode is EndAndHide)

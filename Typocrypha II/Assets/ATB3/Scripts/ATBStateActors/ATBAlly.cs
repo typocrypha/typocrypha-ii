@@ -66,8 +66,6 @@ namespace ATB3
 
         public override void Setup()
         {
-            castBar.hidden = true;
-            castBar.focus = false;
             startMana();
         }
 
