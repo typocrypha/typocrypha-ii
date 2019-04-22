@@ -6,11 +6,20 @@ using TMPro;
 namespace Typocrypha
 {
     /// <summary>
-    /// Manages keyboard interface.
+    /// Manages keyboard interface for battle.
     /// </summary>
     [RequireComponent(typeof(KeyboardBuilder))]
-    public class Keyboard : MonoBehaviour
+    public class Keyboard : MonoBehaviour, IPausable
     {
+        #region IPausable
+        PauseHandle ph;
+        public PauseHandle PH { get => ph; }
+        public void OnPause(bool b)
+        {
+            enabled = !b;
+        }
+        #endregion
+
         public static Keyboard instance = null;
         public Dictionary<char, Key> keyMap; // Map from characters to keyboard keys.
         public TMP_InputField inputBar; // Input field for typing.
@@ -27,7 +36,7 @@ namespace Typocrypha
                 Destroy(gameObject);
                 return;
             }
-            DontDestroyOnLoad(gameObject);
+            ph = new PauseHandle(OnPause);
 
             keyMap = new Dictionary<char, Key>();
             GetComponent<KeyboardBuilder>().BuildKeyboard(keys); // Construct keyboard.

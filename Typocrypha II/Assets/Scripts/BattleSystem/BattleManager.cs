@@ -55,6 +55,7 @@ public class BattleManager : MonoBehaviour
     /// </summary>
     public void StartBattle()
     {
+        //Battlefield.instance.PH.Pause = true;
         var startNode = graphParser.Init();
         var player = Instantiate(startNode.player, transform).GetComponent<FieldObject>();
         Battlefield.instance.Add(player, new Battlefield.Position(1, 1));
