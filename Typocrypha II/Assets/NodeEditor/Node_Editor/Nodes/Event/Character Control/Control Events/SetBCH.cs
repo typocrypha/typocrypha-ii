@@ -24,7 +24,7 @@ namespace Gameflow
         public string hair;
 
         #region Tooltip Strings
-        protected const string tooltip = "Name of feature";
+        protected const string tooltip = "Name of feature (leave blank for no change)";
         #endregion
 
         protected override void OnCreate()

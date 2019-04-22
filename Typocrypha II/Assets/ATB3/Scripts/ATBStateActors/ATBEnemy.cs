@@ -33,7 +33,7 @@ namespace ATB3
             set
             {
                 _charge = value;
-                chargeUI.GetComponent<ShadowBar>().curr = _charge / chargeTime;
+                chargeUI.GetComponent<ShadowBar>().Curr = _charge / chargeTime;
             }
         }
         public float chargeTime; // TESTING: amount of time required to charge currently charging spell
@@ -54,7 +54,7 @@ namespace ATB3
         // Incrementally charges next spell
         IEnumerator chargeCR()
         {
-            chargeUI.GetComponent<ShadowBar>().reset();
+            chargeUI.GetComponent<ShadowBar>().Reset();
             _charge = 0f;
             while (charge + Time.fixedDeltaTime < chargeTime)
             {

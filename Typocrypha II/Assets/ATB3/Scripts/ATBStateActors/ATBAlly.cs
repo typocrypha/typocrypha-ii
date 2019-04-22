@@ -22,7 +22,7 @@ namespace ATB3
             set
             {
                 _mana = value;
-                manaUI.GetComponent<ShadowBar>().curr = _mana / maxMana;
+                manaUI.GetComponent<ShadowBar>().Curr = _mana / maxMana;
             }
         }
         public float maxMana; // TESTING: max mana
@@ -34,7 +34,7 @@ namespace ATB3
         // Start charging mana
         public void startMana()
         {
-            manaUI.GetComponent<ShadowBar>().reset();
+            manaUI.GetComponent<ShadowBar>().Reset();
             _mana = 0f;
             manaCRObj = StartCoroutine(manaCR());
         }

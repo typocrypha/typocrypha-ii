@@ -1,58 +1,52 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-namespace ATB3
+/// <summary>
+/// Delayed bar value change effect (e.g. for health bars).
+/// </summary>
+public class ShadowBar : MonoBehaviour
 {
-    // UI amount bar with shadowed transitions between amounts
-    // To set up in scene, set amount and shadow (with amount layered directly on top of shadow)
-    public class ShadowBar : MonoBehaviour
+    public Slider shadow; // Slider for bar
+    float _curr; // Normalized current amount
+    public float Curr
     {
-        public RectTransform amount; // Transform for main bar
-        public RectTransform shadow; // Transform for shadow bar
-        float _curr; // Normalized current amount
-        public float curr 
+        get
         {
-            get
-            {
-                return _curr;
-            }
-            set
-            {
-                _curr = value;
-                StartCoroutine(transition(amount, delay, time, _curr));
-                StartCoroutine(transition(shadow, shadowDelay, shadowTime, _curr));
-            }
+            return _curr;
         }
-        public float delay = 0f; // Delay before amount changes
-        public float shadowDelay = 0.5f; // Delay before shadow changes
-        public float time = 0f; // Time it takes for bar to reach target amount
-        public float shadowTime = 0.5f; // Time it takes for shadow to reach target amount
-        
-        IEnumerator transition(RectTransform bar, float delay, float time, float target)
+        set
         {
-            if (delay != 0f)
-                yield return new WaitForSeconds(delay);
-            float steps = Mathf.Floor(time / Time.fixedDeltaTime);
-            float start = bar.localScale.x;
-            if (time != 0f)
-            {
-                for (float step = 0; step < steps; step++)
-                {
-                    float scale = Mathf.Lerp(start, target, step / steps);
-                    bar.localScale = new Vector3(scale, bar.localScale.y, bar.localScale.z);
-                    yield return new WaitForFixedUpdate();
-                }
-            }
-            bar.localScale = new Vector3(target, bar.localScale.y, bar.localScale.z);
+            _curr = value;
+            StartCoroutine(Transition(shadow, shadowDelay, shadowTime, Curr));
         }
+    }
+    public float shadowDelay = 0.5f; // Delay before shadow changes
+    public float shadowTime = 0.5f; // Time it takes for shadow to reach target amount
 
-        // Reset amount and shadow to 0 without transitions (immediate)
-        public void reset()
+    IEnumerator Transition(Slider bar, float delay, float time, float target)
+    {
+        if (delay != 0f)
+            yield return new WaitForSeconds(delay);
+        float steps = Mathf.Floor(time / Time.fixedDeltaTime);
+        float start = bar.value;
+        if (time != 0f)
         {
-            amount.localScale = new Vector3(0f, amount.localScale.y, amount.localScale.z);
-            shadow.localScale = new Vector3(0f, shadow.localScale.y, shadow.localScale.z);
+            for (float step = 0; step < steps; step++)
+            {
+                float scale = Mathf.Lerp(start, target, step / steps);
+                bar.value = scale;
+                yield return new WaitForFixedUpdate();
+            }
         }
+        bar.value = target;
+    }
+    /// <summary>
+    /// Reset shadow to 0 without transitions (immediate)
+    /// </summary>
+    public void Reset()
+    {
+        shadow.value = 0;
     }
 }
 
