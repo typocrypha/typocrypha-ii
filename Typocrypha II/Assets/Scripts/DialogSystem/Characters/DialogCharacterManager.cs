@@ -42,7 +42,7 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
     public Color hideTint; // Tint when character is not highlighted.
 
     Dictionary<string, DialogCharacter> characterMap; // Map of string ids to characters in scene.
-    AssetBundle characterDataBundle; // All character data assets.
+    static AssetBundle characterDataBundle; // All character data assets.
 
     const string defaultPose = "base";
     const string defaultExpr = "normal";
@@ -60,7 +60,8 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
         }
 
         characterMap = new Dictionary<string, DialogCharacter>();
-        characterDataBundle = AssetBundle.LoadFromFile(System.IO.Path.Combine(Application.streamingAssetsPath, "characterdata"));
+        if (characterDataBundle == null)
+            characterDataBundle = AssetBundle.LoadFromFile(System.IO.Path.Combine(Application.streamingAssetsPath, "characterdata"));
     }
 
     /// <summary>

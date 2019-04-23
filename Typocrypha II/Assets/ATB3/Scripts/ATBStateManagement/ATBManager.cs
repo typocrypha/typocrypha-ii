@@ -100,7 +100,6 @@ namespace ATB3
             // If stack is now empty, unpause all actors
             if (soloStack.Count == 0)
             {
-                setPauseAll(false);
                 //CastBar.MainBar.focus = true;
                 foreach (ATBActor actor in Battlefield.instance.Actors)
                     actor.isCast = false;

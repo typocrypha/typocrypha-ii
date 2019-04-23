@@ -74,7 +74,7 @@ Shader "Custom/PixelateScreen"
 				pos.xy += float2(_PixelSize, _PixelSize);
 				pos.xy -= (pos.xy % _PixelSize);
 				// set pixel color to center of block
-				return tex2D (_MainTex, float2(pos.x/screenSize.x, 1-pos.y/screenSize.y));
+				return tex2D (_MainTex, float2(pos.x/screenSize.x, pos.y/screenSize.y));
 			}
 			ENDCG
 		}
