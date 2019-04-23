@@ -14,10 +14,9 @@ public class PostProcess : MonoBehaviour
 	void Awake()
     {
         if (postProcessMap == null)
-        {
             postProcessMap = new Dictionary<string, PostProcess>();
-        }
-        postProcessMap[mat.name] = this;
+        if (!postProcessMap.ContainsKey(mat.name)) postProcessMap[mat.name] = this;
+        else return;
         shaderParams = new Dictionary<string, float>();
 	}
 
@@ -28,6 +27,11 @@ public class PostProcess : MonoBehaviour
             mat.SetFloat(kvp.Key, kvp.Value);
         }
 	}
+
+    void OnDestroy()
+    {
+        Debug.Log("Destroy post process");
+    }
 
 	void OnRenderImage(RenderTexture src, RenderTexture dest)
     {
