@@ -38,11 +38,6 @@ public class SaveManager : MonoBehaviour
     public static SaveManager instance = null; // Global static reference
     public GameData loaded; // Loaded game data 
 
-    // NOTE: allSavable list is currently NOT updated between scene transitions.
-    //       solution: just search whole scene?
-    public List<GameObject> allSavable; // All savable objects (have component that implement 'ISavable').
-
-
     void Awake()
     {
         if (instance == null)
@@ -79,7 +74,8 @@ public class SaveManager : MonoBehaviour
     /// </summary>
     public void SaveGame()
     {
-        foreach (var savable in allSavable) savable.GetComponent<ISavable>().Save();
+
+        foreach (var savable in GameObject.FindGameObjectsWithTag("Savable")) savable.GetComponent<ISavable>().Save();
 
         Debug.Log("saving to:" + Application.persistentDataPath + "/savefile" + loaded.saveIndex + ".dat");
         FileStream file = File.Open(Application.persistentDataPath + "/savefile" + loaded.saveIndex + ".dat", FileMode.Open);
@@ -108,6 +104,6 @@ public class SaveManager : MonoBehaviour
     /// </summary>
     public void ApplyState()
     {
-        foreach (var savable in allSavable) savable.GetComponent<ISavable>().Load();
+        foreach (var savable in GameObject.FindGameObjectsWithTag("Savable")) savable.GetComponent<ISavable>().Load();
     }
 }
