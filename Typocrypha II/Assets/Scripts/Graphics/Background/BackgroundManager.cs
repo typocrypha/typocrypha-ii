@@ -24,7 +24,7 @@ public class BackgroundManager : MonoBehaviour, ISavable
     public SpriteRenderer bgsr; // Sprite renderer for the background.
     public GameObject bggo; // Gameobject background (for more complicated backgrounds).
 
-    AssetBundle bgBundle; // Background sprite assets.
+    static AssetBundle bgBundle; // Background sprite assets.
 
     void Awake()
     {
@@ -37,9 +37,9 @@ public class BackgroundManager : MonoBehaviour, ISavable
             Destroy(gameObject);
             return;
         }
-        DontDestroyOnLoad(gameObject);
 
-        bgBundle = AssetBundle.LoadFromFile(System.IO.Path.Combine(Application.streamingAssetsPath, "background"));
+        if (bgBundle == null) bgBundle = AssetBundle.LoadFromFile(
+            System.IO.Path.Combine(Application.streamingAssetsPath, "background"));
     }
 
     /// <summary>

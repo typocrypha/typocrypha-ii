@@ -30,7 +30,7 @@ public class CameraManager : MonoBehaviour, IPausable
             Destroy(gameObject);
             return;
         }
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
 
         ph = new PauseHandle(OnPause);
     }
