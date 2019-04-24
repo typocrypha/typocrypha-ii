@@ -10,6 +10,7 @@ namespace SerializableCollections
         public static class SDictionaryGUI
         {
             public delegate T ValueGUI<T>(T value);
+            public delegate void KeyGUI<T>(T value);
             public delegate void AddGUI();
             public delegate T GetNew<T>();
 
@@ -102,17 +103,23 @@ namespace SerializableCollections
 
             public static void DoGUILayout<TKey, TValue>(this SerializableDictionary<TKey, TValue> dict, ValueGUI<TValue> valueGUI, AddGUI addGUI, string title, bool oneLine = false)
             {
+                void kGUI(TKey key) => EditorGUILayout.LabelField(key.ToString(), GUILayout.MaxWidth(oneLine ? 100 : 250));
+                dict.DoGUILayout(kGUI, valueGUI, addGUI, title, oneLine);
+            }
+
+            public static void DoGUILayout<TKey, TValue>(this SerializableDictionary<TKey, TValue> dict, KeyGUI<TKey> kGUI, ValueGUI<TValue> valueGUI, AddGUI addGUI, string title, bool oneLine = false)
+            {
                 GUILayout.BeginHorizontal();
                 EditorGUILayout.LabelField(title + ": " + dict.Count, EditorUtils.Bold, GUILayout.MaxWidth(120));
                 GUILayout.Space(-20);
                 //GUILayout.FlexibleSpace();
                 addGUI();
                 GUILayout.EndHorizontal();
-                if(dict.Count > 0)
-                    DoGUILayout(dict, valueGUI, oneLine);
+                if (dict.Count > 0)
+                    DoGUILayout(dict, kGUI, valueGUI, oneLine);
             }
 
-            private static void DoGUILayout<TKey, TValue>(SerializableDictionary<TKey, TValue> dict, ValueGUI<TValue> valueGUI, bool oneLine)
+            private static void DoGUILayout<TKey, TValue>(SerializableDictionary<TKey, TValue> dict, KeyGUI<TKey> kGUI, ValueGUI<TValue> valueGUI, bool oneLine)
             {
                 EditorGUILayout.BeginVertical("box");
                 EditorGUI.indentLevel++;
@@ -124,7 +131,7 @@ namespace SerializableCollections
                 foreach (var key in keys)
                 {
                     GUILayout.BeginHorizontal();
-                    EditorGUILayout.PrefixLabel(key.ToString());
+                    kGUI(key);
                     GUILayout.Space(1);
                     if (oneLine)
                         dict[key] = valueGUI(dict[key]);

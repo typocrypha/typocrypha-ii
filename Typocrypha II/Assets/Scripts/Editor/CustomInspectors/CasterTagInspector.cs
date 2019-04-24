@@ -15,6 +15,8 @@ public class CasterTagInspector : Editor
         EditorUtils.Separator();
         tag.displayName = EditorGUILayout.TextField(new GUIContent("Display Name"), tag.displayName);
         EditorUtils.Separator();
+
+        // Cumulative Stats
         if (tag.subTags.Count > 0)
         {
             viewCumulative = EditorGUILayout.ToggleLeft("Cumulative Stats", viewCumulative);
@@ -25,23 +27,27 @@ public class CasterTagInspector : Editor
                 foreach (var mod in tag.subTags)
                     statMod.AddInPlace(mod.statMods);
                 EditorUtils.CasterUtils.CasterStatsLabelLayout(statMod);
-
             }
         }
-        
-
         EditorUtils.Separator();
+
+        // Stat Modifiers
         EditorGUILayout.LabelField("Stat Modifiers", new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold, alignment = TextAnchor.MiddleCenter });
         if (tag.statMods != null)
             EditorUtils.CasterUtils.CasterStatsGUILayout(tag.statMods);
         EditorUtils.Separator();
+
+        // Reactions
         if (tag.reactions != null)
         {
-            SDictionaryGUI.ValueGUI<Reaction> valGUI = (r) => EditorUtils.EnumPopup(GUIContent.none, r, GUILayout.MaxWidth(120));
-            tag.reactions.DoGUILayout(valGUI, () => tag.reactions.ObjPickerAddGUI(), "Reactions", true);
+            Reaction valGUI(Reaction r) => EditorUtils.EnumPopup(GUIContent.none, r, GUILayout.MaxWidth(100));
+            void kGUI(SpellTag s) => EditorGUILayout.LabelField(s.name, GUILayout.MaxWidth(100));
+            tag.reactions.DoGUILayout(kGUI, valGUI, () => tag.reactions.ObjPickerAddGUI(), "Reactions", true);
         }
         EditorGUILayout.Space();
         EditorUtils.Separator();
+
+        // SubTags
         if (tag.subTags != null)
         {
             tag.subTags.DoGUILayout(EditorUtils.CasterUtils.CasterTagGUI, () => tag.subTags.ObjPickerAddGUI(), "SubTags");

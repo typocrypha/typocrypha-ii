@@ -34,6 +34,8 @@ public class CasterStats
     public int Acc { get => acc.Value; set => acc.Value = value; }
     [SerializeField] private Stat evade = new Stat(statMin, statMax);
     public int Evade { get => evade.Value; set => evade.Value = value; }
+    [SerializeField] private Stat luck = new Stat(statMin, statMax);
+    public int Luck { get => luck.Value; set => luck.Value = value; }
     #endregion
 
     public void AddInPlace(CasterStats other)
@@ -48,6 +50,7 @@ public class CasterStats
         spd.AddInPlace(other.spd);
         acc.AddInPlace(other.acc);
         evade.AddInPlace(other.evade);
+        luck.AddInPlace(other.luck);
     }
     public void SubtractInPlace(CasterStats other)
     {
@@ -61,6 +64,7 @@ public class CasterStats
         spd.SubtractInPlace(other.spd);
         acc.SubtractInPlace(other.acc);
         evade.SubtractInPlace(other.evade);
+        luck.SubtractInPlace(other.luck);
     }
     [System.Serializable]
     public class Stat

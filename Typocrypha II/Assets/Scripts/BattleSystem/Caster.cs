@@ -88,7 +88,7 @@ public class Caster : FieldObject
 
     private void Awake()
     {
-        _tags.RecalculateStats();
+        _tags.RecalculateAggregate();
         Health = Stats.MaxHP;
         Armor = Stats.MaxArmor;
         SP = Stats.MaxSP;

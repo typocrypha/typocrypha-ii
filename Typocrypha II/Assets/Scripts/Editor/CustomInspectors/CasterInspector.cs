@@ -39,7 +39,7 @@ public class CasterInspector : Editor
         #endregion
 
         #region Stat GUI
-        data.Tags.RecalculateStats();
+        data.Tags.RecalculateAggregate();
         EditorUtils.CasterUtils.CasterStatsLabelLayout(data.Stats);
         EditorUtils.Separator();
         #endregion

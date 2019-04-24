@@ -11,32 +11,59 @@ public static partial class EditorUtils
     {
         public static void CasterStatsGUILayout(CasterStats data)
         {
-            data.MaxHP = EditorGUILayout.IntField(new GUIContent("Max HP", "TODO: tooltip"), data.MaxHP);
-            data.MaxArmor = EditorGUILayout.IntField(new GUIContent("Max Armor", "TODO: tooltip"), data.MaxArmor);
-            data.MaxSP = EditorGUILayout.IntField(new GUIContent("Max SP", "TODO: tooltip"), data.MaxSP);
-            data.MaxStagger = EditorGUILayout.IntField(new GUIContent("Max Stagger", "TODO: tooltip"), data.MaxStagger);
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField(new GUIContent("Max HP", "TODO: tooltip"), GUILayout.Width(75));
+            data.MaxHP = EditorGUILayout.IntField(data.MaxHP, GUILayout.Width(47.5f));
+            EditorGUILayout.LabelField(new GUIContent("Max SP", "TODO: tooltip"), GUILayout.Width(75));
+            data.MaxSP = EditorGUILayout.IntField(data.MaxSP, GUILayout.Width(47.5f));
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField(new GUIContent("Max Armor", "TODO: tooltip"), GUILayout.Width(75));
+            data.MaxArmor = EditorGUILayout.IntField(data.MaxArmor, GUILayout.Width(47.5f));
+            EditorGUILayout.LabelField(new GUIContent("Max Stagger", "TODO: tooltip"), GUILayout.Width(75));
+            data.MaxStagger = EditorGUILayout.IntField(data.MaxStagger, GUILayout.Width(47.5f));
+            EditorGUILayout.EndHorizontal();
             data.StaggerTime = EditorGUILayout.FloatField(new GUIContent("Stagger Time", "TODO: tooltip"), data.StaggerTime);
             data.Atk = EditorGUILayout.IntSlider(new GUIContent("Atk", "TODO: tooltip"), data.Atk, CasterStats.statMin, CasterStats.statMax);
             data.Def = EditorGUILayout.IntSlider(new GUIContent("Def", "TODO: tooltip"), data.Def, CasterStats.statMin, CasterStats.statMax);
             data.Spd = EditorGUILayout.IntSlider(new GUIContent("Speed", "TODO: tooltip"), data.Spd, CasterStats.statMin, CasterStats.statMax);
             data.Acc = EditorGUILayout.IntSlider(new GUIContent("Acc", "TODO: tooltip"), data.Acc, CasterStats.statMin, CasterStats.statMax);
             data.Evade = EditorGUILayout.IntSlider(new GUIContent("Evade", "TODO: tooltip"), data.Evade, CasterStats.statMin, CasterStats.statMax);
+            data.Luck = EditorGUILayout.IntSlider(new GUIContent("Luck", "TODO: tooltip"), data.Luck, CasterStats.statMin, CasterStats.statMax);
         }
         public static void CasterStatsLabelLayout(CasterStats data)
         {
-            EditorGUILayout.LabelField(new GUIContent("Max HP:         " + data.MaxHP, "TODO: tooltip"));
-            EditorGUILayout.LabelField(new GUIContent("Max Armor:    " + data.MaxArmor, "TODO: tooltip"));
-            EditorGUILayout.LabelField(new GUIContent("Max SP:         " + data.MaxSP, "TODO: tooltip"));
-            EditorGUILayout.LabelField(new GUIContent("Max Stagger:  " + data.MaxStagger, "TODO: tooltip"), GUILayout.Width(125));
-            EditorGUILayout.LabelField(new GUIContent("Stagger Time: " + data.StaggerTime, "TODO: tooltip"), GUILayout.Width(125));
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField(new GUIContent("Atk: " + data.Atk, "TODO: tooltip"), GUILayout.Width(61));
-            EditorGUILayout.LabelField(new GUIContent("Def: " + data.Def, "TODO: tooltip"), GUILayout.Width(61));
-            EditorGUILayout.LabelField(new GUIContent("Speed: " + data.Spd, "TODO: tooltip"), GUILayout.Width(70));
+            EditorGUILayout.LabelField(new GUIContent("Max HP:", "TODO: tooltip"), GUILayout.Width(75));
+            EditorGUILayout.LabelField(new GUIContent(data.MaxHP.ToString(), "TODO: tooltip"), Bold, GUILayout.Width(50));
+            EditorGUILayout.LabelField(new GUIContent("Max SP:", "TODO: tooltip"), GUILayout.Width(75));
+            EditorGUILayout.LabelField(new GUIContent(data.MaxSP.ToString(), "TODO: tooltip"), Bold, GUILayout.Width(50));
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField(new GUIContent("Acc: " + data.Acc, "TODO: tooltip"), GUILayout.Width(61));
-            EditorGUILayout.LabelField(new GUIContent("Evade: " + data.Evade, "TODO: tooltip"), GUILayout.Width(70));
+            EditorGUILayout.LabelField(new GUIContent("Max Armor:", "TODO: tooltip"), GUILayout.Width(75));
+            EditorGUILayout.LabelField(new GUIContent(data.MaxArmor.ToString(), "TODO: tooltip"), Bold, GUILayout.Width(50));
+            EditorGUILayout.LabelField(new GUIContent("Max Stagger:", "TODO: tooltip"), GUILayout.Width(75));
+            EditorGUILayout.LabelField(new GUIContent(data.MaxStagger.ToString(), "TODO: tooltip"), Bold, GUILayout.Width(50));
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField(new GUIContent("Stun Time:", "TODO: tooltip"), GUILayout.Width(75));
+            EditorGUILayout.LabelField(new GUIContent(data.StaggerTime.ToString(), "TODO: tooltip"), Bold, GUILayout.Width(50));
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField(new GUIContent("Atk:", "TODO: tooltip"), GUILayout.Width(50));
+            EditorGUILayout.LabelField(new GUIContent(data.Atk.ToString(), "TODO: tooltip"),Bold, GUILayout.Width(31));
+            EditorGUILayout.LabelField(new GUIContent("Def:", "TODO: tooltip"), GUILayout.Width(50));
+            EditorGUILayout.LabelField(new GUIContent(data.Def.ToString(), "TODO: tooltip"), Bold, GUILayout.Width(31));
+            EditorGUILayout.LabelField(new GUIContent("Speed:", "TODO: tooltip"), GUILayout.Width(50));
+            EditorGUILayout.LabelField(new GUIContent(data.Spd.ToString(), "TODO: tooltip"), Bold, GUILayout.Width(31));
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField(new GUIContent("Acc:", "TODO: tooltip"), GUILayout.Width(50));
+            EditorGUILayout.LabelField(new GUIContent(data.Acc.ToString(), "TODO: tooltip"), Bold, GUILayout.Width(31));
+            EditorGUILayout.LabelField(new GUIContent("Evade:", "TODO: tooltip"), GUILayout.Width(50));
+            EditorGUILayout.LabelField(new GUIContent(data.Evade.ToString(), "TODO: tooltip"), Bold, GUILayout.Width(31));
+            EditorGUILayout.LabelField(new GUIContent("Luck:", "TODO: tooltip"), GUILayout.Width(50));
+            EditorGUILayout.LabelField(new GUIContent(data.Luck.ToString(), "TODO: tooltip"), Bold, GUILayout.Width(31));
             EditorGUILayout.EndHorizontal();
         }
         public static void CasterStatsModifierGUILayout(CasterStats stats)
@@ -102,7 +129,7 @@ public static partial class EditorUtils
         public static void CasterTagGUI(CasterTag data)
         {
             GUILayout.BeginVertical();
-            EditorGUILayout.LabelField(data.name + " (" + data.displayName + ")", new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold }, GUILayout.Width(240));
+            EditorGUILayout.LabelField(data.name + " (" + data.displayName + ")", new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold }, GUILayout.Width(200));
             EditorGUI.indentLevel++;
             if (data.subTags.Count > 0)
             {

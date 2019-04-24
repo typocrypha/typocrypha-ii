@@ -28,8 +28,18 @@ public class CasterTagDictionary
     {
         allTags.Add(tag);
         statMod.AddInPlace(tag.statMods);
+        AddReactions(tag);
         foreach (CasterTag t in tag.subTags)
             AddWithSubTags(t);
+    }
+    private void AddReactions(CasterTag tag)
+    {
+        foreach (var reaction in tag.reactions)
+        {
+            if (!reactions.ContainsKey(reaction.Key))
+                reactions.Add(reaction.Key, new ReactionMultiSet());
+            reactions[reaction.Key].Add(reaction.Value);
+        }
     }
     public void Remove(CasterTag tag)
     {
@@ -40,23 +50,44 @@ public class CasterTagDictionary
     {
         allTags.Remove(tag);
         statMod.SubtractInPlace(tag.statMods);
+        RemoveReactions(tag);
         foreach (CasterTag t in tag.subTags)
             RemoveWithSubTags(t);
+    }
+    private void RemoveReactions(CasterTag tag)
+    {
+        foreach (var reaction in tag.reactions)
+        {
+            reactions[reaction.Key].Remove(reaction.Value);
+            if (reactions[reaction.Key].Count <= 0)
+                reactions.Remove(reaction.Key);
+        }
     }
     #endregion
 
     public IEnumerable<CasterTag> TopLevelTags => tags;
 
     #region Aggregate Tag Data
-    public void RecalculateStats()
+    public void RecalculateAggregate()
     {
         statMod = new CasterStats();
+        reactions.Clear();
         foreach (var tag in allTags)
+        {
             statMod.AddInPlace(tag.statMods);
+            AddReactions(tag);
+        }           
     }
     public CasterStats statMod;
+    public ReactionMultiSet GetReactions(SpellTag tag)
+    {
+        return reactions.ContainsKey(tag) ? reactions[tag] : null;
+    }
+    private ReactionDict reactions = new ReactionDict();
     //public List<CasterAbility> abilities;
     #endregion
 
     [System.Serializable] private class TagMultiSet : SerializableMultiSet<CasterTag> { }
+    [System.Serializable] private class ReactionDict : SerializableDictionary<SpellTag, ReactionMultiSet> { }
+    [System.Serializable] public class ReactionMultiSet : SerializableMultiSet<Reaction> { }
 }
