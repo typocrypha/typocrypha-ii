@@ -11,7 +11,6 @@ public class Caster : FieldObject
         Player,
         PartyMember,
     }
-
     public enum State
     {
         None = -1,
@@ -29,12 +28,15 @@ public class Caster : FieldObject
         Hiding,
     }
 
+    #region State, Status, and Class
     [SerializeField] private State _type;
     public State CasterState { get => _type; set => _type = value; }
     [SerializeField] private Class _casterClass;
     public Class CasterClass { get => _casterClass; set => _casterClass = value; }
+    public BattleStatus BStatus { get; }
+    #endregion
 
-    public Battlefield.Position TargetPos { get; set; } = new Battlefield.Position(0,0);
+    #region Health properties and UI functionality
     int health;
     public int Health
     {
@@ -80,11 +82,16 @@ public class Caster : FieldObject
             ui?.onChargeChanged.Invoke(charge/ChargeTime); 
         }
     }
-    public BattleStatus BStatus { get; }
+    #endregion
+
+    #region Caster Tags and Caster Stats
     [SerializeField] private CasterTagDictionary _tags;
     public CasterTagDictionary Tags { get => _tags; set => _tags = value; }
     public CasterStats Stats { get => _tags.statMod; }
-    public EnemyUI ui;
+    #endregion
+
+    public Battlefield.Position TargetPos { get; set; } = new Battlefield.Position(0, 0);
+    public CasterUI ui = null;
 
     private void Awake()
     {
@@ -93,5 +100,6 @@ public class Caster : FieldObject
         Armor = Stats.MaxArmor;
         SP = Stats.MaxSP;
         Stagger = Stats.MaxStagger;
+        ui = GetComponentInChildren<CasterUI>();
     }
 }

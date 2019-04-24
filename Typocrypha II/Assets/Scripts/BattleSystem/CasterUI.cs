@@ -4,11 +4,10 @@ using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
-/// Manages enemy UI for an enemy caster.
+/// Manages UI for a caster.
 /// </summary>
-public class EnemyUI : MonoBehaviour
+public class CasterUI : MonoBehaviour
 {
-    public Caster caster;
     public UnityEvent_float onHealthChanged; // Pass percentage health.
     public UnityEvent_float onChargeChanged; // Pass percentage charge.
     public UnityEvent_string onStaggerChanged; // Pass absolute stagger as string.
