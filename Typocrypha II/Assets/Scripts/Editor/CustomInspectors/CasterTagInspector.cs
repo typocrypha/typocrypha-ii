@@ -34,7 +34,12 @@ public class CasterTagInspector : Editor
         EditorGUILayout.LabelField("Stat Modifiers", new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold, alignment = TextAnchor.MiddleCenter });
         if (tag.statMods != null)
             EditorUtils.CasterUtils.CasterStatsGUILayout(tag.statMods);
-
+        EditorUtils.Separator();
+        if (tag.reactions != null)
+        {
+            SDictionaryGUI.ValueGUI<Reaction> valGUI = (r) => EditorUtils.EnumPopup(GUIContent.none, r, GUILayout.MaxWidth(120));
+            tag.reactions.DoGUILayout(valGUI, () => tag.reactions.ObjPickerAddGUI(), "Reactions", true);
+        }
         EditorGUILayout.Space();
         EditorUtils.Separator();
         if (tag.subTags != null)

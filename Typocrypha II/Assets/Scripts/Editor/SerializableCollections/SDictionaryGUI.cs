@@ -13,6 +13,7 @@ namespace SerializableCollections
             public delegate void AddGUI();
             public delegate T GetNew<T>();
 
+            #region String
             public static void StringAddGUI<TValue>(this SerializableDictionary<string, TValue> dict, ref string toAdd) where TValue : new()
             {
                 StringAddGUI(dict, ref toAdd, () => new TValue());
@@ -37,7 +38,9 @@ namespace SerializableCollections
                     GUIUtility.keyboardControl = 0;
                 }
             }
+            #endregion
 
+            #region Enum
             public static void EnumAddGUI<TKey, TValue>(this SerializableDictionary<TKey, TValue> dict) where TKey: System.Enum where TValue: new()
             {
                 EnumAddGUI(dict, () => new TValue());
@@ -59,20 +62,42 @@ namespace SerializableCollections
                     menu.ShowAsContext();
                 }
             }
+            #endregion
 
-            public static bool DoGUILayout<TKey, TValue>(this SerializableDictionary<TKey, TValue> dict, ValueGUI<TValue> valueGUI, GenericMenu menu, string title, bool oneLine = false)
+            #region Object Picker
+            public static void ObjPickerAddGUIVal<TKey, TValue>(this SerializableDictionary<TKey, TValue> dict, string filter = "", bool allowSceneObjects = false) where TKey : UnityEngine.Object 
             {
-                bool ret = false;
-                GUILayout.BeginHorizontal();
-                GUILayout.Label(title + ": " + dict.Count, EditorUtils.Bold);
+                dict.ObjPickerAddGUI(filter, allowSceneObjects, default);
+            }
+
+            public static void ObjPickerAddGUI<TKey, TValue>(this SerializableDictionary<TKey, TValue> dict, string filter = "", bool allowSceneObjects = false) where TKey : UnityEngine.Object where TValue : new()
+            {
+                dict.ObjPickerAddGUI(filter, allowSceneObjects, () => new TValue());
+            }
+
+            private static void ObjPickerAddGUI<TKey, TValue>(this SerializableDictionary<TKey, TValue> dict, string filter, bool allowSceneObjects, GetNew<TValue> getNew) where TKey : UnityEngine.Object
+            {
+                Event e = Event.current;
+                if (e.type == EventType.ExecuteCommand && e.commandName == "ObjectSelectorClosed")
+                {
+                    TKey item = EditorGUIUtility.GetObjectPickerObject() as TKey;
+                    if (item == null)
+                        return;
+                    dict.Add(item, getNew());
+                    e.Use();
+                    return;
+                }
+                if (GUILayout.Button("+"))
+                    EditorGUIUtility.ShowObjectPicker<TKey>(null, allowSceneObjects, filter, 1);
+            }
+            #endregion
+
+            public static void GenericMenuAddGUI<TKey, TValue>(this SerializableDictionary<TKey, TValue> dict, GenericMenu menu)
+            {
                 if (EditorGUILayout.DropdownButton(new GUIContent("+"), FocusType.Keyboard))
                 {
                     menu.ShowAsContext();
-                    ret = true;
                 }
-                GUILayout.EndHorizontal();
-                DoGUILayout(dict, valueGUI, oneLine);
-                return ret;
             }
 
             public static void DoGUILayout<TKey, TValue>(this SerializableDictionary<TKey, TValue> dict, ValueGUI<TValue> valueGUI, AddGUI addGUI, string title, bool oneLine = false)
@@ -83,13 +108,13 @@ namespace SerializableCollections
                 //GUILayout.FlexibleSpace();
                 addGUI();
                 GUILayout.EndHorizontal();
-                EditorUtils.Separator();
                 if(dict.Count > 0)
                     DoGUILayout(dict, valueGUI, oneLine);
             }
 
             private static void DoGUILayout<TKey, TValue>(SerializableDictionary<TKey, TValue> dict, ValueGUI<TValue> valueGUI, bool oneLine)
             {
+                EditorGUILayout.BeginVertical("box");
                 EditorGUI.indentLevel++;
                 TKey toDelete = default;
                 bool delete = false;
@@ -116,7 +141,7 @@ namespace SerializableCollections
                 if (delete)
                     dict.Remove(toDelete);
                 EditorGUI.indentLevel--;
-                EditorUtils.Separator();
+                EditorGUILayout.EndVertical();
             }
         }
     }

@@ -92,4 +92,6 @@ public class SerializableDictionary<TKey, TValue> : ISerializationCallbackReceiv
     #endregion
 }
 
-
+[System.Serializable] public class SDictStringString : SerializableDictionary<string, string> { };
+[System.Serializable] public class SDictStringInt : SerializableDictionary<string, int> { };
+[System.Serializable] public class SDictStringFloat : SerializableDictionary<string, float> { };
