@@ -11,8 +11,6 @@ public class LoadingScreenDefault : LoadingScreen
 {
     public TextMeshPro loadingPercent; // Text display of loading percentage
 
-    Animator animator; // Loading screen animator
-
     void Awake()
     {
         loadingPercent.text = 0f.ToString() + "%";
@@ -28,7 +26,6 @@ public class LoadingScreenDefault : LoadingScreen
             // When done loading, start fading out animation. Animator handles destruction.
             if (value == 1.0f)
             {
-                animator.SetBool("DoneLoading", true);
                 _done = true;
             }
         }

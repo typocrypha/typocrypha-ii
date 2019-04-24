@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 7036427213305839662}
   - component: {fileID: 7036427213305839661}
   - component: {fileID: 7493298037779506555}
+  - component: {fileID: 1283166436609570413}
+  - component: {fileID: 3032578339213327769}
   m_Layer: 0
   m_Name: TestEnemy2
   m_TagString: Untagged
@@ -181,6 +183,35 @@ MonoBehaviour:
     effectPackets:
     - clip: {fileID: 7400000, guid: d71d52a86337442439962119ba2abc5a, type: 2}
       sfx: {fileID: 8300000, guid: 1d7a09f9733b1c843b2d169a651de2f9, type: 3}
+--- !u!114 &1283166436609570413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7036427213305839663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b102391bca357784187111215e33ef00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  StateMachine: {fileID: 3032578339213327769}
+  actorName: Bullet
+  isCast: 0
+  caster: {fileID: 7036427213305839661}
+--- !u!114 &3032578339213327769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7036427213305839663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee29449737e302544b35d6c94739153f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  owner: {fileID: 1283166436609570413}
 --- !u!1001 &4859350531316654313
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -188,11 +219,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7036427213305839660}
     m_Modifications:
-    - target: {fileID: 1252018226811768606, guid: 1daa23979c81fa04da7928fd41b3a907,
+    - target: {fileID: 5216593908926948829, guid: 1daa23979c81fa04da7928fd41b3a907,
         type: 3}
-      propertyPath: m_Name
-      value: EnemyUI
-      objectReference: {fileID: 0}
+      propertyPath: m_FillRect
+      value: 
+      objectReference: {fileID: 795713312509844588}
     - target: {fileID: 5216593908265871094, guid: 1daa23979c81fa04da7928fd41b3a907,
         type: 3}
       propertyPath: onHealthChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -223,6 +254,46 @@ PrefabInstance:
       propertyPath: onSpellChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 3256651744995535832}
+    - target: {fileID: 5216593907953892485, guid: 1daa23979c81fa04da7928fd41b3a907,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5216593907953892485, guid: 1daa23979c81fa04da7928fd41b3a907,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5678982213648576752, guid: 1daa23979c81fa04da7928fd41b3a907,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5678982213648576752, guid: 1daa23979c81fa04da7928fd41b3a907,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855740741172443357, guid: 1daa23979c81fa04da7928fd41b3a907,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855740741172443357, guid: 1daa23979c81fa04da7928fd41b3a907,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8087350909998025204, guid: 1daa23979c81fa04da7928fd41b3a907,
+        type: 3}
+      propertyPath: m_FillRect
+      value: 
+      objectReference: {fileID: 981834969489133593}
+    - target: {fileID: 1252018226811768606, guid: 1daa23979c81fa04da7928fd41b3a907,
+        type: 3}
+      propertyPath: m_Name
+      value: EnemyUI
+      objectReference: {fileID: 0}
     - target: {fileID: 1804760588557518778, guid: 1daa23979c81fa04da7928fd41b3a907,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -328,11 +399,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 5216593908926948829, guid: 1daa23979c81fa04da7928fd41b3a907,
-        type: 3}
-      propertyPath: m_FillRect
-      value: 
-      objectReference: {fileID: 795713312509844588}
     - target: {fileID: 3547148898980556296, guid: 1daa23979c81fa04da7928fd41b3a907,
         type: 3}
       propertyPath: m_FillRect
@@ -343,41 +409,6 @@ PrefabInstance:
       propertyPath: shadow
       value: 
       objectReference: {fileID: 3698558388345596189}
-    - target: {fileID: 5216593907953892485, guid: 1daa23979c81fa04da7928fd41b3a907,
-        type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5216593907953892485, guid: 1daa23979c81fa04da7928fd41b3a907,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6855740741172443357, guid: 1daa23979c81fa04da7928fd41b3a907,
-        type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6855740741172443357, guid: 1daa23979c81fa04da7928fd41b3a907,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8087350909998025204, guid: 1daa23979c81fa04da7928fd41b3a907,
-        type: 3}
-      propertyPath: m_FillRect
-      value: 
-      objectReference: {fileID: 981834969489133593}
-    - target: {fileID: 5678982213648576752, guid: 1daa23979c81fa04da7928fd41b3a907,
-        type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5678982213648576752, guid: 1daa23979c81fa04da7928fd41b3a907,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1daa23979c81fa04da7928fd41b3a907, type: 3}
 --- !u!224 &6513381257494439763 stripped

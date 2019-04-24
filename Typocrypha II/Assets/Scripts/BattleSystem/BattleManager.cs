@@ -45,9 +45,13 @@ public class BattleManager : MonoBehaviour, IPausable
         ph = new PauseHandle(OnPause);
     }
 
+    public bool startOnStart = true; // Should battle start when scene starts?
+
     private void Start()
     {
-        StartBattle();
+        // Set so that battle waits for transition
+        TransitionManager.instance.onStartScene.AddListener(StartBattle); 
+        if (startOnStart) StartBattle();
     }
 
     /// <summary>
@@ -65,7 +69,6 @@ public class BattleManager : MonoBehaviour, IPausable
     /// </summary>
     public void StartBattle()
     {
-        Battlefield.instance.PH.Pause = true;
         var startNode = graphParser.Init();
         var player = Instantiate(startNode.player, transform).GetComponent<FieldObject>();
         Battlefield.instance.Add(player, new Battlefield.Position(1, 1));
@@ -105,6 +108,7 @@ public class BattleManager : MonoBehaviour, IPausable
 
     public void NextWave()
     {
+        Battlefield.instance.PH.Pause = true;
         ++waveNum;
         var wave = graphParser.NextWave();
         if (wave == null) return;

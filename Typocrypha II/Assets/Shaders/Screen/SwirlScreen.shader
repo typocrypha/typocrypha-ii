@@ -85,7 +85,7 @@ Shader "Custom/SwirlScreen"
 				pos.y += _Height/2;
 				pos.y = _Height - pos.y;
 				// set rotated pixel color
-				return tex2D (_MainTex, float2(pos.x/screenSize.x, 1-pos.y/screenSize.y));
+				return tex2D (_MainTex, float2(pos.x/screenSize.x, pos.y/screenSize.y));
 			}
 			ENDCG
 		}

@@ -6,8 +6,16 @@ using UnityEngine.UI;
 /// <summary>
 /// Keeps track of spell cooldowns.
 /// </summary>
-public class SpellCooldownManager : MonoBehaviour
+public class SpellCooldownManager : MonoBehaviour, IPausable
 {
+    #region IPausable
+    PauseHandle ph;
+    public PauseHandle PH { get => ph; }
+    public void OnPause(bool b)
+    {
+
+    }
+    #endregion
     public static SpellCooldownManager instance = null;
     // Map of spell rootwords to remaining cooldown time.
     public Dictionary<string, float> cooldowns = new Dictionary<string, float>();
@@ -25,6 +33,7 @@ public class SpellCooldownManager : MonoBehaviour
             Destroy(this);
             return;
         }
+        ph = new PauseHandle(OnPause);
     }
 
     /// <summary>
@@ -65,6 +74,7 @@ public class SpellCooldownManager : MonoBehaviour
         cd.TotalTime = cooldowns[spell];
         while (cooldowns[spell] > 0f)
         {
+            yield return new WaitWhile(() => PH.Pause);
             cooldowns[spell] -= Time.fixedDeltaTime;
             cd.CurrTime = cooldowns[spell];
             yield return new WaitForFixedUpdate();

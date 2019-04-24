@@ -40,7 +40,7 @@ public class TIPSManager : MonoBehaviour, IPausable
     public Transform TIPSContent; // Content panel for attaching entries to.
     public InputField TIPSsearch; // TIPS search bar.
 
-    TIPSEntryData[] allTIPS; // List of all TIPS entries.
+    static TIPSEntryData[] allTIPS; // List of all TIPS entries.
     GameObject currEntry; // Currently displayed entry.
 
     void Awake()
@@ -56,8 +56,11 @@ public class TIPSManager : MonoBehaviour, IPausable
         }
         ph = new PauseHandle(OnPause);
 
-        var ab = AssetBundle.LoadFromFile(System.IO.Path.Combine(Application.streamingAssetsPath, "tips"));
-        allTIPS = ab.LoadAllAssets<TIPSEntryData>();
+        if (allTIPS == null)
+        {
+            var ab = AssetBundle.LoadFromFile(System.IO.Path.Combine(Application.streamingAssetsPath, "tips"));
+            allTIPS = ab.LoadAllAssets<TIPSEntryData>();
+        }
     }
 
     void Update()

@@ -32,6 +32,7 @@ public class CastParser : MonoBehaviour
     public int MaxWords { get; } = 5;
     public int MaxRoots { get; } = 3;
     public Dictionary<string, SpellWord> Words { get; private set; }
+    static AssetBundle spellBundle; // Spell dictioanry asset bundle.
     /// <summary> Singleton Implementation </summary>
     private void Awake()
     {
@@ -107,10 +108,13 @@ public class CastParser : MonoBehaviour
     /// <summary> Build the wor dictionary from the "spellword" assetbundle </summary>
     private void BuildDictionary()
     {
-        var bundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, "spellword"));
-        var rootWords = bundle.LoadAllAssets<SpellWord>();
-        Words = new Dictionary<string, SpellWord>();
-        foreach (var word in rootWords)
-            Words.Add(word.name.ToLower(), word);
+        if (spellBundle == null)
+        {
+            spellBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, "spellword"));
+            var rootWords = spellBundle.LoadAllAssets<SpellWord>();
+            Words = new Dictionary<string, SpellWord>();
+            foreach (var word in rootWords)
+                Words.Add(word.name.ToLower(), word);
+        }
     }
 }

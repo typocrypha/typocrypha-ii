@@ -18,7 +18,8 @@ public class AudioManager : MonoBehaviour, ISavable
     #region ISavable
     public void Save()
     {
-        SaveManager.instance.loaded.bgm = bgm[bgmInd].clip.name;
+        if (bgm[bgmInd].isPlaying)
+            SaveManager.instance.loaded.bgm = bgm[bgmInd].clip.name;
     }
 
     public void Load()

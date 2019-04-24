@@ -43,10 +43,19 @@ public class PauseManager : MonoBehaviour
     // Pause/Unpause all pausable scripts.
     public void PauseAll(bool value)
     {
+        List<PauseHandle> destroyed = new List<PauseHandle>(); // Destroyed pausables.
         foreach(var ph in allPausable)
         {
-            ph.Pause = value;
+            try
+            {
+                ph.Pause = value;
+            }
+            catch (MissingReferenceException e) // Check if object was destroyed.
+            {
+                destroyed.Add(ph);
+            }
         }
+        foreach(var ph in destroyed) allPausable.Remove(ph);
     }
 
     // Open/Close pause menu

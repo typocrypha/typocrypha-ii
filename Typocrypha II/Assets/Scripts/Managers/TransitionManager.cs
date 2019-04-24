@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 
 /// <summary>
 /// Manages transitions between scenes.
@@ -10,6 +11,8 @@ public class TransitionManager : MonoBehaviour
 {
     public static TransitionManager instance = null;
     public GameObject loadingScreenPrefab; // Loading screen prefab
+    public GameObject currLoadingScreen; // Current loading screen
+    public UnityEvent onStartScene; // What should be called when scene starts
 
     void Awake()
     {
@@ -38,8 +41,8 @@ public class TransitionManager : MonoBehaviour
     // Displays loading progress and switches scenes when done loading.
     IEnumerator TransitionSceneCR(string sceneName)
     {
-        GameObject obj = Instantiate(loadingScreenPrefab, this.transform);
-        LoadingScreen loadingScreen = obj.GetComponent<LoadingScreen>();
+        currLoadingScreen = Instantiate(loadingScreenPrefab, this.transform);
+        LoadingScreen loadingScreen = currLoadingScreen.GetComponent<LoadingScreen>();
         yield return new WaitUntil(() => loadingScreen.ReadyToLoad);
         AsyncOperation loadOp = SceneManager.LoadSceneAsync(sceneName);
         loadOp.allowSceneActivation = false;
@@ -51,6 +54,8 @@ public class TransitionManager : MonoBehaviour
         }
         loadingScreen.Progress = 1.0f;
         yield return new WaitUntil(() => loadingScreen.DoneLoading);
+        yield return new WaitUntil(() => loadingScreen.animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
+        loadingScreen.animator.SetBool("DoneLoading", true);
         loadOp.allowSceneActivation = true;
     }
 }
