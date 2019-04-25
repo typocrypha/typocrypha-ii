@@ -23,4 +23,13 @@ public static class Damage
             damage = effect.power,
         };
     }
+    private static Reaction ProcessStandardReactions(DamageEffect effect, Caster caster, Caster target)
+    {
+        var reactions = new List<CasterTagDictionary.ReactionMultiSet>();
+        foreach(var tag in effect.tags)
+        {
+            reactions.Add(target.Tags.GetReactions(tag));
+        }
+        return Reaction.NEUTRAL;
+    }
 }
