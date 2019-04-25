@@ -88,6 +88,18 @@ public class CasterTagDictionary
     #endregion
 
     [System.Serializable] private class TagMultiSet : SerializableMultiSet<CasterTag> { }
-    [System.Serializable] private class ReactionDict : SerializableDictionary<SpellTag, ReactionMultiSet> { }
-    [System.Serializable] public class ReactionMultiSet : SerializableMultiSet<Reaction> { }
+    [System.Serializable] private class ReactionDict : SerializableDictionary<SpellTag, ReactionMultiSet>
+    {
+
+    }
+    [System.Serializable] public class ReactionMultiSet : SerializableMultiSet<Reaction>
+    {
+        public void AddSet(ReactionMultiSet other)
+        {
+            foreach(var reaction in other)
+            {
+                Add(reaction, other.Freq(reaction));
+            }
+        }
+    }
 }

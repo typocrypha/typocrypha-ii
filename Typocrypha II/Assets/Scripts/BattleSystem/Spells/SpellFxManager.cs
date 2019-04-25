@@ -12,6 +12,8 @@ public class SpellFxManager : MonoBehaviour
     [SerializeField] private SpellFxData repelFx = new SpellFxData();
     [Header("Default Popup Prefab")]
     [SerializeField] private GameObject popupPrefab;
+    [Header("Effectiveness Textures")]
+    [SerializeField] private Texture2D weakImage;
 
     /// <summary> Singleton implementation </summary>
     private void Awake()
@@ -36,7 +38,7 @@ public class SpellFxManager : MonoBehaviour
         var pos = targetPos;
 
         #region Repel
-        if (data.effectiveness == Effectiveness.Repel)
+        if (data.effectiveness == Reaction.Repel)
         {
             pos = casterPos;
             yield return StartCoroutine(repelFx.Play(targetPos));
@@ -63,7 +65,24 @@ public class SpellFxManager : MonoBehaviour
         var popper = Instantiate(data.popupPrefab ?? popupPrefab).GetComponent<PopupBase>();
 
         popper.PopText(data.damage.ToString(), targetPos, 0.75f);
-
+        switch (data.effectiveness)
+        {
+            case Reaction.Weak:
+                popper.PopImage(weakImage, targetPos, 0.75f);
+                break;
+            case Reaction.Neutral:
+                break;
+            case Reaction.Resist:
+                break;
+            case Reaction.Block:
+                break;
+            case Reaction.Dodge:
+                break;
+            case Reaction.Drain:
+                break;
+            case Reaction.Repel:
+                break;
+        }
         yield return null;
     }
 

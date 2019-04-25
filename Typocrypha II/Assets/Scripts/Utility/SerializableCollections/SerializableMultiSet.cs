@@ -46,7 +46,7 @@ public class SerializableMultiSet<T> : ISerializationCallbackReceiver, IEnumerab
         return _dictionary.ContainsKey(item);
     }
     //Return the frequency of the item in the multiset (read-only)
-    public int Frequency(T item)
+    public int Freq(T item)
     {
         return _dictionary[item];
     }

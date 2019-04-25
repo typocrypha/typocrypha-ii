@@ -4,13 +4,13 @@ using UnityEngine;
 
 public enum Reaction
 {
-    WEAK = -1,
-    NEUTRAL,
-    RESIST,
-    BLOCK,
-    DODGE,
-    DRAIN,
-    REPEL,
+    Weak = -1,
+    Neutral,
+    Resist,
+    Block,
+    Dodge,
+    Drain,
+    Repel,
 }
 
 [CreateAssetMenu(fileName = "CasterTag", menuName = "Tag/Caster Tag")]
