@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using RandomUtils;
 
 public class CastParser : MonoBehaviour
 {
@@ -65,7 +66,7 @@ public class CastParser : MonoBehaviour
             else
             {
                 #region Process Typo Results
-                TypoResult result = RandomC.RandomChoice(typoActionWeighting, true);
+                TypoResult result = RandomU.instance.Choice(typoActionWeighting);
                 switch (result)
                 {
                     case TypoResult.CastFailure:
