@@ -13,7 +13,7 @@ public class SpellFxManager : MonoBehaviour
     [Header("Default Popup Prefab")]
     [SerializeField] private GameObject popupPrefab;
     [Header("Effectiveness Textures")]
-    [SerializeField] private Texture2D weakImage;
+    [SerializeField] private Sprite weakImage;
 
     /// <summary> Singleton implementation </summary>
     private void Awake()

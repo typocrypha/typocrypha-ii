@@ -58,14 +58,12 @@ public class SpellManager : MonoBehaviour
                         var fx = new SpellFxData[] { root.leftMod?.fx, effect.fx, root.rightMod?.fx };
                         crList.Add(SpellFxManager.instance.Play(fx, popupData, targetSpace, casterSpace));
                         yield return new WaitForSeconds(delayBetweenTargets);
-                        //Break if enemy killed?
                     }                 
                 }
+                // Wait for all of the animations to finish
                 foreach (var cr in crList)
                     yield return cr;
             }
-            // START COOLDOWN
         }
     }
-
 }

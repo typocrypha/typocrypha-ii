@@ -1,12 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
+using System;
 
 [CreateAssetMenu(fileName = "SpellTag", menuName = "Tag/Spell Tag")]
-public class SpellTag : ScriptableObject, System.IComparable<SpellTag>
+public class SpellTag : ScriptableObject, IComparable<SpellTag>, IEquatable<SpellTag>
 {
     public string displayName = string.Empty;
 
@@ -18,7 +16,30 @@ public class SpellTag : ScriptableObject, System.IComparable<SpellTag>
     public override bool Equals(object other)
     {
         var tag = other as SpellTag;
-        return tag == null ? false : name == tag.name;  
+        return tag == null ? false : displayName == tag.displayName;
+    }
+
+    public bool Equals(SpellTag other)
+    {
+        return other != null  &&
+               displayName == other.displayName;
+    }
+
+    public override int GetHashCode()
+    {
+        var hashCode = -181192468;
+        hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(displayName);
+        return hashCode;
+    }
+
+    public static bool operator ==(SpellTag tag1, SpellTag tag2)
+    {
+        return EqualityComparer<SpellTag>.Default.Equals(tag1, tag2);
+    }
+
+    public static bool operator !=(SpellTag tag1, SpellTag tag2)
+    {
+        return !(tag1 == tag2);
     }
 
     [System.Serializable]

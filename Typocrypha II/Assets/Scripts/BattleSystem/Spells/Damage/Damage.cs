@@ -33,11 +33,11 @@ public static class Damage
             }
         }
         var damageMod = GetReactionDmgMod(effect, caster, target, effective, effectMagnitude);
-
-        target.Health -= Mathf.FloorToInt(effect.power * damageMod);
+        int damage = Mathf.FloorToInt(effect.power * damageMod);
+        target.Health -= damage;
         return new PopupData
         {
-            damage = effect.power,
+            damage = damage,
             effectiveness = effective,
         };
     }
@@ -48,9 +48,9 @@ public static class Damage
         // Compute cumulative tags
         foreach(var tag in effect.tags)
         {
-            var eck = target.Tags.GetReactions(tag);
-            if (target.Tags.GetReactions(tag) != null)
-                reactions.AddSet(target.Tags.GetReactions(tag));
+            var r = target.Tags.GetReactions(tag);
+            if (r != null)
+                reactions.AddSet(r);
         }
         // If any of tags are repelled, repel
         if (reactions.Contains(Reaction.Repel))
@@ -78,13 +78,16 @@ public static class Damage
         }
         else
         {
-            // Sum up weaknesses and resistances, return sum
-            multiplier = reactions.Freq(Reaction.Resist) - reactions.Freq(Reaction.Weak);
-            if (multiplier > 0)
-                return Reaction.Resist;
-            if(multiplier < 0)
+            // Sum up weaknesses and resistances
+            int sum = reactions.Freq(Reaction.Resist) - reactions.Freq(Reaction.Weak);
+            if (sum > 0)
             {
-                multiplier *= -1;
+                multiplier = sum;
+                return Reaction.Resist;
+            }                
+            if(sum < 0)
+            {
+                multiplier = -sum;
                 return Reaction.Weak;
             }
             return Reaction.Neutral;

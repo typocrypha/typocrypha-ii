@@ -39,13 +39,15 @@ public class PopupDefault : PopupBase
         Destroy(gameObject);
     }
 
-    public override Coroutine PopImage(Texture2D image, Vector2 pos, float time)
+    public override Coroutine PopImage(Sprite image, Vector2 pos, float time)
     {
-        var textObj = Instantiate(textHolderPrefab, pos, Quaternion.identity, uiCanvas.transform);
-        var imgComponent = textObj.GetComponent<Image>();
-        var rect = textObj.GetComponent<RectTransform>();
+        var imgObj = Instantiate(imgHolderPrefab, Camera.main.WorldToScreenPoint(pos), Quaternion.identity, uiCanvas.transform);
+        var imgComponent = imgObj.GetComponent<Image>();
+        var rect = imgComponent?.rectTransform;
         if (imgComponent == null || rect == null)
             return null;
+        imgComponent.sprite = image;
+        rect.sizeDelta = Vector2.zero;
         return StartCoroutine(PopImageCr(rect, imgComponent, time));
     }
 
@@ -58,6 +60,7 @@ public class PopupDefault : PopupBase
             rect.localScale = scale;
             yield return new WaitForEndOfFrame();
         }
+        rect.sizeDelta = img.sprite.rect.size;
         yield return new WaitForSeconds(time);
         for (int i = 6; i > 0; i--)
         {

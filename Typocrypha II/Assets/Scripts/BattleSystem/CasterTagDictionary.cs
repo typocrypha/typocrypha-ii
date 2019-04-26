@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 [System.Serializable]
 public class CasterTagDictionary
@@ -76,7 +77,7 @@ public class CasterTagDictionary
         {
             statMod.AddInPlace(tag.statMods);
             AddReactions(tag);
-        }           
+        }
     }
     public CasterStats statMod;
     public ReactionMultiSet GetReactions(SpellTag tag)
