@@ -48,7 +48,7 @@ public class SerializableMultiSet<T> : ISerializationCallbackReceiver, IEnumerab
     //Return the frequency of the item in the multiset (read-only)
     public int Freq(T item)
     {
-        return _dictionary[item];
+        return Contains(item) ? _dictionary[item] : 0;
     }
     //Adds the item to the multiset if not already an element, else increments its frequency by amount
     public void Add(T item, int amount = 1)

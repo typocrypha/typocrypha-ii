@@ -48,7 +48,8 @@ public static class Damage
         // Compute cumulative tags
         foreach(var tag in effect.tags)
         {
-            if(target.Tags.GetReactions(tag) != null)
+            var eck = target.Tags.GetReactions(tag);
+            if (target.Tags.GetReactions(tag) != null)
                 reactions.AddSet(target.Tags.GetReactions(tag));
         }
         // If any of tags are repelled, repel

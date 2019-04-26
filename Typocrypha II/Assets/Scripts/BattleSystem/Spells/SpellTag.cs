@@ -15,6 +15,12 @@ public class SpellTag : ScriptableObject, System.IComparable<SpellTag>
         return name.CompareTo(other.name);
     }
 
+    public override bool Equals(object other)
+    {
+        var tag = other as SpellTag;
+        return tag == null ? false : name == tag.name;  
+    }
+
     [System.Serializable]
     public class TagSet : SerializableSet<SpellTag>
     {
