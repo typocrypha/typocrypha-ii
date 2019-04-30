@@ -216,6 +216,14 @@ public class DialogGraphParser : MonoBehaviour
                 AudioManager.instance.PlaySFX(node.sfx);
             }
         }
+        else if (currNode is ClampDialogUINode)
+        {
+            var node = currNode as ClampDialogUINode;
+            if (node.inOut)
+                DialogManager.instance.GetComponent<Animator>().SetTrigger("ClampOut");
+            else
+                DialogManager.instance.GetComponent<Animator>().SetTrigger("ClampIn");
+        }
         //Process other node types
         //Recursively move to next
         return NextDialog();
