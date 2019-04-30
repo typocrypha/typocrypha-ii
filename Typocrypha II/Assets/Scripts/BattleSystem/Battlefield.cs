@@ -26,18 +26,18 @@ public class Battlefield : MonoBehaviour, IPausable
         if (b)
         {
             foreach (var actor in Actors)
-                if (actor != null) actor.pause = true;
+                if (actor != null) actor.Pause = true;
         }
         else
         {
             if (ATBManager.soloStack.Count == 0)
             {
                 foreach (var actor in Actors)
-                    if (actor != null) actor.pause = false;
+                    if (actor != null) actor.Pause = false;
             }
             else
             {
-                ATBManager.soloStack.Peek().pause = false;
+                ATBManager.soloStack.Peek().Pause = false;
             }
         }
     }

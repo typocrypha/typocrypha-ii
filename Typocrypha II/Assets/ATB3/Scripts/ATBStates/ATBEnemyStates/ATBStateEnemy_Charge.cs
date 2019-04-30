@@ -11,9 +11,10 @@ namespace ATB3
 
         // Call upon entering given state
         public override void OnEnter()
-        {    
+        {
             //Debug.Log("ENEMY " + this.Owner.actorName + " has ENTERED the CHARGE state! (id: " + StateID.ToString() + ")");
-            ((ATBEnemy)this.Owner).startCharge();
+            ((ATBEnemy)this.Owner).GetComponent<Animator>().SetTrigger("Idle");
+            ((ATBEnemy)this.Owner).StartCharge();
         }
 
         // Call on fixed update while in given state

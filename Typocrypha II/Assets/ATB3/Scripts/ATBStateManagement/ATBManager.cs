@@ -72,7 +72,7 @@ namespace ATB3
         void setPauseAll(bool value)
         {
             foreach (ATBActor actor in Battlefield.instance.Actors)
-                actor.pause = value;
+                actor.Pause = value;
         }
 
         // Enter solo mode for this actor
@@ -86,8 +86,8 @@ namespace ATB3
                 Battlefield.instance.PH.Pause = true; // Pause battle field
             }
             else
-                soloStack.Peek().pause = true;
-            soloActor.pause = false;
+                soloStack.Peek().Pause = true;
+            soloActor.Pause = false;
             soloStack.Push(soloActor);
         }
 
@@ -110,8 +110,8 @@ namespace ATB3
             // Otherwise, give solo to next in stack
             else
             {
-                soloActor.pause = true;
-                soloStack.Peek().pause = false;
+                soloActor.Pause = true;
+                soloStack.Peek().Pause = false;
             }
         }
 

@@ -22,23 +22,22 @@ namespace ATB3
         Coroutine chargeCRObj; // Coroutine that charges spells
 
         // Start charging current spell (unless old progress is saved)
-        public void startCharge()
+        public void StartCharge()
         {
             if (chargeCRObj == null)
-                chargeCRObj = StartCoroutine(chargeCR());   
+                chargeCRObj = StartCoroutine(ChargeCR());   
         }
 
         // Incrementally charges next spell
-        IEnumerator chargeCR()
+        IEnumerator ChargeCR()
         {
-            if (caster.ChargeTime == 0f) caster.ChargeTime = 10f; // DEBUG
+            if (caster.ChargeTime == 0f) caster.ChargeTime = 8f; // DEBUG
             caster.Charge = 0f;
             while (caster.Charge + Time.fixedDeltaTime < caster.ChargeTime)
             {
                 // Charge while in charge state
-                //Debug.Log("CHARGING...");
                 do yield return new WaitForFixedUpdate();
-                while (pause || !isCurrentState(ATBStateID.Charge));
+                while (Pause || !isCurrentState(ATBStateID.Charge));
                 caster.Charge += Time.fixedDeltaTime;
             }
             caster.Charge = caster.ChargeTime;
@@ -47,9 +46,14 @@ namespace ATB3
             chargeCRObj = null;
         }
 
+        void Start()
+        {
+            Setup();
+        }
+
         public override void Setup()
         {
-            
+            PH.Pause = true;
         }
     }
 }
