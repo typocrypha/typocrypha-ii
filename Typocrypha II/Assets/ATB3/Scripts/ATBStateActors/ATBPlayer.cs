@@ -6,7 +6,8 @@ namespace ATB3
 {
     public partial class ATBPlayer : ATBActor
     {
-        public List<SpellWord> currWords = new List<SpellWord>();
+        [HideInInspector]
+        public Spell currSpell = new Spell();
 
         void Start()
         {

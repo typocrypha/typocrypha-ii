@@ -8,22 +8,17 @@ namespace ATB3
     {
         // The ID for this specific ATBState
         public override ATBStateID StateID { get { return ATBStateID.Cast; } }
-        private float timer = 0.0f;
 
         // Call upon entering given state
         public override void OnEnter()
         {
-            //Debug.Log("ENEMY " + this.Owner.actorName + " has ENTERED the CAST state!");
-            timer = 0.0f;
+            Owner.StartCoroutine(CastAndExit());
         }
 
         // Call on fixed update while in given state
         public override void OnUpdate()
         {
-            timer += Time.deltaTime;
-            if (timer >= 2.0f)
-                Source.PerformTransition(ATBTransition.ToAfterCast);
-            return;
+            
         }
 
         // Call upon exiting given state
@@ -31,5 +26,20 @@ namespace ATB3
         {
             //Debug.Log("ENEMY " + this.Owner.actorName + " has EXITED the CAST state!");
         }
+
+        private IEnumerator CastAndExit()
+        {
+            var caster = Owner.GetComponent<Caster>();
+            var AI = Owner.GetComponent<CasterAI>();
+            if(AI == null)
+            {
+                Debug.LogError("No Caster AI component on enemy: " + Owner.name + " cast failed.");
+                yield break;
+            }
+            yield return SpellManager.instance.Cast(AI.CurrSpell, caster, caster.TargetPos);
+            AI.OnAfterCast?.Invoke();
+            Source.PerformTransition(ATBTransition.ToAfterCast);
+        }
+
     }
 }

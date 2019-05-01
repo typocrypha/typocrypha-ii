@@ -49,9 +49,9 @@ public class CastParser : MonoBehaviour
     /// Returns other ParseResults to indicate different failure conditions 
     /// Returns the parsed spell in out list s.
     /// Also Checks and starts spell cooldowns. </summary>
-    public ParseResults Parse(string[] spellwords, out List<SpellWord> s)
+    public ParseResults Parse(string[] spellwords, out Spell s)
     {
-        s = new List<SpellWord>();
+        s = new Spell();
         int roots = 0;
         foreach (string word in spellwords)
         {

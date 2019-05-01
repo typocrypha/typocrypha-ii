@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(ATB3.ATBPlayer))]
 public class DummyCaster : Caster
 {
-    public SpellWord[] spellWords;
+    public Spell currSpell;
     public GameObject targetRet;
     public char[] separator = { ' ', '-' };
 
@@ -18,11 +18,11 @@ public class DummyCaster : Caster
 
     public void Cast()
     {
-        SpellManager.instance.Cast(spellWords, this, TargetPos);
+        SpellManager.instance.Cast(currSpell, this, TargetPos);
     }
     public void CastString(string spellString)
     {
-        List<SpellWord> words;// = new List<SpellWord>();
+        Spell words;// = new List<SpellWord>();
         var results = CastParser.instance.Parse(spellString.Split(separator), out words);
         Debug.Log(results);
         if (results == CastParser.ParseResults.Valid)
@@ -48,7 +48,7 @@ public class DummyCaster : Caster
                         SpellCooldownManager.instance.StartCooldown(word.displayName, word.cooldown);
                 }
                 
-                playerActor.currWords = words;
+                playerActor.currSpell = words;
                 //SpellManager.instance.Cast(words.ToArray(), this, tPos);
                 GetComponent<ATB3.ATBPlayer>().cast();
             }

@@ -786,10 +786,17 @@ MonoBehaviour:
           max: 10
         overflow: 0
         _value: 0
+      luck:
+        statRange:
+          min: -10
+          max: 10
+        overflow: 0
+        _value: 0
   ui: {fileID: 0}
-  spellWords:
-  - {fileID: 11400000, guid: 3d35f5c67835c734db91be2fe7b97278, type: 2}
-  - {fileID: 11400000, guid: 1b56332619a42f44cb02763787b07c5a, type: 2}
+  currSpell:
+    items:
+    - {fileID: 11400000, guid: 244d694fd79da674badf83fce4e787b7, type: 2}
+    - {fileID: 11400000, guid: 3d35f5c67835c734db91be2fe7b97278, type: 2}
   targetRet: {fileID: 8209475017982436565}
   separator: 20002d00
 --- !u!114 &1638030246455156659
@@ -807,7 +814,8 @@ MonoBehaviour:
   StateMachine: {fileID: 4868622499120600318}
   actorName: Player
   isCast: 0
-  currWords: []
+  currSpell:
+    items: []
 --- !u!114 &4868622499120600318
 MonoBehaviour:
   m_ObjectHideFlags: 0

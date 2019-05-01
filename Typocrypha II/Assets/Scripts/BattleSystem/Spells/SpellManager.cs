@@ -17,15 +17,18 @@ public class SpellManager : MonoBehaviour
             Destroy(gameObject);
     }
 
-    /// <summary> Cast the spell's effect with a given caster at a given target position </summary>
-    public void Cast (SpellWord[] words, Caster caster, Battlefield.Position target)
+    /// <summary> 
+    /// Cast the spell's effect with a given caster at a given target position 
+    /// Returns the case coroutine (in case the end of casting must be waited on)
+    /// </summary>
+    public Coroutine Cast (Spell spell, Caster caster, Battlefield.Position target)
     {
-        StartCoroutine(CastCR(Modify(words), caster, target));
+        return StartCoroutine(CastCR(spell, caster, target));
     }
     /// <summary> Modify the root words by the modifiers and return the modified roots </summary>
-    private RootWord[] Modify(SpellWord[] words)
+    private RootWord[] Modify(Spell spell)
     {
-        SpellWord[] cloneWords = words.Select((word) => word.Clone()).ToArray();
+        SpellWord[] cloneWords = spell.Select((word) => word.Clone()).ToArray();
         for(int i = 0; i < cloneWords.Length; ++i)
         {
             var mod = cloneWords[i] as ModifierWord;
@@ -34,8 +37,9 @@ public class SpellManager : MonoBehaviour
         return (cloneWords.Where((word) => word is RootWord).Select((word) => word as RootWord)).ToArray();
     }
     /// <summary> Cast the spell effects and play the associated fx</summary>
-    private IEnumerator CastCR(RootWord[] roots, Caster caster, Battlefield.Position target)
+    private IEnumerator CastCR(Spell spell, Caster caster, Battlefield.Position target)
     {
+        var roots = Modify(spell);
         var casterSpace = Battlefield.instance.GetSpace(caster.FieldPos);
         List<Coroutine> crList = new List<Coroutine>();
         foreach (var root in roots)
@@ -55,8 +59,12 @@ public class SpellManager : MonoBehaviour
                     else
                     {
                         var popupData = effect.Cast(caster, targetCaster);
+                        // Update AI
+                        targetCaster.GetComponent<CasterAI>()?.OnAfterHit?.Invoke(spell, effect, caster, popupData);
+                        // Play Effects
                         var fx = new SpellFxData[] { root.leftMod?.fx, effect.fx, root.rightMod?.fx };
                         crList.Add(SpellFxManager.instance.Play(fx, popupData, targetSpace, casterSpace));
+                        // Wait for delay between targets
                         yield return new WaitForSeconds(delayBetweenTargets);
                     }                 
                 }
