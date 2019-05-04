@@ -9,7 +9,8 @@ public class TitleMenu : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        if (canContinue) {
+        if (canContinue)
+        {
             GameObject resumeButton = transform.GetChild(0).gameObject;
             resumeButton.SetActive(true);
             EventSystem.current.firstSelectedGameObject = resumeButton;

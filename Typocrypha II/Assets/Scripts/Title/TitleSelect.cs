@@ -12,10 +12,12 @@ public class TitleSelect : MonoBehaviour, ISelectHandler, IDeselectHandler, ISub
 
     private static bool isFirstSelect = true;
 
-    void Awake() {
+    void Awake()
+    {
         asrc = gameObject.GetComponent<AudioSource>();
     }
-    public void OnSelect(BaseEventData eventData) {
+    public void OnSelect(BaseEventData eventData)
+    {
         //Do this on highlight
         Text t = gameObject.GetComponentInChildren<Text>();
         t.color = new Color (219f/255f,56f/255f, 202f/255f); //magenta
@@ -25,14 +27,16 @@ public class TitleSelect : MonoBehaviour, ISelectHandler, IDeselectHandler, ISub
         isFirstSelect = false;
     }
 
-    public void OnDeselect(BaseEventData eventData) {
+    public void OnDeselect(BaseEventData eventData)
+    {
         //Do this on un-highlight
         Text t = gameObject.GetComponentInChildren<Text>();
         t.color = Color.white;
         t.text = t.text.Trim(new char[]{'>',' ', ' ', '<'});
     }
 
-    public void OnSubmit(BaseEventData eventData) {
+    public void OnSubmit(BaseEventData eventData)
+    {
         asrc.PlayOneShot(enterSFX);
     }
 }

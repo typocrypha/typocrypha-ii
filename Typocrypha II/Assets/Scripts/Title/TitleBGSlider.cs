@@ -7,7 +7,8 @@ public class TitleBGSlider : MonoBehaviour
     Rigidbody2D rb;
     RectTransform rt;
 
-    void Start() {
+    void Start()
+    {
         rb = GetComponent<Rigidbody2D>();
         rb.velocity = new Vector2 (-32, 0);
         rt = GetComponent<RectTransform>();
