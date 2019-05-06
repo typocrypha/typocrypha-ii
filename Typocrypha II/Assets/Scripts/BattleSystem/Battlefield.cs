@@ -22,7 +22,7 @@ public class Battlefield : MonoBehaviour, IPausable
     public void OnPause(bool b)
     {
         Typocrypha.Keyboard.instance.PH.Pause = b;
-        SpellCooldownManager.instance.PH.Pause = b;
+        //SpellCooldownManager.instance.PH.Pause = b;
         if (b)
         {
             foreach (var actor in Actors)

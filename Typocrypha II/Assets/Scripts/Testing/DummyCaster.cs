@@ -23,38 +23,46 @@ public class DummyCaster : Caster
         Spell words;// = new List<SpellWord>();
         var results = CastParser.instance.Parse(spellString.Split(separator), out words);
         Debug.Log("Spell cast:" + spellString + ":" + results);
-        if (results == CastParser.ParseResults.Valid)
+        if (results == CastParser.ParseResults.Valid) 
         {
-            foreach (var word in words)
-            {
-                if (word is RootWord)
-                {
-                    if (!SpellCooldownManager.instance.cooldowns.ContainsKey(word.displayName))
-                        SpellCooldownManager.instance.cooldowns[word.displayName] = 0f;
-                    else if (SpellCooldownManager.instance.cooldowns[word.displayName] > 0f)
-                    {
-                        results = CastParser.ParseResults.OnCooldown;
-                        return;
-                    }
-                }
-            }
-            if (results != CastParser.ParseResults.OnCooldown)
-            {
-                foreach (RootWord word in words)
-                {
-                    if (SpellCooldownManager.instance.cooldowns[word.displayName] <= 0f)
-                        SpellCooldownManager.instance.StartCooldown(word.displayName, word.cooldown);
-                }
+        //    foreach (var word in words)
+        //    {
+        //        if (word is RootWord)
+        //        {
+        //            if (!SpellCooldownManager.instance.cooldowns.ContainsKey(word.displayName))
+        //                SpellCooldownManager.instance.cooldowns[word.displayName] = 0f;
+        //            else if (SpellCooldownManager.instance.cooldowns[word.displayName] > 0f)
+        //            {
+        //                results = CastParser.ParseResults.OnCooldown;
+        //                return;
+        //            }
+        //        }
+        //    }
+        //    if (results != CastParser.ParseResults.OnCooldown)
+        //    {
+        //        foreach (RootWord word in words)
+        //        {
+        //            if (SpellCooldownManager.instance.cooldowns[word.displayName] <= 0f)
+        //                SpellCooldownManager.instance.StartCooldown(word.displayName, word.cooldown);
+        //        }
                 
-                FaderManager.instance.FadeAll(0.5f, Color.black);
-                foreach (var target in words.AllTargets(FieldPos, TargetPos).Where( (a) => a != null)) 
-                {
-                    target.GetComponent<FaderGroup>().FadeAmount = 0f;
-                    target.GetComponent<FaderGroup>().FadeColor = Color.black;
-                }
-                GetComponent<Caster>().Spell = words;
-                GetComponent<ATB3.ATBPlayer>().Cast(); // Start casting sequence
+        //        FaderManager.instance.FadeAll(0.5f, Color.black);
+        //        foreach (var target in words.AllTargets(FieldPos, TargetPos).Where( (a) => a != null)) 
+        //        {
+        //            target.GetComponent<FaderGroup>().FadeAmount = 0f;
+        //            target.GetComponent<FaderGroup>().FadeColor = Color.black;
+        //        }
+        //        GetComponent<Caster>().Spell = words;
+        //        GetComponent<ATB3.ATBPlayer>().Cast(); // Start casting sequence
+        //    }
+            FaderManager.instance.FadeAll(0.5f, Color.black);
+            foreach (var target in words.AllTargets(FieldPos, TargetPos).Where((a) => a != null))
+            {
+                target.GetComponent<FaderGroup>().FadeAmount = 0f;
+                target.GetComponent<FaderGroup>().FadeColor = Color.black;
             }
+            GetComponent<Caster>().Spell = words;
+            GetComponent<ATB3.ATBPlayer>().Cast(); // Start casting sequence
         }
     }
     private void Update()
