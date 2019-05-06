@@ -27,7 +27,7 @@ namespace ATB3
         public override void OnExit()
         {
             //Debug.Log("ENEMY " + this.Owner.actorName + " has EXITED the BEFORECAST state!");
-            // THIS IS WHERE THE ENEMY SHOULD GET NOT SOLO'D
+            FaderManager.instance.Solo(Owner.GetComponent<FaderGroup>(), 0.0f, Color.black);
             ATBManager.Instance.exitSolo(this.Owner);
         }
     }
