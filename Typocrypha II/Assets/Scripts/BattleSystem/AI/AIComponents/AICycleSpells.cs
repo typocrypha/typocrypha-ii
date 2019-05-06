@@ -14,16 +14,14 @@ public class AICycleSpells : AIComponent
     {
         // Initialize the standard refs (caster and AI)
         InitializeBase();
-        // Init targeting position
-        caster.TargetPos = new Battlefield.Position(1, 1);
         curr = startIndex;
         AI.OnAfterCast += CycleSpell;
-        AI.CurrSpell = spells[curr];
+        caster.Spell = spells[curr];
     }
     public void CycleSpell()
     {
         if (++curr >= spells.Count)
             curr = 0;
-        AI.CurrSpell = spells[curr];
+        caster.Spell = spells[curr];
     }
 }

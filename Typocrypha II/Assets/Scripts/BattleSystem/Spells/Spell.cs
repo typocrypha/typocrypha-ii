@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 [System.Serializable]
 /// <summary>
@@ -11,6 +12,11 @@ public class Spell : IEnumerable<SpellWord>, IList<SpellWord>
 {
     [SerializeField]
     private List<SpellWord> items = new List<SpellWord>();
+
+    public string ToDisplayString()
+    {
+        return items.Select((s) => s.displayName.ToUpper()).Aggregate((a, b) => a + "-" + b);
+    }
 
     #region IList implementation
 

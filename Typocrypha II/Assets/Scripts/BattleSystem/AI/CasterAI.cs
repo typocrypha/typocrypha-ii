@@ -19,6 +19,4 @@ public  class CasterAI : MonoBehaviour
     {
         OnUpdate?.Invoke();
     }
-
-    public Spell CurrSpell { get; set; }
 }

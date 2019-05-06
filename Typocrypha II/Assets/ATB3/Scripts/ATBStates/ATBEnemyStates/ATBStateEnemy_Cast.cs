@@ -31,12 +31,7 @@ namespace ATB3
         {
             var caster = Owner.GetComponent<Caster>();
             var AI = Owner.GetComponent<CasterAI>();
-            if(AI == null)
-            {
-                Debug.LogError("No Caster AI component on enemy: " + Owner.name + " cast failed.");
-                yield break;
-            }
-            yield return SpellManager.instance.Cast(AI.CurrSpell, caster, caster.TargetPos);
+            yield return SpellManager.instance.Cast(caster.Spell, caster, caster.TargetPos);
             AI.OnAfterCast?.Invoke();
             Source.PerformTransition(ATBTransition.ToAfterCast);
         }

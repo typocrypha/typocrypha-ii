@@ -61,14 +61,14 @@ public class Caster : FieldObject
         }
     }
     public bool Stunned { get; } = false;
-    string spell;
-    public string Spell
+    Spell spell;
+    public Spell Spell
     {
         get => spell;
         set
         {
             spell = value;
-            ui?.onSpellChanged.Invoke(spell);
+            ui?.onSpellChanged.Invoke(spell.ToDisplayString());
         }
     }
     public float ChargeTime { get; set; } // Total time it takes to charge

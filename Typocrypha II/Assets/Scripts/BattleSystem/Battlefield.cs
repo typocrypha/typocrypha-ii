@@ -62,12 +62,7 @@ public class Battlefield : MonoBehaviour, IPausable
     public static Battlefield instance;
     public int Columns { get; } = 3;
     public int Rows { get; } = 2;
-    public Player Player { get => (Casters.FirstOrDefault((obj) => obj.GetComponent<Player>() != null))?.GetComponent<Player>(); }
-
-    #region Debug Fields
-    public ATBActor[] actorsToAdd;
-    public FieldObject[] objectsToAdd;
-    #endregion
+    public Caster Player { get => (Casters.FirstOrDefault((obj) => obj.CasterClass == Caster.Class.Player)); }
 
     #region Row and List Accessor Properties
     public FieldObject[] TopRow { get { return field[0]; } }
@@ -96,7 +91,6 @@ public class Battlefield : MonoBehaviour, IPausable
             return;
         }
         ph = new PauseHandle(OnPause);
-
         spaces = new SpaceMatrix(Rows, Columns);
         field = new FieldMatrix(Rows, Columns);
         var spaceTransforms = GetComponentsInChildren<Transform>();
@@ -106,27 +100,6 @@ public class Battlefield : MonoBehaviour, IPausable
         spaces[1, 0] = spaceTransforms[4];
         spaces[1, 1] = spaceTransforms[5];
         spaces[1, 2] = spaceTransforms[6];
-    }
-
-    //Initialize space objects from children
-    private void Start()
-    {
-        //spaces = new SpaceMatrix(Rows, Columns);
-        //field = new FieldMatrix(Rows, Columns);
-        //var spaceTransforms = GetComponentsInChildren<Transform>();
-        //spaces[0, 0] = spaceTransforms[1];
-        //spaces[0, 1] = spaceTransforms[2];
-        //spaces[0, 2] = spaceTransforms[3];
-        //spaces[1, 0] = spaceTransforms[4];
-        //spaces[1, 1] = spaceTransforms[5];
-        //spaces[1, 2] = spaceTransforms[6];
-        Actors.AddRange(actorsToAdd);
-        for (int i = 0; i < objectsToAdd.Length; ++i)
-        {
-            if (objectsToAdd[i] != null)
-                Add(objectsToAdd[i], new Position(i / 3, i % 3));
-        }
-            
     }
 
     #region Interface Functions

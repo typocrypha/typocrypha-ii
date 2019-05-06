@@ -12,9 +12,14 @@ public abstract class AIComponent : MonoBehaviour
 {
     protected CasterAI AI;
     protected Caster caster;
+    /// <summary>
+    /// Initializes the caster and AI refs, and sets the targeting position to the player
+    /// </summary>
     protected void InitializeBase()
     {
         AI = GetComponent<CasterAI>();
         caster = GetComponent<Caster>();
+        // Init targeting position
+        caster.TargetPos = Battlefield.instance.Player.FieldPos;
     }
 }
