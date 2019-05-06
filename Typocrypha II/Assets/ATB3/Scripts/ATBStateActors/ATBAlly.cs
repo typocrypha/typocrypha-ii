@@ -4,58 +4,33 @@ using UnityEngine;
 
 namespace ATB3
 {
-    public partial class ATBAlly : InputCaster
+    public partial class ATBAlly : ATBActor
     {
-        // UI Objects
-        public GameObject healthUI;
-        public GameObject manaUI;
+        public Caster caster;
+        public KeyCode menuKey; // Key to open ally menu.
         public GameObject allyMenu; // Ally menu (for choosing spell).
 
-        // Properties
-        float _mana; // Current amount of time (seconds) spent charging current spell
-        public float mana
+        // Incrementally charges 
+        IEnumerator ChargeCR()
         {
-            get
-            {
-                return _mana;
-            }
-            set
-            {
-                _mana = value;
-                manaUI.GetComponent<ShadowBar>().Curr = _mana / maxMana;
-            }
-        }
-        public float maxMana; // TESTING: max mana
-        public float manaRate; // TESTING: rate at which mana is charged (per sec)
-        public float manaCost; // TESTING: cost of spell
-
-        Coroutine manaCRObj; // Coroutine that charges mana
-
-        // Start charging mana
-        public void startMana()
-        {
-            manaUI.GetComponent<ShadowBar>().Reset();
-            _mana = 0f;
-            manaCRObj = StartCoroutine(manaCR());
-        }
-
-        // Incrementally charges mana
-        IEnumerator manaCR()
-        {
+            if (caster.ChargeTime == 0f) caster.ChargeTime = 5f; // DEBUG
+            caster.Charge = 0f;
             while (true)
             {
-                yield return new WaitForFixedUpdate();
-                // Cap off mana
-                if (mana >= maxMana)
-                {
-                    mana = maxMana;
-                }
+                do yield return new WaitForFixedUpdate();
+                while(Pause || !isCurrentState(ATBStateID.Charge));
                 // Charge while in charge state
-                else
-                {
-                    if (!pause && isCurrentState(ATBStateID.Charge))
-                        mana += manaRate * Time.fixedDeltaTime;
-                }
+                if (caster.Charge + Time.fixedDeltaTime < caster.ChargeTime)
+                    caster.Charge += Time.fixedDeltaTime;
+            }
+        }
+
+        void Update()
+        {
+            if (Pause || isCast) return;
+            if (Input.GetKeyDown(menuKey))
+            {
+                Menu();
             }
         }
 
@@ -66,7 +41,8 @@ namespace ATB3
 
         public override void Setup()
         {
-            startMana();
+            PH.Pause = true;
+            StartCoroutine(ChargeCR());
         }
 
         /// <summary>

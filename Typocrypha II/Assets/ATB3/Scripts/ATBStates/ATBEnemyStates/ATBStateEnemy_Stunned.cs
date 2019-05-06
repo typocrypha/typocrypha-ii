@@ -13,7 +13,8 @@ namespace ATB3
         // Call upon entering given state
         public override void OnEnter()
         {
-            Debug.Log("ENEMY " + this.Owner.actorName + " has ENTERED the STUNNED state!");
+            //Debug.Log("ENEMY " + this.Owner.actorName + " has ENTERED the STUNNED state!");
+            ((ATBEnemy)this.Owner).GetComponent<Animator>().SetTrigger("Stun");
             timer = 0.0f;
         }
 
@@ -29,7 +30,7 @@ namespace ATB3
         // Call upon exiting given state
         public override void OnExit()
         {
-            Debug.Log("ENEMY " + this.Owner.actorName + " has EXITED the STUNNED state!");
+            //Debug.Log("ENEMY " + this.Owner.actorName + " has EXITED the STUNNED state!");
         }
     }
 }

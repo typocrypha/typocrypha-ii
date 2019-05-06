@@ -12,12 +12,12 @@ namespace ATB3
         // Call upon entering given state
         public override void OnEnter()
         {
+            ((ATBAlly)this.Owner).caster.Charge = 0.0f;
         }
 
         // Call on fixed update while in given state
         public override void OnUpdate()
         {
-            ((ATBAlly)this.Owner).mana = 0.0f;
             Source.PerformTransition(ATBTransition.ToCharge);
             return;
         }
@@ -25,7 +25,6 @@ namespace ATB3
         // Call upon exiting given state
         public override void OnExit()
         {
-            AllyManager.instance.PH.Pause = false;
             ATBManager.Instance.exitSolo(this.Owner);
         }
     }

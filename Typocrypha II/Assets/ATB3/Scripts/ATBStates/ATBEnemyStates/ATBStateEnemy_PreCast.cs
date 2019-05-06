@@ -14,6 +14,7 @@ namespace ATB3
         public override void OnEnter()
         {
             //Debug.Log("ENEMY " + this.Owner.actorName + " has ENTERED the PRECAST state!");
+            ((ATBEnemy)this.Owner).GetComponent<Animator>().SetTrigger("PreCast");
             timer = 0.0f;
         }
 

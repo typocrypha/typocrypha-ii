@@ -13,12 +13,14 @@ namespace ATB3
         public override void OnEnter()
         {
             Owner.StartCoroutine(CastAndExit());
+            ((ATBEnemy)this.Owner).GetComponent<Animator>().SetTrigger("Cast");
+            timer = 0.0f;
         }
 
         // Call on fixed update while in given state
         public override void OnUpdate()
         {
-            
+
         }
 
         // Call upon exiting given state
