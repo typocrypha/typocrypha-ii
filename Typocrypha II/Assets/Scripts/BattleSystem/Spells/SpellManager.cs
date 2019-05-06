@@ -26,7 +26,7 @@ public class SpellManager : MonoBehaviour
         return StartCoroutine(CastCR(spell, caster, target));
     }
     /// <summary> Modify the root words by the modifiers and return the modified roots </summary>
-    private RootWord[] Modify(Spell spell)
+    public RootWord[] Modify(Spell spell)
     {
         SpellWord[] cloneWords = spell.Select((word) => word.Clone()).ToArray();
         for(int i = 0; i < cloneWords.Length; ++i)

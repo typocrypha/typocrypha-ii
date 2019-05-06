@@ -18,6 +18,22 @@ public class Spell : IEnumerable<SpellWord>, IList<SpellWord>
         return items.Select((s) => s.displayName.ToUpper()).Aggregate((a, b) => a + "-" + b);
     }
 
+    public IEnumerable<FieldObject> AllTargets(Battlefield.Position casterPos, Battlefield.Position targetPos)
+    {
+        var roots = SpellManager.instance.Modify(this);
+        var targets = new HashSet<Battlefield.Position>();
+        foreach(var root in roots)
+        {
+            foreach(var effect in root.effects)
+            {
+                var pattern = effect.pattern.Target(casterPos, targetPos);
+                foreach(var space in pattern)
+                    targets.Add(space);
+            }
+        }
+        return targets.Select((s) => Battlefield.instance.GetObject(s));
+    }
+
     #region IList implementation
 
     public SpellWord this[int index] { get => items[index]; set => items[index] = value; }
