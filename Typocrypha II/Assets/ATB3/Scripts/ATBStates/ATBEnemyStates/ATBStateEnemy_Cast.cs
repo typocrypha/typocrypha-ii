@@ -14,7 +14,6 @@ namespace ATB3
         {
             Owner.StartCoroutine(CastAndExit());
             ((ATBEnemy)this.Owner).GetComponent<Animator>().SetTrigger("Cast");
-            timer = 0.0f;
         }
 
         // Call on fixed update while in given state
