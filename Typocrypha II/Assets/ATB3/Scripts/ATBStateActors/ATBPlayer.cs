@@ -6,9 +6,6 @@ namespace ATB3
 {
     public partial class ATBPlayer : ATBActor
     {
-        [HideInInspector]
-        public Spell currSpell = new Spell();
-
         void Start()
         {
             Setup();
@@ -19,10 +16,9 @@ namespace ATB3
         }
 
         // Called when player enters a spell into the cast bar
-        public void cast()
+        public void Cast()
         {
             StateMachine.PerformTransition(ATBTransition.ToBeforeCast);
-            //sendEvent("playerStartCast");
         }
 
     }

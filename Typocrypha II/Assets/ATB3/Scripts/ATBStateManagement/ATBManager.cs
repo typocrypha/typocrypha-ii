@@ -79,6 +79,7 @@ namespace ATB3
         public void enterSolo(ATBActor soloActor)
         {
             //Debug.Log("enter:" + soloActor.gameObject.name);
+
             if (soloStack.Count == 0)
             {
                 if (BattleManager.instance != null)
