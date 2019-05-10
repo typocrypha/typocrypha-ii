@@ -4,10 +4,12 @@ using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(SpellFxManager))]
+[RequireComponent(typeof(SpellRestrictions))]
 public class SpellManager : MonoBehaviour
 {
     private const float delayBetweenTargets = 0.1f;
     public static SpellManager instance;
+
     /// <summary> Singleton implementation </summary>
     private void Awake()
     {
@@ -39,6 +41,9 @@ public class SpellManager : MonoBehaviour
     /// <summary> Cast the spell effects and play the associated fx</summary>
     private IEnumerator CastCR(Spell spell, Caster caster, Battlefield.Position target)
     {
+        // If the spell is restricted, break and do not cast
+        if (SpellRestrictions.instance.IsRestricted(spell, caster, target, true))
+            yield break;
         var roots = Modify(spell);
         var casterSpace = Battlefield.instance.GetSpace(caster.FieldPos);
         List<Coroutine> crList = new List<Coroutine>();
@@ -46,6 +51,7 @@ public class SpellManager : MonoBehaviour
         {
             foreach (var effect in root.effects)
             {
+                // Get the effect's targets
                 var targets = effect.pattern.Target(caster.FieldPos, target);
                 crList.Clear();                
                 foreach (var t in targets)
@@ -58,6 +64,9 @@ public class SpellManager : MonoBehaviour
                     }
                     else
                     {
+                        // Apply the rule effect if necessary
+                        Rule.ActiveRule?.Apply(effect, caster, targetCaster);
+                        // Cast the effect
                         var popupData = effect.Cast(caster, targetCaster);
                         // Update AI
                         targetCaster.GetComponent<CasterAI>()?.OnAfterHit?.Invoke(spell, effect, caster, popupData);

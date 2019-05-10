@@ -12,8 +12,8 @@ public class SpellFxManager : MonoBehaviour
     [SerializeField] private SpellFxData repelFx = new SpellFxData();
     [Header("Default Popup Prefab")]
     [SerializeField] private GameObject popupPrefab;
-    [Header("Effectiveness Textures")]
-    [SerializeField] private Sprite weakImage;
+    [Header("Effectiveness Sprites")]
+    [SerializeField] private Sprite weakSprite;
 
     /// <summary> Singleton implementation </summary>
     private void Awake()
@@ -68,7 +68,7 @@ public class SpellFxManager : MonoBehaviour
         switch (data.effectiveness)
         {
             case Reaction.Weak:
-                popper.PopImage(weakImage, targetPos, 0.75f);
+                popper.PopImage(weakSprite, targetPos, 0.75f);
                 break;
             case Reaction.Neutral:
                 break;

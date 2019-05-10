@@ -7,6 +7,8 @@ using System;
 public class SpellTag : ScriptableObject, IComparable<SpellTag>, IEquatable<SpellTag>
 {
     public string displayName = string.Empty;
+    [TextArea(2,4)]
+    public string description = string.Empty;
 
     public int CompareTo(SpellTag other)
     {
