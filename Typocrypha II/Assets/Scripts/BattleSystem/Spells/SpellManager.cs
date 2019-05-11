@@ -65,7 +65,7 @@ public class SpellManager : MonoBehaviour
                     else
                     {
                         // Apply the rule effect if necessary
-                        Rule.ActiveRule?.Apply(effect, caster, targetCaster);
+                        Rule.ActiveRule?.Apply?.Invoke(effect, caster, targetCaster);
                         // Cast the effect
                         var popupData = effect.Cast(caster, targetCaster);
                         // Update AI

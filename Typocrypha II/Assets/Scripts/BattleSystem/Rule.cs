@@ -10,15 +10,12 @@ public class Rule : MonoBehaviour
         get => activeRule;
         set
         {
-            var res = SpellRestrictions.instance?.restrictions;
-            if (res != null)
+            if (activeRule != null)
                 foreach( var restriction in activeRule.Restrictions.GetInvocationList())
-                    res -= restriction as SpellRestrictions.Restriction;
+                    SpellRestrictions.instance.restrictions -= restriction as SpellRestrictions.Restriction;
             activeRule = value;
-            if (res != null)
-                foreach (var restriction in activeRule.Restrictions.GetInvocationList())
-                    res += restriction as SpellRestrictions.Restriction;
-            activeRule = value;
+            foreach (var restriction in activeRule.Restrictions.GetInvocationList())
+                SpellRestrictions.instance.restrictions += restriction as SpellRestrictions.Restriction;
         }
     }
 
