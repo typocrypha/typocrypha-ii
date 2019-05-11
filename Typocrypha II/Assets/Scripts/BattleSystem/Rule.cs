@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Rule
+public class Rule : MonoBehaviour
 {
     private static Rule activeRule = null;
     public static Rule ActiveRule
@@ -18,7 +18,7 @@ public class Rule
             if (res != null)
                 foreach (var restriction in activeRule.Restrictions.GetInvocationList())
                     res += restriction as SpellRestrictions.Restriction;
-
+            activeRule = value;
         }
     }
 

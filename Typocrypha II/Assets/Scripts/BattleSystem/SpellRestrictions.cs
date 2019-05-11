@@ -20,6 +20,8 @@ public class SpellRestrictions : MonoBehaviour
 
     public bool IsRestricted(Spell spell, Caster caster, Battlefield.Position target, bool showGUI = false)
     {
+        if (restrictions == null)
+            return false;
         var restrictionList = restrictions.GetInvocationList();
         bool isRestricted = false;
         foreach(var restriction in restrictionList)
