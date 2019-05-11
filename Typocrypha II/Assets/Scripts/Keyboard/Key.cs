@@ -29,7 +29,6 @@ namespace Typocrypha
         void Awake()
         {
             Highlight = false;
-            onPress += Output;
         }
 
         /// <summary>
@@ -44,12 +43,6 @@ namespace Typocrypha
             effect.key = this;
             onPress += effect.OnPress;
             effect.OnStart();
-        }
-
-        // Puts output into cast bar (might not be same as letter if effected by something).
-        void Output()
-        {
-            Keyboard.instance.inputBar.text += output;
         }
     }
 }

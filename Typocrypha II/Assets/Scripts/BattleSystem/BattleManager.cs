@@ -73,7 +73,7 @@ public class BattleManager : MonoBehaviour, IPausable
         var player = Instantiate(startNode.player, transform).GetComponent<FieldObject>();
         Battlefield.instance.Add(player, new Battlefield.Position(1, 1));
         // TEMP CASTBAR HOOKUP
-        Typocrypha.Keyboard.instance?.inputBar.onSubmit.AddListener(player.GetComponent<DummyCaster>().CastString);
+        Typocrypha.Keyboard.instance?.castBar.onCast.AddListener(player.GetComponent<DummyCaster>().CastString);
         waveNum = 0;
         NextWave();
     }

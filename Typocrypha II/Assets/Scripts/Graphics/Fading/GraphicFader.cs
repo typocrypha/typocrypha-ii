@@ -27,7 +27,7 @@ public class GraphicFader : Fader
     void Awake()
     {
         // Add fader to list of all faders.
-        FaderManager.instance.allFaders.Add(this);
+        FaderManager.instance?.allFaders.Add(this);
         // Add fade material.
         graphic = GetComponent<Graphic>();
         fadeMat = new Material(fadeShader);

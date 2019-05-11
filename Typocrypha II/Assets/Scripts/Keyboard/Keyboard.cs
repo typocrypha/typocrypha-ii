@@ -21,8 +21,8 @@ namespace Typocrypha
         #endregion
 
         public static Keyboard instance = null;
+        public CastBar castBar;
         public Dictionary<char, Key> keyMap; // Map from characters to keyboard keys.
-        public TMP_InputField inputBar; // Input field for typing.
         public Transform keys; // Object that holds all the key objects.
 
         void Awake()
@@ -60,21 +60,20 @@ namespace Typocrypha
             }
             foreach (var c in Input.inputString)
             {
+                var text = castBar.Text;
                 if (keyMap.ContainsKey(c))
-                    keyMap[c].onPress?.Invoke();
-                else if (c == ' ')
                 {
-                    if (inputBar.text.Length > 0 &&
-                        inputBar.text[inputBar.text.Length - 1] != ' ')
-                        inputBar.text += ' ';
+                    keyMap[c].onPress?.Invoke();
+                    castBar.CheckInput(keyMap[c].output);
                 }
-                else if ((int)c == 8 && inputBar.text.Length > 0) // Backspace
-                    inputBar.text = inputBar.text.Substring(0, inputBar.text.Length - 1);
+                else
+                {
+                    castBar.CheckInput(c);
+                }
             }
             if (Input.GetKeyDown(KeyCode.Return))
             {
-                inputBar.onSubmit.Invoke(inputBar.text);
-                inputBar.text = "";
+                castBar.Cast();
             }
         }
 

@@ -56,9 +56,11 @@ public static class Damage
         // Compute cumulative tags
         foreach(var tag in effect.tags)
         {
-            var r = target.Tags.GetReactions(tag);
-            if (r != null)
-                reactions.AddSet(r);
+            if (tag != null)
+            {
+                var r = target.Tags.GetReactions(tag);
+                if (r != null) reactions.AddSet(r);
+            }
         }
         // If any of tags are repelled, repel
         if (reactions.Contains(Reaction.Repel))

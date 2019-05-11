@@ -31,12 +31,12 @@ public class PauseHandle
     public PauseHandle(OnPauseDel opd)
     {
         onPause = opd;
-        PauseManager.instance.allPausable.Add(this);
+        PauseManager.instance?.allPausable.Add(this);
     }
 
     // Remove self from list of all pause handles on destruction.
     ~PauseHandle()
     {
-        PauseManager.instance.allPausable.Remove(this);
+        PauseManager.instance?.allPausable.Remove(this);
     }
 }
