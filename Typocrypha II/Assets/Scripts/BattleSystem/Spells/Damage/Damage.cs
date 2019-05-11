@@ -10,38 +10,46 @@ public static class Damage
         Standard,
         Custom,
     }
-    public delegate PopupData Formula(DamageEffect effect, Caster caster, Caster target);
+    public delegate CastResults Formula(DamageEffect effect, Caster caster, Caster target);
 
     public static Dictionary<FormulaType, Formula> StandardFormula { get; } = new Dictionary<FormulaType, Formula>
     {
         { FormulaType.Standard, Standard }
     };   
-    private static PopupData Standard(DamageEffect effect, Caster caster, Caster target)
+    public static CastResults StandardElements(DamageEffect effect, Caster caster, Caster target)
     {
         float effectMagnitude;
         var effective = GetReaction(effect, caster, target, out effectMagnitude);
-        if(effective == Reaction.Repel)
+        if (effective == Reaction.Repel)
         {
             if (target != caster)
             {
                 effect.Cast(caster, caster);
-                return new PopupData
+                return new CastResults
                 {
-                    damage = 0,
                     effectiveness = effective,
                 };
             }
         }
         var damageMod = GetReactionDmgMod(effect, caster, target, effective, effectMagnitude);
-        int damage = Mathf.FloorToInt(effect.power * damageMod);
-        target.Health -= damage;
-        return new PopupData
+        return new CastResults
         {
-            damage = damage,
+            damage = damageMod,
             effectiveness = effective,
+            staggerDamage = effective == Reaction.Weak ? 1 : 0
         };
     }
-    private static Reaction GetReaction(DamageEffect effect, Caster caster, Caster target, out float multiplier)
+    private static CastResults Standard(DamageEffect effect, Caster caster, Caster target)
+    {
+        var results = StandardElements(effect, caster, target);
+        results.damage *= effect.power;
+        results.damage = Mathf.FloorToInt(results.damage);
+        target.Health -= (int)results.damage;
+        return results;
+    }
+
+    #region Utility Functions
+    public static Reaction GetReaction(DamageEffect effect, Caster caster, Caster target, out float multiplier)
     {
         multiplier = 0;
         var reactions = new CasterTagDictionary.ReactionMultiSet();
@@ -93,7 +101,7 @@ public static class Damage
             return Reaction.Neutral;
         }
     }
-    private static float GetReactionDmgMod(DamageEffect effect, Caster caster, Caster target, Reaction r, float mag)
+    public static float GetReactionDmgMod(DamageEffect effect, Caster caster, Caster target, Reaction r, float mag)
     {
         if (r == Reaction.Repel)
             return mag;        
@@ -107,5 +115,5 @@ public static class Damage
             return -1 * mag;
         return 0;
     }
-    
+    #endregion
 }

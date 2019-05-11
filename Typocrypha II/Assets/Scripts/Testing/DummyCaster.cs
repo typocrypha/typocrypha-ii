@@ -21,9 +21,9 @@ public class DummyCaster : Caster
     public void CastString(string spellString)
     {
         Spell words;// = new List<SpellWord>();
-        var results = CastParser.instance.Parse(spellString.Split(separator), out words);
+        var results = SpellParser.instance.Parse(spellString.Split(separator), out words);
         Debug.Log("Spell cast:" + spellString + ":" + results);
-        if (results == CastParser.ParseResults.Valid) 
+        if (results == SpellParser.ParseResults.Valid) 
         {
         //    foreach (var word in words)
         //    {

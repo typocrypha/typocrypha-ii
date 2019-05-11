@@ -6,7 +6,7 @@ using UnityEngine;
 public  class CasterAI : MonoBehaviour
 {
     public delegate void AfterCast();
-    public delegate void AfterHit(Spell spell, RootWordEffect effect, Caster caster, PopupData data);
+    public delegate void AfterHit(Spell spell, RootWordEffect effect, Caster caster, CastResults data);
     public delegate void UpdateFn();
 
     #region Delegate Handles

@@ -28,12 +28,12 @@ public class SpellFxManager : MonoBehaviour
     {
         return StartCoroutine(noTargetFx.Play(pos));
     }
-    public Coroutine Play(SpellFxData[] fxData, PopupData data, Vector2 targetPos, Vector2 casterPos)
+    public Coroutine Play(SpellFxData[] fxData, CastResults data, Vector2 targetPos, Vector2 casterPos)
     {
         return StartCoroutine(PlayCR(fxData, data, targetPos, casterPos));
     }
     /// <summary> A coroutine to play multiple spell effects in a row to facilitate Modifier Fx with crList </summary>
-    private IEnumerator PlayCR(SpellFxData[] fxData, PopupData data, Vector2 targetPos, Vector2 casterPos)
+    private IEnumerator PlayCR(SpellFxData[] fxData, CastResults data, Vector2 targetPos, Vector2 casterPos)
     {
         var pos = targetPos;
 
@@ -54,11 +54,11 @@ public class SpellFxManager : MonoBehaviour
 
     #region Popup Effects
 
-    public Coroutine PlayPopup(PopupData data, Vector2 targetPos, Vector2 casterPos)
+    public Coroutine PlayPopup(CastResults data, Vector2 targetPos, Vector2 casterPos)
     {
         return StartCoroutine(PlayPopupCr(data, targetPos, casterPos));
     }
-    private IEnumerator PlayPopupCr(PopupData data, Vector2 targetPos, Vector2 casterPos)
+    private IEnumerator PlayPopupCr(CastResults data, Vector2 targetPos, Vector2 casterPos)
     {
         if (data == null)
             yield break;

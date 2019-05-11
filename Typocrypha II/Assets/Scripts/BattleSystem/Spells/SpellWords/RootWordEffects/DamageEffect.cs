@@ -8,7 +8,7 @@ public class DamageEffect : RootWordEffect
     public CustomFormula customFormula;
     public int power;
 
-    public override PopupData Cast(Caster caster, Caster target)
+    public override CastResults Cast(Caster caster, Caster target)
     {
         if (formula == Damage.FormulaType.Custom)
             return customFormula.Apply(this, caster, target);

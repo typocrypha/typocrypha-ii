@@ -67,12 +67,12 @@ public class SpellManager : MonoBehaviour
                         // Apply the rule effect if necessary
                         Rule.ActiveRule?.Apply?.Invoke(effect, caster, targetCaster);
                         // Cast the effect
-                        var popupData = effect.Cast(caster, targetCaster);
+                        var castResults = effect.Cast(caster, targetCaster);
                         // Update AI
-                        targetCaster.GetComponent<CasterAI>()?.OnAfterHit?.Invoke(spell, effect, caster, popupData);
+                        targetCaster.GetComponent<CasterAI>()?.OnAfterHit?.Invoke(spell, effect, caster, castResults);
                         // Play Effects
                         var fx = new SpellFxData[] { root.leftMod?.fx, effect.fx, root.rightMod?.fx };
-                        crList.Add(SpellFxManager.instance.Play(fx, popupData, targetSpace, casterSpace));
+                        crList.Add(SpellFxManager.instance.Play(fx, castResults, targetSpace, casterSpace));
                         // Wait for delay between targets
                         yield return new WaitForSeconds(delayBetweenTargets);
                     }                 

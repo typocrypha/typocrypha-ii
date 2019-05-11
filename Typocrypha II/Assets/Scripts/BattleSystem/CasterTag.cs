@@ -24,7 +24,7 @@ public class CasterTag : ScriptableObject, System.IComparable<CasterTag>
 
     public int CompareTo(CasterTag other)
     {
-        return name.CompareTo(other.name);
+        return displayName.CompareTo(other.displayName);
     }
 
     [System.Serializable] public class ReactionDict : SerializableDictionary<SpellTag, Reaction> { }
