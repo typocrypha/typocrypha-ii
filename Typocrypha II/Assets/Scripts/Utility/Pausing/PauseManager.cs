@@ -50,7 +50,7 @@ public class PauseManager : MonoBehaviour
             {
                 ph.Pause = value;
             }
-            catch (MissingReferenceException e) // Check if object was destroyed.
+            catch (MissingReferenceException) // Check if object was destroyed.
             {
                 destroyed.Add(ph);
             }
