@@ -16,7 +16,8 @@ namespace ATB3
             //Debug.Log("PLAYER " + this.Owner.actorName + " has ENTERED the CAST state!");
             timer = 0.0f;
             var casterComponent = Owner.GetComponent<Caster>();
-            SpellManager.instance.Cast((Owner as ATBPlayer).currSpell, casterComponent, casterComponent.TargetPos);
+            //SpellManager.instance.Cast((Owner as ATBPlayer).currSpell, casterComponent, casterComponent.TargetPos);
+            SpellManager.instance.Cast(casterComponent.Spell, casterComponent, casterComponent.TargetPos);
         }
 
         // Call on fixed update while in given state

@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(ATB3.ATBPlayer))]
 public class DummyCaster : Caster
 {
-    public Spell currSpell;
     public GameObject targetRet;
     public char[] separator = { ' ', '-' };
 
@@ -16,42 +14,55 @@ public class DummyCaster : Caster
         playerActor = GetComponent<ATB3.ATBPlayer>();
     }
 
-    public void Cast()
-    {
-        SpellManager.instance.Cast(currSpell, this, TargetPos);
-    }
+    /// <summary>
+    /// Cast a spell from the keyboard. Called when enter is pressed by player.
+    /// Parses spell and, if spell is valid, casts it.
+    /// </summary>
     public void CastString(string spellString)
     {
         Spell words;// = new List<SpellWord>();
         var results = CastParser.instance.Parse(spellString.Split(separator), out words);
-        Debug.Log(results);
-        if (results == CastParser.ParseResults.Valid)
+        Debug.Log("Spell cast:" + spellString + ":" + results);
+        if (results == CastParser.ParseResults.Valid) 
         {
-            foreach (var word in words)
-            {
-                if (word is RootWord)
-                {
-                    if (!SpellCooldownManager.instance.cooldowns.ContainsKey(word.displayName))
-                        SpellCooldownManager.instance.cooldowns[word.displayName] = 0f;
-                    else if (SpellCooldownManager.instance.cooldowns[word.displayName] > 0f)
-                    {
-                        results = CastParser.ParseResults.OnCooldown;
-                        return;
-                    }
-                }
-            }
-            if (results != CastParser.ParseResults.OnCooldown)
-            {
-                foreach (RootWord word in words)
-                {
-                    if (SpellCooldownManager.instance.cooldowns[word.displayName] <= 0f)
-                        SpellCooldownManager.instance.StartCooldown(word.displayName, word.cooldown);
-                }
+        //    foreach (var word in words)
+        //    {
+        //        if (word is RootWord)
+        //        {
+        //            if (!SpellCooldownManager.instance.cooldowns.ContainsKey(word.displayName))
+        //                SpellCooldownManager.instance.cooldowns[word.displayName] = 0f;
+        //            else if (SpellCooldownManager.instance.cooldowns[word.displayName] > 0f)
+        //            {
+        //                results = CastParser.ParseResults.OnCooldown;
+        //                return;
+        //            }
+        //        }
+        //    }
+        //    if (results != CastParser.ParseResults.OnCooldown)
+        //    {
+        //        foreach (RootWord word in words)
+        //        {
+        //            if (SpellCooldownManager.instance.cooldowns[word.displayName] <= 0f)
+        //                SpellCooldownManager.instance.StartCooldown(word.displayName, word.cooldown);
+        //        }
                 
-                playerActor.currSpell = words;
-                //SpellManager.instance.Cast(words.ToArray(), this, tPos);
-                GetComponent<ATB3.ATBPlayer>().cast();
+        //        FaderManager.instance.FadeAll(0.5f, Color.black);
+        //        foreach (var target in words.AllTargets(FieldPos, TargetPos).Where( (a) => a != null)) 
+        //        {
+        //            target.GetComponent<FaderGroup>().FadeAmount = 0f;
+        //            target.GetComponent<FaderGroup>().FadeColor = Color.black;
+        //        }
+        //        GetComponent<Caster>().Spell = words;
+        //        GetComponent<ATB3.ATBPlayer>().Cast(); // Start casting sequence
+        //    }
+            FaderManager.instance.FadeAll(0.5f, Color.black);
+            foreach (var target in words.AllTargets(FieldPos, TargetPos).Where((a) => a != null))
+            {
+                target.GetComponent<FaderGroup>().FadeAmount = 0f;
+                target.GetComponent<FaderGroup>().FadeColor = Color.black;
             }
+            GetComponent<Caster>().Spell = words;
+            GetComponent<ATB3.ATBPlayer>().Cast(); // Start casting sequence
         }
     }
     private void Update()

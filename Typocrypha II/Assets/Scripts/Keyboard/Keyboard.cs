@@ -73,7 +73,6 @@ namespace Typocrypha
             }
             if (Input.GetKeyDown(KeyCode.Return))
             {
-                Debug.Log(inputBar.text);
                 inputBar.onSubmit.Invoke(inputBar.text);
                 inputBar.text = "";
             }

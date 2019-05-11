@@ -22,7 +22,7 @@ namespace ATB3
         public override void OnUpdate()
         {
             timer += Time.deltaTime;
-            if (timer >= 1.0f)
+            if (timer >= 1.0f && ATBManager.soloStack.Count == 0)
                 Source.PerformTransition(ATBTransition.ToBeforeCast);
             return;
         }

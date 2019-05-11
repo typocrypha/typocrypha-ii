@@ -50,7 +50,7 @@ public class BattleManager : MonoBehaviour, IPausable
     private void Start()
     {
         // Set so that battle waits for transition
-        TransitionManager.instance.onStartScene.AddListener(StartBattle); 
+        TransitionManager.instance?.onStartScene.AddListener(StartBattle); 
         if (startOnStart) StartBattle();
     }
 
@@ -73,7 +73,7 @@ public class BattleManager : MonoBehaviour, IPausable
         var player = Instantiate(startNode.player, transform).GetComponent<FieldObject>();
         Battlefield.instance.Add(player, new Battlefield.Position(1, 1));
         // TEMP CASTBAR HOOKUP
-        Typocrypha.Keyboard.instance.inputBar.onSubmit.AddListener(player.GetComponent<DummyCaster>().CastString);
+        Typocrypha.Keyboard.instance?.inputBar.onSubmit.AddListener(player.GetComponent<DummyCaster>().CastString);
         waveNum = 0;
         NextWave();
     }

@@ -13,13 +13,17 @@ namespace ATB3
         public override void OnEnter()
         {
             //Debug.Log("ENEMY " + this.Owner.actorName + " has ENTERED the AFTERCAST state!");
+            timer = 0f;
         }
+
+        float timer;
 
         // Call on fixed update while in given state
         public override void OnUpdate()
         {
-            ((ATBEnemy)this.Owner).caster.Charge = 0.0f;
-            Source.PerformTransition(ATBTransition.ToCharge);
+            timer += Time.fixedDeltaTime;
+            if (timer > 1.0f)
+                Source.PerformTransition(ATBTransition.ToCharge);
             return;
         }
 
@@ -27,7 +31,8 @@ namespace ATB3
         public override void OnExit()
         {
             //Debug.Log("ENEMY " + this.Owner.actorName + " has EXITED the BEFORECAST state!");
-            FaderManager.instance.Solo(Owner.GetComponent<FaderGroup>(), 0.0f, Color.black);
+            FaderManager.instance.Solo(Owner.GetComponent<FaderGroup>(), 0.0f, Color.black); // TEMP
+            ((ATBEnemy)this.Owner).caster.Charge = 0.0f;
             ATBManager.Instance.exitSolo(this.Owner);
         }
     }
