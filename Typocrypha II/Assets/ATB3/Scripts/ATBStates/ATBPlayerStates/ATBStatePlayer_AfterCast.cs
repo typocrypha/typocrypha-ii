@@ -15,6 +15,7 @@ namespace ATB3
         public override void OnEnter()
         {
             //Debug.Log("PLAYER " + this.Owner.actorName + " has ENTERED the AFTERCAST state!");
+            time = 0f;
         }
 
         // Call on fixed update while in given state

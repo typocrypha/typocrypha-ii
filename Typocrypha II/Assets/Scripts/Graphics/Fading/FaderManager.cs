@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -70,5 +70,21 @@ public class FaderManager : MonoBehaviour
             f.FadeColor = fadeColor;
         }
         solo.FadeAmount = 0;
+    }
+
+    /// <summary>
+    /// Highlights targets of a spell, fading everything else.
+    /// </summary>
+    /// <param name="spell">Casted spell.</param>
+    /// <param name="fieldPos">Caster's position.</param>
+    /// <param name="targetPos">Caster's target position.</param>
+    public void FadeTargets(Spell spell, Battlefield.Position fieldPos, Battlefield.Position targetPos)
+    {
+        FadeAll(0.5f, Color.black);
+        foreach (var target in spell.AllTargets(fieldPos, targetPos).Where((a) => a != null))
+        {
+            target.GetComponent<FaderGroup>().FadeAmount = 0f;
+            target.GetComponent<FaderGroup>().FadeColor = Color.black;
+        }
     }
 }

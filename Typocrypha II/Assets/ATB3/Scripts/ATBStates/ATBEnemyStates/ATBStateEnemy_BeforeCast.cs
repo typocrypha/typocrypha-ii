@@ -13,7 +13,9 @@ namespace ATB3
         public override void OnEnter()
         {
             //Debug.Log("ENEMY " + this.Owner.actorName + " has ENTERED the BEFORECAST state!");
-            FaderManager.instance.Solo(Owner.GetComponent<FaderGroup>(), 0.5f, Color.black); // TEMP
+            var caster = Owner.GetComponent<Caster>();
+            FaderManager.instance.FadeTargets(caster.Spell, caster.FieldPos, caster.TargetPos);
+            Owner.GetComponent<FaderGroup>().FadeAmount = 0f;
             ((ATBEnemy)this.Owner).GetComponent<Animator>().SetTrigger("BeforeCast");
             ATBManager.Instance.enterSolo(this.Owner);
             this.Owner.isCast = true;

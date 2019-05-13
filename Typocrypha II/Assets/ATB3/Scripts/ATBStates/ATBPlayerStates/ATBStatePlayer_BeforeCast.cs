@@ -17,6 +17,8 @@ namespace ATB3
             //Debug.Log("PLAYER " + this.Owner.actorName + " has ENTERED the BEFORECAST state!");
             // THIS IS WHERE THE PLAYER SHOULD GET SOLO'D
             ATBManager.Instance.enterSolo(this.Owner);
+            var caster = Owner.GetComponent<Caster>();
+            FaderManager.instance.FadeTargets(caster.Spell, caster.FieldPos, caster.TargetPos);
             this.Owner.isCast = true;
             time = 0f;
         }
