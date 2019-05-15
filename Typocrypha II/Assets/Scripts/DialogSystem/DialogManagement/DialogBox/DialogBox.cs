@@ -4,9 +4,19 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
+/// Interface with general dialog box functionality.
+/// </summary>
+public interface IDialogBox : IPausable
+{
+    float ScrollDelay { get; set; }
+    bool IsDone { get; }
+    void DumpText();
+}
+
+/// <summary>
 /// A single dialog box.
 /// </summary>
-public class DialogBox : MonoBehaviour, IPausable
+public class DialogBox : MonoBehaviour, IDialogBox
 {
     #region IPausable
     /// <summary>
@@ -151,7 +161,7 @@ public class DialogBox : MonoBehaviour, IPausable
 				pos = dialogItem.text.IndexOf ('>', pos + 1) + 1;
 				if (pos >= dialogItem.text.Length) break;
 			}
-            if (pos % speechInterval == 0) voiceAS.Play();
+            if (pos % speechInterval == 0) voiceAS?.Play();
             pos++; // Advance text position.
             hideText.ind[0] = pos;
             if (ScrollDelay > 0f)

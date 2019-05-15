@@ -105,7 +105,7 @@ public class DialogGraphParser : MonoBehaviour
                 if (cd != null) DialogCharacterManager.instance.SoloHighlightCharacter(cd);
                 return new DialogItemVN(dNode.text, voice, dNode.characterName, dNode.mcSprite, dNode.codecSprite);
             }
-            if(currNode is DialogNodeChat)
+            else if(currNode is DialogNodeChat)
             {
                 var dNode = currNode as DialogNodeChat;
                 #region Determine Icon Side
@@ -117,8 +117,36 @@ public class DialogGraphParser : MonoBehaviour
                 #endregion
                 return new DialogItemChat(dNode.text, voice, dNode.characterName, iconSide, dNode.leftIcon, dNode.rightIcon);
             }
-            if (currNode is DialogNodeAN)
+            else if (currNode is DialogNodeAN)
+            {
                 return new DialogItemAN((currNode as DialogNodeAN).text, voice);
+            }
+            else if (currNode is DialogNodeBubble)
+            {
+                var dNode = currNode as DialogNodeBubble;
+                var ditem = new DialogItemBubble(dNode.text, voice, dNode.rectVal);
+                // If mutliple speech bubbles at once, gather all multi boxes.
+                if (dNode.multi) 
+                {
+                    var dlist = new DialogItemBubble_Multi("", null);
+                    dlist.bubbleList.Add(ditem);
+                    while (dNode.multi)
+                    {
+                        var tmpNode = Next();
+                        if (tmpNode is DialogNodeBubble)
+                        {
+                            currNode = tmpNode;
+                            dNode = currNode as DialogNodeBubble;
+                            ditem = new DialogItemBubble(dNode.text, null, dNode.rectVal);
+                            dlist.bubbleList.Add(ditem);
+                        }
+                        else break;
+                    }
+                    return dlist;
+                }
+                else return ditem;
+            }
+                
         }
         else if (currNode is SetVariableNode)
         {

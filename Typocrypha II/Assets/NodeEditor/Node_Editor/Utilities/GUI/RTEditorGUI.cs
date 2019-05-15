@@ -681,6 +681,17 @@ namespace NodeEditorFramework.Utilities
         }
         #endregion
 
+        #region RectField
+        public static Rect RectField(Rect position, string label, Rect value)
+        {
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+                return UnityEditor.EditorGUI.RectField(position, label, value);
+#endif
+            return Rect.zero;
+        }
+        #endregion
+
         #region Popups
 
         // TODO: Implement RT Popup

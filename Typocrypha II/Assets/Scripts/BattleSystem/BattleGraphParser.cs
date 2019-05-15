@@ -49,7 +49,9 @@ public class BattleGraphParser : GraphParser
                 waveTitle = node.waveTitle,
                 music = node.music,
                 battleField = node.battleField,
-                battleEvents = node.battleEvents,
+                battleEvents = node.debugBattleEvent != null && node.battleEvents.Count == 0 
+                             ? new List<GameObject>() { node.debugBattleEvent } 
+                             : node.battleEvents,
                 fieldOptions = node.clearFieldOptions,
             };
         }

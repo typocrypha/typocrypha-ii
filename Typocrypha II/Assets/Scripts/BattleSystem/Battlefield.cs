@@ -16,7 +16,7 @@ public class Battlefield : MonoBehaviour, IPausable
     public PauseHandle PH { get => ph; }
 
     /// <summary>
-    /// Pauses all actors. (May pause other things: to be implemented).
+    /// Pauses all actors and keyboard.
     /// </summary>
     /// <param name="b">Whether to pause or not.</param>
     public void OnPause(bool b)

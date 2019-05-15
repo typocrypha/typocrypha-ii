@@ -38,12 +38,13 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     #endregion
 
     public static DialogManager instance = null;
-    public bool startOnStart = true; // Should dialog start when scene starts up?
+    public bool startOnStart = true; // Should dialog start when scene starts up? (should generally only be true for debugging)
+    public bool isBattle = false; // Is this a battle scene?
     public List<DialogView> allViews; // All dialog views (VN, CHAT, etc)
     public UnityEvent onNextDialog; // Event called when a new dialog line is started.
     public UnityEvent onSkip; // Event called when user manually skips text scroll.
     [HideInInspector] public DialogView dialogView; // Currently displayed dialog view.
-    [HideInInspector] public DialogBox dialogBox; // Latest displayed dialog box.
+    [HideInInspector] public IDialogBox dialogBox; // Latest displayed dialog box.
     [HideInInspector] public int dialogCounter; // Number of dialog lines passed.
 
     private DialogGraphParser graphParser; // Dialog graph currently playing.
@@ -62,6 +63,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
 
         ph = new PauseHandle(OnPause);
         graphParser = GetComponent<DialogGraphParser>();
+        if (isBattle) Display(false);
     }
 
     void Start()
@@ -74,7 +76,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     void Update()
     {
         // Check if submit key is pressed
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (dialogBox != null && Input.GetKeyDown(KeyCode.Space))
         {
             if (dialogBox.IsDone) // If dialog is done, go to next dialog
             {
@@ -134,6 +136,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
             SoloView(dialogView); 
         }
         dialogBox = dialogView.PlayDialog(dialogItem); // Play Dialog
+        Debug.Log(dialogBox.GetType());
         onNextDialog.Invoke();
 
         dialogCounter++;
@@ -145,8 +148,16 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     /// <param name="show">If true, display dialog. Otherwise, hide.</param>
     public void Display(bool show)
     {
-        if (show) transform.position = Vector3.zero;
-        else transform.Translate(30f, 0f, 0f);
+        if (show)
+        {
+            transform.position = Vector3.zero;
+            PH.Pause = false;
+        }
+        else
+        {
+            transform.Translate(30f, 0f, 0f);
+            PH.Pause = true;
+        }
     }
 
     // Hide all views except for current.

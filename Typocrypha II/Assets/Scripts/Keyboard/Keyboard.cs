@@ -47,7 +47,7 @@ namespace Typocrypha
         // Check user input.
         void Update()
         {
-            foreach (var c in keyMap)
+            foreach (var c in keyMap) // Highlight pressed keys.
             {
                 if (Input.GetKey(c.Key.ToString()))
                 {
@@ -58,7 +58,7 @@ namespace Typocrypha
                     c.Value.Highlight = false;
                 }
             }
-            foreach (var c in Input.inputString)
+            foreach (var c in Input.inputString) // Add letters to cast bar.
             {
                 var text = castBar.Text;
                 if (keyMap.ContainsKey(c))
@@ -71,7 +71,7 @@ namespace Typocrypha
                     castBar.CheckInput(c);
                 }
             }
-            if (Input.GetKeyDown(KeyCode.Return))
+            if (Input.GetKeyDown(KeyCode.Return)) // Cast if enter is pressed.
             {
                 castBar.Cast();
             }

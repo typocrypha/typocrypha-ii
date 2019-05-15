@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.U2D;
 
 // plays effect animations
-public class AnimationPlayer : MonoBehaviour {
+public class AnimationPlayer : MonoBehaviour
+{
 	public static AnimationPlayer instance = null; // global static ref
 	public GameObject animationHolderPrefab; // object prefab that holds the animations
 
@@ -15,8 +16,7 @@ public class AnimationPlayer : MonoBehaviour {
             instance = this;
             DontDestroyOnLoad(transform);
         }          
-		else
-            Destroy (gameObject); // avoid multiple copies
+		else Destroy (gameObject); // avoid multiple copies
 	}
 	
     //Plays any one-shot animation clip and returns the play time as a float

@@ -4,6 +4,9 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Standard dialog view (visual novel style).
+/// </summary>
 public class DialogViewVN : DialogView
 {
     private DialogBox dialogBox; // Visual novel style dialogue box

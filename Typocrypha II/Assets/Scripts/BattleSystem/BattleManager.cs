@@ -10,10 +10,11 @@ public class BattleManager : MonoBehaviour, IPausable
     #region IPausable
     PauseHandle ph;
     public PauseHandle PH { get => ph; }
-    public void OnPause(bool b) // Pauses battle events
+    public void OnPause(bool b) // Pauses battle events and battlefield
     {
         foreach (var e in currEvents)
             e.PH.Pause = b;
+        Battlefield.instance.PH.Pause = b;
     }
     #endregion
     public static BattleManager instance = null;

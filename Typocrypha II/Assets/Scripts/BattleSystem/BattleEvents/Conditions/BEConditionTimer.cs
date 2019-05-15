@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public class BEConditionTimer : BattleEventCondition
 {
-    public float time = 10f;
+    public float time;
     bool done;
 
     void Start()
