@@ -136,7 +136,6 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
             SoloView(dialogView); 
         }
         dialogBox = dialogView.PlayDialog(dialogItem); // Play Dialog
-        Debug.Log(dialogBox.GetType());
         onNextDialog.Invoke();
 
         dialogCounter++;

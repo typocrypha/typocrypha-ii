@@ -8,9 +8,21 @@ namespace Typocrypha
     /// Manages an effect that applys to keys on keyboard.
     /// Should be attached to a key effect prefab.
     /// </summary>
-    public abstract class KeyEffect : MonoBehaviour
+    public abstract class KeyEffect : MonoBehaviour, IPausable
     {
+        #region IPausable
+        PauseHandle ph;
+        public PauseHandle PH { get => ph; }
+        public void OnPause(bool b) { }
+        #endregion
+
         public Key key; // Affected keyboard key.
+
+        void Awake()
+        {
+            ph = new PauseHandle(OnPause);
+            Keyboard.instance.allEffects.Add(this);
+        }
 
         /// <summary>
         /// Called when effect is first applied.
@@ -23,9 +35,19 @@ namespace Typocrypha
         abstract public void OnPress();
 
         /// <summary>
-        /// Remove the effect.
+        /// Reset key to normal state after effect ends.
         /// </summary>
-        abstract public void Remove();
+        public abstract void Reset();
+
+        /// <summary>
+        /// Removes the effect.
+        /// </summary>
+        public void Remove()
+        {
+            Reset();
+            Keyboard.instance.allEffects.Remove(this);
+            Destroy(gameObject);
+        }
     }
 }
 

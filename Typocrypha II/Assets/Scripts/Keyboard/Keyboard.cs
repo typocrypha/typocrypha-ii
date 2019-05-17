@@ -14,9 +14,12 @@ namespace Typocrypha
         #region IPausable
         PauseHandle ph;
         public PauseHandle PH { get => ph; }
+        // Stops input and pauses keyboard effects.
         public void OnPause(bool b)
         {
             enabled = !b;
+            foreach (var effect in allEffects)
+                effect.PH.Pause = b;
         }
         #endregion
 
@@ -24,6 +27,7 @@ namespace Typocrypha
         public CastBar castBar;
         public Dictionary<char, Key> keyMap; // Map from characters to keyboard keys.
         public Transform keys; // Object that holds all the key objects.
+        public HashSet<KeyEffect> allEffects; // All active key effects on keyboard (managed by individual effects).
 
         void Awake()
         {
@@ -39,6 +43,7 @@ namespace Typocrypha
             ph = new PauseHandle(OnPause);
 
             keyMap = new Dictionary<char, Key>();
+            allEffects = new HashSet<KeyEffect>();
             GetComponent<KeyboardBuilder>().BuildKeyboard(keys); // Construct keyboard.
             foreach(Transform key in keys) // Add keys to map.
                 keyMap[key.gameObject.name[0]] = key.GetComponent<Key>();

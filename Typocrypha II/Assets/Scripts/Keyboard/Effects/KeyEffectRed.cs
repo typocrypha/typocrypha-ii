@@ -16,10 +16,9 @@ namespace Typocrypha
             transform.Rotate(Vector3.forward, 30f);
         }
 
-        public override void Remove()
+        public override void Reset()
         {
             key.onPress -= OnPress;
-            Destroy(gameObject);
         }
 
         // Remove effect when time runs out.

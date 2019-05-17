@@ -13,8 +13,7 @@ public class KeyboardTEST : MonoBehaviour
     IEnumerator Start()
     {
         yield return new WaitForSeconds(2f);
-        keyboard.ApplyEffect("qwe", effect);
+        keyboard.ApplyEffect("q", effect);
         yield return new WaitForSeconds(2f);
-        keyboard.ApplyEffect("ahv", effect);
     }
 }

@@ -17,13 +17,17 @@ namespace Typocrypha
         public OnPressDel onPress; // Delegate called when key is pressed.
         public SpriteRenderer highlight; // Sprite renderer for key highlight.
         public TextMeshPro letterText; // Text for key label.
-        public bool Highlight
+        public bool Highlight // Key highlight (when pressed).
         {
             set
             {
                 if (value) highlight.color = Color.clear;
                 else highlight.color = Color.black * 0.2f; 
             }
+        }
+        public bool Affected // Under status effect (checks for effect child).
+        {
+            get => transform.childCount != 3;
         }
 
         void Awake()

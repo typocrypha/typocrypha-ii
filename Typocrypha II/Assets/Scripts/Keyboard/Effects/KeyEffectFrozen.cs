@@ -6,7 +6,7 @@ namespace Typocrypha
 {
     /// <summary>
     /// Frozen key effect.
-    /// Affetced key cannot be typed until key is mashed some number of times.
+    /// Affected key cannot be typed until key is mashed some number of times.
     /// </summary>
     public class KeyEffectFrozen : KeyEffect
     {
@@ -27,17 +27,16 @@ namespace Typocrypha
             if (--health <= 0) Remove();
         }
 
-        public override void Remove()
+        public override void Reset()
         {
             key.output = key.letter.ToString(); // Unblock output.
             key.onPress -= OnPress;
-            Destroy(gameObject);
         }
 
         // Remove effect when time runs out.
         IEnumerator DestroyAfterTime(float seconds)
         {
-            yield return new WaitForSeconds(seconds);
+            yield return new WaitForSecondsPause(seconds, PH);
             Remove();
         }
     }
