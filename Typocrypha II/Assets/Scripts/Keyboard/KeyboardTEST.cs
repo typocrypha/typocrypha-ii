@@ -9,11 +9,11 @@ public class KeyboardTEST : MonoBehaviour
 {
     public Typocrypha.Keyboard keyboard;
     public GameObject effect;
+    public string effectString;
 
     IEnumerator Start()
     {
         yield return new WaitForSeconds(2f);
-        keyboard.ApplyEffect("q", effect);
-        yield return new WaitForSeconds(2f);
+        Typocrypha.Keyboard.instance?.ApplyEffect(effectString, effect);
     }
 }

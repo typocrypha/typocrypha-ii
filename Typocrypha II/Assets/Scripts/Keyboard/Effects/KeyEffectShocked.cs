@@ -20,12 +20,14 @@ namespace Typocrypha
 
         public override void OnStart()
         {
+            if (!swapped.ContainsKey(key.letter)) swapped[key.letter] = key.letter;
             // If self is not already swapped (i.e. the 'starter' key).
-            if (!swapped.ContainsKey(key.letter) || swapped[key.letter] == key.letter)
+            if (swapped[key.letter] == key.letter)
             {
                 // Pick random, unaffected key.
                 char c = key.letter;
-                while (c == key.letter && Keyboard.instance.keyMap[c].Affected)
+                while (c == key.letter || Keyboard.instance.keyMap[c].Affected ||
+                      (swapped.ContainsKey(c) && swapped[c] != c))
                     c = (char)('a' + Random.Range(0, 26));
                 // Set map.
                 swapped[key.letter] = c;

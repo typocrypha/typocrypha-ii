@@ -18,6 +18,7 @@ using UnityEngine;
 /// Constructor/Awake() 
 /// {
 ///     ph = new PauseHandle(OnPause);
+///     // ... etc ...
 /// }
 /// 
 /// 
