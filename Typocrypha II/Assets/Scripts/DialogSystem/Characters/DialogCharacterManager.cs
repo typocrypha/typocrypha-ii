@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -281,14 +282,17 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
 
     /// <summary>
     /// Finds character data (in scene) that matches given alias.
+    /// Will return null if alias exists, but that character isn't in the scene.
     /// </summary>
     /// <param name="alias">Alias of character you want to find.</param>
     /// <returns>CharacterData found. 'null' if none found.</returns>
     public CharacterData CharacterDataByName(string alias)
     {
         if (characterDataBundle.Contains(alias))
-            return characterDataBundle.LoadAsset<CharacterData>(alias);
-        else
-            return null;
+        {
+            var cdata = characterDataBundle.LoadAsset<CharacterData>(alias);
+            if (characterMap.ContainsKey(cdata.aliases.First())) return cdata;
+        }    
+        return null;
     }
 }
