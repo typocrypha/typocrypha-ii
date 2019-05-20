@@ -14,7 +14,11 @@ public class SpellFxManager : MonoBehaviour
     [SerializeField] private GameObject popupPrefab;
     [Header("Effectiveness Sprites")]
     [SerializeField] private Sprite weakSprite;
+    [Header("Log Fields")]
+    public Vector2 logPosition = new Vector2(0.5f, 0.5f);
+    public Sprite logImage;
 
+    private Queue<LogData> logData = new Queue<LogData>();
     /// <summary> Singleton implementation </summary>
     private void Awake()
     {
@@ -24,6 +28,26 @@ public class SpellFxManager : MonoBehaviour
             Destroy(gameObject);
     }
 
+    public Coroutine PlayMessages()
+    {
+        return StartCoroutine(PlayMessagesCr());
+    }
+    private IEnumerator PlayMessagesCr()
+    {
+        while (logData.Count > 0)
+        {
+            var message = logData.Dequeue();
+            var popper = Instantiate(message.popupPrefab).GetComponent<PopupBase>();
+            var cr1 = popper.PopImage(message.image ?? logImage, logPosition, 0.75f);
+            var cr2 = popper.PopText(message.text, logPosition, 0.75f);
+            yield return cr1;
+            yield return cr2;
+        }
+    }
+    public void LogMessage(string message, Sprite image = null, GameObject popupPrefabOverride = null)
+    {
+        logData.Enqueue(new LogData() { text = message, image = image, popupPrefab = popupPrefabOverride ?? popupPrefab });
+    }
     public Coroutine NoTargetFx(Vector2 pos)
     {
         return StartCoroutine(noTargetFx.Play(pos));
@@ -87,4 +111,11 @@ public class SpellFxManager : MonoBehaviour
     }
 
     #endregion
+
+    private class LogData
+    {
+        public string text;
+        public Sprite image = null;
+        public GameObject popupPrefab;
+    }
 }

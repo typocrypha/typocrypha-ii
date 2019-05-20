@@ -1,12 +1,8 @@
 ﻿using UnityEditor;
 using System.IO;
-[InitializeOnLoad]
+
 public class CreateAssetBundles
 {
-    static CreateAssetBundles()
-    {
-        BuildAllAssetBundles();
-    }
     [MenuItem("Assets/Build AssetBundles")]
     static void BuildAllAssetBundles()
     {
