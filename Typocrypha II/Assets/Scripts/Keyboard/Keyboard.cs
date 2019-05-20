@@ -24,6 +24,7 @@ namespace Typocrypha
         #endregion
 
         public static Keyboard instance = null;
+        public List<GameObject> allEffectPrefabs;
         public CastBar castBar;
         public Dictionary<char, Key> keyMap; // Map from characters to keyboard keys.
         public Transform keys; // Object that holds all the key objects.
@@ -93,6 +94,15 @@ namespace Typocrypha
             {
                 keyMap[c].ApplyEffect(effectPrefab);
             }
+        }
+        /// <summary>
+        /// Applies effect to list of keys by name.
+        /// </summary>
+        /// <param name="affected">List of characters effect.</param>
+        /// <param name="effectName">Name of prefab of effect.</param>
+        public void ApplyEffect(string affected, string effectName)
+        {
+            ApplyEffect(affected, allEffectPrefabs.Find(c => c.name == effectName));
         }
     }
 }
