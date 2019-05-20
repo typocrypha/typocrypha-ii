@@ -25,6 +25,9 @@ public class SoundController : MonoBehaviour
 
     public AudioSource PlaySingle(AudioClip clip, float volume = 1f)
     {
+        if (clip == null)
+            return null;
+        Clear();
         AudioSource sfx = gameObject.AddComponent<AudioSource>() as AudioSource;
         
         sfxList.Add(sfx);
@@ -44,32 +47,36 @@ public class SoundController : MonoBehaviour
 
     public void PauseAll()
     {
+        Clear();
         isPaused = true;
         foreach (AudioSource sfx in sfxList) sfx.Pause();
     }
 
     public void ResumeAll()
     {
+        Clear();
         isPaused = false;
         foreach (AudioSource sfx in sfxList) sfx.Play();
     }
 
     public void StopAll()
     {
+        Clear();
         isPaused = false;
         foreach (AudioSource sfx in sfxList) sfx.Stop();
     }
 
-    void Update()
+    public void Clear()
     {
-        foreach (AudioSource sfx in sfxList)
+        var toDelete = new List<AudioSource>();
+        for (int i = 0; i < sfxList.Count; ++i)
         {
+            var sfx = sfxList[i];
             if (!isPaused && !sfx.isPlaying)
             {
-                sfxList.Remove(sfx);
+                sfxList.RemoveAt(i);
                 Destroy(sfx);
             }
         }
     }
-
 }

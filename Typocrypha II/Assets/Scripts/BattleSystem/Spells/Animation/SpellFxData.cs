@@ -19,16 +19,25 @@ public class SpellFxData
     public IEnumerator Play(Vector2 pos)
     {
         if (effectType == EffectType.Single)
+        {
+            SoundController.instance.PlaySingle(effectPackets[0].sfx);
             yield return new WaitUntilAnimComplete(AnimationPlayer.instance.Play(effectPackets[0].clip, pos));
+        }
+            
         else if (effectType == EffectType.Sequence)
         {
             foreach (var packet in effectPackets)
+            {
+                SoundController.instance.PlaySingle(packet.sfx);
                 yield return new WaitUntilAnimComplete(AnimationPlayer.instance.Play(packet.clip, pos));
+            }
+                
         }
         else if(effectType == EffectType.Parallel)
         {
             for (int i = 1; i < effectPackets.Count; ++i)
             {
+                SoundController.instance.PlaySingle(effectPackets[i].sfx);
                 AnimationPlayer.instance.Play(effectPackets[i].clip, pos);
             }
             if (effectPackets.Count > 0)

@@ -23,6 +23,8 @@ public class SpellParser : MonoBehaviour
         ReplaceWord,
     }
     public static SpellParser instance = null;
+    public SpellWordBundle roots;
+    public SpellWordBundle modifiers;
 
     private readonly WeightedSet<TypoResult> typoActionWeighting = new WeightedSet<TypoResult>()
     {
@@ -33,7 +35,6 @@ public class SpellParser : MonoBehaviour
     public int MaxWords { get; } = 5;
     public int MaxRoots { get; } = 3;
     public Dictionary<string, SpellWord> Words { get; private set; }
-    static AssetBundle spellBundle; // Spell dictioanry asset bundle.
     /// <summary> Singleton Implementation </summary>
     private void Awake()
     {
@@ -109,13 +110,10 @@ public class SpellParser : MonoBehaviour
     /// <summary> Build the wor dictionary from the "spellword" assetbundle </summary>
     private void BuildDictionary()
     {
-        if (spellBundle == null)
-        {
-            spellBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, "spellword"));
-            var rootWords = spellBundle.LoadAllAssets<SpellWord>();
-            Words = new Dictionary<string, SpellWord>();
-            foreach (var word in rootWords)
-                Words.Add(word.name.ToLower(), word);
-        }
+        Words = new Dictionary<string, SpellWord>();
+        foreach (var word in roots.words)
+            Words.Add(word.Key.ToLower(), word.Value);
+        foreach (var word in modifiers.words)
+            Words.Add(word.Key.ToLower(), word.Value);
     }
 }
