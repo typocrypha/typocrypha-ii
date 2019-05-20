@@ -18,9 +18,9 @@ using Gameflow;
     *descriptor* -> Variable text (e.g. dialog)
      
     Newline characters are used as statement delimiters
-    Use '\' to escape control sequences (NOT IMPLEMENTED YET)
-        (e.g., to have a literal newline in dialog, put '\' at the end of the line) (NOT IMPLEMENTED YET)
-    To have a literal backslash, you need to use '\\' (NOT IMPLEMENTED YET)
+    Use '\' to escape control sequences 
+        (e.g., to have a literal newline in dialog, put '\' at the end of the line) 
+    To have a literal backslash, you need to use '\\' 
 
 ******************* Format *******************
     SCRIPT := [STATEMENT]
@@ -39,7 +39,7 @@ using Gameflow;
     % Allows for specifying various nodes
     NODE := >NODE_LABEL, [NODE_ARGUMENT_LIST]
 
-    NODE_LABEL := {"addchar", "end"}
+    NODE_LABEL := {"addchar"}
 
     NODE_ARGUMENT_LIST := *arg 1*,*arg 2*, ... , *arg n*
 
@@ -55,7 +55,7 @@ public class DialogScriptParser : EditorWindow
 {
     TextAsset textScript; // Text script asset
     NodeCanvas canvas; // Generated canvas
-    System.Type currView; // Current dialog view
+    System.Type currView = typeof(DialogViewVN); // Current dialog view
 
     AssetBundle characterDataBundle; // Character data bundle
     CharacterData[] allCharacterData; // All loaded character data
@@ -142,15 +142,17 @@ public class DialogScriptParser : EditorWindow
     {
         string text = textScript.text;
         text = Regex.Replace(text, commentRegex + ".*?\n", "\n"); // Remove comments
+        text = Regex.Replace(text, "\r", ""); // Remove carriage returns
         float pos = 0f; // Position of current node
         Node prev = null; // Previous node (init as start node).
         prev = Node.Create(GameflowStartNode.ID, Vector2.right * pos) as GameflowStartNode;
         pos += prev.MinSize.x + nodeSpacing;
 
         // PARSE LINEBREAKS '\' AND ESCAPES
-        string[] lines = text.Split(lineDelim); // Separate lines
+        string[] lines = text.Split(lineDelim, escape); // Separate lines
         for (int i = 0; i < lines.Length; i++)
         {
+            Debug.Log("parsing:" + lines[i]);
             ParseLine(lines[i], ref pos, ref prev);
         }
         // Create end node.
@@ -170,9 +172,7 @@ public class DialogScriptParser : EditorWindow
         }
         else if (nodeMarker.Contains(line[0])) // General node.
         {
-            string[] dialogLine = line.Split(nodeMarker);
-            string[] nodeArgs = dialogLine[1].Split(argDelim);
-            var node = ParseGeneralNode(nodeArgs, pos); // Parse node.
+            var node = ParseGeneralNode(line, pos); // Parse node.
             pos += node.MinSize.x + nodeSpacing; // Update position
             // Connect to previous
             (prev as BaseNodeOUT).toNextOUT.TryApplyConnection((node as BaseNodeIO).fromPreviousIN, true);
@@ -189,8 +189,10 @@ public class DialogScriptParser : EditorWindow
     }
 
     // Parses a general node (not dialog) line. Returns constructed node.
-    Node ParseGeneralNode(string[] args, float pos)
+    Node ParseGeneralNode(string line, float pos)
     {
+        string[] dialogLine = line.Split(nodeMarker, escape);
+        string[] args = dialogLine[1].Split(argDelim, escape);
         Node node = null;
         System.Type nodeType = nodeMap[args[0]];
         if (nodeType == typeof(AddCharacter))
@@ -207,7 +209,7 @@ public class DialogScriptParser : EditorWindow
     // Parses a single dialog line. Returns constructed node.
     Node ParseDialogNode(string line, float pos)
     {
-        string[] dialogLine = line.Split(nameMarker);
+        string[] dialogLine = line.Split(nameMarker, escape);
         DialogNode node = null;
         if (currView == typeof(DialogNodeVN))
         {
