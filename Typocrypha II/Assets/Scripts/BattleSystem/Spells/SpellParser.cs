@@ -105,7 +105,7 @@ public class SpellParser : MonoBehaviour
     private SpellWord ReplaceTypo(string word)
     {
         //TODO: add actual replacement keyword option
-        return Words["splash"];
+        return Words["sword"];
     }
     /// <summary> Build the wor dictionary from the "spellword" assetbundle </summary>
     private void BuildDictionary()
