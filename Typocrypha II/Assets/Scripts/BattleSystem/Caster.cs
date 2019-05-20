@@ -93,13 +93,13 @@ public class Caster : FieldObject
     public Battlefield.Position TargetPos { get; set; } = new Battlefield.Position(0, 0);
     public CasterUI ui = null;
 
-    private void Awake()
+    protected void Awake()
     {
         _tags.RecalculateAggregate();
         Health = Stats.MaxHP;
         Armor = Stats.MaxArmor;
         SP = Stats.MaxSP;
         Stagger = Stats.MaxStagger;
-        ui = GetComponentInChildren<CasterUI>();
+        if (ui == null) ui = GetComponentInChildren<CasterUI>();
     }
 }

@@ -9,8 +9,11 @@ public class DummyCaster : Caster
 
     ATB3.ATBPlayer playerActor;
 
-    public void Awake()
+    new public void Awake()
     {
+        base.Awake();
+        Stats.MaxHP = 100; // DEBUG
+        Health = Stats.MaxHP;
         playerActor = GetComponent<ATB3.ATBPlayer>();
     }
 
