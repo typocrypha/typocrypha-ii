@@ -19,44 +19,42 @@ namespace Typocrypha
     public class KeyboardBuilder : MonoBehaviour
     {
         public GameObject keyPrefab; // Prefab for a single key.
-        public float keySize = 0.6f; // Key size.
-        public float hSpacing = 0.2f; // Horizontal spacing between keys.
-        public float vSpacing = 0.2f; // Vertical spacing between rows.
+        public GameObject keyPrefabAlt; // Alt color key prefab.
+        public Transform[] rows; // Row transforms.
         public const string keyboardFormat = // Key letter format.
-            "qwertyuiop\n 0.4 asdfghjkl\n 1.2 zxcvbnm"; 
+            "qwertyuiop\n asdfghjkl\n zxcvbnm"; 
 
         /// <summary>
         /// Create keyboard by spawning key objects in correct locations.
         /// </summary>
-        public void BuildKeyboard(Transform keys)
-        { 
+        public void BuildKeyboard()
+        {
+            int rowind = 0;
+            bool colorSwap = false;
             Vector3 currPos = Vector2.zero;
-            for (int i = 0; i < keyboardFormat.Length;)
+            for (int i = 0; i < keyboardFormat.Length; i++)
             {
+                GameObject go = null;
                 char c = keyboardFormat[i];
                 switch(c)
                 {
-                    case ' ': // Horizontal spacing.
-                        int ppos = keyboardFormat.IndexOf(' ', i+1);
-                        currPos.x += float.Parse(keyboardFormat.Substring(i, ppos - i));
-                        i = ppos + 1;
+                    case ' ': // Color swap.
+                        colorSwap = !colorSwap;
                         break;
                     case '\n': // Start a new row.
-                        currPos.x = 0;
-                        currPos.y -= keySize + vSpacing;
-                        i++;
+                        rowind++;
                         break;
                     default: // Alphabetical character.
-                        var go = Instantiate(keyPrefab, keys);
+                        if (colorSwap = !colorSwap)
+                            go = Instantiate(keyPrefab, rows[rowind]);
+                        else
+                            go = Instantiate(keyPrefabAlt, rows[rowind]);
                         go.name = c.ToString();
-                        go.transform.localPosition = currPos;
-                        go.transform.localScale = Vector2.one * keySize;
+                        go.transform.localScale = Vector2.one;
                         Key key = go.GetComponent<Key>();
                         key.letter = c;
                         key.output = c.ToString();
                         key.letterText.text = c.ToString().ToUpper();
-                        currPos.x += keySize + hSpacing;
-                        i++;
                         break;
                 }
             }

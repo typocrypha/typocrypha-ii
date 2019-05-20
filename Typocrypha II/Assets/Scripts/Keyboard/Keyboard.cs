@@ -45,9 +45,9 @@ namespace Typocrypha
 
             keyMap = new Dictionary<char, Key>();
             allEffects = new HashSet<KeyEffect>();
-            GetComponent<KeyboardBuilder>().BuildKeyboard(keys); // Construct keyboard.
-            foreach(Transform key in keys) // Add keys to map.
-                keyMap[key.gameObject.name[0]] = key.GetComponent<Key>();
+            GetComponent<KeyboardBuilder>().BuildKeyboard(); // Construct keyboard.
+            foreach(Key key in keys.GetComponentsInChildren<Key>()) // Add keys to map.
+                keyMap[key.letter] = key;
         }
 
         // Check user input.

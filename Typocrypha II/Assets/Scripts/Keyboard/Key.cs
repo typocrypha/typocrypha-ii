@@ -15,14 +15,15 @@ namespace Typocrypha
         public char letter; // Letter this key represents.
         public string output; // What is typed when this key is pressed.
         public OnPressDel onPress; // Delegate called when key is pressed.
-        public SpriteRenderer highlight; // Sprite renderer for key highlight.
+        public SpriteRenderer highlightSR; // Sprite renderer for key highlight.
         public TextMeshPro letterText; // Text for key label.
+        float highlight = 0f; // Normalized highlight value.
         public bool Highlight // Key highlight (when pressed).
         {
             set
             {
-                if (value) highlight.color = Color.clear;
-                else highlight.color = Color.black * 0.2f; 
+                if (value) highlight = 1f;
+                else if (highlight >= 0f) highlight -= 0.15f;
             }
         }
         public bool Affected // Under status effect (checks for effect child).
@@ -33,6 +34,11 @@ namespace Typocrypha
         void Awake()
         {
             Highlight = false;
+        }
+
+        void Update()
+        {
+            highlightSR.color = Color.white * highlight;
         }
 
         /// <summary>
