@@ -5,7 +5,9 @@ using UnityEngine;
 [RequireComponent(typeof(SpellManager))]
 public class SpellFxManager : MonoBehaviour
 {
+    private const float logTime = 1f;
     public static SpellFxManager instance;
+    public bool HasMessages { get => logData.Count > 0; }
     [Header("No Target FX")]
     [SerializeField] private SpellFxData noTargetFx = new SpellFxData();
     [Header("Repel FX")]
@@ -38,8 +40,8 @@ public class SpellFxManager : MonoBehaviour
         {
             var message = logData.Dequeue();
             var popper = Instantiate(message.popupPrefab).GetComponent<PopupBase>();
-            var cr1 = popper.PopImage(message.image ?? logImage, logPosition, 0.75f);
-            var cr2 = popper.PopText(message.text, logPosition, 0.75f);
+            var cr1 = popper.PopImage(message.image ?? logImage, logPosition, logTime);
+            var cr2 = popper.PopText(message.text, logPosition, logTime);
             yield return cr1;
             yield return cr2;
         }
@@ -107,7 +109,7 @@ public class SpellFxManager : MonoBehaviour
             case Reaction.Repel:
                 break;
         }
-        yield return null;
+        yield return new WaitForSeconds(0.75f);
     }
 
     #endregion

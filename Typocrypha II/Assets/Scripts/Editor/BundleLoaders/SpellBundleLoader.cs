@@ -30,8 +30,9 @@ public static class LoadSpellBundlesOnPlayMode
                 if(!bundle.words.ContainsKey(word.displayName))
                     bundle.words.Add(word.displayName, word);
             }
-            EditorUtility.SetDirty(bundle);
-            AssetDatabase.SaveAssets();
+            if(bundle != null)
+                EditorUtility.SetDirty(bundle);
         }
+        AssetDatabase.SaveAssets();
     }
 }

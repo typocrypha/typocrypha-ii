@@ -12,6 +12,7 @@ public class DummyCaster : Caster
     public void Awake()
     {
         playerActor = GetComponent<ATB3.ATBPlayer>();
+        DisplayName = "Ayin";
     }
 
     /// <summary>

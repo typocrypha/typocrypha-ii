@@ -12,6 +12,8 @@ public class FomulaLuckDmg : CustomFormula
         float luckfactor = 1 + ((caster.Stats.Luck + 1) - target.Stats.Luck) * scalingFactor;
         results.damage = Mathf.Floor(results.damage * effect.power * luckfactor);
         target.Health -= (int)results.damage;
+        SpellFxManager.instance.LogMessage(caster.DisplayName + " is feeling lucky!");
+        SpellFxManager.instance.LogMessage(target.DisplayName + " got shat on");
         return results;
     }
 }
