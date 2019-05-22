@@ -5,7 +5,7 @@ using UnityEngine;
 public class AICycleSpells : AIComponent
 {
     public int startIndex = 0;
-    public List<Spell> spells;
+    public SpellList spells;
 
     int curr;
 

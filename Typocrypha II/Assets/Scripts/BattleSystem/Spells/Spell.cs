@@ -8,7 +8,7 @@ using System.Linq;
 /// Basically just a list of spellwords.
 /// Implemented this way instead of inheriting from List due the the way unity property drawers work
 /// </summary>
-public class Spell : IEnumerable<SpellWord>, IList<SpellWord>
+public class Spell : IList<SpellWord>
 {
     [SerializeField]
     private List<SpellWord> items = new List<SpellWord>();
