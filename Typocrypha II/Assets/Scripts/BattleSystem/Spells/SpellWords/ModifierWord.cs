@@ -21,6 +21,7 @@ public class ModifierWord : SpellWord
 
     public SpellFxData fx;
     public Direction direction;
+    [SubSO("Sp. Effect")]
     public ModifierWordEffect specialEffect;
     public SpellTag.TagSet tagsToAdd;
 

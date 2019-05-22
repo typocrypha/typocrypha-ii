@@ -12,8 +12,8 @@ public class SubSOAttributeDrawer : PropertyDrawer
         var attr = attribute as SubSOAttribute;
         var UIRect = new Rect(position) { height = EditorGUIUtility.singleLineHeight };
         var dropRect = new Rect(UIRect) { width = UIRect.width - 125 };
-        string dropString = "Set " + attr.name + (property.objectReferenceValue == null ? " (None)" : property.objectReferenceValue.ToString());
-        if (EditorGUI.DropdownButton(dropRect, new GUIContent(dropString), FocusType.Keyboard))
+        string dropString = "Set " + attr.name + ": " + (property.objectReferenceValue == null ? "(None)" : property.objectReferenceValue.ToString());
+        if (EditorGUI.DropdownButton(dropRect, new GUIContent(dropString, dropString), FocusType.Keyboard))
         {
             GetMenu(property, fieldInfo.FieldType).ShowAsContext();
         }

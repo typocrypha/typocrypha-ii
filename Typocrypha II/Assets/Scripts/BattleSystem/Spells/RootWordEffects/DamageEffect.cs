@@ -5,6 +5,7 @@ using UnityEngine;
 public class DamageEffect : RootWordEffect
 {
     public Damage.FormulaType formula;
+    [SubSO("Formula")]
     public CustomFormula customFormula;
     public int power;
 
