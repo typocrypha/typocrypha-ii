@@ -37,6 +37,11 @@ public class CasterTagInspector : Editor
             EditorUtils.CasterUtils.CasterStatsGUILayout(tag.statMods);
         EditorUtils.Separator();
 
+        // Abilities
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("ability1"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("ability2"));
+        EditorUtils.Separator();
+
         // Reactions
         if (tag.reactions != null)
         {

@@ -20,7 +20,10 @@ public class CasterTag : ScriptableObject, System.IComparable<CasterTag>
     public CasterStats statMods;
     public ReactionDict reactions;
     public TagSet subTags;
-    public AbilitySet abilities;
+    [SubSO("Ability1")]
+    public CasterAbility ability1;
+    [SubSO("Ability2")]
+    public CasterAbility ability2;
 
     public int CompareTo(CasterTag other)
     {
@@ -29,20 +32,4 @@ public class CasterTag : ScriptableObject, System.IComparable<CasterTag>
 
     [System.Serializable] public class ReactionDict : SerializableDictionary<SpellTag, Reaction> { }
     [System.Serializable] public class TagSet : SerializableSet<CasterTag> { }
-    [System.Serializable] public class AbilitySet : SerializableSet<CasterAbility> { }
-}
-
-[System.Serializable]
-public class CasterAbility
-{
-    public enum AbilityName
-    { }
-    public SpellTag.TagSet spellTags;
-    public CasterTag.TagSet casterTags;
-    public List<SpellWord> spells;
-    public List<TargetData> targetData;
-    public SDictStringInt intParams;
-    public SDictStringFloat floatParams;
-    public Component component;
-
 }

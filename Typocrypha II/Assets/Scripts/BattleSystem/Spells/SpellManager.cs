@@ -45,7 +45,11 @@ public class SpellManager : MonoBehaviour
         // If the spell is restricted, break and do not cast
         if (SpellRestrictions.instance.IsRestricted(spell, caster, target, true))
         {
-            yield return SpellFxManager.instance.PlayMessages();
+            if (SpellFxManager.instance.HasMessages)
+            {
+                yield return new WaitForSeconds(delayBeforeLog);
+                yield return SpellFxManager.instance.PlayMessages();
+            }
             yield break;
         }          
         var roots = Modify(spell);

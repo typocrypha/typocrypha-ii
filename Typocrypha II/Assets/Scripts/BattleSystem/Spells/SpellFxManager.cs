@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(SpellManager))]
 public class SpellFxManager : MonoBehaviour
 {
-    private const float logTime = 1f;
+    private const float logTime = 0.8f;
     public static SpellFxManager instance;
     public bool HasMessages { get => logData.Count > 0; }
     [Header("No Target FX")]
