@@ -66,7 +66,6 @@ public class DialogScriptParser : EditorWindow
     char[] nodeMarker = new char[] { '>' }; // Node marker.
     char[] viewSwitchMarker = new char[] { '+' }; // View switching marker.
     char[] escape = new char[] { '\\' }; // Escape character.
-    string commentRegex = "/{2}"; // Comment regex "//".
 
     // Dialog view labels.
     Dictionary<string, System.Type> viewMap = new Dictionary<string, System.Type>
@@ -141,7 +140,9 @@ public class DialogScriptParser : EditorWindow
     void Parse()
     {
         string text = textScript.text;
-        text = Regex.Replace(text, commentRegex + ".*?\n", "\n"); // Remove comments
+        text = Regex.Replace(text, "/{2}.*?\n", "\n"); // Remove comments
+        text = Regex.Replace(text, "/[\x2A].*?[\x2A]/", "", RegexOptions.Singleline); // Remove block comments
+        Debug.Log(text);
         text = Regex.Replace(text, "\r", ""); // Remove carriage returns
         float pos = 0f; // Position of current node
         Node prev = null; // Previous node (init as start node).
