@@ -142,14 +142,13 @@ public class DialogScriptParser : EditorWindow
         string text = textScript.text;
         text = Regex.Replace(text, "/{2}.*?\n", "\n"); // Remove comments
         text = Regex.Replace(text, "/[\x2A].*?[\x2A]/", "", RegexOptions.Singleline); // Remove block comments
-        Debug.Log(text);
         text = Regex.Replace(text, "\r", ""); // Remove carriage returns
         float pos = 0f; // Position of current node
         Node prev = null; // Previous node (init as start node).
         prev = Node.Create(GameflowStartNode.ID, Vector2.right * pos) as GameflowStartNode;
         pos += prev.MinSize.x + nodeSpacing;
 
-        // PARSE LINEBREAKS '\' AND ESCAPES
+        text = Regex.Replace(text,":\\s*\n",":"); // Remove newlines after character name delimiters.
         string[] lines = text.Split(lineDelim, escape); // Separate lines
         for (int i = 0; i < lines.Length; i++)
         {
