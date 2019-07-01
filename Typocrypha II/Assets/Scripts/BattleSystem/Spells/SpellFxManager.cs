@@ -5,7 +5,9 @@ using UnityEngine;
 [RequireComponent(typeof(SpellManager))]
 public class SpellFxManager : MonoBehaviour
 {
+    private const float logTime = 0.8f;
     public static SpellFxManager instance;
+    public bool HasMessages { get => logData.Count > 0; }
     [Header("No Target FX")]
     [SerializeField] private SpellFxData noTargetFx = new SpellFxData();
     [Header("Repel FX")]
@@ -14,7 +16,11 @@ public class SpellFxManager : MonoBehaviour
     [SerializeField] private GameObject popupPrefab;
     [Header("Effectiveness Sprites")]
     [SerializeField] private Sprite weakSprite;
+    [Header("Log Fields")]
+    public Vector2 logPosition = new Vector2(0.5f, 0.5f);
+    public Sprite logImage;
 
+    private Queue<LogData> logData = new Queue<LogData>();
     /// <summary> Singleton implementation </summary>
     private void Awake()
     {
@@ -24,6 +30,26 @@ public class SpellFxManager : MonoBehaviour
             Destroy(gameObject);
     }
 
+    public Coroutine PlayMessages()
+    {
+        return StartCoroutine(PlayMessagesCr());
+    }
+    private IEnumerator PlayMessagesCr()
+    {
+        while (logData.Count > 0)
+        {
+            var message = logData.Dequeue();
+            var popper = Instantiate(message.popupPrefab).GetComponent<PopupBase>();
+            var cr1 = popper.PopImage(message.image ?? logImage, logPosition, logTime);
+            var cr2 = popper.PopText(message.text, logPosition, logTime);
+            yield return cr1;
+            yield return cr2;
+        }
+    }
+    public void LogMessage(string message, Sprite image = null, GameObject popupPrefabOverride = null)
+    {
+        logData.Enqueue(new LogData() { text = message, image = image, popupPrefab = popupPrefabOverride ?? popupPrefab });
+    }
     public Coroutine NoTargetFx(Vector2 pos)
     {
         return StartCoroutine(noTargetFx.Play(pos));
@@ -83,8 +109,15 @@ public class SpellFxManager : MonoBehaviour
             case Reaction.Repel:
                 break;
         }
-        yield return null;
+        yield return new WaitForSeconds(0.75f);
     }
 
     #endregion
+
+    private class LogData
+    {
+        public string text;
+        public Sprite image = null;
+        public GameObject popupPrefab;
+    }
 }

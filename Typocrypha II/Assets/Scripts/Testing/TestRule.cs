@@ -21,6 +21,7 @@ public class TestRule : Rule
         {
             var popper = GameObject.Instantiate(popupPrefab).GetComponent<PopupBase>();
             popper.PopText(s.ToString() + " is banned.", Battlefield.instance.GetSpace(c.FieldPos), 0.75f);
+            SpellFxManager.instance.LogMessage(s.ToString() + " is banned.");
         }
         return ret;
     }

@@ -21,9 +21,7 @@ namespace Gameflow
                     .Where(myType => myType.IsClass && !myType.IsAbstract && myType.IsSubclassOf(typeof(T))))
                 {
                     types.Add(type);
-                    //objects.Add((T)Activator.CreateInstance(type, constructorArgs));
                 }
-                //objects.Sort();
                 return types;
             }
         }

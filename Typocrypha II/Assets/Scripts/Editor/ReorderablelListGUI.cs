@@ -100,7 +100,7 @@ namespace GUIUtils
 
     public class RListGUIProperty
     {
-        public delegate void ElementGUI(SerializedProperty element, int index, Rect rect);
+        public delegate float ElementHeight(SerializedProperty element, int index);
         public delegate GenericMenu Dropdown();
         public float Height => list.GetHeight() + EditorGUIUtility.singleLineHeight;
 
@@ -119,6 +119,10 @@ namespace GUIUtils
                 EditorGUI.PropertyField(rect, prop.GetArrayElementAtIndex(index), GUIContent.none);
                 prop.serializedObject.ApplyModifiedProperties();
             };
+        }
+        public RListGUIProperty(SerializedProperty prop, GUIContent label, ElementHeight height) : this(prop, label)
+        {
+            list.elementHeightCallback = (int index) => height(prop.GetArrayElementAtIndex(index), index);
         }
 
         public void DoList(Rect rect)

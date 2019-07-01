@@ -15,7 +15,10 @@ public class DamageEffectInspector : RootWordEffectInspector
         effect.power = EditorGUILayout.IntField(new GUIContent("Power"), effect.power);
         effect.formula = EditorUtils.EnumPopup(new GUIContent("FormulaType"), effect.formula);
         if (effect.formula == Damage.FormulaType.Custom)
-            effect.customFormula = EditorUtils.ObjectField(effect.customFormula, false);
+        {
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("customFormula"));
+            serializedObject.ApplyModifiedProperties();
+        }
         if (GUI.changed)
             EditorUtility.SetDirty(target);
     }

@@ -8,6 +8,7 @@ using UnityEngine;
 public class SpellManager : MonoBehaviour
 {
     private const float delayBetweenTargets = 0.1f;
+    private const float delayBeforeLog = 0.25f;
     public static SpellManager instance;
 
     /// <summary> Singleton implementation </summary>
@@ -43,7 +44,14 @@ public class SpellManager : MonoBehaviour
     {
         // If the spell is restricted, break and do not cast
         if (SpellRestrictions.instance.IsRestricted(spell, caster, target, true))
+        {
+            if (SpellFxManager.instance.HasMessages)
+            {
+                yield return new WaitForSeconds(delayBeforeLog);
+                yield return SpellFxManager.instance.PlayMessages();
+            }
             yield break;
+        }          
         var roots = Modify(spell);
         var casterSpace = Battlefield.instance.GetSpace(caster.FieldPos);
         List<Coroutine> crList = new List<Coroutine>();
@@ -80,6 +88,11 @@ public class SpellManager : MonoBehaviour
                 // Wait for all of the animations to finish
                 foreach (var cr in crList)
                     yield return cr;
+                if (SpellFxManager.instance.HasMessages)
+                {
+                    yield return new WaitForSeconds(delayBeforeLog);
+                    yield return SpellFxManager.instance.PlayMessages();
+                }                             
             }
         }
     }

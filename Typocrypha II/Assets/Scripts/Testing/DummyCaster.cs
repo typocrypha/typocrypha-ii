@@ -15,6 +15,7 @@ public class DummyCaster : Caster
         Stats.MaxHP = 100; // DEBUG
         Health = Stats.MaxHP;
         playerActor = GetComponent<ATB3.ATBPlayer>();
+        DisplayName = "Ayin";
     }
 
     /// <summary>
