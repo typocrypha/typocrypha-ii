@@ -32,6 +32,8 @@ using Gameflow;
     VIEW_SWITCH := +VIEW_LABEL
     VIEW_LABEL := {"vn", "chat", "an", "bubble"}
 
+    DIALOG := *speaker name (can be empty)* (*expression*) : *line of dialog*
+
     DIALOG := *speaker name (can be empty)* : *line of dialog*
 
     COMMENT := // *comment*
@@ -46,6 +48,8 @@ using Gameflow;
 ******************* Node Types *******************
     >addchar, *character name*, *x position*, *y position*
         -Adds a new character to the scene with default pose and expression.
+    >removechar, *character name*
+        -Removes character.
 */
 
 /// <summary>
@@ -56,16 +60,17 @@ public class DialogScriptParser : EditorWindow
     TextAsset textScript; // Text script asset
     NodeCanvas canvas; // Generated canvas
     System.Type currView = typeof(DialogViewVN); // Current dialog view
+    float pos; // Position of current node
 
     AssetBundle characterDataBundle; // Character data bundle
     CharacterData[] allCharacterData; // All loaded character data
-    
-    char[] lineDelim = new char[] { '\n' }; // Line delimiter.
-    char[] argDelim = new char[] { ',' }; // List of arguments delimiter.
-    char[] nameMarker = new char[] { ':' }; // Speaker's name delim.
-    char[] nodeMarker = new char[] { '>' }; // Node marker.
-    char[] viewSwitchMarker = new char[] { '+' }; // View switching marker.
-    char[] escape = new char[] { '\\' }; // Escape character.
+
+    readonly char[] lineDelim = new char[] { '\n' }; // Line delimiter.
+    readonly char[] argDelim = new char[] { ',' }; // List of arguments delimiter.
+    readonly char[] nameMarker = new char[] { ':' }; // Speaker's name delim.
+    readonly char[] nodeMarker = new char[] { '>' }; // Node marker.
+    readonly char[] viewSwitchMarker = new char[] { '+' }; // View switching marker.
+    readonly char[] escape = new char[] { '\\' }; // Escape character.
 
     // Dialog view labels.
     Dictionary<string, System.Type> viewMap = new Dictionary<string, System.Type>
@@ -80,6 +85,7 @@ public class DialogScriptParser : EditorWindow
     Dictionary<string, System.Type> nodeMap = new Dictionary<string, System.Type>
     {
         {"addchar", typeof(AddCharacter) },
+        {"removechar", typeof(RemoveCharacter) },
         {"end", typeof(GameflowEndNode) },
     };
 
@@ -128,9 +134,9 @@ public class DialogScriptParser : EditorWindow
         {
             canvas.nodes.Clear();
         }
-
+        // Parse text into node canvas.
         Parse();
-
+        // Save canvas.
         canvas.saveName = "Assets/ScriptableObjects/DialogScenes/" + canvas.name + ".asset";
         NodeEditorSaveManager.SaveNodeCanvas(canvas.saveName, ref canvas, true);
         AssetBundle.UnloadAllAssetBundles(true);
@@ -143,17 +149,23 @@ public class DialogScriptParser : EditorWindow
         text = Regex.Replace(text, "/{2}.*?\n", "\n"); // Remove comments
         text = Regex.Replace(text, "/[\x2A].*?[\x2A]/", "", RegexOptions.Singleline); // Remove block comments
         text = Regex.Replace(text, "\r", ""); // Remove carriage returns
-        float pos = 0f; // Position of current node
+        pos = 0f; // Position of current node
         Node prev = null; // Previous node (init as start node).
-        prev = Node.Create(GameflowStartNode.ID, Vector2.right * pos) as GameflowStartNode;
-        pos += prev.MinSize.x + nodeSpacing;
+        prev = CreateNode(GameflowStartNode.ID) as GameflowStartNode;
 
         text = Regex.Replace(text,":\\s*\n",":"); // Remove newlines after character name delimiters.
         string[] lines = text.Split(lineDelim, escape); // Separate lines
         for (int i = 0; i < lines.Length; i++)
         {
             Debug.Log("parsing:" + lines[i]);
-            ParseLine(lines[i], ref pos, ref prev);
+            try
+            {
+                ParseLine(lines[i], ref prev);
+            }
+            catch
+            {
+                Debug.LogError("Line " + (i+1) + ": Script parsing error");
+            }
         }
         // Create end node.
         var endNode = Node.Create(EndAndHide.ID, Vector2.right * pos) as EndAndHide;
@@ -161,74 +173,118 @@ public class DialogScriptParser : EditorWindow
     }
 
     // Parses a single line
-    void ParseLine(string line, ref float pos, ref Node prev)
+    void ParseLine(string line, ref Node prev)
     {
         line = line.Trim();
         if (line.Length < 2) return; // Empty line.
-        else if (viewSwitchMarker.Contains(line[0])) // View switch.
+        List<Node> nodes = null; // Constructed nodes.
+        if (viewSwitchMarker.Contains(line[0])) // View switch.
         {
             string[] dialogLine = line.Split(viewSwitchMarker);
             currView = viewMap[dialogLine[1]];
         }
         else if (nodeMarker.Contains(line[0])) // General node.
         {
-            var node = ParseGeneralNode(line, pos); // Parse node.
-            pos += node.MinSize.x + nodeSpacing; // Update position
-            // Connect to previous
-            (prev as BaseNodeOUT).toNextOUT.TryApplyConnection((node as BaseNodeIO).fromPreviousIN, true);
-            prev = node;
+            nodes = ParseGeneralNode(line); // Parse node.
         }
         else // Line of dialog.
         {
-            var node = ParseDialogNode(line, pos); // Parse dialog
-            pos += node.MinSize.x + nodeSpacing; // Update position
-            // Connect to previous
-            (prev as BaseNodeOUT).toNextOUT.TryApplyConnection((node as BaseNodeIO).fromPreviousIN, true);
-            prev = node;   
+            nodes = ParseDialogNode(line); // Parse dialog
+        }
+        if (nodes != null)
+        {
+            foreach(var node in nodes)
+            {
+                // Connect to previous
+                (prev as BaseNodeOUT).toNextOUT.TryApplyConnection((node as BaseNodeIO).fromPreviousIN, true);
+                prev = node;
+            }
         }
     }
 
-    // Parses a general node (not dialog) line. Returns constructed node.
-    Node ParseGeneralNode(string line, float pos)
+    // Parses a general node (not dialog) line. Returns constructed nodes.
+    List<Node> ParseGeneralNode(string line)
     {
         string[] dialogLine = line.Split(nodeMarker, escape);
         string[] args = dialogLine[1].Split(argDelim, escape);
-        Node node = null;
+        List<Node> nodes = new List<Node>();
         System.Type nodeType = nodeMap[args[0]];
         if (nodeType == typeof(AddCharacter))
         {
-            var gnode = Node.Create(AddCharacter.ID, Vector2.right * pos) as AddCharacter;
-            var cdata = allCharacterData.Single(c => c.aliases.Contains(args[1])); // Find character data.
-            gnode.characterData = AssetDatabase.LoadAssetAtPath<CharacterData>("Assets/ScriptableObjects/CharacterData/" + cdata.name + ".asset");
+            var gnode = CreateNode(AddCharacter.ID) as AddCharacter;
+            gnode.characterData = GetCharacterData(args[1]);
             gnode.targetPos = new Vector2(float.Parse(args[2]), float.Parse(args[3]));
-            node = gnode;
+            nodes.Add(gnode);
         }
-        return node;
+        else if (nodeType == typeof(RemoveCharacter))
+        {
+            var gnode = CreateNode(RemoveCharacter.ID) as RemoveCharacter;
+            gnode.characterData = GetCharacterData(args[1]);
+            nodes.Add(gnode);
+        }
+        return nodes;
     }
 
-    // Parses a single dialog line. Returns constructed node.
-    Node ParseDialogNode(string line, float pos)
+    // Parses a single dialog line. Returns constructed nodes.
+    List<Node> ParseDialogNode(string line)
     {
         string[] dialogLine = line.Split(nameMarker, escape);
-        DialogNode node = null;
+        List<Node> nodes = new List<Node>();
+        string charName;
+        if (dialogLine[0].Contains('('))
+        {
+            charName = dialogLine[0].Substring(0, dialogLine[0].IndexOf('(')).Trim();
+            string expr = Regex.Match(dialogLine[0], @"\(([^\)]*)\)").Value;
+            expr = expr.Substring(1, expr.Length - 2);
+            var gnode = CreateNode(SetExpression.ID) as SetExpression;
+            gnode.characterData = GetCharacterData(charName);
+            gnode.expr = expr;
+            nodes.Add(gnode);
+        }
+        else
+        {
+            charName = dialogLine[0].Trim();
+            string expr = "normal"; // Normal default expression.
+            var gnode = CreateNode(SetExpression.ID) as SetExpression;
+            gnode.characterData = GetCharacterData(charName);
+            gnode.expr = expr;
+            nodes.Add(gnode);
+        }
+        DialogNode dnode = null; // Node for dialog.
         if (currView == typeof(DialogNodeVN))
         {
-            node = Node.Create(DialogNodeVN.ID, Vector2.right * pos, canvas) as DialogNodeVN;
+            dnode = CreateNode(DialogNodeVN.ID) as DialogNodeVN;
         }
         else if (currView == typeof(DialogNodeChat))
         {
-            node = Node.Create(DialogNodeChat.ID, Vector2.right * pos, canvas) as DialogNodeChat;
+            dnode = CreateNode(DialogNodeChat.ID) as DialogNodeChat;
         }
         else if (currView == typeof(DialogNodeAN))
         {
-            node = Node.Create(DialogNodeAN.ID, Vector2.right * pos, canvas) as DialogNodeAN;
+            dnode = CreateNode(DialogNodeAN.ID) as DialogNodeAN;
         }
         else if (currView == typeof(DialogNodeBubble))
         {
-            node = Node.Create(DialogNodeBubble.ID, Vector2.right * pos, canvas) as DialogNodeBubble;
+            dnode = CreateNode(DialogNodeBubble.ID) as DialogNodeBubble;
         }
-        node.characterName = dialogLine[0].Trim();
-        node.text = dialogLine[1].Trim();
-        return node;
+        dnode.characterName = charName;
+        dnode.text = dialogLine[1].Trim();
+        nodes.Add(dnode);
+        return nodes;
+    }
+
+    // Get character data from alias.
+    CharacterData GetCharacterData(string alias)
+    {
+        var cdata = allCharacterData.Single(c => c.aliases.Contains(alias)); // Find character data.
+        return AssetDatabase.LoadAssetAtPath<CharacterData>("Assets/ScriptableObjects/CharacterData/" + cdata.name + ".asset");
+    }
+
+    // Creates node and shifts position.
+    Node CreateNode(string id)
+    {
+        var gnode = Node.Create(id, Vector2.right * pos, canvas);
+        pos += gnode.MinSize.x + nodeSpacing;
+        return gnode;
     }
 }
