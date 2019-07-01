@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(SpellManager))]
 public class SpellFxManager : MonoBehaviour
 {
+    private const float popTime = 0.5f;
     private const float logTime = 0.8f;
     public static SpellFxManager instance;
     public bool HasMessages { get => logData.Count > 0; }
@@ -44,6 +45,7 @@ public class SpellFxManager : MonoBehaviour
             var cr2 = popper.PopText(message.text, logPosition, logTime);
             yield return cr1;
             yield return cr2;
+            popper.Cleanup();
         }
     }
     public void LogMessage(string message, Sprite image = null, GameObject popupPrefabOverride = null)
@@ -90,11 +92,11 @@ public class SpellFxManager : MonoBehaviour
             yield break;
         var popper = Instantiate(data.popupPrefab ?? popupPrefab).GetComponent<PopupBase>();
 
-        popper.PopText(data.damage.ToString(), targetPos, 0.75f);
+        yield return popper.PopText(data.damage.ToString(), targetPos, popTime);
         switch (data.effectiveness)
         {
             case Reaction.Weak:
-                popper.PopImage(weakSprite, targetPos, 0.75f);
+                yield return popper.PopImage(weakSprite, targetPos, popTime);
                 break;
             case Reaction.Neutral:
                 break;
@@ -109,7 +111,7 @@ public class SpellFxManager : MonoBehaviour
             case Reaction.Repel:
                 break;
         }
-        yield return new WaitForSeconds(0.75f);
+        popper.Cleanup();
     }
 
     #endregion

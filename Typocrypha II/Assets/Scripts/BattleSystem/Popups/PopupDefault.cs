@@ -36,7 +36,6 @@ public class PopupDefault : PopupBase
             rect.localScale = scale;
             yield return new WaitForEndOfFrame();
         }
-        Destroy(gameObject);
     }
 
     public override Coroutine PopImage(Sprite image, Vector2 pos, float time)
@@ -47,7 +46,7 @@ public class PopupDefault : PopupBase
         if (imgComponent == null || rect == null)
             return null;
         imgComponent.sprite = image;
-        rect.sizeDelta = Vector2.zero;
+        imgComponent.SetNativeSize();
         return StartCoroutine(PopImageCr(rect, imgComponent, time));
     }
 
@@ -60,7 +59,6 @@ public class PopupDefault : PopupBase
             rect.localScale = scale;
             yield return new WaitForEndOfFrame();
         }
-        rect.sizeDelta = img.sprite.rect.size;
         yield return new WaitForSeconds(time);
         for (int i = 6; i > 0; i--)
         {
@@ -68,6 +66,5 @@ public class PopupDefault : PopupBase
             rect.localScale = scale;
             yield return new WaitForEndOfFrame();
         }
-        Destroy(gameObject);
     }
 }

@@ -19,8 +19,8 @@ public class TestRule : Rule
         bool ret = modRoots.Any((root) => root.effects.Any((effect) => effect.tags.Contains(tagToBan)));
         if(ret)
         {
-            var popper = GameObject.Instantiate(popupPrefab).GetComponent<PopupBase>();
-            popper.PopText(s.ToString() + " is banned.", Battlefield.instance.GetSpace(c.FieldPos), 0.75f);
+            var popper = Instantiate(popupPrefab).GetComponent<PopupBase>();
+            popper.PopTextAndCleanup(s.ToString() + " is banned.", Battlefield.instance.GetSpace(c.FieldPos), 0.75f);
             SpellFxManager.instance.LogMessage(s.ToString() + " is banned.");
         }
         return ret;
