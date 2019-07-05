@@ -32,9 +32,11 @@ using Gameflow;
     VIEW_SWITCH := +VIEW_LABEL
     VIEW_LABEL := {"vn", "chat", "an", "bubble"}
 
-    DIALOG := *speaker name (can be empty)* (*expression*) : *line of dialog*
+    DIALOG := *speaker name* (*expression*) [*pose*] : *line of dialog*
 
-    DIALOG := *speaker name (can be empty)* : *line of dialog*
+    DIALOG := *speaker name* (*expression*) : *line of dialog*
+
+    DIALOG := *speaker name* : *line of dialog*
 
     COMMENT := // *comment*
 
@@ -67,9 +69,13 @@ public class DialogScriptParser : EditorWindow
 
     readonly char[] lineDelim = new char[] { '\n' }; // Line delimiter.
     readonly char[] argDelim = new char[] { ',' }; // List of arguments delimiter.
-    readonly char[] nameMarker = new char[] { ':' }; // Speaker's name delim.
+    readonly char[] nameMarker = new char[] { ':' }; // Speaker's name marker for dialog lines.
     readonly char[] nodeMarker = new char[] { '>' }; // Node marker.
     readonly char[] viewSwitchMarker = new char[] { '+' }; // View switching marker.
+    readonly char[] exprMarker = new char[] { '(', ')' }; // Speaker's expression marker for dialog lines.
+    readonly string exprPat = @"\(([^\)]*)\)"; // Expression marker pattern.
+    readonly char[] poseMarker = new char[] { '[', ']' }; // Speaker's pose marker for dialog lines.
+    readonly string posePat = @"\[([^\)]*)\]"; // Pose marker pattern.
     readonly char[] escape = new char[] { '\\' }; // Escape character.
 
     // Dialog view labels.
@@ -146,25 +152,29 @@ public class DialogScriptParser : EditorWindow
     void Parse()
     {
         string text = textScript.text;
+        #region Preprocessing text
         text = Regex.Replace(text, "/{2}.*?\n", "\n"); // Remove comments
         text = Regex.Replace(text, "/[\x2A].*?[\x2A]/", "", RegexOptions.Singleline); // Remove block comments
         text = Regex.Replace(text, "\r", ""); // Remove carriage returns
+        text = Regex.Replace(text, ":\\s*\n", ":"); // Remove newlines after character name delimiters.
+        #endregion
+        string[] lines = text.Split(lineDelim, escape); // Separate lines
+
         pos = 0f; // Position of current node
         Node prev = null; // Previous node (init as start node).
         prev = CreateNode(GameflowStartNode.ID) as GameflowStartNode;
-
-        text = Regex.Replace(text,":\\s*\n",":"); // Remove newlines after character name delimiters.
-        string[] lines = text.Split(lineDelim, escape); // Separate lines
+        
         for (int i = 0; i < lines.Length; i++)
         {
-            Debug.Log("parsing:" + lines[i]);
+            //Debug.Log("parsing:" + lines[i]);
             try
             {
                 ParseLine(lines[i], ref prev);
             }
             catch
             {
-                Debug.LogError("Line " + (i+1) + ": Script parsing error");
+                Debug.LogError("Line " + (i + 1) + ": Script parsing error");
+                Debug.LogError("Line " + (i + 1) + ": " + lines[i]);
             }
         }
         // Create end node.
@@ -180,7 +190,7 @@ public class DialogScriptParser : EditorWindow
         List<Node> nodes = null; // Constructed nodes.
         if (viewSwitchMarker.Contains(line[0])) // View switch.
         {
-            string[] dialogLine = line.Split(viewSwitchMarker);
+            string[] dialogLine = line.Split(viewSwitchMarker, escape);
             currView = viewMap[dialogLine[1]];
         }
         else if (nodeMarker.Contains(line[0])) // General node.
@@ -230,26 +240,45 @@ public class DialogScriptParser : EditorWindow
     {
         string[] dialogLine = line.Split(nameMarker, escape);
         List<Node> nodes = new List<Node>();
-        string charName;
-        if (dialogLine[0].Contains('('))
+        string charName; // Character name.
+        CharacterData charData; // Character data.
+        #region Expression and pose
+        string expr;
+        string pose;
+        if (dialogLine[0].Contains(poseMarker[0]))
         {
-            charName = dialogLine[0].Substring(0, dialogLine[0].IndexOf('(')).Trim();
-            string expr = Regex.Match(dialogLine[0], @"\(([^\)]*)\)").Value;
+            charName = dialogLine[0].Substring(0, dialogLine[0].IndexOf(exprMarker[0])).Trim();
+            expr = Regex.Match(dialogLine[0], exprPat).Value;
             expr = expr.Substring(1, expr.Length - 2);
-            var gnode = CreateNode(SetExpression.ID) as SetExpression;
-            gnode.characterData = GetCharacterData(charName);
-            gnode.expr = expr;
-            nodes.Add(gnode);
+            pose = Regex.Match(dialogLine[0], posePat).Value;
+            pose = pose.Substring(1, pose.Length - 2);
+        }
+        else if (dialogLine[0].Contains(exprMarker[0])) 
+        {
+            charName = dialogLine[0].Substring(0, dialogLine[0].IndexOf(exprMarker[0])).Trim();
+            expr = Regex.Match(dialogLine[0], exprPat).Value;
+            expr = expr.Substring(1, expr.Length - 2);
+            pose = "base";
         }
         else
         {
             charName = dialogLine[0].Trim();
-            string expr = "normal"; // Normal default expression.
+            expr = "normal"; // Default expression.
+            pose = "base"; // Default pose.
+        }
+        charData = GetCharacterData(charName);
+        if (charData != null)
+        {
+            var hnode = CreateNode(SetPose.ID) as SetPose;
+            hnode.characterData = charData;
+            hnode.pose = pose;
+            nodes.Add(hnode);
             var gnode = CreateNode(SetExpression.ID) as SetExpression;
-            gnode.characterData = GetCharacterData(charName);
+            gnode.characterData = charData;
             gnode.expr = expr;
             nodes.Add(gnode);
         }
+        #endregion
         DialogNode dnode = null; // Node for dialog.
         if (currView == typeof(DialogNodeVN))
         {
@@ -273,9 +302,10 @@ public class DialogScriptParser : EditorWindow
         return nodes;
     }
 
-    // Get character data from alias.
+    // Get character data asset from alias (null if character doesn't exist).
     CharacterData GetCharacterData(string alias)
     {
+        if (!allCharacterData.Any(c => c.aliases.Contains(alias))) return null;
         var cdata = allCharacterData.Single(c => c.aliases.Contains(alias)); // Find character data.
         return AssetDatabase.LoadAssetAtPath<CharacterData>("Assets/ScriptableObjects/CharacterData/" + cdata.name + ".asset");
     }

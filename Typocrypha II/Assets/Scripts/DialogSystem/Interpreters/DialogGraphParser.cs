@@ -145,8 +145,7 @@ public class DialogGraphParser : MonoBehaviour
                     return dlist;
                 }
                 else return ditem;
-            }
-                
+            }    
         }
         else if (currNode is SetVariableNode)
         {
