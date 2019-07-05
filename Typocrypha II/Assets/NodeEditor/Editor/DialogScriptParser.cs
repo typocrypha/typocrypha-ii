@@ -241,52 +241,71 @@ public class DialogScriptParser : EditorWindow
         string[] dialogLine = line.Split(nameMarker, escape);
         List<Node> nodes = new List<Node>();
         string charName; // Character name.
-        CharacterData charData; // Character data.
-        #region Expression and pose
-        string expr;
-        string pose;
-        if (dialogLine[0].Contains(poseMarker[0]))
-        {
-            charName = dialogLine[0].Substring(0, dialogLine[0].IndexOf(exprMarker[0])).Trim();
-            expr = Regex.Match(dialogLine[0], exprPat).Value;
-            expr = expr.Substring(1, expr.Length - 2);
-            pose = Regex.Match(dialogLine[0], posePat).Value;
-            pose = pose.Substring(1, pose.Length - 2);
-        }
-        else if (dialogLine[0].Contains(exprMarker[0])) 
-        {
-            charName = dialogLine[0].Substring(0, dialogLine[0].IndexOf(exprMarker[0])).Trim();
-            expr = Regex.Match(dialogLine[0], exprPat).Value;
-            expr = expr.Substring(1, expr.Length - 2);
-            pose = "base";
-        }
+        if (dialogLine[0].Contains(exprMarker[0]) || dialogLine[0].Contains(poseMarker[0]))
+            charName = dialogLine[0].Substring(0, dialogLine[0].IndexOfAny(exprMarker.Concat(poseMarker).ToArray())).Trim();
         else
-        {
             charName = dialogLine[0].Trim();
-            expr = "normal"; // Default expression.
-            pose = "base"; // Default pose.
-        }
-        charData = GetCharacterData(charName);
+        CharacterData charData = GetCharacterData(charName); // Character data.
+        #region Expression and pose
+        string expr = ""; // Expression string (value within parentheticals)
+        string pose = ""; // Pose string [value within square brackets]
         if (charData != null)
         {
-            var hnode = CreateNode(SetPose.ID) as SetPose;
-            hnode.characterData = charData;
-            hnode.pose = pose;
-            nodes.Add(hnode);
-            var gnode = CreateNode(SetExpression.ID) as SetExpression;
-            gnode.characterData = charData;
-            gnode.expr = expr;
-            nodes.Add(gnode);
+            if (dialogLine[0].Contains(poseMarker[0])) // Pose
+            {
+                pose = Regex.Match(dialogLine[0], posePat).Value;
+                pose = pose.Substring(1, pose.Length - 2);
+            }
+            else
+            {
+                pose = "base"; // Default pose.
+            }
+            if (dialogLine[0].Contains(exprMarker[0])) // Expression
+            {
+                expr = Regex.Match(dialogLine[0], exprPat).Value;
+                expr = expr.Substring(1, expr.Length - 2);
+            }
+            else
+            {
+                expr = "normal"; // Default expression.
+            }
         }
         #endregion
         DialogNode dnode = null; // Node for dialog.
         if (currView == typeof(DialogNodeVN))
         {
+            // Create expression and pose nodes
+            if (charData != null)
+            {
+                var hnode = CreateNode(SetPose.ID) as SetPose;
+                hnode.characterData = charData;
+                hnode.pose = pose;
+                nodes.Add(hnode);
+                var gnode = CreateNode(SetExpression.ID) as SetExpression;
+                gnode.characterData = charData;
+                gnode.expr = expr;
+                nodes.Add(gnode);
+            }
+            // Create dialog node
             dnode = CreateNode(DialogNodeVN.ID) as DialogNodeVN;
         }
         else if (currView == typeof(DialogNodeChat))
         {
+            // USE EXPRESSION TO CHANGE ICON (currently only 1 icon)
             dnode = CreateNode(DialogNodeChat.ID) as DialogNodeChat;
+            if (pose == "left")
+            {
+                (dnode as DialogNodeChat).leftIcon = charData.chat_icon;
+            }
+            else if (pose == "right")
+            {
+                (dnode as DialogNodeChat).rightIcon = charData.chat_icon;
+            }
+            else if (pose == "both")
+            {
+                (dnode as DialogNodeChat).leftIcon = charData.chat_icon;
+                (dnode as DialogNodeChat).rightIcon = charData.chat_icon;
+            }
         }
         else if (currView == typeof(DialogNodeAN))
         {
