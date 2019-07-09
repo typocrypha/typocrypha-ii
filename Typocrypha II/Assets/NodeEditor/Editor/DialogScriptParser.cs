@@ -7,52 +7,7 @@ using UnityEngine;
 using NodeEditorFramework;
 using Gameflow;
 
-/*
-******************* Metasyntax *******************
-    CAPITAL_LETTERS -> Type of parsable item
-    := -> Defined as
-    [ ITEM ] -> Zero or more copies of item
-    { ITEM1, ITEM2, ... } -> Any single one of the contained items
-    % comment -> Comment
-    "label" -> String literal (e.g. view types)
-    *descriptor* -> Variable text (e.g. dialog)
-     
-    Newline characters are used as statement delimiters
-    Use '\' to escape control sequences 
-        (e.g., to have a literal newline in dialog, put '\' at the end of the line) 
-    To have a literal backslash, you need to use '\\' 
-
-******************* Format *******************
-    SCRIPT := [STATEMENT]
-    
-    % Note the required newline at the end of a statement
-    STATEMENT := {VIEW_SWITCH, DIALOG, COMMENT, NODE} \n
-    
-    % Switches the dialog view mode
-    VIEW_SWITCH := +VIEW_LABEL
-    VIEW_LABEL := {"vn", "chat", "an", "bubble"}
-
-    DIALOG := *speaker name* (*expression*) [*pose*] : *line of dialog*
-
-    DIALOG := *speaker name* (*expression*) : *line of dialog*
-
-    DIALOG := *speaker name* : *line of dialog*
-
-    COMMENT := // *comment*
-
-    % Allows for specifying various nodes
-    NODE := >NODE_LABEL, [NODE_ARGUMENT_LIST]
-
-    NODE_LABEL := {"addchar"}
-
-    NODE_ARGUMENT_LIST := *arg 1*,*arg 2*, ... , *arg n*
-
-******************* Node Types *******************
-    >addchar, *character name*, *x position*, *y position*
-        -Adds a new character to the scene with default pose and expression.
-    >removechar, *character name*
-        -Removes character.
-*/
+// Syntax: https://docs.google.com/document/d/1za4Xt3NwA6cOirZnnqCrD0kbA193A7Ypk6n_yVwa1e4/edit#heading=h.jg4trxckxznj
 
 /// <summary>
 /// Parses text scripts into dialog node canvases
@@ -92,8 +47,13 @@ public class DialogScriptParser : EditorWindow
     {
         {"addchar", typeof(AddCharacter) },
         {"removechar", typeof(RemoveCharacter) },
+        {"playbgm", typeof(PlayBgm) },
+        {"stopbgm", typeof(StopBgm) },
         {"end", typeof(GameflowEndNode) },
     };
+
+    AnimationCurve bgmFadeIn = new AnimationCurve(); // Default fade in curve
+    AnimationCurve bgmFadeOut = new AnimationCurve(); // Default fade out curve
 
     const float nodeSpacing = 40f;
 
@@ -105,6 +65,7 @@ public class DialogScriptParser : EditorWindow
 
     void OnGUI()
     {
+        // Main asset fields
         GUILayout.BeginVertical("Box");
 
         GUILayout.BeginHorizontal();
@@ -118,11 +79,20 @@ public class DialogScriptParser : EditorWindow
         GUILayout.EndHorizontal();
 
         GUILayout.EndVertical();
+        // Custom settings
+        GUILayout.BeginVertical();
+
+        GUILayout.BeginHorizontal("Box");
+        bgmFadeIn = EditorGUILayout.CurveField("BGM Fade In Curve", bgmFadeIn, GUILayout.Height(50f));
+        bgmFadeOut = EditorGUILayout.CurveField("BGM Fade Out Curve", bgmFadeOut, GUILayout.Height(50f));
+        GUILayout.EndHorizontal();
+
+        GUILayout.EndVertical();
+        // Generate button
         if (textScript != null && GUILayout.Button("Generate Canvas", GUILayout.Width(120f)))
         {
             GenerateCanvas();
         }
-        
     }
 
     // Generates node canvas from script
@@ -230,6 +200,21 @@ public class DialogScriptParser : EditorWindow
         {
             var gnode = CreateNode(RemoveCharacter.ID) as RemoveCharacter;
             gnode.characterData = GetCharacterData(args[1]);
+            nodes.Add(gnode);
+        }
+        else if (nodeType == typeof(PlayBgm))
+        {
+            var gnode = CreateNode(PlayBgm.ID) as PlayBgm;
+            string path = AssetDatabase.FindAssets(args[1], AssetDatabase.GetSubFolders("Assets/Audio/Clips/Music"))[0];
+            path = AssetDatabase.GUIDToAssetPath(path);
+            gnode.bgm = AssetDatabase.LoadAssetAtPath<AudioClip>(path);
+            gnode.fadeCurve = bgmFadeIn;
+            nodes.Add(gnode);
+        }
+        else if (nodeType == typeof(StopBgm))
+        {
+            var gnode = CreateNode(StopBgm.ID) as StopBgm;
+            gnode.fadeCurve = bgmFadeOut;
             nodes.Add(gnode);
         }
         return nodes;
