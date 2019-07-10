@@ -19,8 +19,8 @@ namespace Gameflow
         public override string Title { get { return "Set Background"; } }
         public override Vector2 MinSize { get { return new Vector2(150, 40); } }
 
-        private const string Id = "setBackground";
-        public override string GetID { get { return Id; } }
+        public const string ID = "setBackground";
+        public override string GetID { get { return ID; } }
 
         public BgType bgType;
         public Sprite bgSprite;

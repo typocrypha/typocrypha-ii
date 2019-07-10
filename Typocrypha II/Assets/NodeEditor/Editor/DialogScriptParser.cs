@@ -49,6 +49,7 @@ public class DialogScriptParser : EditorWindow
         {"removechar", typeof(RemoveCharacter) },
         {"playbgm", typeof(PlayBgm) },
         {"stopbgm", typeof(StopBgm) },
+        {"setbg", typeof(SetBackgroundNode) },
         {"end", typeof(GameflowEndNode) },
     };
 
@@ -215,6 +216,18 @@ public class DialogScriptParser : EditorWindow
         {
             var gnode = CreateNode(StopBgm.ID) as StopBgm;
             gnode.fadeCurve = bgmFadeOut;
+            nodes.Add(gnode);
+        }
+        else if (nodeType == typeof(SetBackgroundNode))
+        {
+            var gnode = CreateNode(SetBackgroundNode.ID) as SetBackgroundNode;
+            gnode.bgType = (args[1] == "sprite") ? SetBackgroundNode.BgType.Sprite 
+                                                 : SetBackgroundNode.BgType.Prefab;
+            string path = (args[1] == "sprite") ? AssetDatabase.FindAssets(args[2], AssetDatabase.GetSubFolders("Assets/Graphics/Sprites/Backgrounds"))[0] 
+                                                : AssetDatabase.FindAssets(args[2], AssetDatabase.GetSubFolders("Assets/Prefabs/Backgrounds"))[0];
+            path = AssetDatabase.GUIDToAssetPath(path);
+            if (args[1] == "sprite") gnode.bgSprite = AssetDatabase.LoadAssetAtPath<Sprite>(path);
+            else                     gnode.bgPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
             nodes.Add(gnode);
         }
         return nodes;
