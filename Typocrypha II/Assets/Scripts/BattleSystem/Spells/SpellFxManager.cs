@@ -14,12 +14,12 @@ public class SpellFxManager : MonoBehaviour
     [Header("Repel FX")]
     [SerializeField] private SpellFxData repelFx = new SpellFxData();
     [Header("Default Popup Prefab")]
-    [SerializeField] private GameObject popupPrefab;
+    [SerializeField] private GameObject popupPrefab = null;
     [Header("Effectiveness Sprites")]
-    [SerializeField] private Sprite weakSprite;
+    [SerializeField] private Sprite weakSprite = null;
     [Header("Log Fields")]
-    public Vector2 logPosition = new Vector2(0.5f, 0.5f);
-    public Sprite logImage;
+    [SerializeField] private Vector2 logPosition = new Vector2(0.5f, 0.5f);
+    [SerializeField] private Sprite logImage = null;
 
     private Queue<LogData> logData = new Queue<LogData>();
     /// <summary> Singleton implementation </summary>
@@ -66,7 +66,7 @@ public class SpellFxManager : MonoBehaviour
         var pos = targetPos;
 
         #region Repel
-        if (data.effectiveness == Reaction.Repel)
+        if (data.Effectiveness == Reaction.Repel)
         {
             pos = casterPos;
             yield return StartCoroutine(repelFx.Play(targetPos));
@@ -92,8 +92,8 @@ public class SpellFxManager : MonoBehaviour
             yield break;
         var popper = Instantiate(data.popupPrefab ?? popupPrefab).GetComponent<PopupBase>();
 
-        yield return popper.PopText(data.damage.ToString(), targetPos, popTime);
-        switch (data.effectiveness)
+        yield return popper.PopText(data.Damage.ToString(), targetPos, popTime);
+        switch (data.Effectiveness)
         {
             case Reaction.Weak:
                 yield return popper.PopImage(weakSprite, targetPos, popTime);

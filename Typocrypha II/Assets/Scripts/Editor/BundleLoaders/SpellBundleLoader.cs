@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
+﻿using UnityEditor;
 using System.Linq;
 using System.IO;
 
@@ -9,6 +6,7 @@ using System.IO;
 [InitializeOnLoad]
 public static class LoadSpellBundlesOnPlayMode
 {
+    public static string path = "Assets/ScriptableObjects/Bundles";
     // register an event handler when the class is initialized
     static LoadSpellBundlesOnPlayMode()
     {
@@ -18,9 +16,9 @@ public static class LoadSpellBundlesOnPlayMode
 
     private static void LoadSpellBundles(PlayModeStateChange state)
     {
-        if (state != PlayModeStateChange.ExitingPlayMode)
+        if (state != PlayModeStateChange.ExitingEditMode)
             return;
-        var spellBundles = AssetUtils.LoadAllAssetsInDirectory<SpellWordBundle>("Assets/ScriptableObjects/Bundles");
+        var spellBundles = AssetUtils.LoadAllAssetsInDirectory<SpellWordBundle>(path);
         foreach (var bundle in spellBundles)
         {
             bundle.words.Clear();

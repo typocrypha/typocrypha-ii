@@ -12,49 +12,54 @@ public static class Damage
     }
     public delegate CastResults Formula(DamageEffect effect, Caster caster, Caster target);
 
-    public static Dictionary<FormulaType, Formula> StandardFormula { get; } = new Dictionary<FormulaType, Formula>
+    public static Dictionary<FormulaType, Formula> PresetFormula { get; } = new Dictionary<FormulaType, Formula>
     {
-        { FormulaType.Standard, Standard }
-    };   
+        { FormulaType.Standard, StandardApplied }
+    };
+
+    public static CastResults StandardApplied(DamageEffect effect, Caster caster, Caster target)
+    {
+        var results = Standard(effect, caster, target);
+        ApplyStandard(results, effect, caster, target);
+        return results;
+    }
+
+    #region Calculation
+
+    public static CastResults Standard(DamageEffect effect, Caster caster, Caster target)
+    {
+        var results = StandardElements(effect, caster, target);
+        results.Damage *= effect.power;
+        return results;
+    }
+
+    #region Standard Elements and Reactions
+
     public static CastResults StandardElements(DamageEffect effect, Caster caster, Caster target)
     {
         float effectMagnitude;
         var effective = GetReaction(effect, caster, target, out effectMagnitude);
-        if (effective == Reaction.Repel)
-        {
-            if (target != caster)
-            {
-                effect.Cast(caster, caster);
-                return new CastResults
-                {
-                    effectiveness = effective,
-                };
-            }
-        }
         var damageMod = GetReactionDmgMod(effect, caster, target, effective, effectMagnitude);
         return new CastResults
         {
-            damage = damageMod,
-            effectiveness = effective,
-            staggerDamage = effective == Reaction.Weak ? 1 : 0
+            Damage = damageMod,
+            Effectiveness = effective,
+            StaggerDamage = effective == Reaction.Weak ? 1 : 0
         };
     }
-    private static CastResults Standard(DamageEffect effect, Caster caster, Caster target)
-    {
-        var results = StandardElements(effect, caster, target);
-        results.damage *= effect.power;
-        results.damage = Mathf.FloorToInt(results.damage);
-        target.Health -= (int)results.damage;
-        return results;
-    }
-
-    #region Utility Functions
+    /// <summary>
+    /// Get the reaction of the given effect on the given target.
+    /// The strongest reaction is taken, with its multiplier being the number of that reaction the target has
+    /// Strength order = Repel -> Drain -> Dodge -> Block -> BASIC.
+    /// If BASIC is reached, the reaction is dermened by comparing the number of resists with the number of weaks
+    /// to be weak, resist, or neutral
+    /// </summary>
     public static Reaction GetReaction(DamageEffect effect, Caster caster, Caster target, out float multiplier)
     {
         multiplier = 0;
         var reactions = new CasterTagDictionary.ReactionMultiSet();
-        // Compute cumulative tags
-        foreach(var tag in effect.tags)
+        // Compute cumulative reactions
+        foreach (var tag in effect.tags)
         {
             if (tag != null)
             {
@@ -94,20 +99,25 @@ public static class Damage
             {
                 multiplier = sum;
                 return Reaction.Resist;
-            }                
-            if(sum < 0)
+            }
+            if (sum < 0)
             {
+                // Take the positive value of the sum
                 multiplier = -sum;
                 return Reaction.Weak;
             }
             return Reaction.Neutral;
         }
     }
+    /// <summary>
+    /// Get the standard damage multiplier for a given reaction.
+    /// magnitude is the number of that reaction
+    /// </summary>
     public static float GetReactionDmgMod(DamageEffect effect, Caster caster, Caster target, Reaction r, float mag)
     {
         if (r == Reaction.Repel)
-            return mag;        
-        if(r == Reaction.Weak)
+            return mag;
+        if (r == Reaction.Weak)
             return (mag + 1);
         if (r == Reaction.Resist)
             return 1 / (mag + 1);
@@ -118,4 +128,45 @@ public static class Damage
         return 0;
     }
     #endregion
+
+    #endregion
+
+    #region Application
+
+    public static void ApplyStandard(CastResults results, DamageEffect effect, Caster caster, Caster target)
+    {
+        if (ApplyReflect(results, effect, caster, target))
+            return;
+        ApplyDamage(results, effect, caster, target);
+        ApplyStaggerDamage(results, effect, caster, target);
+    }
+
+    public static bool ApplyReflect(CastResults results, DamageEffect effect, Caster caster, Caster target)
+    {
+        if (results.Effectiveness == Reaction.Repel && !effect.tags.Contains("IgnoreReflect") && !effect.tags.Contains("Reflected"))
+        {
+            effect.tags.Add(SpellTag.GetByName("Reflected"));
+            effect.Cast(caster, caster);
+            return true;
+        }
+        return false;
+    }
+
+    public static void ApplyDamage(CastResults results, DamageEffect effect, Caster caster, Caster target)
+    {
+        target.Health -= Mathf.FloorToInt(results.Damage);
+    }
+
+    public static void ApplyStaggerDamage(CastResults results, DamageEffect effect, Caster caster, Caster target)
+    {
+        if (target.Stunned)
+            return;
+        target.Stagger -= Mathf.FloorToInt(results.StaggerDamage);
+        if (target.Stunned)
+            SpellFxManager.instance.LogMessage(target.DisplayName + " is stunned!");
+    }
+
+    #endregion
+
+
 }

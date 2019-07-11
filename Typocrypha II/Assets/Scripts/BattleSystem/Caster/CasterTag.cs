@@ -17,9 +17,9 @@ public enum Reaction
 public class CasterTag : ScriptableObject, System.IComparable<CasterTag>
 {
     public string displayName = string.Empty;
-    public CasterStats statMods;
-    public ReactionDict reactions;
-    public TagSet subTags;
+    public CasterStats statMods = new CasterStats();
+    public ReactionDict reactions = new ReactionDict();
+    public TagSet subTags = new TagSet();
     [SubSO("Ability1")]
     public CasterAbility ability1;
     [SubSO("Ability2")]

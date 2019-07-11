@@ -6,9 +6,24 @@ using System;
 [CreateAssetMenu(fileName = "SpellTag", menuName = "Tag/Spell Tag")]
 public class SpellTag : ScriptableObject, IComparable<SpellTag>, IEquatable<SpellTag>
 {
-    public string displayName = string.Empty;
+    public string internalName = string.Empty;
+    [Tooltip("Overrides how the tag is named in-game. uses the internal name if empty.")]
+    [SerializeField]
+    private string displayName = string.Empty;
+    public string DisplayName { get => displayName != string.Empty ? displayName : internalName; }
     [TextArea(2,4)]
     public string description = string.Empty;
+
+    public static SpellTag GetByName(string name)
+    {
+        if(SpellTagLookup.instance == null)
+        {
+            Debug.LogError("Trying to look up spell tag by name with no lookup instance. " +
+                "Either there is none in the scene or you are trying to use this method from editor mode");
+            return null;
+        }
+        return SpellTagLookup.instance.Get(name);
+    }
 
     public int CompareTo(SpellTag other)
     {
@@ -18,19 +33,19 @@ public class SpellTag : ScriptableObject, IComparable<SpellTag>, IEquatable<Spel
     public override bool Equals(object other)
     {
         var tag = other as SpellTag;
-        return tag == null ? false : displayName == tag.displayName;
+        return tag == null ? false : internalName == tag.internalName;
     }
 
     public bool Equals(SpellTag other)
     {
         return other != null  &&
-               displayName == other.displayName;
+               internalName == other.internalName;
     }
 
     public override int GetHashCode()
     {
         var hashCode = -181192468;
-        hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(displayName);
+        hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(internalName);
         return hashCode;
     }
 
@@ -49,8 +64,10 @@ public class SpellTag : ScriptableObject, IComparable<SpellTag>, IEquatable<Spel
     {
         public bool Contains(string tagName)
         {
-            throw new System.NotImplementedException("add spell tag assetbundle");
-            //return Contains(SpellTagIndex.getTagFromString(tagName));
+            var tag = GetByName(tagName);
+            if (tag == null)
+                return false;
+            return Contains(tag);
         }
         public override string ToString()
         {
