@@ -67,8 +67,8 @@ public static class Damage
                 if (r != null) reactions.AddSet(r);
             }
         }
-        // If any of tags are repelled, repel
-        if (reactions.Contains(Reaction.Repel))
+        // If any of tags are repelled, repel (unless the spell cannot be repelled or has already been repelled
+        if (reactions.Contains(Reaction.Repel) && !effect.tags.Contains("IgnoreReflect") && !effect.tags.Contains("Reflected"))
         {
             multiplier = reactions.Freq(Reaction.Repel);
             return Reaction.Repel;
@@ -143,7 +143,7 @@ public static class Damage
 
     public static bool ApplyReflect(CastResults results, DamageEffect effect, Caster caster, Caster target)
     {
-        if (results.Effectiveness == Reaction.Repel && !effect.tags.Contains("IgnoreReflect") && !effect.tags.Contains("Reflected"))
+        if (results.Effectiveness == Reaction.Repel)
         {
             effect.tags.Add(SpellTag.GetByName("Reflected"));
             effect.Cast(caster, caster);
