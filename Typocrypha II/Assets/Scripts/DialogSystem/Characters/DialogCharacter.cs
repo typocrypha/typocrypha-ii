@@ -32,15 +32,15 @@ public class DialogCharacter : MonoBehaviour
     static int layerSeparator = 0; // Keeps track of layers to put characters on own layers.
     const int layerSeparation = 10; // Amount of layer separation.
 
+    readonly Color defaultOutlineColor = Color.white * 0.5f;
+    readonly Color highlightColor = Color.white;
+    readonly Color noHighlightColor = Color.gray;
+
     void Awake()
     {
         overrideAnimator = new AnimatorOverrideController(animator.runtimeAnimatorController);
         animator.runtimeAnimatorController = overrideAnimator;
         outlineSprite.material = new Material(outlineShader);
-    }
-
-    void Start()
-    {
         // Separate character's layers from other characters
         // More recently added characters go on top by default
         foreach (var sr in GetComponentsInChildren<SpriteRenderer>())
@@ -48,7 +48,13 @@ public class DialogCharacter : MonoBehaviour
         layerSeparator += layerSeparation;
         // Initialize outline
         OutlineThickness = 0.004f;
-        OutlineColor = Color.white;
+        OutlineColor = defaultOutlineColor;
+        Highlight(false);
+    }
+
+    void Start()
+    {
+
     }
 
     public Sprite PoseSprite // Set/get the character's pose.
@@ -122,8 +128,13 @@ public class DialogCharacter : MonoBehaviour
     public Color OutlineColor
     {
         get => outlineSprite.material.GetColor("_OutlineColor");
-        set => outlineSprite.material.SetColor("_OutlineColor", value);
+        set
+        {
+            outlineColor = value;
+            outlineSprite.material.SetColor("_OutlineColor", value);
+        }
     }
+    Color outlineColor;
 
     /// <summary>
     /// Highlight a character on or off.
@@ -131,18 +142,23 @@ public class DialogCharacter : MonoBehaviour
     /// <param name="on">Whether to to turn on highlight.</param>
     public void Highlight(bool on)
     {
+        // Highlight base character sprite
         SpriteRenderer[] allSR = GetComponentsInChildren<SpriteRenderer>();
         foreach(var sr in allSR)
         {
             if (on)
             {
-                sr.color = Color.white;
+                sr.color = highlightColor;
             }
             else
             {
-                sr.color = DialogCharacterManager.instance.hideTint;
+                sr.color = noHighlightColor;
             }
         }
+        // Highlight outline
+        if (on) outlineSprite.material.SetColor("_OutlineColor", outlineColor);
+        else    outlineSprite.material.SetColor("_OutlineColor", outlineColor * 0.3f);
+        // Save highlight state
         saveData.highlight = on;
     }
 }

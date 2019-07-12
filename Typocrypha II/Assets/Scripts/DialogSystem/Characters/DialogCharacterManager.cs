@@ -40,7 +40,6 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
 
     public static DialogCharacterManager instance = null;
     public GameObject characterPrefab; // Prefab of dialog character object
-    public Color hideTint; // Tint when character is not highlighted.
 
     Dictionary<string, DialogCharacter> characterMap; // Map of string ids to characters in scene.
     static AssetBundle characterDataBundle; // All character data assets.
