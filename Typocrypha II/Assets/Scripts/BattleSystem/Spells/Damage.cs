@@ -5,6 +5,10 @@ using System.Linq;
 
 public static class Damage
 {
+    public const float stunBonusDamageMod = 1.25f;
+    public const float critDamageMod = 2f;
+    public const float baseCritChance = 0.1f;
+
     public enum FormulaType
     {
         Standard,
@@ -12,7 +16,7 @@ public static class Damage
     }
     public delegate CastResults Formula(DamageEffect effect, Caster caster, Caster target);
 
-    public static Dictionary<FormulaType, Formula> PresetFormula { get; } = new Dictionary<FormulaType, Formula>
+    public static Dictionary<FormulaType, Formula> PresetFormulae { get; } = new Dictionary<FormulaType, Formula>
     {
         { FormulaType.Standard, StandardApplied }
     };
@@ -28,30 +32,138 @@ public static class Damage
 
     public static CastResults Standard(DamageEffect effect, Caster caster, Caster target)
     {
-        var results = StandardElements(effect, caster, target);
-        results.Damage *= effect.power;
+        var results = new CastResults();
+        StandardHitCheck(results, effect, caster, target);
+        StandardAtkDef(results, effect, caster, target);
+        if (StandardCritCheck(results, effect, caster, target))
+            StandardCritMod(results, effect, caster, target);
+        StandardElements(results, effect, caster, target);
+        StandardPower(results, effect, caster, target);
+        StandardStunBonus(results, effect, caster, target);
         return results;
     }
 
-    #region Standard Elements and Reactions
+    /// <summary>
+    /// Sets the Hit property of the given results based on a standard accuracy check
+    /// </summary>
+    public static void StandardHitCheck(CastResults results, DamageEffect effect, Caster caster, Caster target)
+    {
+        // If the move always hits, bypass accuracy checks
+        if(effect.tags.Contains("AlwaysHit"))
+        {
+            results.Miss = false;
+            return;
+        }
+        // If the move always misses, bypass accuracy checks
+        else if (effect.tags.Contains("AlwaysMiss"))
+        {
+            results.Miss = true;
+            return;
+        }
+        float hitChance = 1 * CompareStats(caster.Stats.Acc, target.Stats.Evade);
+        results.Miss = (Random.Range(0, 1) > hitChance);
+    }
+    /// <summary>
+    /// Sets the Crit property and modifies damage and stagger based on a standard crit check
+    /// </summary>
+    public static bool StandardCritCheck(CastResults results, DamageEffect effect, Caster caster, Caster target)
+    {
+        // If the move always crits, bypass accuracy checks
+        if (effect.tags.Contains("AlwaysCrit"))
+        {
+            return true;
+        }
+        // If the move always misses, bypass accuracy checks
+        else if (effect.tags.Contains("NeverCrit"))
+        {
+            return false;
+        }
+        float critChance = baseCritChance;
+        if(Random.Range(0,1) <= critChance)
+        {
+            return true;
+        }
+        return false;
+    }
+    /// <summary>
+    /// Applies the standard modification to the results
+    /// Sets crit to true, sets stagger damage to 1, and multiplies the Damage by Damage.critDamageMod;
+    /// </summary>
+    public static void StandardCritMod(CastResults results, DamageEffect effect, Caster caster, Caster target)
+    {
+        results.Crit = true;
+        results.StaggerDamage = 1;
+        results.Damage *= critDamageMod;
+    }
 
-    public static CastResults StandardElements(DamageEffect effect, Caster caster, Caster target)
+    /// <summary>
+    /// Apply standard stat modifiers to a spell.
+    /// </summary>
+    public static void StandardAtkDef(CastResults results, DamageEffect effect, Caster caster, Caster target)
+    {
+        results.Damage *= CompareStats(caster.Stats.Atk, target.Stats.Def);
+    }
+
+    /// <summary>
+    /// Compare two stats by a standard comparison. Returns a multiplier.
+    /// Returns the quotient of atk / def, 
+    /// where atk = 1 + the atkStat (if positive) + the defStat (if negative) and
+    /// where def = 1 + the defStat (if positive) + the atkStat (if negative)
+    /// atkStat and defStat do not have to be attack and defense,
+    /// and this comparison can be used for more than damage modifier calculations
+    /// </summary>
+    public static float CompareStats(int atkStat, int defStat)
+    {
+        float atk = 1;
+        float def = 1;
+        // If the attacking stat is positive, add it as a bonus
+        if (atk > 0)
+            atk += atkStat;
+        else
+            def += atkStat;
+        if (def > 0)
+            def += defStat;
+        else
+            atk += defStat;
+        return atk / def;
+    }
+    /// <summary>
+    /// Modifies damage by power by simple multiplication
+    /// </summary>
+    public static void StandardPower(CastResults results, DamageEffect effect, Caster caster, Caster target)
+    {
+        results.Damage *= effect.power;
+    }
+    /// <summary>
+    /// Applies a standard stun bonus to damage if the target is already stunned and the attack would deal stagger damager
+    /// Should be applied at the end of calculation
+    /// </summary>
+    public static void StandardStunBonus(CastResults results, DamageEffect effect, Caster caster, Caster target)
+    {
+        if (target.Stunned && results.StaggerDamage > 0)
+            results.Damage *= stunBonusDamageMod;
+    }
+
+    #region Standard Elements and Reactions
+    /// <summary>
+    /// Applies the standard element modifiers to a running CastResults passed in as results
+    /// Calculates Effectiveness modifiers by GetReaction
+    /// Calculates Damage multiplier by GetReactionDmgMod
+    /// Adds Stagger Damage if the reaction is weak
+    /// </summary>
+    public static void StandardElements(CastResults results, DamageEffect effect, Caster caster, Caster target)
     {
         float effectMagnitude;
-        var effective = GetReaction(effect, caster, target, out effectMagnitude);
-        var damageMod = GetReactionDmgMod(effect, caster, target, effective, effectMagnitude);
-        return new CastResults
-        {
-            Damage = damageMod,
-            Effectiveness = effective,
-            StaggerDamage = effective == Reaction.Weak ? 1 : 0
-        };
+        results.Effectiveness = GetReaction(effect, caster, target, out effectMagnitude);
+        results.Damage *= GetReactionDmgMod(effect, caster, target, results.Effectiveness, effectMagnitude);
+        if (results.Effectiveness == Reaction.Weak)
+            results.StaggerDamage = 1;
     }
     /// <summary>
     /// Get the reaction of the given effect on the given target.
     /// The strongest reaction is taken, with its multiplier being the number of that reaction the target has
     /// Strength order = Repel -> Drain -> Dodge -> Block -> BASIC.
-    /// If BASIC is reached, the reaction is dermened by comparing the number of resists with the number of weaks
+    /// If BASIC is reached, the reaction is determined by comparing the number of resists with the number of weaks
     /// to be weak, resist, or neutral
     /// </summary>
     public static Reaction GetReaction(DamageEffect effect, Caster caster, Caster target, out float multiplier)
@@ -135,6 +247,8 @@ public static class Damage
 
     public static void ApplyStandard(CastResults results, DamageEffect effect, Caster caster, Caster target)
     {
+        if (results.Miss)
+            return;
         if (ApplyReflect(results, effect, caster, target))
             return;
         ApplyDamage(results, effect, caster, target);
@@ -145,7 +259,7 @@ public static class Damage
     {
         if (results.Effectiveness == Reaction.Repel)
         {
-            effect.tags.Add(SpellTag.GetByName("Reflected"));
+            effect.tags.Add("Reflected");
             effect.Cast(caster, caster);
             return true;
         }
@@ -156,7 +270,9 @@ public static class Damage
     {
         target.Health -= Mathf.FloorToInt(results.Damage);
     }
-
+    /// <summary>
+    /// Apply stagger damage and log a message if stunned
+    /// </summary>
     public static void ApplyStaggerDamage(CastResults results, DamageEffect effect, Caster caster, Caster target)
     {
         if (target.Stunned)

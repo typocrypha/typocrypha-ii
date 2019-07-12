@@ -15,7 +15,11 @@ public class SpellTagInspector : Editor
             foreach(var t in targets)
             {
                 var tag = t as SpellTag;
-                tag.internalName = tag.name;
+                if(tag.internalName != tag.name)
+                {
+                    tag.internalName = tag.name;
+                    EditorUtility.SetDirty(tag);
+                }
             }
         }
     }

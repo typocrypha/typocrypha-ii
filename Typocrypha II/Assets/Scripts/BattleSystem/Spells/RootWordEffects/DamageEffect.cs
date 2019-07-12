@@ -13,6 +13,6 @@ public class DamageEffect : RootWordEffect
     {
         if (formula == Damage.FormulaType.Custom)
             return customFormula.Apply(this, caster, target);
-        return Damage.PresetFormula[formula](this, caster, target);
+        return Damage.PresetFormulae[formula](this, caster, target);
     }
 }

@@ -12,7 +12,12 @@ public class SpellTag : ScriptableObject, IComparable<SpellTag>, IEquatable<Spel
     private string displayName = string.Empty;
     public string DisplayName { get => displayName != string.Empty ? displayName : internalName; }
     [TextArea(2,4)]
-    public string description = string.Empty;
+    [SerializeField]
+    [Tooltip("Overrides how the tag is described in-game. uses the documentation if empty.")]
+    private string description = string.Empty;
+    public string DisplayDescription { get => description != string.Empty ? description : documentation; }
+    [TextArea(2, 4)]
+    public string documentation = string.Empty;
 
     public static SpellTag GetByName(string name)
     {
@@ -69,6 +74,15 @@ public class SpellTag : ScriptableObject, IComparable<SpellTag>, IEquatable<Spel
                 return false;
             return Contains(tag);
         }
+
+        public void Add(string tagName)
+        {
+            var tag = GetByName(tagName);
+            if (tag == null || Contains(tag))
+                return;
+            Add(tag);
+        }
+
         public override string ToString()
         {
             string ret = string.Empty;
