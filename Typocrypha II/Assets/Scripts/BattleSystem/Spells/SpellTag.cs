@@ -6,6 +6,7 @@ using System;
 [CreateAssetMenu(fileName = "SpellTag", menuName = "Tag/Spell Tag")]
 public class SpellTag : ScriptableObject, IComparable<SpellTag>, IEquatable<SpellTag>
 {
+    #region Name, Description, and Documentation Fields
     public string internalName = string.Empty;
     [Tooltip("Overrides how the tag is named in-game. uses the internal name if empty.")]
     [SerializeField]
@@ -18,6 +19,7 @@ public class SpellTag : ScriptableObject, IComparable<SpellTag>, IEquatable<Spel
     public string DisplayDescription { get => description != string.Empty ? description : documentation; }
     [TextArea(2, 4)]
     public string documentation = string.Empty;
+    #endregion
 
     public static SpellTag GetByName(string name)
     {
@@ -32,7 +34,7 @@ public class SpellTag : ScriptableObject, IComparable<SpellTag>, IEquatable<Spel
 
     public int CompareTo(SpellTag other)
     {
-        return name.CompareTo(other.name);
+        return internalName.CompareTo(other.internalName);
     }
 
     public override bool Equals(object other)
@@ -87,7 +89,7 @@ public class SpellTag : ScriptableObject, IComparable<SpellTag>, IEquatable<Spel
         {
             string ret = string.Empty;
             foreach (var tag in this)
-                ret += tag.name + ", ";
+                ret += tag.internalName + ", ";
             return ret.TrimEnd().TrimEnd(',');
         }
     }

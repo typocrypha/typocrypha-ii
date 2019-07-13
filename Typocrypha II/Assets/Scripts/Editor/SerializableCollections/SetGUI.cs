@@ -69,6 +69,8 @@ namespace SerializableCollections
                 EditorGUILayout.LabelField(title + ": " + set.Count, EditorUtils.Bold, GUILayout.MaxWidth(120));
                 GUILayout.Space(-20);
                 //GUILayout.FlexibleSpace();
+                if (GUILayout.Button("Clear"))
+                    set.Clear();
                 addGUI();
                 GUILayout.EndHorizontal();
                 //EditorUtils.Separator();

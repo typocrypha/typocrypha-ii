@@ -27,6 +27,10 @@ public class SerializableSet<T> : ISerializationCallbackReceiver, IEnumerable<T>
     {
         _hashset.Remove(item);
     }
+    public void Clear()
+    {
+        _hashset.Clear();
+    }
     public T[] Items
     {
         get

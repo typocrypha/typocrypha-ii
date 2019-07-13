@@ -129,7 +129,7 @@ public static partial class EditorUtils
         public static void CasterTagGUI(CasterTag data)
         {
             GUILayout.BeginVertical();
-            EditorGUILayout.LabelField(data.name + " (" + data.displayName + ")", new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold }, GUILayout.Width(200));
+            EditorGUILayout.LabelField(data.name + " (" + data.internalName + ")", new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold }, GUILayout.Width(200));
             EditorGUI.indentLevel++;
             if (data.subTags.Count > 0)
             {

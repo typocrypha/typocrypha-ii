@@ -113,6 +113,8 @@ namespace SerializableCollections
                 EditorGUILayout.LabelField(title + ": " + dict.Count, EditorUtils.Bold, GUILayout.MaxWidth(120));
                 GUILayout.Space(-20);
                 //GUILayout.FlexibleSpace();
+                if (GUILayout.Button("Clear"))
+                    dict.Clear();
                 addGUI();
                 GUILayout.EndHorizontal();
                 if (dict.Count > 0)

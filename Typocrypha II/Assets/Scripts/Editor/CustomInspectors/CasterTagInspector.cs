@@ -5,21 +5,43 @@ using UnityEditor;
 using SerializableCollections.GUIUtils;
 
 [CustomEditor(typeof(CasterTag))]
+[CanEditMultipleObjects]
 public class CasterTagInspector : Editor
 {
     private bool viewCumulative = true;
+    private bool viewInfo = false;
     public override void OnInspectorGUI()
     {
         CasterTag tag = target as CasterTag;
-        EditorGUILayout.LabelField("Caster Tag: " + tag.name + " (" + tag.displayName + ")");
-        EditorUtils.Separator();
-        tag.displayName = EditorGUILayout.TextField(new GUIContent("Display Name"), tag.displayName);
+        viewInfo = EditorGUILayout.ToggleLeft("View Name and Description Info", viewInfo, EditorUtils.Bold);
+        if(viewInfo)
+        {
+            tag.internalName = EditorGUILayout.TextField(new GUIContent("Internal Name"), tag.internalName);
+            if (GUILayout.Button("Set internal name to asset name"))
+            {
+                foreach (var t in targets)
+                {
+                    var tag2 = t as CasterTag;
+                    if (tag2.internalName != tag2.name)
+                    {
+                        tag2.internalName = tag2.name;
+                        EditorUtility.SetDirty(tag2);
+                    }
+                }
+            }
+            tag.displayName = EditorGUILayout.TextField(new GUIContent("Display Name"), tag.displayName);
+            EditorGUILayout.LabelField(new GUIContent("Description"), EditorUtils.BoldCentered);
+            tag.description = EditorGUILayout.TextArea(tag.description, GUILayout.MinHeight(EditorGUIUtility.singleLineHeight * 2));
+            EditorGUILayout.LabelField(new GUIContent("Documentation"), EditorUtils.BoldCentered);
+            tag.documentation = EditorGUILayout.TextArea(tag.documentation, GUILayout.MinHeight(EditorGUIUtility.singleLineHeight * 2));
+            
+        }
         EditorUtils.Separator();
 
         // Cumulative Stats
-        if (tag.subTags.Count > 0)
+        if (tag.subTags != null && tag.subTags.Count > 0)
         {
-            viewCumulative = EditorGUILayout.ToggleLeft("Cumulative Stats", viewCumulative);
+            viewCumulative = EditorGUILayout.ToggleLeft("View Cumulative Stats",viewCumulative, EditorUtils.Bold);
             if(viewCumulative)
             {
                 var statMod = new CasterStats();
@@ -28,9 +50,8 @@ public class CasterTagInspector : Editor
                     statMod.AddInPlace(mod.statMods);
                 EditorUtils.CasterUtils.CasterStatsLabelLayout(statMod);
             }
+            EditorUtils.Separator();
         }
-        EditorUtils.Separator();
-
         // Stat Modifiers
         EditorGUILayout.LabelField("Stat Modifiers", new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold, alignment = TextAnchor.MiddleCenter });
         if (tag.statMods != null)

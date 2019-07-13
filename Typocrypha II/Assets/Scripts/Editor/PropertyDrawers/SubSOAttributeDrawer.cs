@@ -17,7 +17,7 @@ public class SubSOAttributeDrawer : PropertyDrawer
         {
             GetMenu(property, fieldInfo.FieldType).ShowAsContext();
         }
-        var inspectButtonRect = new Rect(UIRect) { x = UIRect.x + dropRect.width, width = 125};
+        var inspectButtonRect = new Rect(UIRect) { x = UIRect.x + dropRect.width + 3, width = 122};
         if (property.objectReferenceValue != null && GUI.Button(inspectButtonRect, "View Inspector"))
         {
             var inspector = InspectorEditorWindow.Create(property.objectReferenceValue, attr.name);
@@ -29,6 +29,16 @@ public class SubSOAttributeDrawer : PropertyDrawer
     private GenericMenu GetMenu(SerializedProperty property, System.Type objType)
     {
         var menu = new GenericMenu();
+        // Add an option to reset to none
+        menu.AddItem(new GUIContent("None"), false, (obj) =>
+        {
+            if (property.objectReferenceValue != null)
+                Object.DestroyImmediate(property.objectReferenceValue, true);
+            property.objectReferenceValue = null;
+            property.serializedObject.ApplyModifiedProperties();
+            AssetDatabase.ImportAsset(AssetDatabase.GetAssetPath(property.serializedObject.targetObject));
+        }, null);
+        // Add an option for each subtype of the given object type
         foreach (var type in ReflectionUtils.ReflectiveEnumerator.GetAllSubclassTypes(objType))
         {
             string[] path = type.ToString().Split('.');
