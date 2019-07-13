@@ -62,4 +62,30 @@ public static class StringExtensions
         if (strb.Length > 0) strl.Add(strb.ToString());
         return strl.ToArray();
     }
+
+    /// <summary>
+    /// Checks if string contains any of a set of characters.
+    /// </summary>
+    /// <param name="str">Original string.</param>
+    /// <param name="search">Characters to look for.</param>
+    /// <param name="escapes">Escape characters.</param>
+    /// <returns>Index of found first occurence.</returns>
+    public static bool Contains(this string str, char[] search, char[] escapes)
+    {
+        List<string> strl = new List<string>();
+        StringBuilder strb = new StringBuilder();
+        for (int i = 0; i < str.Length; i++)
+        {
+            char c = str[i];
+            if (escapes.Contains(c))
+            {
+                i++;
+            }
+            else if (search.Contains(c))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }

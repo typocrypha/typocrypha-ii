@@ -40,7 +40,6 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
 
     public static DialogCharacterManager instance = null;
     public GameObject characterPrefab; // Prefab of dialog character object
-    public Color hideTint; // Tint when character is not highlighted.
 
     Dictionary<string, DialogCharacter> characterMap; // Map of string ids to characters in scene.
     static AssetBundle characterDataBundle; // All character data assets.
@@ -182,7 +181,12 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
     /// <returns>DialogCharacter component of selected character.</returns>
     public DialogCharacter ChangePose(CharacterData data, string baseSprite)
     {
-        characterMap[data.name].PoseSprite = data.poses[baseSprite];
+        // FIXED POSE
+        //characterMap[data.name].PoseSprite = data.poses[baseSprite];
+        //characterMap[data.name].saveData.baseSprite = baseSprite;
+        // TEMP: Uses the default of each element (e.g. Illyia's base body, base clothes, and base hair)
+        // LATER: string manip? "base_1", "base_halloween"
+        ChangeBCH(data, baseSprite, baseSprite, baseSprite);
         characterMap[data.name].saveData.baseSprite = baseSprite;
         return characterMap[data.name];
     }
@@ -210,9 +214,9 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
     /// <returns>DialogCharacter component of selected character.</returns>
     public DialogCharacter ChangeBCH(CharacterData data, string body, string clothes, string hair)
     {
-        if (body != "") characterMap[data.name].BodySprite = data.expressions[body];
-        if (clothes != "") characterMap[data.name].ClothesSprite = data.expressions[clothes];
-        if (hair != "") characterMap[data.name].HairSprite = data.expressions[hair];
+        if (body != "") characterMap[data.name].BodySprite = data.bodies[body];
+        if (clothes != "") characterMap[data.name].ClothesSprite = data.clothes[clothes];
+        if (hair != "") characterMap[data.name].HairSprite = data.hair[hair];
         return characterMap[data.name];
     }
 

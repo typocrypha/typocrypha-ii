@@ -1,26 +1,47 @@
-//this is a comment
-+vn
-illyia (Happy) :
-yo wassup // this is another comment
-dahlia(Sad): 
-nm, how bout u?
-+chat
+/* Example test script */
 
-/* block */ 
++vn // Switches to visual novel view
+
+Bob : It's me, Bob. // Simple line of dialog
+
+>addchar,illyia,-2,0 // Adds character
+
+illyia : I'm Illyia!
+
+>addchar,dahlia,2,0
+
+dahlia : And I'm Dahlia!
+
+// Dialog can be on separate line as speaker's name
+// Can specify expression in parenthesis (default expression if empty)
+illyia (laughing) : 
+What's up?
+
+dahlia(laughing): 
+Not much. You?
+
+// Can specify pose with square brackets (generally requires a valid expression)
+illyia (yell) [action] :
+I'm actually worried about something.
+
+dahlia(concerned): 
+What is it?
+
++chat // Switches to chat view
+
+// Can specify the side where the icon appears with square brackets (no icon if empty)
+illyia [left] : 
+I'm racking up a real big phone bill this month.
+
+dahlia [right] : 
+... Then why are you textin me?\
+I'm also standing right next to you.
+
++vn
 
 illyia : 
-it good
+...
 
-dahlia : why are you textin me?\
-like, im right here
+>removechar,illyia // Removes character
 
-+vn
-
-/* block2
-block2 */
-
->addchar,illyia,0,0
-illyia : bom, it me.
-
->removechar,illyia
-dahlia : illyia has left the building
+dahlia : ... She ran.

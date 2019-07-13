@@ -9,7 +9,7 @@ using UnityEditor;
 public class CharacterData : ScriptableObject
 {
     public NameSet aliases; // Different aliases/names for this character
-    public NameMap poses; // Different body poses
+    public NameMap poses; // Different body poses (DEPRECATED)
     public NameMap expressions; // Different facial expressions
     public NameMap bodies; // Different base bodies
     public NameMap clothes; // Different clothes
