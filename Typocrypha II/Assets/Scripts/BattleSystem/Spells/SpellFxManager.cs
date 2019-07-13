@@ -65,6 +65,15 @@ public class SpellFxManager : MonoBehaviour
     {
         var pos = targetPos;
 
+        #region Miss
+        if(data.Miss)
+        {
+            var popper = Instantiate(data.popupPrefab ?? popupPrefab).GetComponent<PopupBase>();
+            popper.PopText("Miss", targetPos, popTime);
+            yield break;
+        }
+        #endregion
+
         #region Repel
         if (data.Effectiveness == Reaction.Repel)
         {
@@ -91,8 +100,9 @@ public class SpellFxManager : MonoBehaviour
         if (data == null)
             yield break;
         var popper = Instantiate(data.popupPrefab ?? popupPrefab).GetComponent<PopupBase>();
-
+        // Damage popup
         yield return popper.PopText(data.Damage.ToString(), targetPos, popTime);
+        // Effectiveness popup
         switch (data.Effectiveness)
         {
             case Reaction.Weak:
@@ -110,6 +120,11 @@ public class SpellFxManager : MonoBehaviour
                 break;
             case Reaction.Repel:
                 break;
+        }
+        // Crit Effects
+        if(data.Crit)
+        {
+            LogMessage("A critical hit!"); // DEBUG
         }
         popper.Cleanup();
     }

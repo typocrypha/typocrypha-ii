@@ -6,17 +6,13 @@ using GUIUtils;
 using SerializableCollections.GUIUtils;
 
 [CustomEditor(typeof(ModifierWord))]
-public class ModifierWordInspector : Editor
+[CanEditMultipleObjects]
+public class ModifierWordInspector : SpellWordInspector
 {
     public override void OnInspectorGUI()
     {
+        base.OnInspectorGUI();
         var word = target as ModifierWord;
-        EditorGUILayout.LabelField("Modifer Word: " + word.name);
-        word.displayName = EditorGUILayout.TextField(new GUIContent("Display Name"), word.displayName);
-        EditorUtils.Separator();
-        EditorGUILayout.LabelField(new GUIContent("Description"), EditorUtils.BoldCentered);
-        word.description = EditorGUILayout.TextArea(word.description, new GUIStyle(GUI.skin.textArea) { wordWrap = true }, GUILayout.MinHeight(EditorGUIUtility.singleLineHeight * 2));
-        EditorUtils.Separator();
         EditorGUILayout.LabelField("Vfx/Sfx", EditorUtils.BoldCentered);
         EditorGUILayout.BeginVertical("box");
         EditorGUILayout.PropertyField(serializedObject.FindProperty("fx"));

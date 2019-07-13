@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class SpellWord : ScriptableObject
 {   
-    public string displayName;
+    public string internalName;
     public string description;
     public abstract SpellWord Clone();
 }

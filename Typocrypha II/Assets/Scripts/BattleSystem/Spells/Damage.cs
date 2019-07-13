@@ -79,7 +79,7 @@ public static class Damage
             return false;
         }
         float critChance = baseCritChance;
-        if(Random.Range(0,1) <= critChance)
+        if(Random.Range(0,1f) <= critChance)
         {
             return true;
         }

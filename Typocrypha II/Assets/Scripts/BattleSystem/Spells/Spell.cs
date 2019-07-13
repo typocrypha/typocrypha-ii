@@ -15,7 +15,7 @@ public class Spell : IList<SpellWord>
 
     public string ToDisplayString()
     {
-        return items.Select((s) => s.displayName.ToUpper()).Aggregate((a, b) => a + "-" + b);
+        return items.Select((s) => s.internalName.ToUpper()).Aggregate((a, b) => a + "-" + b);
     }
 
     public IEnumerable<FieldObject> AllTargets(Battlefield.Position casterPos, Battlefield.Position targetPos)

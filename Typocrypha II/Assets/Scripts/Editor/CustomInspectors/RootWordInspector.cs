@@ -5,7 +5,8 @@ using UnityEditor;
 using GUIUtils;
 
 [CustomEditor(typeof(RootWord))]
-public class RootWordInspector : Editor
+[CanEditMultipleObjects]
+public class RootWordInspector : SpellWordInspector
 {
 
     private RListGUI<RootWordEffect> rList;
@@ -56,13 +57,8 @@ public class RootWordInspector : Editor
 
     public override void OnInspectorGUI()
     {
+        base.OnInspectorGUI();
         var word = target as RootWord;
-        EditorGUILayout.LabelField("Root Word: " + word.name);
-        word.displayName = EditorGUILayout.TextField(new GUIContent("Display Name"), word.displayName);
-        EditorUtils.Separator();
-        GUILayout.Label(new GUIContent("Description"), new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold });
-        word.description = EditorGUILayout.TextArea(word.description, new GUIStyle(GUI.skin.textArea) { wordWrap = true }, GUILayout.MinHeight(EditorGUIUtility.singleLineHeight * 2));
-        EditorUtils.Separator();
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label(new GUIContent("Cooldown"), new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold });
         word.cooldown = EditorGUILayout.FloatField(word.cooldown);
