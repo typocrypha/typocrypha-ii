@@ -21,7 +21,7 @@ namespace Gameflow
         /// Currently based on UnityEditorInternal code. Safe for non-editor solutions </summary>
         public class RListGUI<T>
         {          
-            public delegate void ElementGUI(T element, Rect rect);
+            public delegate void ElementGUI(T element, int index, Rect rect);
             public delegate T DefaultElement();
             public delegate NodeEditorFramework.Utilities.GenericMenu Dropdown();
             public delegate float ElementHeight(T element);
@@ -47,7 +47,7 @@ namespace Gameflow
                 {
                     if (index >= list.count || list.count <= 0)//Fixes error if .doGUI removes an element from the list
                         return;
-                    elementGUI(items[index], rect);
+                    elementGUI(items[index], index, rect);
                 };
                 list.elementHeightCallback = (index) => { return height(items[index]); };
                 list.drawHeaderCallback = (Rect rect) =>

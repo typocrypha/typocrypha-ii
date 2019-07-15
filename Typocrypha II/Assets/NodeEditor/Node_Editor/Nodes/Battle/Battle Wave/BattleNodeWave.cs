@@ -26,7 +26,6 @@ namespace Gameflow
 
         private RListGUI<GameObject> eventGUI;
         public List<GameObject> battleEvents;
-        public GameObject debugBattleEvent;
 
         #region Tooltip Strings
         private static string tooltip_music = "Music to play. Leave as None to keep the previous music playing";
@@ -83,18 +82,16 @@ namespace Gameflow
             #region Battle Events GUI
             if(eventGUI == null)
             {
-                RListGUI<GameObject>.ElementGUI eGUI = (element, rect) =>
+                RListGUI<GameObject>.ElementGUI eGUI = (element, ind, rect) =>
                 {
-                    RTEditorGUI.ObjectFieldRect(rect, element, false);
+                    element = RTEditorGUI.ObjectFieldRect(rect, element, false);
+                    battleEvents[ind] = element;
                 };
                 RListGUI<GameObject>.DefaultElement newItem = () => null;
                 eventGUI = new RListGUI<GameObject>(battleEvents, new GUIContent("Battle Event Prefabs"), eGUI, (e) => RTEditorGUI.lineHeight, newItem);
             }
             eventGUI.DoLayoutList();
             #endregion
-
-            //DEBUG
-            debugBattleEvent = RTEditorGUI.ObjectField(debugBattleEvent, false);
 
             //Don't know why this code needs to be here exactly, but it makes everything nicer? maybe add to some static stuff?
             GUILayout.BeginHorizontal();

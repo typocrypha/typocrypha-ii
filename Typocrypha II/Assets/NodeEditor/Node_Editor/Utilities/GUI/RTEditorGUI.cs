@@ -638,15 +638,15 @@ namespace NodeEditorFramework.Utilities
         }
 
         /// <summary>
-        /// Provides an object field (with no auto-layouting) both for editor (using default) and for runtime (not yet implemented other that displaying object)
+        /// Provides an object field (with no auto-layouting) both for editor (using default) and for runtime (no runtime functionality)
         /// </summary>
         public static T ObjectFieldRect<T>(Rect rect, T obj, bool allowSceneObjects) where T : Object
         {
-            return ObjectFieldRect<T>(rect, GUIContent.none, obj, allowSceneObjects);
+            return ObjectFieldRect(rect, GUIContent.none, obj, allowSceneObjects);
         }
 
         /// <summary>
-        /// Provides an object field (with no auto-layouting)  both for editor (using default) and for runtime (not yet implemented other that displaying object)
+        /// Provides an object field (with no auto-layouting)  both for editor (using default) and for runtime (no runtime functionality)
         /// </summary>
         public static T ObjectFieldRect<T>(Rect rect, GUIContent label, T obj, bool allowSceneObjects) where T : Object
         {
@@ -654,7 +654,8 @@ namespace NodeEditorFramework.Utilities
             if (!Application.isPlaying)
                 return UnityEditor.EditorGUI.ObjectField(rect, label, obj, typeof(T), allowSceneObjects) as T;
             #endif
-            throw new System.NotImplementedException();
+            Debug.LogError("Error with object field rect RT gui");
+            return default;
         }
 
         #endregion
