@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -42,27 +43,43 @@ namespace FXText
             List<UIVertex> stream = ListPool<UIVertex>.Get();
             vh.GetUIVertexStream(stream);
             int len = textComp.text.Length * vertsInQuad;
-            int cnt = stream.Count;
-            
+            int spaces = textComp.text.Count(a => a == ' ');
+            bool shadow = (gameObject.GetComponent<Shadow>() != null) && (gameObject.GetComponent<Shadow>().enabled); // Is there an active shadow?
+            // Check if there aren't dummy vertices for spaces
+            if ((!shadow && (len != stream.Count)) ||
+                ( shadow && (2 * len != stream.Count)))
+            {
+                // Add dummy vertices for spaces
+                for (int i = 0; i < textComp.text.Length; i++)
+                {
+                    int shift = 0;
+                    if (textComp.text[i] == ' ')
+                    {
+                        shift++;
+                        int pos = i * vertsInQuad;
+                        for (int k = 0; k < vertsInQuad; k++)
+                        {
+                            stream.Insert(pos, new UIVertex());
+                            if (shadow) stream.Insert(pos + ((textComp.text.Length - spaces + shift - 1) * vertsInQuad) + k + 1, new UIVertex());
+                        }
+                    }
+                }
+            }
+
             // Apply effect to each individual letter rect
             // Also applies to shadows
             for (int i = 0; i < ind.Count; i += 2)
             {
                 for (int j = ind[i]; j < ind[i + 1]; j++)
                 {
-                    int pos = j * vertsInQuad;
-                    for (; pos < stream.Count; pos += len)
+                    if (j >= textComp.text.Length) break;
+                    // Apply effect on character and its shadow
+                    for (int pos = j * vertsInQuad; pos < stream.Count; pos += len)
                     {
                         List<UIVertex> buffer = ListPool<UIVertex>.Get();
-                        for (int k = 0; k < vertsInQuad; k++)
-                        {
-                            buffer.Add(stream[pos + k]);
-                        }
+                        for (int k = 0; k < vertsInQuad; k++) buffer.Add(stream[pos + k]);
                         OnEffect(buffer, j);
-                        for (int k = 0; k < vertsInQuad; k++)
-                        {
-                            stream[pos + k] = buffer[k];
-                        }
+                        for (int k = 0; k < vertsInQuad; k++) stream[pos + k] = buffer[k];
                         ListPool<UIVertex>.Release(buffer);
                     }
                 }

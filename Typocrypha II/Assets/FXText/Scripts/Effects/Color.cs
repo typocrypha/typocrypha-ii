@@ -21,7 +21,8 @@ namespace FXText
             for (int i = 0; i < verts.Count; i++)
             {
                 vt = verts[i];
-                vt.color = color;
+                Color32 col = (UnityEngine.Color)vt.color * (UnityEngine.Color)color;
+                vt.color = col;
                 verts[i] = vt;
             }
         }
