@@ -98,12 +98,16 @@ public class DialogGraphParser : MonoBehaviour
             TIPSManager.instance.CurrSearchable = cNode.tipsData;
             // Add to history.
             DialogHistory.instance.AddHistory(cNode.characterName, cNode.text);
+            // Get proper display name.
+            string displayName = (cNode.displayName.Trim().Length == 0)
+                               ? cNode.characterName 
+                               : cNode.displayName;
             if (currNode is DialogNodeVN)
             {
                 var dNode = currNode as DialogNodeVN;
                 // Highlight speaking character.
                 if (cd != null) DialogCharacterManager.instance.SoloHighlightCharacter(cd);
-                return new DialogItemVN(dNode.text, voice, dNode.characterName, dNode.mcSprite, dNode.codecSprite);
+                return new DialogItemVN(dNode.text, voice, displayName, dNode.mcSprite, dNode.codecSprite);
             }
             else if(currNode is DialogNodeChat)
             {
@@ -115,7 +119,7 @@ public class DialogGraphParser : MonoBehaviour
                 else if (dNode.rightIcon != null)
                     iconSide = IconSide.RIGHT;
                 #endregion
-                return new DialogItemChat(dNode.text, voice, dNode.characterName, iconSide, dNode.leftIcon, dNode.rightIcon);
+                return new DialogItemChat(dNode.text, voice, displayName, iconSide, dNode.leftIcon, dNode.rightIcon);
             }
             else if (currNode is DialogNodeAN)
             {

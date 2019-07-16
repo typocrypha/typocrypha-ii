@@ -12,11 +12,13 @@ namespace Gameflow
         public override bool AllowRecursion { get { return true; } }
 
         public string characterName; // Name of character speaking (used by default to find speaking sfx).
+        public string displayName; // Override display name (if name should be different from speaker's actual name).
         public string text; // Dialog line.
         public TIPSEntryData tipsData; // TIPS searchable metadata (if applicable).
 
         #region Tooltip Strings
         protected const string tooltipName = "The speaking character's name. Used to set speaking sfx and sprite highlighting if not overriden by text events";
+        protected const string tooltipDisplayName = "The name displayed. Leave blank to use the speaker's name.";
         protected const string tooltipText = "The text to be displayed. Can substitute text macros using {macro-name,args}, and call text events using [event-name,args]";
         protected const string tooltipTIPS = "Metadata for TIPS-searchable term that comes up in dialog";
         #endregion
@@ -24,6 +26,7 @@ namespace Gameflow
         protected override void OnCreate()
         {
             characterName = "Character Name";
+            displayName = "";
             text = "Insert dialog text here";
         }
 
@@ -37,6 +40,10 @@ namespace Gameflow
             characterName = GUILayout.TextField(characterName, GUILayout.Width(MinSize.x - 65));
             GUILayout.EndHorizontal();
             GUILayout.Space(3);
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(new GUIContent("Display", tooltipDisplayName), NodeEditorGUI.nodeLabel, GUILayout.Width(45f));
+            displayName = GUILayout.TextField(displayName, GUILayout.Width(MinSize.x - 65));
+            GUILayout.EndHorizontal();
             GUILayout.EndVertical();
         }
 
