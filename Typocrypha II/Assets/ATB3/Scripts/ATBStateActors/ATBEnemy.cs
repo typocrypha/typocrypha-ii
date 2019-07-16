@@ -11,8 +11,10 @@ namespace ATB3
     // on the battlefield.
     //================================================================//
 
+    [RequireComponent(typeof(Caster))]
     public partial class ATBEnemy : ATBActor
     {
+        [HideInInspector]
         public Caster caster; // Associated Caster script.
 
         //----------------------------------------------------------------//
@@ -53,6 +55,7 @@ namespace ATB3
 
         public override void Setup()
         {
+            caster = GetComponent<Caster>();
             PH.Pause = true;
         }
     }

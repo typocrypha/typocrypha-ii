@@ -13,7 +13,7 @@ namespace ATB3
     // A Finite State Machine System based on Chapter 3.1 of Game Programming Gems 1 by Eric Dybsand
     // Written by Roberto Cezar Bianchini, July 2010
     // ===============================================================//
-
+    [RequireComponent(typeof(ATBActor))]
     public abstract class ATBStateMachine : MonoBehaviour, IPausable
     {
         #region IPausable
@@ -34,7 +34,7 @@ namespace ATB3
 
         // ATBActor that owns this state machine
         // (drag and drop the desired ATBActor component in the Unity editor)
-        public ATBActor owner;
+        protected ATBActor owner;
 
         // map of all the machine's transitions and their end point states
         // (override and define this in individual child state machines)
@@ -61,6 +61,7 @@ namespace ATB3
         void Awake()
         {
             ph = new PauseHandle(OnPause);
+            owner = GetComponent<ATBActor>();
             InitializeStates();
             InitializeTransitions();
             foreach (ATBState state in states)

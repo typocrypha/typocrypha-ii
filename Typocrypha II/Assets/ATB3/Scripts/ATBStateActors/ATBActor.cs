@@ -18,7 +18,6 @@ namespace ATB3
         //----------------------------------------------------------------//
 
         public ATBStateMachine StateMachine; // State machine for this actor
-        public string actorName; // Name of actor (debug)
 
         #region IPausable
         PauseHandle ph;
@@ -44,6 +43,7 @@ namespace ATB3
                 PH.Pause = value;
             }
         }
+        [HideInInspector]
         public bool isCast; // Is the actor in cast sequence? Isn't unset until all chains are finished.
 
         //----------------------------------------------------------------//
