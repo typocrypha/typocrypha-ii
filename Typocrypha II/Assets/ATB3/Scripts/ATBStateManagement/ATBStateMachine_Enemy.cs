@@ -15,7 +15,6 @@ namespace ATB3
         // PROPERTIES                                                     //
         //----------------------------------------------------------------//
 
-        public ATBEnemy Owner { get => owner as ATBEnemy; }
 
         //----------------------------------------------------------------//
         // STATE MACHINE FUNCTIONS                                        //
@@ -25,12 +24,12 @@ namespace ATB3
         // Add your states here!
         protected override void InitializeStates()
         {
-            AddState(new ATBStateEnemy_Charge() { Owner = this.Owner, Source = this });
-            AddState(new ATBStateEnemy_PreCast() { Owner = this.Owner, Source = this });
-            AddState(new ATBStateEnemy_BeforeCast() { Owner = this.Owner, Source = this });
-            AddState(new ATBStateEnemy_Cast() { Owner = this.Owner, Source = this });
-            AddState(new ATBStateEnemy_AfterCast() { Owner = this.Owner, Source = this });
-            AddState(new ATBStateEnemy_Stunned() { Owner = this.Owner, Source = this });
+            AddState(new ATBStateEnemy_Charge() { Owner = owner, Source = this });
+            AddState(new ATBStateEnemy_PreCast() { Owner = owner, Source = this });
+            AddState(new ATBStateEnemy_BeforeCast() { Owner = owner, Source = this });
+            AddState(new ATBStateEnemy_Cast() { Owner = owner, Source = this });
+            AddState(new ATBStateEnemy_AfterCast() { Owner = owner, Source = this });
+            AddState(new ATBStateEnemy_Stunned() { Owner = owner, Source = this });
         }
 
         // Appends the machine's transitions to the given transition map (should be called on awake)

@@ -9,19 +9,26 @@ namespace ATB3
         // The ID for this specific ATBState
         public override ATBStateID StateID { get { return ATBStateID.Charge; } }
 
+        private ATBEnemy enemyOwner;
+
         // Call upon entering given state
         public override void OnEnter()
         {
+            enemyOwner = Owner as ATBEnemy;
             //Debug.Log("ENEMY " + this.Owner.actorName + " has ENTERED the CHARGE state! (id: " + StateID.ToString() + ")");
-            ((ATBEnemy)this.Owner).GetComponent<Animator>().SetTrigger("Idle");
-            ((ATBEnemy)this.Owner).StartCharge();
+            enemyOwner.GetComponent<Animator>().SetTrigger("Idle");
+            enemyOwner.StartCharge();
         }
 
         // Call on fixed update while in given state
         public override void OnUpdate()
         {
+            if(enemyOwner.caster.Stunned)
+            {
+                Source.PerformTransition(ATBTransition.ToStun);
+            }
             // Source.PerformTransition(ATBTransition.ChargeFinish);
-            if (((ATBEnemy)this.Owner).caster.Charge >= ((ATBEnemy)this.Owner).caster.ChargeTime)
+            if (enemyOwner.caster.Charge >= enemyOwner.caster.ChargeTime)
             {
                 Source.PerformTransition(ATBTransition.ToPreCast);
             }

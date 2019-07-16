@@ -57,10 +57,32 @@ public class Caster : FieldObject
         {
             stagger = value;
             ui?.onStaggerChanged.Invoke(stagger.ToString());
-            if (stagger <= 0) ui?.onStun.Invoke();
+            if (stagger <= 0)
+            {
+                Stunned = true;
+            }
+
         }
     }
-    public bool Stunned { get; } = false;
+    private bool stunned = false;
+    public bool Stunned
+    {
+        get => stunned;
+        set
+        {
+            stunned = value;
+            // If stunned display stun UI
+            if (stunned)
+            {
+                ui?.onStun.Invoke();
+            }
+            else
+            {
+                // If unstunned reset stagger to full
+                Stagger = Stats.MaxStagger;
+            }
+        }
+    }
     Spell spell;
     public Spell Spell
     {
