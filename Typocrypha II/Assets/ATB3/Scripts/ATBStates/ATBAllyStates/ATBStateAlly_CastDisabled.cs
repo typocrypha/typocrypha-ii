@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ATB3
 {
-    public class ATBStateAlly_CastDisabled : ATBState
+    public class ATBStateAlly_CastDisabled : ATBState<ATBAlly>
     {
         // The ID for this specific ATBState
         public override ATBStateID StateID { get { return ATBStateID.CastDisabled; } }

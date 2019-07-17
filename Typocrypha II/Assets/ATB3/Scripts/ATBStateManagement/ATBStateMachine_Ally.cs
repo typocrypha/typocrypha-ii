@@ -9,13 +9,11 @@ namespace ATB3
     // Machine contained in all allies to manage individual states.
     //================================================================//
 
-    public class ATBStateMachine_Ally : ATBStateMachine
+    public class ATBStateMachine_Ally : ATBStateMachine<ATBAlly>
     {
         //----------------------------------------------------------------//
         // PROPERTIES                                                     //
         //----------------------------------------------------------------//
-
-        public ATBAlly Owner { get => owner as ATBAlly; }
 
         //----------------------------------------------------------------//
         // STATE MACHINE FUNCTIONS                                        //
@@ -25,13 +23,13 @@ namespace ATB3
         // Add your states here!
         protected override void InitializeStates()
         {
-            AddState(new ATBStateAlly_Charge() { Owner = this.Owner, Source = this });
-            AddState(new ATBStateAlly_AllyMenu() { Owner = this.Owner, Source = this });
-            AddState(new ATBStateAlly_BeforeCast() { Owner = this.Owner, Source = this });
-            AddState(new ATBStateAlly_Cast() { Owner = this.Owner, Source = this });
-            AddState(new ATBStateAlly_AfterCast() { Owner = this.Owner, Source = this });
-            AddState(new ATBStateAlly_CastDisabled() { Owner = this.Owner, Source = this });
-            AddState(new ATBStateAlly_Stunned() { Owner = this.Owner, Source = this });
+            AddState(new ATBStateAlly_Charge() { Owner = Owner, Source = this });
+            AddState(new ATBStateAlly_AllyMenu() { Owner = Owner, Source = this });
+            AddState(new ATBStateAlly_BeforeCast() { Owner = Owner, Source = this });
+            AddState(new ATBStateAlly_Cast() { Owner = Owner, Source = this });
+            AddState(new ATBStateAlly_AfterCast() { Owner = Owner, Source = this });
+            AddState(new ATBStateAlly_CastDisabled() { Owner = Owner, Source = this });
+            AddState(new ATBStateAlly_Stunned() { Owner = Owner, Source = this });
         }
 
         // Appends the machine's transitions to the given transition map (should be called on awake)

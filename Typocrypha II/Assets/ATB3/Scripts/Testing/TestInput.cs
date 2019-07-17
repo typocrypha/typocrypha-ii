@@ -23,7 +23,7 @@ namespace ATB3
 
         void Update()
         {
-            outputText.text = testActor.StateMachine.CurrentStateID.ToString();
+            outputText.text = testActor.BaseStateMachine.CurrentStateID.ToString();
             //if (stateNameMap.ContainsKey(testActor.currStateHash))
             //{
             //    outputText.text = stateNameMap[testActor.currStateHash];
@@ -41,7 +41,7 @@ namespace ATB3
         public void checkInput()
         {
             ATBTransition inputTrans = (ATBTransition)System.Enum.Parse(typeof(ATBTransition), input.text);
-            testActor.StateMachine.PerformTransition(inputTrans);
+            testActor.BaseStateMachine.PerformTransition(inputTrans);
         }
     }
 }

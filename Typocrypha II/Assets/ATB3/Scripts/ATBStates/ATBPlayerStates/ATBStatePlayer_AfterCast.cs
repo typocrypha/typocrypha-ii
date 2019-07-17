@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ATB3
 {
-    public class ATBStatePlayer_AfterCast : ATBState
+    public class ATBStatePlayer_AfterCast : ATBState<ATBPlayer>
     {
         float time = 0f;
 

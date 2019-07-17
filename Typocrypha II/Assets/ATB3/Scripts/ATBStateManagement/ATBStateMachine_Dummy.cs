@@ -9,13 +9,8 @@ namespace ATB3
     // Checking if state machine code works
     //================================================================//
 
-    public class ATBStateMachine_Dummy : ATBStateMachine
+    public class ATBStateMachine_Dummy : ATBStateMachine<ATBEnemy>
     {
-        //----------------------------------------------------------------//
-        // PROPERTIES                                                     //
-        //----------------------------------------------------------------//
-
-        public ATBEnemy Owner { get => owner as ATBEnemy; }
 
         //----------------------------------------------------------------//
         // STATE MACHINE FUNCTIONS                                        //
@@ -25,8 +20,8 @@ namespace ATB3
         // Add your states here!
         protected override void InitializeStates()
         {
-            AddState(new ATBStateEnemy_Charge() { Owner = this.Owner, Source = this });
-            AddState(new ATBStateEnemy_Stunned() { Owner = this.Owner, Source = this });
+            AddState(new ATBStateEnemy_Charge() { Owner = Owner, Source = this });
+            AddState(new ATBStateEnemy_Stunned() { Owner = Owner, Source = this });
         }
 
         // Appends the machine's transitions to the given transition map (should be called on awake)

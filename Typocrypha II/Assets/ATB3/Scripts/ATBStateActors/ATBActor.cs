@@ -10,14 +10,14 @@ namespace ATB3
     // ACTOR
     // A generic entity with states in the ATB system.
     //================================================================//
-
+    [DisallowMultipleComponent]
     public abstract class ATBActor : MonoBehaviour, IPausable
     {
         //----------------------------------------------------------------//
         // PROPERTIES                                                     //
         //----------------------------------------------------------------//
 
-        public ATBStateMachine StateMachine; // State machine for this actor
+        public abstract IATBStateMachine BaseStateMachine { get; } // State machine for this actor
 
         #region IPausable
         PauseHandle ph;
@@ -28,7 +28,7 @@ namespace ATB3
 
         public void OnPause(bool b)
         {
-            StateMachine.PH.Pause = b;
+            BaseStateMachine.PH.Pause = b;
         }
         #endregion
 
@@ -62,7 +62,7 @@ namespace ATB3
         public bool isCurrentState(ATBStateID stateID)
         {
             //return currStateHash == Animator.StringToHash(stateName);
-            return StateMachine.CurrentStateID == stateID;
+            return BaseStateMachine.CurrentStateID == stateID;
         }
     }
 }

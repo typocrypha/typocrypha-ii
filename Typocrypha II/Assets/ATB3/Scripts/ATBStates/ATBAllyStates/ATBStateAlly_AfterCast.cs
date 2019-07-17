@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ATB3
 {
-    public class ATBStateAlly_AfterCast : ATBState
+    public class ATBStateAlly_AfterCast : ATBState<ATBAlly>
     {
         // The ID for this specific ATBState
         public override ATBStateID StateID { get { return ATBStateID.AfterCast; } }
@@ -12,7 +12,7 @@ namespace ATB3
         // Call upon entering given state
         public override void OnEnter()
         {
-            ((ATBAlly)this.Owner).caster.Charge = 0.0f;
+            Owner.caster.Charge = 0.0f;
         }
 
         // Call on fixed update while in given state
@@ -25,7 +25,7 @@ namespace ATB3
         // Call upon exiting given state
         public override void OnExit()
         {
-            ATBManager.Instance.exitSolo(this.Owner);
+            ATBManager.Instance.exitSolo(Owner);
         }
     }
 }

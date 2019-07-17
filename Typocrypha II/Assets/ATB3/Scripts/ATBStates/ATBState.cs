@@ -64,14 +64,13 @@ namespace ATB3
     //================================================================//
 
     [System.Serializable]
-    public abstract class ATBState
+    public abstract class ATBState<T> where T : ATBActor
     {
         //protected ATBStateID stateID = 0;
         public virtual ATBStateID StateID { get { return ATBStateID.NullATBStateID; } }
-        private ATBActor owner; 
-        public ATBActor Owner { get { return owner; } set { owner = value; } }
-        private ATBStateMachine source;
-        public ATBStateMachine Source { get { return source; } set { source = value;  } }
+        private T owner; 
+        public T Owner { get { return owner; } set { owner = value; } }
+        public ATBStateMachine<T> Source { get; set; }
         public float timePassed = 0.0f;    // Amount of time spent in the state
 
         // Constructor for ATBState
@@ -79,16 +78,16 @@ namespace ATB3
         public ATBState()
         {
             owner = null;
-            source = null;
+            Source = null;
         }
-        public ATBState(ATBActor actor, ATBStateMachine machine)
+        public ATBState(T actor, ATBStateMachine<T> machine)
         {
             owner = actor;
-            source = machine;
+            Source = machine;
         }
 
         // set owner for the ATBState
-        public void SetOwner(ATBActor actor)
+        public void SetOwner(T actor)
         {
             owner = actor;
         }

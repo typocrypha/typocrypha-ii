@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ATB3
 {
-    public class ATBStatePlayer_Cast : ATBState
+    public class ATBStatePlayer_Cast : ATBState<ATBPlayer>
     {
         // The ID for this specific ATBState
         public override ATBStateID StateID { get { return ATBStateID.Cast; } }

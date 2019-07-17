@@ -9,7 +9,7 @@ namespace ATB3
     // Machine contained in all Enemies to manage individual states.
     //================================================================//
 
-    public class ATBStateMachine_Enemy : ATBStateMachine
+    public class ATBStateMachine_Enemy : ATBStateMachine<ATBEnemy>
     {
         //----------------------------------------------------------------//
         // PROPERTIES                                                     //
@@ -24,12 +24,12 @@ namespace ATB3
         // Add your states here!
         protected override void InitializeStates()
         {
-            AddState(new ATBStateEnemy_Charge() { Owner = owner, Source = this });
-            AddState(new ATBStateEnemy_PreCast() { Owner = owner, Source = this });
-            AddState(new ATBStateEnemy_BeforeCast() { Owner = owner, Source = this });
-            AddState(new ATBStateEnemy_Cast() { Owner = owner, Source = this });
-            AddState(new ATBStateEnemy_AfterCast() { Owner = owner, Source = this });
-            AddState(new ATBStateEnemy_Stunned() { Owner = owner, Source = this });
+            AddState(new ATBStateEnemy_Charge() { Owner = Owner, Source = this });
+            AddState(new ATBStateEnemy_PreCast() { Owner = Owner, Source = this });
+            AddState(new ATBStateEnemy_BeforeCast() { Owner = Owner, Source = this });
+            AddState(new ATBStateEnemy_Cast() { Owner = Owner, Source = this });
+            AddState(new ATBStateEnemy_AfterCast() { Owner = Owner, Source = this });
+            AddState(new ATBStateEnemy_Stunned() { Owner = Owner, Source = this });
         }
 
         // Appends the machine's transitions to the given transition map (should be called on awake)
@@ -43,7 +43,7 @@ namespace ATB3
             AddTransition(ATBTransition.ToBeforeCast, ATBStateID.BeforeCast);    // If about to cast, go into beforecast state
             AddTransition(ATBTransition.ToCast, ATBStateID.Cast);                // If finishing beforecast, go into cast state
             AddTransition(ATBTransition.ToAfterCast, ATBStateID.AfterCast);      // If performed spell, go into aftercast state
-            AddTransition(ATBTransition.ToCharge, ATBStateID.Charge);             // If ready to charge spell again, go into charge state
+            AddTransition(ATBTransition.ToCharge, ATBStateID.Charge);            // If ready to charge spell again, go into charge state
         }
     }
 }

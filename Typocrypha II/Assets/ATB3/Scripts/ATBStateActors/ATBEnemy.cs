@@ -12,8 +12,11 @@ namespace ATB3
     //================================================================//
 
     [RequireComponent(typeof(Caster))]
+    [RequireComponent(typeof(ATBStateMachine_Enemy))]
     public partial class ATBEnemy : ATBActor
     {
+        public ATBStateMachine_Enemy StateMachine { get; private set; }
+        public override IATBStateMachine BaseStateMachine => StateMachine;
         [HideInInspector]
         public Caster caster; // Associated Caster script.
 
@@ -55,6 +58,7 @@ namespace ATB3
 
         public override void Setup()
         {
+            StateMachine = GetComponent<ATBStateMachine_Enemy>();
             caster = GetComponent<Caster>();
             PH.Pause = true;
         }

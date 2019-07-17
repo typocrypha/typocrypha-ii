@@ -4,8 +4,11 @@ using UnityEngine;
 
 namespace ATB3
 {
+    [RequireComponent(typeof(ATBStateMachine_Player))]
     public partial class ATBPlayer : ATBActor
     {
+        public ATBStateMachine_Player StateMachine { get; private set; }
+        public override IATBStateMachine BaseStateMachine => StateMachine;
         void Start()
         {
             Setup();
@@ -13,6 +16,7 @@ namespace ATB3
 
         public override void Setup()
         {
+            StateMachine = GetComponent<ATBStateMachine_Player>();
         }
 
         // Called when player enters a spell into the cast bar

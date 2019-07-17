@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ATB3
 {
-    public class ATBStateEnemy_BeforeCast : ATBState
+    public class ATBStateEnemy_BeforeCast : ATBState<ATBEnemy>
     {
         // The ID for this specific ATBState
         public override ATBStateID StateID { get { return ATBStateID.BeforeCast; } }

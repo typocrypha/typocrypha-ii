@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ATB3
 {
-    public class ATBStateAlly_Charge : ATBState
+    public class ATBStateAlly_Charge : ATBState<ATBAlly>
     {
         // The ID for this specific ATBState
         public override ATBStateID StateID { get { return ATBStateID.Charge; } }
@@ -13,14 +13,14 @@ namespace ATB3
         public override void OnEnter()
         {    
             //Debug.Log("ALLY " + this.Owner.actorName + " has ENTERED the CHARGE state!");
-            //((ATBAlly)this.Owner).startMana();
+            //Owner.startMana();
         }
 
         // Call on fixed update while in given state
         public override void OnUpdate()
         {
             // Source.PerformTransition(ATBTransition.ChargeFinish);
-            //if (((ATBAlly)this.Owner).mana >= ((ATBAlly)this.Owner).maxMana)
+            //if (Owner.mana >= Owner.maxMana)
             //{
             //    Source.PerformTransition(ATBTransition.ToBeforeCast);
             //}

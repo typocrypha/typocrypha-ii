@@ -4,8 +4,11 @@ using UnityEngine;
 
 namespace ATB3
 {
+    [RequireComponent(typeof(ATBStateMachine_Ally))]
     public partial class ATBAlly : ATBActor
     {
+        public ATBStateMachine_Ally StateMachine { get; private set; }
+        public override IATBStateMachine BaseStateMachine => StateMachine;
         public Caster caster;
         public KeyCode menuKey; // Key to open ally menu.
         public GameObject allyMenu; // Ally menu (for choosing spell).
@@ -41,6 +44,7 @@ namespace ATB3
 
         public override void Setup()
         {
+            StateMachine = GetComponent<ATBStateMachine_Ally>();
             PH.Pause = true;
             StartCoroutine(ChargeCR());
         }

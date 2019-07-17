@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ATB3
 {
-    public class ATBStateAlly_BeforeCast : ATBState
+    public class ATBStateAlly_BeforeCast : ATBState<ATBAlly>
     {
         // The ID for this specific ATBState
         public override ATBStateID StateID { get { return ATBStateID.BeforeCast; } }
@@ -12,7 +12,7 @@ namespace ATB3
         // Call upon entering given state
         public override void OnEnter()
         {
-            this.Owner.isCast = true;
+            Owner.isCast = true;
         }
 
         // Call on fixed update while in given state

@@ -9,13 +9,11 @@ namespace ATB3
     // Machine for the player to manage individual states.
     //================================================================//
 
-    public class ATBStateMachine_Player : ATBStateMachine
+    public class ATBStateMachine_Player : ATBStateMachine<ATBPlayer>
     {
         //----------------------------------------------------------------//
         // PROPERTIES                                                     //
         //----------------------------------------------------------------//
-
-        public ATBPlayer Owner { get => owner as ATBPlayer; }
 
         //----------------------------------------------------------------//
         // STATE MACHINE FUNCTIONS                                        //
@@ -25,10 +23,10 @@ namespace ATB3
         // Add your states here!
         protected override void InitializeStates()
         {
-            AddState(new ATBStatePlayer_Idle() { Owner = this.Owner, Source = this });
-            AddState(new ATBStatePlayer_BeforeCast() { Owner = this.Owner, Source = this });
-            AddState(new ATBStatePlayer_Cast() { Owner = this.Owner, Source = this });
-            AddState(new ATBStatePlayer_AfterCast() { Owner = this.Owner, Source = this });
+            AddState(new ATBStatePlayer_Idle() { Owner = Owner, Source = this });
+            AddState(new ATBStatePlayer_BeforeCast() { Owner = Owner, Source = this });
+            AddState(new ATBStatePlayer_Cast() { Owner = Owner, Source = this });
+            AddState(new ATBStatePlayer_AfterCast() { Owner = Owner, Source = this });
         }
 
         // Appends the machine's transitions to the given transition map (should be called on awake)

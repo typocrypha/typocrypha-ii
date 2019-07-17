@@ -14,7 +14,8 @@ namespace ATB3
     // Written by Roberto Cezar Bianchini, July 2010
     // ===============================================================//
     [RequireComponent(typeof(ATBActor))]
-    public abstract class ATBStateMachine : MonoBehaviour, IPausable
+    [DisallowMultipleComponent]
+    public abstract class ATBStateMachine<T> : MonoBehaviour, IPausable, IATBStateMachine where T : ATBActor
     {
         #region IPausable
         PauseHandle ph;
@@ -33,26 +34,21 @@ namespace ATB3
         //----------------------------------------------------------------//
 
         // ATBActor that owns this state machine
-        // (drag and drop the desired ATBActor component in the Unity editor)
-        protected ATBActor owner;
+        protected T Owner { get; private set; }
 
         // map of all the machine's transitions and their end point states
         // (override and define this in individual child state machines)
         protected Dictionary<ATBTransition, ATBStateID> transitionMap = new Dictionary<ATBTransition, ATBStateID>();
         // list of all the states allowed in this machine 
         // (because you have to call [new ATBStateBlah()] for each state, add to list on awake())
-        private List<ATBState> states = new List<ATBState>();
+        private List<ATBState<T>> states = new List<ATBState<T>>();
 
         // The only way one can change the state of the machine is by performing a transition
         // Don't change the CurrentState directly (unless initializing with SetState())
-        private ATBStateID currentStateID;
-        public ATBStateID CurrentStateID { get { return currentStateID; } }
-        private ATBState currentState;
-        public ATBState CurrentState { get { return currentState; } }
-        private ATBStateID previousStateID;
-        public ATBStateID PreviousStateID { get { return previousStateID; } }
-        private ATBState previousState;
-        public ATBState PreviousState { get { return previousState; } }
+        public ATBStateID CurrentStateID { get; set; }
+        public ATBState<T> CurrentState { get; private set; }
+        public ATBStateID PreviousStateID { get; set; }
+        public ATBState<T> PreviousState { get; private set; }
 
         //----------------------------------------------------------------//
         // RUNTIME FUNCTIONS                                              //
@@ -61,14 +57,14 @@ namespace ATB3
         void Awake()
         {
             ph = new PauseHandle(OnPause);
-            owner = GetComponent<ATBActor>();
+            Owner = GetComponent<T>();
             InitializeStates();
             InitializeTransitions();
-            foreach (ATBState state in states)
+            foreach (var state in states)
             {
-                state.SetOwner(owner);
+                state.SetOwner(Owner);
             }
-            currentState.OnEnter();
+            CurrentState.OnEnter();
         }
 
         void FixedUpdate()
@@ -90,7 +86,7 @@ namespace ATB3
         /// or prints an ERROR message if the state was already inside the List.
         /// First state added is also the initial state.
         /// </summary>
-        public void AddState(ATBState s)
+        public void AddState(ATBState<T> s)
         {
             // Check for Null reference before deleting
             if (s == null)
@@ -103,14 +99,14 @@ namespace ATB3
             if (states.Count == 0)
             {
                 states.Add(s);
-                currentState = s;
-                currentStateID = s.StateID;
+                CurrentState = s;
+                CurrentStateID = s.StateID;
                 //Debug.Log(owner.actorName + " intial current state is " + currentStateID.ToString());
                 return;
             }
 
             // Add the state to the List if it's not inside it
-            foreach (ATBState state in states)
+            foreach (var state in states)
             {
                 if (state.StateID == s.StateID)
                 {
@@ -161,43 +157,43 @@ namespace ATB3
             // SPECIAL CASE: If we're returning to a previous state, rollback
             if (id == ATBStateID.PreviousState)
             {
-                ATBState tempState = previousState;
-                previousStateID = currentState.StateID;
-                currentStateID = tempState.StateID;
+                var tempState = PreviousState;
+                PreviousStateID = CurrentState.StateID;
+                CurrentStateID = tempState.StateID;
 
                 // Do the post processing of the state before setting the new one
-                currentState.OnExit();
+                CurrentState.OnExit();
 
-                previousState = currentState;
-                currentState = tempState;
+                PreviousState = CurrentState;
+                CurrentState = tempState;
 
                 // Reset the state to its desired condition before it can reason or act
-                currentState.OnEnter();
+                CurrentState.OnEnter();
                 return;
             }
             else if (id == ATBStateID.NullATBStateID)
             {
-                Debug.LogError("FSM ERROR: State " + currentStateID.ToString() + " does not have a target state " +
+                Debug.LogError("FSM ERROR: State " + CurrentStateID.ToString() + " does not have a target state " +
                                " for transition " + trans.ToString());
                 return;
             }
             else
             {
                 // Update the currentStateID and currentState		
-                previousStateID = currentStateID;
-                currentStateID = id;
-                foreach (ATBState state in states)
+                PreviousStateID = CurrentStateID;
+                CurrentStateID = id;
+                foreach (var state in states)
                 {
-                    if (state.StateID == currentStateID)
+                    if (state.StateID == CurrentStateID)
                     {
                         // Do the post processing of the state before setting the new one
-                        currentState.OnExit();
+                        CurrentState.OnExit();
 
-                        previousState = currentState;
-                        currentState = state;
+                        PreviousState = CurrentState;
+                        CurrentState = state;
 
                         // Reset the state to its desired condition before it can reason or act
-                        currentState.OnEnter();
+                        CurrentState.OnEnter();
                         break;
                     }
                 }
@@ -221,14 +217,14 @@ namespace ATB3
 
         // force set the current ATB state for the machine (i.e. change initialization)
         // this does not use transitions or activate OnEnter/Exit
-        private void SetState(ATBState state)
+        private void SetState(ATBState<T> state)
         {
             if (states.Contains(state))
             {
-                previousState = currentState;
-                previousStateID = currentStateID;
-                currentState = state;
-                currentStateID = state.StateID;
+                PreviousState = CurrentState;
+                PreviousStateID = CurrentStateID;
+                CurrentState = state;
+                CurrentStateID = state.StateID;
             }
             return;
         }
