@@ -10,15 +10,13 @@ namespace ATB3
         public override ATBStateID StateID { get { return ATBStateID.Stunned; } }
         private float timer = 0.0f;
         private float stuntime = 5;
-        private ATBEnemy enemyOwner;
 
         // Call upon entering given state
         public override void OnEnter()
         {
-            enemyOwner = Owner as ATBEnemy;
-            stuntime = enemyOwner.caster.Stats.StaggerTime;
+            stuntime = Owner.Caster.Stats.StaggerTime;
             //Debug.Log("ENEMY " + this.Owner.actorName + " has ENTERED the STUNNED state!");
-            enemyOwner.GetComponent<Animator>().SetTrigger("Stun");
+            Owner.GetComponent<Animator>().SetTrigger("Stun");
             timer = 0.0f;
         }
 
@@ -26,7 +24,7 @@ namespace ATB3
         public override void OnUpdate()
         {
             timer += Time.fixedDeltaTime;
-            if (timer >= stuntime || !enemyOwner.caster.Stunned)
+            if (timer >= stuntime || !Owner.Caster.Stunned)
                 Source.PerformTransition(ATBTransition.ExitStun);
             return;
         }
@@ -34,7 +32,7 @@ namespace ATB3
         // Call upon exiting given state
         public override void OnExit()
         {
-            enemyOwner.caster.Stunned = false;
+            Owner.Caster.Stunned = false;
             //Debug.Log("ENEMY " + this.Owner.actorName + " has EXITED the STUNNED state!");
         }
     }

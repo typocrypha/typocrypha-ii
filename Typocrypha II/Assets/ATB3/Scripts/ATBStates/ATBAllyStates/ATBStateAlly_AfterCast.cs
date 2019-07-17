@@ -12,7 +12,7 @@ namespace ATB3
         // Call upon entering given state
         public override void OnEnter()
         {
-            Owner.caster.Charge = 0.0f;
+            Owner.Caster.Charge = 0.0f;
         }
 
         // Call on fixed update while in given state

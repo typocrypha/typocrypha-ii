@@ -16,7 +16,7 @@ namespace ATB3
         {
             Debug.Log("ALLY " + Owner.name + " has ENTERED the STUNNED state!");
             timer = 0.0f;
-            stunTime = Owner.caster.Stats.StaggerTime;
+            stunTime = Owner.Caster.Stats.StaggerTime;
         }
 
         // Call on fixed update while in given state

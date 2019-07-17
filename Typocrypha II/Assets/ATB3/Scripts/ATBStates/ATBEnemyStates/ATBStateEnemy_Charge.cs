@@ -21,12 +21,12 @@ namespace ATB3
         public override void OnUpdate()
         {
             // If stunned, go to stun state
-            if(Owner.caster.Stunned)
+            if(Owner.Caster.Stunned)
             {
                 Source.PerformTransition(ATBTransition.ToStun);
             }
             // If finished charging, go to precast
-            if (Owner.caster.Charge >= Owner.caster.ChargeTime)
+            if (Owner.Caster.Charge >= Owner.Caster.ChargeTime)
             {
                 Source.PerformTransition(ATBTransition.ToPreCast);
             }

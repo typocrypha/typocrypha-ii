@@ -17,8 +17,7 @@ namespace ATB3
     {
         public ATBStateMachine_Enemy StateMachine { get; private set; }
         public override IATBStateMachine BaseStateMachine => StateMachine;
-        [HideInInspector]
-        public Caster caster; // Associated Caster script.
+        public Caster Caster { get; private set; } // Associated Caster script.
 
         //----------------------------------------------------------------//
         // CHARGE COROUTINE                                               //
@@ -36,16 +35,16 @@ namespace ATB3
         // Incrementally charges next spell
         IEnumerator ChargeCR()
         {
-            if (caster.ChargeTime == 0f) caster.ChargeTime = 8f; // DEBUG
-            caster.Charge = 0f;
-            while (caster.Charge + Time.fixedDeltaTime < caster.ChargeTime)
+            if (Caster.ChargeTime == 0f) Caster.ChargeTime = 8f; // DEBUG
+            Caster.Charge = 0f;
+            while (Caster.Charge + Time.fixedDeltaTime < Caster.ChargeTime)
             {
                 // Charge while in charge state
                 do yield return new WaitForFixedUpdate();
                 while (Pause || !isCurrentState(ATBStateID.Charge));
-                caster.Charge += Time.fixedDeltaTime;
+                Caster.Charge += Time.fixedDeltaTime;
             }
-            caster.Charge = caster.ChargeTime;
+            Caster.Charge = Caster.ChargeTime;
             //Debug.Log("DONE CHARGING");
             //sendEvent("enemyPreCast");
             chargeCRObj = null;
@@ -59,7 +58,7 @@ namespace ATB3
         public override void Setup()
         {
             StateMachine = GetComponent<ATBStateMachine_Enemy>();
-            caster = GetComponent<Caster>();
+            Caster = GetComponent<Caster>();
             PH.Pause = true;
         }
     }

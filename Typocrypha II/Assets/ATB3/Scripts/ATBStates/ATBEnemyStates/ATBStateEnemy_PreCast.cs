@@ -24,9 +24,9 @@ namespace ATB3
         public override void OnUpdate()
         {
             timer += Time.fixedDeltaTime;
-            if(enemyOwner.caster.Stunned)
+            if(enemyOwner.Caster.Stunned)
             {
-                enemyOwner.caster.Charge = 0;
+                enemyOwner.Caster.Charge = 0;
                 var AI = Owner.GetComponent<CasterAI>();
                 // DEBUG, REMOVE LATER
                 AI.OnAfterCast?.Invoke();
