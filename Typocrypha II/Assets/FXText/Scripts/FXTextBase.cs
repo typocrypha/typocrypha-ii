@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -42,25 +43,25 @@ namespace FXText
             if (!IsActive() || ind == null || ind.Count == 0 || ind.Count % 2 != 0) return;
             List<UIVertex> stream = ListPool<UIVertex>.Get();
             vh.GetUIVertexStream(stream);
-            int len = textComp.text.Length * vertsInQuad;
-            int spaces = textComp.text.Count(a => a == ' ');
+            string text = Regex.Replace(textComp.text, @"<.*?>", ""); // Remove tags
+            int len = text.Length * vertsInQuad;
+            int spaces = text.Count(a => a == ' ');
             bool shadow = (gameObject.GetComponent<Shadow>() != null) && (gameObject.GetComponent<Shadow>().enabled); // Is there an active shadow?
-            // Check if there aren't dummy vertices for spaces
-            if ((!shadow && (len != stream.Count)) ||
-                ( shadow && (2 * len != stream.Count)))
+            // Check if first FXText (dont double add spaces)
+            if (GetComponents<FXTextBase>()[0] == this)
             {
+                int shift = 0;
                 // Add dummy vertices for spaces
-                for (int i = 0; i < textComp.text.Length; i++)
+                for (int i = 0; i < text.Length; i++)
                 {
-                    int shift = 0;
-                    if (textComp.text[i] == ' ')
+                    if (text[i] == ' ')
                     {
                         shift++;
                         int pos = i * vertsInQuad;
                         for (int k = 0; k < vertsInQuad; k++)
                         {
                             stream.Insert(pos, new UIVertex());
-                            if (shadow) stream.Insert(pos + ((textComp.text.Length - spaces + shift - 1) * vertsInQuad) + k + 1, new UIVertex());
+                            if (shadow) stream.Insert(pos + ((text.Length - spaces + shift - 1) * vertsInQuad) + k + 1, new UIVertex());
                         }
                     }
                 }
@@ -72,7 +73,7 @@ namespace FXText
             {
                 for (int j = ind[i]; j < ind[i + 1]; j++)
                 {
-                    if (j >= textComp.text.Length) break;
+                    if (j >= text.Length) break;
                     // Apply effect on character and its shadow
                     for (int pos = j * vertsInQuad; pos < stream.Count; pos += len)
                     {
