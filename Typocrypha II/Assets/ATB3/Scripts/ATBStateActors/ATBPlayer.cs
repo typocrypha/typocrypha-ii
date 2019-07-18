@@ -9,8 +9,9 @@ namespace ATB3
     {
         public ATBStateMachine_Player StateMachine { get; private set; }
         public override IATBStateMachine BaseStateMachine => StateMachine;
-        void Start()
+        void Awake()
         {
+            ph = new PauseHandle(OnPause);
             Setup();
         }
 

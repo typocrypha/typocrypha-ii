@@ -50,8 +50,9 @@ namespace ATB3
             chargeCRObj = null;
         }
 
-        void Start()
+        void Awake()
         {
+            ph = new PauseHandle(OnPause);
             Setup();
         }
 

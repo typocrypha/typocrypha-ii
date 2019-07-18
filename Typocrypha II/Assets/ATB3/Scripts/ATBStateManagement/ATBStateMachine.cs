@@ -47,7 +47,7 @@ namespace ATB3
         // Don't change the CurrentState directly (unless initializing with SetState())
         public ATBStateID CurrentStateID { get; set; }
         public ATBState<T> CurrentState { get; private set; }
-        public ATBStateID PreviousStateID { get; set; }
+        public ATBStateID PreviousStateID { get; private set; }
         public ATBState<T> PreviousState { get; private set; }
 
         //----------------------------------------------------------------//
@@ -64,6 +64,11 @@ namespace ATB3
             {
                 state.SetOwner(Owner);
             }
+            PH.Pause = true;
+        }
+
+        void Start()
+        {
             CurrentState.OnEnter();
         }
 

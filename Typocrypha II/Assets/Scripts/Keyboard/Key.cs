@@ -26,10 +26,6 @@ namespace Typocrypha
                 else if (highlight >= 0f) highlight -= 0.15f;
             }
         }
-        public bool Affected // Under status effect (checks for effect child).
-        {
-            get => transform.childCount != 3;
-        }
 
         void Awake()
         {

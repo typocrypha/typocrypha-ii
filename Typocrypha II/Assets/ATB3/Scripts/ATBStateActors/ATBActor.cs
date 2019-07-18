@@ -20,7 +20,7 @@ namespace ATB3
         public abstract IATBStateMachine BaseStateMachine { get; } // State machine for this actor
 
         #region IPausable
-        PauseHandle ph;
+        protected PauseHandle ph;
         public PauseHandle PH
         {
             get => ph;
@@ -28,7 +28,8 @@ namespace ATB3
 
         public void OnPause(bool b)
         {
-            BaseStateMachine.PH.Pause = b;
+            if(BaseStateMachine.PH != null)
+                BaseStateMachine.PH.Pause = b;
         }
         #endregion
 

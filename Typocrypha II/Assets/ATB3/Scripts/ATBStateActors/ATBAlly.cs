@@ -38,8 +38,9 @@ namespace ATB3
             }
         }
 
-        void Start()
+        void Awake()
         {
+            ph = new PauseHandle(OnPause);
             Setup();
         }
 

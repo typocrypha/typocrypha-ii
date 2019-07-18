@@ -15,7 +15,7 @@ namespace Typocrypha
         public PauseHandle PH { get => ph; }
         public void OnPause(bool b) { }
         #endregion
-
+        [HideInInspector]
         public Key key; // Affected keyboard key.
 
         void Awake()
@@ -23,6 +23,11 @@ namespace Typocrypha
             ph = new PauseHandle(OnPause);
             Keyboard.instance.allEffects.Add(this);
         }
+
+        /// <summary>
+        /// The number of keys an instance of this effect will affect
+        /// </summary>
+        public virtual int NumAffectedKeys { get => 1; }
 
         /// <summary>
         /// Called when effect is first applied.
@@ -46,7 +51,25 @@ namespace Typocrypha
         {
             Reset();
             Keyboard.instance.allEffects.Remove(this);
+            MarkUnaffected(key.letter);
             Destroy(gameObject);
+        }
+
+        /// <summary>
+        /// Mark a character unaffected. should be done when cleaning up an effect
+        /// </summary>
+        /// <param name="c"> The char to mark unaffected (should be a-z) </param>
+        protected void MarkUnaffected(char c)
+        {
+            Keyboard.instance.unaffectedKeys.Add(c);
+        }
+        /// <summary>
+        /// Mark a character affected. should be done when starting an effect that affects more than 1 key
+        /// </summary>
+        /// <param name="c"> The char to mark affected (should be a-z) </param>
+        protected void MarkAffected(char c)
+        {
+            Keyboard.instance.unaffectedKeys.Remove(c);
         }
     }
 }

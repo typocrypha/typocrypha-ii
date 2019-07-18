@@ -10,7 +10,8 @@ namespace Typocrypha
     /// </summary>
     [RequireComponent(typeof(KeyboardBuilder))]
     public class Keyboard : MonoBehaviour, IPausable
-    {
+    { 
+
         #region IPausable
         PauseHandle ph;
         public PauseHandle PH { get => ph; }
@@ -23,12 +24,14 @@ namespace Typocrypha
         }
         #endregion
 
+        public const char randomKeyFail = '!';
         public static Keyboard instance = null;
         public List<GameObject> allEffectPrefabs;
         public CastBar castBar;
         public Dictionary<char, Key> keyMap; // Map from characters to keyboard keys.
         public Transform keys; // Object that holds all the key objects.
         public HashSet<KeyEffect> allEffects; // All active key effects on keyboard (managed by individual effects).
+        public HashSet<char> unaffectedKeys; // All keys not currently affected by a key effect
 
         void Awake()
         {
@@ -45,9 +48,16 @@ namespace Typocrypha
 
             keyMap = new Dictionary<char, Key>();
             allEffects = new HashSet<KeyEffect>();
+            unaffectedKeys = new HashSet<char>();
             GetComponent<KeyboardBuilder>().BuildKeyboard(); // Construct keyboard.
-            foreach(Key key in keys.GetComponentsInChildren<Key>()) // Add keys to map.
+            foreach(Key key in keys.GetComponentsInChildren<Key>()) 
+            {
+                // Add keys to map.
                 keyMap[key.letter] = key;
+                // Initialize unaffected key set
+                unaffectedKeys.Add(key.letter);
+            }
+
         }
 
         // Check user input.
@@ -92,7 +102,10 @@ namespace Typocrypha
         {
             foreach(char c in affected)
             {
+                if (!unaffectedKeys.Contains(c))
+                    continue;
                 keyMap[c].ApplyEffect(effectPrefab);
+                unaffectedKeys.Remove(c);
             }
         }
         /// <summary>
@@ -103,6 +116,45 @@ namespace Typocrypha
         public void ApplyEffect(string affected, string effectName)
         {
             ApplyEffect(affected, allEffectPrefabs.Find(c => c.name == effectName));
+        }
+        /// <summary>
+        /// Apply an effect to a random key x times.
+        /// </summary>
+        /// <param name="effectPrefab">Prefab of effect (contains functionality and visual/audio effects.</param>
+        /// <param name="times">Number of times to attempt application.</param>
+        /// <returns>The number of times the effect was sucessfully applied</returns>
+        public int ApplyEffectRandom(GameObject effectPrefab, int times = 1)
+        {
+            int numKeysPerEffect = effectPrefab.GetComponent<KeyEffect>().NumAffectedKeys;
+            for (int i = 0; i < times; ++i)
+            {
+                if (numKeysPerEffect > unaffectedKeys.Count)
+                    return i;
+                char key = GetRandomUnaffectedKey();
+                ApplyEffect(key.ToString(), effectPrefab);
+            }
+            return times;
+        }
+        /// <summary>
+        /// Apply an effect to a random key x times by an effect name.
+        /// </summary>
+        /// <param name="effectName">Name of prefab of effect.</param>
+        /// <param name="times">Number of times to attempt application.</param>
+        /// <returns></returns>
+        public int ApplyEffectRandom(string effectName, int times = 1)
+        {
+            return ApplyEffectRandom(allEffectPrefabs.Find(c => c.name == effectName), times);
+        }
+        /// <summary>
+        /// Returns a random, unaffected key.
+        /// If there are no unaffected keys, returns '!'
+        /// </summary>
+        /// <returns> The key, or '!' if none exist </returns>
+        public char GetRandomUnaffectedKey()
+        {
+            if (unaffectedKeys.Count <= 0)
+                return randomKeyFail;
+            return RandomUtils.RandomU.instance.Choice(unaffectedKeys);
         }
     }
 }

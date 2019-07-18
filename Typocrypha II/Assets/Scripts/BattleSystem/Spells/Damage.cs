@@ -253,6 +253,7 @@ public static class Damage
             return;
         ApplyDamage(results, effect, caster, target);
         ApplyStaggerDamage(results, effect, caster, target);
+        ApplyStatusEffects(results, effect, caster, target);
     }
 
     public static bool ApplyReflect(CastResults results, DamageEffect effect, Caster caster, Caster target)
@@ -281,6 +282,34 @@ public static class Damage
         if (target.Stunned)
             SpellFxManager.instance.LogMessage(target.DisplayName + " is stunned!");
     }
+
+    #region Apply Special Tags
+    /// <summary>
+    /// Apply "Status Conditions" based on the prescence of certain tags
+    /// Specifically, this function hadles anything that could affect the player's keyboard if the target is the player
+    /// </summary>
+    public static void ApplyStatusEffects(CastResults results, DamageEffect effect, Caster caster, Caster target)
+    {
+        //Inflict keyboard effects if the target is the player
+        if(target.CasterClass == Caster.Class.Player)
+        {
+            if (effect.tags.Contains("Fire"))
+            {
+                Typocrypha.Keyboard.instance.ApplyEffectRandom("KeyEffectBurning");
+            }
+            if(effect.tags.Contains("Lightning"))
+            {
+                Typocrypha.Keyboard.instance.ApplyEffectRandom("KeyEffectShocked");
+            }
+            if(effect.tags.Contains("Ice"))
+            {
+                Typocrypha.Keyboard.instance.ApplyEffectRandom("KeyEffectFrozen");
+            }
+        }
+
+    }
+
+    #endregion
 
     #endregion
 

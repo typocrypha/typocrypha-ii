@@ -8,42 +8,41 @@ namespace Typocrypha
     /// Shocked key effect.
     /// Affected key's output is swapped with another key.
     /// To apply, just apply to a single key. Then, that key will pick a random key to set.
-    /// TODO: allow for manually setting shock pairs (probably through swapped map).
+    /// TODO: allow for manually setting shock pairs.
     /// </summary>
     public class KeyEffectShocked : KeyEffect
     {
-        public GameObject effectPrefab; // For application of effect on swapped key.
-
-        static Dictionary<char, char> swapped = new Dictionary<char, char>(); // All pairs of swapped keys.
+        public override int NumAffectedKeys => 2;
 
         const float time = 5f; // Duration of shock.
 
+        public GameObject swappedKeyEffectPrefab;
+
+        private GameObject swappedKeyEffect;
+        private char swappedWith = ' ';
+
         public override void OnStart()
         {
-            if (!swapped.ContainsKey(key.letter)) swapped[key.letter] = key.letter;
-            // If self is not already swapped (i.e. the 'starter' key).
-            if (swapped[key.letter] == key.letter)
+            // Pick random, unaffected key.
+            swappedWith = Keyboard.instance.GetRandomUnaffectedKey();
+            // If there are no other unaffected keys (this should never happen)
+            if (swappedWith == Keyboard.randomKeyFail)
             {
-                // Pick random, unaffected key.
-                char c = key.letter;
-                while (c == key.letter || Keyboard.instance.keyMap[c].Affected ||
-                      (swapped.ContainsKey(c) && swapped[c] != c))
-                    c = (char)('a' + Random.Range(0, 26));
-                // Set map.
-                swapped[key.letter] = c;
-                swapped[c] = key.letter;
-                // Swap self output.
-                key.output = c.ToString();
-                key.letterText.text = c.ToString().ToUpper();
-                // Apply effect to other key;
-                Keyboard.instance.keyMap[c].ApplyEffect(effectPrefab);
+                Remove();
+                return;
             }
-            else // Otherwise, we've already been paired (i.e. the 'other' key)
-            {
-                // Swap self output.
-                key.output = swapped[key.letter].ToString();
-                key.letterText.text = swapped[key.letter].ToString().ToUpper();
-            }
+            // Mark the other key as being affected
+            MarkAffected(swappedWith);
+            // Swap self output.
+            key.output = swappedWith.ToString();
+            key.letterText.text = swappedWith.ToString().ToUpper();
+            // Set the output of the key we swapped with
+            Key swappedKey = Keyboard.instance.keyMap[swappedWith];
+            swappedKey.output = key.letter.ToString();
+            swappedKey.letterText.text = key.letter.ToString().ToUpper();
+            // Create the visuals for the other key
+            swappedKeyEffect = Instantiate(swappedKeyEffectPrefab, swappedKey.transform);
+
             // Start timer.
             StartCoroutine(DestroyAfterTime(time));
         }
@@ -55,12 +54,18 @@ namespace Typocrypha
 
         public override void Reset()
         {
-            // Reset map.
-            swapped[key.letter] = key.letter;
-            // Revert output.
+            // Revert own output.
             key.output = key.letter.ToString();
             key.letterText.text = key.letter.ToString().ToUpper();
             key.onPress -= OnPress;
+            // Revert swapped key output
+            Key swappedKey = Keyboard.instance.keyMap[swappedWith];
+            swappedKey.output = swappedWith.ToString();
+            swappedKey.letterText.text = swappedWith.ToString().ToUpper();
+            // Destroy Swapped key effect graphics
+            Destroy(swappedKeyEffect);
+            // Mark swapped key unaffected
+            MarkUnaffected(swappedWith);
         }
 
         // Remove effect when time runs out.
