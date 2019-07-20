@@ -135,7 +135,7 @@ public class DialogScriptParser : EditorWindow
         pos = 0f; // Position of current node
         Node prev = null; // Previous node (init as start node).
         prev = CreateNode(GameflowStartNode.ID) as GameflowStartNode;
-        
+        currView = viewMap["vn"]; // Default to visual novel view
         for (int i = 0; i < lines.Length; i++)
         {
             //Debug.Log("parsing:" + lines[i]);
