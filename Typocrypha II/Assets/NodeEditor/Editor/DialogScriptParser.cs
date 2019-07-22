@@ -14,6 +14,7 @@ using Gameflow;
 /// </summary>
 public class DialogScriptParser : EditorWindow
 {
+    public const string assetPath = "Assets/ScriptableObjects/DialogScenes/";
     TextAsset textScript; // Text script asset
     NodeCanvas canvas; // Generated canvas
     System.Type currView = typeof(DialogViewVN); // Current dialog view
@@ -31,8 +32,9 @@ public class DialogScriptParser : EditorWindow
     readonly string exprPat = @"\(([^\)]*)\)"; // Expression marker pattern.
     readonly char[] poseMarker = new char[] { '[', ']' }; // Speaker's pose marker for dialog lines.
     readonly string posePat = @"\[([^\)]*)\]"; // Pose marker pattern.
-    readonly string displayPat = "\".*?\""; // Display name marker pattern.
+    readonly string displayPat = "[\"“].*?[\"”]"; // Display name marker pattern.
     readonly char[] escape = new char[] { '\\' }; // Escape character.
+    readonly char[] displayNameChars = new char[] { '"', '“', '”' }; // Characters that could delimit a display name.
 
     // Dialog view labels.
     Dictionary<string, System.Type> viewMap = new Dictionary<string, System.Type>
@@ -103,19 +105,22 @@ public class DialogScriptParser : EditorWindow
         AssetBundle.UnloadAllAssetBundles(true);
         characterDataBundle = AssetBundle.LoadFromFile(System.IO.Path.Combine(Application.streamingAssetsPath, "characterdata"));
         allCharacterData = characterDataBundle.LoadAllAssets<CharacterData>();
+        canvas = AssetDatabase.LoadAssetAtPath<DialogCanvas>(assetPath + textScript.name + ".asset");
         if (canvas == null) // Generate new canvas if empty
         {
             canvas = NodeCanvas.CreateCanvas(typeof(DialogCanvas));
             canvas.name = textScript.name;
+            canvas.Validate();
         }
         else // Otherwise overwrite
         {
             canvas.nodes.Clear();
+            canvas.Validate();
         }
         // Parse text into node canvas.
         Parse();
         // Save canvas.
-        canvas.saveName = "Assets/ScriptableObjects/DialogScenes/" + canvas.name + ".asset";
+        canvas.saveName = assetPath + canvas.name + ".asset";
         NodeEditorSaveManager.SaveNodeCanvas(canvas.saveName, ref canvas, true);
         AssetBundle.UnloadAllAssetBundles(true);
     }
@@ -150,8 +155,8 @@ public class DialogScriptParser : EditorWindow
             }
         }
         // Create end node.
-        var endNode = Node.Create(EndAndHide.ID, Vector2.right * pos) as EndAndHide;
-        (prev as BaseNodeIO).toNextOUT.TryApplyConnection(endNode.fromPreviousIN);
+        var endNode = CreateNode(EndAndHide.ID) as EndAndHide;
+        (prev as BaseNodeIO).toNextOUT.TryApplyConnection(endNode.fromPreviousIN, true);
     }
 
     // Parses a single line
@@ -240,9 +245,10 @@ public class DialogScriptParser : EditorWindow
         string[] dialogLine = line.Split(nameMarker, escape);
         List<Node> nodes = new List<Node>();
         string charName = (dialogLine[0].Contains(exprMarker[0]) || dialogLine[0].Contains(poseMarker[0])) 
-                        ? dialogLine[0].Substring(0, dialogLine[0].IndexOfAny(exprMarker.Concat(poseMarker).ToArray())).Trim()
+                        ? dialogLine[0].Substring(0, dialogLine[0].IndexOfAny(exprMarker.Concat(poseMarker).ToArray(), 0, escape)).Trim()
                         : dialogLine[0].Trim();
-        if (charName.Contains('"')) charName = charName.Substring(0, charName.IndexOf('"')).Trim();
+        // Remove Display name from character name
+        if (charName.Contains(displayNameChars, escape)) charName = charName.Substring(0, charName.IndexOfAny(displayNameChars, 0, escape)).Trim();
         string displayName = Regex.Match(dialogLine[0], displayPat).Value; // Displayed speaker name.
         displayName = (displayName.Length > 2) 
                     ? displayName.Substring(1, displayName.Length - 2) 

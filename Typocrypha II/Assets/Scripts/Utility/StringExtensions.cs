@@ -32,6 +32,31 @@ public static class StringExtensions
     }
 
     /// <summary>
+    /// Finds index of first occurence of any char in searchChars.
+    /// </summary>
+    /// <param name="str">Original string.</param>
+    /// <param name="anyOf">Characters to search for.</param>
+    /// <param name="startPos">Index to start at.</param>
+    /// <param name="escapes">Escape characters.</param>
+    /// <returns>Index of first occurence of search term. -1 if not found.</returns>
+    public static int IndexOfAny(this string str, char[] anyOf, int startPos, char[] escapes)
+    {
+        for (int i = startPos; i < str.Length; i++)
+        {
+            char c = str[i];
+            if (escapes.Contains(c))
+            {
+                i++;
+            }
+            else if (anyOf.Contains(c))
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /// <summary>
     /// Split a string based on a delimiter.
     /// </summary>
     /// <param name="str">Original string.</param>
