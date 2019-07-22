@@ -31,7 +31,6 @@ namespace Gameflow
         {
             NameGUI();
             TextGUI();
-            TIPSGUI();
 
             //GUILayout.Label(new GUIContent("Dialog Text", tooltip_text), NodeEditorGUI.nodeLabelBoldCentered);
             //GUILayout.BeginHorizontal();

@@ -72,6 +72,10 @@ public class DialogBox : MonoBehaviour, IDialogBox
     public void StartDialogBox(DialogItem dialogItem)
     {
         ResetDialogBox();
+        // Add text shadow.
+        var shadow = dialogText.gameObject.AddComponent<Shadow>();
+        shadow.effectDistance = new Vector2(2, -2);
+        shadow.effectColor = Color.black;
         // Get dialog.
         this.dialogItem = dialogItem;
         string otext = dialogItem.text; // Original text
@@ -79,11 +83,6 @@ public class DialogBox : MonoBehaviour, IDialogBox
         dialogItem.text = Regex.Replace(dialogItem.text, @"<.*?>", ""); // Remove rich text tags
         DialogParser.instance.Parse(dialogItem, this); // Parse w/o rich text tags
         dialogText.text = DialogParser.instance.RemoveTags(otext); // Set dialog text
-        
-        // Add text shadow.
-        var shadow = dialogText.gameObject.AddComponent<Shadow>();
-        shadow.effectDistance = new Vector2(2, -2);
-        shadow.effectColor = Color.black;
         // Hide all text.
         hideText = dialogText.gameObject.AddComponent<FXText.Color>();
         hideText.ind = new List<int> { 0, 0 };
