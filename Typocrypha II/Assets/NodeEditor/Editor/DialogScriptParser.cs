@@ -31,6 +31,7 @@ public class DialogScriptParser : EditorWindow
     readonly string exprPat = @"\(([^\)]*)\)"; // Expression marker pattern.
     readonly char[] poseMarker = new char[] { '[', ']' }; // Speaker's pose marker for dialog lines.
     readonly string posePat = @"\[([^\)]*)\]"; // Pose marker pattern.
+    readonly string displayPat = "\".*?\""; // Display name marker pattern.
     readonly char[] escape = new char[] { '\\' }; // Escape character.
 
     // Dialog view labels.
@@ -134,7 +135,7 @@ public class DialogScriptParser : EditorWindow
         pos = 0f; // Position of current node
         Node prev = null; // Previous node (init as start node).
         prev = CreateNode(GameflowStartNode.ID) as GameflowStartNode;
-        
+        currView = viewMap["vn"]; // Default to visual novel view
         for (int i = 0; i < lines.Length; i++)
         {
             //Debug.Log("parsing:" + lines[i]);
@@ -194,7 +195,7 @@ public class DialogScriptParser : EditorWindow
         {
             var gnode = CreateNode(AddCharacter.ID) as AddCharacter;
             gnode.characterData = GetCharacterData(args[1]);
-            gnode.targetPos = new Vector2(float.Parse(args[2]), float.Parse(args[3]));
+            gnode.targetPos = new Vector2(float.Parse(args[2]) * 8.8888f, float.Parse(args[3]) * 5f); // Normalized coordinates (hardcoded 16/9 res with camera size 5).
             nodes.Add(gnode);
         }
         else if (nodeType == typeof(RemoveCharacter))
@@ -238,11 +239,14 @@ public class DialogScriptParser : EditorWindow
     {
         string[] dialogLine = line.Split(nameMarker, escape);
         List<Node> nodes = new List<Node>();
-        string charName; // Character name.
-        if (dialogLine[0].Contains(exprMarker[0]) || dialogLine[0].Contains(poseMarker[0]))
-            charName = dialogLine[0].Substring(0, dialogLine[0].IndexOfAny(exprMarker.Concat(poseMarker).ToArray())).Trim();
-        else
-            charName = dialogLine[0].Trim();
+        string charName = (dialogLine[0].Contains(exprMarker[0]) || dialogLine[0].Contains(poseMarker[0])) 
+                        ? dialogLine[0].Substring(0, dialogLine[0].IndexOfAny(exprMarker.Concat(poseMarker).ToArray())).Trim()
+                        : dialogLine[0].Trim();
+        if (charName.Contains('"')) charName = charName.Substring(0, charName.IndexOf('"')).Trim();
+        string displayName = Regex.Match(dialogLine[0], displayPat).Value; // Displayed speaker name.
+        displayName = (displayName.Length > 2) 
+                    ? displayName.Substring(1, displayName.Length - 2) 
+                    : "";
         CharacterData charData = GetCharacterData(charName); // Character data.
         #region Expression and pose
         string expr = ""; // Expression string (value within parentheticals)
@@ -314,6 +318,7 @@ public class DialogScriptParser : EditorWindow
             dnode = CreateNode(DialogNodeBubble.ID) as DialogNodeBubble;
         }
         dnode.characterName = charName;
+        dnode.displayName = displayName;
         dnode.text = dialogLine[1].Trim();
         nodes.Add(dnode);
         return nodes;

@@ -52,9 +52,9 @@ public class DialogParser : MonoBehaviour
     /// <param name="dialogBox">Dialog box that will hold dialog.</param>
 	public void Parse(DialogItem dialogItem, DialogBox dialogBox)
     {
-		StringBuilder parsed = new StringBuilder(); // Processes string
-		string text = SubstituteMacros(dialogItem.text); 
-		dialogItem.FXTextList = new List<FXText.FXTextBase>();
+		StringBuilder parsed = new StringBuilder(); 
+        string text = dialogItem.text;
+        dialogItem.FXTextList = new List<FXText.FXTextBase>();
 		dialogItem.TextEventList = new List<TextEvent>();
 		bool tag = false; // Are we parsing a tag?
 		int i = 0;

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -31,7 +32,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
     #endregion
 
     #region Constants
-    const float defaultScrollDelay = 0.01f; // Default text scrolling speed.
+    const float defaultScrollDelay = 0.001f; // Default text scrolling speed.
     const int defaultSpeechInterval = 2; // Default number of text scrolls before speech sfx plays
     const float textPad = 16f; // Padding between text rect and dialog box rect.
     #endregion
@@ -73,8 +74,12 @@ public class DialogBox : MonoBehaviour, IDialogBox
         ResetDialogBox();
         // Get dialog.
         this.dialogItem = dialogItem;
-        DialogParser.instance.Parse(dialogItem, this);
-        dialogText.text = dialogItem.text;
+        string otext = dialogItem.text; // Original text
+        dialogItem.text = DialogParser.instance.SubstituteMacros(dialogItem.text); // Parse macros
+        dialogItem.text = Regex.Replace(dialogItem.text, @"<.*?>", ""); // Remove rich text tags
+        DialogParser.instance.Parse(dialogItem, this); // Parse w/o rich text tags
+        dialogText.text = DialogParser.instance.RemoveTags(otext); // Set dialog text
+        
         // Add text shadow.
         var shadow = dialogText.gameObject.AddComponent<Shadow>();
         shadow.effectDistance = new Vector2(2, -2);
@@ -151,16 +156,12 @@ public class DialogBox : MonoBehaviour, IDialogBox
 	protected IEnumerator TextScrollCR()
     {
         yield return null;
+        Debug.Log(dialogItem.text);
         int pos = 0;
-		while (pos < dialogItem.text.Length)
+        while (pos < dialogItem.text.Length)
         {
             yield return StartCoroutine(CheckEvents (pos));
             yield return new WaitWhile(() => ph.Pause); // Wait on pause.
-			if (dialogItem.text[pos] == '<') // Skip Unity richtext tags.
-            {
-				pos = dialogItem.text.IndexOf ('>', pos + 1) + 1;
-				if (pos >= dialogItem.text.Length) break;
-			}
             if (pos % speechInterval == 0) voiceAS?.Play();
             pos++; // Advance text position.
             hideText.ind[0] = pos;
