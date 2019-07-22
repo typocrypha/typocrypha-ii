@@ -43,9 +43,9 @@ namespace FXText
             if (!IsActive() || ind == null || ind.Count == 0 || ind.Count % 2 != 0) return;
             List<UIVertex> stream = ListPool<UIVertex>.Get();
             vh.GetUIVertexStream(stream);
-            string text = Regex.Replace(textComp.text, @"<.*?>", ""); // Remove tags
+            string text = Regex.Replace(textComp.text, @"<.*?>", ""); // Remove rich text tags
             int len = text.Length * vertsInQuad;
-            int spaces = text.Count(a => a == ' ');
+            int wspace = text.Count(a => a == ' ') + text.Count(a => a == '\n');
             bool shadow = (gameObject.GetComponent<Shadow>() != null) && (gameObject.GetComponent<Shadow>().enabled); // Is there an active shadow?
             // Check if first FXText (dont double add spaces)
             if (GetComponents<FXTextBase>()[0] == this)
@@ -54,14 +54,14 @@ namespace FXText
                 // Add dummy vertices for spaces
                 for (int i = 0; i < text.Length; i++)
                 {
-                    if (text[i] == ' ')
+                    if (text[i] == ' ' || text[i] == '\n')
                     {
                         shift++;
                         int pos = i * vertsInQuad;
                         for (int k = 0; k < vertsInQuad; k++)
                         {
                             stream.Insert(pos, new UIVertex());
-                            if (shadow) stream.Insert(pos + ((text.Length - spaces + shift - 1) * vertsInQuad) + k + 1, new UIVertex());
+                            if (shadow) stream.Insert(pos + ((text.Length - wspace + shift - 1) * vertsInQuad) + k + 1, new UIVertex());
                         }
                     }
                 }
