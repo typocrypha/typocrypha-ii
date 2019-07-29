@@ -8,6 +8,7 @@ public class DialogGraphParser : MonoBehaviour
     [SerializeField] private DialogCanvas graph = null;
     public DialogCanvas Graph { set => graph = value; }
     private BaseNode currNode = null;
+    private Stack<BaseNode> recStack = new Stack<BaseNode>();
     /// <summary> Initialized the root node (for if next dialogue is called in DialogManager's awake function </summary>
     public void Init()
     {
@@ -61,9 +62,21 @@ public class DialogGraphParser : MonoBehaviour
     {
         if (next) currNode = Next();
         if (currNode == null) return null;
+        if (currNode is SubCanvasNode)
+        {
+            var node = currNode as SubCanvasNode;
+            recStack.Push(Next()); // Remember exit node.
+            currNode = (node.subCanvas as DialogCanvas).getStartNode();
+            return NextDialog(true);
+        }
         if (currNode is GameflowEndNode)
         {
-            if (currNode is EndAndHide)
+            if (recStack.Count != 0)
+            {
+                currNode = recStack.Pop();
+                return NextDialog(false);
+            }
+            else if (currNode is EndAndHide)
             {
                 DialogManager.instance.Display(false);
                 return null;
