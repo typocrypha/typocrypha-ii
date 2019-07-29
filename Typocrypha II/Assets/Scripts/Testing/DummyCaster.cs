@@ -29,6 +29,7 @@ public class DummyCaster : Caster
         Debug.Log("Spell cast:" + spellString + ":" + results);
         if (results == SpellParser.ParseResults.Valid) 
         {
+            #region Cooldowns (Deprecated)
             //    foreach (var word in words)
             //    {
             //        if (word is RootWord)
@@ -59,6 +60,8 @@ public class DummyCaster : Caster
             //        GetComponent<Caster>().Spell = words;
             //        GetComponent<ATB3.ATBPlayer>().Cast(); // Start casting sequence
             //    }
+            #endregion
+
             GetComponent<Caster>().Spell = words;
             GetComponent<ATB3.ATBPlayer>().Cast(); // Start casting sequence
         }

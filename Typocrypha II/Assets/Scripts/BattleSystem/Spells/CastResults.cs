@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CastResults
 {
+    public Caster caster;
+    public Caster target;
     public RootWordEffect effect;
     public GameObject popupPrefab = null;
     public bool Miss { get; set; }
@@ -11,4 +13,10 @@ public class CastResults
     public float StaggerDamage { get; set; } = 0;
     public float Damage { get; set; } = 1;
     public Reaction Effectiveness { get; set; } = Reaction.Neutral;
+
+    public CastResults(Caster caster, Caster target)
+    {
+        this.caster = caster;
+        this.target = target;
+    }
 }

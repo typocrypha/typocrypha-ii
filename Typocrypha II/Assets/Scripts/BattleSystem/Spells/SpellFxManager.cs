@@ -13,6 +13,10 @@ public class SpellFxManager : MonoBehaviour
     [SerializeField] private SpellFxData noTargetFx = new SpellFxData();
     [Header("Repel FX")]
     [SerializeField] private SpellFxData repelFx = new SpellFxData();
+    [Header("Drain FX")]
+    [SerializeField] private SpellFxData drainFx = new SpellFxData();
+    [Header("Block FX")]
+    [SerializeField] private SpellFxData blockFx = new SpellFxData();
     [Header("Default Popup Prefab")]
     [SerializeField] private GameObject popupPrefab = null;
     [Header("Effectiveness Sprites")]
@@ -68,19 +72,44 @@ public class SpellFxManager : MonoBehaviour
         #region Miss
         if(data.Miss)
         {
+            var tAnimator = data.target?.GetComponent<Animator>();
+            if (tAnimator != null && tAnimator.HasState(0, Animator.StringToHash("EnemyDodge")))
+            {
+                tAnimator.SetTrigger("Dodge");
+            }
             var popper = Instantiate(data.popupPrefab ?? popupPrefab).GetComponent<PopupBase>();
             popper.PopText("Miss", targetPos, popTime);
             yield break;
         }
         #endregion
 
-        #region Repel
+        #region Special Reaction Graphics
+
+        //Repel
         if (data.Effectiveness == Reaction.Repel)
         {
             pos = casterPos;
             yield return StartCoroutine(repelFx.Play(targetPos));
         }
-        #endregion
+        else if (data.Effectiveness == Reaction.Drain)
+        {
+            yield return StartCoroutine(drainFx.Play(targetPos));
+        }
+        else if (data.Effectiveness == Reaction.Dodge)
+        {
+            var tAnimator = data.target?.GetComponent<Animator>();
+            if(tAnimator != null && tAnimator.HasState(0, Animator.StringToHash("EnemyDodge")))
+            {
+                tAnimator.SetTrigger("Dodge");
+            }
+            yield return new WaitForSeconds(0.33f);
+        }
+        else if (data.Effectiveness == Reaction.Block)
+        {
+            yield return StartCoroutine(blockFx.Play(targetPos));
+        }
+
+        #endregion 
 
         foreach (var fx in fxData)
             if (fx != null)

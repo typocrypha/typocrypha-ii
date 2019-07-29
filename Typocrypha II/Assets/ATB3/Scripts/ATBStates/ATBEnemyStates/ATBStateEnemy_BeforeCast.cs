@@ -16,9 +16,9 @@ namespace ATB3
             var caster = Owner.GetComponent<Caster>();
             FaderManager.instance.FadeTargets(caster.Spell, caster.FieldPos, caster.TargetPos);
             Owner.GetComponent<FaderGroup>().FadeAmount = 0f;
-            ((ATBEnemy)this.Owner).GetComponent<Animator>().SetTrigger("BeforeCast");
-            ATBManager.Instance.enterSolo(this.Owner);
-            this.Owner.isCast = true;
+            Owner.GetComponent<Animator>().SetTrigger("BeforeCast");
+            ATBManager.Instance.EnterSolo(Owner);
+            Owner.isCast = true;
             timer = 0f;
         }
 

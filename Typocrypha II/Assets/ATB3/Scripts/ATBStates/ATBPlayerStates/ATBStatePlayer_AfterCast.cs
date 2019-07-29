@@ -32,7 +32,7 @@ namespace ATB3
         {
             //Debug.Log("PLAYER " + this.Owner.actorName + " has EXITED the BEFORECAST state!");
             FaderManager.instance.FadeAll(0f, Color.black);
-            ATBManager.Instance.exitSolo(this.Owner);
+            ATBManager.Instance.ExitSolo(this.Owner);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace ATB3
         // Call upon entering given state
         public override void OnEnter()
         {
-            ATBManager.Instance.enterSolo(Owner);
+            ATBManager.Instance.EnterSolo(Owner);
         }
 
         // Call on fixed update while in given state

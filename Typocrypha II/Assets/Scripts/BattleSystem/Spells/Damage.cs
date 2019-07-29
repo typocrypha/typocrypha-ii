@@ -32,7 +32,7 @@ public static class Damage
 
     public static CastResults Standard(DamageEffect effect, Caster caster, Caster target)
     {
-        var results = new CastResults();
+        var results = new CastResults(caster, target);
         StandardHitCheck(results, effect, caster, target);
         StandardAtkDef(results, effect, caster, target);
         if (StandardCritCheck(results, effect, caster, target))

@@ -25,7 +25,7 @@ namespace ATB3
         // Call upon exiting given state
         public override void OnExit()
         {
-            ATBManager.Instance.exitSolo(Owner);
+            ATBManager.Instance.ExitSolo(Owner);
         }
     }
 }

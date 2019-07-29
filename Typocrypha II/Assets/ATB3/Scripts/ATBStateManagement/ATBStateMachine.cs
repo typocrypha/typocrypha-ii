@@ -64,7 +64,6 @@ namespace ATB3
             {
                 state.SetOwner(Owner);
             }
-            PH.Pause = true;
         }
 
         void Start()

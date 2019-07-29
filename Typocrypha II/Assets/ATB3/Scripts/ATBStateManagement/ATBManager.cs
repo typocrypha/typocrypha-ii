@@ -69,14 +69,14 @@ namespace ATB3
         //}
 
         // Set the pause value of all actors
-        void setPauseAll(bool value)
+        void SetPauseAll(bool value)
         {
             foreach (ATBActor actor in Battlefield.instance.Actors)
                 actor.Pause = value;
         }
 
         // Enter solo mode for this actor
-        public void enterSolo(ATBActor soloActor)
+        public void EnterSolo(ATBActor soloActor)
         {
             //Debug.Log("enter:" + soloActor.gameObject.name);
 
@@ -93,7 +93,7 @@ namespace ATB3
         }
 
         // Exit solo mode for this actor (should be at top of stack)
-        public void exitSolo(ATBActor soloActor)
+        public void ExitSolo(ATBActor soloActor)
         {
             //Debug.Log("exit:" + soloActor.gameObject.name);
             if (soloActor != soloStack.Pop())

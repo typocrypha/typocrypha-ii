@@ -152,7 +152,7 @@ public class BattleManager : MonoBehaviour, IPausable
         yield return StartCoroutine(WaveTransition(waveData));
         //DEBUG, actually sequence after transition later
         PH.Pause = false; // Unpause battle events
-        Battlefield.instance.PH.Pause = false; 
+        Battlefield.instance.PH.Pause = false;
     }
 
     private IEnumerator WaveTransition(BattleWave waveData)
