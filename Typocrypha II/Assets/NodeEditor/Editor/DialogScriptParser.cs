@@ -33,6 +33,8 @@ public class DialogScriptParser : EditorWindow
     readonly char[] poseMarker = new char[] { '[', ']' }; // Speaker's pose marker for dialog lines.
     readonly string posePat = @"\[([^\)]*)\]"; // Pose marker pattern.
     readonly string displayPat = "[\"“].*?[\"”]"; // Display name marker pattern.
+    readonly char[] choiceMarker = new char[] { '<', '>' }; // Choice marker for dialog input lines.
+    readonly string choicePat = @"\<([^\)]*)\>"; // Input choice prompt marker pattern.
     readonly char[] escape = new char[] { '\\' }; // Escape character.
     readonly char[] displayNameChars = new char[] { '"', '“', '”' }; // Characters that could delimit a display name.
 
@@ -43,6 +45,7 @@ public class DialogScriptParser : EditorWindow
         {"chat", typeof(DialogNodeChat) },
         {"an", typeof(DialogNodeAN) },
         {"bubble", typeof(DialogNodeBubble) },
+        {"input", typeof(DialogNodeInput) }
     };
 
     // General node labels.
@@ -143,7 +146,7 @@ public class DialogScriptParser : EditorWindow
         currView = viewMap["vn"]; // Default to visual novel view
         for (int i = 0; i < lines.Length; i++)
         {
-            //Debug.Log("parsing:" + lines[i]);
+            //Debug.Log("parsing:" + (i+1) +":" + lines[i]);
             try
             {
                 ParseLine(lines[i], ref prev);
@@ -247,8 +250,9 @@ public class DialogScriptParser : EditorWindow
         string charName = (dialogLine[0].Contains(exprMarker[0]) || dialogLine[0].Contains(poseMarker[0])) 
                         ? dialogLine[0].Substring(0, dialogLine[0].IndexOfAny(exprMarker.Concat(poseMarker).ToArray(), 0, escape)).Trim()
                         : dialogLine[0].Trim();
-        // Remove Display name from character name
+        // Remove specifiers from character name
         if (charName.Contains(displayNameChars, escape)) charName = charName.Substring(0, charName.IndexOfAny(displayNameChars, 0, escape)).Trim();
+        if (charName.Contains(choiceMarker, escape)) charName = charName.Substring(0, charName.IndexOfAny(choiceMarker, 0, escape)).Trim();
         string displayName = Regex.Match(dialogLine[0], displayPat).Value; // Displayed speaker name.
         displayName = (displayName.Length > 2) 
                     ? displayName.Substring(1, displayName.Length - 2) 
@@ -280,7 +284,7 @@ public class DialogScriptParser : EditorWindow
         }
         #endregion
         DialogNode dnode = null; // Node for dialog.
-        if (currView == typeof(DialogNodeVN))
+        if (currView == typeof(DialogNodeVN) || currView == typeof(DialogNodeInput))
         {
             // Create expression and pose nodes
             if (charData != null)
@@ -295,7 +299,23 @@ public class DialogScriptParser : EditorWindow
                 nodes.Add(gnode);
             }
             // Create dialog node
-            dnode = CreateNode(DialogNodeVN.ID) as DialogNodeVN;
+            if (currView == typeof(DialogNodeInput))
+            {
+                // Get choice prompts and variable name.
+                string choices = Regex.Match(dialogLine[0], choicePat).Value;
+                choices = choices.Substring(1, choices.Length - 2);
+                var carr = choices.Split(new char[] { ',' }, escape);
+                DialogNodeInput inode = CreateNode(DialogNodeInput.ID) as DialogNodeInput;
+                inode.showChoicePrompt = carr.Length > 1;
+                inode.variableName = carr[0];
+                for (int i = 1; i < carr.Length; i++)
+                    inode.choicePromptText[i - 1] = carr[i];
+                dnode = inode;
+            }
+            else
+            {
+                dnode = CreateNode(DialogNodeVN.ID) as DialogNodeVN;
+            }
         }
         else if (currView == typeof(DialogNodeChat))
         {
