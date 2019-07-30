@@ -45,7 +45,7 @@ public class SpellTag : ScriptableObject, IComparable<SpellTag>, IEquatable<Spel
 
     public bool Equals(SpellTag other)
     {
-        return other != null  &&
+        return other != null &&
                internalName == other.internalName;
     }
 
@@ -54,16 +54,6 @@ public class SpellTag : ScriptableObject, IComparable<SpellTag>, IEquatable<Spel
         var hashCode = -181192468;
         hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(internalName);
         return hashCode;
-    }
-
-    public static bool operator ==(SpellTag tag1, SpellTag tag2)
-    {
-        return EqualityComparer<SpellTag>.Default.Equals(tag1, tag2);
-    }
-
-    public static bool operator !=(SpellTag tag1, SpellTag tag2)
-    {
-        return !(tag1 == tag2);
     }
 
     [System.Serializable]

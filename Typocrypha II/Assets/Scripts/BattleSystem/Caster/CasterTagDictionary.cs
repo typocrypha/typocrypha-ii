@@ -10,6 +10,13 @@ public class CasterTagDictionary
     [SerializeField] private TagMultiSet allTags = new TagMultiSet();
 
     #region Dictionary Functions
+    public int Count
+    {
+        get
+        {
+            return tags.Count;
+        }
+    }
     public bool ContainsTag(string tagName)
     {
         throw new System.NotImplementedException("add caster tags assetbundle");

@@ -55,8 +55,13 @@ public class CasterInspector : Editor
         }
         #endregion
 
+        int count = data.Tags.Count;
         // Tag GUI
         EditorUtils.CasterUtils.CasterTagDictionaryGUILayout(data.Tags);
+        if(count != data.Tags.Count)
+        {
+            EditorUtils.SetSceneDirty(target);
+        }
 
         EditorUtils.SetSceneDirtyIfGUIChanged(target);
     }

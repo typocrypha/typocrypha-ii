@@ -69,6 +69,7 @@ public class CasterTagInspector : Editor
             Reaction valGUI(Reaction r) => EditorUtils.EnumPopup(GUIContent.none, r, GUILayout.MaxWidth(100));
             void kGUI(SpellTag s) => EditorGUILayout.LabelField(s.name, GUILayout.MaxWidth(100));
             tag.reactions.DoGUILayout(kGUI, valGUI, () => tag.reactions.ObjPickerAddGUI(), "Reactions", true);
+            EditorUtility.SetDirty(target);
         }
         EditorGUILayout.Space();
         EditorUtils.Separator();

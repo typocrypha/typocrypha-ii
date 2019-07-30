@@ -37,13 +37,18 @@ public static partial class EditorUtils
     {
         if (GUI.changed)
         {
-            if (!EditorApplication.isPlayingOrWillChangePlaymode)
-                EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
-            var prefabStage = PrefabStageUtility.GetCurrentPrefabStage();
-            if (prefabStage != null)
-            {
-                EditorSceneManager.MarkSceneDirty(prefabStage.scene);
-            }
+            SetSceneDirty(target);
+        }
+    }
+
+    public static void SetSceneDirty(Object target)
+    {
+        if (!EditorApplication.isPlayingOrWillChangePlaymode)
+            EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+        var prefabStage = PrefabStageUtility.GetCurrentPrefabStage();
+        if (prefabStage != null)
+        {
+            EditorSceneManager.MarkSceneDirty(prefabStage.scene);
         }
     }
 }
