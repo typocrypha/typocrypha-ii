@@ -233,16 +233,25 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
     }
 
     /// <summary>
+    /// Turns highlight on or off for all characters.
+    /// </summary>
+    /// <param name="on">Whether to turn on highlight.</param>
+    public void HighlightAllCharacters(bool on)
+    {
+        foreach (var kvp in characterMap)
+        {
+            kvp.Value.Highlight(on);
+        }
+    }
+
+    /// <summary>
     /// Highlight one character and unhighlight all others.
     /// </summary>
     /// <param name="data">Id of selected character.</param>
     /// <returns>DialogCharacter component of selected character.</returns>
     public DialogCharacter SoloHighlightCharacter(CharacterData data)
     {
-        foreach(var kvp in characterMap)
-        {
-            kvp.Value.Highlight(false);
-        }
+        HighlightAllCharacters(false);
         characterMap[data.name].Highlight(true);
         return characterMap[data.name];
     }

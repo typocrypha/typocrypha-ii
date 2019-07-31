@@ -7,7 +7,7 @@ public class DialogItemVN : DialogItem
     public string speakerName;
     public Sprite mcSprite; // Sprite of main character (displayed in text box)
     public Sprite codecSprite; // Sprite of main character (displayed in text box)
-    public DialogItemVN(string text, AudioClip voice, string speakerName, Sprite mcSprite, Sprite codecSprite) : base(text, voice)
+    public DialogItemVN(string text, List<AudioClip> voice, string speakerName, Sprite mcSprite, Sprite codecSprite) : base(text, voice)
     {
         this.speakerName = speakerName;
         this.mcSprite = mcSprite;

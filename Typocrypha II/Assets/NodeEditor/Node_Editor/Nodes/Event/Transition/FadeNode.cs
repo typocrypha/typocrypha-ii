@@ -6,7 +6,7 @@ using NodeEditorFramework;
 using NodeEditorFramework.Utilities;
 
 namespace Gameflow {
-    [Node(false, "Event/Transition/Fade", new System.Type[] { typeof(GameflowCanvas) })]
+    [Node(false, "Event/Transition/Fade", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
     public class FadeNode : BaseNodeIO {
         public enum FadeType
         {

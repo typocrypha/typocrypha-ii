@@ -46,7 +46,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
     int speechInterval; // Number of character scrolls before speech sfx plays
 
     public Text dialogText; // Text display component
-    public AudioSource voiceAS; // AudioSource for playing speech sfx
+    public AudioSource[] voiceAS; // AudioSources for playing speech sfx
 
     FXText.Color hideText; // Allows for hiding parts of text (for scrolling)
     DialogItem dialogItem; // Dialog line data
@@ -63,6 +63,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
     void Awake()
     {
         ph = new PauseHandle(OnPause);
+        voiceAS = GetComponents<AudioSource>();
     }
 
     /// <summary>
@@ -92,7 +93,8 @@ public class DialogBox : MonoBehaviour, IDialogBox
         // Set box size based on text.
         SetBoxHeight();
         // Set voice sfx.
-        voiceAS.clip = dialogItem.voice;
+        for(int i = 0; i < dialogItem.voice.Count; i++)
+            voiceAS[i].clip = dialogItem.voice[i];
         scrollCR = StartCoroutine(TextScrollCR());
 	}
 
@@ -161,7 +163,8 @@ public class DialogBox : MonoBehaviour, IDialogBox
         {
             yield return StartCoroutine(CheckEvents (pos));
             yield return new WaitWhile(() => ph.Pause); // Wait on pause.
-            if (pos % speechInterval == 0) voiceAS?.Play();
+            if (pos % speechInterval == 0)
+                foreach(var v in voiceAS) v?.Play();
             pos++; // Advance text position.
             hideText.ind[0] = pos;
             if (ScrollDelay > 0f)

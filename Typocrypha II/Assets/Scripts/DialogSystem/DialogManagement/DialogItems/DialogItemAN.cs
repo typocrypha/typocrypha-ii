@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public class DialogItemAN : DialogItem
 {
-    public DialogItemAN(string text, AudioClip voice) : base(text, voice) { }
+    public DialogItemAN(string text, List<AudioClip> voice) : base(text, voice) { }
 
     public override System.Type GetView()
     {
