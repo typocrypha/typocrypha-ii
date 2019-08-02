@@ -97,12 +97,16 @@ public class SpellFxManager : MonoBehaviour
         }
         else if (data.Effectiveness == Reaction.Dodge)
         {
-            var tAnimator = data.target?.GetComponent<Animator>();
-            if(tAnimator != null && tAnimator.HasState(0, Animator.StringToHash("EnemyDodge")))
+            if(data.target != null)
             {
-                tAnimator.SetTrigger("Dodge");
+                var tEnemey = data.target.GetComponent<Caster>();
+                var tAnimator = data.target.GetComponent<Animator>();
+                if (tAnimator != null && tAnimator.HasState(0, Animator.StringToHash("EnemyDodge")))
+                {
+                    tAnimator.SetTrigger("Dodge");
+                    yield return new WaitForSeconds(0.33f);
+                }
             }
-            yield return new WaitForSeconds(0.33f);
         }
         else if (data.Effectiveness == Reaction.Block)
         {

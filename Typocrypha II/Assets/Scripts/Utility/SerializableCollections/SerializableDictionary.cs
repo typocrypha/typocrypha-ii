@@ -83,9 +83,9 @@ public class SerializableDictionary<TKey, TValue> : ISerializationCallbackReceiv
             {
                 _dictionary.Add(_keys[i], _values[i]);
             }
-            catch (System.ArgumentException)
+            catch(System.Exception e)
             {
-                continue;
+                Debug.LogError("SDict Error: " + e.ToString() + " " + this.ToString());
             }
         }
     }

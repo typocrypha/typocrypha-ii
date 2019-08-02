@@ -129,7 +129,7 @@ public static partial class EditorUtils
         public static void CasterTagGUI(CasterTag data)
         {
             GUILayout.BeginVertical();
-            EditorGUILayout.LabelField(data.name + " (" + data.internalName + ")", new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold }, GUILayout.Width(200));
+            EditorGUILayout.LabelField(data.internalName + " (" + data.DisplayName + ")", new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold }, GUILayout.Width(200));
             EditorGUI.indentLevel++;
             if (data.subTags.Count > 0)
             {
@@ -143,7 +143,7 @@ public static partial class EditorUtils
         private static void DoSubtagNames(CasterTag data)
         {
             EditorGUI.indentLevel++;
-            EditorGUILayout.LabelField(data.name, new GUIStyle(GUI.skin.label), GUILayout.Width(240));
+            EditorGUILayout.LabelField(data.internalName, new GUIStyle(GUI.skin.label), GUILayout.Width(240));
             foreach (var tag in data.subTags)
                 DoSubtagNames(tag);
             EditorGUI.indentLevel--;

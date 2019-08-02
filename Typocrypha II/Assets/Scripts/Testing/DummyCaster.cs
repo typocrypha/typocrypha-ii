@@ -16,6 +16,7 @@ public class DummyCaster : Caster
         Health = Stats.MaxHP;
         playerActor = GetComponent<ATB3.ATBPlayer>();
         DisplayName = "Ayin";
+        targetRet = transform.Find("TargetRet").gameObject;
     }
 
     /// <summary>

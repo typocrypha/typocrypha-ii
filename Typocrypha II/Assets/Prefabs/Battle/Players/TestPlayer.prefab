@@ -290,17 +290,20 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted
     m_PressedTrigger: Pressed
+    m_SelectedTrigger: Highlighted
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 0}
@@ -449,43 +452,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc94b59a2ed77a842be13706c850b537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _displayName: 
+  _displayName: PlayerTest
   _moveable: 1
   _type: 0
   _casterClass: 1
   _tags:
     tags:
       _items:
-      - {fileID: 11400000, guid: 76ebc3835d4fe614cb741802716e4708, type: 2}
+      - {fileID: 11400000, guid: 0e755ad7c9d93d9499095b84b2354ef5, type: 2}
     allTags:
-      _keys: []
-      _frequencies: 
+      _keys:
+      - {fileID: 11400000, guid: 0e755ad7c9d93d9499095b84b2354ef5, type: 2}
+      _frequencies: 01000000
     statMod:
       maxHP:
         statRange:
-          min: 0
+          min: -2147483647
           max: 2147483647
         overflow: 0
-        _value: 0
+        _value: 100
       maxArmor:
         statRange:
-          min: 0
+          min: -2147483647
           max: 2147483647
         overflow: 0
         _value: 0
       maxSP:
         statRange:
-          min: 0
+          min: -2147483647
           max: 2147483647
         overflow: 0
-        _value: 0
+        _value: 1
       maxStagger:
         statRange:
-          min: 0
+          min: -2147483647
           max: 2147483647
         overflow: 0
         _value: 0
-      staggerTime: 5
+      staggerTime: 0
       atk:
         statRange:
           min: -10
@@ -522,8 +526,8 @@ MonoBehaviour:
           max: 10
         overflow: 0
         _value: 0
-  ui: {fileID: 7827001794663949926}
-  targetRet: {fileID: 8209475017982436565}
+  ui: {fileID: 0}
+  targetRet: {fileID: 0}
   separator: 20002d00
 --- !u!114 &1638030246455156659
 MonoBehaviour:
@@ -537,8 +541,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6118bb32e3bc3f94c8ddd61c6eb74cad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StateMachine: {fileID: 4868622499120600318}
-  actorName: Player
   isCast: 0
 --- !u!114 &4868622499120600318
 MonoBehaviour:
@@ -552,7 +554,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e333f99642d983c499dcb63984e39e3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  owner: {fileID: 1638030246455156659}
 --- !u!114 &8484712797101294984
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -881,7 +882,7 @@ GameObject:
   - component: {fileID: 6371324209052077529}
   - component: {fileID: 2001369374637554358}
   m_Layer: 0
-  m_Name: bullethell_sun
+  m_Name: TargetRet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 
 [CreateAssetMenu(fileName = "SpellTag", menuName = "Tag/Spell Tag")]
-public class SpellTag : ScriptableObject, IComparable<SpellTag>, IEquatable<SpellTag>
+public class SpellTag : ScriptableObject, IComparable<SpellTag>
 {
     #region Name, Description, and Documentation Fields
     public string internalName = string.Empty;
@@ -35,37 +35,6 @@ public class SpellTag : ScriptableObject, IComparable<SpellTag>, IEquatable<Spel
     public int CompareTo(SpellTag other)
     {
         return internalName.CompareTo(other.internalName);
-    }
-
-    public override bool Equals(object other)
-    {
-        var tag = other as SpellTag;
-        return  tag != null && internalName == tag.internalName;
-    }
-
-    public bool Equals(SpellTag other)
-    {
-        return other != null &&
-               internalName == other.internalName;
-    }
-
-    public static bool operator ==(SpellTag tag1, SpellTag tag2)
-    {
-        return EqualityComparer<SpellTag>.Default.Equals(tag1, tag2);
-    }
-
-    public static bool operator !=(SpellTag tag1, SpellTag tag2)
-    {
-        return !(tag1 == tag2);
-    }
-
-
-
-    public override int GetHashCode()
-    {
-        if (internalName == null)
-            return 0;
-        return internalName.GetHashCode();
     }
 
     [System.Serializable]
