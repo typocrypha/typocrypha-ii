@@ -40,7 +40,7 @@ public class SpellTag : ScriptableObject, IComparable<SpellTag>, IEquatable<Spel
     public override bool Equals(object other)
     {
         var tag = other as SpellTag;
-        return tag == null ? false : internalName == tag.internalName;
+        return  tag != null && internalName == tag.internalName;
     }
 
     public bool Equals(SpellTag other)
@@ -49,11 +49,23 @@ public class SpellTag : ScriptableObject, IComparable<SpellTag>, IEquatable<Spel
                internalName == other.internalName;
     }
 
+    public static bool operator ==(SpellTag tag1, SpellTag tag2)
+    {
+        return EqualityComparer<SpellTag>.Default.Equals(tag1, tag2);
+    }
+
+    public static bool operator !=(SpellTag tag1, SpellTag tag2)
+    {
+        return !(tag1 == tag2);
+    }
+
+
+
     public override int GetHashCode()
     {
-        var hashCode = -181192468;
-        hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(internalName);
-        return hashCode;
+        if (internalName == null)
+            return 0;
+        return internalName.GetHashCode();
     }
 
     [System.Serializable]

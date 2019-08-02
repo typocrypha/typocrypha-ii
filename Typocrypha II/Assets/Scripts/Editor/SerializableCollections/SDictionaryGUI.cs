@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System.Linq;
 
 namespace SerializableCollections
 {
@@ -135,7 +136,7 @@ namespace SerializableCollections
                     GUILayout.BeginHorizontal();
                     kGUI(key);
                     GUILayout.Space(1);
-                    if (oneLine)
+                    if (oneLine && dict.ContainsKey(key))
                         dict[key] = valueGUI(dict[key]);
                     GUILayout.FlexibleSpace();
                     if (GUILayout.Button("-", GUILayout.Width(45)))
@@ -144,7 +145,7 @@ namespace SerializableCollections
                         delete = true;
                     }
                     GUILayout.EndHorizontal();
-                    if (!oneLine)
+                    if (!oneLine && dict.ContainsKey(key))
                         dict[key] = valueGUI(dict[key]);
                 }
                 if (delete)
