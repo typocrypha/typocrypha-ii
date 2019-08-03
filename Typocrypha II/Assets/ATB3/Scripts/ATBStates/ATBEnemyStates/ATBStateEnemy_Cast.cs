@@ -13,7 +13,7 @@ namespace ATB3
         public override void OnEnter()
         {
             Owner.StartCoroutine(CastAndExit());
-            ((ATBEnemy)this.Owner).GetComponent<Animator>().SetTrigger("Cast");
+            Owner.GetComponent<Animator>().SetTrigger("Cast");
         }
 
         // Call on fixed update while in given state
@@ -30,9 +30,8 @@ namespace ATB3
 
         private IEnumerator CastAndExit()
         {
-            var caster = Owner.GetComponent<Caster>();
             var AI = Owner.GetComponent<CasterAI>();
-            yield return SpellManager.instance.Cast(caster.Spell, caster, caster.TargetPos);
+            yield return SpellManager.instance.Cast(Owner.Caster.Spell, Owner.Caster, Owner.Caster.TargetPos);
             AI.OnAfterCast?.Invoke();
             Source.PerformTransition(ATBTransition.ToAfterCast);
         }

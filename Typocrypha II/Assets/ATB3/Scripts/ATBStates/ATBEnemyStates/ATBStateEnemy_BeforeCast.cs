@@ -12,9 +12,7 @@ namespace ATB3
         // Call upon entering given state
         public override void OnEnter()
         {
-            //Debug.Log("ENEMY " + this.Owner.actorName + " has ENTERED the BEFORECAST state!");
-            var caster = Owner.GetComponent<Caster>();
-            FaderManager.instance.FadeTargets(caster.Spell, caster.FieldPos, caster.TargetPos);
+            FaderManager.instance.FadeTargets(Owner.Caster.Spell, Owner.Caster.FieldPos, Owner.Caster.TargetPos);
             Owner.GetComponent<FaderGroup>().FadeAmount = 0f;
             Owner.GetComponent<Animator>().SetTrigger("BeforeCast");
             ATBManager.Instance.EnterSolo(Owner);

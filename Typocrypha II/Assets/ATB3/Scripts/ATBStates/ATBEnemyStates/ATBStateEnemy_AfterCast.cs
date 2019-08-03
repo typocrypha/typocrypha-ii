@@ -32,8 +32,8 @@ namespace ATB3
         {
             //Debug.Log("ENEMY " + this.Owner.actorName + " has EXITED the BEFORECAST state!");
             FaderManager.instance.Solo(Owner.GetComponent<FaderGroup>(), 0.0f, Color.black); // TEMP
-            ((ATBEnemy)this.Owner).Caster.Charge = 0.0f;
-            ATBManager.Instance.ExitSolo(this.Owner);
+            Owner.Caster.Charge = 0.0f;
+            ATBManager.Instance.ExitSolo(Owner);
         }
     }
 }

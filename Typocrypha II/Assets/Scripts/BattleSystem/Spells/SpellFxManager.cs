@@ -62,23 +62,26 @@ public class SpellFxManager : MonoBehaviour
     }
     public Coroutine Play(SpellFxData[] fxData, CastResults data, Vector2 targetPos, Vector2 casterPos)
     {
-        return StartCoroutine(PlayCR(fxData, data, targetPos, casterPos));
+        // For some unknown reason, getting the animator within the coroutine instead of passing it in always gets null
+        var targetAnim = data.target?.GetComponent<Animator>();
+        return StartCoroutine(PlayCR(fxData, targetAnim, data, targetPos, casterPos));
     }
     /// <summary> A coroutine to play multiple spell effects in a row to facilitate Modifier Fx with crList </summary>
-    private IEnumerator PlayCR(SpellFxData[] fxData, CastResults data, Vector2 targetPos, Vector2 casterPos)
+    private IEnumerator PlayCR(SpellFxData[] fxData, Animator targetAnim, CastResults data, Vector2 targetPos, Vector2 casterPos)
     {
         var pos = targetPos;
 
         #region Miss
         if(data.Miss)
         {
-            var tAnimator = data.target?.GetComponent<Animator>();
-            if (tAnimator != null && tAnimator.HasState(0, Animator.StringToHash("EnemyDodge")))
+            if (targetAnim != null && targetAnim.HasState(0, Animator.StringToHash("Dodge")))
             {
-                tAnimator.SetTrigger("Dodge");
+                targetAnim.Play("Dodge");
+                yield return new WaitForSeconds(0.25f);
+                targetAnim.SetTrigger("Idle");
             }
             var popper = Instantiate(data.popupPrefab ?? popupPrefab).GetComponent<PopupBase>();
-            popper.PopText("Miss", targetPos, popTime);
+            popper.PopTextAndCleanup("Miss", targetPos, popTime);
             yield break;
         }
         #endregion
@@ -97,15 +100,10 @@ public class SpellFxManager : MonoBehaviour
         }
         else if (data.Effectiveness == Reaction.Dodge)
         {
-            if(data.target != null)
+            if (targetAnim != null && targetAnim.HasState(0, Animator.StringToHash("EnemyDodge")))
             {
-                var tEnemey = data.target.GetComponent<Caster>();
-                var tAnimator = data.target.GetComponent<Animator>();
-                if (tAnimator != null && tAnimator.HasState(0, Animator.StringToHash("EnemyDodge")))
-                {
-                    tAnimator.SetTrigger("Dodge");
-                    yield return new WaitForSeconds(0.33f);
-                }
+                targetAnim.SetTrigger("Dodge");
+                yield return new WaitForSeconds(0.33f);
             }
         }
         else if (data.Effectiveness == Reaction.Block)
@@ -163,6 +161,13 @@ public class SpellFxManager : MonoBehaviour
     }
 
     #endregion
+
+
+    private void Update()
+    {
+        var anims = GameObject.FindObjectsOfType<Animator>();
+        Debug.Log(anims.Length);
+    }
 
     private class LogData
     {

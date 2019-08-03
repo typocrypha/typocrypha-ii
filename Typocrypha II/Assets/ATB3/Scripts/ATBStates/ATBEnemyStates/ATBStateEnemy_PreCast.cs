@@ -9,14 +9,12 @@ namespace ATB3
         // The ID for this specific ATBState
         public override ATBStateID StateID { get { return ATBStateID.PreCast; } }
         private float timer = 0.0f;
-        private ATBEnemy enemyOwner;
 
         // Call upon entering given state
         public override void OnEnter()
         {
-            enemyOwner = Owner as ATBEnemy;
             //Debug.Log("ENEMY " + this.Owner.actorName + " has ENTERED the PRECAST state!");
-            enemyOwner.GetComponent<Animator>().SetTrigger("PreCast");
+            Owner.GetComponent<Animator>().SetTrigger("PreCast");
             timer = 0.0f;
         }
 
@@ -24,9 +22,9 @@ namespace ATB3
         public override void OnUpdate()
         {
             timer += Time.fixedDeltaTime;
-            if(enemyOwner.Caster.Stunned)
+            if(Owner.Caster.Stunned)
             {
-                enemyOwner.Caster.Charge = 0;
+                Owner.Caster.Charge = 0;
                 var AI = Owner.GetComponent<CasterAI>();
                 // DEBUG, REMOVE LATER
                 AI.OnAfterCast?.Invoke();
