@@ -279,9 +279,36 @@ public class DialogGraphParser : MonoBehaviour
             else
                 DialogManager.instance.GetComponent<Animator>().SetTrigger("ClampIn");
         }
-        //Process other node types
-        //Recursively move to next
-        return NextDialog();
+        else if (currNode is FadeNode)
+        {
+            var node = currNode as FadeNode;
+            float fadeStart = node.fadeType == FadeNode.FadeType.Fade_In ? 1f : 0f;
+            float fadeEnd = 1f - fadeStart;
+            StartCoroutine(FadeNode.FadeAllOverTime(node.fadeTime, fadeStart, fadeEnd, node.fadeColor));
+        }
+        // Check if need to wait on node to complete.
+        if (currNode is ITimedNode)
+        {
+            DialogManager.instance.PH.Pause = true;
+            StartCoroutine(WaitOnNode(currNode as ITimedNode));
+            return null;
+        }
+        else
+        {
+            //Recursively move to next
+            return NextDialog();
+        }
+    }
+
+    /// <summary>
+    /// Waits for a node to complete before allowing dialog to proceed (coroutine).
+    /// </summary>
+    /// <param name="node">Node to wait on.</param>
+    IEnumerator WaitOnNode(ITimedNode node)
+    {
+        yield return new WaitUntil(() => node.IsCompleted);
+        DialogManager.instance.PH.Pause = false;
+        DialogManager.instance.NextDialog(true);
     }
 
     /// <summary>

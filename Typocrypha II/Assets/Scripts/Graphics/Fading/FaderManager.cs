@@ -1,12 +1,22 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
 
 /// <summary>
 /// Manages all faders in the scene.
 /// </summary>
-public class FaderManager : MonoBehaviour
+public class FaderManager : MonoBehaviour, IPausable
 {
+    #region IPausable
+    PauseHandle ph;
+    public PauseHandle PH { get => ph; }
+
+    public void OnPause(bool b)
+    {
+    }
+    #endregion
+
     public static FaderManager instance = null;
     public List<Fader> allFaders; // List of all faders. Fader instances add themselves.
 
@@ -22,7 +32,7 @@ public class FaderManager : MonoBehaviour
             return;
         }
         DontDestroyOnLoad(gameObject);
-
+        ph = new PauseHandle(OnPause);
         allFaders = new List<Fader>();
     }
 

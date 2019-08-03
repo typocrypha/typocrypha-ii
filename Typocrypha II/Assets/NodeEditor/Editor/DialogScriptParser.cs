@@ -19,6 +19,7 @@ public class DialogScriptParser : EditorWindow
     NodeCanvas canvas; // Generated canvas
     System.Type currView = typeof(DialogViewVN); // Current dialog view
     float pos; // Position of current node
+    Node prev;
 
     AssetBundle characterDataBundle; // Character data bundle
     CharacterData[] allCharacterData; // All loaded character data
@@ -56,7 +57,9 @@ public class DialogScriptParser : EditorWindow
         {"playbgm", typeof(PlayBgm) },
         {"stopbgm", typeof(StopBgm) },
         {"setbg", typeof(SetBackgroundNode) },
+        {"fade", typeof(FadeNode) },
         {"end", typeof(GameflowEndNode) },
+        {"start" , typeof(GameflowStartNode)}
     };
 
     AnimationCurve bgmFadeIn = new AnimationCurve(); // Default fade in curve
@@ -102,17 +105,29 @@ public class DialogScriptParser : EditorWindow
         }
     }
 
-    // Generates node canvas from script
+    // Generates node canvases from script
     void GenerateCanvas()
     {
         AssetBundle.UnloadAllAssetBundles(true);
         characterDataBundle = AssetBundle.LoadFromFile(System.IO.Path.Combine(Application.streamingAssetsPath, "characterdata"));
         allCharacterData = characterDataBundle.LoadAllAssets<CharacterData>();
-        canvas = AssetDatabase.LoadAssetAtPath<DialogCanvas>(assetPath + textScript.name + ".asset");
+        canvas = null;
+        Parse();
+        AssetBundle.UnloadAllAssetBundles(true);
+    }
+
+    /// <summary>
+    /// Attempts to make a new canvas with the given name, or finds the existing canvas.
+    /// Sets the canvas to the 'canvas' field.
+    /// </summary>
+    /// <param name="canvasName"></param>
+    void StartCanvas(string canvasName)
+    {
+        canvas = AssetDatabase.LoadAssetAtPath<DialogCanvas>(assetPath + canvasName + ".asset");
         if (canvas == null) // Generate new canvas if empty
         {
             canvas = NodeCanvas.CreateCanvas(typeof(DialogCanvas));
-            canvas.name = textScript.name;
+            canvas.name = canvasName;
             canvas.Validate();
         }
         else // Otherwise overwrite
@@ -120,12 +135,22 @@ public class DialogScriptParser : EditorWindow
             canvas.nodes.Clear();
             canvas.Validate();
         }
-        // Parse text into node canvas.
-        Parse();
-        // Save canvas.
+        pos = 0f; // Position of current node
+        prev = CreateNode(GameflowStartNode.ID) as GameflowStartNode;
+        currView = viewMap["vn"]; // Default to visual novel view
+    }
+
+    /// <summary>
+    /// Saves current canvas.
+    /// </summary>
+    void EndCanvas()
+    {
+        // Create end node.
+        var endNode = CreateNode(EndAndHide.ID) as EndAndHide;
+        (prev as BaseNodeIO).toNextOUT.TryApplyConnection(endNode.fromPreviousIN, true);
+
         canvas.saveName = assetPath + canvas.name + ".asset";
         NodeEditorSaveManager.SaveNodeCanvas(canvas.saveName, ref canvas, true);
-        AssetBundle.UnloadAllAssetBundles(true);
     }
 
     // Parses text into node canvas
@@ -140,10 +165,6 @@ public class DialogScriptParser : EditorWindow
         #endregion
         string[] lines = text.Split(lineDelim, escape); // Separate lines
 
-        pos = 0f; // Position of current node
-        Node prev = null; // Previous node (init as start node).
-        prev = CreateNode(GameflowStartNode.ID) as GameflowStartNode;
-        currView = viewMap["vn"]; // Default to visual novel view
         for (int i = 0; i < lines.Length; i++)
         {
             //Debug.Log("parsing:" + (i+1) +":" + lines[i]);
@@ -157,9 +178,7 @@ public class DialogScriptParser : EditorWindow
                 Debug.LogError("Line " + (i + 1) + ": " + lines[i]);
             }
         }
-        // Create end node.
-        var endNode = CreateNode(EndAndHide.ID) as EndAndHide;
-        (prev as BaseNodeIO).toNextOUT.TryApplyConnection(endNode.fromPreviousIN, true);
+        EndCanvas();
     }
 
     // Parses a single line
@@ -199,7 +218,12 @@ public class DialogScriptParser : EditorWindow
         string[] args = dialogLine[1].Split(argDelim, escape);
         List<Node> nodes = new List<Node>();
         System.Type nodeType = nodeMap[args[0]];
-        if (nodeType == typeof(AddCharacter))
+        if (nodeType == typeof(GameflowStartNode))
+        {
+            if (canvas != null) EndCanvas(); // End previous canvas.
+            StartCanvas(args[1]); // Start new canvas.
+        }
+        else if (nodeType == typeof(AddCharacter))
         {
             var gnode = CreateNode(AddCharacter.ID) as AddCharacter;
             gnode.characterData = GetCharacterData(args[1]);
@@ -237,6 +261,14 @@ public class DialogScriptParser : EditorWindow
             path = AssetDatabase.GUIDToAssetPath(path);
             if (args[1] == "sprite") gnode.bgSprite = AssetDatabase.LoadAssetAtPath<Sprite>(path);
             else                     gnode.bgPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            nodes.Add(gnode);
+        }
+        else if (nodeType == typeof(FadeNode))
+        {
+            var gnode = CreateNode(FadeNode.ID) as FadeNode;
+            gnode.fadeType = args[1] == "in" ? FadeNode.FadeType.Fade_In : FadeNode.FadeType.Fade_Out;
+            gnode.fadeTime = float.Parse(args[2]);
+            gnode.fadeColor = new Color(float.Parse(args[3]), float.Parse(args[4]), float.Parse(args[5]), 1f);
             nodes.Add(gnode);
         }
         return nodes;
@@ -355,6 +387,12 @@ public class DialogScriptParser : EditorWindow
         else if (currView == typeof(DialogNodeBubble))
         {
             dnode = CreateNode(DialogNodeBubble.ID) as DialogNodeBubble;
+            (dnode as DialogNodeBubble).multi = (exprs[0] == "multi");
+            var coords = poses[0].Split(',');
+            (dnode as DialogNodeBubble).rectVal.x = float.Parse(coords[0]);
+            (dnode as DialogNodeBubble).rectVal.y = float.Parse(coords[1]);
+            (dnode as DialogNodeBubble).rectVal.width = float.Parse(coords[2]);
+            (dnode as DialogNodeBubble).rectVal.height = float.Parse(coords[3]);
         }
         dnode.characterName = cname.Substring(0, cname.Length-1);
         dnode.displayName = displayName;

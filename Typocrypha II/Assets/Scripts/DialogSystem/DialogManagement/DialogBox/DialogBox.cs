@@ -93,8 +93,9 @@ public class DialogBox : MonoBehaviour, IDialogBox
         // Set box size based on text.
         SetBoxHeight();
         // Set voice sfx.
-        for(int i = 0; i < dialogItem.voice.Count; i++)
-            voiceAS[i].clip = dialogItem.voice[i];
+        if (dialogItem.voice != null)
+            for(int i = 0; i < dialogItem.voice.Count; i++)
+                voiceAS[i].clip = dialogItem.voice[i];
         scrollCR = StartCoroutine(TextScrollCR());
 	}
 

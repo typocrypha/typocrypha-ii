@@ -21,6 +21,10 @@ public class DialogCharacter : MonoBehaviour
     public SpriteRenderer outlineSprite; // Outline renderer.
     public Animator animator; // Animator for character.
     public Shader outlineShader; // Shader for outlining dialog characters.
+    public Material OutlineMaterial
+    {
+        get => outlineSprite.material;
+    }
     [HideInInspector]public AnimatorOverrideController overrideAnimator; // Override animator.
     [HideInInspector]public DialogCharacterManager.CharacterSave saveData; // Serializable state.
 
