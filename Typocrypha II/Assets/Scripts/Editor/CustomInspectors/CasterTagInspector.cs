@@ -30,11 +30,11 @@ public class CasterTagInspector : Editor
                 }
             }
             tag.displayName = EditorGUILayout.TextField(new GUIContent("Display Name"), tag.displayName);
+            var areaStyle = new GUIStyle(GUI.skin.textArea) { wordWrap = true };
             EditorGUILayout.LabelField(new GUIContent("Description"), EditorUtils.BoldCentered);
-            tag.description = EditorGUILayout.TextArea(tag.description, GUILayout.MinHeight(EditorGUIUtility.singleLineHeight * 2));
+            tag.description = EditorGUILayout.TextArea(tag.description, areaStyle, GUILayout.MinHeight(EditorGUIUtility.singleLineHeight * 2)); ; ;
             EditorGUILayout.LabelField(new GUIContent("Documentation"), EditorUtils.BoldCentered);
-            tag.documentation = EditorGUILayout.TextArea(tag.documentation, GUILayout.MinHeight(EditorGUIUtility.singleLineHeight * 2));
-            
+            tag.documentation = EditorGUILayout.TextArea(tag.documentation, areaStyle, GUILayout.MinHeight(EditorGUIUtility.singleLineHeight * 2));
         }
         EditorUtils.Separator();
 
