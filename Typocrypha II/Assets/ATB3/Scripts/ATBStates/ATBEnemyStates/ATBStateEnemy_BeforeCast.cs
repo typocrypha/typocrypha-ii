@@ -12,6 +12,11 @@ namespace ATB3
         // Call upon entering given state
         public override void OnEnter()
         {
+            if(Owner.Caster.Spell == null)
+            {
+                Source.PerformTransition(ATBTransition.ToCharge);
+                return;
+            }
             FaderManager.instance.FadeTargets(Owner.Caster.Spell, Owner.Caster.FieldPos, Owner.Caster.TargetPos);
             Owner.GetComponent<FaderGroup>().FadeAmount = 0f;
             Owner.GetComponent<Animator>().SetTrigger("BeforeCast");

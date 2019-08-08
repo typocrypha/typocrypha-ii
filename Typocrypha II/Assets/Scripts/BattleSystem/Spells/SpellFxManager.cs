@@ -162,13 +162,6 @@ public class SpellFxManager : MonoBehaviour
 
     #endregion
 
-
-    private void Update()
-    {
-        var anims = GameObject.FindObjectsOfType<Animator>();
-        Debug.Log(anims.Length);
-    }
-
     private class LogData
     {
         public string text;

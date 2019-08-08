@@ -54,7 +54,7 @@ LightmapSettings:
     m_EnableBakedLightmaps: 0
     m_EnableRealtimeLightmaps: 0
   m_LightmapEditorSettings:
-    serializedVersion: 10
+    serializedVersion: 12
     m_Resolution: 2
     m_BakeResolution: 40
     m_AtlasSize: 1024
@@ -62,6 +62,7 @@ LightmapSettings:
     m_AOMaxDistance: 1
     m_CompAOExponent: 1
     m_CompAOExponentDirect: 0
+    m_ExtractAmbientOcclusion: 0
     m_Padding: 2
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
@@ -76,10 +77,16 @@ LightmapSettings:
     m_PVRDirectSampleCount: 32
     m_PVRSampleCount: 500
     m_PVRBounces: 2
+    m_PVREnvironmentSampleCount: 500
+    m_PVREnvironmentReferencePointCount: 2048
+    m_PVRFilteringMode: 2
+    m_PVRDenoiserTypeDirect: 0
+    m_PVRDenoiserTypeIndirect: 0
+    m_PVRDenoiserTypeAO: 0
     m_PVRFilterTypeDirect: 0
     m_PVRFilterTypeIndirect: 0
     m_PVRFilterTypeAO: 0
-    m_PVRFilteringMode: 1
+    m_PVREnvironmentMIS: 0
     m_PVRCulling: 1
     m_PVRFilteringGaussRadiusDirect: 1
     m_PVRFilteringGaussRadiusIndirect: 5
@@ -88,6 +95,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaIndirect: 2
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ShowResolutionOverlay: 1
+    m_ExportTrainingData: 0
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -395,6 +403,17 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 832961995}
+    - target: {fileID: 4084041016394960713, guid: 7c31b96ce53251e4aae15f9092b58a0d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4084041017365127637, guid: 7c31b96ce53251e4aae15f9092b58a0d,
+        type: 3}
+      propertyPath: graph
+      value: 
+      objectReference: {fileID: 11400000, guid: 12ef51ee1c1ec05479a34287a00d3345,
+        type: 2}
     - target: {fileID: 530138748083918385, guid: 7c31b96ce53251e4aae15f9092b58a0d,
         type: 3}
       propertyPath: m_Camera
@@ -405,12 +424,11 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 832961995}
-    - target: {fileID: 4084041017365127637, guid: 7c31b96ce53251e4aae15f9092b58a0d,
+    - target: {fileID: 7005604225759833760, guid: 7c31b96ce53251e4aae15f9092b58a0d,
         type: 3}
-      propertyPath: graph
-      value: 
-      objectReference: {fileID: 11400000, guid: 12ef51ee1c1ec05479a34287a00d3345,
-        type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7c31b96ce53251e4aae15f9092b58a0d, type: 3}
 --- !u!1 &592624291 stripped
@@ -656,11 +674,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pause Manager
       objectReference: {fileID: 0}
-    - target: {fileID: 2221644826953733977, guid: 4858bde02167ceb4e91e33c034dceed8,
-        type: 3}
-      propertyPath: m_Camera
-      value: 
-      objectReference: {fileID: 832961995}
     - target: {fileID: 559637704174999463, guid: 4858bde02167ceb4e91e33c034dceed8,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -716,6 +729,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2221644826953733977, guid: 4858bde02167ceb4e91e33c034dceed8,
+        type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 832961995}
     - target: {fileID: 1462438522, guid: 4858bde02167ceb4e91e33c034dceed8, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
