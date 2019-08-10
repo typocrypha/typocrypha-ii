@@ -11,16 +11,12 @@ public class SpellWordInspector : Editor
         var word = target as SpellWord;
         EditorGUILayout.LabelField(word.GetType().ToString() + " " + word.name);
         word.internalName = EditorGUILayout.TextField(new GUIContent("Name"), word.internalName);
-        if (GUILayout.Button("Set name to asset name"))
+        if (string.IsNullOrWhiteSpace(word.internalName) || GUILayout.Button("Set name to asset name"))
         {
-            foreach (var t in targets)
+            if (word.internalName != word.name)
             {
-                var w2 = t as SpellWord;
-                if (w2.internalName != w2.name)
-                {
-                    w2.internalName = w2.name;
-                    EditorUtility.SetDirty(w2);
-                }
+                word.internalName = word.name;
+                EditorUtility.SetDirty(word);
             }
         }
         EditorUtils.Separator();
