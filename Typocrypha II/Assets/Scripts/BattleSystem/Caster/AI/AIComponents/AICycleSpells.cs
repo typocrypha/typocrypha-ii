@@ -20,12 +20,12 @@ public class AICycleSpells : AIComponent
 
     private void OnEnable()
     {
-        caster.AfterCastResolved += (spell, self) => CycleSpell();
+        caster.OnAfterCastResolved += (spell, self) => CycleSpell();
     }
 
     private void OnDisable()
     {
-        caster.AfterCastResolved -= (spell, self) => CycleSpell();
+        caster.OnAfterCastResolved -= (spell, self) => CycleSpell();
     }
 
     public void CycleSpell()

@@ -7,6 +7,7 @@ public class SpellFxData
 {
     public enum EffectType
     {
+        None,
         Single,
         Sequence,
         Parallel,
@@ -18,12 +19,13 @@ public class SpellFxData
 
     public IEnumerator Play(Vector2 pos)
     {
+        if (effectType == EffectType.None)
+            yield break;
         if (effectType == EffectType.Single)
         {
             SoundController.instance.PlaySingle(effectPackets[0].sfx);
             yield return new WaitUntilAnimComplete(AnimationPlayer.instance.Play(effectPackets[0].clip, pos));
-        }
-            
+        }           
         else if (effectType == EffectType.Sequence)
         {
             foreach (var packet in effectPackets)

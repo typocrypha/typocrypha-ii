@@ -18,6 +18,8 @@ public class SpellFxDataDrawer : PropertyDrawer
             InitList(property);
         switch (property.FindPropertyRelative("effectType").enumValueIndex)
         {
+            case (int)SpellFxData.EffectType.None:
+                return EditorGUIUtility.singleLineHeight + 1;
             case (int)SpellFxData.EffectType.Single:
                 return EditorGUIUtility.singleLineHeight * 2 + 1;               
             case (int)SpellFxData.EffectType.Sequence:

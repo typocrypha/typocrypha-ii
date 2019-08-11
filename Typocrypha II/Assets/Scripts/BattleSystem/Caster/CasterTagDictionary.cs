@@ -19,8 +19,11 @@ public class CasterTagDictionary
     }
     public bool ContainsTag(string tagName)
     {
-        throw new System.NotImplementedException("add caster tags assetbundle");
-        //return allTags.Contains(CasterTagIndex.getTagFromString(tagName));
+        return allTags.Contains(TagLookup.instance.GetCasterTag(tagName));
+    }
+    public bool ContainsTag(CasterTag tag)
+    {
+        return allTags.Contains(tag);
     }
     public void Add(CasterTag tag)
     {

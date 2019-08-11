@@ -10,7 +10,7 @@ public class CastResults
     public GameObject popupPrefab = null;
 
     public bool DisplayDamage { get; set; } = true;
-    public bool Miss { get; set; }
+    public bool Miss { get; set; } = false;
     public bool Crit { get; set; }
     public float StaggerDamage { get; set; } = 0;
     public float Damage { get; set; } = 1;

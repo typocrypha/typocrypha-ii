@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[DisallowMultipleComponent]
 public class FieldObject : MonoBehaviour
 {
     [SerializeField] private string _displayName;

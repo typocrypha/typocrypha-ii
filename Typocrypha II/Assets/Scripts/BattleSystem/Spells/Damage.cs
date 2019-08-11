@@ -106,26 +106,25 @@ public static class Damage
 
     /// <summary>
     /// Compare two stats by a standard comparison. Returns a multiplier.
-    /// Returns the quotient of atk / def, 
-    /// where atk = 1 + the atkStat (if positive) + the defStat (if negative) and
-    /// where def = 1 + the defStat (if positive) + the atkStat (if negative)
-    /// atkStat and defStat do not have to be attack and defense,
-    /// and this comparison can be used for more than damage modifier calculations
+    /// Returns the quotient of value1 / value2, 
+    /// where value1 = 1 + stat1 (if positive) + stat2 (if negative) and
+    /// where value2 = 1 + stat2 (if positive) + stat1 (if negative)
     /// </summary>
-    public static float CompareStats(int atkStat, int defStat)
+    public static float CompareStats(int stat1, int stat2)
     {
-        float atk = 1;
-        float def = 1;
-        // If the attacking stat is positive, add it as a bonus
-        if (atk > 0)
-            atk += atkStat;
-        else
-            def += atkStat;
-        if (def > 0)
-            def += defStat;
-        else
-            atk += defStat;
-        return atk / def;
+        float val1 = 1;
+        float val2 = 1;
+        // If the first stat is positive, add it to val1
+        if (stat1 > 0)
+            val1 += stat1;
+        else // else add the absolute value to val2
+            val2 -= stat1;
+        // If the second stat is positive, add it to val2
+        if (stat2 > 0)
+            val2 += stat2;
+        else // else add the absolute value to val2
+            val1 -= stat2;
+        return val1 / val2;
     }
     /// <summary>
     /// Modifies damage by power by simple multiplication
