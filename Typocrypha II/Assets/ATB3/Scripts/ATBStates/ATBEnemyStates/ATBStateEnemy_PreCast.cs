@@ -25,9 +25,7 @@ namespace ATB3
             if(Owner.Caster.Stunned)
             {
                 Owner.Caster.Charge = 0;
-                var AI = Owner.GetComponent<CasterAI>();
-                // DEBUG, REMOVE LATER
-                AI.OnAfterCast?.Invoke();
+                // Add lose cast on stun behavior here
                 Source.PerformTransition(ATBTransition.ToStun);
             }
             if (timer >= 1.0f && ATBManager.soloStack.Count == 0)

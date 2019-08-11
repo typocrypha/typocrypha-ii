@@ -28,6 +28,17 @@ public class Caster : FieldObject
         Hiding,
     }
 
+    #region Delegate Declarations
+    public delegate void ApplyToEffectFn(RootWordEffect effect, Caster caster, Caster target);
+    public delegate void HitFn(RootWordEffect effect, Caster caster, Caster target, CastResults data);
+    public delegate void AfterCastFn(Spell s, Caster caster); // Add targets and results?
+    #endregion
+
+    public ApplyToEffectFn BeforeCastResolved { get; set; }
+    public AfterCastFn AfterCastResolved { get; set; }
+    public HitFn BeforeHitResolved { get; set; }
+    public HitFn AfterHitResolved { get; set; }
+
     #region State, Status, and Class
     [SerializeField] private State _type;
     public State CasterState { get => _type; set => _type = value; }

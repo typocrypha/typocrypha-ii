@@ -74,10 +74,12 @@ public class SpellManager : MonoBehaviour
                     {
                         // Apply the rule effect if necessary
                         Rule.ActiveRule?.Apply?.Invoke(effect, caster, targetCaster);
+                        // Apply OnCast Callbacks
+                        caster.BeforeCastResolved?.Invoke(effect, caster, targetCaster);
                         // Cast the effect
                         var castResults = effect.Cast(caster, targetCaster);
-                        // Update AI
-                        targetCaster.GetComponent<CasterAI>()?.OnAfterHit?.Invoke(spell, effect, caster, castResults);
+                        // Apply OnHit Callbacks (Updates AI)
+                        targetCaster.AfterHitResolved?.Invoke(effect, caster, targetCaster, castResults);
                         // Play Effects
                         var fx = new SpellFxData[] { root.leftMod?.fx, effect.fx, root.rightMod?.fx };
                         crList.Add(SpellFxManager.instance.Play(fx, castResults, targetSpace, casterSpace));
@@ -92,7 +94,9 @@ public class SpellManager : MonoBehaviour
                 {
                     yield return new WaitForSeconds(delayBeforeLog);
                     yield return SpellFxManager.instance.PlayMessages();
-                }                             
+                }
+                // Apply callbacks after the whole cast is finished
+                caster.AfterCastResolved?.Invoke(spell, caster);
             }
         }
     }

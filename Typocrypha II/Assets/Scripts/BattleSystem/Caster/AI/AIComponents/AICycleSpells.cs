@@ -15,9 +15,19 @@ public class AICycleSpells : AIComponent
         // Initialize the standard refs (caster and AI)
         InitializeBase();
         curr = startIndex;
-        AI.OnAfterCast += CycleSpell;
         caster.Spell = spells[curr];
     }
+
+    private void OnEnable()
+    {
+        caster.AfterCastResolved += (spell, self) => CycleSpell();
+    }
+
+    private void OnDisable()
+    {
+        caster.AfterCastResolved -= (spell, self) => CycleSpell();
+    }
+
     public void CycleSpell()
     {
         if (++curr >= spells.Count)

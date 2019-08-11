@@ -30,9 +30,7 @@ namespace ATB3
 
         private IEnumerator CastAndExit()
         {
-            var AI = Owner.GetComponent<CasterAI>();
             yield return SpellManager.instance.Cast(Owner.Caster.Spell, Owner.Caster, Owner.Caster.TargetPos);
-            AI.OnAfterCast?.Invoke();
             Source.PerformTransition(ATBTransition.ToAfterCast);
         }
 

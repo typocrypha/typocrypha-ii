@@ -131,8 +131,9 @@ public class SpellFxManager : MonoBehaviour
         if (data == null)
             yield break;
         var popper = Instantiate(data.popupPrefab ?? popupPrefab).GetComponent<PopupBase>();
-        // Damage popup
-        yield return popper.PopText(data.Damage.ToString(), targetPos, popTime);
+        // If damage should be displayed, display damage
+        if(data.DisplayDamage)
+            yield return popper.PopText(data.Damage.ToString(), targetPos, popTime);
         // Effectiveness popup
         switch (data.Effectiveness)
         {

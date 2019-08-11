@@ -14,6 +14,8 @@ public class CasterTagInspector : Editor
     {
         CasterTag tag = target as CasterTag;
         viewInfo = EditorGUILayout.ToggleLeft("View Name and Description Info", viewInfo, EditorUtils.Bold);
+        if (string.IsNullOrWhiteSpace(tag.internalName))
+            tag.internalName = tag.name;
         if(viewInfo)
         {
             tag.internalName = EditorGUILayout.TextField(new GUIContent("Internal Name"), tag.internalName);

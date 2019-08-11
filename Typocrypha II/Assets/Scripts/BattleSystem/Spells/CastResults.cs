@@ -8,6 +8,8 @@ public class CastResults
     public Caster target;
     public RootWordEffect effect;
     public GameObject popupPrefab = null;
+
+    public bool DisplayDamage { get; set; } = true;
     public bool Miss { get; set; }
     public bool Crit { get; set; }
     public float StaggerDamage { get; set; } = 0;
