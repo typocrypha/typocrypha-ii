@@ -64,7 +64,7 @@ public class CasterTagInspector : Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("ability1"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("ability2"));
         // StatusEffectPrefab
-        EditorUtils.ObjectField(new GUIContent("Status Effect Prefab"), tag.statusEffectPrefab, false);
+        tag.statusEffectPrefab = EditorUtils.ObjectField(new GUIContent("Status Effect Prefab"), tag.statusEffectPrefab, false);
         EditorUtils.Separator();
 
         // Reactions

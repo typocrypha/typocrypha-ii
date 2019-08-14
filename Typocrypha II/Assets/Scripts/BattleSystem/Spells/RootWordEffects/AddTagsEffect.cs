@@ -10,7 +10,7 @@ public class AddTagsEffect : RootWordEffect
         CastResults results = new CastResults(caster, target);
         foreach(var t in casterTagsToAdd)
         {
-            target.Tags.Add(t);
+            target.AddTag(t);
         }
         results.Miss = false;
         results.DisplayDamage = false;

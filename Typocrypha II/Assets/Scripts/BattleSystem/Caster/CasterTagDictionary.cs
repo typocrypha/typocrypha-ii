@@ -111,6 +111,16 @@ public class CasterTagDictionary
     private StatusEffectDict statusEffects = new StatusEffectDict();
     #endregion
 
+    public override string ToString()
+    {
+        if (allTags.Count == 0)
+            return "No tags";
+        string ret = string.Empty;
+        foreach (var tag in allTags)
+            ret += tag.internalName + ", ";
+        return ret;
+    }
+
     [System.Serializable] private class TagMultiSet : SerializableMultiSet<CasterTag> { }
     [System.Serializable] private class ReactionDict : SerializableDictionary<SpellTag, ReactionMultiSet>
     {

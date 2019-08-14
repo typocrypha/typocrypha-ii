@@ -5,8 +5,8 @@ using UnityEngine;
 public class StatusEffect : MonoBehaviour
 {
     protected Caster affected;
-    public CasterTag tagToAdd;
-    public bool stackable;
+    public CasterTag casterTag;
+
     private void Awake()
     {
         Initialize();
@@ -19,15 +19,9 @@ public class StatusEffect : MonoBehaviour
         {
             Debug.LogError("StatusEffect: " + name + " does could not find a caster on it's parent object ");
             return;
-        }
-        if (!stackable && affected.HasTag(tagToAdd))
-        {
-            Destroy(gameObject);
-            return;
-        }          
+        }         
         affected.OnAfterHitResolved += OnAfterHit;
         affected.OnAfterCastResolved += OnAfterCastResolved;
-        affected.AddTag(tagToAdd);
     }
 
     public virtual void OnAfterHit(RootWordEffect effect, Caster caster, Caster target, CastResults data)
@@ -44,7 +38,6 @@ public class StatusEffect : MonoBehaviour
     {
         affected.OnAfterHitResolved -= OnAfterHit;
         affected.OnAfterCastResolved -= OnAfterCastResolved;
-        affected.RemoveTag(tagToAdd);
-        Destroy(gameObject);
+        affected.RemoveTag(casterTag);
     }
 }

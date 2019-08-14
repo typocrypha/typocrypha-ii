@@ -8,8 +8,8 @@ public class StatusGuard : StatusEffect
     public override void OnAfterHit(RootWordEffect effect, Caster caster, Caster target, CastResults data)
     {
         // Don't destory if this is a guard effect
-        var st = (effect as ApplyStatusEffect)?.effectPrefab?.GetComponent<StatusEffect>();
-        if (st != null && st.tagToAdd == tagToAdd)
+        var st = (effect as AddTagsEffect);
+        if (st != null && st.casterTagsToAdd.Contains(casterTag))
             return;
         // Don't destroy if the attack missed
         if (data.Miss)
