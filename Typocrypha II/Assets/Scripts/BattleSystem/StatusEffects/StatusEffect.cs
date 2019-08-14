@@ -20,14 +20,14 @@ public class StatusEffect : MonoBehaviour
             Debug.LogError("StatusEffect: " + name + " does could not find a caster on it's parent object ");
             return;
         }
-        if (!stackable && affected.Tags.ContainsTag(tagToAdd))
+        if (!stackable && affected.HasTag(tagToAdd))
         {
             Destroy(gameObject);
             return;
         }          
         affected.OnAfterHitResolved += OnAfterHit;
         affected.OnAfterCastResolved += OnAfterCastResolved;
-        affected.Tags.Add(tagToAdd);
+        affected.AddTag(tagToAdd);
     }
 
     public virtual void OnAfterHit(RootWordEffect effect, Caster caster, Caster target, CastResults data)
@@ -44,7 +44,7 @@ public class StatusEffect : MonoBehaviour
     {
         affected.OnAfterHitResolved -= OnAfterHit;
         affected.OnAfterCastResolved -= OnAfterCastResolved;
-        affected.Tags.Remove(tagToAdd);
+        affected.RemoveTag(tagToAdd);
         Destroy(gameObject);
     }
 }

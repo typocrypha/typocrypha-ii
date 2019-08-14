@@ -152,8 +152,7 @@ public static class Damage
     /// </summary>
     public static void StandardElements(CastResults results, DamageEffect effect, Caster caster, Caster target)
     {
-        float effectMagnitude;
-        results.Effectiveness = GetReaction(effect, caster, target, out effectMagnitude);
+        results.Effectiveness = GetReaction(effect, caster, target, out float effectMagnitude);
         results.Damage *= GetReactionDmgMod(effect, caster, target, results.Effectiveness, effectMagnitude);
         if (results.Effectiveness == Reaction.Weak)
             results.StaggerDamage = 1;
@@ -174,7 +173,7 @@ public static class Damage
         {
             if (tag != null)
             {
-                var r = target.Tags.GetReactions(tag);
+                var r = target.GetReactions(tag);
                 if (r != null) reactions.AddSet(r);
             }
         }

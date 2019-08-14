@@ -33,6 +33,8 @@ public class CasterTag : ScriptableObject, System.IComparable<CasterTag>
     [SubSO("Ability2")]
     public CasterAbility ability2;
 
+    public GameObject statusEffectPrefab;
+
     public int CompareTo(CasterTag other)
     {
         return internalName.CompareTo(other.internalName);

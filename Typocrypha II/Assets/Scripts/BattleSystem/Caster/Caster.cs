@@ -117,9 +117,28 @@ public class Caster : FieldObject
     #endregion
 
     #region Caster Tags and Caster Stats
-    [SerializeField] private CasterTagDictionary _tags;
-    public CasterTagDictionary Tags { get => _tags; set => _tags = value; }
-    public CasterStats Stats { get => _tags.statMod; }
+    [SerializeField] private CasterTagDictionary tags;
+    public bool HasTag(CasterTag tag)
+    {
+        return tags.ContainsTag(tag);
+    }
+    public void RemoveTag(CasterTag tag)
+    {
+        tags.Remove(tag);
+    }
+    public void AddTag(CasterTag tag)
+    {
+        tags.Add(tag, this);
+    }
+    public CasterTagDictionary.ReactionMultiSet GetReactions(SpellTag tag)
+    {
+        return tags.GetReactions(tag);
+    }
+    public CasterStats Stats { get => tags.statMod; }
+
+    #if UNITY_EDITOR
+    public CasterTagDictionary Tags => tags;
+    #endif
     #endregion
 
     public Battlefield.Position TargetPos { get; set; } = new Battlefield.Position(0, 0);
@@ -127,7 +146,8 @@ public class Caster : FieldObject
 
     protected void Awake()
     {
-        _tags.RecalculateAggregate();
+        tags.RecalculateAggregate();
+        tags.SpawnAllStatusEffects(this);
         Health = Stats.MaxHP;
         Armor = Stats.MaxArmor;
         SP = Stats.MaxSP;

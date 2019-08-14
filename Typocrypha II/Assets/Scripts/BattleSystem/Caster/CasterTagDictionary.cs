@@ -25,7 +25,7 @@ public class CasterTagDictionary
     {
         return allTags.Contains(tag);
     }
-    public void Add(CasterTag tag)
+    public void Add(CasterTag tag, Caster addTo = null)
     {
         if (tags.Contains(tag))
         {
@@ -33,15 +33,17 @@ public class CasterTagDictionary
             return;
         }
         tags.Add(tag);
-        AddWithSubTags(tag);
+        AddWithSubTags(tag, addTo);
     }
-    private void AddWithSubTags(CasterTag tag)
+    private void AddWithSubTags(CasterTag tag, Caster addTo = null)
     {
         allTags.Add(tag);
         statMod.AddInPlace(tag.statMods);
         AddReactions(tag);
+        if (addTo != null && tag.statusEffectPrefab != null)
+            statusEffects.Add(tag, GameObject.Instantiate(tag.statusEffectPrefab, addTo.transform));
         foreach (CasterTag t in tag.subTags)
-            AddWithSubTags(t);
+            AddWithSubTags(t, addTo);
     }
     private void AddReactions(CasterTag tag)
     {
@@ -62,6 +64,11 @@ public class CasterTagDictionary
         allTags.Remove(tag);
         statMod.SubtractInPlace(tag.statMods);
         RemoveReactions(tag);
+        if(statusEffects.ContainsKey(tag))
+        {
+            GameObject.Destroy(statusEffects[tag]);
+            statusEffects.Remove(tag);
+        }
         foreach (CasterTag t in tag.subTags)
             RemoveWithSubTags(t);
     }
@@ -95,7 +102,13 @@ public class CasterTagDictionary
         return reactions.ContainsKey(tag) ? reactions[tag] : null;
     }
     private ReactionDict reactions = new ReactionDict();
-    //public List<CasterAbility> abilities;
+    public void SpawnAllStatusEffects(Caster addTo)
+    {
+        foreach(var tag in allTags)
+            if (tag.statusEffectPrefab != null)
+                statusEffects.Add(tag, GameObject.Instantiate(tag.statusEffectPrefab, addTo.transform));
+    }
+    private StatusEffectDict statusEffects = new StatusEffectDict();
     #endregion
 
     [System.Serializable] private class TagMultiSet : SerializableMultiSet<CasterTag> { }
@@ -103,6 +116,7 @@ public class CasterTagDictionary
     {
 
     }
+    [System.Serializable] private class StatusEffectDict : SerializableDictionary<CasterTag, GameObject> { }
     [System.Serializable] public class ReactionMultiSet : SerializableMultiSet<Reaction>
     {
         public void AddSet(ReactionMultiSet other)
