@@ -7,11 +7,19 @@ public class StatusEffect : MonoBehaviour
     protected Caster affected;
     public CasterTag casterTag;
 
-    private void Awake()
+    private void OnEnable()
     {
         Initialize();
     }
 
+    private void OnDisable()
+    {
+        Cleanup();
+    }
+
+    /// <summary>
+    /// Initialize subscriptions to Caster callbacks
+    /// </summary>
     protected virtual void Initialize()
     {
         affected = GetComponentInParent<Caster>();
@@ -34,10 +42,21 @@ public class StatusEffect : MonoBehaviour
 
     }
 
-    public virtual void CleanupAndDestroy()
+    /// <summary>
+    /// Removes all subscriptions to Caster callbacks
+    /// </summary>
+    public virtual void Cleanup()
     {
         affected.OnAfterHitResolved -= OnAfterHit;
         affected.OnAfterCastResolved -= OnAfterCastResolved;
+    }
+
+    /// <summary>
+    /// Simply removes the associated tag from the caster.
+    /// Cleanup and actual destruction are called in CasterTagDictionary when the associated tag is removed
+    /// </summary>
+    public virtual void Remove()
+    {
         affected.RemoveTag(casterTag);
     }
 }

@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 
 [System.Serializable]
 public class CasterTagDictionary
@@ -66,7 +64,8 @@ public class CasterTagDictionary
         RemoveReactions(tag);
         if(statusEffects.ContainsKey(tag))
         {
-            GameObject.Destroy(statusEffects[tag]);
+            var effect = statusEffects[tag];          
+            GameObject.Destroy(effect);
             statusEffects.Remove(tag);
         }
         foreach (CasterTag t in tag.subTags)
