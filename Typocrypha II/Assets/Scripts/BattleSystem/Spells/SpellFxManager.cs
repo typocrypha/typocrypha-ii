@@ -46,7 +46,7 @@ public class SpellFxManager : MonoBehaviour
             var message = logData.Dequeue();
             var popper = Instantiate(message.popupPrefab).GetComponent<PopupBase>();
             var cr1 = popper.PopImage(message.image ?? logImage, logPosition, logTime);
-            var cr2 = popper.PopText(message.text, logPosition, logTime);
+            var cr2 = popper.PopText(message.text, logPosition, logTime, Color.white);
             yield return cr1;
             yield return cr2;
             popper.Cleanup();
@@ -81,7 +81,7 @@ public class SpellFxManager : MonoBehaviour
                 targetAnim.SetTrigger("Idle");
             }
             var popper = Instantiate(data.popupPrefab ?? popupPrefab).GetComponent<PopupBase>();
-            popper.PopTextAndCleanup("Miss", targetPos, popTime);
+            popper.PopTextAndCleanup("Miss", targetPos, popTime, Color.white);
             yield break;
         }
         #endregion
@@ -122,7 +122,7 @@ public class SpellFxManager : MonoBehaviour
 
     #region Popup Effects
 
-    public Coroutine PlayPopup(CastResults data, Vector2 targetPos, Vector2 casterPos)
+    public Coroutine PlayFullPopup(CastResults data, Vector2 targetPos, Vector2 casterPos)
     {
         return StartCoroutine(PlayPopupCr(data, targetPos, casterPos));
     }
@@ -133,7 +133,10 @@ public class SpellFxManager : MonoBehaviour
         var popper = Instantiate(data.popupPrefab ?? popupPrefab).GetComponent<PopupBase>();
         // If damage should be displayed, display damage
         if(data.DisplayDamage)
-            yield return popper.PopText(Mathf.FloorToInt(data.Damage).ToString(), targetPos, popTime);
+        {
+            yield return PlayDamageNumber(data.Damage, targetPos, popper);
+        }
+
         // Effectiveness popup
         switch (data.Effectiveness)
         {
@@ -159,6 +162,17 @@ public class SpellFxManager : MonoBehaviour
             LogMessage("A critical hit!"); // DEBUG
         }
         popper.Cleanup();
+    }
+
+    public Coroutine PlayDamageNumber(float damage, Vector2 targetPos, PopupBase popperOverride = null)
+    {
+        var popper = popperOverride ?? Instantiate(popupPrefab).GetComponent<PopupBase>();
+        // If damage should be displayed, display damage
+        var damageColor = damage < 0 ? Color.green : Color.white;
+        var numberText = Mathf.FloorToInt(Mathf.Abs(damage)).ToString();
+        if (popperOverride == null)
+            return popper.PopTextAndCleanup(numberText, targetPos, popTime, damageColor);
+        return popper.PopText(numberText, targetPos, popTime, damageColor);
     }
 
     #endregion

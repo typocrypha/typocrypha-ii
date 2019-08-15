@@ -2,9 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StatusGuard : StatusEffect
+public class StatusRemoveAfterHitOrCast : StatusEffect
 {
+    public bool removeFromHits = true;
+    public int hitsToRemove = 1;
+    public bool removeFromCasts = true;
+    public int castsToRemove = 1;
     bool firstCastDone = false;
+    private int casts;
+    private int hits;
     public override void OnAfterHit(RootWordEffect effect, Caster caster, Caster target, CastResults data)
     {
         // If the caster isn't also the target and the first cast isn't done, this is the first cast and this isn't a self-cast
@@ -13,6 +19,8 @@ public class StatusGuard : StatusEffect
             firstCastDone = true;
             return;
         }
+        if (!removeFromHits)
+            return;
         // Don't destory if this is a guard effect
         var st = (effect as AddTagsEffect);
         if (st != null && st.casterTagsToAdd.Contains(casterTag))
@@ -20,16 +28,20 @@ public class StatusGuard : StatusEffect
         // Don't destroy if the attack missed
         if (data.Miss)
             return;
-        Remove();
+        if(++hits >= hitsToRemove)
+            Remove();
     }
 
     public override void OnAfterCastResolved(Spell s, Caster self)
     {
+        if (!removeFromCasts)
+            return;
         if(!firstCastDone)
         {
             firstCastDone = true;
             return;
         }
-        Remove();
+        if(++casts >= castsToRemove)
+            Remove();
     }
 }

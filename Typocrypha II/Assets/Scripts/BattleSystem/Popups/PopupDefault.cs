@@ -9,13 +9,14 @@ public class PopupDefault : PopupBase
     public GameObject textHolderPrefab;
     public Canvas uiCanvas;
 
-    public override Coroutine PopText(string text, Vector2 pos, float time)
+    public override Coroutine PopText(string text, Vector2 pos, float time, Color color)
     {      
         var textObj = Instantiate(textHolderPrefab, Camera.main.WorldToScreenPoint(pos), Quaternion.identity, uiCanvas.transform);
         var textComponent = textObj.GetComponent<Text>();
         var rect = textObj.GetComponent<RectTransform>();
         if (textComponent == null || rect == null)
             return null;
+        textComponent.color = color;
         textComponent.text = text;
         return StartCoroutine(PopTextCr(rect, textComponent, time));
     }

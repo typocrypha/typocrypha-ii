@@ -12,7 +12,7 @@ public class StatusEffect : MonoBehaviour
         Initialize();
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         Cleanup();
     }

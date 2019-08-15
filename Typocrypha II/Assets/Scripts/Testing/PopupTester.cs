@@ -16,6 +16,6 @@ public class PopupTester : MonoBehaviour
     public void SpawnText()
     {
         var p = Instantiate(popupPrefab).GetComponent<PopupBase>();
-        p?.PopText(text, Vector2.zero, 1);
+        p?.PopText(text, Vector2.zero, 1, Color.white);
     }
 }
