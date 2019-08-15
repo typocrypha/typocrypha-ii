@@ -105,26 +105,14 @@ public static class Damage
     }
 
     /// <summary>
-    /// Compare two stats by a standard comparison. Returns a multiplier.
-    /// Returns the quotient of value1 / value2, 
-    /// where value1 = 1 + stat1 (if positive) + stat2 (if negative) and
-    /// where value2 = 1 + stat2 (if positive) + stat1 (if negative)
+    /// Compare two stats by a standard comparison. Returns a non-negative multiplier
+    /// Returns a constant base raised to the power of the difference between the two stats.
     /// </summary>
     public static float CompareStats(int stat1, int stat2)
     {
-        float val1 = 1;
-        float val2 = 1;
-        // If the first stat is positive, add it to val1
-        if (stat1 > 0)
-            val1 += stat1;
-        else // else add the absolute value to val2
-            val2 -= stat1;
-        // If the second stat is positive, add it to val2
-        if (stat2 > 0)
-            val2 += stat2;
-        else // else add the absolute value to val2
-            val1 -= stat2;
-        return val1 / val2;
+        const float expBase = 1.25f;
+        float difference = stat1 - stat2;
+        return Mathf.Pow(expBase, difference);
     }
     /// <summary>
     /// Modifies damage by power by simple multiplication
