@@ -68,10 +68,13 @@ public class Caster : FieldObject
         get => stagger;
         set
         {
+            if (Stunned)
+                return;
             stagger = value;
             ui?.onStaggerChanged.Invoke(stagger.ToString());
             if (stagger <= 0)
             {
+                stagger = 0;
                 Stunned = true;
             }
 

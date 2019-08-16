@@ -31,7 +31,7 @@ namespace ATB3
         public override void OnUpdate()
         {
             timer += Time.fixedDeltaTime;
-            if (timer >= 1.0f)
+            if (timer >= 0.8f)
                 Source.PerformTransition(ATBTransition.ToCast);
             return;
         }
