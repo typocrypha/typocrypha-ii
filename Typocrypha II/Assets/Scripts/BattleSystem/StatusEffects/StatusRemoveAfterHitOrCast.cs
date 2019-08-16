@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StatusRemoveAfterHitOrCast : StatusEffect
+public abstract class StatusRemoveAfterHitOrCast : StatusEffect
 {
     public bool removeFromHits = true;
     public int hitsToRemove = 1;
@@ -21,9 +21,7 @@ public class StatusRemoveAfterHitOrCast : StatusEffect
         }
         if (!removeFromHits)
             return;
-        // Don't destory if this is a guard effect
-        var st = (effect as AddTagsEffect);
-        if (st != null && st.casterTagsToAdd.Contains(casterTag))
+        if (!firstCastDone && caster == target)
             return;
         // Don't destroy if the attack missed
         if (data.Miss)

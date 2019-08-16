@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StatusEffect : MonoBehaviour
+public abstract class StatusEffect : MonoBehaviour
 {
     protected Caster affected;
     public CasterTag casterTag;
 
-    private void OnEnable()
+    private void Awake()
     {
         Initialize();
     }
@@ -31,6 +31,8 @@ public class StatusEffect : MonoBehaviour
         affected.OnAfterHitResolved += OnAfterHit;
         affected.OnAfterCastResolved += OnAfterCastResolved;
     }
+
+    public abstract void Apply(ApplyStatusEffect effect, Caster caster, Caster target, CastResults data);
 
     public virtual void OnAfterHit(RootWordEffect effect, Caster caster, Caster target, CastResults data)
     {

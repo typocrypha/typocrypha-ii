@@ -23,7 +23,7 @@ public class CasterTagDictionary
     {
         return allTags.Contains(tag);
     }
-    public void Add(CasterTag tag, Caster addTo = null)
+    public void Add(CasterTag tag)
     {
         if (tags.Contains(tag))
         {
@@ -31,17 +31,15 @@ public class CasterTagDictionary
             return;
         }
         tags.Add(tag);
-        AddWithSubTags(tag, addTo);
+        AddWithSubTags(tag);
     }
-    private void AddWithSubTags(CasterTag tag, Caster addTo = null)
+    private void AddWithSubTags(CasterTag tag)
     {
         allTags.Add(tag);
         statMod.AddInPlace(tag.statMods);
         AddReactions(tag);
-        if (addTo != null && tag.statusEffectPrefab != null)
-            statusEffects.Add(tag, GameObject.Instantiate(tag.statusEffectPrefab, addTo.transform));
         foreach (CasterTag t in tag.subTags)
-            AddWithSubTags(t, addTo);
+            AddWithSubTags(t);
     }
     private void AddReactions(CasterTag tag)
     {
@@ -62,12 +60,6 @@ public class CasterTagDictionary
         allTags.Remove(tag);
         statMod.SubtractInPlace(tag.statMods);
         RemoveReactions(tag);
-        if(statusEffects.ContainsKey(tag))
-        {
-            var effect = statusEffects[tag];          
-            GameObject.Destroy(effect);
-            statusEffects.Remove(tag);
-        }
         foreach (CasterTag t in tag.subTags)
             RemoveWithSubTags(t);
     }
@@ -100,14 +92,7 @@ public class CasterTagDictionary
     {
         return reactions.ContainsKey(tag) ? reactions[tag] : null;
     }
-    private ReactionDict reactions = new ReactionDict();
-    public void SpawnAllStatusEffects(Caster addTo)
-    {
-        foreach(var tag in allTags)
-            if (tag.statusEffectPrefab != null)
-                statusEffects.Add(tag, GameObject.Instantiate(tag.statusEffectPrefab, addTo.transform));
-    }
-    private StatusEffectDict statusEffects = new StatusEffectDict();
+    private ReactionDict reactions = new ReactionDict();   
     #endregion
 
     public override string ToString()
@@ -125,7 +110,6 @@ public class CasterTagDictionary
     {
 
     }
-    [System.Serializable] private class StatusEffectDict : SerializableDictionary<CasterTag, GameObject> { }
     [System.Serializable] public class ReactionMultiSet : SerializableMultiSet<Reaction>
     {
         public void AddSet(ReactionMultiSet other)

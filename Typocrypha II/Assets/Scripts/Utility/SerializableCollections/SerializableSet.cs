@@ -23,6 +23,11 @@ public class SerializableSet<T> : ISerializationCallbackReceiver, IEnumerable<T>
         if (!_hashset.Contains(item))
             _hashset.Add(item);
     }
+    public void Add(IEnumerable<T> items)
+    {
+        foreach(T item in items)
+            Add(item);
+    }
     public void Remove(T item)
     {
         _hashset.Remove(item);

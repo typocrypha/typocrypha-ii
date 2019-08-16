@@ -31,11 +31,14 @@ public class Caster : FieldObject
     #region Delegate Declarations
     public delegate void ApplyToEffectFn(RootWordEffect effect, Caster caster, Caster target);
     public delegate void HitFn(RootWordEffect effect, Caster caster, Caster target, CastResults data);
+    public delegate CasterTagDictionary.ReactionMultiSet GetReactionsFn(SpellTag tag);
     public delegate void AfterCastFn(Spell s, Caster caster); // Add targets and results?
     #endregion
 
     public ApplyToEffectFn OnBeforeCastResolved { get; set; }
     public AfterCastFn OnAfterCastResolved { get; set; }
+    public GetReactionsFn ExtraReactions { get; set; }
+    public HitFn OnBeforeEffectApplied { get; set; }
     public HitFn OnAfterHitResolved { get; set; }
 
     #region State, Status, and Class
@@ -116,6 +119,8 @@ public class Caster : FieldObject
     }
     #endregion
 
+    private StatusEffectDict statusEffects = new StatusEffectDict();
+
     #region Caster Tags and Caster Stats
     [SerializeField] private CasterTagDictionary tags;
     public bool HasTag(CasterTag tag)
@@ -125,10 +130,21 @@ public class Caster : FieldObject
     public void RemoveTag(CasterTag tag)
     {
         tags.Remove(tag);
+        if(statusEffects.ContainsKey(tag))
+        {
+            var effect = statusEffects[tag];
+            Destroy(effect);
+            statusEffects.Remove(tag);
+        }
     }
     public void AddTag(CasterTag tag)
     {
-        tags.Add(tag, this);
+        tags.Add(tag);
+    }
+    public void AddTagWithStatusEffect(StatusEffect effect, CasterTag tag)
+    {
+        statusEffects.Add(tag, effect);
+        tags.Add(tag);
     }
     public CasterTagDictionary.ReactionMultiSet GetReactions(SpellTag tag)
     {
@@ -148,11 +164,12 @@ public class Caster : FieldObject
     protected void Awake()
     {
         tags.RecalculateAggregate();
-        tags.SpawnAllStatusEffects(this);
         Health = Stats.MaxHP;
         Armor = Stats.MaxArmor;
         SP = Stats.MaxSP;
         Stagger = Stats.MaxStagger;
         if (ui == null) ui = GetComponentInChildren<CasterUI>();
     }
+
+    [System.Serializable] private class StatusEffectDict : SerializableDictionary<CasterTag, StatusEffect> { }
 }

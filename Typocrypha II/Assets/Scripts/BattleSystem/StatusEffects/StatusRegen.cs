@@ -8,6 +8,14 @@ public class StatusRegen : StatusRemoveAfterHitOrCast
     public int healthPerTick;
     private float time = 0;
 
+    public override void Apply(ApplyStatusEffect effect, Caster caster, Caster target, CastResults data)
+    {
+        if (data.Crit)
+        {
+            healthPerTick *= (int)Damage.critDamageMod;
+        }
+    }
+
     void FixedUpdate()
     {
         time += Time.fixedDeltaTime;
