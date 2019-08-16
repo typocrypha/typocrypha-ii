@@ -6,5 +6,6 @@ public abstract class SpellWord : ScriptableObject
 {   
     public string internalName;
     public string description;
+    public float cost;
     public abstract SpellWord Clone();
 }

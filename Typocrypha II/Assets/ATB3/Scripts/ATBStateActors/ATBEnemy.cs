@@ -35,14 +35,14 @@ namespace ATB3
         // Incrementally charges next spell
         IEnumerator ChargeCR()
         {
-            if (Caster.ChargeTime == 0f) Caster.ChargeTime = 8f; // DEBUG
             Caster.Charge = 0f;
+            Caster.ChargeTime = Caster.Spell.Cost;
             while (Caster.Charge + Time.fixedDeltaTime < Caster.ChargeTime)
             {
                 // Charge while in charge state
                 do yield return new WaitForFixedUpdate();
                 while (Pause || !isCurrentState(ATBStateID.Charge));
-                Caster.Charge += Time.fixedDeltaTime;
+                Caster.Charge += Time.fixedDeltaTime * Caster.Stats.CastingSpeedMod;
             }
             Caster.Charge = Caster.ChargeTime;
             //Debug.Log("DONE CHARGING");

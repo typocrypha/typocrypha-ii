@@ -10,6 +10,11 @@ public class CasterStats
     public const int resourceMax = int.MaxValue;
     public const int resourceMin = -resourceMax;
 
+    public float CastingSpeedMod
+    {
+        get => 1 + spd.Value / statMax;
+    }
+
     #region Resources
     [SerializeField] private Stat maxHP = new Stat(resourceMin, resourceMax);
     public int MaxHP { get => maxHP.Value; set => maxHP.Value = value; }

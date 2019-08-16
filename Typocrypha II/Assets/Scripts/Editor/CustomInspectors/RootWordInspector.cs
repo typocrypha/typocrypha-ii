@@ -59,11 +59,6 @@ public class RootWordInspector : SpellWordInspector
     {
         base.OnInspectorGUI();
         var word = target as RootWord;
-        EditorGUILayout.BeginHorizontal();
-        GUILayout.Label(new GUIContent("Cooldown"), new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold });
-        word.cooldown = EditorGUILayout.FloatField(word.cooldown);
-        EditorGUILayout.EndHorizontal();
-        EditorUtils.Separator();
         rList.DoLayoutList();
         if (GUI.changed)
             EditorUtility.SetDirty(this);

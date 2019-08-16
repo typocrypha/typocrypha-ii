@@ -17,7 +17,6 @@ namespace ATB3
         // Incrementally charges 
         IEnumerator ChargeCR()
         {
-            if (Caster.ChargeTime == 0f) Caster.ChargeTime = 5f; // DEBUG
             Caster.Charge = 0f;
             while (true)
             {

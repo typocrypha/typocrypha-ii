@@ -13,6 +13,8 @@ public class Spell : IList<SpellWord>
     [SerializeField]
     private List<SpellWord> items = new List<SpellWord>();
 
+    public float Cost { get => items.Select((item) => item.cost).Sum(); }
+
     public string ToDisplayString()
     {
         return items.Select((s) => s.internalName.ToUpper()).Aggregate((a, b) => a + "-" + b);
