@@ -19,6 +19,7 @@ public class DialogScriptParser : EditorWindow
     NodeCanvas canvas; // Generated canvas
     System.Type currView = typeof(DialogViewVN); // Current dialog view
     float pos; // Position of current node
+    Node prev;
 
     AssetBundle characterDataBundle; // Character data bundle
     CharacterData[] allCharacterData; // All loaded character data
@@ -33,6 +34,8 @@ public class DialogScriptParser : EditorWindow
     readonly char[] poseMarker = new char[] { '[', ']' }; // Speaker's pose marker for dialog lines.
     readonly string posePat = @"\[([^\)]*)\]"; // Pose marker pattern.
     readonly string displayPat = "[\"“].*?[\"”]"; // Display name marker pattern.
+    readonly char[] choiceMarker = new char[] { '<', '>' }; // Choice marker for dialog input lines.
+    readonly string choicePat = @"\<([^\)]*)\>"; // Input choice prompt marker pattern.
     readonly char[] escape = new char[] { '\\' }; // Escape character.
     readonly char[] displayNameChars = new char[] { '"', '“', '”' }; // Characters that could delimit a display name.
 
@@ -43,6 +46,7 @@ public class DialogScriptParser : EditorWindow
         {"chat", typeof(DialogNodeChat) },
         {"an", typeof(DialogNodeAN) },
         {"bubble", typeof(DialogNodeBubble) },
+        {"input", typeof(DialogNodeInput) }
     };
 
     // General node labels.
@@ -53,7 +57,9 @@ public class DialogScriptParser : EditorWindow
         {"playbgm", typeof(PlayBgm) },
         {"stopbgm", typeof(StopBgm) },
         {"setbg", typeof(SetBackgroundNode) },
+        {"fade", typeof(FadeNode) },
         {"end", typeof(GameflowEndNode) },
+        {"start" , typeof(GameflowStartNode)}
     };
 
     AnimationCurve bgmFadeIn = new AnimationCurve(); // Default fade in curve
@@ -99,17 +105,29 @@ public class DialogScriptParser : EditorWindow
         }
     }
 
-    // Generates node canvas from script
+    // Generates node canvases from script
     void GenerateCanvas()
     {
         AssetBundle.UnloadAllAssetBundles(true);
         characterDataBundle = AssetBundle.LoadFromFile(System.IO.Path.Combine(Application.streamingAssetsPath, "characterdata"));
         allCharacterData = characterDataBundle.LoadAllAssets<CharacterData>();
-        canvas = AssetDatabase.LoadAssetAtPath<DialogCanvas>(assetPath + textScript.name + ".asset");
+        canvas = null;
+        Parse();
+        AssetBundle.UnloadAllAssetBundles(true);
+    }
+
+    /// <summary>
+    /// Attempts to make a new canvas with the given name, or finds the existing canvas.
+    /// Sets the canvas to the 'canvas' field.
+    /// </summary>
+    /// <param name="canvasName"></param>
+    void StartCanvas(string canvasName)
+    {
+        canvas = AssetDatabase.LoadAssetAtPath<DialogCanvas>(assetPath + canvasName + ".asset");
         if (canvas == null) // Generate new canvas if empty
         {
             canvas = NodeCanvas.CreateCanvas(typeof(DialogCanvas));
-            canvas.name = textScript.name;
+            canvas.name = canvasName;
             canvas.Validate();
         }
         else // Otherwise overwrite
@@ -117,12 +135,22 @@ public class DialogScriptParser : EditorWindow
             canvas.nodes.Clear();
             canvas.Validate();
         }
-        // Parse text into node canvas.
-        Parse();
-        // Save canvas.
+        pos = 0f; // Position of current node
+        prev = CreateNode(GameflowStartNode.ID) as GameflowStartNode;
+        currView = viewMap["vn"]; // Default to visual novel view
+    }
+
+    /// <summary>
+    /// Saves current canvas.
+    /// </summary>
+    void EndCanvas()
+    {
+        // Create end node.
+        var endNode = CreateNode(EndAndHide.ID) as EndAndHide;
+        (prev as BaseNodeIO).toNextOUT.TryApplyConnection(endNode.fromPreviousIN, true);
+
         canvas.saveName = assetPath + canvas.name + ".asset";
         NodeEditorSaveManager.SaveNodeCanvas(canvas.saveName, ref canvas, true);
-        AssetBundle.UnloadAllAssetBundles(true);
     }
 
     // Parses text into node canvas
@@ -137,13 +165,9 @@ public class DialogScriptParser : EditorWindow
         #endregion
         string[] lines = text.Split(lineDelim, escape); // Separate lines
 
-        pos = 0f; // Position of current node
-        Node prev = null; // Previous node (init as start node).
-        prev = CreateNode(GameflowStartNode.ID) as GameflowStartNode;
-        currView = viewMap["vn"]; // Default to visual novel view
         for (int i = 0; i < lines.Length; i++)
         {
-            //Debug.Log("parsing:" + lines[i]);
+            //Debug.Log("parsing:" + (i+1) +":" + lines[i]);
             try
             {
                 ParseLine(lines[i], ref prev);
@@ -154,9 +178,7 @@ public class DialogScriptParser : EditorWindow
                 Debug.LogError("Line " + (i + 1) + ": " + lines[i]);
             }
         }
-        // Create end node.
-        var endNode = CreateNode(EndAndHide.ID) as EndAndHide;
-        (prev as BaseNodeIO).toNextOUT.TryApplyConnection(endNode.fromPreviousIN, true);
+        EndCanvas();
     }
 
     // Parses a single line
@@ -196,7 +218,12 @@ public class DialogScriptParser : EditorWindow
         string[] args = dialogLine[1].Split(argDelim, escape);
         List<Node> nodes = new List<Node>();
         System.Type nodeType = nodeMap[args[0]];
-        if (nodeType == typeof(AddCharacter))
+        if (nodeType == typeof(GameflowStartNode))
+        {
+            if (canvas != null) EndCanvas(); // End previous canvas.
+            StartCanvas(args[1]); // Start new canvas.
+        }
+        else if (nodeType == typeof(AddCharacter))
         {
             var gnode = CreateNode(AddCharacter.ID) as AddCharacter;
             gnode.characterData = GetCharacterData(args[1]);
@@ -236,6 +263,14 @@ public class DialogScriptParser : EditorWindow
             else                     gnode.bgPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
             nodes.Add(gnode);
         }
+        else if (nodeType == typeof(FadeNode))
+        {
+            var gnode = CreateNode(FadeNode.ID) as FadeNode;
+            gnode.fadeType = args[1] == "in" ? FadeNode.FadeType.Fade_In : FadeNode.FadeType.Fade_Out;
+            gnode.fadeTime = float.Parse(args[2]);
+            gnode.fadeColor = new Color(float.Parse(args[3]), float.Parse(args[4]), float.Parse(args[5]), 1f);
+            nodes.Add(gnode);
+        }
         return nodes;
     }
 
@@ -244,75 +279,105 @@ public class DialogScriptParser : EditorWindow
     {
         string[] dialogLine = line.Split(nameMarker, escape);
         List<Node> nodes = new List<Node>();
-        string charName = (dialogLine[0].Contains(exprMarker[0]) || dialogLine[0].Contains(poseMarker[0])) 
-                        ? dialogLine[0].Substring(0, dialogLine[0].IndexOfAny(exprMarker.Concat(poseMarker).ToArray(), 0, escape)).Trim()
-                        : dialogLine[0].Trim();
-        // Remove Display name from character name
-        if (charName.Contains(displayNameChars, escape)) charName = charName.Substring(0, charName.IndexOfAny(displayNameChars, 0, escape)).Trim();
-        string displayName = Regex.Match(dialogLine[0], displayPat).Value; // Displayed speaker name.
-        displayName = (displayName.Length > 2) 
-                    ? displayName.Substring(1, displayName.Length - 2) 
-                    : "";
-        CharacterData charData = GetCharacterData(charName); // Character data.
-        #region Expression and pose
-        string expr = ""; // Expression string (value within parentheticals)
-        string pose = ""; // Pose string [value within square brackets]
-        if (charData != null)
+        string preMarker = dialogLine[0];
+        // Remove specifiers from character name
+        if (preMarker.Contains(displayNameChars, escape)) preMarker = preMarker.Substring(0, preMarker.IndexOfAny(displayNameChars, 0, escape)).Trim();
+        if (preMarker.Contains(choiceMarker, escape)) preMarker = preMarker.Substring(0, preMarker.IndexOfAny(choiceMarker, 0, escape)).Trim();
+        List<CharacterData> cds = new List<CharacterData>();
+        List<string> exprs = new List<string>();
+        List<string> poses = new List<string>();
+        var clines = preMarker.Split(new char[] { '|' }, escape);
+        string cname = "";
+        foreach(var cline in clines)
         {
-            if (dialogLine[0].Contains(poseMarker[0])) // Pose
+            string currname = (cline.Contains(exprMarker[0]) || cline.Contains(poseMarker[0]))
+                ? cline.Substring(0, cline.IndexOfAny(exprMarker.Concat(poseMarker).ToArray(), 0, escape)).Trim()
+                : cline.Trim();
+            cname += currname + '|';
+            var cd = GetCharacterData(currname);
+            cds.Add(cd);
+            #region Expression and pose
+            string expr = ""; // Expression string (value within parentheticals)
+            string pose = ""; // Pose string [value within square brackets]
+            if (cline.Contains(poseMarker[0])) // Pose
             {
-                pose = Regex.Match(dialogLine[0], posePat).Value;
+                pose = Regex.Match(cline, posePat).Value;
                 pose = pose.Substring(1, pose.Length - 2);
             }
             else
             {
                 pose = "base"; // Default pose.
             }
-            if (dialogLine[0].Contains(exprMarker[0])) // Expression
+            if (cline.Contains(exprMarker[0])) // Expression
             {
-                expr = Regex.Match(dialogLine[0], exprPat).Value;
+                expr = Regex.Match(cline, exprPat).Value;
                 expr = expr.Substring(1, expr.Length - 2);
             }
             else
             {
                 expr = "normal"; // Default expression.
             }
+            exprs.Add(expr);
+            poses.Add(pose);
+            #endregion
         }
-        #endregion
+        string displayName = Regex.Match(dialogLine[0], displayPat).Value; // Displayed speaker name.
+        displayName = (displayName.Length > 2) 
+                    ? displayName.Substring(1, displayName.Length - 2) 
+                    : "";
         DialogNode dnode = null; // Node for dialog.
-        if (currView == typeof(DialogNodeVN))
+        if (currView == typeof(DialogNodeVN) || currView == typeof(DialogNodeInput))
         {
             // Create expression and pose nodes
-            if (charData != null)
+            for (int i = 0; i < cds.Count; i++)
             {
-                var hnode = CreateNode(SetPose.ID) as SetPose;
-                hnode.characterData = charData;
-                hnode.pose = pose;
-                nodes.Add(hnode);
-                var gnode = CreateNode(SetExpression.ID) as SetExpression;
-                gnode.characterData = charData;
-                gnode.expr = expr;
-                nodes.Add(gnode);
+                if (cds[i] != null)
+                {
+                    var hnode = CreateNode(SetPose.ID) as SetPose;
+                    hnode.characterData = cds[i];
+                    hnode.pose = poses[i];
+                    nodes.Add(hnode);
+                    var gnode = CreateNode(SetExpression.ID) as SetExpression;
+                    gnode.characterData = cds[i];
+                    gnode.expr = exprs[i];
+                    nodes.Add(gnode);
+                }
             }
             // Create dialog node
-            dnode = CreateNode(DialogNodeVN.ID) as DialogNodeVN;
+            if (currView == typeof(DialogNodeInput))
+            {
+                // Get choice prompts and variable name.
+                string choices = Regex.Match(dialogLine[0], choicePat).Value;
+                choices = choices.Substring(1, choices.Length - 2);
+                var carr = choices.Split(new char[] { ',' }, escape);
+                DialogNodeInput inode = CreateNode(DialogNodeInput.ID) as DialogNodeInput;
+                inode.showChoicePrompt = carr.Length > 1;
+                inode.variableName = carr[0];
+                for (int i = 1; i < carr.Length; i++)
+                    inode.choicePromptText[i - 1] = carr[i];
+                dnode = inode;
+            }
+            else
+            {
+                dnode = CreateNode(DialogNodeVN.ID) as DialogNodeVN;
+            }
         }
         else if (currView == typeof(DialogNodeChat))
         {
             // USE EXPRESSION TO CHANGE ICON (currently only 1 icon)
             dnode = CreateNode(DialogNodeChat.ID) as DialogNodeChat;
-            if (pose == "left")
+            if (poses[0] == "left")
             {
-                (dnode as DialogNodeChat).leftIcon = charData.chat_icon;
+                (dnode as DialogNodeChat).leftIcon = cds[0].chat_icon;
             }
-            else if (pose == "right")
+            else if (poses[0] == "right")
             {
-                (dnode as DialogNodeChat).rightIcon = charData.chat_icon;
+                (dnode as DialogNodeChat).rightIcon = cds[0].chat_icon;
             }
-            else if (pose == "both")
+            else if (poses[0] == "both")
             {
-                (dnode as DialogNodeChat).leftIcon = charData.chat_icon;
-                (dnode as DialogNodeChat).rightIcon = charData.chat_icon;
+                (dnode as DialogNodeChat).leftIcon = cds[0].chat_icon;
+                (dnode as DialogNodeChat).rightIcon = cds[0].chat_icon;
             }
         }
         else if (currView == typeof(DialogNodeAN))
@@ -322,8 +387,14 @@ public class DialogScriptParser : EditorWindow
         else if (currView == typeof(DialogNodeBubble))
         {
             dnode = CreateNode(DialogNodeBubble.ID) as DialogNodeBubble;
+            (dnode as DialogNodeBubble).multi = (exprs[0] == "multi");
+            var coords = poses[0].Split(',');
+            (dnode as DialogNodeBubble).rectVal.x = float.Parse(coords[0]);
+            (dnode as DialogNodeBubble).rectVal.y = float.Parse(coords[1]);
+            (dnode as DialogNodeBubble).rectVal.width = float.Parse(coords[2]);
+            (dnode as DialogNodeBubble).rectVal.height = float.Parse(coords[3]);
         }
-        dnode.characterName = charName;
+        dnode.characterName = cname.Substring(0, cname.Length-1);
         dnode.displayName = displayName;
         dnode.text = dialogLine[1].Trim();
         nodes.Add(dnode);

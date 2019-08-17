@@ -14,6 +14,8 @@
 		_HairTex("Hair", 2D) = "white" {}
 		_OutlineSize("Outline Size", float) = 0
 		_OutlineColor("Outline Color", Color) = (0,0,0,1)
+		_FadeAmount("Fade Amount", float) = 0
+		_FadeColor("Fade Color", Color) = (0,0,0,1)
 	}
 
 		SubShader
@@ -48,6 +50,8 @@
 				sampler2D _HairTex;
 				float _OutlineSize;
 				fixed4 _OutlineColor;
+				float _FadeAmount;
+				fixed4 _FadeColor;
 
 				fixed4 composite(float2 uv) {
 					return tex2D(_BodyTex, uv) + tex2D(_ClothesTex, uv) + tex2D(_HairTex, uv);
@@ -65,8 +69,12 @@
 						if ((composite(IN.texcoord + x_dist).a > 0) ||
 							(composite(IN.texcoord - x_dist).a > 0) ||
 							(composite(IN.texcoord + y_dist).a > 0) ||
-							(composite(IN.texcoord - y_dist).a > 0))
-							c = _OutlineColor;
+							(composite(IN.texcoord - y_dist).a > 0)) 
+							{
+								c.rgb = _OutlineColor.rgb * (1 - _FadeAmount) + (_FadeAmount * _FadeColor.rgb);
+								c.a = 1;
+							}
+							
 					}
 					return c;
 				}

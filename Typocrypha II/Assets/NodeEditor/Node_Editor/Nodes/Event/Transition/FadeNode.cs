@@ -6,12 +6,42 @@ using NodeEditorFramework;
 using NodeEditorFramework.Utilities;
 
 namespace Gameflow {
-    [Node(false, "Event/Transition/Fade", new System.Type[] { typeof(GameflowCanvas) })]
-    public class FadeNode : BaseNodeIO {
+    [Node(false, "Event/Transition/Fade", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
+    public class FadeNode : BaseNodeIO, ITimedNode {
         public enum FadeType
         {
             Fade_In,
             Fade_Out,
+        }
+
+        #region ITimedNode
+        static bool isCompleted;
+        public bool IsCompleted // Wait for fade to complete.
+        {
+            get => isCompleted;
+        }
+        #endregion
+
+        /// <summary>
+        /// Fade all of the faders in the scene (coroutine).
+        /// </summary>
+        /// <param name="fadeTime">Amount of time to complete fade.</param>
+        /// <param name="fadeStart">Starting amount of normlized fade.</param>
+        /// <param name="fadeEnd">End amount of normalized fade</param>
+        /// <param name="fadeColor">Color of fade.</param>
+        public static IEnumerator FadeAllOverTime(float fadeTime, float fadeStart, float fadeEnd, Color fadeColor)
+        {
+            isCompleted = false;
+            float time = 0f;
+            while (time < fadeTime)
+            {
+                yield return new WaitWhile(() => FaderManager.instance.PH.Pause);
+                FaderManager.instance.FadeAll(Mathf.Lerp(fadeStart, fadeEnd, time / fadeTime), fadeColor);
+                yield return new WaitForFixedUpdate();
+                time += Time.fixedDeltaTime;
+            }
+            FaderManager.instance.FadeAll(fadeEnd, fadeColor);
+            isCompleted = true;
         }
 
         #region Editor
@@ -48,7 +78,7 @@ namespace Gameflow {
             fadeTime = RTEditorGUI.FloatField(fadeTime, GUILayout.Width(72));
             GUILayout.EndHorizontal();
             GUILayout.Space(3);
-            //fadeColor = RTEditorGUI..ColorField(fadeColor);
+            fadeColor = RTEditorGUI.ColorField(fadeColor);
             GUILayout.EndVertical();
             if (fadeType == FadeType.Fade_In)
                 _title = "Fade In";

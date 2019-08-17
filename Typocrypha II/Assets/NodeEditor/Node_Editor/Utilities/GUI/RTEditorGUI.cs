@@ -671,6 +671,17 @@ namespace NodeEditorFramework.Utilities
         }
         #endregion
 
+        #region Color Field
+        public static Color ColorField(Color value)
+        {
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+                return UnityEditor.EditorGUILayout.ColorField(value);
+            #endif
+            return Color.clear;
+        }
+        #endregion
+
         #region Vector2Field
         public static Vector2 Vector2Field(Rect position, string label, Vector2 value)
         {

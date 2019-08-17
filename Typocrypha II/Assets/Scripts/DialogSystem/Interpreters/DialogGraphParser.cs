@@ -8,6 +8,7 @@ public class DialogGraphParser : MonoBehaviour
     [SerializeField] private DialogCanvas graph = null;
     public DialogCanvas Graph { set => graph = value; }
     private BaseNode currNode = null;
+    private Stack<BaseNode> recStack = new Stack<BaseNode>();
     /// <summary> Initialized the root node (for if next dialogue is called in DialogManager's awake function </summary>
     public void Init()
     {
@@ -61,9 +62,21 @@ public class DialogGraphParser : MonoBehaviour
     {
         if (next) currNode = Next();
         if (currNode == null) return null;
+        if (currNode is SubCanvasNode)
+        {
+            var node = currNode as SubCanvasNode;
+            recStack.Push(Next()); // Remember exit node.
+            currNode = (node.subCanvas as DialogCanvas).getStartNode();
+            return NextDialog(true);
+        }
         if (currNode is GameflowEndNode)
         {
-            if (currNode is EndAndHide)
+            if (recStack.Count != 0)
+            {
+                currNode = recStack.Pop();
+                return NextDialog(false);
+            }
+            else if (currNode is EndAndHide)
             {
                 DialogManager.instance.Display(false);
                 return null;
@@ -90,23 +103,34 @@ public class DialogGraphParser : MonoBehaviour
         if (currNode is DialogNode)
         {
             var cNode = currNode as DialogNode;
-            // Get speaking SFX if valid name.
-            var cd = DialogCharacterManager.instance.CharacterDataByName(cNode.characterName);
-            AudioClip voice = null;
-            if (cd != null) voice = cd.talk_sfx;
+            List<CharacterData> cds = new List<CharacterData>();
+            var charNames = cNode.characterName.Split(new char[] { '|' }, new char[] { '\\' });
+            List<AudioClip> voice = new List<AudioClip>();
+            foreach (var charName in charNames)
+            {
+                // Get speaking SFX if valid name.
+                var cd = DialogCharacterManager.instance.CharacterDataByName(charName.Trim());
+                if (cd != null)
+                {
+                    cds.Add(cd);
+                    voice.Add(cd.talk_sfx);
+                }
+            } 
             // Set TIPS search.
             TIPSManager.instance.CurrSearchable = cNode.tipsData;
-            // Add to history.
-            DialogHistory.instance.AddHistory(cNode.characterName, cNode.text);
             // Get proper display name.
             string displayName = (cNode.displayName.Trim().Length == 0)
                                ? cNode.characterName 
                                : cNode.displayName;
+            // Add to history.
+            DialogHistory.instance.AddHistory(displayName, cNode.text);
             if (currNode is DialogNodeVN)
             {
                 var dNode = currNode as DialogNodeVN;
-                // Highlight speaking character.
-                if (cd != null) DialogCharacterManager.instance.SoloHighlightCharacter(cd);
+                // Highlight speaking characters.
+                DialogCharacterManager.instance.HighlightAllCharacters(false);
+                for (int i = 0; i < cds.Count; i++)
+                    if (cds[i] != null) DialogCharacterManager.instance.HighlightCharacter(cds[i], true);
                 return new DialogItemVN(dNode.text, voice, displayName, dNode.mcSprite, dNode.codecSprite);
             }
             else if(currNode is DialogNodeChat)
@@ -255,9 +279,36 @@ public class DialogGraphParser : MonoBehaviour
             else
                 DialogManager.instance.GetComponent<Animator>().SetTrigger("ClampIn");
         }
-        //Process other node types
-        //Recursively move to next
-        return NextDialog();
+        else if (currNode is FadeNode)
+        {
+            var node = currNode as FadeNode;
+            float fadeStart = node.fadeType == FadeNode.FadeType.Fade_In ? 1f : 0f;
+            float fadeEnd = 1f - fadeStart;
+            StartCoroutine(FadeNode.FadeAllOverTime(node.fadeTime, fadeStart, fadeEnd, node.fadeColor));
+        }
+        // Check if need to wait on node to complete.
+        if (currNode is ITimedNode)
+        {
+            DialogManager.instance.PH.Pause = true;
+            StartCoroutine(WaitOnNode(currNode as ITimedNode));
+            return null;
+        }
+        else
+        {
+            //Recursively move to next
+            return NextDialog();
+        }
+    }
+
+    /// <summary>
+    /// Waits for a node to complete before allowing dialog to proceed (coroutine).
+    /// </summary>
+    /// <param name="node">Node to wait on.</param>
+    IEnumerator WaitOnNode(ITimedNode node)
+    {
+        yield return new WaitUntil(() => node.IsCompleted);
+        DialogManager.instance.PH.Pause = false;
+        DialogManager.instance.NextDialog(true);
     }
 
     /// <summary>

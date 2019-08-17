@@ -130,6 +130,7 @@ public class TextEvents : MonoBehaviour, IPausable
 
     /// <summary>
     /// Fades the screen.
+    /// Automatically finishes fade when dialog line finishes.
     /// </summary>
     /// <param name="opt">
     /// [0]: float, amount of time to get to fade.
