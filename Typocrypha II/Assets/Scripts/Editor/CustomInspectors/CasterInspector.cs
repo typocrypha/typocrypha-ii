@@ -39,7 +39,7 @@ public class CasterInspector : Editor
         #endregion
 
         #region Stat GUI
-        data.EditorTagDict.RecalculateAggregate();
+        data.TagDict.RecalculateAggregate();
         EditorUtils.CasterUtils.CasterStatsLabelLayout(data.Stats);
         EditorUtils.Separator();
         #endregion
@@ -55,10 +55,10 @@ public class CasterInspector : Editor
         }
         #endregion
 
-        int count = data.EditorTagDict.Count;
+        int count = data.TagDict.Count;
         // Tag GUI
-        EditorUtils.CasterUtils.CasterTagDictionaryGUILayout(data.EditorTagDict);
-        if(count != data.EditorTagDict.Count)
+        EditorUtils.CasterUtils.CasterTagDictionaryGUILayout(data.TagDict);
+        if(count != data.TagDict.Count)
         {
             EditorUtils.SetSceneDirty(target);
         }

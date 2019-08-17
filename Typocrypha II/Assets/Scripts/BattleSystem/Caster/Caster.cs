@@ -156,9 +156,9 @@ public class Caster : FieldObject
     public CasterStats Stats { get => tags.statMod; }
 
     /// <summary>
-    /// The dictionary containing all of this caster's CasterTags. Should only be used for debugging or in editor
+    /// The dictionary containing all of this caster's CasterTags.
     /// </summary>
-    public CasterTagDictionary EditorTagDict => tags;
+    public CasterTagDictionary TagDict => tags;
     #endregion
 
     public Battlefield.Position TargetPos { get; set; } = new Battlefield.Position(0, 0);

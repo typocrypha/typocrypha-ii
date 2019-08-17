@@ -22,6 +22,6 @@ public class DebugShowTags : MonoBehaviour
             if (caster == null)
                 return;
         }
-        text.text = caster.EditorTagDict.ToString();
+        text.text = caster.TagDict.ToString();
     }
 }
