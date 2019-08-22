@@ -175,4 +175,10 @@ public class Caster : FieldObject
     }
 
     [System.Serializable] private class StatusEffectDict : SerializableDictionary<CasterTag, StatusEffect> { }
+
+    public override ScouterInfo GetScouterInfo()
+    {
+        ScouterInfo_Enemy info = new ScouterInfo_Enemy(this); // TEMP
+        return info;
+    }
 }
