@@ -178,7 +178,16 @@ public class Caster : FieldObject
 
     public override ScouterInfo GetScouterInfo()
     {
-        ScouterInfo_Enemy info = new ScouterInfo_Enemy(this); // TEMP
-        return info;
+        switch (CasterState)
+        {
+            case State.Player:
+                return new ScouterInfo_Player(this);
+            case State.Ally:
+                return new ScouterInfo_Ally(this);
+            case State.Hostile:
+                return new ScouterInfo_Enemy(this);
+            default:
+                return null;
+        }
     }
 }

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Info that comes up when scouter is used.
+/// Handler for getting info that comes up when scouter is used.
+/// NOT actually a container for the data.
 /// </summary>
 public abstract class ScouterInfo 
 {
@@ -11,4 +12,9 @@ public abstract class ScouterInfo
     /// Primary description text.
     /// </summary>
     public abstract string DescriptionText { get; }
+
+    /// <summary>
+    /// Temp image
+    /// </summary>
+    public Sprite DisplayImage;
 }

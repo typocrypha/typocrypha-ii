@@ -5,21 +5,19 @@ using UnityEngine;
 /// <summary>
 /// Scouter info handler for enemies.
 /// </summary>
-public class ScouterInfo_Enemy : ScouterInfo
+public class ScouterInfo_Player : ScouterInfo
 {
-    public ScouterInfo_Enemy(Caster caster)
+    public ScouterInfo_Player(Caster caster)
     {
         _description = "";
-        var key = caster.name.Substring(0, caster.name.Length - 7); // Get enemy name (remove "(clone)").
-        var data = Scouter.GetScouterData(key); // Lookup scouter data.
-        _description += data.description;
-        string desc = "\nEnemy tags: ";
+        _description += "Clarke: git good\n"; // LOOKUP CLARKE TIP FROM DATABASE
+        string desc = "Your tags: ";
         foreach (var tag in caster.TagDict)
             desc += tag.DisplayName + ", ";
         _description += desc;
-        DisplayImage = data.pic; // TEMP IMAGE
     }
 
     private string _description;
     public override string DescriptionText => _description;
 }
+
