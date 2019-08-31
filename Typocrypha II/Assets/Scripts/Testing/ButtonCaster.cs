@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class ButtonCaster : MonoBehaviour
 {
     public InputField field;
-    public DummyCaster caster;
+    public Player caster;
     public void Cast()
     {
         caster.CastString(field.text);

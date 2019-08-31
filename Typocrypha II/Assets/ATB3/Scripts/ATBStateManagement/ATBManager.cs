@@ -12,17 +12,16 @@ namespace ATB3
 
     public partial class ATBManager : MonoBehaviour
     {
-        private static ATBManager _instance;
-        public static ATBManager Instance { get { return _instance; } }
+        public static ATBManager instance;
         private void Awake()
         {
-            if (_instance != null)
+            if (instance != null)
             {
-                Destroy(this.gameObject);
+                Destroy(gameObject);
             }
             else
             {
-                _instance = this;
+                instance = this;
             }
         }
 
@@ -30,8 +29,11 @@ namespace ATB3
         // EVENT DATA                                                     //
         //----------------------------------------------------------------//
 
-
+        // Is the ATB system currently in Solo mode?
         public bool InSolo => soloStack.Count != 0;
+        /// <summary>
+        /// The current SoloActor. If the ATB system is not in solo, returns null
+        /// </summary>
         public ATBActor SoloActor => InSolo ? soloStack.Peek() : null;
         // Events sent
         // static List<StateEventObj> eventQueue = new List<StateEventObj>(); 

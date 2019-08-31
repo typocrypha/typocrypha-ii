@@ -2,9 +2,8 @@
 using UnityEngine;
 
 [RequireComponent(typeof(ATB3.ATBPlayer))]
-public class DummyCaster : Caster
+public class Player : Caster
 {
-    public GameObject targetRet;
     public char[] separator = { ' ', '-' };
 
     ATB3.ATBPlayer playerActor;
@@ -16,7 +15,7 @@ public class DummyCaster : Caster
         Health = Stats.MaxHP;
         playerActor = GetComponent<ATB3.ATBPlayer>();
         DisplayName = "Ayin";
-        targetRet = transform.Find("TargetRet").gameObject;
+        TargetPos = new Battlefield.Position(0, 1);
     }
 
     /// <summary>
@@ -69,6 +68,8 @@ public class DummyCaster : Caster
     }
     private void Update()
     {
+        if (playerActor.Pause || playerActor.isCast)
+            return;
         if (Input.GetKeyDown(KeyCode.LeftArrow))
             TargetPos.Col = Mathf.Max(0, TargetPos.Col - 1);
         if (Input.GetKeyDown(KeyCode.RightArrow))
@@ -77,6 +78,5 @@ public class DummyCaster : Caster
             TargetPos.Row = 0;
         if (Input.GetKeyDown(KeyCode.DownArrow))
             TargetPos.Row = 1;
-        //if (targetRet != null) targetRet.transform.position = Battlefield.instance.GetSpace(TargetPos);
     }
 }

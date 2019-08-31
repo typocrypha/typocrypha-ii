@@ -8,14 +8,13 @@ namespace ATB3
     [RequireComponent(typeof(ATBStateMachine_Ally))]
     public partial class ATBAlly : ATBActor
     {
+        public const float activationWindow = 0.5f;
         public ATBStateMachine_Ally StateMachine { get; private set; }
         public override IATBStateMachine BaseStateMachine => StateMachine;
         public Caster Caster { get; private set; }
-        public KeyCode menuKey; // Key to open ally menu.
         public AllyMenu allyMenu; // Ally menu (for choosing spell).
         public int mpMax;
         public float mpChargeTime;
-        private float mp;
         public float Mp
         {
             get => mp;
@@ -25,7 +24,10 @@ namespace ATB3
                 Caster.Charge = mp / mpMax;
             }
         }
+        private float mp;
 
+        private static readonly Battlefield.Position leftAllyPos  = new Battlefield.Position(1, 0);
+        private static readonly Battlefield.Position rightAllyPos = new Battlefield.Position(1, 2);
 
         // Incrementally charges 
         IEnumerator ChargeCR()
@@ -49,14 +51,29 @@ namespace ATB3
 
         void Update()
         {
-            if (Pause || isCast || !ATBManager.Instance.InSolo)
+            // return if we are not currently an ally
+            if (Caster.CasterState != Caster.State.Ally)
                 return;
-            if (Input.GetKeyDown(menuKey) && allyMenu.CanCast)
+            // return if we are currently casting, have an open ally menu,
+            // We are not currently in solo, or if we don't have enough MP to cast anything
+            if (isCast || allyMenu.gameObject.activeSelf || !ATBManager.instance.InSolo || !allyMenu.CanCast)
+                return;
+            // Calculate ally key
+            KeyCode menuKey;
+            if (Caster.FieldPos == leftAllyPos)
+                menuKey = KeyCode.LeftArrow;
+            else if (Caster.FieldPos == rightAllyPos)
+                menuKey = KeyCode.RightArrow;
+            else
+                return;
+            Debug.Log("most of the way");
+            // Actually test for the key
+            if (Input.GetKeyDown(menuKey))
             {
-                if (ATBManager.Instance.SoloActor.isCurrentState(ATBStateID.BeforeCast))
-                    Menu(ATBStateID.BeforeCast);
-                else if (ATBManager.Instance.SoloActor.isCurrentState(ATBStateID.AfterCast))
-                    Menu(ATBStateID.AfterCast);
+                if (ATBManager.instance.SoloActor.isCurrentState(ATBStateID.BeforeCast))
+                    Menu(ATBStateID.BeforeCast);                
+                else if (ATBManager.instance.SoloActor.isCurrentState(ATBStateID.AfterCast))
+                    Menu(ATBStateID.AfterCast);                  
             }
         }
 
@@ -79,8 +96,7 @@ namespace ATB3
         /// </summary>
         public void Menu(ATBStateID state)
         {
-            ATBManager.Instance.EnterSolo(this);
-            StateMachine.PerformTransition(ATBTransition.ToAllyMenu);
+            ATBManager.instance.EnterSolo(this);
             allyMenu.gameObject.SetActive(true);
             allyMenu.Activate(state);
         }
@@ -92,6 +108,7 @@ namespace ATB3
         {
             Mp -= spell.Cost;
             Caster.Spell = spell;
+            Caster.TargetPos = Battlefield.instance.Player.TargetPos;
             StateMachine.PerformTransition(ATBTransition.ToBeforeCast);
         }
     }

@@ -51,7 +51,7 @@ public class AllyMenu : MonoBehaviour
             cast = spellDown;
         }
         if(cast != null && cast.Count > 0 && ally.Mp >= cast.Cost)
-        {
+        {        
             ally.Cast(cast);
             gameObject.SetActive(false);
         }

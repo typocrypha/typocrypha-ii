@@ -30,14 +30,14 @@ public class Battlefield : MonoBehaviour, IPausable
         }
         else
         {
-            if (!ATBManager.Instance.InSolo)
+            if (!ATBManager.instance.InSolo)
             {
                 foreach (var actor in Actors)
                     if (actor != null) actor.Pause = false;
             }
             else
             {
-                ATBManager.Instance.SoloActor.Pause = false;
+                ATBManager.instance.SoloActor.Pause = false;
             }
         }
     }
@@ -364,6 +364,10 @@ public class Battlefield : MonoBehaviour, IPausable
         {
             return other is Position ? Equals(other as Position) : false;
         }
+
+        public static bool operator ==(Position a, Position b) => a.Equals(b);
+        public static bool operator !=(Position a, Position b) => !(a == b);
+        
         public override int GetHashCode()
         {
             unchecked // Overflow is fine, just wrap

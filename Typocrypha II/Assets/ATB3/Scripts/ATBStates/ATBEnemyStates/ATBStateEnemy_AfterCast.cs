@@ -7,12 +7,11 @@ namespace ATB3
     public class ATBStateEnemy_AfterCast : ATBState<ATBEnemy>
     {
         // The ID for this specific ATBState
-        public override ATBStateID StateID { get { return ATBStateID.AfterCast; } }
+        public override ATBStateID StateID => ATBStateID.AfterCast;
 
         // Call upon entering given state
         public override void OnEnter()
         {
-            //Debug.Log("ENEMY " + this.Owner.actorName + " has ENTERED the AFTERCAST state!");
             timer = 0f;
         }
 
@@ -22,18 +21,16 @@ namespace ATB3
         public override void OnUpdate()
         {
             timer += Time.fixedDeltaTime;
-            if (timer > 1.0f)
+            if (timer >= ATBAlly.activationWindow)
                 Source.PerformTransition(ATBTransition.ToCharge);
-            return;
         }
 
         // Call upon exiting given state
         public override void OnExit()
         {
-            //Debug.Log("ENEMY " + this.Owner.actorName + " has EXITED the BEFORECAST state!");
-            FaderManager.instance.Solo(Owner.GetComponent<FaderGroup>(), 0.0f, Color.black); // TEMP
+            FaderManager.instance.Solo(Owner.GetComponent<FaderGroup>(), 0.0f, Color.black);
             Owner.Caster.Charge = 0.0f;
-            ATBManager.Instance.ExitSolo(Owner);
+            ATBManager.instance.ExitSolo(Owner);
         }
     }
 }

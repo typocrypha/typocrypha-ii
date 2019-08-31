@@ -7,25 +7,27 @@ namespace ATB3
     public class ATBStateAlly_AfterCast : ATBState<ATBAlly>
     {
         // The ID for this specific ATBState
-        public override ATBStateID StateID { get { return ATBStateID.AfterCast; } }
+        public override ATBStateID StateID => ATBStateID.AfterCast;
+        private float timer = 0;
 
         // Call upon entering given state
         public override void OnEnter()
         {
-            Owner.Caster.Charge = 0.0f;
+            timer = 0;
         }
 
         // Call on fixed update while in given state
         public override void OnUpdate()
         {
-            Source.PerformTransition(ATBTransition.ToCharge);
-            return;
+            timer += Time.fixedDeltaTime;
+            if (timer >= ATBAlly.activationWindow)
+                Source.PerformTransition(ATBTransition.ToCharge);
         }
 
         // Call upon exiting given state
         public override void OnExit()
         {
-            ATBManager.Instance.ExitSolo(Owner);
+            ATBManager.instance.ExitSolo(Owner);
         }
     }
 }
