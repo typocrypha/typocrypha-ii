@@ -130,6 +130,11 @@ public class Caster : FieldObject
     {
         return tags.ContainsTag(tag);
     }
+
+    public bool HasTag(string tagName)
+    {
+        return tags.ContainsTag(tagName);
+    }
     public void RemoveTag(CasterTag tag)
     {
         tags.Remove(tag);
