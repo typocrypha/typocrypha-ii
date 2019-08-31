@@ -47,6 +47,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
 
     public Text dialogText; // Text display component
     public AudioSource[] voiceAS; // AudioSources for playing speech sfx
+    public bool resizeTextBox = true; // Should dialog box resize itself?
 
     FXText.Color hideText; // Allows for hiding parts of text (for scrolling)
     DialogItem dialogItem; // Dialog line data
@@ -91,13 +92,24 @@ public class DialogBox : MonoBehaviour, IDialogBox
         hideText.ind[0] = 0;
         hideText.ind[1] = dialogItem.text.Length;
         // Set box size based on text.
-        SetBoxHeight();
+        if (resizeTextBox) SetBoxHeight();
         // Set voice sfx.
         if (dialogItem.voice != null)
             for(int i = 0; i < dialogItem.voice.Count; i++)
                 voiceAS[i].clip = dialogItem.voice[i];
         scrollCR = StartCoroutine(TextScrollCR());
 	}
+
+    /// <summary>
+    /// Initializes dialogue box (parses tags) and starts text scroll.
+    /// Uses only text (no character name/speech effect/etc).
+    /// </summary>
+    /// <param name="dialogText">Dialog text to display.</param>
+    public void StartDialogBox(string dialogText)
+    {
+        DialogItem ditem = new DialogItemAN(dialogText, null);
+        StartDialogBox(ditem);
+    }
 
     /// <summary>
     /// Reset dialog box to default state.
@@ -158,7 +170,6 @@ public class DialogBox : MonoBehaviour, IDialogBox
 	protected IEnumerator TextScrollCR()
     {
         yield return null;
-        Debug.Log(dialogItem.text);
         int pos = 0;
         while (pos < dialogItem.text.Length)
         {

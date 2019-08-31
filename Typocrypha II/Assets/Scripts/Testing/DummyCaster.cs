@@ -77,7 +77,6 @@ public class DummyCaster : Caster
             TargetPos.Row = 0;
         if (Input.GetKeyDown(KeyCode.DownArrow))
             TargetPos.Row = 1;
-        if (targetRet != null)
-            targetRet.transform.position = Battlefield.instance.GetSpace(TargetPos);
+        //if (targetRet != null) targetRet.transform.position = Battlefield.instance.GetSpace(TargetPos);
     }
 }

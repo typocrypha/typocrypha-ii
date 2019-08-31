@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class CasterTagDictionary
+public class CasterTagDictionary : IEnumerable<CasterTag>
 {
     [SerializeField] private CasterTag.TagSet tags = new CasterTag.TagSet();
     [SerializeField] private TagMultiSet allTags = new TagMultiSet();
@@ -103,6 +104,16 @@ public class CasterTagDictionary
         foreach (var tag in allTags)
             ret += tag.internalName + ", ";
         return ret;
+    }
+
+    public IEnumerator<CasterTag> GetEnumerator()
+    {
+        return ((IEnumerable<CasterTag>)allTags).GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        throw new System.NotImplementedException();
     }
 
     [System.Serializable] private class TagMultiSet : SerializableMultiSet<CasterTag> { }
