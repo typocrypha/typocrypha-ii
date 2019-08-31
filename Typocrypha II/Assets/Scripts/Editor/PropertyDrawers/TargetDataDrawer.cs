@@ -10,6 +10,9 @@ public class TargetDataDrawer : PropertyDrawer
     const float labelWidth = 100;
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
+        var typeProp = property.FindPropertyRelative("type");
+        if (!TargetData.PatternApplies((TargetData.Type)typeProp.enumValueIndex))
+            return (EditorGUIUtility.singleLineHeight + 1) * 2;
         return (EditorGUIUtility.singleLineHeight + 1) * 5;
     }
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -35,30 +38,33 @@ public class TargetDataDrawer : PropertyDrawer
         EditorGUI.PropertyField(new Rect(UIRect) { x = UIRect.x + labelWidth, width = UIRect.width - labelWidth }, typeProp, GUIContent.none);
         UIRect.y += lineHeight;
 
-        #region Draw Matrix
+        if(TargetData.PatternApplies((TargetData.Type)typeProp.enumValueIndex))
+        {
+            #region Draw Matrix
 
-        //Draw Top row
-        string topRowLabel = (TargetData.Type)typeProp.enumValueIndex == TargetData.Type.Targeted ? "Target Row" : "Enemy Row";
-        EditorGUI.PrefixLabel(new Rect(UIRect) { width = labelWidth }, new GUIContent(topRowLabel));
-        Rect checkRect = new Rect(UIRect) { width = checkWidth, x = UIRect.x + labelWidth + 3 };
-        EditorGUI.PropertyField(checkRect, arrayProp.GetArrayElementAtIndex(0), GUIContent.none);
-        checkRect.x += checkWidth;
-        EditorGUI.PropertyField(checkRect, arrayProp.GetArrayElementAtIndex(1), GUIContent.none);
-        checkRect.x += checkWidth;
-        EditorGUI.PropertyField(checkRect, arrayProp.GetArrayElementAtIndex(2), GUIContent.none);
-        UIRect.y += lineHeight;
+            //Draw Top row
+            string topRowLabel = (TargetData.Type)typeProp.enumValueIndex == TargetData.Type.TargetedPattern ? "Target Row" : "Enemy Row";
+            EditorGUI.PrefixLabel(new Rect(UIRect) { width = labelWidth }, new GUIContent(topRowLabel));
+            Rect checkRect = new Rect(UIRect) { width = checkWidth, x = UIRect.x + labelWidth + 3 };
+            EditorGUI.PropertyField(checkRect, arrayProp.GetArrayElementAtIndex(0), GUIContent.none);
+            checkRect.x += checkWidth;
+            EditorGUI.PropertyField(checkRect, arrayProp.GetArrayElementAtIndex(1), GUIContent.none);
+            checkRect.x += checkWidth;
+            EditorGUI.PropertyField(checkRect, arrayProp.GetArrayElementAtIndex(2), GUIContent.none);
+            UIRect.y += lineHeight;
 
-        //Draw Bottom row
-        string bottomRowLabel = (TargetData.Type)typeProp.enumValueIndex == TargetData.Type.Targeted ? "Other Row" : "Caster Row";
-        EditorGUI.PrefixLabel(new Rect(UIRect) { width = labelWidth }, new GUIContent(bottomRowLabel));
-        checkRect = new Rect(UIRect) { width = checkWidth, x = UIRect.x + labelWidth + 3 };
-        EditorGUI.PropertyField(checkRect, arrayProp.GetArrayElementAtIndex(3), GUIContent.none);
-        checkRect.x += checkWidth;
-        EditorGUI.PropertyField(checkRect, arrayProp.GetArrayElementAtIndex(4), GUIContent.none);
-        checkRect.x += checkWidth;
-        EditorGUI.PropertyField(checkRect, arrayProp.GetArrayElementAtIndex(5), GUIContent.none);
-        UIRect.y += lineHeight;
-        #endregion
+            //Draw Bottom row
+            string bottomRowLabel = (TargetData.Type)typeProp.enumValueIndex == TargetData.Type.TargetedPattern ? "Other Row" : "Caster Row";
+            EditorGUI.PrefixLabel(new Rect(UIRect) { width = labelWidth }, new GUIContent(bottomRowLabel));
+            checkRect = new Rect(UIRect) { width = checkWidth, x = UIRect.x + labelWidth + 3 };
+            EditorGUI.PropertyField(checkRect, arrayProp.GetArrayElementAtIndex(3), GUIContent.none);
+            checkRect.x += checkWidth;
+            EditorGUI.PropertyField(checkRect, arrayProp.GetArrayElementAtIndex(4), GUIContent.none);
+            checkRect.x += checkWidth;
+            EditorGUI.PropertyField(checkRect, arrayProp.GetArrayElementAtIndex(5), GUIContent.none);
+            UIRect.y += lineHeight;
+            #endregion
+        }
 
         #endregion
 

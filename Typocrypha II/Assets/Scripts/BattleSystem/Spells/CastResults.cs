@@ -11,7 +11,7 @@ public class CastResults
 
     public bool DisplayDamage { get; set; } = true;
     public bool Miss { get; set; } = false;
-    public bool Crit { get; set; }
+    public bool Crit { get; set; } = false;
     public float StaggerDamage { get; set; } = 0;
     public float Damage { get; set; } = 1;
     public Reaction Effectiveness { get; set; } = Reaction.Neutral;

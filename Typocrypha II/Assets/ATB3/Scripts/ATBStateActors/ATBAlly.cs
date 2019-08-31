@@ -66,7 +66,6 @@ namespace ATB3
                 menuKey = KeyCode.RightArrow;
             else
                 return;
-            Debug.Log("most of the way");
             // Actually test for the key
             if (Input.GetKeyDown(menuKey))
             {

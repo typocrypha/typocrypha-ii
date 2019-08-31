@@ -5,7 +5,7 @@ using UnityEngine;
 public class ApplyStatusEffect : RootWordEffect
 {
     public GameObject statusEffectPrefab;
-    public override CastResults Cast(Caster caster, Caster target)
+    public override CastResults Cast(Caster caster, Caster target, RootCastResults prevResults = null)
     {
         var results = new CastResults(caster, target);
         Damage.StandardHitCheck(results, this, caster, target);
