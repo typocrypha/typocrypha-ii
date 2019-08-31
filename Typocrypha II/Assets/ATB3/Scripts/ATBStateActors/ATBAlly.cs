@@ -12,28 +12,51 @@ namespace ATB3
         public override IATBStateMachine BaseStateMachine => StateMachine;
         public Caster Caster { get; private set; }
         public KeyCode menuKey; // Key to open ally menu.
-        public GameObject allyMenu; // Ally menu (for choosing spell).
+        public AllyMenu allyMenu; // Ally menu (for choosing spell).
+        public int mpMax;
+        public float mpChargeTime;
+        private float mp;
+        public float Mp
+        {
+            get => mp;
+            set
+            {
+                mp = value;
+                Caster.Charge = mp / mpMax;
+            }
+        }
+
 
         // Incrementally charges 
         IEnumerator ChargeCR()
         {
-            Caster.Charge = 0f;
+            Mp = 0f;
+            float time = 0f;
             while (true)
             {
-                do yield return new WaitForFixedUpdate();
-                while(Pause || !isCurrentState(ATBStateID.Charge));
-                // Charge while in charge state
-                if (Caster.Charge + Time.fixedDeltaTime < Caster.ChargeTime)
-                    Caster.Charge += Time.fixedDeltaTime;
+                yield return new WaitForFixedUpdate();
+                yield return new WaitWhile(() => Pause || !isCurrentState(ATBStateID.Charge));
+                if (Mp == mpMax)
+                    continue;
+                time += Time.fixedDeltaTime;
+                if(time >= mpChargeTime)
+                {
+                    ++Mp;
+                    time = 0;
+                }
             }
         }
 
         void Update()
         {
-            if (Pause || isCast) return;
-            if (Input.GetKeyDown(menuKey))
+            if (Pause || isCast || !ATBManager.Instance.InSolo)
+                return;
+            if (Input.GetKeyDown(menuKey) && allyMenu.CanCast)
             {
-                Menu();
+                if (ATBManager.Instance.SoloActor.isCurrentState(ATBStateID.BeforeCast))
+                    Menu(ATBStateID.BeforeCast);
+                else if (ATBManager.Instance.SoloActor.isCurrentState(ATBStateID.AfterCast))
+                    Menu(ATBStateID.AfterCast);
             }
         }
 
@@ -54,17 +77,21 @@ namespace ATB3
         /// <summary>
         /// Starts ally menu sequence.
         /// </summary>
-        public void Menu()
+        public void Menu(ATBStateID state)
         {
+            ATBManager.Instance.EnterSolo(this);
             StateMachine.PerformTransition(ATBTransition.ToAllyMenu);
-            allyMenu.SetActive(true);
+            allyMenu.gameObject.SetActive(true);
+            allyMenu.Activate(state);
         }
         
         /// <summary>
         /// Starts cast sequence.
         /// </summary>
-        public void Cast()
+        public void Cast(Spell spell)
         {
+            Mp -= spell.Cost;
+            Caster.Spell = spell;
             StateMachine.PerformTransition(ATBTransition.ToBeforeCast);
         }
     }

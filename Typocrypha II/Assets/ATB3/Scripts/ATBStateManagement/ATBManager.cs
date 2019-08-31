@@ -29,12 +29,15 @@ namespace ATB3
         //----------------------------------------------------------------//
         // EVENT DATA                                                     //
         //----------------------------------------------------------------//
-        
+
+
+        public bool InSolo => soloStack.Count != 0;
+        public ATBActor SoloActor => InSolo ? soloStack.Peek() : null;
         // Events sent
         // static List<StateEventObj> eventQueue = new List<StateEventObj>(); 
         static List<string> eventQueue = new List<string>();
         // Stack for managing when actors have solo activity (casting)
-        public static Stack<ATBActor> soloStack = new Stack<ATBActor>();
+        private readonly Stack<ATBActor> soloStack = new Stack<ATBActor>();
 
         //----------------------------------------------------------------//
         // STATE MANAGEMENT                                               //
@@ -47,7 +50,7 @@ namespace ATB3
         }
 
         // Process queue (FIFO: one event per update frame)
-        void processQueue()
+        void ProcessQueue()
         {
             //if (eventQueue.Count == 0) return;
             //StateEventObj obj = eventQueue[0];
