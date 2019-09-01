@@ -149,6 +149,10 @@ public class Caster : FieldObject
     {
         tags.Add(tag);
     }
+    public void AddTag(string tagName)
+    {
+        tags.Add(tagName);
+    }
     public void AddTagWithStatusEffect(StatusEffect effect, CasterTag tag)
     {
         statusEffects.Add(tag, effect);

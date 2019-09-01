@@ -18,7 +18,10 @@ public class CasterTagDictionary : IEnumerable<CasterTag>
     }
     public bool ContainsTag(string tagName)
     {
-        return allTags.Contains(TagLookup.instance.GetCasterTag(tagName));
+        var tag = TagLookup.instance.GetCasterTag(tagName);
+        if (tag == null)
+            return false;
+        return ContainsTag(tag);
     }
     public bool ContainsTag(CasterTag tag)
     {
@@ -33,6 +36,12 @@ public class CasterTagDictionary : IEnumerable<CasterTag>
         }
         tags.Add(tag);
         AddWithSubTags(tag);
+    }
+    public void Add(string tagName)
+    {
+        var tag = TagLookup.instance.GetCasterTag(tagName);
+        if (tag != null)
+            Add(tag);
     }
     private void AddWithSubTags(CasterTag tag)
     {

@@ -10,4 +10,9 @@ public abstract class CustomFormula : ScriptableObject
     {
         SpellFxManager.instance.LogMessage(message, image, popupPrefabOverride);
     }
+
+    protected bool MoveDoesDamage(Reaction r)
+    {
+        return r == Reaction.Neutral || r == Reaction.Resist || r == Reaction.Weak;
+    }
 }
