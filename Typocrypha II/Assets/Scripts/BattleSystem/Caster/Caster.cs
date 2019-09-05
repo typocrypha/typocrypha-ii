@@ -106,7 +106,13 @@ public class Caster : FieldObject
         set
         {
             spell = value;
+            // Set spell word (DEBUG)
             ui?.onSpellChanged.Invoke(spell.ToDisplayString());
+            // Set spell icon (gets first rootword)
+            foreach(var spellword in spell)
+                if (spellword is RootWord)
+                    ui?.onSpellIconChanged.Invoke((spellword as RootWord).icon);
+            
         }
     }
     public float ChargeTime { get; set; } // Total time it takes to charge
