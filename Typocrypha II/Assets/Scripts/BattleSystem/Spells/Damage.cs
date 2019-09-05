@@ -272,7 +272,7 @@ public static class Damage
     /// </summary>
     public static void ApplyStaggerDamage(CastResults results, RootWordEffect effect, Caster caster, Caster target)
     {
-        if (target.Stunned)
+        if (target.Stunned || !MoveDoesDamage(results.Effectiveness))
             return;
         target.Stagger -= Mathf.FloorToInt(results.StaggerDamage);
         if (target.Stunned)
@@ -309,5 +309,9 @@ public static class Damage
 
     #endregion
 
+    public static bool MoveDoesDamage(Reaction r)
+    {
+        return r == Reaction.Neutral || r == Reaction.Resist || r == Reaction.Weak;
+    }
 
 }

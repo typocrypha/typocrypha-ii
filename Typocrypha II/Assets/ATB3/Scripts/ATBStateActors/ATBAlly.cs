@@ -22,7 +22,8 @@ namespace ATB3
             set
             {
                 mp = value;
-                Caster.Charge = mp / mpMax;
+                Caster.ChargeTime = mpMax;
+                Caster.Charge = mp;
             }
         }
         private float mp;
@@ -41,7 +42,7 @@ namespace ATB3
                 yield return new WaitWhile(() => Pause || !isCurrentState(ATBStateID.Charge));
                 if (Mp == mpMax)
                     continue;
-                time += Time.fixedDeltaTime;
+                time += Time.fixedDeltaTime * Caster.Stats.CastingSpeedMod;
                 if(time >= mpChargeTime)
                 {
                     ++Mp;

@@ -14,7 +14,7 @@ public class FormulaFinishingBlow : CustomFormula
 
         if ((finishStunned && target.Stunned) || tags.Any((t) => target.HasTag(t)))
         {
-            if (MoveDoesDamage(results.Effectiveness))
+            if (Damage.MoveDoesDamage(results.Effectiveness))
             {
                 results.StaggerDamage = target.Stagger;
                 results.Damage *= finishMultiplier;

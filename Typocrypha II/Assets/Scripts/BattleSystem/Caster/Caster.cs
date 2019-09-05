@@ -70,11 +70,10 @@ public class Caster : FieldObject
         {
             if (Stunned)
                 return;
-            stagger = value;
+            stagger = Mathf.Max(0, value);
             ui?.onStaggerChanged.Invoke(stagger.ToString());
             if (stagger <= 0)
             {
-                stagger = 0;
                 Stunned = true;
             }
 
