@@ -55,6 +55,7 @@ namespace ATB3
         PreCast,
         // Ally-Specific States ∇ 
         CastDisabled,
+        AllyMenu,
     }
 
     //================================================================//

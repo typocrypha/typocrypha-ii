@@ -12,10 +12,10 @@ public class FomulaLuckDmg : CustomFormula
         // Calculate the luck factor and multiply damage by it
         float luckfactor = Damage.CompareStats(caster.Stats.Luck, target.Stats.Luck) * scalingFactor;
         results.Damage *= luckfactor;
-        // Apply the results of the cast in the standard manner
-        Damage.ApplyStandard(results, effect, caster, target);
         // Log some extra messages
         LogMessage(caster.DisplayName + " is feeling lucky!");
+        // Apply the results of the cast in the standard manner
+        Damage.ApplyStandard(results, effect, caster, target);
         return results;
     }
 }

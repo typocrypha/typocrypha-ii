@@ -18,15 +18,20 @@ public class AllyMenu : MonoBehaviour
     public List<Spell> Spells => new List<Spell>() { spellUp, spellLeft, spellRight, spellDown };
     private Text[] spellText;
 
-    public bool CanCast => Spells.Any((s) => s.Cost <= ally.Mp);
-
-    public void Activate(ATB3.ATBStateID state)
+    private void Awake()
     {
         spellText = GetComponentsInChildren<Text>();
+    }
+
+    public bool CanCast => Spells.Any((s) => s.Count != 0 && ally.Mp >= s.Cost);
+
+    public void Activate(ATB3.ATBStateID state)
+    {      
         var spellObjects = Spells;
         for(int i = 0; i < spellText.Length; ++i)
         {
-            spellText[i].gameObject.SetActive(spellObjects.Count > 0);
+            bool active = spellObjects.Count > 0 && ally.Mp >= spellObjects[i].Cost;
+            spellText[i].gameObject.SetActive(active);
             spellText[i].text = spellObjects[i].ToDisplayString();
         }
     }

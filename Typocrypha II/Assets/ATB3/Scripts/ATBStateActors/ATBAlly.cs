@@ -44,6 +44,7 @@ namespace ATB3
                 if(time >= mpChargeTime)
                 {
                     ++Mp;
+                    Debug.Log(Caster.DisplayName + " gains MP!");
                     time = 0;
                 }
             }
@@ -72,7 +73,8 @@ namespace ATB3
                 if (ATBManager.instance.SoloActor.isCurrentState(ATBStateID.BeforeCast))
                     Menu(ATBStateID.BeforeCast);                
                 else if (ATBManager.instance.SoloActor.isCurrentState(ATBStateID.AfterCast))
-                    Menu(ATBStateID.AfterCast);                  
+                    Menu(ATBStateID.AfterCast);
+                StateMachine.PerformTransition(ATBTransition.ToAllyMenu);
             }
         }
 

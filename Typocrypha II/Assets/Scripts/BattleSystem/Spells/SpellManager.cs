@@ -51,7 +51,9 @@ public class SpellManager : MonoBehaviour
                 yield return SpellFxManager.instance.PlayMessages();
             }
             yield break;
-        }          
+        }
+        SpellFxManager.instance.LogMessage(caster.DisplayName + " casts " + spell.ToDisplayString());
+        yield return SpellFxManager.instance.PlayMessages();
         var roots = Modify(spell);
         var casterSpace = Battlefield.instance.GetSpace(caster.FieldPos);
         List<Coroutine> crList = new List<Coroutine>();
