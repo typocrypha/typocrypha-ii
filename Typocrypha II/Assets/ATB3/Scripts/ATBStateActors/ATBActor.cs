@@ -26,7 +26,7 @@ namespace ATB3
             get => ph;
         }
 
-        public void OnPause(bool b)
+        public virtual void OnPause(bool b)
         {
             if(BaseStateMachine.PH != null)
                 BaseStateMachine.PH.Pause = b;
