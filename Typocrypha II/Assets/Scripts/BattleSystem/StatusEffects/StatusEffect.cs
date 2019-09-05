@@ -30,11 +30,17 @@ public abstract class StatusEffect : MonoBehaviour
         }         
         affected.OnAfterHitResolved += OnAfterHit;
         affected.OnAfterCastResolved += OnAfterCastResolved;
+        affected.OnBeforeEffectApplied += OnBeforeAffectApplied;
     }
 
     public abstract void Apply(ApplyStatusEffect effect, Caster caster, Caster target, CastResults data);
 
     public virtual void OnAfterHit(RootWordEffect effect, Caster caster, Caster target, CastResults data)
+    {
+
+    }
+
+    public virtual void OnBeforeAffectApplied(RootWordEffect effect, Caster caster, Caster target, CastResults data)
     {
 
     }
@@ -51,6 +57,7 @@ public abstract class StatusEffect : MonoBehaviour
     {
         affected.OnAfterHitResolved -= OnAfterHit;
         affected.OnAfterCastResolved -= OnAfterCastResolved;
+        affected.OnBeforeEffectApplied -= OnBeforeAffectApplied;
     }
 
     /// <summary>

@@ -15,8 +15,5 @@ public class RootWordEffectInspector : Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("pattern"));
         EditorUtils.Separator();
         effect.tags.DoGUILayout((tag) => EditorGUILayout.LabelField(tag.name), () => effect.tags.ObjPickerAddGUI(), "Tags");
-        serializedObject.ApplyModifiedProperties();
-        if (GUI.changed)
-            EditorUtility.SetDirty(target);
     }
 }

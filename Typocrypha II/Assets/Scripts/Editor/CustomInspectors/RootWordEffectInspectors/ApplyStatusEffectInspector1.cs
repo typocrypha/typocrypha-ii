@@ -14,6 +14,7 @@ public class ApplyStatusEffectInspector : RootWordEffectInspector
         EditorUtils.Separator();
         var effect = target as ApplyStatusEffect;
         effect.statusEffectPrefab = EditorUtils.ObjectField(new GUIContent("Status Effect Prefab"), effect.statusEffectPrefab, false);
+        serializedObject.ApplyModifiedProperties();
         if (GUI.changed)
             EditorUtility.SetDirty(target);
     }

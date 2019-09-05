@@ -19,6 +19,7 @@ public class DamageEffectInspector : RootWordEffectInspector
             EditorGUILayout.PropertyField(serializedObject.FindProperty("customFormula"));
             serializedObject.ApplyModifiedProperties();
         }
+        serializedObject.ApplyModifiedProperties();
         if (GUI.changed)
             EditorUtility.SetDirty(target);
     }
