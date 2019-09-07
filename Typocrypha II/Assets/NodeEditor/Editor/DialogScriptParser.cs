@@ -38,6 +38,7 @@ public class DialogScriptParser : EditorWindow
     readonly string choicePat = @"\<([^\)]*)\>"; // Input choice prompt marker pattern.
     readonly char[] escape = new char[] { '\\' }; // Escape character.
     readonly char[] displayNameChars = new char[] { '"', '“', '”' }; // Characters that could delimit a display name.
+    readonly string googleCommentPat = @"\[\w\]";
 
     // Dialog view labels.
     Dictionary<string, System.Type> viewMap = new Dictionary<string, System.Type>
@@ -59,7 +60,8 @@ public class DialogScriptParser : EditorWindow
         {"setbg", typeof(SetBackgroundNode) },
         {"fade", typeof(FadeNode) },
         {"end", typeof(GameflowEndNode) },
-        {"start" , typeof(GameflowStartNode)}
+        {"start" , typeof(GameflowStartNode)},
+        {"endt", typeof(EndAndTransition) }
     };
 
     AnimationCurve bgmFadeIn = new AnimationCurve(); // Default fade in curve
@@ -145,10 +147,6 @@ public class DialogScriptParser : EditorWindow
     /// </summary>
     void EndCanvas()
     {
-        // Create end node.
-        var endNode = CreateNode(EndAndHide.ID) as EndAndHide;
-        (prev as BaseNodeIO).toNextOUT.TryApplyConnection(endNode.fromPreviousIN, true);
-
         canvas.saveName = assetPath + canvas.name + ".asset";
         NodeEditorSaveManager.SaveNodeCanvas(canvas.saveName, ref canvas, true);
     }
@@ -158,6 +156,7 @@ public class DialogScriptParser : EditorWindow
     {
         string text = textScript.text;
         #region Preprocessing text
+        text = Regex.Replace(text, googleCommentPat, "");
         text = Regex.Replace(text, "/{2}.*?\n", "\n"); // Remove comments
         text = Regex.Replace(text, "/[\x2A].*?[\x2A]/", "", RegexOptions.Singleline); // Remove block comments
         text = Regex.Replace(text, "\r", ""); // Remove carriage returns
@@ -177,6 +176,12 @@ public class DialogScriptParser : EditorWindow
                 Debug.LogError("Line " + (i + 1) + ": Script parsing error");
                 Debug.LogError("Line " + (i + 1) + ": " + lines[i]);
             }
+        }
+        // Create end node (if not already there).
+        if (!(prev is GameflowEndNode))
+        {
+            var endNode = CreateNode(EndAndHide.ID) as EndAndHide;
+            (prev as BaseNodeIO).toNextOUT.TryApplyConnection(endNode.fromPreviousIN, true);
         }
         EndCanvas();
     }
@@ -205,7 +210,14 @@ public class DialogScriptParser : EditorWindow
             foreach(var node in nodes)
             {
                 // Connect to previous
-                (prev as BaseNodeOUT).toNextOUT.TryApplyConnection((node as BaseNodeIO).fromPreviousIN, true);
+                if (node is BaseNodeIO)
+                {
+                    (prev as BaseNodeOUT).toNextOUT.TryApplyConnection((node as BaseNodeIO).fromPreviousIN, true);
+                }
+                else
+                {
+                    (prev as BaseNodeOUT).toNextOUT.TryApplyConnection((node as GameflowEndNode).fromPreviousIN, true);
+                }
                 prev = node;
             }
         }
@@ -269,6 +281,12 @@ public class DialogScriptParser : EditorWindow
             gnode.fadeType = args[1] == "in" ? FadeNode.FadeType.Fade_In : FadeNode.FadeType.Fade_Out;
             gnode.fadeTime = float.Parse(args[2]);
             gnode.fadeColor = new Color(float.Parse(args[3]), float.Parse(args[4]), float.Parse(args[5]), 1f);
+            nodes.Add(gnode);
+        }
+        else if (nodeType == typeof(EndAndTransition))
+        {
+            var gnode = CreateNode(EndAndTransition.ID) as EndAndTransition;
+            gnode.nextScene = args[1];
             nodes.Add(gnode);
         }
         return nodes;
