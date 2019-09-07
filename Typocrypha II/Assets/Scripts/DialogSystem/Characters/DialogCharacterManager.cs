@@ -40,7 +40,6 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
 
     public static DialogCharacterManager instance = null;
     public GameObject characterPrefab; // Prefab of dialog character object
-    public GameObject characterPrefabAyinCodec; // Prefab for ayin's codec object
 
     Dictionary<string, DialogCharacter> characterMap; // Map of string ids to characters in scene.
     static AssetBundle characterDataBundle; // All character data assets.
@@ -75,16 +74,7 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
     /// <returns>Reference to created character.</returns>
     public DialogCharacter AddCharacter(CharacterData data, string baseSprite, string expression, Vector2 pos)
     {
-        GameObject go;
-        if (data.aliases.Contains("Ayin")) // Codec position for ayin's character
-        {
-            go = Instantiate(characterPrefabAyinCodec, transform);
-            pos = new Vector2(-7f, -5f);
-        }
-        else
-        {
-            go = Instantiate(characterPrefab, transform);
-        }
+        GameObject go = Instantiate(characterPrefab, transform);
         go.transform.position = pos;
         DialogCharacter dc = go.GetComponent<DialogCharacter>();
         characterMap[data.name] = dc;
@@ -209,15 +199,8 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
     /// <returns>DialogCharacter component of selected character.</returns>
     public DialogCharacter ChangeExpression(CharacterData data, string expression)
     {
-        if (data.expressions.ContainsKey(expression))
-        {
-            characterMap[data.name].ExprSprite = data.expressions[expression];
-            characterMap[data.name].saveData.expression = expression;
-        }
-        else
-        {
-            Debug.LogError("No such expression:" + expression);
-        }
+        characterMap[data.name].ExprSprite = data.expressions[expression];
+        characterMap[data.name].saveData.expression = expression;
         return characterMap[data.name];
     }
 
@@ -231,16 +214,9 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
     /// <returns>DialogCharacter component of selected character.</returns>
     public DialogCharacter ChangeBCH(CharacterData data, string body, string clothes, string hair)
     {
-        try
-        {
-            if (body != "") characterMap[data.name].BodySprite = data.bodies[body];
-            if (clothes != "") characterMap[data.name].ClothesSprite = data.clothes[clothes];
-            if (hair != "") characterMap[data.name].HairSprite = data.hair[hair];
-        }
-        catch
-        {
-            Debug.LogError("No such pose:" + body);
-        }
+        if (body != "") characterMap[data.name].BodySprite = data.bodies[body];
+        if (clothes != "") characterMap[data.name].ClothesSprite = data.clothes[clothes];
+        if (hair != "") characterMap[data.name].HairSprite = data.hair[hair];
         return characterMap[data.name];
     }
 
@@ -252,7 +228,6 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
     /// <returns>DialogCharacter component of selected character.</returns>
     public DialogCharacter HighlightCharacter(CharacterData data, bool on)
     {
-        Debug.Log(data.name);
         characterMap[data.name].Highlight(on);
         return characterMap[data.name];
     }
@@ -318,9 +293,6 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
         }
     }
 
-    // Used for memoizing character data 
-    Dictionary<string, CharacterData> memoizeCD = new Dictionary<string, CharacterData>();
-
     /// <summary>
     /// Finds character data (in scene) that matches given alias.
     /// Will return null if alias exists, but that character isn't in the scene.
@@ -329,21 +301,11 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
     /// <returns>CharacterData found. 'null' if none found.</returns>
     public CharacterData CharacterDataByName(string alias)
     {
-        if (memoizeCD.ContainsKey(alias))
+        if (characterDataBundle.Contains(alias))
         {
-            return memoizeCD[alias];
-        }
-        else
-        {
-            foreach(var cd in characterDataBundle.LoadAllAssets<CharacterData>())
-            {
-                if (cd.aliases.Contains(alias))
-                {
-                    memoizeCD[alias] = cd;
-                    return cd;
-                }
-            }
-        }
+            var cdata = characterDataBundle.LoadAsset<CharacterData>(alias);
+            if (characterMap.ContainsKey(cdata.aliases.First())) return cdata;
+        }    
         return null;
     }
 }
