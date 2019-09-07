@@ -30,14 +30,14 @@ public class Battlefield : MonoBehaviour, IPausable
         }
         else
         {
-            if (ATBManager.soloStack.Count == 0)
+            if (!ATBManager.Instance.InSolo)
             {
                 foreach (var actor in Actors)
                     if (actor != null) actor.Pause = false;
             }
             else
             {
-                ATBManager.soloStack.Peek().Pause = false;
+                ATBManager.Instance.SoloActor.Pause = false;
             }
         }
     }
