@@ -14,6 +14,7 @@ public class RootWord : SpellWord
     #endregion
 
     public List<RootWordEffect> effects = new List<RootWordEffect>();
+    public Sprite icon; // Icon displayed when charging up spell.
     public override SpellWord Clone()
     {
         var clone = Instantiate(this);

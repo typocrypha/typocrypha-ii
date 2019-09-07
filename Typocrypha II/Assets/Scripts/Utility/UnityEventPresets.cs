@@ -13,3 +13,5 @@ public class UnityEvent_float : UnityEvent<float> { }
 public class UnityEvent_string : UnityEvent<string> { }
 [System.Serializable]
 public class UnityEvent_bool : UnityEvent<bool> { }
+[System.Serializable]
+public class UnityEvent_sprite : UnityEvent<Sprite> { }
