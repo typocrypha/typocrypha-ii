@@ -15,6 +15,7 @@ public class AddTagsEffectInspector : RootWordEffectInspector
         var effect = target as AddTagsEffect;
         void kGUI(CasterTag t) => EditorGUILayout.LabelField(t.internalName);
         effect.casterTagsToAdd.DoGUILayout(kGUI,() => effect.casterTagsToAdd.ObjPickerAddGUI(), "C Tags To Add");
+        serializedObject.ApplyModifiedProperties();
         if (GUI.changed)
             EditorUtility.SetDirty(target);
     }

@@ -14,7 +14,7 @@ namespace ATB3
         // Call upon entering given state
         public override void OnEnter()
         {
-            ATBManager.Instance.EnterSolo(Owner);
+            ATBManager.instance.EnterSolo(Owner);
             var caster = Owner.GetComponent<Caster>();
             FaderManager.instance.FadeTargets(caster.Spell, caster.FieldPos, caster.TargetPos);
             Owner.isCast = true;
@@ -25,7 +25,7 @@ namespace ATB3
         public override void OnUpdate()
         {
             timer += Time.fixedDeltaTime;
-            if (timer >= 1f)
+            if (timer >= ATBAlly.activationWindow)
                 Source.PerformTransition(ATBTransition.ToCast);
         }
 

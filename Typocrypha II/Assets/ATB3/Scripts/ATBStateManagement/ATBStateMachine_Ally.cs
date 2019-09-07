@@ -24,12 +24,12 @@ namespace ATB3
         protected override void InitializeStates()
         {
             AddState(new ATBStateAlly_Charge() { Owner = Owner, Source = this });
-            AddState(new ATBStateAlly_AllyMenu() { Owner = Owner, Source = this });
             AddState(new ATBStateAlly_BeforeCast() { Owner = Owner, Source = this });
             AddState(new ATBStateAlly_Cast() { Owner = Owner, Source = this });
             AddState(new ATBStateAlly_AfterCast() { Owner = Owner, Source = this });
             AddState(new ATBStateAlly_CastDisabled() { Owner = Owner, Source = this });
             AddState(new ATBStateAlly_Stunned() { Owner = Owner, Source = this });
+            AddState(new ATBStateAlly_Menu() { Owner = Owner, Source = this });
         }
 
         // Appends the machine's transitions to the given transition map (should be called on awake)
@@ -43,7 +43,7 @@ namespace ATB3
             AddTransition(ATBTransition.ToCast, ATBStateID.Cast);                // If finishing beforecast, go into cast state
             AddTransition(ATBTransition.ToAfterCast, ATBStateID.AfterCast);      // If performed spell, go into aftercast state
             AddTransition(ATBTransition.ToCharge, ATBStateID.Charge);            // If ready to charge spell again, go into charge state
-            AddTransition(ATBTransition.ToAllyMenu, ATBStateID.AllyMenu);        // Go to ally menu.
+            AddTransition(ATBTransition.ToAllyMenu, ATBStateID.AllyMenu);            // Go to menu
         }
     }
 }

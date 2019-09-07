@@ -6,25 +6,24 @@ namespace ATB3
 {
     public class ATBStatePlayer_AfterCast : ATBState<ATBPlayer>
     {
-        float time = 0f;
+        float timer = 0f;
 
         // The ID for this specific ATBState
-        public override ATBStateID StateID { get { return ATBStateID.AfterCast; } }
+        public override ATBStateID StateID => ATBStateID.AfterCast;
 
         // Call upon entering given state
         public override void OnEnter()
         {
             //Debug.Log("PLAYER " + this.Owner.actorName + " has ENTERED the AFTERCAST state!");
-            time = 0f;
+            timer = 0f;
         }
 
         // Call on fixed update while in given state
         public override void OnUpdate()
         {
-            if (time < 1f) time += Time.fixedDeltaTime;
-            else
+            timer += Time.fixedDeltaTime;
+            if (timer >= ATBAlly.activationWindow)
                 Source.PerformTransition(ATBTransition.ToIdle);
-            return;
         }
 
         // Call upon exiting given state
@@ -32,7 +31,7 @@ namespace ATB3
         {
             //Debug.Log("PLAYER " + this.Owner.actorName + " has EXITED the BEFORECAST state!");
             FaderManager.instance.FadeAll(0f, Color.black);
-            ATBManager.Instance.ExitSolo(this.Owner);
+            ATBManager.instance.ExitSolo(this.Owner);
         }
     }
 }

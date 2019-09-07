@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ATB3
 {
-    public class ATBStateAlly_AllyMenu : ATBState<ATBAlly>
+    public class ATBStateAlly_Menu : ATBState<ATBAlly>
     {
         // The ID for this specific ATBState
         public override ATBStateID StateID { get { return ATBStateID.AllyMenu; } }
@@ -12,7 +12,7 @@ namespace ATB3
         // Call upon entering given state
         public override void OnEnter()
         {
-            ATBManager.Instance.EnterSolo(Owner);
+
         }
 
         // Call on fixed update while in given state

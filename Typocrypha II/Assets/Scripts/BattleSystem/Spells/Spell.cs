@@ -17,6 +17,8 @@ public class Spell : IList<SpellWord>
 
     public string ToDisplayString()
     {
+        if (items.Count == 0)
+            return string.Empty;
         return items.Select((s) => s.internalName.ToUpper()).Aggregate((a, b) => a + "-" + b);
     }
 

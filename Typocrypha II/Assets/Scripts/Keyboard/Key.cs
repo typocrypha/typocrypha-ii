@@ -47,6 +47,7 @@ namespace Typocrypha
             go.transform.localPosition = Vector3.zero;
             var effect = go.GetComponent<KeyEffect>();
             effect.key = this;
+            effect.Register(letter);
             onPress += effect.OnPress;
             effect.OnStart();
         }

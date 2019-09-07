@@ -19,8 +19,8 @@ namespace Typocrypha
         public void OnPause(bool b)
         {
             enabled = !b;
-            foreach (var effect in allEffects)
-                effect.PH.Pause = b;
+            foreach (var kvp in allEffects)
+                kvp.Value.PH.Pause = b;
         }
         #endregion
 
@@ -30,7 +30,7 @@ namespace Typocrypha
         public CastBar castBar;
         public Dictionary<char, Key> keyMap; // Map from characters to keyboard keys.
         public Transform keys; // Object that holds all the key objects.
-        public HashSet<KeyEffect> allEffects; // All active key effects on keyboard (managed by individual effects).
+        public Dictionary<char, KeyEffect> allEffects; // All active key effects on keyboard (managed by individual effects).
         public HashSet<char> unaffectedKeys; // All keys not currently affected by a key effect
 
         void Awake()
@@ -47,7 +47,7 @@ namespace Typocrypha
             ph = new PauseHandle(OnPause);
 
             keyMap = new Dictionary<char, Key>();
-            allEffects = new HashSet<KeyEffect>();
+            allEffects = new Dictionary<char, KeyEffect>();
             unaffectedKeys = new HashSet<char>();
             GetComponent<KeyboardBuilder>().BuildKeyboard(); // Construct keyboard.
             foreach(Key key in keys.GetComponentsInChildren<Key>()) 
@@ -123,17 +123,19 @@ namespace Typocrypha
         /// <param name="effectPrefab">Prefab of effect (contains functionality and visual/audio effects.</param>
         /// <param name="times">Number of times to attempt application.</param>
         /// <returns>The number of times the effect was sucessfully applied</returns>
-        public int ApplyEffectRandom(GameObject effectPrefab, int times = 1)
+        public string ApplyEffectRandom(GameObject effectPrefab, int times = 1)
         {
             int numKeysPerEffect = effectPrefab.GetComponent<KeyEffect>().NumAffectedKeys;
+            string affected = string.Empty;
             for (int i = 0; i < times; ++i)
             {
                 if (numKeysPerEffect > unaffectedKeys.Count)
-                    return i;
+                    return affected;
                 char key = GetRandomUnaffectedKey();
                 ApplyEffect(key.ToString(), effectPrefab);
+                affected += key;
             }
-            return times;
+            return affected;
         }
         /// <summary>
         /// Apply an effect to a random key x times by an effect name.
@@ -141,7 +143,7 @@ namespace Typocrypha
         /// <param name="effectName">Name of prefab of effect.</param>
         /// <param name="times">Number of times to attempt application.</param>
         /// <returns></returns>
-        public int ApplyEffectRandom(string effectName, int times = 1)
+        public string ApplyEffectRandom(string effectName, int times = 1)
         {
             return ApplyEffectRandom(allEffectPrefabs.Find(c => c.name == effectName), times);
         }
@@ -155,6 +157,30 @@ namespace Typocrypha
             if (unaffectedKeys.Count <= 0)
                 return randomKeyFail;
             return RandomUtils.RandomU.instance.Choice(unaffectedKeys);
+        }
+        /// <summary>
+        /// Remove an effect from one or more keys
+        /// </summary>
+        /// <param name="keys">each character in this string will have its effect removed</param>
+        public void RemoveEffect(string keys)
+        {
+            foreach (char c in keys)
+            {
+                if (unaffectedKeys.Contains(c))
+                    continue;
+                allEffects[c].Remove();
+            }
+        }
+
+        /// <summary>
+        /// Removes all key effects
+        /// </summary>
+        public void Clear()
+        {
+            foreach(var kvp in allEffects)
+            {
+                kvp.Value.Remove();
+            }
         }
     }
 }

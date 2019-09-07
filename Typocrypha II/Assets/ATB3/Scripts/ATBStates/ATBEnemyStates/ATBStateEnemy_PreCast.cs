@@ -28,7 +28,7 @@ namespace ATB3
                 // Add lose cast on stun behavior here
                 Source.PerformTransition(ATBTransition.ToStun);
             }
-            if (timer >= 1.0f && !ATBManager.Instance.InSolo)
+            if (timer >= 1.0f && !ATBManager.instance.InSolo)
                 Source.PerformTransition(ATBTransition.ToBeforeCast);
             return;
         }

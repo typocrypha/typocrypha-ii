@@ -21,7 +21,12 @@ namespace Typocrypha
         void Awake()
         {
             ph = new PauseHandle(OnPause);
-            Keyboard.instance.allEffects.Add(this);
+            
+        }
+
+        public void Register(char key)
+        {
+            Keyboard.instance.allEffects.Add(key, this);
         }
 
         /// <summary>
@@ -50,7 +55,7 @@ namespace Typocrypha
         public void Remove()
         {
             Reset();
-            Keyboard.instance.allEffects.Remove(this);
+            Keyboard.instance.allEffects.Remove(key.letter);
             MarkUnaffected(key.letter);
             Destroy(gameObject);
         }

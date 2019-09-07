@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class StatusRemoveAfterHitOrCast : StatusEffect
+public class StatusRemoveAfterHitOrCast : StatusEffect
 {
     public bool removeFromHits = true;
     public int hitsToRemove = 1;
@@ -41,5 +41,10 @@ public abstract class StatusRemoveAfterHitOrCast : StatusEffect
         }
         if(++casts >= castsToRemove)
             Remove();
+    }
+
+    public override void Apply(ApplyStatusEffect effect, Caster caster, Caster target, CastResults data)
+    {
+        return;
     }
 }

@@ -20,7 +20,7 @@ namespace ATB3
             FaderManager.instance.FadeTargets(Owner.Caster.Spell, Owner.Caster.FieldPos, Owner.Caster.TargetPos);
             Owner.GetComponent<FaderGroup>().FadeAmount = 0f;
             Owner.GetComponent<Animator>().SetTrigger("BeforeCast");
-            ATBManager.Instance.EnterSolo(Owner);
+            ATBManager.instance.EnterSolo(Owner);
             Owner.isCast = true;
             timer = 0f;
         }
@@ -31,9 +31,8 @@ namespace ATB3
         public override void OnUpdate()
         {
             timer += Time.fixedDeltaTime;
-            if (timer >= 0.8f)
+            if (timer >= ATBAlly.activationWindow)
                 Source.PerformTransition(ATBTransition.ToCast);
-            return;
         }
 
         // Call upon exiting given state

@@ -12,7 +12,7 @@ public class CasterStats
 
     public float CastingSpeedMod
     {
-        get => 1 + spd.Value / statMax;
+        get => Damage.CompareStats(spd.Value, 0);
     }
 
     #region Resources

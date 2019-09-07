@@ -51,16 +51,22 @@ public class SpellManager : MonoBehaviour
                 yield return SpellFxManager.instance.PlayMessages();
             }
             yield break;
-        }          
+        }
+        SpellFxManager.instance.LogMessage(caster.DisplayName + " casts " + spell.ToDisplayString());
+        yield return SpellFxManager.instance.PlayMessages();
         var roots = Modify(spell);
         var casterSpace = Battlefield.instance.GetSpace(caster.FieldPos);
         List<Coroutine> crList = new List<Coroutine>();
         foreach (var root in roots)
         {
+            // Log the effect of each effect
+            var rootResults = new RootCastResults();
             foreach (var effect in root.effects)
             {
                 // Get the effect's targets
                 var targets = effect.pattern.Target(caster.FieldPos, target);
+                // Log the effect of each effect
+                var effectResults = new List<CastResults>();
                 crList.Clear();                
                 foreach (var t in targets)
                 {                   
@@ -77,12 +83,14 @@ public class SpellManager : MonoBehaviour
                         // Apply OnCast Callbacks
                         caster.OnBeforeCastResolved?.Invoke(effect, caster, targetCaster);
                         // Cast the effect
-                        var castResults = effect.Cast(caster, targetCaster);
+                        var castResults = effect.Cast(caster, targetCaster, rootResults);
                         // Apply OnHit Callbacks (Updates AI)
                         targetCaster.OnAfterHitResolved?.Invoke(effect, caster, targetCaster, castResults);
                         // Play Effects
                         var fx = new SpellFxData[] { root.leftMod?.fx, effect.fx, root.rightMod?.fx };
                         crList.Add(SpellFxManager.instance.Play(fx, castResults, targetSpace, casterSpace));
+                        // Log the results of this target
+                        effectResults.Add(castResults);
                         // Wait for delay between targets
                         yield return new WaitForSeconds(delayBetweenTargets);
                     }                 
@@ -97,7 +105,17 @@ public class SpellManager : MonoBehaviour
                 }
                 // Apply callbacks after the whole cast is finished
                 caster.OnAfterCastResolved?.Invoke(spell, caster);
+                // Log the effects of this effect
+                rootResults.Add(effectResults);
             }
         }
     }
+}
+
+/// <summary>
+/// A class to store the results of the effects of an entire root
+/// </summary>
+public class RootCastResults : List<List<CastResults>>
+{
+    public List<CastResults> LastEffect => this[Count - 1];
 }

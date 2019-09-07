@@ -5,7 +5,7 @@ using UnityEngine;
 public class AddTagsEffect : RootWordEffect
 {
     public CasterTag.TagSet casterTagsToAdd = new CasterTag.TagSet();
-    public override CastResults Cast(Caster caster, Caster target)
+    public override CastResults Cast(Caster caster, Caster target, RootCastResults prevResults = null)
     {
         CastResults results = new CastResults(caster, target);
         foreach(var t in casterTagsToAdd)

@@ -8,24 +8,28 @@ namespace ATB3
     [RequireComponent(typeof(ATBStateMachine_Ally))]
     public partial class ATBAlly : ATBActor
     {
+        public const float activationWindow = 0.5f;
         public ATBStateMachine_Ally StateMachine { get; private set; }
         public override IATBStateMachine BaseStateMachine => StateMachine;
         public Caster Caster { get; private set; }
-        public KeyCode menuKey; // Key to open ally menu.
         public AllyMenu allyMenu; // Ally menu (for choosing spell).
+        public GameObject menuPrompt;
         public int mpMax;
         public float mpChargeTime;
-        private float mp;
         public float Mp
         {
             get => mp;
             set
             {
                 mp = value;
-                Caster.Charge = mp / mpMax;
+                Caster.ChargeTime = mpMax;
+                Caster.Charge = mp;
             }
         }
+        private float mp;
 
+        private static readonly Battlefield.Position leftAllyPos  = new Battlefield.Position(1, 0);
+        private static readonly Battlefield.Position rightAllyPos = new Battlefield.Position(1, 2);
 
         // Incrementally charges 
         IEnumerator ChargeCR()
@@ -38,10 +42,11 @@ namespace ATB3
                 yield return new WaitWhile(() => Pause || !isCurrentState(ATBStateID.Charge));
                 if (Mp == mpMax)
                     continue;
-                time += Time.fixedDeltaTime;
+                time += Time.fixedDeltaTime * Caster.Stats.CastingSpeedMod;
                 if(time >= mpChargeTime)
                 {
                     ++Mp;
+                    Debug.Log(Caster.DisplayName + " gains MP!");
                     time = 0;
                 }
             }
@@ -49,14 +54,40 @@ namespace ATB3
 
         void Update()
         {
-            if (Pause || isCast || !ATBManager.Instance.InSolo)
-                return;
-            if (Input.GetKeyDown(menuKey) && allyMenu.CanCast)
+            // return if we are not currently an ally, if we are currently casting, have an open ally menu,
+            // We are not currently in solo, or if we don't have enough MP to cast anything
+            if (Caster.CasterState != Caster.State.Ally || isCast 
+                || allyMenu.gameObject.activeSelf || !ATBManager.instance.InSolo || !allyMenu.CanCast)
             {
-                if (ATBManager.Instance.SoloActor.isCurrentState(ATBStateID.BeforeCast))
-                    Menu(ATBStateID.BeforeCast);
-                else if (ATBManager.Instance.SoloActor.isCurrentState(ATBStateID.AfterCast))
-                    Menu(ATBStateID.AfterCast);
+                menuPrompt.SetActive(false);
+                return;
+            }
+  
+            // Calculate ally key
+            KeyCode menuKey;
+            if (Caster.FieldPos == leftAllyPos)
+                menuKey = KeyCode.LeftArrow;
+            else if (Caster.FieldPos == rightAllyPos)
+                menuKey = KeyCode.RightArrow;
+            else
+            {
+                menuPrompt.SetActive(false);
+                return;
+            }
+               
+            var state = ATBManager.instance.SoloActor.BaseStateMachine.CurrentStateID;
+            if (state != ATBStateID.BeforeCast && state != ATBStateID.AfterCast)
+            {
+                menuPrompt.SetActive(false);
+                return;
+            }
+
+            menuPrompt.SetActive(true);
+            // Actually test for the key
+            if (Input.GetKeyDown(menuKey))
+            {
+                Menu(state);
+                StateMachine.PerformTransition(ATBTransition.ToAllyMenu);
             }
         }
 
@@ -79,8 +110,7 @@ namespace ATB3
         /// </summary>
         public void Menu(ATBStateID state)
         {
-            ATBManager.Instance.EnterSolo(this);
-            StateMachine.PerformTransition(ATBTransition.ToAllyMenu);
+            ATBManager.instance.EnterSolo(this);
             allyMenu.gameObject.SetActive(true);
             allyMenu.Activate(state);
         }
@@ -92,7 +122,14 @@ namespace ATB3
         {
             Mp -= spell.Cost;
             Caster.Spell = spell;
+            Caster.TargetPos = Battlefield.instance.Player.TargetPos;
             StateMachine.PerformTransition(ATBTransition.ToBeforeCast);
+        }
+        public override void OnPause(bool b)
+        {
+            base.OnPause(b);
+            if(b)
+                menuPrompt.SetActive(false);
         }
     }
 }

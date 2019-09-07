@@ -14,14 +14,18 @@ public class TagLookup : MonoBehaviour
         else
             Destroy(gameObject);
     }
-
+    /// <summary>
+    /// If the string is a valid spell tag, returns it (else returns null)
+    /// </summary>
     public SpellTag GetSpellTag(string name)
     {
         if (spellTagBundle.tags.ContainsKey(name))
             return spellTagBundle.tags[name];
         return null;
     }
-
+    /// <summary>
+    /// If the string is a valid caster tag, returns it (else returns null)
+    /// </summary>
     public CasterTag GetCasterTag(string name)
     {
         if (casterTagBundle.tags.ContainsKey(name))
