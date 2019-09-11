@@ -11,54 +11,41 @@ public class AllyMenu : MonoBehaviour
 {
     public ATB3.ATBAlly ally; // Ally this menu is for.
 
-    public Spell spellUp;
-    public Spell spellLeft;
-    public Spell spellRight;
-    public Spell spellDown;
-    public List<Spell> Spells => new List<Spell>() { spellUp, spellLeft, spellRight, spellDown };
-    private Text[] spellText;
+    public List<Spell> Spells;
+    private Button[] spellButtons;
 
     private void Awake()
     {
-        spellText = GetComponentsInChildren<Text>();
+        spellButtons = GetComponentsInChildren<Button>();
     }
 
     public bool CanCast => Spells.Any((s) => s.Count != 0 && ally.Mp >= s.Cost);
 
     public void Activate(ATB3.ATBStateID state)
-    {      
-        var spellObjects = Spells;
-        for(int i = 0; i < spellText.Length; ++i)
+    {
+        bool toggle = true;
+        for(int i = 0; i < spellButtons.Length; ++i)
         {
-            bool active = spellObjects.Count > 0 && ally.Mp >= spellObjects[i].Cost;
-            spellText[i].gameObject.SetActive(active);
-            spellText[i].text = spellObjects[i].ToDisplayString();
+            bool active = Spells.Count > i && ally.Mp >= Spells[i].Cost;
+            spellButtons[i].gameObject.SetActive(active);
+            spellButtons[i].GetComponentInChildren<Text>().text = Spells[i].ToDisplayString();
+            // Select first available spell.
+            if (active && toggle)
+            {
+                toggle = false;
+                spellButtons[i].Select();
+            }
         }
     }
 
-    void Update()
+    public void Cast(int index)
     {
-        Spell cast = null;
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        Spell cast = Spells[index];
+        if (cast != null && cast.Count > 0 && ally.Mp >= cast.Cost)
         {
-            cast = spellUp;
-        }
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            cast = spellRight;
-        }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            cast = spellLeft;
-        }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            cast = spellDown;
-        }
-        if(cast != null && cast.Count > 0 && ally.Mp >= cast.Cost)
-        {        
             ally.Cast(cast);
             gameObject.SetActive(false);
         }
     }
+
 }
