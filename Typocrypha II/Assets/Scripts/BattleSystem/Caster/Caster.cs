@@ -180,12 +180,12 @@ public class Caster : FieldObject
 
     protected void Awake()
     {
+        if (ui == null) ui = GetComponentInChildren<CasterUI>();
         tags.RecalculateAggregate();
         Health = Stats.MaxHP;
         Armor = Stats.MaxArmor;
         SP = Stats.MaxSP;
         Stagger = Stats.MaxStagger;
-        if (ui == null) ui = GetComponentInChildren<CasterUI>();
     }
 
     [System.Serializable] private class StatusEffectDict : SerializableDictionary<CasterTag, StatusEffect> { }
