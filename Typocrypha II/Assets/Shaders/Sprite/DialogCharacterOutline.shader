@@ -72,7 +72,7 @@
 							(composite(IN.texcoord - y_dist).a > 0)) 
 							{
 								c.rgb = _OutlineColor.rgb * (1 - _FadeAmount) + (_FadeAmount * _FadeColor.rgb);
-								c.a = 1;
+								c.a = 0.5;
 							}
 							
 					}

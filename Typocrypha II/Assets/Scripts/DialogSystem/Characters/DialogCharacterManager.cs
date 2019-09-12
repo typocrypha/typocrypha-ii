@@ -253,7 +253,6 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
     /// <returns>DialogCharacter component of selected character.</returns>
     public DialogCharacter HighlightCharacter(CharacterData data, bool on)
     {
-        Debug.Log(data.name);
         characterMap[data.name].Highlight(on);
         return characterMap[data.name];
     }

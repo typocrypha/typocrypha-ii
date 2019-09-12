@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using System.Linq;
 
 /// <summary>
@@ -23,6 +24,7 @@ public class AllyMenu : MonoBehaviour
 
     public void Activate(ATB3.ATBStateID state)
     {
+        AllyDisplay.instance.gameObject.SetActive(true);
         bool toggle = true;
         for(int i = 0; i < spellButtons.Length; ++i)
         {
@@ -45,7 +47,27 @@ public class AllyMenu : MonoBehaviour
         {
             ally.Cast(cast);
             gameObject.SetActive(false);
+            AllyDisplay.instance.gameObject.SetActive(false);
         }
     }
 
+    /// <summary>
+    /// Updates display to show currently selected spell's description.
+    /// </summary>
+    public void UpdateDescription()
+    {
+        for (int i = 0; i < spellButtons.Length; ++i)
+        {
+            if (EventSystem.current.currentSelectedGameObject == spellButtons[i].gameObject)
+            {
+                AllyDisplay.instance.descriptionText.text = Spells[i][0].description;
+                return;
+            }
+        }
+    }
+
+    void Update()
+    {
+        UpdateDescription();
+    }
 }
