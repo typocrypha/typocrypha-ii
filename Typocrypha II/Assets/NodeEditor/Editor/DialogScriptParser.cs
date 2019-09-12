@@ -316,25 +316,17 @@ public class DialogScriptParser : EditorWindow
             var cd = GetCharacterData(currname);
             cds.Add(cd);
             #region Expression and pose
-            string expr = ""; // Expression string (value within parentheticals)
-            string pose = ""; // Pose string [value within square brackets]
+            string expr = string.Empty; // Expression string (value within parentheticals)
+            string pose = string.Empty; // Pose string [value within square brackets]
             if (cline.Contains(poseMarker[0])) // Pose
             {
                 pose = Regex.Match(cline, posePat).Value;
                 pose = pose.Substring(1, pose.Length - 2);
             }
-            else
-            {
-                pose = "base"; // Default pose.
-            }
             if (cline.Contains(exprMarker[0])) // Expression
             {
                 expr = Regex.Match(cline, exprPat).Value;
                 expr = expr.Substring(1, expr.Length - 2);
-            }
-            else
-            {
-                expr = "normal"; // Default expression.
             }
             exprs.Add(expr);
             poses.Add(pose);
@@ -352,14 +344,21 @@ public class DialogScriptParser : EditorWindow
             {
                 if (cds[i] != null)
                 {
-                    var hnode = CreateNode(SetPose.ID) as SetPose;
-                    hnode.characterData = cds[i];
-                    hnode.pose = poses[i];
-                    nodes.Add(hnode);
-                    var gnode = CreateNode(SetExpression.ID) as SetExpression;
-                    gnode.characterData = cds[i];
-                    gnode.expr = exprs[i];
-                    nodes.Add(gnode);
+                    if(!string.IsNullOrEmpty(poses[i]))
+                    {
+                        var hnode = CreateNode(SetPose.ID) as SetPose;
+                        hnode.characterData = cds[i];
+                        hnode.pose = poses[i];
+                        nodes.Add(hnode);
+                    }
+                    if(!string.IsNullOrEmpty(exprs[i]))
+                    {
+                        var gnode = CreateNode(SetExpression.ID) as SetExpression;
+                        gnode.characterData = cds[i];
+                        gnode.expr = exprs[i];
+                        nodes.Add(gnode);
+                    }
+
                 }
             }
             // Create dialog node
