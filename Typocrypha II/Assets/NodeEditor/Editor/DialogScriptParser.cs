@@ -266,12 +266,13 @@ public class DialogScriptParser : EditorWindow
         else if (nodeType == typeof(SetBackgroundNode))
         {
             var gnode = CreateNode(SetBackgroundNode.ID) as SetBackgroundNode;
-            gnode.bgType = (args[1] == "sprite") ? SetBackgroundNode.BgType.Sprite 
+            gnode.bgType = (args[1].ToLower() == "sprite") ? SetBackgroundNode.BgType.Sprite 
                                                  : SetBackgroundNode.BgType.Prefab;
-            string path = (args[1] == "sprite") ? AssetDatabase.FindAssets(args[2], AssetDatabase.GetSubFolders("Assets/Graphics/Sprites/Backgrounds"))[0] 
+            string path = (args[1].ToLower() == "sprite") ? AssetDatabase.FindAssets(args[2], AssetDatabase.GetSubFolders("Assets/Graphics/Sprites/Backgrounds"))[0] 
                                                 : AssetDatabase.FindAssets(args[2], AssetDatabase.GetSubFolders("Assets/Prefabs/Backgrounds"))[0];
             path = AssetDatabase.GUIDToAssetPath(path);
-            if (args[1] == "sprite") gnode.bgSprite = AssetDatabase.LoadAssetAtPath<Sprite>(path);
+            Debug.Log("bg:" + path);
+            if (args[1].ToLower() == "sprite") gnode.bgSprite = AssetDatabase.LoadAssetAtPath<Sprite>(path);
             else                     gnode.bgPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
             nodes.Add(gnode);
         }
