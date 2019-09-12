@@ -1,0 +1,288 @@
+﻿/* Begin Scene Documentation
+Status
+* Script Status: first draft (no review)
+* DSP status: Formatted with new assets, untested in engine
+* Scriptwriter: Tino
+Character List:
+* Ayin (Ein)
+* Adelai
+* Clarke
+Setting List:
+* Ayin’s house
+Information communicated to the player:
+* They have a house
+* They are in the military now (a militia)
+Premise:
+* Ayin and Adelai rejoice at being safe and decide to leave as soon as possible. In the aftermath of the battle with Adrestia, they receive a notification on their typocrypha that they have been drafted
+Outline
+* Adelai and ayin are glad they are alive
+* Clarke gives them an alert that they have been drafted into the militia
+* Draft evaders will be found and put in prison
+* They are forced to report to the briefing
+
+
+
+
+
+
+End Scene Documentation */
+
+
+>start,ACT I-4: And Then We Became Heroes
+
+
+>fade,out,0,1,1,1
+
+
+>setbg,Sprite,BgAyinRoom
+
+
+>addchar,adelai,0,0
+
+
+>addchar,Ayin,0,0
+
+
+>playbgm,BGMSomber2
+
+
+>fade,in,3,1,1,1
+
+
+Ein (normal): Alright. Your futon’s all rolled out.
+
+
+Adelai (caring): Thanks for letting me stay here so often.
+
+
+Ein (happy): Keep it up, and Ivan might ask you to pay rent.
+
+
+Adelai (serious): Where is he?
+
+
+Ein (nervous): I don’t know. I’m sure he’ll be here in the morning.
+
+
+Ein: (He isn’t usually out this late. I hope he’s ok.)
+
+
+Adelai (defeated): Well, we never got him any leftovers anyway.
+
+
+Ein (concerned): (She looks so sad. I hate seeing her like this.)
+
+
+Ein (normal): Come on. We should get some rest.[a]
+
+
+Adelai (defeated): Honestly, I don’t know if I’ll be able to get to sleep.
+
+
+Adelai: I feel like I’m floating.
+
+
+Adelai: We could’ve died back there.
+
+
+Adelai: We probably should’ve died back there.
+
+
+Adelai: And you know me, I already have insomnia.
+
+
+Ein: (She’ll fall asleep eventually.) 
+
+
+Ein: (Usually I try to fall asleep before her, so the snoring doesn’t keep me up.)
+
+
+Ein: (I’d rather not think about almost dying, but I think she wants to talk.)[b]
+
+
+Ein (cheerful): I’m just glad we’re alive
+
+
+Ein (normal): ...
+
+
+Ein: Do you want to talk about it?
+
+
+Adelai: …
+
+
+Adelai: It’s hard to feel safe with stuff like that going on.
+
+
+Adelai (frustratedDistant): And it’s all because of those accursed Demons!
+
+
+Adelai (defeated): Isn’t it enough to lock us in this place?
+
+
+Adelai: That wasn’t some shapeshifter slipping through the seals, either.
+
+
+Adelai: That was an invasion, and it won’t be the last.
+
+
+Adelai: If Nemesis can make it into the city she can lead whatever Demons she wants with her.
+
+
+Ein (smile): Maybe she won’t? Maybe Kaia and the Exterminators took her out.
+
+
+Ein (normal): Anyway, not much we can do except stay safe and hope AEIOU does something.
+
+
+Adelai (frustrated): ...
+
+
+Adelai (tdefeated): You’re right.
+
+
+Adelai (defeated): I just wish there was more we could do. 
+
+
+>stopbgm
+
+
+>addchar,Clarke,0,0.2
+
+
+Clarke (alert): Alert! The Demon threat has been dealt with, and you are now safe to leave your shelters!
+
+
+Ein (happy): (Took them a while.)
+
+
+Ein (cheerful): See! I told you everything would work out.
+
+
+Clarke (alert): And if you’re worried about future invasions… Don’t be!
+
+
+Clarke (alert): For every blow they have dealt us, the AEIOU will strike back harder!
+
+
+Clarke (alert): End of Alert.
+
+
+>removechar,Clarke
+
+
+Adelai (ifonly): Maybe you’re right. Maybe everything worked out.
+
+
+Ein (nervoussmile): They’ve got It taken care of. They must have dealt with Nemesis if they’re that confident about not having more invasion.
+
+
+Ein (nervous): (Although uh, it is weird the announcement didn’t mention her at all.)
+
+
+>addchar,Clarke,0,0.2
+
+
+Clarke (alert): Alert!
+
+
+Ein (surprised): Another one?
+
+
+>playbgm,BGMMilitary
+
+
+Clarke: Have you ever wanted to help your country and make money at the same time?
+
+
+Clarke: Of course you have! You’re an Agarthan citizen!
+
+
+Clarke: If you are receiving this, then it’s your lucky day!
+
+
+Clarke: In the wake of recent events, The AEIOU need new heroes to fight the spawn of the Evil Eye.
+
+
+Clarke: You have been determined to have the qualities necessary to answer the call!
+
+
+Clarke (military): Report to General Kaia at the AEIOU briefing room tomorrow at 0500 hours. 
+
+
+Clarke: If you have any other responsibilities at that time, consider them null and void!
+
+
+Clarke (alert): Don’t be late! Anyone caught not attending will be thrown in prison for evading the draft!
+
+
+Clarke (cheeky): Although, I’m sure we don’t have to worry about any of you doing anything that stupid!
+
+
+Clarke (military): You will be given more information at the briefing.
+
+
+Clarke (cheeky): See you there!
+
+
+>removechar,Clarke
+
+
+>stopbgm
+
+
+Ein (uncomfortable): …
+
+
+>playbgm,BGMSomber
+
+
+Ein (cheerful): Uh, look on the bright side!
+
+
+Ein: You said you wanted an opportunity to do something, didn’t you?
+
+
+Ein: Well, here it is! 
+
+
+Adelai (defeated): ...
+
+
+Adelai (defeated): You’re right.
+
+
+Ein (sheepish): ...You don’t look very happy about it
+
+
+Adelai: No, I mean that you’re right that we should try to rest.
+
+
+Adelai: I’ve got a lot to think about.
+
+
+Ein (happy): It’s ok if you need some space, but maybe I we could think about it together?
+
+
+Adelai: ...
+
+
+Adelai: Thanks… but I think I just need to sleep right now.
+
+
+Adelai: 5AM is way, way too early to wake up.
+
+
+Adelai (normal): See you tomorrow then.
+
+
+Ein (happy): Sleep well.
+
+
+>fade,out,3,1,1,1
+
+
+>stopbgm
+[a]Emotions confusing? maybe just go through the topics too fast.
+[b]Kind of different from the usual internal style. Might change this

@@ -1,7 +1,7 @@
 ﻿/* Begin Scene Documentation
 Status
 * Script Status: 2nd Draft (no review) 
-* DSP status: Formatted, with new assets, untested in engine
+* DSP status: Formatted w/ improper expressions, untested in engine
 * Scriptwriter: Tino
 Character List:
 * Those who curse their fates. [Party]
@@ -68,14 +68,25 @@ End Scene Documentation */
 /* If we need a little intro thing to show that time has passed, we use AN mode and huginn/muninn or use the end of the cold open */
 
 
-//>setbg,Sprite,BgTypocrypho
+>start,ACT I-1
 
 
->start,act1scene1
+>fade,out,0,1,1,1
 
->addchar,Ein,0,0
 
-Ein (worried): (Where’s Adelai? She’s never late.)
+>setbg,Sprite,BgTypocrypho
+
+
+>addchar,Ayin,0,0
+
+
+>playbgm,BGMNaiveHero
+
+
+>fade,in,3,1,1,1
+
+
+Ein (nervous): (Where’s Adelai? She’s never late.)
 
 
 Ein: (I hope nothing happened to her)
@@ -84,16 +95,16 @@ Ein: (I hope nothing happened to her)
 >addchar,Adelai,0,0
 
 
-Ein: (Good. She’s ok.)[b][c][d][e][f]
+Ein (normal): (Good. She’s ok.)[b][c][d][e][f]
 
 
-Ein (smile): Hey, Adelai! Thought you’d forgotten about me.
+Ein (happy): Hey, Adelai! Thought you’d forgotten about me.
 
 
 Adelai (bffs4ever): Ein, you[g] know I wouldn’t miss out on our Detachment Day[h] festivities.
 
 
-Adelai (embarrassed): I got a speeding ticket on the way to the station.
+Adelai (frustrated): I got a speeding ticket on the way to the station.
 
 
 Adelai: And then, the Skyway was late!
@@ -102,25 +113,25 @@ Adelai: And then, the Skyway was late!
 Adelai: Which… shouldn’t happen.
 
 
-Adelai: But here I am![i]
+Adelai (normal): But here I am![i]
 
 
-Ein (smile): Glad you are.
+Ein (cheerful): Glad you are.
 
 
 Adelai (interested): Is your father coming this year?[j]
 
 
-Ein (sad): No. Ivan still doesn’t, uh, feel up to it.
+Ein (nervous): No. Ivan still doesn’t, uh, feel up to it.
 
 
 Adelai (caring): Well, let him know I missed him again[k].
 
 
-Ein (smile): I always do!
+Ein (cheerful): I always do!
 
 
-Ein (smile): We just have to be sure to order enough to “accidentally” have leftovers.
+Ein: We just have to be sure to order enough to “accidentally” have leftovers.
 
 
 Adelai (normal): Any excuse to try as much as possible on Detachment Day[l].[m]
@@ -129,16 +140,16 @@ Adelai (normal): Any excuse to try as much as possible on Detachment Day[l].[m]
 Adelai (interested): See anything good while you were waiting for me?
 
 
-Ein (smile): Yeah! Quite a few things[n] from before the Lockdown this year.
+Ein: Yeah! Quite a few things[n] from before the Lockdown this year.
 
 
-Ein (normal): I’m think I’ll get the boat noodles. The owner is making them in the style of a place called Laos.
+Ein (normal): I think I’ll get the boat noodles. The owner is making them in the style of a place called Laos.
 
 
-Ein (excited): The old woman that shared the recipe with them even came to help out!
+Ein (elated): The old woman that shared the recipe with them even came to help out!
 
 
-Adelai (excited): Definitely can’t pass that up.
+Adelai: Definitely can’t pass that up.
 
 
 Adelai (caring): We’ll have to go back to the kitchen and thank her after we eat.
@@ -147,19 +158,19 @@ Adelai (caring): We’ll have to go back to the kitchen and thank her after we e
 Ein (normal): Maybe she can tell us a little bit about Laos too.
 
 
-Ein (sad): The people who remember the world outside the Lockdown are only getting older.[o]
+Ein (nervous): The people who remember the world outside the Lockdown are only getting older.[o]
 
 
 Adelai (frustrated): There you go again, acting like we won’t break the Lockdown any day now.
 
 
-Adelai (illogically hopeful): AEIOU is so close. I can feel it.
+Adelai (ifonly): AEIOU is so close. I can feel it.
 
 
 Ein (normal): Even if the Lockdown gets broken tomorrow, we might be able to make that old lady’s day[p].
 
 
-Ein (sad): (When Ivan’s feeling up to it, he loves telling stories about the world outside the Lockdown[q].)
+Ein (nervous): (When Ivan’s feeling up to it, he loves telling stories about the world outside the Lockdown[q].)
 
 
 Adelai (normal): You’re right. We should focus on what’s happening now.
@@ -174,25 +185,37 @@ Adelai (normal): I think I’ll get that.
 Ein (mischievous): Afraid the boat noodles will be too spicy for you?
 
 
-Adelai (fake upset): Hey, you know I try my best.
+Adelai (frustrated): Hey, you know I try my best.
 
 
 Adelai: I may have a weak mouth, but it’s getting stronger all the time[r].
 
 
-Adelai: What do you think we should bring back for Ivan?
+Adelai (normal): What do you think we should bring back for Ivan?
 
 
 Ein (normal): I think he’d like - 
 
 
+>stopbgm
+
+
+>addchar,Clarke,0,0.2
+
+
 Clarke (alert): Alert!
+
+
+>removechar,Clarke
 
 
 Ein (normal): Hold on, I’m getting an alert on my Typocypha.
 
 
 Adelai (serious): I’m getting it too.
+
+
+>addchar,Clarke,0,0.2
 
 
 Clarke: A magical presence has breached the underground and is moving towards Agartha.
@@ -207,13 +230,19 @@ Clarke: Citizens around the Seven Stars shopping district should remain especial
 Clarke: Typocrypha self-defense spellcasting subroutines have been enabled for all citizens in the area.
 
 
-Ein (alarmed): That’s right next to us.
+>removechar,Clarke
+
+
+>playbgm,BGMMysterious
+
+
+Ein (nervous): That’s right next to us.
 
 
 Adelai (serious): We have to do something.
 
 
-Ein (alarmed): What are you talking about?
+Ein: What are you talking about?
 
 
 Ein: The announcement, uh, very clearly said stay inside.
@@ -230,17 +259,19 @@ Adelai: Even if we aren’t AEIOU, we have combat training. We can do something.
 Ein (sheepish): (I’d qualify us having combat training with a “technically”)
 
 
-Ein (sheepish): I, uh,  haven’t exactly practiced combat casting much since Academy.
+Ein (sheepish): I, uh, haven’t exactly practiced combat casting much since Academy.
 
 
-Ein (determined): But if you think this is the right thing to do I’m coming.
+Ein (serious): But if you think this is the right thing to do I’m coming.
 
 
 Adelai (listening intently): If you really think we should stay…
-Ein (determined): No. This is the right thing to do. 
 
 
-Ein (determined): You take the lead. I’ll cover your blind spots.
+Ein: No. This is the right thing to do. 
+
+
+Ein: You take the lead. I’ll cover your blind spots.
 
 
 Adelai (teasing): You know I don’t have any blind spots.
@@ -258,16 +289,19 @@ Ein: Sounds... almost like a plan.
 Adelai: Let’s go.
 
 
+>addchar,Clarke,0,0.2
+
+
 Clarke (normal): Ein, please reconsider. If you leave this building, you will likely be slaughtered!
 
 
-Ein: (Oof.)
+Ein (ohfuck): (Oof.)
 
 
 Ein: Uh, Clarke that’s not very helpful.
 
 
-Clarke (normal): Noted. I’ll attempt to be more supportive.
+Clarke (normal): Noted. I’ll be more supportive.
 
 
 Clarke (normal): . . .[s]
@@ -276,7 +310,41 @@ Clarke (normal): . . .[s]
 Clarke (victory): Try not to get killed immediately!
 
 
-Ein: Not much, but I’ll take it.
+>removechar,Clarke,0,0.2
+
+
+Ein (serious): Not much, but I’ll take it.
 
 
 Ein: (I guess we’re doing this.)
+
+
+>fade,out,3,1,1,1
+
+
+>stopbgm
+
+
+
+
+
+
+[a]May need to give precedent in cold opening to land
+[b]Suggestions for wording pls
+[c]Thank fuck?
+[d]Thank goodness?
+[e]Thank the Eye?
+[f]Thank the Sun?
+[g]Is the unnatural dialog worth mentioning the chara's name here?
+[h]Name needs work probs
+[i]Too many emotion changes
+[j]Adeali is probably on a first name basis with Ivan? but this gives more context to who Ivan is
+[k]"let him know I missed him again" sounds like "i miss you" rather than "tell your dad i said hi"
+[l]I'm not sure what they're trying as much as possible on... ordering food?
+[m]Does this line make it seem like Adelai doesn't care about Ivan?
+[n]"quite a few things from before the lockdown this year" wording... too many words for me to comprehend the sentence "they're serving traditional food from before the lockdown this year" ??
+[o]Add a pause or another line? Flow doesn't feel natrual
+[p]"even if the lockdown gets broken tomorrow" even... feels like a funky word
+[q]mention of ivan feels sudden here, could be reworded to have the thought be more natural (I miss Ivan's stories about the outside world)
+[r]a weak mouth isn't a common phrase i hear so it feels odd... something about "building up my tolerance" might feel more natural
+[s]Slowscroll if we can do it
