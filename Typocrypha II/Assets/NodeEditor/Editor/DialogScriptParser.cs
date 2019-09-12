@@ -414,7 +414,7 @@ public class DialogScriptParser : EditorWindow
         }
         dnode.characterName = cname.Substring(0, cname.Length-1);
         dnode.displayName = displayName;
-        dnode.text = dialogLine[1].Trim();
+        dnode.text = dialogLine[1].Trim().Replace("…", "...");
         nodes.Add(dnode);
         return nodes;
     }

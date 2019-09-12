@@ -79,7 +79,7 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
         if (data.aliases.Contains("Ayin")) // Codec position for ayin's character
         {
             go = Instantiate(characterPrefabAyinCodec, transform);
-            pos = new Vector2(-7f, -5f);
+            pos = new Vector2(-5.5f, -4.75f);
         }
         else
         {
@@ -209,14 +209,15 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
     /// <returns>DialogCharacter component of selected character.</returns>
     public DialogCharacter ChangeExpression(CharacterData data, string expression)
     {
-        if (data.expressions.ContainsKey(expression))
+        string expr = expression.ToLower().Replace("default", "normal");
+        if (data.expressions.ContainsKey(expr))
         {
-            characterMap[data.name].ExprSprite = data.expressions[expression];
-            characterMap[data.name].saveData.expression = expression;
+            characterMap[data.name].ExprSprite = data.expressions[expr];
+            characterMap[data.name].saveData.expression = expr;
         }
         else
         {
-            Debug.LogError("No such expression:" + expression);
+            Debug.LogError("No such expression:" + expr);
         }
         return characterMap[data.name];
     }
