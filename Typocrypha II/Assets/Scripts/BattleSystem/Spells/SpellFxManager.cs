@@ -19,6 +19,8 @@ public class SpellFxManager : MonoBehaviour
     [SerializeField] private SpellFxData blockFx = new SpellFxData();
     [Header("Default Popup Prefab")]
     [SerializeField] private GameObject popupPrefab = null;
+    [Header("Battle Log Popup Prefab")]
+    [SerializeField] private GameObject battleLogPopupPrefab = null;
     [Header("Effectiveness Sprites")]
     [SerializeField] private Sprite weakSprite = null;
     [Header("Log Fields")]
@@ -54,7 +56,7 @@ public class SpellFxManager : MonoBehaviour
     }
     public void LogMessage(string message, Sprite image = null, GameObject popupPrefabOverride = null)
     {
-        logData.Enqueue(new LogData() { text = message, image = image, popupPrefab = popupPrefabOverride ?? popupPrefab });
+        logData.Enqueue(new LogData() { text = message, image = image, popupPrefab = popupPrefabOverride ?? battleLogPopupPrefab });
     }
     public Coroutine NoTargetFx(Vector2 pos)
     {

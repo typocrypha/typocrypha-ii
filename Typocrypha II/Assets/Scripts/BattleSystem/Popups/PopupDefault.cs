@@ -13,6 +13,8 @@ public class PopupDefault : PopupBase
     {      
         var textObj = Instantiate(textHolderPrefab, Camera.main.WorldToScreenPoint(pos), Quaternion.identity, uiCanvas.transform);
         var textComponent = textObj.GetComponent<Text>();
+        if (textComponent == null)
+            textComponent = textObj.GetComponentInChildren<Text>();
         var rect = textObj.GetComponent<RectTransform>();
         if (textComponent == null || rect == null)
             return null;
