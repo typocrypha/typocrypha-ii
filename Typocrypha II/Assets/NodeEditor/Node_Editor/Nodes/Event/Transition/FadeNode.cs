@@ -23,24 +23,24 @@ namespace Gameflow {
         #endregion
 
         /// <summary>
-        /// Fade all of the faders in the scene (coroutine).
+        /// Fade the entire screen (coroutine).
         /// </summary>
         /// <param name="fadeTime">Amount of time to complete fade.</param>
         /// <param name="fadeStart">Starting amount of normlized fade.</param>
         /// <param name="fadeEnd">End amount of normalized fade</param>
         /// <param name="fadeColor">Color of fade.</param>
-        public static IEnumerator FadeAllOverTime(float fadeTime, float fadeStart, float fadeEnd, Color fadeColor)
+        public static IEnumerator FadeScreenOverTime(float fadeTime, float fadeStart, float fadeEnd, Color fadeColor)
         {
             isCompleted = false;
             float time = 0f;
             while (time < fadeTime)
             {
                 yield return new WaitWhile(() => FaderManager.instance.PH.Pause);
-                FaderManager.instance.FadeAll(Mathf.Lerp(fadeStart, fadeEnd, time / fadeTime), fadeColor);
+                FaderManager.instance.FadeScreen(Mathf.Lerp(fadeStart, fadeEnd, time / fadeTime), fadeColor);
                 yield return new WaitForFixedUpdate();
                 time += Time.fixedDeltaTime;
             }
-            FaderManager.instance.FadeAll(fadeEnd, fadeColor);
+            FaderManager.instance.FadeScreen(fadeEnd, fadeColor);
             isCompleted = true;
         }
 

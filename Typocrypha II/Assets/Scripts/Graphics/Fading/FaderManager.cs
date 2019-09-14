@@ -19,6 +19,7 @@ public class FaderManager : MonoBehaviour, IPausable
 
     public static FaderManager instance = null;
     public List<Fader> allFaders; // List of all faders. Fader instances add themselves.
+    public SpriteRenderer ScreenFader; // SpriteRenderer for fading entire screen.
 
     void Awake()
     {
@@ -96,5 +97,15 @@ public class FaderManager : MonoBehaviour, IPausable
             target.GetComponent<FaderGroup>().FadeAmount = 0f;
             target.GetComponent<FaderGroup>().FadeColor = Color.black;
         }
+    }
+
+    /// <summary>
+    /// Fade the entire screen.
+    /// </summary>
+    /// <param name="fadeAmount">Amount of fade.</param>
+    /// <param name="fadeColor">Color of fade.</param>
+    public void FadeScreen(float fadeAmount, Color fadeColor)
+    {
+        ScreenFader.color = new Color(fadeColor.r, fadeColor.g, fadeColor.b, fadeAmount);
     }
 }

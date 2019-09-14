@@ -284,7 +284,7 @@ public class DialogGraphParser : MonoBehaviour
             var node = currNode as FadeNode;
             float fadeStart = node.fadeType == FadeNode.FadeType.Fade_In ? 1f : 0f;
             float fadeEnd = 1f - fadeStart;
-            StartCoroutine(FadeNode.FadeAllOverTime(node.fadeTime, fadeStart, fadeEnd, node.fadeColor));
+            StartCoroutine(FadeNode.FadeScreenOverTime(node.fadeTime, fadeStart, fadeEnd, node.fadeColor));
         }
         // Check if need to wait on node to complete.
         if (currNode is ITimedNode)

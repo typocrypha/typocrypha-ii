@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 
 /// <summary>
-/// Default loading screen.
+/// Default loading screen. Fades in and out to hide loading.
 /// </summary>
 [RequireComponent(typeof(Animator))]
 public class LoadingScreenDefault : LoadingScreen

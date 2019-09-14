@@ -54,6 +54,7 @@ public class TransitionManager : MonoBehaviour
         }
         loadingScreen.Progress = 1.0f;
         yield return new WaitUntil(() => loadingScreen.DoneLoading);
+        // Set animator flags (animator also triggers start of scene)
         yield return new WaitUntil(() => loadingScreen.animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
         loadingScreen.animator.SetBool("DoneLoading", true);
         loadOp.allowSceneActivation = true;
