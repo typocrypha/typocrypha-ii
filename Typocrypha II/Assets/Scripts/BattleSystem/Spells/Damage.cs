@@ -21,7 +21,7 @@ public static class Damage
         { FormulaType.Standard, StandardApplied }
     };
 
-    public static CastResults StandardApplied(DamageEffect effect, Caster caster, Caster target)
+    private static CastResults StandardApplied(DamageEffect effect, Caster caster, Caster target)
     {
         var results = Standard(effect, caster, target);
         ApplyStandard(results, effect, caster, target);
@@ -174,47 +174,46 @@ public static class Damage
                 }
             }
         }
-        // If any of tags are repelled, repel (unless the spell cannot be repelled or has already been repelled
+        // If any of tags are repelled, repel (unless the spell cannot be repelled or has already been repelled)
         if (reactions.Contains(Reaction.Repel) && !effect.tags.Contains("IgnoreReflect") && !effect.tags.Contains("Reflected"))
         {
             multiplier = reactions.Freq(Reaction.Repel);
             return Reaction.Repel;
         }
-        // Else if any drain, drain
-        else if (reactions.Contains(Reaction.Drain))
+        // If the target is weak to any of the tags, return weak
+        else if(reactions.Contains(Reaction.Weak))
         {
-            multiplier = reactions.Freq(Reaction.Drain);
-            return Reaction.Drain;
+            multiplier = reactions.Freq(Reaction.Weak);
+            return Reaction.Weak;            
         }
-        // If any dodge, dodge
-        else if (reactions.Contains(Reaction.Dodge))
-        {
-            multiplier = reactions.Freq(Reaction.Dodge);
-            return Reaction.Dodge;
-        }
-        // If any block, block
+        #region  Drain and Dodge (currently deprecated)
+        //// Else if any drain, drain
+        //else if (reactions.Contains(Reaction.Drain))
+        //{
+        //    multiplier = reactions.Freq(Reaction.Drain);
+        //    return Reaction.Drain;
+        //}
+        //// If any dodge, dodge
+        //else if (reactions.Contains(Reaction.Dodge))
+        //{
+        //    multiplier = reactions.Freq(Reaction.Dodge);
+        //    return Reaction.Dodge;
+        //}
+        #endregion
+        // If the target blocks any of the tags, return block
         else if (reactions.Contains(Reaction.Block))
         {
             multiplier = reactions.Freq(Reaction.Block);
             return Reaction.Block;
         }
-        else
+        // If the target resists any of the tags, return resist
+        else if(reactions.Contains(Reaction.Resist))
         {
-            // Sum up weaknesses and resistances
-            int sum = reactions.Freq(Reaction.Resist) - reactions.Freq(Reaction.Weak);
-            if (sum > 0)
-            {
-                multiplier = sum;
-                return Reaction.Resist;
-            }
-            if (sum < 0)
-            {
-                // Take the positive value of the sum
-                multiplier = -sum;
-                return Reaction.Weak;
-            }
-            return Reaction.Neutral;
+            multiplier = reactions.Freq(Reaction.Resist);
+            return Reaction.Resist;            
         }
+        else
+            return Reaction.Neutral;
     }
     /// <summary>
     /// Get the standard damage multiplier for a given reaction.
