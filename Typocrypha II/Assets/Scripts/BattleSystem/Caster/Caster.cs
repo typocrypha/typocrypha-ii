@@ -21,11 +21,10 @@ public class Caster : FieldObject
     }
     public enum BattleStatus
     {
-        Alive,
+        Normal,
+        SpiritMode,
         Dead,
         Fled,
-        Banished,
-        Hiding,
     }
 
     #region Delegate Declarations
@@ -40,29 +39,73 @@ public class Caster : FieldObject
     public GetReactionsFn ExtraReactions { get; set; }
     public HitFn OnBeforeEffectApplied { get; set; }
     public HitFn OnAfterHitResolved { get; set; }
+    public System.Action OnSpiritMode { get; set; }
 
     #region State, Status, and Class
     [SerializeField] private State _type;
     public State CasterState { get => _type; set => _type = value; }
     [SerializeField] private Class _casterClass;
     public Class CasterClass { get => _casterClass; set => _casterClass = value; }
-    public BattleStatus BStatus { get; }
+    public BattleStatus BStatus
+    {
+        get => status;
+        set
+        {
+            switch (value)
+            {
+                case BattleStatus.Normal:
+                    break;
+                case BattleStatus.SpiritMode:
+                    ui?.onSpiritForm.Invoke();
+                    ui?.onSpChanged.Invoke((float)sp / Stats.MaxSP);
+                    OnSpiritMode?.Invoke();
+                    break;
+                case BattleStatus.Dead:
+                    ui?.gameObject.SetActive(false);
+                    break;
+                case BattleStatus.Fled:
+                    ui?.gameObject.SetActive(false);
+                    GetComponentInChildren<SpriteRenderer>().gameObject.SetActive(false);
+                    break;
+            }
+            status = value;
+        }
+    }
+    private BattleStatus status = BattleStatus.Normal;
     #endregion
 
-    #region Health properties and UI functionality
-    int health;
+    #region Health properties and UI functionality    
     public int Health
     {
         get => health;
-        set
+        protected set
         {
             health = value;
-            ui?.onHealthChanged.Invoke((float)health/Stats.MaxHP);
+            if (value <= 0 && BStatus == BattleStatus.Normal)
+            {
+                BStatus = BattleStatus.SpiritMode;
+            }
+            else
+            {
+                ui?.onHealthChanged.Invoke((float)health / Stats.MaxHP);
+            }         
         }
     }
-    public int Armor { get; set; }
-    public int SP { get; set; }
-    int stagger;
+    int health;
+    public int SP
+    {
+        get => sp;
+        protected set
+        {
+            sp = value;
+            if (value <= 0 && BStatus == BattleStatus.SpiritMode)
+            {
+                BStatus = BattleStatus.Dead;
+            }
+            ui?.onSpChanged.Invoke((float)sp / Stats.MaxSP);
+        }
+    }
+    int sp;
     public int Stagger
     {
         get => stagger;
@@ -79,7 +122,7 @@ public class Caster : FieldObject
 
         }
     }
-    private bool stunned = false;
+    int stagger; 
     public bool Stunned
     {
         get => stunned;
@@ -98,13 +141,15 @@ public class Caster : FieldObject
             }
         }
     }
-    Spell spell;
+    private bool stunned = false;   
     public Spell Spell
     {
         get => spell;
         set
         {
             spell = value;
+            if (value == null)
+                return;
             // Set spell word (DEBUG)
             ui?.onSpellChanged.Invoke(spell.ToDisplayString());
             // Set spell icon (gets first rootword)
@@ -114,8 +159,8 @@ public class Caster : FieldObject
             
         }
     }
-    public float ChargeTime { get; set; } // Total time it takes to charge
-    float charge; // Charge amount (seconds) for enemies
+    Spell spell;
+    public float ChargeTime { get; set; } // Total time it takes to charge 
     public float Charge
     {
         get => charge;
@@ -125,7 +170,24 @@ public class Caster : FieldObject
             ui?.onChargeChanged.Invoke(charge/ChargeTime); 
         }
     }
+    float charge; // Charge amount (seconds) for enemies
     #endregion
+
+    public void Damage(int amount)
+    {
+        if (BStatus == BattleStatus.SpiritMode)
+            SP -= amount;
+        else
+            Health -= amount;
+    }
+
+    public void Heal(int amount)
+    {
+        if (BStatus == BattleStatus.SpiritMode)
+            SP += amount;
+        else
+            Health += amount;
+    }
 
     private StatusEffectDict statusEffects = new StatusEffectDict();
 
@@ -183,7 +245,6 @@ public class Caster : FieldObject
         if (ui == null) ui = GetComponentInChildren<CasterUI>();
         tags.RecalculateAggregate();
         Health = Stats.MaxHP;
-        Armor = Stats.MaxArmor;
         SP = Stats.MaxSP;
         Stagger = Stats.MaxStagger;
     }

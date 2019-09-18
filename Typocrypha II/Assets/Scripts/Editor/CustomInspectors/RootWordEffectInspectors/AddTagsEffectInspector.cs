@@ -8,6 +8,7 @@ using GUIUtils;
 [CustomEditor(typeof(AddTagsEffect), true)]
 public class AddTagsEffectInspector : RootWordEffectInspector
 {
+    public override bool IsChild => true;
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();

@@ -24,6 +24,8 @@ namespace ATB3
         public override void OnUpdate()
         {
             timer += Time.fixedDeltaTime;
+            if (Owner.Caster.BStatus == Caster.BattleStatus.Dead)
+                Source.PerformTransition(ATBTransition.ToDeath);
             if (timer >= stuntime || !Owner.Caster.Stunned)
                 Source.PerformTransition(ATBTransition.ExitStun);
             return;

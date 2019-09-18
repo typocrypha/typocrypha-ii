@@ -18,8 +18,6 @@ public static partial class EditorUtils
             data.MaxSP = EditorGUILayout.IntField(data.MaxSP, GUILayout.Width(47.5f));
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField(new GUIContent("Max Armor", "TODO: tooltip"), GUILayout.Width(75));
-            data.MaxArmor = EditorGUILayout.IntField(data.MaxArmor, GUILayout.Width(47.5f));
             EditorGUILayout.LabelField(new GUIContent("Max Stagger", "TODO: tooltip"), GUILayout.Width(75));
             data.MaxStagger = EditorGUILayout.IntField(data.MaxStagger, GUILayout.Width(47.5f));
             EditorGUILayout.EndHorizontal();
@@ -40,8 +38,6 @@ public static partial class EditorUtils
             EditorGUILayout.LabelField(new GUIContent(data.MaxSP.ToString(), "TODO: tooltip"), Bold, GUILayout.Width(50));
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField(new GUIContent("Max Armor:", "TODO: tooltip"), GUILayout.Width(75));
-            EditorGUILayout.LabelField(new GUIContent(data.MaxArmor.ToString(), "TODO: tooltip"), Bold, GUILayout.Width(50));
             EditorGUILayout.LabelField(new GUIContent("Max Stagger:", "TODO: tooltip"), GUILayout.Width(75));
             EditorGUILayout.LabelField(new GUIContent(data.MaxStagger.ToString(), "TODO: tooltip"), Bold, GUILayout.Width(50));
             EditorGUILayout.EndHorizontal();

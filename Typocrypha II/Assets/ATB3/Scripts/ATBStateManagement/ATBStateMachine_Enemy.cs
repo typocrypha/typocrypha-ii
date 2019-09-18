@@ -30,6 +30,8 @@ namespace ATB3
             AddState(new ATBStateEnemy_Cast() { Owner = Owner, Source = this });
             AddState(new ATBStateEnemy_AfterCast() { Owner = Owner, Source = this });
             AddState(new ATBStateEnemy_Stunned() { Owner = Owner, Source = this });
+            AddState(new ATBStateEnemy_Dead() { Owner = Owner, Source = this });
+            AddState(new ATBStateEnemy_Fled() { Owner = Owner, Source = this });
         }
 
         // Appends the machine's transitions to the given transition map (should be called on awake)
@@ -44,6 +46,8 @@ namespace ATB3
             AddTransition(ATBTransition.ToCast, ATBStateID.Cast);                // If finishing beforecast, go into cast state
             AddTransition(ATBTransition.ToAfterCast, ATBStateID.AfterCast);      // If performed spell, go into aftercast state
             AddTransition(ATBTransition.ToCharge, ATBStateID.Charge);            // If ready to charge spell again, go into charge state
+            AddTransition(ATBTransition.ToDeath, ATBStateID.Dead);               // If Dead, die
+            AddTransition(ATBTransition.ToFlee, ATBStateID.Fled);                // If ready to charge spell again, go into charge state
         }
     }
 }

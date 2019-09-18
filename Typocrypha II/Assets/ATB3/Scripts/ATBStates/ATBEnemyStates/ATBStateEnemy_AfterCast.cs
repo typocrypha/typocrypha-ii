@@ -22,7 +22,15 @@ namespace ATB3
         {
             timer += Time.fixedDeltaTime;
             if (timer >= ATBAlly.activationWindow)
-                Source.PerformTransition(ATBTransition.ToCharge);
+            {
+                if (Owner.Caster.BStatus == Caster.BattleStatus.Dead)
+                    Source.PerformTransition(ATBTransition.ToDeath);
+                else if (Owner.Caster.BStatus == Caster.BattleStatus.Fled)
+                    Source.PerformTransition(ATBTransition.ToFlee);
+                else
+                    Source.PerformTransition(ATBTransition.ToCharge);
+            }
+                
         }
 
         // Call upon exiting given state

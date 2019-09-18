@@ -72,7 +72,7 @@ public class SpellManager : MonoBehaviour
                 {                   
                     var targetCaster = Battlefield.instance.GetCaster(t); 
                     var targetSpace = Battlefield.instance.GetSpace(t);
-                    if (targetCaster == null)
+                    if (targetCaster == null || targetCaster.BStatus == Caster.BattleStatus.Dead || targetCaster.BStatus == Caster.BattleStatus.Fled)
                     {
                         crList.Add(SpellFxManager.instance.NoTargetFx(targetSpace));
                     }

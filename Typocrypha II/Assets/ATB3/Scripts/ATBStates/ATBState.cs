@@ -27,6 +27,8 @@ namespace ATB3
         ToIdle,
         ToAllyMenu,
         ToCastDisabled,
+        ToDeath,
+        ToFlee,
     }
 
     //================================================================//
@@ -43,6 +45,9 @@ namespace ATB3
         NullATBStateID = 0, // Use this ID to represent a non-existing State in your system
         // Special State for the state machine to rollback into previous states ∇ 
         PreviousState,
+        // General States ∇ 
+        Dead,
+        Fled,
         // Player-Specific States ∇ 
         Idle,
         // Non-Player General States ∇ 

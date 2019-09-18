@@ -264,7 +264,7 @@ public static class Damage
 
     public static void ApplyDamage(CastResults results, RootWordEffect effect, Caster caster, Caster target)
     {
-        target.Health -= Mathf.FloorToInt(results.Damage);
+        target.Damage(Mathf.FloorToInt(results.Damage));
     }
     /// <summary>
     /// Apply stagger damage and log a message if stunned

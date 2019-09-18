@@ -20,13 +20,17 @@ namespace ATB3
         // Call on fixed update while in given state
         public override void OnUpdate()
         {
+            if (Owner.Caster.BStatus == Caster.BattleStatus.Dead)
+                Source.PerformTransition(ATBTransition.ToDeath);
+            if (Owner.Caster.BStatus == Caster.BattleStatus.Fled)
+                Source.PerformTransition(ATBTransition.ToFlee);
             // If stunned, go to stun state
-            if(Owner.Caster.Stunned)
+            if (Owner.Caster.Stunned)
             {
                 Source.PerformTransition(ATBTransition.ToStun);
             }
             // If finished charging, go to precast
-            if (Owner.Caster.Charge >= Owner.Caster.ChargeTime)
+            if (Owner.Caster.Charge >= Owner.Caster.ChargeTime && Owner.Caster.Spell != null)
             {
                 Source.PerformTransition(ATBTransition.ToPreCast);
             }

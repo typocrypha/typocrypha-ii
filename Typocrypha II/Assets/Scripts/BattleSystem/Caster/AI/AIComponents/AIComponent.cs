@@ -10,6 +10,12 @@ using UnityEngine;
 public abstract class AIComponent : MonoBehaviour
 {
     protected Caster caster;
+
+    void Awake()
+    {
+        InitializeBase();
+    }
+
     /// <summary>
     /// Initializes the caster and AI refs, and sets the targeting position to the player
     /// </summary>

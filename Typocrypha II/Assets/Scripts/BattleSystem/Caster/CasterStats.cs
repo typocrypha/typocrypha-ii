@@ -18,8 +18,6 @@ public class CasterStats
     #region Resources
     [SerializeField] private Stat maxHP = new Stat(resourceMin, resourceMax);
     public int MaxHP { get => maxHP.Value; set => maxHP.Value = value; }
-    [SerializeField] private Stat maxArmor = new Stat(resourceMin, resourceMax);
-    public int MaxArmor { get => maxArmor.Value; set => maxArmor.Value = value; }
     [SerializeField] private Stat maxSP = new Stat(resourceMin, resourceMax);
     public int MaxSP { get => maxSP.Value; set => maxSP.Value = value; }
     [SerializeField] private Stat maxStagger = new Stat(resourceMin, resourceMax);
@@ -46,7 +44,6 @@ public class CasterStats
     public void AddInPlace(CasterStats other)
     {
         maxHP.AddInPlace(other.maxHP);
-        maxArmor.AddInPlace(other.maxArmor);
         maxSP.AddInPlace(other.maxSP);
         maxStagger.AddInPlace(other.maxStagger);
         staggerTime += other.staggerTime;
@@ -60,7 +57,6 @@ public class CasterStats
     public void SubtractInPlace(CasterStats other)
     {
         maxHP.SubtractInPlace(other.maxHP);
-        maxArmor.SubtractInPlace(other.maxArmor);
         maxSP.SubtractInPlace(other.maxSP);
         maxStagger.SubtractInPlace(other.maxStagger);
         staggerTime -= other.staggerTime;

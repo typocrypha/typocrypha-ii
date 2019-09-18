@@ -21,7 +21,8 @@ public class StatusRegen : StatusRemoveAfterHitOrCast
         time += Time.fixedDeltaTime;
         if(time >= tickTime)
         {
-            affected.Health += healthPerTick;
+            affected.Heal(healthPerTick);
+            SpellFxManager.instance.PlayDamageNumber(-healthPerTick, affected.transform.position);
             time = 0;
         }
     }

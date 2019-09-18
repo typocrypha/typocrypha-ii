@@ -49,7 +49,6 @@ public class CasterInspector : Editor
         {
             EditorGUILayout.LabelField(new GUIContent("Status: " + data.BStatus));
             EditorGUILayout.LabelField(new GUIContent("Health: " + data.Health));          
-            EditorGUILayout.LabelField(new GUIContent("Armor: " + data.Armor));
             EditorGUILayout.LabelField(new GUIContent("SP: " + data.SP));
             EditorGUILayout.LabelField(new GUIContent("Stagger: " + data.Stagger));            
         }

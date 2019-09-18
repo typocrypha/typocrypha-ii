@@ -23,7 +23,7 @@ public class StatusRegenAccelerating : StatusRemoveAfterHitOrCast
         time += Time.fixedDeltaTime;
         if (time >= tickTime)
         {
-            affected.Health += healthPerTick;
+            affected.Heal(healthPerTick);
             SpellFxManager.instance.PlayDamageNumber(-healthPerTick, affected.transform.position);
             tickTime -= decreasePerTick;
             if (tickTime < minTick)

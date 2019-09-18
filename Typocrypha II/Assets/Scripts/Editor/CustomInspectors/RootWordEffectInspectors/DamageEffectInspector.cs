@@ -7,6 +7,7 @@ using GUIUtils;
 [CustomEditor(typeof(DamageEffect), true)]
 public class DamageEffectInspector : RootWordEffectInspector
 {
+    public override bool IsChild => true;
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();

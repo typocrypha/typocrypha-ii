@@ -8,6 +8,7 @@ using GUIUtils;
 [CustomEditor(typeof(ApplyStatusEffect), true)]
 public class ApplyStatusEffectInspector : RootWordEffectInspector
 {
+    public override bool IsChild => true;
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
