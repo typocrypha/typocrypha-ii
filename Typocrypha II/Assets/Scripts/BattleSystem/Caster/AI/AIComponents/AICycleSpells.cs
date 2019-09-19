@@ -5,6 +5,7 @@ using UnityEngine;
 public class AICycleSpells : AIComponent
 {
     public int startIndex = 0;
+    public int loopIndex = 0;
     public SpellList spells;
 
     int curr;
@@ -31,7 +32,7 @@ public class AICycleSpells : AIComponent
     public void CycleSpell()
     {
         if (++curr >= spells.Count)
-            curr = 0;
+            curr = loopIndex;
         caster.Spell = spells[curr];
     }
 }

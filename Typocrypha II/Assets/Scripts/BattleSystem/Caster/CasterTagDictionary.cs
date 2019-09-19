@@ -29,7 +29,7 @@ public class CasterTagDictionary : IEnumerable<CasterTag>
     }
     public void Add(CasterTag tag)
     {
-        if (tags.Contains(tag))
+        if (allTags.Contains(tag))
         {
             Debug.LogWarning("Cannot Add Duplicate caster tag: " + tag.name);
             return;

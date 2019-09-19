@@ -199,7 +199,6 @@ public class Caster : FieldObject
     {
         return tags.ContainsTag(tag);
     }
-
     public bool HasTag(string tagName)
     {
         return tags.ContainsTag(tagName);
@@ -224,8 +223,16 @@ public class Caster : FieldObject
     }
     public void AddTagWithStatusEffect(StatusEffect effect, CasterTag tag)
     {
+        if (statusEffects.ContainsKey(tag))
+            return;
         statusEffects.Add(tag, effect);
         tags.Add(tag);
+    }
+    public StatusEffect GetStatusEffect(CasterTag tag)
+    {
+        if (statusEffects.ContainsKey(tag))
+            return statusEffects[tag];
+        return null;
     }
     public CasterTagDictionary.ReactionMultiSet GetReactions(SpellTag tag)
     {
