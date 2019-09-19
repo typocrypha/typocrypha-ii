@@ -25,12 +25,19 @@ public class AllyMenu : MonoBehaviour
     public void Activate(ATB3.ATBStateID state)
     {
         AllyDisplay.instance.gameObject.SetActive(true);
+        foreach(var button in spellButtons)
+            button.gameObject.SetActive(false);
         bool toggle = true;
-        for(int i = 0; i < spellButtons.Length; ++i)
+        for(int i = 0; i < Spells.Count; ++i)
         {
-            bool active = Spells.Count > i && ally.Mp >= Spells[i].Cost;
-            spellButtons[i].gameObject.SetActive(active);
-            spellButtons[i].GetComponentInChildren<Text>().text = Spells[i].ToDisplayString();
+            bool active = ally.Mp >= Spells[i].Cost;
+            spellButtons[i].gameObject.SetActive(true);
+            spellButtons[i].interactable = active;
+            var spellText = spellButtons[i].GetComponentInChildren<Text>();
+            spellText.text = Spells[i].ToDisplayString();
+            spellText.color = active ? Color.white : Color.red;
+            spellButtons[i].transform.GetChild(1).GetComponent<Text>().text = ((int)Spells[i].Cost).ToString();
+            spellButtons[i].transform.GetChild(2).GetComponent<Image>().sprite = Spells[i].Icon;
             // Select first available spell.
             if (active && toggle)
             {
@@ -56,7 +63,7 @@ public class AllyMenu : MonoBehaviour
     /// </summary>
     public void UpdateDescription()
     {
-        for (int i = 0; i < spellButtons.Length; ++i)
+        for (int i = 0; i < Spells.Count; ++i)
         {
             if (EventSystem.current.currentSelectedGameObject == spellButtons[i].gameObject)
             {

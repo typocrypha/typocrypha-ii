@@ -157,10 +157,7 @@ public class Caster : FieldObject
             // Set spell word (DEBUG)
             ui?.onSpellChanged.Invoke(spell.ToDisplayString());
             // Set spell icon (gets first rootword)
-            foreach(var spellword in spell)
-                if (spellword is RootWord)
-                    ui?.onSpellIconChanged.Invoke((spellword as RootWord).icon);
-            
+            ui?.onSpellIconChanged.Invoke(spell.Icon);            
         }
     }
     Spell spell;

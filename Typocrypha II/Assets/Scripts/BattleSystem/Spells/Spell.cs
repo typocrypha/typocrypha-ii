@@ -15,6 +15,8 @@ public class Spell : IList<SpellWord>
 
     public float Cost { get => items.Select((item) => item.cost).Sum(); }
 
+    public Sprite Icon => items.Where((w) => w is RootWord).Select((w) => w as RootWord).FirstOrDefault().icon;
+
     public string ToDisplayString()
     {
         if (items.Count == 0)

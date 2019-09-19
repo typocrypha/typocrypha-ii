@@ -48,6 +48,8 @@ public class SpellFxManager : MonoBehaviour
             var message = logData.Dequeue();
             var popper = Instantiate(message.popupPrefab).GetComponent<PopupBase>();
             var cr2 = popper.PopText(message.text, logPosition, logTime, Color.white);
+            if(message.image != null)
+                popper.PopImage(message.image, logPosition - new Vector2(5, 0), logTime);
             yield return cr2;
             popper.Cleanup();
         }

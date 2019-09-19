@@ -52,7 +52,7 @@ public class SpellManager : MonoBehaviour
             }
             yield break;
         }
-        SpellFxManager.instance.LogMessage(caster.DisplayName + " casts " + spell.ToDisplayString());
+        SpellFxManager.instance.LogMessage(caster.DisplayName + " casts " + spell.ToDisplayString(), spell.Icon);
         yield return SpellFxManager.instance.PlayMessages();
         var roots = Modify(spell);
         var casterSpace = Battlefield.instance.GetSpace(caster.FieldPos);
