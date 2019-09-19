@@ -10,6 +10,7 @@ public class ApplyStatusOnAwake : MonoBehaviour
     void Start()
     {
         var caster = GetComponent<Caster>();
-        caster.AddTagWithStatusEffect(statusEffectPrefab, statusEffectPrefab.casterTag);
+        var se = Instantiate(statusEffectPrefab, caster.transform).GetComponent<StatusEffect>();
+        caster.AddTagWithStatusEffect(se, se.casterTag);
     }
 }
