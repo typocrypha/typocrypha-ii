@@ -40,6 +40,7 @@ public class Caster : FieldObject
     public HitFn OnBeforeEffectApplied { get; set; }
     public HitFn OnAfterHitResolved { get; set; }
     public System.Action OnSpiritMode { get; set; }
+    public System.Action<Battlefield.Position> OnNoTargetHit { get; set; }
 
     #region State, Status, and Class
     [SerializeField] private State _type;
