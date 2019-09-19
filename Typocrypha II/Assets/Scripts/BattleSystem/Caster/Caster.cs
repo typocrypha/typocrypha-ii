@@ -90,6 +90,7 @@ public class Caster : FieldObject
             else
             {
                 ui?.onHealthChanged.Invoke((float)health / Stats.MaxHP);
+                ui?.onHealthChangedNumber.Invoke(value + "/" + Stats.MaxHP);
             }         
         }
     }
@@ -105,6 +106,7 @@ public class Caster : FieldObject
                 BStatus = BattleStatus.Dead;
             }
             ui?.onSpChanged.Invoke((float)sp / Stats.MaxSP);
+            ui?.onHealthChangedNumber.Invoke(value + "/" + Stats.MaxSP);
         }
     }
     int sp;
@@ -169,7 +171,8 @@ public class Caster : FieldObject
         set
         {
             charge = value;
-            ui?.onChargeChanged.Invoke(charge/ChargeTime); 
+            ui?.onChargeChanged.Invoke(charge/ChargeTime);
+            ui?.onChargeChangedNumber.Invoke(((int)Charge) + "/" + ((int)ChargeTime));
         }
     }
     float charge; // Charge amount (seconds) for enemies
@@ -253,8 +256,8 @@ public class Caster : FieldObject
     {
         if (ui == null) ui = GetComponentInChildren<CasterUI>();
         tags.RecalculateAggregate();
-        Health = Stats.MaxHP;
-        SP = Stats.MaxSP;
+        sp = Stats.MaxSP;
+        Health = Stats.MaxHP;       
         Stagger = Stats.MaxStagger;
         ui?.onNameChanged.Invoke(DisplayName);
     }
