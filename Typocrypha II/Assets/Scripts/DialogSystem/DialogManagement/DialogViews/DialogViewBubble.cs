@@ -43,8 +43,14 @@ public class DialogViewBubble : DialogView
     {
         var obj = Instantiate(dialogBoxPrefab, transform);
         old.Add(obj);
-        obj.GetComponent<RectTransform>().anchoredPosition = dialogItem.rect.position;
-        obj.GetComponent<RectTransform>().sizeDelta = new Vector2(dialogItem.rect.width, dialogItem.rect.height);
+        // Absolute Pixel Positioning (Top Left Origin)
+        //obj.GetComponent<RectTransform>().anchoredPosition = dialogItem.rect.position;
+        //obj.GetComponent<RectTransform>().sizeDelta = new Vector2(dialogItem.rect.width, dialogItem.rect.height);
+        // Normalized World Positioning (Top Left)
+        Vector2 res = new Vector2(Screen.width, Screen.height);
+        obj.GetComponent<RectTransform>().anchoredPosition = dialogItem.rect.position * res;
+        obj.GetComponent<RectTransform>().sizeDelta = 
+            new Vector2(dialogItem.rect.width, dialogItem.rect.height) * res;
         var dialogBox = obj.GetComponent<DialogBox>();
         dialogBox.StartDialogBox(dialogItem);
         return dialogBox;
