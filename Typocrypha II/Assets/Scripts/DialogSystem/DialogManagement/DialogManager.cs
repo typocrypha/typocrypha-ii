@@ -106,7 +106,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     public void StartDialog()
     {
         graphParser.Init();
-        if (dialogCounter <= 0) // Start from beginning of scene if no save file load.
+        if (isBattle || dialogCounter <= 0) // Start from beginning of scene if no save file load (can't save in middle of battle).
         {
             dialogCounter = -1;
             NextDialog();
@@ -142,21 +142,13 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     }
 
     /// <summary>
-    /// Show/Hide dialog UI/characters/etc. DOES NOT pause.
+    /// Show/Hide dialog UI/characters/etc. DOES NOT pause?
     /// </summary>
     /// <param name="show">If true, display dialog. Otherwise, hide.</param>
     public void Display(bool show)
     {
-        if (show)
-        {
-            transform.position = Vector3.zero;
-            PH.Pause = false;
-        }
-        else
-        {
-            transform.Translate(30f, 0f, 0f);
-            PH.Pause = true;
-        }
+        PH.Pause = !show;
+        foreach (var view in allViews) view.SetEnabled(show); // MAY CAUSE SOME NULL REFS
     }
 
     // Hide all views except for current.

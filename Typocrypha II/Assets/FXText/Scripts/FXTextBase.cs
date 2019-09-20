@@ -61,7 +61,11 @@ namespace FXText
                         for (int k = 0; k < vertsInQuad; k++)
                         {
                             stream.Insert(pos, new UIVertex());
-                            if (shadow) stream.Insert(pos + ((text.Length - wspace + shift - 1) * vertsInQuad) + k + 1, new UIVertex());
+                            if (shadow)
+                            {
+                                int spos = pos + ((text.Length - wspace + shift - 1) * vertsInQuad) + k + 1;
+                                stream.Insert(spos, new UIVertex());
+                            }
                         }
                     }
                 }
