@@ -136,7 +136,7 @@ public class TextMacros : MonoBehaviour {
 	// input: [0]: string, color name (must be implemented in Unity rich tags)
 	//             if argument is empty, subsitutes the closing tag '</color>'
 	string macroColor(string[] opt) {
-		if (opt [0] != null && opt[0] != "") {
+		if (opt.Length != 0 && opt [0] != null && opt[0] != "") {
 			if (color_map.ContainsKey(opt[0]))
 				return "<color=" + color_map[opt[0]] + ">";
 			else return "<color=" + opt [0] + ">";

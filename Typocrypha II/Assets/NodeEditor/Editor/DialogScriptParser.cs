@@ -173,8 +173,7 @@ public class DialogScriptParser : EditorWindow
             }
             catch
             {
-                Debug.LogError("Line " + (i + 1) + ": Script parsing error");
-                Debug.LogError("Line " + (i + 1) + ": " + lines[i]);
+                Debug.LogError("Line Error " + (i + 1) + ": " + lines[i]);
             }
         }
         // Create end node (if not already there).
@@ -232,7 +231,16 @@ public class DialogScriptParser : EditorWindow
         System.Type nodeType = nodeMap[args[0]];
         if (nodeType == typeof(GameflowStartNode))
         {
-            if (canvas != null) EndCanvas(); // End previous canvas.
+            if (canvas != null)
+            {
+                // Create end node (if not already there).
+                if (!(prev is GameflowEndNode))
+                {
+                    var endNode = CreateNode(EndAndHide.ID) as EndAndHide;
+                    (prev as BaseNodeIO).toNextOUT.TryApplyConnection(endNode.fromPreviousIN, true);
+                }
+                EndCanvas(); // End previous canvas.
+            }
             StartCanvas(args[1]); // Start new canvas.
         }
         else if (nodeType == typeof(AddCharacter))
@@ -427,8 +435,8 @@ public class DialogScriptParser : EditorWindow
                     -0.1f,
                     -0.4f,
                 };
-                (dnode as DialogNodeBubble).rectVal.x = bfc_row[int.Parse(coords[0])];
-                (dnode as DialogNodeBubble).rectVal.y = bfc_col[int.Parse(coords[1])];
+                (dnode as DialogNodeBubble).rectVal.x = bfc_row[int.Parse(coords[1])];
+                (dnode as DialogNodeBubble).rectVal.y = bfc_col[int.Parse(coords[0])];
                 (dnode as DialogNodeBubble).rectVal.width = 0.25f;
                 (dnode as DialogNodeBubble).rectVal.height = 0.5f;
             }

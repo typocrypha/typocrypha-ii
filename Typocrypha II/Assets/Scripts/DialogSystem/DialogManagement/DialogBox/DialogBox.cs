@@ -80,11 +80,10 @@ public class DialogBox : MonoBehaviour, IDialogBox
         shadow.effectColor = Color.black;
         // Get dialog.
         this.dialogItem = dialogItem;
-        string otext = dialogItem.text; // Original text
-        dialogItem.text = DialogParser.instance.SubstituteMacros(dialogItem.text); // Parse macros
-        dialogItem.text = Regex.Replace(dialogItem.text, @"<.*?>", ""); // Remove rich text tags
+        string rtext = DialogParser.instance.SubstituteMacros(dialogItem.text); // Parse macros
+        dialogItem.text = Regex.Replace(rtext, @"<.*?>", ""); // Remove rich text tags
         DialogParser.instance.Parse(dialogItem, this); // Parse w/o rich text tags
-        dialogText.text = DialogParser.instance.RemoveTags(otext); // Set dialog text
+        dialogText.text = DialogParser.instance.RemoveTags(rtext); // Set dialog text (doesn't remove rich text tags)
         // Hide all text.
         hideText = dialogText.gameObject.AddComponent<FXText.Color>();
         hideText.ind = new List<int> { 0, 0 };

@@ -78,6 +78,7 @@ public class DialogGraphParser : MonoBehaviour
             }
             else if (currNode is EndAndHide)
             {
+                DialogManager.instance.GetComponentInChildren<DialogViewBubble>()?.RemoveOld();
                 DialogManager.instance.Display(false);
                 return null;
             }
