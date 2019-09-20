@@ -40,6 +40,7 @@ public class Caster : FieldObject
     public HitFn OnBeforeEffectApplied { get; set; }
     public HitFn OnAfterHitResolved { get; set; }
     public System.Action OnSpiritMode { get; set; }
+    public System.Action<Battlefield.Position> OnNoTargetHit { get; set; }
 
     #region State, Status, and Class
     [SerializeField] private State _type;
@@ -157,10 +158,7 @@ public class Caster : FieldObject
             // Set spell word (DEBUG)
             ui?.onSpellChanged.Invoke(spell.ToDisplayString());
             // Set spell icon (gets first rootword)
-            foreach(var spellword in spell)
-                if (spellword is RootWord)
-                    ui?.onSpellIconChanged.Invoke((spellword as RootWord).icon);
-            
+            ui?.onSpellIconChanged.Invoke(spell.Icon);            
         }
     }
     Spell spell;

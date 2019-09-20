@@ -407,10 +407,31 @@ public class DialogScriptParser : EditorWindow
             dnode = CreateNode(DialogNodeBubble.ID) as DialogNodeBubble;
             (dnode as DialogNodeBubble).multi = (exprs[0] == "multi");
             var coords = poses[0].Split(',');
-            (dnode as DialogNodeBubble).rectVal.x = float.Parse(coords[0]);
-            (dnode as DialogNodeBubble).rectVal.y = float.Parse(coords[1]);
-            (dnode as DialogNodeBubble).rectVal.width = float.Parse(coords[2]);
-            (dnode as DialogNodeBubble).rectVal.height = float.Parse(coords[3]);
+            if (coords.Length == 4) // Full coordinate specification
+            {
+                (dnode as DialogNodeBubble).rectVal.x = float.Parse(coords[0]);
+                (dnode as DialogNodeBubble).rectVal.y = float.Parse(coords[1]);
+                (dnode as DialogNodeBubble).rectVal.width = float.Parse(coords[2]);
+                (dnode as DialogNodeBubble).rectVal.height = float.Parse(coords[3]);
+            }
+            else // Shorthand battlefield coordinates
+            {
+                float[] bfc_row = new float[]
+                {
+                    0.1f,
+                    0.4f,
+                    0.7f,
+                };
+                float[] bfc_col = new float[]
+{
+                    -0.1f,
+                    -0.4f,
+                };
+                (dnode as DialogNodeBubble).rectVal.x = bfc_row[int.Parse(coords[0])];
+                (dnode as DialogNodeBubble).rectVal.y = bfc_col[int.Parse(coords[1])];
+                (dnode as DialogNodeBubble).rectVal.width = 0.25f;
+                (dnode as DialogNodeBubble).rectVal.height = 0.5f;
+            }
         }
         dnode.characterName = cname.Substring(0, cname.Length-1);
         dnode.displayName = displayName;

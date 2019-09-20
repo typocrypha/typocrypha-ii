@@ -52,7 +52,7 @@ public class SpellManager : MonoBehaviour
             }
             yield break;
         }
-        SpellFxManager.instance.LogMessage(caster.DisplayName + " casts " + spell.ToDisplayString());
+        SpellFxManager.instance.LogMessage(caster.DisplayName + " casts " + spell.ToDisplayString(), spell.Icon);
         yield return SpellFxManager.instance.PlayMessages();
         var roots = Modify(spell);
         var casterSpace = Battlefield.instance.GetSpace(caster.FieldPos);
@@ -74,6 +74,7 @@ public class SpellManager : MonoBehaviour
                     var targetSpace = Battlefield.instance.GetSpace(t);
                     if (targetCaster == null || targetCaster.BStatus == Caster.BattleStatus.Dead || targetCaster.BStatus == Caster.BattleStatus.Fled)
                     {
+                        caster.OnNoTargetHit?.Invoke(t);
                         crList.Add(SpellFxManager.instance.NoTargetFx(targetSpace));
                     }
                     else

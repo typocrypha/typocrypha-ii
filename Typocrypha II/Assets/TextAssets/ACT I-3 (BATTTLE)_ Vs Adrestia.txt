@@ -1,0 +1,464 @@
+﻿/* Begin Scene Documentation
+Status
+* Script Status: outline (waiting on design)
+* DSP status: N/A
+* Scriptwriter: Tino
+Character List:
+* Ayin
+* Adelai
+* Nemesis
+* Kaia (off-screen)
+Setting List:
+* Lower Level Streets (station) (Battle)
+Information communicated to the player:
+* Basic combat mechanics: Spellcasting and damage
+* Basic combat mechanics: Rules
+* Basic combat mechanics: Allies
+* Spells:
+   * Sword and Lance (or equivalents)
+* Nemesis’ Rule: Gloam Knight Nemesis
+* Kaia’s Rule: Vampire Hunter
+* Kaia is the general of E and is powerful
+Premise:
+* Ayin and Adelai are trapped at the train station by Adrestia (and possibly minion demons) and have to fight to survive. Is also the combat tutorial
+Outline
+* Nemesis catches up and forces them into a battle
+* Fight happens (see design doc)
+* As the party is about to die, Kaia arrives with the Exterminators. Kaia puts her rule into place, allowing Ayin and Adelai to leave.
+
+
+
+
+End Scene Documentation */
+
+
+// WAVE 1 : Spellcasting
+
+
+// Battle interrupt 1: start of the battle
+>start,ACTI-3Wave1Start
+
+
++bubble
+
+
+Changeling [0,1]: Cursed Ostanes!
+
+
+Changeling [0,1]: In the name of Nemesis, you shall fall!
+
+
++vn
+
+
+>addchar,Ayin,0,0
+
+
+>addchar,Clarke,0,0.5
+
+
+Clarke (normal): Ein, watch out! The Demons of the {c,evil-eye} EVIL EYE {c} are attacking!
+
+
+Clarke (normal): Combat subroutines have been enabled on your TYPOCRYPHA.
+
+
+Clarke (cheeky): I’ll assume due to your “lack of practice” you’ll be needing a refresher?
+
+
+Ein (sheepish): Uh, just make it quick.
+
+
+Ein (sheepish): I don’t think the Demons are going to wait for me to re-take my certifications.
+
+
+Clarke (normal): Noted. You can cast {c,spell}SPELLS{c} by entering them into your TYPOCRYPHA
+
+
+Clarke (normal): Press {c,ui-terms}ENTER{c} to submit your input and cast a {c,spell}SPELL!{c}
+
+
+Clarke (normal): Try starting with a {c,spell}SWORD!{c}
+
+
+>removechar,Clarke
+
+
+>removechar,Ayin
+
+
++bubble
+
+
+Adelai [1,2]: Don’t worry about me.
+
+
+Adelai [1,2]: Focus on the Demons!
+
+
+//Probably have the changeling have a speech bubble here
+
+
+//Battle interrupt 2: if the player seems to be struggling with casting
+
+
+>start,ACTI-3Wave1CastReminder
+
+
+>addchar,Ayin,0,0
+
+
+>addchar,Clarke,0,0.5
+
+
+Clarke: You seem to be having some trouble there!
+
+
+Ayin (sheepish): I did say I was out of practice…
+
+
+Clarke: Just remember, You can cast SPELLS by entering them into your TYPOCRYPHA
+
+
+Clarke (normal): Press ENTER to submit your input and cast a SPELL!
+
+
+Clarke (victory): Knock them dead with SWORD!
+
+
+//Battle interrupt 3: When the changeling goes down
+
+
+>start,ACTI-3Wave1Wisp
+
+
+>addchar,Ayin,0,0
+
+
+>addchar,Clarke,0,0.5
+
+
+Clarke: See that blue orb?
+
+
+Clarke: That’s a WISP, a Demon’s purest form!
+
+
+Ein (concerned): Are they dangerous?
+
+
+Clarke:  They almost always run away immediately.
+
+
+Ein (serious): Should I attack them?
+
+
+Clarke (alert): The AEIOU strongly recommends all WISPs be terminated immediately.
+
+
+Clarke (alert): Remember, citizen! The only way to truly kill a Demon is to destroy its WISP.
+
+
+Ein (Uncomfortable): Um, ok then...
+
+
+// WAVE 2 : Targeting
+
+
+// Battle interrupt 1: start of the battle
+
+
+>start,ACTI-3Wave2Start
+
+
++bubble
+
+
+ChangelingA [0,0]: You beat our friend!
+
+
+ChangelingA [0,0]: You’ll pay for that!
+
+
+ChangelingB [0,2]: They look scary…
+
+
++vn 
+
+
+>addchar,Ayin,0,0
+
+
+>addchar,Clarke,0,0.2
+
+
+Clarke: Multiple Demons detected!
+
+
+Clarke: Targeting subsystems activated.
+
+
+Clarke: Use the ARROW KEYS to select the target for your spells.
+
+
+Clarke: You can also target yourself and your allies.
+
+
+Clarke (cheeky): Be careful not to cast SWORD on yourself!
+
+
+>removechar,Clarke
+
+
+>removechar,Ayin
+
+
++bubble
+
+
+Adelai: Ein, you take the one on the left!
+
+
+Adelai: I’ll handle the one on the right!
+
+
+// Battle interrupt 2: if the player casts a spell that doesn’t hit any targets
+
+
+>start,ACTI-3Wave2TargetReminder
+
+
+>addchar,Ayin,0,0
+
+
+>addchar,Clarke,0,0.5
+
+
+Clarke: It looks like your spell didn’t hit anybody!
+
+
+Ein (sheepish):  (I’m more out of practice than I thought I was…)
+
+
+Clarke: Remember, use the ARROW KEYS to select the target for your spells!
+
+
+// WAVE 3 : SALVE and SHIELD
+
+
+// Battle interrupt 1: start of the battle
+
+
+>start,ACTI-3Wave3SalveTut
+
+
+>addchar,Ayin,0,0
+
+
+>addchar,Clarke,0,0.5
+
+
+Ein (concerned): There doesn’t seem to be any more coming…
+
+
+Clarke: This is a good chance to patch yourself up with SALVE!
+
+
+Clarke: Casting SALVE will cause you to heal over time.
+
+
+Clarke: But watch out! If you are hit while healing you’ll take extra damage!
+
+
+Clarke: If you cast a different SPELL or get hit, the SALVE will stop.
+// Battle interrupt 2: After kitsune spawns
+
+
+>start,ACTI-3Wave3ShieldTut
+
+
+>addchar,Ayin,0,0
+
+
+>addchar,Clarke,0,0.5
+
+
+Clarke: You’ve been ambushed!
+
+
+Clarke: Quick, cast SHIELD!
+
+
+Clarke: SHIELD will raise your defense..
+
+
+Clarke: But be aware! If you cast a spell while your SHIELD is up, it will do less damage!
+
+
+Clarke: If you cast a different SPELL, your SHIELD will stop.
+// Battle interrupt 3: after kitsune is turned into a WISP
+
+
+>start,ACTI-3Wave3KitsuneDefeated
+
+
++bubble
+
+
+>playbgm,BGMVictory
+
+
+Adelai [1,2]: We did it!
+
+
+Ayin [1,1]: Was the their leader?
+
+
+Adelai [1,2]: It had to have been.
+
+
+Adelai [1,2]: The others should run now.
+
+
+Ayin [1,1]: Wait… My TYPOCRYPHA-
+
+
++vn
+
+
+>addchar,Clarke,0,0.5
+
+
+>addchar,Ayin,0,0
+
+
+>playbgm,BGMMysterious
+
+
+Clarke: I’m detecting one more magical presence.
+ 
+Clarke: Be careful, this one seems different than the others...
+// WAVE 4: Gloam Knight Nemesis
+
+
+// Battle interrupt 1: start of the battle
+
+
+>start,ACTI-3Wave4AdrestiaStart
+
+
++bubble
+
+
+Nemesis [0,1]: OSTANES, 
+
+
+Nemesis [0,1]: Today, I end your CURSE upon Agartha.
+
+
+Nemesis [0,1]: Your betrayals will never be forgiven.
+
+
+Nemesis [0,1]: You cannot escape me.
+
+
+Nemesis [0,1]: You cannot kill me.
+
+
+Nemesis [0,1]: Accept your fate.
+
+
+Nemesis [0,1]: You shouldn’t be here.
+
+
+Nemesis [0,1]: I will make it so.
+
+
+Nemesis [0,1]: RULE: DEATHMATCH
+
+
+// The rule badge comes into 
+
+
+Ein [1,1]: Isn’t that Nemesis?
+
+
+Ein [1,1]: What is she talking about?
+
+
+Adelai [1,2]: I have no idea, but it doesn’t matter.
+
+
+Adelai [1,2]: We need to run, and fast.
+
+
+Adelai [1,2]: We’re just a waste of time to her.
+
+
+Adelai [1,2]: We should have left this to the Exterminators.
+
+
++vn
+
+
+>addchar,Clarke,0,0.5
+
+
+>addchar,Ayin,0,0
+
+
+Clarke: Ein, you need to be careful.
+
+
+Clarke: The enemy is powerful enough to have a RULE.
+
+
+Clarke: DEATHMATCH prevents anyone in battle from leaving until only one side is alive.
+
+
+Clarke: Trying to defeat her is useless.
+
+
+Clarke: Focus on staying alive with SHIELD and SALVE.
+
+
+Clarke: Your only hope is that the Exterminators show up before you die.
+
+
+// Battle interrupt 2: The Exterminators Arrive
+
+
+>start,ACTI-3Wave4KaiaArrives
+
+
+>addchar,Ayin,0,0
+
+
+>addchar,Kaia,0,0
+
+
+>playbgm,BGMMilitary
+
+
+Kaia (confident) “???”: Civilians, get down, and run as quickly as you can!
+
+
+Kaia (commanding) “???”: Exterminators, prepare for battle!
+
+
+Kaia (Zealous): RULE: MAGNUM RAIL
+
+
+//Adrestia’s rule breaks
+
+
+Ein: (Don’t have to tell me twice.)[a]
+
+
+>fade,1,1,1,3
+
+
+>stopbgm
+
+
+[a]Placeholder
