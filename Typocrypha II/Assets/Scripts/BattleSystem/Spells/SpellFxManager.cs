@@ -6,7 +6,7 @@ using UnityEngine;
 public class SpellFxManager : MonoBehaviour
 {
     private const float popTime = 0.5f;
-    private const float logTime = 0.8f;
+    private const float logTime = 1.1f;
     public static SpellFxManager instance;
     public bool HasMessages { get => logData.Count > 0; }
     [Header("No Target FX")]
@@ -19,14 +19,13 @@ public class SpellFxManager : MonoBehaviour
     [SerializeField] private SpellFxData blockFx = new SpellFxData();
     [Header("Default Popup Prefab")]
     [SerializeField] private GameObject popupPrefab = null;
-    [Header("Battle Log Popup Prefab")]
-    [SerializeField] private GameObject battleLogPopupPrefab = null;
     [Header("Effectiveness Sprites")]
     [SerializeField] private Sprite weakSprite = null;
     [Header("Log Fields")]
+    [SerializeField] private GameObject battleLogPrefab = null;
     [SerializeField] private Vector2 logPosition = new Vector2(0.5f, 0.5f);
-    [SerializeField] private Sprite logImage = null;
-
+    [SerializeField] private Canvas logCanvas;
+    
     private Queue<LogData> logData = new Queue<LogData>();
     /// <summary> Singleton implementation </summary>
     private void Awake()
@@ -46,17 +45,15 @@ public class SpellFxManager : MonoBehaviour
         while (logData.Count > 0)
         {
             var message = logData.Dequeue();
-            var popper = Instantiate(message.popupPrefab).GetComponent<PopupBase>();
-            var cr2 = popper.PopText(message.text, logPosition, logTime, Color.white);
-            if(message.image != null)
-                popper.PopImage(message.image, logPosition - new Vector2(5, 0), logTime);
-            yield return cr2;
-            popper.Cleanup();
+            var log = Instantiate(battleLogPrefab, Camera.main.WorldToScreenPoint(logPosition), Quaternion.identity, logCanvas.transform).GetComponent<BattleLog>();
+            log.SetContent(message.text, message.icon);
+            yield return new WaitForSeconds(logTime);
+            Destroy(log.gameObject);
         }
     }
-    public void LogMessage(string message, Sprite image = null, GameObject popupPrefabOverride = null)
+    public void LogMessage(string message, Sprite icon = null)
     {
-        logData.Enqueue(new LogData() { text = message, image = image, popupPrefab = popupPrefabOverride ?? battleLogPopupPrefab });
+        logData.Enqueue(new LogData() { text = message, icon = icon });
     }
     public Coroutine NoTargetFx(Vector2 pos)
     {
@@ -182,7 +179,6 @@ public class SpellFxManager : MonoBehaviour
     private class LogData
     {
         public string text;
-        public Sprite image = null;
-        public GameObject popupPrefab;
+        public Sprite icon = null;
     }
 }
