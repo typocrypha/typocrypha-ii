@@ -189,7 +189,7 @@ public class DialogParser : MonoBehaviour
                 i++;
             }
                 
-            if (cnt++ > 100) break;
+            if (cnt++ > 10000) break; // Infinite loop check
         }
         return parsed.ToString();
     }
