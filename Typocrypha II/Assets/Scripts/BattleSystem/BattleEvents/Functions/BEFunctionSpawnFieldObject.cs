@@ -10,5 +10,8 @@ public class BEFunctionSpawnFieldObject : BattleEventFunction
     {
         var obj = Instantiate(fieldObjectPrefab).GetComponent<FieldObject>();
         Battlefield.instance.Add(obj, pos);
+        var actor = obj.GetComponent<ATB3.ATBActor>();
+        if(actor != null)
+         actor.Pause = false;
     }
 }

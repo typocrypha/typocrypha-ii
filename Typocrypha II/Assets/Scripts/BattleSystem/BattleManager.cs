@@ -86,10 +86,6 @@ public class BattleManager : MonoBehaviour, IPausable
     /// </summary>
     public void SetBattleEvents(IEnumerable<GameObject> eventObjects, bool pause = true, bool addStd = true)
     {
-        // Destroy battle events from previous wave
-        foreach (var e in currEvents)
-            Destroy(e.gameObject);
-        currEvents.Clear();
         // Add the standard battle events for this battle to the list
         if(addStd)
             foreach (var e in stdBattleEvents)
@@ -98,7 +94,7 @@ public class BattleManager : MonoBehaviour, IPausable
         foreach (var e in eventObjects)
             currEvents.Add(Instantiate(e).GetComponent<BattleEvent>());
         // Pause all of the new battle events so they don't activate during the tarnsition
-        PH.Pause = pause;
+        //PH.Pause = pause;
     }
 
     public void AddBattleEvent(BattleEvent battleEvent)
@@ -113,8 +109,11 @@ public class BattleManager : MonoBehaviour, IPausable
         ++waveNum;
         var wave = graphParser.NextWave();
         if (wave == null) return;
-        // Set and pause the battle events
-        SetBattleEvents(wave.battleEvents);
+
+        // Destroy battle events from previous wave
+        foreach (var e in currEvents)
+            Destroy(e.gameObject);
+        currEvents.Clear();
         // Clear the battlefield according to the clear options in the new wave
         Battlefield.instance.ClearAndDestroy(wave.fieldOptions);
 
@@ -150,9 +149,13 @@ public class BattleManager : MonoBehaviour, IPausable
             }
         }
         yield return StartCoroutine(WaveTransition(waveData));
+        // Set and pause the battle events
+        SetBattleEvents(waveData.battleEvents);
         //DEBUG, actually sequence after transition later
         PH.Pause = false; // Unpause battle events
         Battlefield.instance.PH.Pause = false;
+        if(waveData.music != null)
+          AudioManager.instance.PlayBGM(waveData.music);
     }
 
     private IEnumerator WaveTransition(BattleWave waveData)

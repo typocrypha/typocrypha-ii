@@ -83,7 +83,7 @@ public class Caster : FieldObject
         get => health;
         protected set
         {
-            health = value;
+            health = Mathf.Clamp(value, 0, Stats.MaxHP);
             if (value <= 0 && BStatus == BattleStatus.Normal)
             {
                 BStatus = BattleStatus.SpiritMode;
