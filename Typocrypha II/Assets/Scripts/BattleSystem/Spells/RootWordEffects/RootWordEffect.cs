@@ -9,8 +9,8 @@ public abstract class RootWordEffect : ScriptableObject
     public TargetData pattern = new TargetData();
     public abstract CastResults Cast(Caster caster, Caster target, RootCastResults prevResults = null);
 
-    protected void LogMessage(string message, Sprite image = null, GameObject popupPrefabOverride = null)
+    protected void LogMessage(string message, Sprite icon = null)
     {
-        SpellFxManager.instance.LogMessage(message, image, popupPrefabOverride);
+        SpellFxManager.instance.LogMessage(message, icon);
     }
 }
