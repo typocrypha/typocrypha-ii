@@ -40,6 +40,8 @@ public class DialogCharacter : MonoBehaviour
     readonly Color highlightColor = Color.white;
     readonly Color noHighlightColor = Color.gray;
 
+    public bool isStaticCharacter = false; // Is this character just for display (doesn't change)
+
     void Awake()
     {
         overrideAnimator = new AnimatorOverrideController(animator.runtimeAnimatorController);
@@ -58,7 +60,13 @@ public class DialogCharacter : MonoBehaviour
 
     void Start()
     {
-
+        if (isStaticCharacter)
+        {
+            BodySprite = BodySprite;
+            ClothesSprite = ClothesSprite;
+            HairSprite = HairSprite;
+            Highlight(true);
+        }
     }
 
     public Sprite PoseSprite // Set/get the character's pose.
