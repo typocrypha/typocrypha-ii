@@ -116,6 +116,13 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
         characterMap.Remove(data.name);
     }
 
+    public void RemoveAllCharacters()
+    {
+        foreach (var kvp in characterMap)
+            Destroy(characterMap[kvp.Key].gameObject);
+        characterMap.Clear();
+    }
+
     /// <summary>
     /// Moves character immediately to new position.
     /// </summary>

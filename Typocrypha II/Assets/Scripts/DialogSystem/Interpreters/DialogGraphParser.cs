@@ -78,7 +78,8 @@ public class DialogGraphParser : MonoBehaviour
             }
             else if (currNode is EndAndHide)
             {
-                DialogManager.instance.GetComponentInChildren<DialogViewBubble>()?.RemoveOld();
+                DialogManager.instance.CleanUp();
+                DialogCharacterManager.instance?.RemoveAllCharacters();
                 DialogManager.instance.Display(false);
                 return null;
             }
@@ -254,22 +255,22 @@ public class DialogGraphParser : MonoBehaviour
             if (currNode is PlayBgm)
             {
                 var node = currNode as PlayBgm;
-                AudioManager.instance.PlayBGM(node.bgm, node.fadeCurve);
+                AudioManager.instance?.PlayBGM(node.bgm, node.fadeCurve);
             }
             else if (currNode is StopBgm)
             {
                 var node = currNode as StopBgm;
-                AudioManager.instance.StopBGM(node.fadeCurve);
+                AudioManager.instance?.StopBGM(node.fadeCurve);
             }
             else if (currNode is PauseBgm)
             {
                 var node = currNode as PauseBgm;
-                AudioManager.instance.PauseBGM(node.pause);
+                AudioManager.instance?.PauseBGM(node.pause);
             }
             else if (currNode is PlaySfx)
             {
                 var node = currNode as PlaySfx;
-                AudioManager.instance.PlaySFX(node.sfx);
+                AudioManager.instance?.PlaySFX(node.sfx);
             }
         }
         else if (currNode is ClampDialogUINode)

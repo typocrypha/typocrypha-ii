@@ -52,4 +52,9 @@ public class DialogViewVN : DialogView
         dialogBox.StartDialogBox(dialogItem);
         return dialogBox;
     }
+
+    public override void CleanUp()
+    {
+        // Does nothing.
+    }
 }

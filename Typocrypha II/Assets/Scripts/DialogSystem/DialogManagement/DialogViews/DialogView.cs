@@ -33,4 +33,9 @@ public abstract class DialogView : MonoBehaviour
     {
         GameObject go = Instantiate(dialogInputPrefab, transform);
     }
+
+    /// <summary>
+    /// Cleans up dialog view (e.g. removing dialog boxes)
+    /// </summary>
+    public abstract void CleanUp();
 }

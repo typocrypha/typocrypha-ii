@@ -68,4 +68,9 @@ public class DialogViewBubble : DialogView
             Destroy(tmp);
         }
     }
+
+    public override void CleanUp()
+    {
+        RemoveOld();
+    }
 }

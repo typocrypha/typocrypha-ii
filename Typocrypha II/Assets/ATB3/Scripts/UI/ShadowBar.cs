@@ -18,7 +18,8 @@ public class ShadowBar : MonoBehaviour
         set
         {
             _curr = value;
-            StartCoroutine(Transition(shadow, shadowDelay, shadowTime, Curr));
+            if (gameObject.activeInHierarchy)
+                StartCoroutine(Transition(shadow, shadowDelay, shadowTime, Curr));
         }
     }
     public float shadowDelay = 0.5f; // Delay before shadow changes

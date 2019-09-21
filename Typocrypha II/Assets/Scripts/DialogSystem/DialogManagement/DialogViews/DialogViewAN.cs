@@ -30,9 +30,14 @@ public class DialogViewAN : DialogView
         gameObject.SetActive(e);
     }
 
-    // Clear all AN dialogue
+    // Clear all AN dialogue (TODO)
     public void ClearLog()
     {
         
+    }
+
+    public override void CleanUp()
+    {
+        ClearLog();
     }
 }

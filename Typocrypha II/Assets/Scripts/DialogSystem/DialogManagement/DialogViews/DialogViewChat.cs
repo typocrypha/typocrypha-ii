@@ -75,6 +75,11 @@ public class DialogViewChat : DialogView
         ResetWindowSize();
     }
 
+    public override void CleanUp()
+    {
+        ClearLog();
+    }
+
     #region chat window height management
     // Increases window size to fit new dialogue box
     void SetWindowSize(float boxHeight)

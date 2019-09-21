@@ -148,7 +148,15 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     public void Display(bool show)
     {
         PH.Pause = !show;
-        foreach (var view in allViews) view.SetEnabled(show); // MAY CAUSE SOME NULL REFS
+        dialogView?.SetEnabled(show);
+    }
+
+    /// <summary>
+    /// Cleans up all dialog views (i.e. deletes old dialog boxes).
+    /// </summary>
+    public void CleanUp()
+    {
+        foreach (var view in allViews) view.CleanUp();
     }
 
     // Hide all views except for current.
