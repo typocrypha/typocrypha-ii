@@ -61,7 +61,8 @@ public class TextEvents : MonoBehaviour, IPausable
             {"fade-screen", FadeScreen},
             {"text-delay", TextDelay},
             {"float-text", FloatText },
-            {"tips-entry",SignalEntry }
+            {"tips-entry",SignalEntry },
+            {"play-sfx",PlaySFX }
         };
     }
 
@@ -72,7 +73,8 @@ public class TextEvents : MonoBehaviour, IPausable
     /// <param name="opt">Parameters to event.</param>
     /// <returns>Coroutine of event (null if none).</returns>
     public Coroutine PlayEvent(string evt, string[] opt)
-    {
+    { 
+        Debug.Log("TextEvent:" + evt);
         if (!textEventMap.TryGetValue(evt, out TextEventDel textEvent))
         {
             Debug.LogException(new System.Exception("Bad text event parameters:" + evt));
@@ -90,6 +92,15 @@ public class TextEvents : MonoBehaviour, IPausable
     IEnumerator Test(string[] opt)
     {
         Debug.Log("test");
+        yield return null;
+    }
+
+    public AudioClip[] hardCodedClips;
+    int hardCodedInd = 0;
+
+    IEnumerator PlaySFX(string[] opt)
+    {
+        AudioManager.instance.PlaySFX(hardCodedClips[hardCodedInd++]);
         yield return null;
     }
 

@@ -155,7 +155,11 @@ public class BattleManager : MonoBehaviour, IPausable
         PH.Pause = false; // Unpause battle events
         Battlefield.instance.PH.Pause = false;
         if(waveData.music != null)
-          AudioManager.instance.PlayBGM(waveData.music);
+        {
+            AudioManager.instance.PlayBGM(waveData.music);
+            AudioManager.instance.BGMVolume = 0.6f;
+        }
+          
     }
 
     private IEnumerator WaveTransition(BattleWave waveData)

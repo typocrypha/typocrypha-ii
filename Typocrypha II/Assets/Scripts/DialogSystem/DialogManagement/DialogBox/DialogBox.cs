@@ -84,6 +84,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
         dialogItem.text = Regex.Replace(rtext, @"<.*?>", ""); // Remove rich text tags
         DialogParser.instance.Parse(dialogItem, this); // Parse w/o rich text tags
         dialogText.text = DialogParser.instance.RemoveTags(rtext); // Set dialog text (doesn't remove rich text tags)
+        Debug.Log(dialogText.text);
         // Hide all text.
         hideText = dialogText.gameObject.AddComponent<FXText.Color>();
         hideText.ind = new List<int> { 0, 0 };
@@ -182,13 +183,14 @@ public class DialogBox : MonoBehaviour, IDialogBox
             {
                 yield return new WaitForSeconds(ScrollDelay);
             }
-            else // If scale is at 0, skip all text.
+            else // If scale is at 0, skip to next dialog event
             {
-                hideText.ind[0] = dialogItem.text.Length;
-                break;
+                if (dialogItem.TextEventList.Count > 0)
+                    pos = dialogItem.TextEventList[0].pos;
+                hideText.ind[0] = pos;
             }
-		}
-		yield return StartCoroutine(CheckEvents (dialogItem.text.Length)); // Play events at end of text.
+        }
+        yield return StartCoroutine(CheckEvents (dialogItem.text.Length)); // Play events at end of text.
 		scrollCR = null;
 	}
 

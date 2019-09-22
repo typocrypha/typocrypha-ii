@@ -43,6 +43,12 @@ public class AudioManager : MonoBehaviour, ISavable
         }
     }
 
+    public float BGMVolume
+    {
+        get => bgm[bgmInd].volume;
+        set => bgm[bgmInd].volume = value;
+    }
+
     void Awake()
     {
         if (instance == null)
