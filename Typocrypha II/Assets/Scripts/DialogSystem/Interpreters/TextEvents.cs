@@ -95,12 +95,9 @@ public class TextEvents : MonoBehaviour, IPausable
         yield return null;
     }
 
-    public AudioClip[] hardCodedClips;
-    int hardCodedInd = 0;
-
     IEnumerator PlaySFX(string[] opt)
     {
-        AudioManager.instance.PlaySFX(hardCodedClips[hardCodedInd++]);
+        //AudioManager.instance.PlaySFX(null);
         yield return null;
     }
 
