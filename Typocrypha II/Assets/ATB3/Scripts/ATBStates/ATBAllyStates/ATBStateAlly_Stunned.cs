@@ -6,8 +6,6 @@ namespace ATB3
 {
     public class ATBStateAlly_Stunned : ATBState<ATBAlly>
     {
-        // The ID for this specific ATBState
-        public override ATBStateID StateID { get { return ATBStateID.Stunned; } }
         private float timer = 0.0f;
         private float stunTime = 5f;
 
@@ -24,7 +22,7 @@ namespace ATB3
         {
             timer += Time.deltaTime;
             if (timer >= stunTime)
-                Source.PerformTransition(ATBTransition.ExitStun);
+                Source.PerformTransition(ATBStateID.Charge);
             return;
         }
 

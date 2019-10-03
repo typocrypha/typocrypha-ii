@@ -39,7 +39,7 @@ namespace ATB3
             while (true)
             {
                 yield return new WaitForFixedUpdate();
-                yield return new WaitWhile(() => Pause || !isCurrentState(ATBStateID.Charge));
+                yield return new WaitWhile(() => Pause || !IsCurrentState(ATBStateID.Charge));
                 if (Mp == mpMax)
                     continue;
                 time += Time.fixedDeltaTime * Caster.Stats.CastingSpeedMod;
@@ -87,7 +87,7 @@ namespace ATB3
             if (Input.GetKeyDown(menuKey))
             {
                 Menu(state);
-                StateMachine.PerformTransition(ATBTransition.ToAllyMenu);
+                StateMachine.PerformTransition(ATBStateID.AllyMenu);
             }
         }
 
@@ -123,7 +123,7 @@ namespace ATB3
             Mp -= spell.Cost;
             Caster.Spell = spell;
             Caster.TargetPos = Battlefield.instance.Player.TargetPos;
-            StateMachine.PerformTransition(ATBTransition.ToBeforeCast);
+            StateMachine.PerformTransition(ATBStateID.BeforeCast);
         }
         public override void OnPause(bool b)
         {

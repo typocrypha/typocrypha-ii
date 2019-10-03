@@ -6,9 +6,6 @@ namespace ATB3
 {
     public class ATBStatePlayer_Cast : ATBState<ATBPlayer>
     {
-        // The ID for this specific ATBState
-        public override ATBStateID StateID { get { return ATBStateID.Cast; } }
-
         // Call upon entering given state
         public override void OnEnter()
         {
@@ -32,7 +29,7 @@ namespace ATB3
         {
             var caster = Owner.GetComponent<Caster>();
             yield return SpellManager.instance.Cast(caster.Spell, caster, caster.TargetPos);
-            Source.PerformTransition(ATBTransition.ToAfterCast);
+            Source.PerformTransition(ATBStateID.AfterCast);
         }
     }
 }

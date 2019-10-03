@@ -6,9 +6,6 @@ namespace ATB3
 {
     public class ATBStatePlayer_Idle : ATBState<ATBPlayer>
     {
-        // The ID for this specific ATBState
-        public override ATBStateID StateID { get { return ATBStateID.Idle; } }
-
         // Call upon entering given state
         public override void OnEnter()
         {    

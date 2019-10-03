@@ -9,6 +9,6 @@ namespace ATB3
         PauseHandle PH { get;  }
         ATBStateID CurrentStateID { get; set; }
 
-        void PerformTransition(ATBTransition trans);
+        void PerformTransition(ATBStateID transitionTo);
     }
 }

@@ -23,7 +23,7 @@ namespace ATB3
         // Called when player enters a spell into the cast bar
         public void Cast()
         {
-            StateMachine.PerformTransition(ATBTransition.ToBeforeCast);
+            StateMachine.PerformTransition(ATBStateID.BeforeCast);
         }
 
     }

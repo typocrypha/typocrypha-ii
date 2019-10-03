@@ -20,19 +20,8 @@ namespace ATB3
         // Add your states here!
         protected override void InitializeStates()
         {
-            AddState(new ATBStateEnemy_Charge() { Owner = Owner, Source = this });
-            AddState(new ATBStateEnemy_Stunned() { Owner = Owner, Source = this });
+            AddState(new ATBStateEnemy_Charge() { Owner = Owner, Source = this }, ATBStateID.Charge);
+            AddState(new ATBStateEnemy_Stunned() { Owner = Owner, Source = this }, ATBStateID.Stunned);
         }
-
-        // Appends the machine's transitions to the given transition map (should be called on awake)
-        // Add your transitions here!
-        // transitionMap says: trans rights!
-        protected override void InitializeTransitions()
-        {
-            AddTransition(ATBTransition.ToStun, ATBStateID.Stunned);
-            AddTransition(ATBTransition.ExitStun, ATBStateID.Charge);
-            AddTransition(ATBTransition.ToPreCast, ATBStateID.Stunned);
-        }
-
     }
 }

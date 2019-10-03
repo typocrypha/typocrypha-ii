@@ -5,11 +5,11 @@ using UnityEngine;
 namespace ATB3
 {
     //================================================================//
-    // PLAYER STATE MACHINE
-    // Machine for the player to manage individual states.
+    // ALLY STATE MACHINE
+    // Machine contained in all allies to manage individual states.
     //================================================================//
 
-    public class ATBStateMachine_Player : ATBStateMachine<ATBPlayer>
+    public class ATBStateMachine_AllyAutonomous : ATBStateMachine<ATBAlly>
     {
         //----------------------------------------------------------------//
         // PROPERTIES                                                     //
@@ -23,10 +23,12 @@ namespace ATB3
         // Add your states here!
         protected override void InitializeStates()
         {
-            AddState(new ATBStatePlayer_Idle() { Owner = Owner, Source = this }, ATBStateID.Idle);
-            AddState(new ATBStatePlayer_BeforeCast() { Owner = Owner, Source = this }, ATBStateID.BeforeCast);
-            AddState(new ATBStatePlayer_Cast() { Owner = Owner, Source = this }, ATBStateID.Cast);
-            AddState(new ATBStatePlayer_AfterCast() { Owner = Owner, Source = this }, ATBStateID.AfterCast);
+            AddState(new ATBStateAlly_Charge() { Owner = Owner, Source = this }, ATBStateID.Charge);
+            AddState(new ATBStateAlly_BeforeCast() { Owner = Owner, Source = this }, ATBStateID.BeforeCast);
+            AddState(new ATBStateAlly_Cast() { Owner = Owner, Source = this }, ATBStateID.Cast);
+            AddState(new ATBStateAlly_AfterCast() { Owner = Owner, Source = this }, ATBStateID.AfterCast);
+            AddState(new ATBStateAlly_CastDisabled() { Owner = Owner, Source = this }, ATBStateID.CastDisabled);
+            AddState(new ATBStateAlly_Stunned() { Owner = Owner, Source = this }, ATBStateID.Stunned);
         }
     }
 }
