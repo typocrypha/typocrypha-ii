@@ -5,11 +5,11 @@ using UnityEngine;
 namespace ATB3
 {
     [RequireComponent(typeof(Caster))]
-    [RequireComponent(typeof(ATBStateMachine_Ally))]
+    //[RequireComponent(typeof(ATBStateMachine<ATBAlly>))]
     public partial class ATBAlly : ATBActor
     {
         public const float activationWindow = 0.5f;
-        public ATBStateMachine_Ally StateMachine { get; private set; }
+        public ATBStateMachine<ATBAlly> StateMachine { get; private set; }
         public override IATBStateMachine BaseStateMachine => StateMachine;
         public Caster Caster { get; private set; }
         public AllyMenu allyMenu; // Ally menu (for choosing spell).
@@ -54,6 +54,8 @@ namespace ATB3
 
         void Update()
         {
+            if (allyMenu == null)
+                return;
             // return if we are not currently an ally, if we are currently casting, have an open ally menu,
             // We are not currently in solo, or if we don't have enough MP to cast anything
             if (Caster.CasterState != Caster.State.Ally || isCast 
@@ -99,7 +101,7 @@ namespace ATB3
 
         public override void Setup()
         {
-            StateMachine = GetComponent<ATBStateMachine_Ally>();
+            StateMachine = GetComponent<ATBStateMachine<ATBAlly>>();
             Caster = GetComponent<Caster>();
             PH.Pause = true;
             StartCoroutine(ChargeCR());
@@ -128,7 +130,7 @@ namespace ATB3
         public override void OnPause(bool b)
         {
             base.OnPause(b);
-            if(b)
+            if(b && menuPrompt != null)
                 menuPrompt.SetActive(false);
         }
     }
