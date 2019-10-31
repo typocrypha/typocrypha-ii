@@ -23,21 +23,10 @@ namespace ATB3
         // Add your states here!
         protected override void InitializeStates()
         {
-            AddState(new ATBStatePlayer_Idle() { Owner = Owner, Source = this });
-            AddState(new ATBStatePlayer_BeforeCast() { Owner = Owner, Source = this });
-            AddState(new ATBStatePlayer_Cast() { Owner = Owner, Source = this });
-            AddState(new ATBStatePlayer_AfterCast() { Owner = Owner, Source = this });
-        }
-
-        // Appends the machine's transitions to the given transition map (should be called on awake)
-        // Add your transitions here!
-        // transitionMap says: trans rights!
-        protected override void InitializeTransitions()
-        {
-            AddTransition(ATBTransition.ToBeforeCast, ATBStateID.BeforeCast);    // If about to cast, go into beforecast state
-            AddTransition(ATBTransition.ToCast, ATBStateID.Cast);                // If finishing beforecast, go into cast state
-            AddTransition(ATBTransition.ToAfterCast, ATBStateID.AfterCast);      // If performed spell, go into aftercast state
-            AddTransition(ATBTransition.ToIdle, ATBStateID.Idle);                // If ready to type again, go into idle state
+            AddState(new ATBStatePlayer_Idle() { Owner = Owner, Source = this }, ATBStateID.Idle);
+            AddState(new ATBStatePlayer_BeforeCast() { Owner = Owner, Source = this }, ATBStateID.BeforeCast);
+            AddState(new ATBStatePlayer_Cast() { Owner = Owner, Source = this }, ATBStateID.Cast);
+            AddState(new ATBStatePlayer_AfterCast() { Owner = Owner, Source = this }, ATBStateID.AfterCast);
         }
     }
 }

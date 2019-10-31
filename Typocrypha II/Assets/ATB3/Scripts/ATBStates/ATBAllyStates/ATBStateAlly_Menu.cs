@@ -6,9 +6,6 @@ namespace ATB3
 {
     public class ATBStateAlly_Menu : ATBState<ATBAlly>
     {
-        // The ID for this specific ATBState
-        public override ATBStateID StateID { get { return ATBStateID.AllyMenu; } }
-
         // Call upon entering given state
         public override void OnEnter()
         {

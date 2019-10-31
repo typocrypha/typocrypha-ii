@@ -7,10 +7,6 @@ namespace ATB3
     public class ATBStatePlayer_AfterCast : ATBState<ATBPlayer>
     {
         float timer = 0f;
-
-        // The ID for this specific ATBState
-        public override ATBStateID StateID => ATBStateID.AfterCast;
-
         // Call upon entering given state
         public override void OnEnter()
         {
@@ -23,7 +19,7 @@ namespace ATB3
         {
             timer += Time.fixedDeltaTime;
             if (timer >= ATBAlly.activationWindow)
-                Source.PerformTransition(ATBTransition.ToIdle);
+                Source.PerformTransition(ATBStateID.Idle);
         }
 
         // Call upon exiting given state
@@ -31,7 +27,7 @@ namespace ATB3
         {
             //Debug.Log("PLAYER " + this.Owner.actorName + " has EXITED the BEFORECAST state!");
             FaderManager.instance.FadeAll(0f, Color.black);
-            ATBManager.instance.ExitSolo(this.Owner);
+            ATBManager.instance.ExitSolo(Owner);
         }
     }
 }

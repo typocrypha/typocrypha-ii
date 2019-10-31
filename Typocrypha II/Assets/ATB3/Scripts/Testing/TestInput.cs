@@ -40,8 +40,8 @@ namespace ATB3
 
         public void checkInput()
         {
-            ATBTransition inputTrans = (ATBTransition)System.Enum.Parse(typeof(ATBTransition), input.text);
-            testActor.BaseStateMachine.PerformTransition(inputTrans);
+            var state = (ATBStateID)System.Enum.Parse(typeof(ATBStateID), input.text);
+            testActor.BaseStateMachine.PerformTransition(state);
         }
     }
 }

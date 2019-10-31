@@ -6,9 +6,6 @@ namespace ATB3
 {
     public class ATBStateEnemy_AfterCast : ATBState<ATBEnemy>
     {
-        // The ID for this specific ATBState
-        public override ATBStateID StateID => ATBStateID.AfterCast;
-
         // Call upon entering given state
         public override void OnEnter()
         {
@@ -24,11 +21,11 @@ namespace ATB3
             if (timer >= ATBAlly.activationWindow)
             {
                 if (Owner.Caster.BStatus == Caster.BattleStatus.Dead)
-                    Source.PerformTransition(ATBTransition.ToDeath);
+                    Source.PerformTransition(ATBStateID.Dead);
                 else if (Owner.Caster.BStatus == Caster.BattleStatus.Fled)
-                    Source.PerformTransition(ATBTransition.ToFlee);
+                    Source.PerformTransition(ATBStateID.Fled);
                 else
-                    Source.PerformTransition(ATBTransition.ToCharge);
+                    Source.PerformTransition(ATBStateID.Charge);
             }
                 
         }

@@ -4,33 +4,6 @@ using UnityEngine;
 
 namespace ATB3
 {
-
-    //================================================================//
-    // ATBStateTransition
-    // ID enum of events that trigger event changes
-    //================================================================//
-
-    /// <summary>
-    /// Place the labels for the Transitions in this enum.
-    /// Don't change the first label, NullTransition as FSMSystem class uses it.
-    /// </summary>
-    public enum ATBTransition
-    {
-        NullATBTransition = 0, // Use this transition to represent a non-existing transition in your system
-        ToStun,
-        ToPreCast,
-        ToBeforeCast,
-        ToCast,
-        ToAfterCast,
-        ToCharge,
-        ExitStun,
-        ToIdle,
-        ToAllyMenu,
-        ToCastDisabled,
-        ToDeath,
-        ToFlee,
-    }
-
     //================================================================//
     // ATBStateID
     // ID enum of state IDs
@@ -71,8 +44,7 @@ namespace ATB3
     [System.Serializable]
     public abstract class ATBState<T> where T : ATBActor
     {
-        //protected ATBStateID stateID = 0;
-        public virtual ATBStateID StateID { get { return ATBStateID.NullATBStateID; } }
+        public ATBStateID StateID { get; set; } = ATBStateID.NullATBStateID; 
         private T owner; 
         public T Owner { get { return owner; } set { owner = value; } }
         public ATBStateMachine<T> Source { get; set; }

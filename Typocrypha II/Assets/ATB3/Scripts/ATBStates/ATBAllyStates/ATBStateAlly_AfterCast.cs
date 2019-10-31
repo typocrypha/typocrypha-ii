@@ -6,8 +6,6 @@ namespace ATB3
 {
     public class ATBStateAlly_AfterCast : ATBState<ATBAlly>
     {
-        // The ID for this specific ATBState
-        public override ATBStateID StateID => ATBStateID.AfterCast;
         private float timer = 0;
 
         // Call upon entering given state
@@ -21,7 +19,7 @@ namespace ATB3
         {
             timer += Time.fixedDeltaTime;
             if (timer >= ATBAlly.activationWindow)
-                Source.PerformTransition(ATBTransition.ToCharge);
+                Source.PerformTransition(ATBStateID.Charge);
         }
 
         // Call upon exiting given state

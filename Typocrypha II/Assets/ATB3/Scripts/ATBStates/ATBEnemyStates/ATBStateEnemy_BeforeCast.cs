@@ -6,15 +6,12 @@ namespace ATB3
 {
     public class ATBStateEnemy_BeforeCast : ATBState<ATBEnemy>
     {
-        // The ID for this specific ATBState
-        public override ATBStateID StateID { get { return ATBStateID.BeforeCast; } }
-
         // Call upon entering given state
         public override void OnEnter()
         {
             if(Owner.Caster.Spell == null)
             {
-                Source.PerformTransition(ATBTransition.ToCharge);
+                Source.PerformTransition(ATBStateID.Charge);
                 return;
             }
             FaderManager.instance.FadeTargets(Owner.Caster.Spell, Owner.Caster.FieldPos, Owner.Caster.TargetPos);
@@ -32,7 +29,7 @@ namespace ATB3
         {
             timer += Time.fixedDeltaTime;
             if (timer >= ATBAlly.activationWindow)
-                Source.PerformTransition(ATBTransition.ToCast);
+                Source.PerformTransition(ATBStateID.Cast);
         }
 
         // Call upon exiting given state

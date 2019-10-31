@@ -41,7 +41,7 @@ namespace ATB3
             {
                 // Charge while in charge state
                 do yield return new WaitForFixedUpdate();
-                while (Pause || !isCurrentState(ATBStateID.Charge));
+                while (Pause || !IsCurrentState(ATBStateID.Charge));
                 Caster.Charge += Time.fixedDeltaTime * Caster.Stats.CastingSpeedMod;
             }
             Caster.Charge = Caster.ChargeTime;

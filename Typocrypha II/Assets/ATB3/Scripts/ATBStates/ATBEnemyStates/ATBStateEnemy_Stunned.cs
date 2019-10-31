@@ -6,8 +6,6 @@ namespace ATB3
 {
     public class ATBStateEnemy_Stunned : ATBState<ATBEnemy>
     {
-        // The ID for this specific ATBState
-        public override ATBStateID StateID { get { return ATBStateID.Stunned; } }
         private float timer = 0.0f;
         private float stuntime = 5;
 
@@ -25,9 +23,9 @@ namespace ATB3
         {
             timer += Time.fixedDeltaTime;
             if (Owner.Caster.BStatus == Caster.BattleStatus.Dead)
-                Source.PerformTransition(ATBTransition.ToDeath);
+                Source.PerformTransition(ATBStateID.Dead);
             if (timer >= stuntime || !Owner.Caster.Stunned)
-                Source.PerformTransition(ATBTransition.ExitStun);
+                Source.PerformTransition(ATBStateID.Charge);
             return;
         }
 

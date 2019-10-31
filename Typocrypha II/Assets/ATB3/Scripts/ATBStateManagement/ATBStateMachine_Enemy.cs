@@ -24,30 +24,14 @@ namespace ATB3
         // Add your states here!
         protected override void InitializeStates()
         {
-            AddState(new ATBStateEnemy_Charge() { Owner = Owner, Source = this });
-            AddState(new ATBStateEnemy_PreCast() { Owner = Owner, Source = this });
-            AddState(new ATBStateEnemy_BeforeCast() { Owner = Owner, Source = this });
-            AddState(new ATBStateEnemy_Cast() { Owner = Owner, Source = this });
-            AddState(new ATBStateEnemy_AfterCast() { Owner = Owner, Source = this });
-            AddState(new ATBStateEnemy_Stunned() { Owner = Owner, Source = this });
-            AddState(new ATBStateEnemy_Dead() { Owner = Owner, Source = this });
-            AddState(new ATBStateEnemy_Fled() { Owner = Owner, Source = this });
-        }
-
-        // Appends the machine's transitions to the given transition map (should be called on awake)
-        // Add your transitions here!
-        // transitionMap says: trans rights!
-        protected override void InitializeTransitions()
-        {
-            AddTransition(ATBTransition.ToStun, ATBStateID.Stunned);             // If stunned, go into stunned state
-            AddTransition(ATBTransition.ExitStun, ATBStateID.Charge);            // If exiting stun, go into charge state
-            AddTransition(ATBTransition.ToPreCast, ATBStateID.PreCast);          // If finished charge, go into precast state
-            AddTransition(ATBTransition.ToBeforeCast, ATBStateID.BeforeCast);    // If about to cast, go into beforecast state
-            AddTransition(ATBTransition.ToCast, ATBStateID.Cast);                // If finishing beforecast, go into cast state
-            AddTransition(ATBTransition.ToAfterCast, ATBStateID.AfterCast);      // If performed spell, go into aftercast state
-            AddTransition(ATBTransition.ToCharge, ATBStateID.Charge);            // If ready to charge spell again, go into charge state
-            AddTransition(ATBTransition.ToDeath, ATBStateID.Dead);               // If Dead, die
-            AddTransition(ATBTransition.ToFlee, ATBStateID.Fled);                // If ready to charge spell again, go into charge state
+            AddState(new ATBStateEnemy_Charge() { Owner = Owner, Source = this }, ATBStateID.Charge);
+            AddState(new ATBStateEnemy_PreCast() { Owner = Owner, Source = this }, ATBStateID.PreCast);
+            AddState(new ATBStateEnemy_BeforeCast() { Owner = Owner, Source = this }, ATBStateID.BeforeCast);
+            AddState(new ATBStateEnemy_Cast() { Owner = Owner, Source = this }, ATBStateID.Cast);
+            AddState(new ATBStateEnemy_AfterCast() { Owner = Owner, Source = this }, ATBStateID.AfterCast);
+            AddState(new ATBStateEnemy_Stunned() { Owner = Owner, Source = this }, ATBStateID.Stunned);
+            AddState(new ATBStateEnemy_Dead() { Owner = Owner, Source = this }, ATBStateID.Dead);
+            AddState(new ATBStateEnemy_Fled() { Owner = Owner, Source = this }, ATBStateID.Fled);
         }
     }
 }

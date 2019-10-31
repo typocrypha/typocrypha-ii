@@ -6,9 +6,6 @@ namespace ATB3
 {
     public class ATBStateAlly_CastDisabled : ATBState<ATBAlly>
     {
-        // The ID for this specific ATBState
-        public override ATBStateID StateID { get { return ATBStateID.CastDisabled; } }
-
         // Call upon entering given state
         public override void OnEnter()
         {    

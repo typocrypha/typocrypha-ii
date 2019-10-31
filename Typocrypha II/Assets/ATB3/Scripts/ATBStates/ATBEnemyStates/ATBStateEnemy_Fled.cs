@@ -6,9 +6,6 @@ namespace ATB3
 {
     public class ATBStateEnemy_Fled : ATBState<ATBEnemy>
     {
-        // The ID for this specific ATBState
-        public override ATBStateID StateID { get { return ATBStateID.Fled; } }
-
         // Call upon entering given state
         public override void OnEnter()
         {

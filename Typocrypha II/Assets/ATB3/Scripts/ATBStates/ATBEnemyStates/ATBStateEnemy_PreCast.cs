@@ -6,8 +6,6 @@ namespace ATB3
 {
     public class ATBStateEnemy_PreCast : ATBState<ATBEnemy>
     {
-        // The ID for this specific ATBState
-        public override ATBStateID StateID { get { return ATBStateID.PreCast; } }
         private float timer = 0.0f;
 
         // Call upon entering given state
@@ -26,10 +24,10 @@ namespace ATB3
             {
                 Owner.Caster.Charge = 0;
                 // Add lose cast on stun behavior here
-                Source.PerformTransition(ATBTransition.ToStun);
+                Source.PerformTransition(ATBStateID.Stunned);
             }
             if (timer >= 1.0f && !ATBManager.instance.InSolo)
-                Source.PerformTransition(ATBTransition.ToBeforeCast);
+                Source.PerformTransition(ATBStateID.BeforeCast);
             return;
         }
 

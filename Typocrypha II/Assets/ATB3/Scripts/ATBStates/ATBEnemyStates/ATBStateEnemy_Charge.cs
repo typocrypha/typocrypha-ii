@@ -6,8 +6,6 @@ namespace ATB3
 {
     public class ATBStateEnemy_Charge : ATBState<ATBEnemy>
     {
-        // The ID for this specific ATBState
-        public override ATBStateID StateID { get { return ATBStateID.Charge; } }
 
         // Call upon entering given state
         public override void OnEnter()
@@ -21,18 +19,18 @@ namespace ATB3
         public override void OnUpdate()
         {
             if (Owner.Caster.BStatus == Caster.BattleStatus.Dead)
-                Source.PerformTransition(ATBTransition.ToDeath);
+                Source.PerformTransition(ATBStateID.Dead);
             if (Owner.Caster.BStatus == Caster.BattleStatus.Fled)
-                Source.PerformTransition(ATBTransition.ToFlee);
+                Source.PerformTransition(ATBStateID.Fled);
             // If stunned, go to stun state
             if (Owner.Caster.Stunned)
             {
-                Source.PerformTransition(ATBTransition.ToStun);
+                Source.PerformTransition(ATBStateID.Stunned);
             }
             // If finished charging, go to precast
             if (Owner.Caster.Charge >= Owner.Caster.ChargeTime && Owner.Caster.Spell != null)
             {
-                Source.PerformTransition(ATBTransition.ToPreCast);
+                Source.PerformTransition(ATBStateID.PreCast);
             }
             return;
         }

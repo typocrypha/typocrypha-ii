@@ -60,7 +60,7 @@ namespace ATB3
         public abstract void Setup();
 
         // Checks if the current state name matches given string
-        public bool isCurrentState(ATBStateID stateID)
+        public bool IsCurrentState(ATBStateID stateID)
         {
             //return currStateHash == Animator.StringToHash(stateName);
             return BaseStateMachine.CurrentStateID == stateID;
