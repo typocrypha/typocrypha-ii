@@ -45,7 +45,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     public UnityEvent onSkip; // Event called when user manually skips text scroll.
     [HideInInspector] public DialogView dialogView; // Currently displayed dialog view.
     [HideInInspector] public IDialogBox dialogBox; // Latest displayed dialog box.
-    [HideInInspector] public int dialogCounter; // Number of dialog lines passed.
+    [HideInInspector] public int dialogCounter = 0; // Number of dialog lines passed.
 
     private DialogGraphParser graphParser; // Dialog graph currently playing.
 
@@ -113,7 +113,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
         }
         else // Otherwise, go to saved position.
         {
-            graphParser.FastForward(dialogCounter);
+            graphParser.SkipTo(dialogCounter);
             NextDialog(false);
         }
     }
@@ -142,7 +142,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     }
 
     /// <summary>
-    /// Show/Hide dialog UI/characters/etc. DOES NOT pause?
+    /// Show/Hide dialog UI/characters/etc.
     /// </summary>
     /// <param name="show">If true, display dialog. Otherwise, hide.</param>
     public void Display(bool show)
@@ -152,7 +152,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     }
 
     /// <summary>
-    /// Cleans up all dialog views (i.e. deletes old dialog boxes).
+    /// Cleans up all dialog views (e.g. deletes old dialog boxes).
     /// </summary>
     public void CleanUp()
     {

@@ -247,7 +247,7 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
         }
         catch
         {
-            Debug.LogError("No such pose:" + body);
+            Debug.LogError("No such body/clothes/hair:" + body + "/" + clothes + "/" + hair);
         }
         return characterMap[data.name];
     }

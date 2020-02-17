@@ -314,11 +314,11 @@ public class DialogGraphParser : MonoBehaviour
     }
 
     /// <summary>
-    /// Fast forwards to saved position.
+    /// Skips to saved position.
     /// Only works when no branching.
     /// </summary>
     /// <param name="pos">Node (dialog node count) position to fast forward to.</param>
-    public void FastForward(int pos)
+    public void SkipTo(int pos)
     {
         for (int i = 0; i <= pos;)
         {
