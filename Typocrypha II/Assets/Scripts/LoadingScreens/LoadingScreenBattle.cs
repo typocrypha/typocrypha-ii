@@ -15,7 +15,6 @@ public class LoadingScreenBattle : LoadingScreenDefault
             PostProcess.postProcessMap["swirl_screen_mat"].shaderParams["_SwirlAmount"] = value;
         }
     }
-    PostProcess swirl; // Swirling post process effect.
 
     void Start()
     {
@@ -24,6 +23,8 @@ public class LoadingScreenBattle : LoadingScreenDefault
 
     void Update()
     {
+        PostProcess.postProcessMap["swirl_screen_mat"].shaderParams["_Width"] = Screen.width;
+        PostProcess.postProcessMap["swirl_screen_mat"].shaderParams["_Height"] = Screen.height;
         SwirlAmount = _SwirlAmount;
     }
 }

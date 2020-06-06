@@ -16,7 +16,6 @@ public class LoadingScreenImmediate : LoadingScreen
     {
         set
         {
-            Debug.Log("loading progress:" + value);
             if (value == 1.0f)
             {
                 _done = true;

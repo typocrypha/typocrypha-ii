@@ -34,7 +34,7 @@ public class TransitionManager : MonoBehaviour
     /// <param name="sceneName">Name of scene to transition to.</param>
     public void TransitionScene(string sceneName, GameObject loadingScreen = null)
     {
-        loadingScreenPrefab = loadingScreen ?? loadingScreenPrefab;
+        loadingScreenPrefab = loadingScreen != null ? loadingScreen : loadingScreenPrefab;
         StartCoroutine(TransitionSceneCR(sceneName));
     }
 
