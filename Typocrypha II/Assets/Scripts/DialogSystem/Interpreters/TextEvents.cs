@@ -62,7 +62,8 @@ public class TextEvents : MonoBehaviour, IPausable
             {"text-delay", TextDelay},
             {"float-text", FloatText },
             {"tips-entry",SignalEntry },
-            {"play-sfx",PlaySFX }
+            {"play-sfx",PlaySFX },
+            {"next",NextDialog }
         };
     }
 
@@ -84,6 +85,16 @@ public class TextEvents : MonoBehaviour, IPausable
     }
 
     /**************************** TEXT EVENTS *****************************/
+
+    /// <summary>
+    /// Immediately go to next dialog box.
+    /// </summary>
+    /// <param name="opt">NONE</param>
+    IEnumerator NextDialog(string[] opt)
+    {
+        yield return null;
+        DialogManager.instance.NextDialog();
+    }
 
     /// <summary>
     /// Test text event.
