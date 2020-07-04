@@ -95,8 +95,18 @@ public class DialogBox : MonoBehaviour, IDialogBox
         if (resizeTextBox) SetBoxHeight();
         // Set voice sfx.
         if (dialogItem.voice != null)
-            for(int i = 0; i < dialogItem.voice.Count; i++)
-                voiceAS[i].clip = dialogItem.voice[i];
+        {
+            if (dialogItem.voice.Count == 0)
+            {
+                for (int i = 0; i < voiceAS.Length; i++)
+                    voiceAS[i].clip = null;
+            }
+            else
+            {
+                for (int i = 0; i < dialogItem.voice.Count; i++)
+                    voiceAS[i].clip = dialogItem.voice[i];
+            }
+        }
         scrollCR = StartCoroutine(TextScrollCR());
 	}
 
@@ -176,7 +186,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
             yield return StartCoroutine(CheckEvents (pos));
             yield return new WaitWhile(() => ph.Pause); // Wait on pause.
             if (pos % speechInterval == 0)
-                foreach(var v in voiceAS) v?.Play();
+                foreach(var v in voiceAS) if (v != null && v.clip != null) v.Play();
             pos++; // Advance text position.
             hideText.ind[0] = pos;
             if (ScrollDelay > 0f)
