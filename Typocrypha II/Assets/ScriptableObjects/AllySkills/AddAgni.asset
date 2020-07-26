@@ -13,12 +13,40 @@ MonoBehaviour:
   m_Name: AddAgni
   m_EditorClassIdentifier: 
   internalName: Add Agni
-  description: Adds the Fire tag to the next spell cast by the player.
+  description: Adds the Fire tag to the next spell cast by the target
   cost: 10
   effects:
-  - {fileID: 740983779489985348}
+  - {fileID: 4700774915741844549}
   icon: {fileID: 21300000, guid: b21ca90f7d7b567418b02f05a2360b8f, type: 3}
 --- !u!114 &740983779489985348
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73c980c5e48b11145ae2d8765918663c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fx:
+    effectType: 1
+    effectPrefab: {fileID: 0}
+    effectPackets:
+    - clip: {fileID: 7400000, guid: 2b1f21dbf068fb946bbfdcb7e31a07a0, type: 2}
+      sfx: {fileID: 0}
+  tags:
+    _items:
+    - {fileID: 11400000, guid: 1eccec5b02879d84b99649c057697388, type: 2}
+  pattern:
+    pattern:
+      _data: 000000000100
+      _rows: 2
+      _cols: 3
+    type: 1
+  spellTagsToAdd: []
+--- !u!114 &4700774915741844549
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -46,4 +74,4 @@ MonoBehaviour:
       _cols: 3
     type: 1
   spellTagsToAdd:
-    _items: []
+  - {fileID: 11400000, guid: ab0e191f8916f394a9818784558700cb, type: 2}

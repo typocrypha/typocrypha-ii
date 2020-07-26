@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class InceptSpellTagsEffect : RootWordEffect
 {
-    public SpellTag.TagSet spellTagsToAdd = new SpellTag.TagSet();
+    public List<SpellTag> spellTagsToAdd = new List<SpellTag>();
     public override CastResults Cast(Caster caster, Caster target, RootCastResults prevResults = null)
     {
         target.OnBeforeCastResolved += InceptTag;
@@ -18,6 +18,6 @@ public class InceptSpellTagsEffect : RootWordEffect
     {
         foreach (var t in spellTagsToAdd)
             effect.tags.Add(t);
-        target.OnBeforeCastResolved -= InceptTag;
+        caster.OnBeforeCastResolved -= InceptTag;
     }
 }
