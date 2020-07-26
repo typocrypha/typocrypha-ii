@@ -34,10 +34,25 @@ public class Caster : FieldObject
     public delegate void AfterCastFn(Spell s, Caster caster); // Add targets and results?
     #endregion
 
+    /// <summary>
+    /// Callbacks applied on casts (before they resolve)
+    /// </summary>
     public ApplyToEffectFn OnBeforeCastResolved { get; set; }
+    /// <summary>
+    /// Callbacks applied after a cast resolves
+    /// </summary>
     public AfterCastFn OnAfterCastResolved { get; set; }
+    /// <summary>
+    /// Callbacks the calculate extra tag reactions
+    /// </summary>
     public GetReactionsFn ExtraReactions { get; set; }
+    /// <summary>
+    /// Callbacks applied by an effect target before being hit
+    /// </summary>
     public HitFn OnBeforeEffectApplied { get; set; }
+    /// <summary>
+    /// Callbacks applied by an effect target after being hit
+    /// </summary>
     public HitFn OnAfterHitResolved { get; set; }
     public System.Action OnSpiritMode { get; set; }
     public System.Action<Battlefield.Position> OnNoTargetHit { get; set; }
