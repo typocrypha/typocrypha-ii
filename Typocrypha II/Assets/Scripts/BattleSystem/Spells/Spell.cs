@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 [System.Serializable]
 /// <summary>
 /// Basically just a list of spellwords.
 /// Implemented this way instead of inheriting from List due the the way unity property drawers work
 /// </summary>
-public class Spell : IList<SpellWord>
+public class Spell : IList<SpellWord>, IEquatable<Spell>
 {
     [SerializeField]
     private List<SpellWord> items = new List<SpellWord>();
@@ -67,5 +68,11 @@ public class Spell : IList<SpellWord>
     public void RemoveAt(int index) => items.RemoveAt(index);
 
     IEnumerator IEnumerable.GetEnumerator() => items.GetEnumerator();
+
     #endregion
+
+    public bool Equals(Spell other)
+    {
+        return ToDisplayString().Equals(other.ToDisplayString());
+    }
 }
