@@ -7,7 +7,7 @@ public class PlayerEquipment : MonoBehaviour
 {
     public static PlayerEquipment instance = null;
 
-    public Dictionary<string, SpellWord> EquippedWordsDict => EquippedWords.ToDictionary((s) => s.internalName.ToLower());
+    public Dictionary<string, SpellWord> EquippedWordsDict => EquippedWords.Distinct().ToDictionary((s) => s.internalName.ToLower());
     public List<SpellWord> EquippedWords { get; } = new List<SpellWord>();
     [SerializeField] List<SpellWord> debugWords = new List<SpellWord>();
 
