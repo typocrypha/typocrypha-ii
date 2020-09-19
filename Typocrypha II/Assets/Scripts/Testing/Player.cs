@@ -25,7 +25,7 @@ public class Player : Caster
     public void CastString(string spellString)
     {
         Spell words = new Spell();// = new List<SpellWord>();
-        var results = SpellParser.instance?.Parse(spellString.Split(separator), out words);
+        var results = SpellParser.instance?.Parse(spellString.Split(separator), PlayerEquipment.instance.EquippedWordsDict, out words);
         Debug.Log("Spell cast:" + spellString + ":" + results);
         if (results == SpellParser.ParseResults.Valid) 
         {
