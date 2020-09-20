@@ -26,45 +26,25 @@ public class Player : Caster
     {
         Spell words = new Spell();// = new List<SpellWord>();
         var results = SpellParser.instance?.Parse(spellString.Split(separator), PlayerEquipment.instance.EquippedWordsDict, out words);
-        Debug.Log("Spell cast:" + spellString + ":" + results);
         if (results == SpellParser.ParseResults.Valid) 
         {
-            #region Cooldowns (Deprecated)
-            //    foreach (var word in words)
-            //    {
-            //        if (word is RootWord)
-            //        {
-            //            if (!SpellCooldownManager.instance.cooldowns.ContainsKey(word.displayName))
-            //                SpellCooldownManager.instance.cooldowns[word.displayName] = 0f;
-            //            else if (SpellCooldownManager.instance.cooldowns[word.displayName] > 0f)
-            //            {
-            //                results = CastParser.ParseResults.OnCooldown;
-            //                return;
-            //            }
-            //        }
-            //    }
-            //    if (results != CastParser.ParseResults.OnCooldown)
-            //    {
-            //        foreach (RootWord word in words)
-            //        {
-            //            if (SpellCooldownManager.instance.cooldowns[word.displayName] <= 0f)
-            //                SpellCooldownManager.instance.StartCooldown(word.displayName, word.cooldown);
-            //        }
-
-            //        FaderManager.instance.FadeAll(0.5f, Color.black);
-            //        foreach (var target in words.AllTargets(FieldPos, TargetPos).Where( (a) => a != null)) 
-            //        {
-            //            target.GetComponent<FaderGroup>().FadeAmount = 0f;
-            //            target.GetComponent<FaderGroup>().FadeColor = Color.black;
-            //        }
-            //        GetComponent<Caster>().Spell = words;
-            //        GetComponent<ATB3.ATBPlayer>().Cast(); // Start casting sequence
-            //    }
-            #endregion
-
-            GetComponent<Caster>().Spell = words;
-            GetComponent<ATB3.ATBPlayer>().Cast(); // Start casting sequence
+            // Check cooldowns
+            var cooldowns = SpellCooldownManager.instance;
+            if(words.Any((w) => cooldowns.IsOnCooldown(w.Key)))
+            {
+                results = SpellParser.ParseResults.OnCooldown;
+            }
+            if (results != SpellParser.ParseResults.OnCooldown)
+            {
+                // Lower Cooldowns of all words currently on cooldown by the number of words in the successful spell
+                cooldowns.ModifyAllCooldowns(-words.Count);
+                foreach (var word in words)
+                    cooldowns.StartCooldown(word.Key, word.cooldown);
+                GetComponent<Caster>().Spell = words;
+                GetComponent<ATB3.ATBPlayer>().Cast(); // Start casting sequence
+            }
         }
+        Debug.Log("Spell cast:" + spellString + ":" + results);
     }
     private void Update()
     {

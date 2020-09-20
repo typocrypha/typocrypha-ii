@@ -135,8 +135,8 @@ public class SpellManager : MonoBehaviour
             {
                 cancelTarget.Stagger--;
                 cancelTarget.OnCounter?.Invoke(cancelTarget);
+                SpellFxManager.instance.LogMessage(cancelTarget.DisplayName + " has been countered!");
             }
-            SpellFxManager.instance.LogMessage(cancelTarget.DisplayName + " has been countered!");
         }
         yield return SpellFxManager.instance.PlayMessages();
     }

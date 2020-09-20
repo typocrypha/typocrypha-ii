@@ -11,16 +11,16 @@ public class SpellCooldown : MonoBehaviour
     public UnityEvent_string onChangeTimeString; // Handle called when cooldown time left changes (called with formatted time string).
     public UnityEvent_float onChangeTimeRatio; // Handle called when cooldown time left changes (called with ratio amount).
     public Text spellText; // Text for spell name.
-    public float TotalTime { get; set; } // Total cooldown time.
-    float currTime;
-    public float CurrTime
+    public int TotalUses { get; set; } // Total cooldown time.
+    int currTime;
+    public int CurrUses
     {
         get => currTime;
         set
         {
             currTime = value;
-            onChangeTimeString.Invoke(CurrTime.ToString("R"));
-            onChangeTimeRatio.Invoke(CurrTime/TotalTime);
+            onChangeTimeString.Invoke(CurrUses.ToString());
+            onChangeTimeRatio.Invoke(CurrUses/TotalUses);
         }
     }
 }
