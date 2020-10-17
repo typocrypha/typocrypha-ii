@@ -23,25 +23,21 @@ public class SpellParser : MonoBehaviour
         ReplaceWord,
     }
     public static SpellParser instance = null;
-    public SpellWordBundle roots;
-    public SpellWordBundle modifiers;
+    //public SpellWordBundle roots;
+    //public SpellWordBundle modifiers;
 
     private readonly WeightedSet<TypoResult> typoActionWeighting = new WeightedSet<TypoResult>()
     {
-        { TypoResult.CastFailure, 85 },
-        { TypoResult.DropoutWord, 10 },
-        { TypoResult.ReplaceWord, 5 }
+        { TypoResult.CastFailure, 100 },
     };
     public int MaxWords { get; } = 5;
     public int MaxRoots { get; } = 3;
-    public Dictionary<string, SpellWord> Words { get; private set; }
     /// <summary> Singleton Implementation </summary>
     private void Awake()
     {
         if (instance == null)
         {
             instance = this;
-            BuildDictionary();
         }
         else
             Destroy(gameObject);
@@ -50,16 +46,16 @@ public class SpellParser : MonoBehaviour
     /// Returns other ParseResults to indicate different failure conditions 
     /// Returns the parsed spell in out list s.
     /// Also Checks and starts spell cooldowns. </summary>
-    public ParseResults Parse(string[] spellwords, out Spell s)
+    public ParseResults Parse(string[] spellwords, Dictionary<string, SpellWord> words, out Spell s)
     {
         s = new Spell();
         int roots = 0;
         foreach (string word in spellwords)
         {
-            if (Words.ContainsKey(word))
+            if (words.ContainsKey(word))
             {
-                s.Add(Words[word]);
-                if (Words[word] is RootWord)
+                s.Add(words[word]);
+                if (words[word] is RootWord)
                 {
                     ++roots;
                 }
@@ -72,12 +68,6 @@ public class SpellParser : MonoBehaviour
                 {
                     case TypoResult.CastFailure:
                         return ParseResults.TypoFailure;
-                    case TypoResult.ReplaceWord:
-                        SpellWord replacement = ReplaceTypo(word);
-                        s.Add(replacement);
-                        if (replacement is RootWord)
-                            ++roots;
-                        break;
                     default:
                         continue;
                 }
@@ -100,20 +90,5 @@ public class SpellParser : MonoBehaviour
         #endregion
 
         return ParseResults.Valid;
-    }
-    /// <summary> Returns a replacement word for a misspelled keyword (WIP) </summary>
-    private SpellWord ReplaceTypo(string word)
-    {
-        //TODO: add actual replacement keyword option
-        return Words["sword"];
-    }
-    /// <summary> Build the wor dictionary from the "spellword" assetbundle </summary>
-    private void BuildDictionary()
-    {
-        Words = new Dictionary<string, SpellWord>();
-        foreach (var word in roots.words)
-            Words.Add(word.Key.ToLower(), word.Value);
-        foreach (var word in modifiers.words)
-            Words.Add(word.Key.ToLower(), word.Value);
     }
 }

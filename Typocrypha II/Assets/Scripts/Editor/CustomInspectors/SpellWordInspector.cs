@@ -24,6 +24,7 @@ public class SpellWordInspector : Editor
         word.description = EditorGUILayout.TextArea(word.description, new GUIStyle(GUI.skin.textArea) { wordWrap = true }, GUILayout.MinHeight(EditorGUIUtility.singleLineHeight * 2));
         EditorUtils.Separator();
         word.cost = EditorGUILayout.FloatField(new GUIContent("Cost", "The MP or time cost of the action, if cast by an ally or enemy"), word.cost);
+        word.cooldown = EditorGUILayout.IntField(new GUIContent("Cooldown", "The cooldown of the word, if cast by the player"), word.cooldown);
         EditorUtils.Separator();
     }
 }

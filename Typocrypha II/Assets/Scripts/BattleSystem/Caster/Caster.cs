@@ -43,6 +43,10 @@ public class Caster : FieldObject
     /// </summary>
     public AfterCastFn OnAfterCastResolved { get; set; }
     /// <summary>
+    /// Callbacks applied after a cast resolves
+    /// </summary>
+    public System.Action<Caster> OnCounter { get; set; }
+    /// <summary>
     /// Callbacks the calculate extra tag reactions
     /// </summary>
     public GetReactionsFn ExtraReactions { get; set; }
@@ -273,6 +277,7 @@ public class Caster : FieldObject
         Health = Stats.MaxHP;       
         Stagger = Stats.MaxStagger;
         ui?.onNameChanged.Invoke(DisplayName);
+        OnCounter += (self) => Charge = 0;
     }
 
     [System.Serializable] private class StatusEffectDict : SerializableDictionary<CasterTag, StatusEffect> { }

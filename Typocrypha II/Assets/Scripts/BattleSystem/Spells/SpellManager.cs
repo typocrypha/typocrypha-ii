@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -27,6 +28,18 @@ public class SpellManager : MonoBehaviour
     public Coroutine Cast (Spell spell, Caster caster, Battlefield.Position target)
     {
         return StartCoroutine(CastCR(spell, caster, target));
+    }
+
+    /// <summary> 
+    /// Cast the spell's effect with a given caster at a given target position, and then Cancels 
+    /// Returns the case coroutine (in case the end of casting must be waited on)
+    /// </summary>
+    public Coroutine CastAndCounter(Spell spell, Caster caster, Battlefield.Position target)
+    {
+        var targetCaster = Battlefield.instance.GetCaster(target);
+        if (targetCaster == null)
+            return StartCoroutine(CastCR(spell, caster, target));
+        return StartCoroutine(CastAndCounterCR(spell, caster, target, (c) => c == targetCaster));
     }
     /// <summary> Modify the root words by the modifiers and return the modified roots </summary>
     public RootWord[] Modify(Spell spell)
@@ -99,17 +112,33 @@ public class SpellManager : MonoBehaviour
                 // Wait for all of the animations to finish
                 foreach (var cr in crList)
                     yield return cr;
+                // Apply callbacks after the whole cast is finished
+                caster.OnAfterCastResolved?.Invoke(spell, caster);
                 if (SpellFxManager.instance.HasMessages)
                 {
                     yield return new WaitForSeconds(delayBeforeLog);
                     yield return SpellFxManager.instance.PlayMessages();
                 }
-                // Apply callbacks after the whole cast is finished
-                caster.OnAfterCastResolved?.Invoke(spell, caster);
                 // Log the effects of this effect
                 rootResults.Add(effectResults);
             }
         }
+    }
+
+    private IEnumerator CastAndCounterCR(Spell spell, Caster caster, Battlefield.Position target, Predicate<Caster> pred)
+    {
+        yield return StartCoroutine(CastCR(spell, caster, target));
+        var cancelTargets = Battlefield.instance.Casters.Where((c) => pred(c));
+        foreach (var cancelTarget in cancelTargets)
+        {
+            if(cancelTarget.Spell.Equals(spell))
+            {
+                cancelTarget.Stagger--;
+                cancelTarget.OnCounter?.Invoke(cancelTarget);
+                SpellFxManager.instance.LogMessage(cancelTarget.DisplayName + " has been countered!");
+            }
+        }
+        yield return SpellFxManager.instance.PlayMessages();
     }
 }
 
