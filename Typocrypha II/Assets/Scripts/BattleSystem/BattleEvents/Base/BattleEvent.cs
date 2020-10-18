@@ -24,6 +24,7 @@ public class BattleEvent : MonoBehaviour, IPausable
     }
 
     public Logic logic = Logic.And;
+    public bool repeat = false;
     BattleEventCondition[] conditions; // All conditions to check.
     BattleEventFunction[] functions; // All functions to run.
     bool done = false; // Has battle event been executed?
@@ -64,6 +65,14 @@ public class BattleEvent : MonoBehaviour, IPausable
     {
         foreach(var func in functions)
             func.Run();
-        done = true;
+        if(!repeat)
+        {
+            done = true;
+        }
+        else
+        {
+            foreach (var cond in conditions)
+                cond.ResetValues();
+        }
     }
 }

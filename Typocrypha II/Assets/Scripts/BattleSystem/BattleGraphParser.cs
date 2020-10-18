@@ -48,9 +48,10 @@ public class BattleGraphParser : GraphParser
             {
                 waveTitle = node.waveTitle,
                 music = node.music,
-                battleField = node.battleField,
-                battleEvents = node.battleEvents,
+                battleField = new GOMatrix2D(node.battleField),
+                battleEvents = new List<GameObject>(node.battleEvents),
                 fieldOptions = node.clearFieldOptions,
+                reinforcementPrefabs = new List<GameObject>(node.reinforcements),
             };
         }
         else if (currNode is SetVariableNode)

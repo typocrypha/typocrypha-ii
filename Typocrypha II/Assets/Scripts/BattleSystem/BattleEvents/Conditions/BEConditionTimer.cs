@@ -12,12 +12,24 @@ public class BEConditionTimer : BattleEventCondition
 
     void Start()
     {
+        StartTimer();
+    }
+
+    private void StartTimer()
+    {
         StartCoroutine(Timer());
     }
 
     public override bool Check()
     {
         return done;
+    }
+
+    public override void ResetValues()
+    {
+        StopAllCoroutines();
+        done = false;
+        StartTimer();
     }
 
     IEnumerator Timer()

@@ -27,6 +27,9 @@ namespace Gameflow
         private RListGUI<GameObject> eventGUI;
         public List<GameObject> battleEvents;
 
+        private RListGUI<GameObject> reinforcementsGUI;
+        public List<GameObject> reinforcements;
+
         #region Tooltip Strings
         private static string tooltip_music = "Music to play. Leave as None to keep the previous music playing";
         #endregion
@@ -35,6 +38,7 @@ namespace Gameflow
         {
             battleField = new GOMatrix2D(2, 3);
             battleEvents = new List<GameObject>();
+            reinforcements = new List<GameObject>();
         }
 
         public override void NodeGUI()
@@ -82,15 +86,29 @@ namespace Gameflow
             #region Battle Events GUI
             if(eventGUI == null)
             {
-                RListGUI<GameObject>.ElementGUI eGUI = (element, ind, rect) =>
+                void EltGUI(GameObject element, int ind, Rect rect)
                 {
                     element = RTEditorGUI.ObjectFieldRect(rect, element, false);
                     battleEvents[ind] = element;
-                };
-                RListGUI<GameObject>.DefaultElement newItem = () => null;
-                eventGUI = new RListGUI<GameObject>(battleEvents, new GUIContent("Battle Event Prefabs"), eGUI, (e) => RTEditorGUI.lineHeight, newItem);
+                }
+                GameObject NewItem() => null;
+                eventGUI = new RListGUI<GameObject>(battleEvents, new GUIContent("Battle Event Prefabs"), EltGUI, (e) => RTEditorGUI.lineHeight, NewItem);
             }
             eventGUI.DoLayoutList();
+            #endregion
+
+            #region Reinforcements GUI
+            if(reinforcementsGUI == null)
+            {
+                void EltGUI(GameObject element, int ind, Rect rect)
+                {
+                    element = RTEditorGUI.ObjectFieldRect(rect, element, false);
+                    reinforcements[ind] = element;
+                }
+                GameObject NewItem() => null;
+                reinforcementsGUI = new RListGUI<GameObject>(reinforcements, new GUIContent("Reinforcements"), EltGUI, (e) => RTEditorGUI.lineHeight, NewItem);
+            }
+            reinforcementsGUI.DoLayoutList();
             #endregion
 
             //Don't know why this code needs to be here exactly, but it makes everything nicer? maybe add to some static stuff?

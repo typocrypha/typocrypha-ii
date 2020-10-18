@@ -17,7 +17,9 @@ public class BattleManager : MonoBehaviour, IPausable
         Battlefield.instance.PH.Pause = b;
     }
     #endregion
+
     public static BattleManager instance = null;
+    public BattleWave CurrWave { get; private set; }
     public GameObject[] stdBattleEvents;
     // DEBUG (come up with something better later)
     public string totalWaves = string.Empty;
@@ -27,8 +29,7 @@ public class BattleManager : MonoBehaviour, IPausable
     public SpellFxData defualtSpawnFx = new SpellFxData();
 
     private BattleGraphParser graphParser;
-    private List<BattleEvent> currEvents = new List<BattleEvent>();
-    private BattleWave currWave;
+    private readonly List<BattleEvent> currEvents = new List<BattleEvent>();
     private int waveNum = 0;
 
     private void Awake()
@@ -107,17 +108,17 @@ public class BattleManager : MonoBehaviour, IPausable
     {
         Battlefield.instance.PH.Pause = true;
         ++waveNum;
-        var wave = graphParser.NextWave();
-        if (wave == null) return;
+        CurrWave = graphParser.NextWave();
+        if (CurrWave == null) return;
 
         // Destroy battle events from previous wave
         foreach (var e in currEvents)
             Destroy(e.gameObject);
         currEvents.Clear();
         // Clear the battlefield according to the clear options in the new wave
-        Battlefield.instance.ClearAndDestroy(wave.fieldOptions);
+        Battlefield.instance.ClearAndDestroy(CurrWave.fieldOptions);
 
-        StartCoroutine(StartWaveCR(wave));
+        StartCoroutine(StartWaveCR(CurrWave));
     }
 
     private IEnumerator StartWaveCR(BattleWave waveData)
@@ -136,12 +137,7 @@ public class BattleManager : MonoBehaviour, IPausable
                 }
                 continue;
             }
-            FieldObject e = Instantiate(fieldData[row, col]).GetComponent<FieldObject>();
-            Battlefield.instance.Add(e, new Battlefield.Position(row, col));
-            // Use the default FX if the prefab doesn't have a SpawnFX componetn
-            var fx = e.GetComponent<SpawnFX>()?.fx ?? defualtSpawnFx;
-            // Play and wait for spawn effects
-            yield return StartCoroutine(fx.Play(e.transform.position));
+            yield return StartCoroutine(AddFieldObject(fieldData[row, col], row, col));
             if (++col >= fieldData.Columns)
             {
                 col = 0;
@@ -160,6 +156,24 @@ public class BattleManager : MonoBehaviour, IPausable
             AudioManager.instance.BGMVolume = 0.6f;
         }
           
+    }
+
+    public IEnumerator AddFieldObject(GameObject fieldObjectPrefab, int row, int col, bool unPause = false)
+    {
+        FieldObject e = Instantiate(fieldObjectPrefab).GetComponent<FieldObject>();
+        if (e == null)
+            yield break;
+        Battlefield.instance.Add(e, new Battlefield.Position(row, col));
+        // Use the default FX if the prefab doesn't have a SpawnFX componetn
+        var fx = e.GetComponent<SpawnFX>()?.fx ?? defualtSpawnFx;
+        // Play and wait for spawn effects
+        yield return StartCoroutine(fx.Play(e.transform.position));
+        if(unPause)
+        {
+            var actor = e.GetComponent<ATB3.ATBActor>();
+            if (actor != null)
+                actor.Pause = false;
+        }
     }
 
     private IEnumerator WaveTransition(BattleWave waveData)
