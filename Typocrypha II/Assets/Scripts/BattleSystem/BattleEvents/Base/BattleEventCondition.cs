@@ -20,4 +20,6 @@ public abstract class BattleEventCondition : MonoBehaviour
     /// </summary>
     /// <returns>Whether condition has been satisfied or not.</returns>
     public abstract bool Check();
+
+    public virtual void ResetValues() { }
 }

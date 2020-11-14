@@ -1,4 +1,4 @@
-﻿public class BEConditionNumberOfEnemies : BattleEventCondition
+﻿public class BEConditionNumberOfReinforcements : BattleEventCondition
 {
     [System.Flags]
     public enum Operator
@@ -16,7 +16,7 @@
 
     public override bool Check()
     {
-        int count = Battlefield.instance.Enemies.Length;
+        int count = BattleManager.instance.CurrWave.reinforcementPrefabs.Count;
         if (op.HasFlag(Operator.EqualTo) && count == num)
             return true;
         if (op.HasFlag(Operator.GreaterThan) && count > num)

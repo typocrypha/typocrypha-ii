@@ -100,6 +100,10 @@ public class Serializable2DMatrix<T> : IEnumerable<T>
         _cols = columns;
         _data = new T[rows * columns];
     }
+    public Serializable2DMatrix(Serializable2DMatrix<T> toCopy) : this(toCopy.Rows, toCopy.Columns)
+    {
+        System.Array.Copy(toCopy._data, _data, _data.Length);
+    }
     private Serializable2DMatrix(T[] data, int rows, int columns)
     {
         _rows = rows;
@@ -170,4 +174,8 @@ public class Serializable2DMatrix<T> : IEnumerable<T>
 [System.Serializable] public class BoolMatrix2D : Serializable2DMatrix<bool> { public BoolMatrix2D(int rows, int columns) : base(rows, columns) { } }
 [System.Serializable] public class IntMatrix2D : Serializable2DMatrix<int> { public IntMatrix2D(int rows, int columns) : base(rows, columns) { } }
 [System.Serializable] public class FloatMatrix2D : Serializable2DMatrix<float> { public FloatMatrix2D(int rows, int columns) : base(rows, columns) { } }
-[System.Serializable] public class GOMatrix2D : Serializable2DMatrix<GameObject> { public GOMatrix2D(int rows, int columns) : base(rows, columns) { } }
+[System.Serializable] public class GOMatrix2D : Serializable2DMatrix<GameObject> 
+{ 
+    public GOMatrix2D(int rows, int columns) : base(rows, columns) { } 
+    public GOMatrix2D(GOMatrix2D toCopy) : base(toCopy) { } 
+}

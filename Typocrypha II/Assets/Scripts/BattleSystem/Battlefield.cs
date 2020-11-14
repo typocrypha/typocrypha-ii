@@ -72,6 +72,7 @@ public class Battlefield : MonoBehaviour, IPausable
     public List<ATBActor> Actors { get; } = new List<ATBActor>();
     public List<Caster> ExternalCasters { get => Casters.Where((obj) => !obj.FieldPos.IsLegal) as List<Caster>; }
     public List<Caster> Casters { get; } = new List<Caster>();
+    public IEnumerable<Position> AllPositions => Enumerable.Range(0, Rows).SelectMany((row) => Enumerable.Range(0, Columns).Select((col) => new Position(row, col)));
     #endregion
 
     #region Data and Representative Lists
