@@ -18,7 +18,7 @@ namespace ATB3
         public override void OnUpdate()
         {
             timer += Time.fixedDeltaTime;
-            if (timer >= ATBAlly.activationWindow)
+            if (!ATBManager.instance.HasReadyAllies || timer >= ATBAlly.activationWindow)
             {
                 if (Owner.Caster.BStatus == Caster.BattleStatus.Dead)
                     Source.PerformTransition(ATBStateID.Dead);

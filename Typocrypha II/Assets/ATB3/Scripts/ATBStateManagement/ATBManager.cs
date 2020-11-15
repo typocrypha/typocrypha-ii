@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace ATB3
 {
@@ -13,6 +14,9 @@ namespace ATB3
     public partial class ATBManager : MonoBehaviour
     {
         public static ATBManager instance;
+
+        public bool HasReadyAllies => Battlefield.instance.Actors.Any((a) => a is ATBAlly && (a as ATBAlly).allyMenu.CanCast);
+
         private void Awake()
         {
             if (instance != null)

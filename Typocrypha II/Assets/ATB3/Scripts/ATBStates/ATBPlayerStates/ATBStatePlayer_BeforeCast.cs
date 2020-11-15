@@ -22,7 +22,7 @@ namespace ATB3
         public override void OnUpdate()
         {
             timer += Time.fixedDeltaTime;
-            if (timer >= ATBAlly.activationWindow)
+            if (!ATBManager.instance.HasReadyAllies || timer >= ATBAlly.activationWindow)
                 Source.PerformTransition(ATBStateID.Cast);
         }
 
