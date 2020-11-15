@@ -39,7 +39,7 @@ public class Player : Caster
                 // Lower Cooldowns of all words currently on cooldown by the number of words in the successful spell
                 cooldowns.ModifyAllCooldowns(-words.Count);
                 foreach (var word in words)
-                    cooldowns.StartCooldown(word.Key, word.cooldown);
+                    cooldowns.StartCooldown(word.Key);
                 GetComponent<Caster>().Spell = words;
                 GetComponent<ATB3.ATBPlayer>().Cast(); // Start casting sequence
             }
