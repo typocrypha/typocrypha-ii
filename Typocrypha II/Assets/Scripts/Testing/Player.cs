@@ -67,8 +67,11 @@ public class Player : Caster
                 ++newPos.Col;
                 if (newPos.Col >= field.Columns)
                     newPos.Col = 0;
+                var caster = field.GetCaster(newPos);
+                if (caster != null && caster.BStatus != BattleStatus.Dead && caster.BStatus != BattleStatus.Fled)
+                    break;
             }
-            while (newPos.Col != TargetPos.Col && field.GetCaster(newPos) == null);
+            while (newPos.Col != TargetPos.Col);
             TargetPos.Col = newPos.Col;
         }
 
