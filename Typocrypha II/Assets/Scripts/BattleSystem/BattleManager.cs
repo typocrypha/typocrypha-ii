@@ -117,7 +117,8 @@ public class BattleManager : MonoBehaviour, IPausable
         currEvents.Clear();
         // Clear the battlefield according to the clear options in the new wave
         Battlefield.instance.ClearAndDestroy(CurrWave.fieldOptions);
-
+        // Clear player cooldowns
+        SpellCooldownManager.instance.ResetAllCooldowns();
         StartCoroutine(StartWaveCR(CurrWave));
     }
 
