@@ -41,15 +41,15 @@ public class Player : Caster
                 foreach (var word in words)
                     cooldowns.StartCooldown(word.Key);
                 GetComponent<Caster>().Spell = words;
-                GetComponent<ATB3.ATBPlayer>().Cast(); // Start casting sequence
+                GetComponent<ATB3.ATBPlayer>().Cast(TargetPos); // Start casting sequence
             }
         }
         Debug.Log("Spell cast:" + spellString + ":" + results);
     }
     private void Update()
     {
-        if (playerActor.Pause || playerActor.isCast)
-            return;
+        //if (playerActor.Pause || playerActor.isCast)
+        //    return;
         if (Input.GetKeyDown(KeyCode.LeftArrow))
             TargetPos.Col = Mathf.Max(0, TargetPos.Col - 1);
         if (Input.GetKeyDown(KeyCode.RightArrow))

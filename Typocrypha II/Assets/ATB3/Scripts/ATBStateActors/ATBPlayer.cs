@@ -9,6 +9,8 @@ namespace ATB3
     {
         public ATBStateMachine_Player StateMachine { get; private set; }
         public override IATBStateMachine BaseStateMachine => StateMachine;
+        public Battlefield.Position SavedTargetPos { get; private set; }
+
         void Awake()
         {
             ph = new PauseHandle(OnPause);
@@ -21,8 +23,9 @@ namespace ATB3
         }
 
         // Called when player enters a spell into the cast bar
-        public void Cast()
+        public void Cast(Battlefield.Position targetPos)
         {
+            SavedTargetPos = new Battlefield.Position(targetPos);
             StateMachine.PerformTransition(ATBStateID.BeforeCast);
         }
 
