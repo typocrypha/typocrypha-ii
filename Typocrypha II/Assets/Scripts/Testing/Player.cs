@@ -59,6 +59,18 @@ public class Player : Caster
         if (Input.GetKeyDown(KeyCode.DownArrow))
             TargetPos.Row = 1;
         if (Input.GetKeyDown(KeyCode.Tab))
-            TargetPos.Col = TargetPos.Col + 1 >= Battlefield.instance.Columns ? 0 : TargetPos.Col + 1;
+        {
+            var field = Battlefield.instance;
+            var newPos = new Battlefield.Position(TargetPos);
+            do
+            {
+                ++newPos.Col;
+                if (newPos.Col >= field.Columns)
+                    newPos.Col = 0;
+            }
+            while (newPos.Col != TargetPos.Col && field.GetCaster(newPos) == null);
+            TargetPos.Col = newPos.Col;
+        }
+
     }
 }
