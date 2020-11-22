@@ -28,8 +28,11 @@ namespace ATB3
         // Start charging current spell (unless old progress is saved)
         public void StartCharge()
         {
-            if (chargeCRObj == null)
-                chargeCRObj = StartCoroutine(ChargeCR());   
+            if (chargeCRObj != null)
+            {
+                StopCoroutine(chargeCRObj);
+            }
+            chargeCRObj = StartCoroutine(ChargeCR());
         }
 
         // Incrementally charges next spell
