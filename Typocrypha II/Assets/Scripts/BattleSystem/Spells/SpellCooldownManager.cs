@@ -144,4 +144,14 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
             cooldowns[word].CurrCooldown = 0;
         }
     }
+    /// <summary>
+    /// Resets the cooldown for all spells to 0
+    /// </summary>
+    public void ResetAllCooldowns()
+    {
+        foreach(var spell in cooldowns.Keys)
+        {
+            cooldowns[spell].CurrCooldown = 0;
+        }
+    }
 }
