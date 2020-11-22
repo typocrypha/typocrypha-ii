@@ -95,7 +95,7 @@ public class SpellManager : MonoBehaviour
                         // Apply the rule effect if necessary
                         Rule.ActiveRule?.Apply?.Invoke(effect, caster, targetCaster);
                         // Apply OnCast Callbacks
-                        caster.OnBeforeCastResolved?.Invoke(effect, caster, targetCaster);
+                        caster.OnBeforeSpellEffectResolved?.Invoke(effect, caster, targetCaster);
                         // Cast the effect
                         var castResults = effect.Cast(caster, targetCaster, rootResults);
                         // Apply OnHit Callbacks (Updates AI)
@@ -112,8 +112,8 @@ public class SpellManager : MonoBehaviour
                 // Wait for all of the animations to finish
                 foreach (var cr in crList)
                     yield return cr;
-                // Apply callbacks after the whole cast is finished
-                caster.OnAfterCastResolved?.Invoke(spell, caster);
+                // Apply callbacks after the effect is finished
+                caster.OnAfterSpellEffectResolved?.Invoke(spell, caster);
                 if (SpellFxManager.instance.HasMessages)
                 {
                     yield return new WaitForSeconds(delayBeforeLog);
@@ -123,6 +123,8 @@ public class SpellManager : MonoBehaviour
                 rootResults.Add(effectResults);
             }
         }
+        // Apply callbacks after the whole cast is finished
+        caster.OnAfterCastResolved?.Invoke(spell, caster);
     }
 
     private IEnumerator CastAndCounterCR(Spell spell, Caster caster, Battlefield.Position target, Predicate<Caster> pred)

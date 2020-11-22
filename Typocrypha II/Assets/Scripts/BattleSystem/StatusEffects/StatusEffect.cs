@@ -29,7 +29,7 @@ public abstract class StatusEffect : MonoBehaviour
             return;
         }         
         affected.OnAfterHitResolved += OnAfterHit;
-        affected.OnAfterCastResolved += OnAfterCastResolved;
+        affected.OnAfterSpellEffectResolved += OnAfterCastResolved;
         affected.OnBeforeEffectApplied += OnBeforeAffectApplied;
     }
 
@@ -56,7 +56,7 @@ public abstract class StatusEffect : MonoBehaviour
     public virtual void Cleanup()
     {
         affected.OnAfterHitResolved -= OnAfterHit;
-        affected.OnAfterCastResolved -= OnAfterCastResolved;
+        affected.OnAfterSpellEffectResolved -= OnAfterCastResolved;
         affected.OnBeforeEffectApplied -= OnBeforeAffectApplied;
     }
 

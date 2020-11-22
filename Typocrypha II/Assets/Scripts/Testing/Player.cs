@@ -25,7 +25,7 @@ public class Player : Caster
     public void CastString(string spellString)
     {
         Spell words = new Spell();// = new List<SpellWord>();
-        var results = SpellParser.instance?.Parse(spellString.Split(separator), PlayerEquipment.instance.EquippedWordsDict, out words);
+        var results = SpellParser.instance?.Parse(spellString.TrimEnd().Split(separator), PlayerEquipment.instance.EquippedWordsDict, out words);
         if (results == SpellParser.ParseResults.Valid) 
         {
             // Check cooldowns
@@ -67,8 +67,11 @@ public class Player : Caster
                 ++newPos.Col;
                 if (newPos.Col >= field.Columns)
                     newPos.Col = 0;
+                var caster = field.GetCaster(newPos);
+                if (caster != null && caster.BStatus != BattleStatus.Dead && caster.BStatus != BattleStatus.Fled)
+                    break;
             }
-            while (newPos.Col != TargetPos.Col && field.GetCaster(newPos) == null);
+            while (newPos.Col != TargetPos.Col);
             TargetPos.Col = newPos.Col;
         }
 

@@ -7,7 +7,7 @@ public class InceptSpellTagsEffect : RootWordEffect
     public List<SpellTag> spellTagsToAdd = new List<SpellTag>();
     public override CastResults Cast(Caster caster, Caster target, RootCastResults prevResults = null)
     {
-        target.OnBeforeCastResolved += InceptTag;
+        target.OnBeforeSpellEffectResolved += InceptTag;
         CastResults results = new CastResults(caster, target);
         results.Miss = false;
         results.DisplayDamage = false;
@@ -18,6 +18,6 @@ public class InceptSpellTagsEffect : RootWordEffect
     {
         foreach (var t in spellTagsToAdd)
             effect.tags.Add(t);
-        caster.OnBeforeCastResolved -= InceptTag;
+        caster.OnBeforeSpellEffectResolved -= InceptTag;
     }
 }
