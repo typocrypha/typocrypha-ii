@@ -58,5 +58,7 @@ public class Player : Caster
             TargetPos.Row = 0;
         if (Input.GetKeyDown(KeyCode.DownArrow))
             TargetPos.Row = 1;
+        if (Input.GetKeyDown(KeyCode.Tab))
+            TargetPos.Col = TargetPos.Col + 1 >= Battlefield.instance.Columns ? 0 : TargetPos.Col + 1;
     }
 }

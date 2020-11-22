@@ -65,6 +65,8 @@ public class TIPSManager : MonoBehaviour, IPausable
 
     void Update()
     {
+        if (DialogManager.instance.isBattle)
+            return;
         if (Input.GetButtonDown("TIPS"))
         {
             TIPSMenu.SetActive(!TIPSMenu.activeSelf);
