@@ -7,23 +7,32 @@ public static class Damage
 {
     public const float stunBonusDamageMod = 1.25f;
     public const float critDamageMod = 2f;
-    public const float baseCritChance = 0.1f;
+    public const float baseCritChance = 0.075f;
 
     public enum FormulaType
     {
-        Standard,
+        StandardDmg,
         Custom,
+        StandardHeal,
     }
     public delegate CastResults Formula(DamageEffect effect, Caster caster, Caster target);
 
     public static Dictionary<FormulaType, Formula> PresetFormulae { get; } = new Dictionary<FormulaType, Formula>
     {
-        { FormulaType.Standard, StandardApplied }
+        { FormulaType.StandardDmg, StandardApplied },
+        { FormulaType.StandardHeal, StandardHealApplied },
     };
 
     private static CastResults StandardApplied(DamageEffect effect, Caster caster, Caster target)
     {
         var results = Standard(effect, caster, target);
+        ApplyStandard(results, effect, caster, target);
+        return results;
+    }
+
+    private static CastResults StandardHealApplied(DamageEffect effect, Caster caster, Caster target)
+    {
+        var results = StandardHeal(effect, caster, target);
         ApplyStandard(results, effect, caster, target);
         return results;
     }
@@ -40,6 +49,24 @@ public static class Damage
         StandardElements(results, effect, caster, target);
         StandardPower(results, effect, caster, target);
         StandardStunBonus(results, effect, caster, target);
+        return results;
+    }
+
+    public static CastResults StandardHeal(DamageEffect effect, Caster caster, Caster target)
+    {
+        var results = new CastResults(caster, target)
+        {
+            Miss = effect.tags.Contains("AlwaysMiss"),
+        };
+        if (StandardCritCheckBuff(results, effect, caster, target))
+        {
+            results.Crit = true;
+            results.Damage *= critDamageMod;
+        }
+        StandardElements(results, effect, caster, target);
+        results.StaggerDamage = 0;
+        StandardPower(results, effect, caster, target);
+        results.Damage *= -1;
         return results;
     }
 
@@ -60,7 +87,7 @@ public static class Damage
             results.Miss = true;
             return;
         }
-        float hitChance = 1 * CompareStats(caster.Stats.Acc, target.Stats.Evade);
+        float hitChance = 1 * CompareStatsWeak(caster.Stats.Acc, target.Stats.Evade);
         results.Miss = (Random.Range(0, 1) > hitChance);
     }
     /// <summary>
@@ -78,13 +105,29 @@ public static class Damage
         {
             return false;
         }
-        float critChance = baseCritChance;
-        if(Random.Range(0,1f) <= critChance)
+        float critChance = baseCritChance * CompareStats(caster.Stats.Luck, target.Stats.Luck);
+        return Random.Range(0, 1f) <= critChance;
+    }
+
+    /// <summary>
+    /// Sets the Crit property and modifies damage and stagger based on a standard crit check
+    /// </summary>
+    public static bool StandardCritCheckBuff(CastResults results, RootWordEffect effect, Caster caster, Caster target)
+    {
+        // If the move always crits, bypass accuracy checks
+        if (effect.tags.Contains("AlwaysCrit"))
         {
             return true;
         }
-        return false;
+        // If the move always misses, bypass accuracy checks
+        else if (effect.tags.Contains("NeverCrit"))
+        {
+            return false;
+        }
+        float critChance = baseCritChance + (0.025f * (caster.Stats.Luck + target.Stats.Luck));
+        return Random.Range(0, 1f) <= critChance;
     }
+
     /// <summary>
     /// Applies the standard modification to the results
     /// Sets crit to true, sets stagger damage to 1, and multiplies the Damage by Damage.critDamageMod;
@@ -111,6 +154,17 @@ public static class Damage
     public static float CompareStats(int stat1, int stat2)
     {
         const float expBase = 1.25f;
+        float difference = stat1 - stat2;
+        return Mathf.Pow(expBase, difference);
+    }
+
+    /// <summary>
+    /// Compare two stats by a standard comparison. Returns a non-negative multiplier
+    /// Returns a constant base raised to the power of the difference between the two stats.
+    /// </summary>
+    public static float CompareStatsWeak(int stat1, int stat2)
+    {
+        const float expBase = 1.075f;
         float difference = stat1 - stat2;
         return Mathf.Pow(expBase, difference);
     }
