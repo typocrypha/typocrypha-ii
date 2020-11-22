@@ -35,9 +35,13 @@ public class Caster : FieldObject
     #endregion
 
     /// <summary>
-    /// Callbacks applied on casts (before they resolve)
+    /// Callbacks applied before a spell effect resolves (before they resolve)
     /// </summary>
-    public ApplyToEffectFn OnBeforeCastResolved { get; set; }
+    public ApplyToEffectFn OnBeforeSpellEffectResolved { get; set; }
+    /// <summary>
+    /// Callbacks applied after a spell effect resolves
+    /// </summary>
+    public AfterCastFn OnAfterSpellEffectResolved { get; set; }
     /// <summary>
     /// Callbacks applied after a cast resolves
     /// </summary>
