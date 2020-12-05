@@ -66,21 +66,14 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
     }
 
     /// <summary>
-    /// Returns true if the word is on cooldown, else false
+    /// Returns true if the word is on cooldown.
     /// </summary>
     /// <param name="word"></param>
     /// <returns></returns>
     public bool IsOnCooldown(string word)
     {
         word = word.ToUpper();
-        if (cooldowns.ContainsKey(word))
-        {
-            return cooldowns[word].CurrCooldown > 0;
-        }
-        else
-        {
-            return false;
-        }
+        return GetCooldown(word) > 0;
     }
 
     /// <summary>
