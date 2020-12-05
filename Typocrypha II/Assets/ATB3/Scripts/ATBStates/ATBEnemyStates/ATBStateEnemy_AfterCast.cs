@@ -33,9 +33,17 @@ namespace ATB3
         // Call upon exiting given state
         public override void OnExit()
         {
-            FaderManager.instance.Solo(Owner.GetComponent<FaderGroup>(), 0.0f, Color.black);
-            Owner.Caster.Charge = 0.0f;
-            ATBManager.instance.ExitSolo(Owner);
+            if (Owner.Caster.BStatus != Caster.BattleStatus.Fled) 
+            {
+                FaderManager.instance.Solo(Owner.GetComponent<FaderGroup>(), 0.0f, Color.black);
+                Owner.Caster.Charge = 0.0f;
+                ATBManager.instance.ExitSolo(Owner);
+            }
+            else // No pause for run spell
+            {
+                Owner.Caster.Charge = 0.0f;
+            }
+
         }
     }
 }
