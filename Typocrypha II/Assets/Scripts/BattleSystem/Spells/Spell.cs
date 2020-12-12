@@ -18,6 +18,23 @@ public class Spell : IList<SpellWord>, IEquatable<Spell>
 
     public Sprite Icon => items.Where((w) => w is RootWord).Select((w) => w as RootWord).FirstOrDefault().icon;
 
+    public bool Countered => items.Count == 1 && items[0].Key == SpellManager.instance.counterWord.Key;
+
+    public Spell()
+    {
+
+    }
+
+    public Spell(SpellWord word)
+    {
+        items.Add(word);
+    }
+
+    public Spell(IEnumerable<SpellWord> words)
+    {
+        items.AddRange(words);
+    }
+
     public string ToDisplayString()
     {
         if (items.Count == 0)

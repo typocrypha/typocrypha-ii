@@ -23,10 +23,13 @@ namespace ATB3
         {
             timer += Time.fixedDeltaTime;
             if (Owner.Caster.BStatus == Caster.BattleStatus.Dead)
+            {
                 Source.PerformTransition(ATBStateID.Dead);
-            if (timer >= stuntime || !Owner.Caster.Stunned)
-                Source.PerformTransition(ATBStateID.Charge);
-            return;
+            }
+            else if (timer >= stuntime || !Owner.Caster.Stunned)
+            {
+                Source.PerformTransition(ATBStateID.PreviousState);
+            }
         }
 
         // Call upon exiting given state
