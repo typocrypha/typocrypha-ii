@@ -126,11 +126,6 @@ namespace ATB3
                 Debug.LogError("FSM ERROR: NullStateID is not allowed for a real transition");
                 return;
             }
-            if(!states.ContainsKey(transitionTo))
-            {
-                Debug.LogError("FSM ERROR: " + name + " does not have a state with the ID: " + transitionTo.ToString());
-                return;
-            }
 
             // SPECIAL CASE: If we're returning to a previous state, rollback
             if (transitionTo == ATBStateID.PreviousState)
@@ -144,6 +139,11 @@ namespace ATB3
                 CurrentState = tempState;
                 // Reset the state to its desired condition before it can reason or act
                 CurrentState.OnEnter();
+            }
+            else if (!states.ContainsKey(transitionTo))
+            {
+                Debug.LogError("FSM ERROR: " + name + " does not have a state with the ID: " + transitionTo.ToString());
+                return;
             }
             else
             {

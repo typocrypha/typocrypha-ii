@@ -22,13 +22,11 @@ public class AICycleSpells : AIComponent
     private void OnEnable()
     {
         caster.OnAfterCastResolved += (spell, self) => CycleSpell();
-        caster.OnCounter += (self) => CycleSpell();
     }
 
     private void OnDisable()
     {
         caster.OnAfterCastResolved -= (spell, self) => CycleSpell();
-        caster.OnCounter -= (self) => CycleSpell();
     }
 
     public void CycleSpell()

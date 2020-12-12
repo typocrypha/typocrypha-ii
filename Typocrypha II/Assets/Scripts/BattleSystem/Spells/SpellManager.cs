@@ -11,6 +11,7 @@ public class SpellManager : MonoBehaviour
     private const float delayBetweenTargets = 0.1f;
     private const float delayBeforeLog = 0.25f;
     public static SpellManager instance;
+    public SpellWord counterWord;
 
     /// <summary> Singleton implementation </summary>
     private void Awake()
@@ -136,6 +137,7 @@ public class SpellManager : MonoBehaviour
             if(cancelTarget.Spell.Equals(spell))
             {
                 cancelTarget.Stagger--;
+                cancelTarget.Spell = new Spell(counterWord);
                 cancelTarget.OnCounter?.Invoke(cancelTarget);
                 SpellFxManager.instance.LogMessage(cancelTarget.DisplayName + " has been countered!");
             }

@@ -19,19 +19,30 @@ namespace ATB3
         // Call on fixed update while in given state
         public override void OnUpdate()
         {
+            var caster = Owner.Caster;
             timer += Time.fixedDeltaTime;
-            if(Owner.Caster.Stunned)
+            if(caster.Stunned)
             {
-                Owner.Caster.Charge = 0;
-                // Add lose cast on stun behavior here
                 Source.PerformTransition(ATBStateID.Stunned);
             }
-            else if(Owner.Caster.Charge <= 0)
+            else if(caster.Charge <= 0)
             {
                 Source.PerformTransition(ATBStateID.Charge);
             }
-            if (timer >= 1.0f && !ATBManager.instance.InSolo)
-                Source.PerformTransition(ATBStateID.BeforeCast);
+            else if (timer >= 1.0f && !ATBManager.instance.InSolo)
+            {
+                if (caster.Spell.Countered) // Spell is countered
+                {
+                    // Apply callbacks after the whole cast is finished (as if this cast happened)
+                    caster.OnAfterCastResolved?.Invoke(caster.Spell, caster);
+                    Source.PerformTransition(ATBStateID.Charge);
+                }
+                else
+                {
+                    Source.PerformTransition(ATBStateID.BeforeCast);
+                }
+            }
+
             return;
         }
 

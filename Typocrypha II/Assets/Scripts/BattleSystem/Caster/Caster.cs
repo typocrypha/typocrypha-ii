@@ -281,7 +281,6 @@ public class Caster : FieldObject
         Health = Stats.MaxHP;       
         Stagger = Stats.MaxStagger;
         ui?.onNameChanged.Invoke(DisplayName);
-        OnCounter += (self) => Charge = 0;
     }
 
     [System.Serializable] private class StatusEffectDict : SerializableDictionary<CasterTag, StatusEffect> { }
