@@ -14,10 +14,17 @@ namespace ATB3
                 Source.PerformTransition(ATBStateID.Charge);
                 return;
             }
-            FaderManager.instance.FadeTargets(Owner.Caster.Spell, Owner.Caster.FieldPos, Owner.Caster.TargetPos);
-            Owner.GetComponent<FaderGroup>().FadeAmount = 0f;
-            Owner.GetComponent<Animator>().SetTrigger("BeforeCast");
-            ATBManager.instance.EnterSolo(Owner);
+            if (Owner.Caster.Spell.ToDisplayString() != "RUN") 
+            {
+                FaderManager.instance.FadeTargets(Owner.Caster.Spell, Owner.Caster.FieldPos, Owner.Caster.TargetPos);
+                Owner.GetComponent<FaderGroup>().FadeAmount = 0f;
+                Owner.GetComponent<Animator>().SetTrigger("BeforeCast");
+                ATBManager.instance.EnterSolo(Owner);
+            }
+            else // No pause for run spell
+            {
+                Owner.GetComponent<Animator>().SetTrigger("BeforeCast");
+            }
             Owner.isCast = true;
             timer = 0f;
         }
