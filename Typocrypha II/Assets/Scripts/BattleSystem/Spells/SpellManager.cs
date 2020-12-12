@@ -134,13 +134,22 @@ public class SpellManager : MonoBehaviour
         var cancelTargets = Battlefield.instance.Casters.Where((c) => pred(c));
         foreach (var cancelTarget in cancelTargets)
         {
-            if(cancelTarget.Spell.Equals(spell))
+            var remainingWords = cancelTarget.Spell.Where((word) => !spell.Contains(word));
+            // No words were countered, continue to next target
+            if (remainingWords.Count() == cancelTarget.Spell.Count)
+                continue;
+            // Full counter (no remaining roots)
+            if(remainingWords.Count((w) => w is RootWord) <= 0)
             {
                 cancelTarget.Stagger--;
                 cancelTarget.Spell = new Spell(counterWord);
-                cancelTarget.OnCounter?.Invoke(cancelTarget);
-                SpellFxManager.instance.LogMessage(cancelTarget.DisplayName + " has been countered!");
             }
+            else // Partial counter
+            {
+                cancelTarget.Spell = new Spell(remainingWords);
+            }
+            cancelTarget.OnCounter?.Invoke(cancelTarget);
+            SpellFxManager.instance.LogMessage(cancelTarget.DisplayName + " has been countered!");
         }
         yield return SpellFxManager.instance.PlayMessages();
     }

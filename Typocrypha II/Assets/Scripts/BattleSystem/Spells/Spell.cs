@@ -18,7 +18,7 @@ public class Spell : IList<SpellWord>, IEquatable<Spell>
 
     public Sprite Icon => items.Where((w) => w is RootWord).Select((w) => w as RootWord).FirstOrDefault().icon;
 
-    public bool Countered => items.Count == 1 && items[0].Key == SpellManager.instance.counterWord.Key;
+    public bool Countered => items.Count == 1 && SpellWord.CompareKeys(items[0], SpellManager.instance.counterWord);
 
     public Spell()
     {
