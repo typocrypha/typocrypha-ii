@@ -8,19 +8,27 @@ using UnityEngine.UI;
 /// </summary>
 public class SpellCooldown : MonoBehaviour
 {
-    public UnityEvent_string onChangeTimeString; // Handle called when cooldown time left changes (called with formatted time string).
-    public UnityEvent_float onChangeTimeRatio; // Handle called when cooldown time left changes (called with ratio amount).
+    public UnityEvent_int OnChangeTotalCooldown; // Handle called when total cooldown is set.
+    public UnityEvent_int OnChangeCurrCooldown; // Handle called when cooldown changes (amount remaining).
     public Text spellText; // Text for spell name.
-    public int TotalCooldown { get; set; } // Total cooldown time.
-    int currCooldown;
+    int totalCooldown; // Total cooldown.
+    public int TotalCooldown
+    {
+        get => totalCooldown;
+        set
+        {
+            totalCooldown = value;
+            OnChangeTotalCooldown.Invoke(value);
+        }
+    }
+    int currCooldown; // Current cooldown remaining.
     public int CurrCooldown
     {
         get => currCooldown;
         set
         {
             currCooldown = value;
-            onChangeTimeString.Invoke(CurrCooldown.ToString());
-            onChangeTimeRatio.Invoke((float)CurrCooldown/(float)TotalCooldown);
+            OnChangeCurrCooldown.Invoke(value);
         }
     }
 

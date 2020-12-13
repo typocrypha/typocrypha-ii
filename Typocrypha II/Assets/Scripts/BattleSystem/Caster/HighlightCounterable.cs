@@ -36,8 +36,15 @@ public class HighlightCounterable : MonoBehaviour
             }
             catch (UnityException e)
             {
-                Highlights[i].ind[0] = 0;
-                Highlights[i].ind[1] = 0;
+                if (e.Message == "Invalid Cooldown")
+                {
+                    Highlights[i].ind[0] = 0;
+                    Highlights[i].ind[1] = 0;
+                }
+                else
+                {
+                    throw e;
+                }
             }
             pos += spell.Length + 1;
         }
