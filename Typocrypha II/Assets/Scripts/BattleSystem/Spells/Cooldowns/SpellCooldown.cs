@@ -29,6 +29,7 @@ public class SpellCooldown : MonoBehaviour
         {
             currCooldown = value;
             OnChangeCurrCooldown.Invoke(value);
+            SpellCooldownManager.instance.SortCooldowns();
         }
     }
 
