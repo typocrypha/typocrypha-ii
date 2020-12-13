@@ -7,7 +7,10 @@ public class MoveEffect : RootWordEffect
 {
     public bool onlyMoveToUnoccupied;
     public List<Battlefield.Position> positions;
-    public override CastResults Cast(Caster caster, Caster target, RootCastResults prevResults = null)
+
+    public override bool CanCrit => false;
+
+    public override CastResults Cast(Caster caster, Caster target, bool crit, RootCastResults prevResults = null)
     {
         CastResults results = new CastResults(caster, target);
         results.Miss = false;

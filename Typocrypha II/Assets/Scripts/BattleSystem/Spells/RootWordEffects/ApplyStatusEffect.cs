@@ -5,13 +5,15 @@ using UnityEngine;
 public class ApplyStatusEffect : RootWordEffect
 {
     public GameObject statusEffectPrefab;
-    public override CastResults Cast(Caster caster, Caster target, RootCastResults prevResults = null)
+
+    public override bool CanCrit => false;
+
+    public override CastResults Cast(Caster caster, Caster target, bool crit, RootCastResults prevResults = null)
     {
         var results = new CastResults(caster, target);
         Damage.StandardHitCheck(results, this, caster, target);
         if (results.Miss)
             return results;
-        Damage.StandardCritCheck(results, this, caster, target);
         results.Effectiveness = Damage.GetReaction(this, caster, target, out float mult);
         results.DisplayDamage = false;
         if (Damage.ApplyReflect(results, this, caster, target))

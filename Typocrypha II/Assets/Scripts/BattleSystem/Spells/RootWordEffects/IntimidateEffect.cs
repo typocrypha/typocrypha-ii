@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class IntimidateEffect : RootWordEffect
 {
-    public override CastResults Cast(Caster caster, Caster target, RootCastResults prevResults = null)
-    {
-        var results = new CastResults(caster, target);
-        results.DisplayDamage = false;
+    public override bool CanCrit => false;
 
-        if(target.HasTag("Melancholy"))
+    public override CastResults Cast(Caster caster, Caster target, bool crit, RootCastResults prevResults = null)
+    {
+        var results = new CastResults(caster, target)
+        {
+            DisplayDamage = false
+        };
+
+        if (target.HasTag("Melancholy"))
         {
             target.AddTag("Crying");
             LogMessage(target.DisplayName + " is crying!");

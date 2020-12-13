@@ -12,6 +12,8 @@ public class SpellManager : MonoBehaviour
     private const float delayBeforeLog = 0.25f;
     public static SpellManager instance;
     public SpellWord counterWord;
+    [SerializeField]
+    private PromptPopup criticalPopup;
 
     /// <summary> Singleton implementation </summary>
     private void Awake()
@@ -69,6 +71,14 @@ public class SpellManager : MonoBehaviour
         SpellFxManager.instance.LogMessage(caster.DisplayName + " casts " + spell.ToDisplayString(), spell.Icon);
         yield return SpellFxManager.instance.PlayMessages();
         var roots = Modify(spell);
+        // Critical chance
+        bool crit = false;
+        if (roots.Any((r) => r.effects.Any((e) => e.CanCrit)) && UnityEngine.Random.Range(0, 1f) <= Damage.baseCritChance)
+        {
+            bool friendly = caster.CasterClass == Caster.Class.Player || caster.CasterClass == Caster.Class.PartyMember;
+            yield return criticalPopup.Show("Critical Chance!", friendly ? "CRITICAL" : "BLOCK", 5);
+            crit = friendly == criticalPopup.LastPromptSuccess;
+        }
         var casterSpace = Battlefield.instance.GetSpace(caster.FieldPos);
         List<Coroutine> crList = new List<Coroutine>();
         foreach (var root in roots)
@@ -98,7 +108,7 @@ public class SpellManager : MonoBehaviour
                         // Apply OnCast Callbacks
                         caster.OnBeforeSpellEffectResolved?.Invoke(effect, caster, targetCaster);
                         // Cast the effect
-                        var castResults = effect.Cast(caster, targetCaster, rootResults);
+                        var castResults = effect.Cast(caster, targetCaster, crit, rootResults);
                         // Apply OnHit Callbacks (Updates AI)
                         targetCaster.OnAfterHitResolved?.Invoke(effect, caster, targetCaster, castResults);
                         // Play Effects

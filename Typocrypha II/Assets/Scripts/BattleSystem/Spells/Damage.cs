@@ -6,7 +6,7 @@ using System.Linq;
 public static class Damage
 {
     public const float stunBonusDamageMod = 1.25f;
-    public const float critDamageMod = 2f;
+    public const float critDamageMod = 2.5f;
     public const float baseCritChance = 0.075f;
 
     public enum FormulaType
@@ -15,7 +15,7 @@ public static class Damage
         Custom,
         StandardHeal,
     }
-    public delegate CastResults Formula(DamageEffect effect, Caster caster, Caster target);
+    public delegate CastResults Formula(DamageEffect effect, Caster caster, Caster target, bool crit);
 
     public static Dictionary<FormulaType, Formula> PresetFormulae { get; } = new Dictionary<FormulaType, Formula>
     {
@@ -23,45 +23,46 @@ public static class Damage
         { FormulaType.StandardHeal, StandardHealApplied },
     };
 
-    private static CastResults StandardApplied(DamageEffect effect, Caster caster, Caster target)
+    private static CastResults StandardApplied(DamageEffect effect, Caster caster, Caster target, bool crit)
     {
-        var results = Standard(effect, caster, target);
+        var results = Standard(effect, caster, target, crit);
         ApplyStandard(results, effect, caster, target);
         return results;
     }
 
-    private static CastResults StandardHealApplied(DamageEffect effect, Caster caster, Caster target)
+    private static CastResults StandardHealApplied(DamageEffect effect, Caster caster, Caster target, bool crit)
     {
-        var results = StandardHeal(effect, caster, target);
+        var results = StandardHeal(effect, caster, target, crit);
         ApplyStandard(results, effect, caster, target);
         return results;
     }
 
     #region Calculation
 
-    public static CastResults Standard(DamageEffect effect, Caster caster, Caster target)
+    public static CastResults Standard(DamageEffect effect, Caster caster, Caster target, bool crit)
     {
         var results = new CastResults(caster, target);
         StandardHitCheck(results, effect, caster, target);
         StandardAtkDef(results, effect, caster, target);
-        if (StandardCritCheck(results, effect, caster, target))
+        if (crit)
+        {
             StandardCritMod(results, effect, caster, target);
+        }
         StandardElements(results, effect, caster, target);
         StandardPower(results, effect, caster, target);
         StandardStunBonus(results, effect, caster, target);
         return results;
     }
 
-    public static CastResults StandardHeal(DamageEffect effect, Caster caster, Caster target)
+    public static CastResults StandardHeal(DamageEffect effect, Caster caster, Caster target, bool crit)
     {
         var results = new CastResults(caster, target)
         {
             Miss = effect.tags.Contains("AlwaysMiss"),
         };
-        if (StandardCritCheckBuff(results, effect, caster, target))
+        if (crit)
         {
-            results.Crit = true;
-            results.Damage *= critDamageMod;
+            StandardCritMod(results, effect, caster, target);
         }
         StandardElements(results, effect, caster, target);
         results.StaggerDamage = 0;
@@ -93,7 +94,7 @@ public static class Damage
     /// <summary>
     /// Sets the Crit property and modifies damage and stagger based on a standard crit check
     /// </summary>
-    public static bool StandardCritCheck(CastResults results, RootWordEffect effect, Caster caster, Caster target)
+    public static bool StandardCritCheck(RootWordEffect effect, Caster caster, Caster target)
     {
         // If the move always crits, bypass accuracy checks
         if (effect.tags.Contains("AlwaysCrit"))
@@ -135,8 +136,8 @@ public static class Damage
     public static void StandardCritMod(CastResults results, RootWordEffect effect, Caster caster, Caster target)
     {
         results.Crit = true;
-        results.StaggerDamage = 1;
         results.Damage *= critDamageMod;
+        results.StaggerDamage = 1;
     }
 
     /// <summary>
@@ -310,7 +311,7 @@ public static class Damage
         if (results.Effectiveness == Reaction.Repel)
         {
             effect.tags.Add("Reflected");
-            effect.Cast(caster, caster);
+            effect.Cast(caster, caster, results.Crit);
             return true;
         }
         return false;

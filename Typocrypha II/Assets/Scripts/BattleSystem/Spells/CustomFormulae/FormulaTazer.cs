@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class FormulaTazer : CustomFormula
 {
-    public override CastResults Apply(DamageEffect effect, Caster caster, Caster target, RootCastResults prevResults = null)
+    public override CastResults Apply(DamageEffect effect, Caster caster, Caster target, bool crit, RootCastResults prevResults = null)
     {
         // Calculate standard results using the standard formula
-        var results = Damage.Standard(effect, caster, target);
+        var results = Damage.Standard(effect, caster, target, crit);
         ++results.StaggerDamage;
         // Log some extra messages
         LogMessage(target.DisplayName + " is shocked!");

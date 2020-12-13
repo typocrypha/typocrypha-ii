@@ -7,7 +7,9 @@ public abstract class RootWordEffect : ScriptableObject
     public SpellFxData fx;
     public SpellTag.TagSet tags = new SpellTag.TagSet();
     public TargetData pattern = new TargetData();
-    public abstract CastResults Cast(Caster caster, Caster target, RootCastResults prevResults = null);
+
+    public abstract bool CanCrit { get; }
+    public abstract CastResults Cast(Caster caster, Caster target, bool crit, RootCastResults prevResults = null);
 
     protected void LogMessage(string message, Sprite icon = null)
     {

@@ -5,12 +5,17 @@ using UnityEngine;
 public class InceptSpellTagsEffect : RootWordEffect
 {
     public List<SpellTag> spellTagsToAdd = new List<SpellTag>();
-    public override CastResults Cast(Caster caster, Caster target, RootCastResults prevResults = null)
+
+    public override bool CanCrit => false;
+
+    public override CastResults Cast(Caster caster, Caster target, bool crit, RootCastResults prevResults = null)
     {
         target.OnBeforeSpellEffectResolved += InceptTag;
-        CastResults results = new CastResults(caster, target);
-        results.Miss = false;
-        results.DisplayDamage = false;
+        CastResults results = new CastResults(caster, target)
+        {
+            Miss = false,
+            DisplayDamage = false
+        };
         return results;
     }
 
