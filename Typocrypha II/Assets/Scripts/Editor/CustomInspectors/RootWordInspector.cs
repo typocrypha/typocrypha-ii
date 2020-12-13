@@ -58,12 +58,12 @@ public class RootWordInspector : SpellWordInspector
     public override void OnInspectorGUI()
     {
         // Icon field
-        (target as RootWord).icon = EditorGUILayout.ObjectField("icon", (target as RootWord).icon, typeof(Sprite), false) as Sprite;
+        var word = target as RootWord;
+        word.icon = EditorUtils.ObjectField(new GUIContent("Icon"), word.icon, false);
         EditorUtils.Separator();
         base.OnInspectorGUI();
-        var word = target as RootWord;
         rList.DoLayoutList();
         if (GUI.changed)
-            EditorUtility.SetDirty(this);
+            EditorUtility.SetDirty(word);
     }
 }
