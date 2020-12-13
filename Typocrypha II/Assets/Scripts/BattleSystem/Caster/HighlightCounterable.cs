@@ -12,6 +12,7 @@ public class HighlightCounterable : MonoBehaviour
 {
     public Text SpellText; // Text displaying charging spell.
     public FXText.Color[] Highlights; // Highlights for spellwords.
+    public FXText.Color CounteredHighlight; // Highlight for countered display.
 
     void Update()
     {
@@ -39,6 +40,17 @@ public class HighlightCounterable : MonoBehaviour
                 Highlights[i].ind[1] = 0;
             }
             pos += spell.Length + 1;
+        }
+
+        if (SpellText.text == SpellManager.instance.counterWord.internalName.ToUpper())
+        {
+            CounteredHighlight.ind[0] = 0;
+            CounteredHighlight.ind[1] = SpellManager.instance.counterWord.internalName.Length;
+        }
+        else
+        {
+            CounteredHighlight.ind[0] = 0;
+            CounteredHighlight.ind[1] = 0;
         }
     }
 }
