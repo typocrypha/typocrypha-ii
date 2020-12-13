@@ -32,11 +32,17 @@ namespace ATB3
         {
             var caster = Owner.Caster;
             timer += Time.fixedDeltaTime;
-            if(caster.Stunned)
+            if (caster.Stunned)
             {
                 Source.PerformTransition(ATBStateID.Stunned);
             }
-            else if(caster.Charge <= 0)
+            else if (caster.Spell.Countered) // Spell is countered
+            {
+                // Apply callbacks after the whole cast is finished (as if this cast happened)
+                caster.OnAfterCastResolved?.Invoke(caster.Spell, caster);
+                Source.PerformTransition(ATBStateID.Charge);
+            }
+            else if (caster.Charge <= 0)
             {
                 Source.PerformTransition(ATBStateID.Charge);
             }
@@ -44,8 +50,6 @@ namespace ATB3
             {
                 Source.PerformTransition(ATBStateID.BeforeCast);
             }
-
-            return;
         }
 
         // Call upon exiting given state
