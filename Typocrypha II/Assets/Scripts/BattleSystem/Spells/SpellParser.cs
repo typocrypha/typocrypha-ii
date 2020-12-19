@@ -23,6 +23,9 @@ public class SpellParser : MonoBehaviour
         ReplaceWord,
     }
     public static SpellParser instance = null;
+    // Words that are availible even if not equipped
+    [SerializeField] private SpellWordBundle freeWordBundle;
+    private readonly Dictionary<string, SpellWord> freeWords = new Dictionary<string, SpellWord>();
     //public SpellWordBundle roots;
     //public SpellWordBundle modifiers;
 
@@ -38,10 +41,20 @@ public class SpellParser : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+            BuildDictionary();
         }
         else
             Destroy(gameObject);
     }
+
+    /// <summary> Build the free word dictionary from the free word assetbundle </summary>
+    private void BuildDictionary()
+    {
+        freeWords.Clear();
+        foreach (var word in freeWordBundle.words)
+            freeWords.Add(word.Key.ToLower(), word.Value);
+    }
+
     /// <summary> Returns Valid if the string array represents a valid spell that exists in the given spell dictionary
     /// Returns other ParseResults to indicate different failure conditions 
     /// Returns the parsed spell in out list s.
@@ -52,10 +65,18 @@ public class SpellParser : MonoBehaviour
         int roots = 0;
         foreach (string word in spellwords)
         {
-            if (words.ContainsKey(word))
+            if (words.ContainsKey(word)) // Spell is in the words availible for this cast
             {
                 s.Add(words[word]);
                 if (words[word] is RootWord)
+                {
+                    ++roots;
+                }
+            }
+            else if(freeWords.ContainsKey(word)) // Spell is in the always availible words
+            {
+                s.Add(freeWords[word]);
+                if (freeWords[word] is RootWord)
                 {
                     ++roots;
                 }

@@ -78,7 +78,7 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
 
     /// <summary>
     /// Returns the number of uses left on this word's cooldowns if the word is on cooldown.
-    /// Throws exception if the word is not on cooldown.
+    /// Returns -1 if the word is not on cooldown.
     /// </summary>
     /// <param name="word"></param>
     /// <returns></returns>
@@ -90,7 +90,7 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
         }
         else
         {
-            throw new UnityException("Invalid Cooldown");
+            return -1;
         }
     }
 

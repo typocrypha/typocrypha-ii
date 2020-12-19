@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using UnityEngine;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(ATB3.ATBPlayer))]
 public class Player : Caster
@@ -36,10 +37,12 @@ public class Player : Caster
             }
             if (results != SpellParser.ParseResults.OnCooldown)
             {
+                // Find the roots
+                var roots = new List<SpellWord>(words.Where((w) => w is RootWord));
                 // Lower Cooldowns of all words currently on cooldown by the number of words in the successful spell
-                cooldowns.ModifyAllCooldowns(-words.Count);
-                foreach (var word in words)
-                    cooldowns.StartCooldown(word.Key);
+                cooldowns.ModifyAllCooldowns(-roots.Count);
+                // Start the roots in the spell on cooldown
+                roots.ForEach((w) => cooldowns.StartCooldown(w.Key));
                 GetComponent<Caster>().Spell = words;
                 GetComponent<ATB3.ATBPlayer>().Cast(TargetPos); // Start casting sequence
             }
