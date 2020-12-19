@@ -52,6 +52,13 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
         }
     }
 
+    public void SortCooldowns()
+    {
+        System.Func<Transform, Transform, int> comp = (a, b) =>
+            b.GetComponent<SpellCooldown>().CurrCooldown - a.GetComponent<SpellCooldown>().CurrCooldown;
+        cooldownTr.SortHiearchy(comp);
+    }
+
     /// <summary>
     /// Start cooldown timer for given spell.
     /// If the spell is already on cooldown, return and do nothing
@@ -78,7 +85,7 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
 
     /// <summary>
     /// Returns the number of uses left on this word's cooldowns if the word is on cooldown.
-    /// Throws exception if the word is not on cooldown.
+    /// Returns -1 if the word is not on cooldown.
     /// </summary>
     /// <param name="word"></param>
     /// <returns></returns>
@@ -90,7 +97,7 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
         }
         else
         {
-            throw new UnityException("Invalid Cooldown");
+            return -1;
         }
     }
 
@@ -117,6 +124,11 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
         {
             cooldowns[word].CurrCooldown += modifier;
         }
+        System.Func<Transform, Transform, int> comp = (a, b) =>
+            a.GetComponent<SpellCooldown>().CurrCooldown < b.GetComponent<SpellCooldown>().CurrCooldown
+            ? 1
+            : -1;
+        cooldownTr.SortHiearchy(comp);
     }
 
     public void ModifyAllCooldowns(int modifier, bool mustAlreadyBeOnCooldown = true)
@@ -144,7 +156,7 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
     {
         foreach(var spell in cooldowns.Keys)
         {
-            cooldowns[spell].CurrCooldown = 0;
+            ResetCooldown(spell);
         }
     }
 }

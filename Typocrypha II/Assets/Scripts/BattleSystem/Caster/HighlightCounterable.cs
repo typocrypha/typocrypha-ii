@@ -21,23 +21,22 @@ public class HighlightCounterable : MonoBehaviour
         for (int i = 0; i < spells.Length; i++)
         {
             string spell = spells[i];
-            try
+            if (PlayerEquipment.instance.EquippedWordsDict.ContainsKey(spell.ToLower()) && !SpellCooldownManager.instance.IsOnCooldown(spell))
             {
-                if (!SpellCooldownManager.instance.IsOnCooldown(spell))
-                {
-                    Highlights[i].ind[0] = pos;
-                    Highlights[i].ind[1] = pos + spell.Length;
-                }
-                else
+                Highlights[i].ind[0] = pos;
+                Highlights[i].ind[1] = pos + spell.Length;
+            }
+            else
+            {
+                if (e.Message == "Invalid Cooldown")
                 {
                     Highlights[i].ind[0] = 0;
                     Highlights[i].ind[1] = 0;
                 }
-            }
-            catch (UnityException e)
-            {
-                Highlights[i].ind[0] = 0;
-                Highlights[i].ind[1] = 0;
+                else
+                {
+                    throw e;
+                }
             }
             pos += spell.Length + 1;
         }
