@@ -10,7 +10,7 @@ public class SpellCooldown : MonoBehaviour
 {
     public UnityEvent_int OnChangeTotalCooldown; // Handle called when total cooldown is set.
     public UnityEvent_int OnChangeCurrCooldown; // Handle called when cooldown changes (amount remaining).
-    public Text spellText; // Text for spell name.
+    public TMPro.TextMeshProUGUI spellText; // Text for spell name.
     int totalCooldown; // Total cooldown.
     public int TotalCooldown
     {
