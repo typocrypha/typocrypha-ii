@@ -134,6 +134,11 @@ public class SpellManager : MonoBehaviour
                 rootResults.Add(effectResults);
             }
         }
+        if(crit)
+        {
+            SpellFxManager.instance.LogMessage("A critical hit!");
+            yield return SpellFxManager.instance.PlayMessages();
+        }
         // Apply callbacks after the whole cast is finished
         caster.OnAfterCastResolved?.Invoke(spell, caster);
     }

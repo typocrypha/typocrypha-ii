@@ -155,11 +155,6 @@ public class SpellFxManager : MonoBehaviour
             case Reaction.Repel:
                 break;
         }
-        // Crit Effects
-        if(data.Crit)
-        {
-            LogMessage("A critical hit!"); // DEBUG
-        }
         popper.Cleanup();
     }
 
