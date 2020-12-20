@@ -28,15 +28,8 @@ public class HighlightCounterable : MonoBehaviour
             }
             else
             {
-                if (e.Message == "Invalid Cooldown")
-                {
-                    Highlights[i].ind[0] = 0;
-                    Highlights[i].ind[1] = 0;
-                }
-                else
-                {
-                    throw e;
-                }
+                Highlights[i].ind[0] = 0;
+                Highlights[i].ind[1] = 0;
             }
             pos += spell.Length + 1;
         }
