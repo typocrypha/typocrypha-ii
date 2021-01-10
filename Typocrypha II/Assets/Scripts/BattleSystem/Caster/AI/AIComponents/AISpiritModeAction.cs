@@ -5,6 +5,7 @@ using UnityEngine;
 public class AISpiritModeAction : AIComponent
 {
     public Spell action;
+    public int spiritStagger = 3;
 
     private void OnEnable()
     {
@@ -27,6 +28,9 @@ public class AISpiritModeAction : AIComponent
         }
         caster.Spell = action;
         caster.Charge = 0;
+        caster.Stats.MaxStagger = spiritStagger;
+        caster.Stagger = spiritStagger;
+        caster.Stunned = false;
         caster.ChargeTime = action.Cost * caster.Stats.CastingSpeedMod;
     }
 }
