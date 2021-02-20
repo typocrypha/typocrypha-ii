@@ -12,10 +12,14 @@ namespace Typocrypha
     {
         const float time = 5f; // Duration of fire.
 
+        int reps = 0; // Number of additional times key is repeated.
+
         public override void OnStart()
         {
-            // Double output.
-            key.output = key.output + key.output;
+            // Multiply output.
+            reps = Random.Range(1, 4);
+            for (int i = 0; i < reps; i++)
+                key.output += key.letter.ToString();
             // Start timer.
             StartCoroutine(DestroyAfterTime(time));
         }

@@ -345,7 +345,7 @@ public static class Damage
         {
             if (effect.tags.Contains("Fire"))
             {
-                Typocrypha.Keyboard.instance.ApplyEffectRandom("KeyEffectBurning");
+                Typocrypha.Keyboard.instance.ApplyEffectRandom("KeyEffectBurning", 3);
             }
             if(effect.tags.Contains("Lightning"))
             {
