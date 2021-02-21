@@ -11,6 +11,10 @@ using System;
 /// </summary>
 public class Spell : IList<SpellWord>, IEquatable<Spell>
 {
+    public const char separator = '-';
+    public const char separatorModRight = '>';
+    public const char separatorModLeft = '<';
+    public static readonly char[] separators = { separator, separatorModLeft, separatorModRight };
     [SerializeField]
     private List<SpellWord> items = new List<SpellWord>();
 
@@ -39,7 +43,40 @@ public class Spell : IList<SpellWord>, IEquatable<Spell>
     {
         if (items.Count == 0)
             return string.Empty;
-        return items.Select((s) => s.internalName.ToUpper()).Aggregate((a, b) => a + "-" + b);
+        string ret = string.Empty;
+        for (int i = 0; i < Count; ++i)
+        {
+            var word = this[i];
+            ret += word.internalName.ToUpper();
+            if (i >= Count - 1)
+            {
+                break;
+            }
+            if (word is ModifierWord)
+            {
+                var modifier = word as ModifierWord;
+                if ((modifier.direction == ModifierWord.Direction.Right || modifier.direction == ModifierWord.Direction.Bidirectional) && this[i + 1] is RootWord)
+                {
+                    ret += separatorModRight;
+                }
+                else
+                {
+                    ret += separator;
+                }
+            }
+            else if(word is RootWord)
+            {
+                if (this[i + 1] is ModifierWord modifier && (modifier.direction == ModifierWord.Direction.Left || modifier.direction == ModifierWord.Direction.Bidirectional))
+                {
+                    ret += separatorModLeft;
+                }
+                else
+                {
+                    ret += separator;
+                }
+            }
+        }
+        return ret;
     }
 
     public IEnumerable<FieldObject> AllTargets(Battlefield.Position casterPos, Battlefield.Position targetPos)

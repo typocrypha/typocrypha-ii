@@ -16,7 +16,7 @@ public class HighlightCounterable : MonoBehaviour
 
     void Update()
     {
-        string[] spells = SpellText.text.Split('-');
+        string[] spells = SpellText.text.Split(Spell.separators);
         int pos = 0; // Text character position in spell words.
         for (int i = 0; i < spells.Length; i++)
         {
