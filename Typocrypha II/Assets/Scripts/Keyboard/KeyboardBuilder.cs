@@ -18,24 +18,62 @@ namespace Typocrypha
     /// </summary>
     public class KeyboardBuilder : MonoBehaviour
     {
+        public const string keyboardFormatQwerty = "qwertyuiop\n asdfghjkl\n zxcvbnm"; // Key letter format.
+        public const string keyboardFormatDvorak = "pyfgcrl\n aoeuidhtns\n  qjkxbmwvs"; // Key letter format.
+        public const string keyboardFormatColemak = "qwfpgjluy\n arstdhneio\n zxcvbkm"; // Key letter format.
+        public const string keyboardFormatPhone = "1234567890"; // Key letter format.
+        public const string keyboardFormatNumPad = "789\n 456\n 1230"; // Key letter format.
+        public enum Mode
+        {
+            Keyboard,
+            Phone,
+        }
         public GameObject keyPrefab; // Prefab for a single key.
         public GameObject keyPrefabAlt; // Alt color key prefab.
         public Transform[] rows; // Row transforms.
-        public const string keyboardFormat = // Key letter format.
-            "qwertyuiop\n asdfghjkl\n zxcvbnm"; 
+        public Mode mode; // Keyboard mode
+        private readonly List<GameObject> keyObjects = new List<GameObject>(); // Key objects
 
+        private string KeyboardFormat
+        {
+            get
+            {
+                if(mode == Mode.Keyboard)
+                {
+                    switch (Settings.KeyLayout)
+                    {
+                        case Settings.KeyLayoutType.CUSTOM:
+                            return Settings.CustomKeyLayout;
+                        case Settings.KeyLayoutType.QWERTY:
+                            return keyboardFormatQwerty;
+                        case Settings.KeyLayoutType.DVORAK:
+                            return keyboardFormatDvorak;
+                        case Settings.KeyLayoutType.COLEMAK:
+                            return keyboardFormatColemak;
+                        default:
+                            goto case Settings.KeyLayoutType.QWERTY;
+                    }
+                }
+                else // Mode == phone
+                {
+                    return keyboardFormatPhone;
+                }
+            }
+        }
         /// <summary>
         /// Create keyboard by spawning key objects in correct locations.
         /// </summary>
         public void BuildKeyboard()
         {
+            ClearKeyboard();
             int rowind = 0;
             bool colorSwap = false;
             Vector3 currPos = Vector2.zero;
-            for (int i = 0; i < keyboardFormat.Length; i++)
+            string format = KeyboardFormat;
+            for (int i = 0; i < format.Length; i++)
             {
-                GameObject go = null;
-                char c = keyboardFormat[i];
+
+                char c = format[i];
                 switch(c)
                 {
                     case ' ': // Color swap.
@@ -45,19 +83,23 @@ namespace Typocrypha
                         rowind++;
                         break;
                     default: // Alphabetical character.
-                        if (colorSwap = !colorSwap)
-                            go = Instantiate(keyPrefab, rows[rowind]);
-                        else
-                            go = Instantiate(keyPrefabAlt, rows[rowind]);
+                        GameObject go = Instantiate((colorSwap = !colorSwap) ? keyPrefab : keyPrefabAlt, rows[rowind]);
                         go.name = c.ToString();
                         go.transform.localScale = Vector2.one;
-                        Key key = go.GetComponent<Key>();
-                        key.letter = c;
-                        key.output = c.ToString();
-                        key.letterText.text = c.ToString().ToUpper();
+                        go.GetComponent<Key>()?.SetText(c);
+                        keyObjects.Add(go);
                         break;
                 }
             }
+        }
+
+        public void ClearKeyboard()
+        {
+            foreach (var obj in keyObjects)
+            {
+                Destroy(obj);
+            }
+            keyObjects.Clear();
         }
     }
 }
