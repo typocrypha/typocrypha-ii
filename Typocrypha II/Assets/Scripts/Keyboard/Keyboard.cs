@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Linq;
 
 namespace Typocrypha
 {
@@ -28,10 +29,10 @@ namespace Typocrypha
         public static Keyboard instance = null;
         public List<GameObject> allEffectPrefabs;
         public CastBar castBar;
-        public Dictionary<char, Key> keyMap; // Map from characters to keyboard keys.
         public Transform keys; // Object that holds all the key objects.
-        public Dictionary<char, KeyEffect> allEffects; // All active key effects on keyboard (managed by individual effects).
-        public HashSet<char> unaffectedKeys; // All keys not currently affected by a key effect
+        public readonly Dictionary<char, Key> keyMap = new Dictionary<char, Key>(); // Map from characters to keyboard keys.
+        public readonly Dictionary<char, KeyEffect> allEffects = new Dictionary<char, KeyEffect>(); // All active key effects on keyboard (managed by individual effects).
+        public readonly HashSet<char> unaffectedKeys = new HashSet<char>(); // All keys not currently affected by a key effect
 
         void Awake()
         {
@@ -46,18 +47,21 @@ namespace Typocrypha
             }
             ph = new PauseHandle(OnPause);
 
-            keyMap = new Dictionary<char, Key>();
-            allEffects = new Dictionary<char, KeyEffect>();
-            unaffectedKeys = new HashSet<char>();
             GetComponent<KeyboardBuilder>().BuildKeyboard(); // Construct keyboard.
-            foreach(Key key in keys.GetComponentsInChildren<Key>()) 
+            Initialize();
+        }
+
+        public void Initialize()
+        {
+            keyMap.Clear();
+            unaffectedKeys.Clear();
+            foreach (Key key in keys.GetComponentsInChildren<Key>())
             {
                 // Add keys to map.
                 keyMap[key.letter] = key;
                 // Initialize unaffected key set
                 unaffectedKeys.Add(key.letter);
             }
-
         }
 
         // Check user input.
@@ -177,9 +181,9 @@ namespace Typocrypha
         /// </summary>
         public void Clear()
         {
-            foreach(var kvp in allEffects)
+            foreach(var key in allEffects.Keys.ToArray())
             {
-                kvp.Value.Remove();
+                allEffects[key].Remove();
             }
         }
     }

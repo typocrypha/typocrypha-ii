@@ -37,6 +37,13 @@ namespace Typocrypha
             highlightSR.color = Color.white * highlight;
         }
 
+        public virtual void SetText(char c)
+        {
+            letter = c;
+            output = c.ToString();
+            letterText.text = output.ToUpper();
+        }
+
         /// <summary>
         /// Apply a key effect to this key.
         /// </summary>

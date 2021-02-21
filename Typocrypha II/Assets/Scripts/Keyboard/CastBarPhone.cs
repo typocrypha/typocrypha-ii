@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using System.Linq;
 
 namespace Typocrypha
 {
@@ -10,7 +11,8 @@ namespace Typocrypha
     {
         public const float waitTime = 0.5f;
         private const char nullChar = '?';
-        protected override char SpaceChar => '0';
+        private const char spaceChar = '0';
+        protected override char SpaceChar => spaceChar;
         private readonly Regex numeric = new Regex("^[2-9]"); // Matches numric strings.
         private static readonly Dictionary<char, char[]> mapping = new Dictionary<char, char[]>()
         {
@@ -27,6 +29,15 @@ namespace Typocrypha
         private int index = 0;
         private char lastKey = nullChar;
         private Coroutine waitCr = null;
+
+        public static string GetToolTipText(char c)
+        {
+            if (c == spaceChar)
+                return "_";
+            if (mapping.ContainsKey(c))
+                return string.Concat(mapping[c].Select(char.ToString));
+            return string.Empty;
+        }
 
         protected override void HandleBackSpace()
         {
