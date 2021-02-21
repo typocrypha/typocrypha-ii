@@ -18,17 +18,17 @@ namespace Typocrypha
         public GameObject[] keywords; // Set of all keywords (prefab effects).
         public UnityEvent_string onCast; // Event called when enter is pressed (casting spell).
 
-        StringBuilder sb = new StringBuilder(); // String builder for text.
+        protected readonly StringBuilder sb = new StringBuilder(); // String builder for text.
         public string Text
         {
             get => sb.ToString();
         }
 
-        int pos = 0; // Cursor position.
-        Dictionary<string, GameObject> keywordMap = new Dictionary<string, GameObject>();
-
-        Regex alpha = new Regex("^[A-Za-z]"); // Matches alphabetic strings.
+        protected int pos = 0; // Cursor position.
+        readonly Dictionary<string, GameObject> keywordMap = new Dictionary<string, GameObject>();
+        readonly Regex alpha = new Regex("^[A-Za-z]"); // Matches alphabetic strings.
         readonly char[] keywordDelim = new char[1] { ' ' };
+        protected virtual char SpaceChar => ' ';
 
         void Start()
         {
@@ -46,36 +46,60 @@ namespace Typocrypha
                 letters[pos].GetComponent<RectTransform>().offsetMin;
         }
 
+        protected virtual void HandleBackSpace()
+        {
+            letters[--pos].text = "";
+            sb.Remove(pos, 1);
+        }
+
+        private bool CheckSpecialCharacter(char inputChar)
+        {
+            if (inputChar == 8) // Backspace. Don't allow backspace on first character.
+            {
+                if(pos > 0)
+                    HandleBackSpace();
+                return true;
+            }
+            if (inputChar == SpaceChar) // Space. Don't allow space on first character.
+            {
+                if (pos > 0 && sb[pos - 1] != keywordDelim[0]) // Ignore multiple spaces.
+                {
+                    sb.Append(keywordDelim[0]);
+                    pos++;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        protected virtual bool CheckStandardCharacter(char inputChar)
+        {
+            if (alpha.IsMatch(inputChar.ToString())) // Normal character.
+            {
+                sb.Append(inputChar.ToString().ToLower());
+                letters[pos++].text = inputChar.ToString();
+                return true;
+            }
+            return false;
+        }
+
         /// <summary>
         /// Receive input to castbar (from Keyboard.cs).
         /// </summary>
         /// <param name="inputChar">Input character</param>
         public void CheckInput(char inputChar)
         {
-            if (pos > 0 && inputChar == 8) // Backspace. Don't allow backspace on first character.
-            {
-                letters[--pos].text = "";
-                sb.Remove(pos, 1);
-            }
-            else if (pos >= letters.Length - 1) // No more room.
+            if (pos >= letters.Length - 1) // No more room.
             {
                 Debug.Log("CastBar full");
+                return;
             }
-            else if (pos > 0 && inputChar == 32) // Space. Don't allow space on first character.
+            if(CheckSpecialCharacter(inputChar) || CheckStandardCharacter(inputChar))
             {
-                if (sb[pos - 1] != keywordDelim[0]) // Ignore multiple spaces.
-                {
-                    sb.Append(keywordDelim[0]);
-                    pos++;
-                }
+                MatchKeywords(); // Find keywords and combos
             }
-            else if (alpha.IsMatch(inputChar.ToString())) // Normal character.
-            {
-                sb.Append(inputChar.ToString().ToLower());
-                letters[pos++].text = inputChar.ToString();
-            }
-            if (Text.Length > 0) MatchKeywords(); // Find keywords and combos.
         }
+
         public void CheckInput(string inputString)
         {
             foreach (char inputChar in inputString)
@@ -97,6 +121,8 @@ namespace Typocrypha
         // Effects are attached as children to first letter in keyword.
         void MatchKeywords()
         {
+            if (Text.Length <= 0)
+                return;
             var keywords = sb.ToString().Split(keywordDelim);
             int pos = 0; // Character position.
             Keyword curr = null; // Current keyword.
@@ -118,11 +144,11 @@ namespace Typocrypha
                         {
                             if (prev.type == Keyword.Type.left)
                             {
-                                letters[pos - 1].text = ">";
+                                letters[pos - 1].text = Spell.separatorModRight.ToString();
                             }
                             else if (prev.type == Keyword.Type.root)
                             {
-                                letters[pos - 1].text = "-";
+                                letters[pos - 1].text = Spell.separator.ToString();
                             }
                         }
                     }
@@ -132,7 +158,7 @@ namespace Typocrypha
                         {
                             if (prev.type == Keyword.Type.root)
                             {
-                                letters[pos - 1].text = "<";
+                                letters[pos - 1].text = Spell.separatorModLeft.ToString();
                             }
                         }
                     }
