@@ -20,7 +20,7 @@ namespace ATB3
         // Call on fixed update while in given state
         public override void OnUpdate()
         {
-            timer += Time.deltaTime;
+            timer += Time.deltaTime * Settings.GameplaySpeed;
             if (timer >= stunTime)
                 Source.PerformTransition(ATBStateID.Charge);
             return;
