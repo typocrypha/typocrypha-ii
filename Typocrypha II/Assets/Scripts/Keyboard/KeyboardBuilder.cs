@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace Typocrypha
 {
@@ -32,6 +33,7 @@ namespace Typocrypha
         public GameObject keyPrefabAlt; // Alt color key prefab.
         public Transform[] rows; // Row transforms.
         public Mode mode; // Keyboard mode
+        public IEnumerable<Key> Keys => keyObjects.Select(obj => obj.GetComponent<Key>());
         private readonly List<GameObject> keyObjects = new List<GameObject>(); // Key objects
 
         private string KeyboardFormat

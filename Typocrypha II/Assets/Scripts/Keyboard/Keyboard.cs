@@ -47,15 +47,16 @@ namespace Typocrypha
             }
             ph = new PauseHandle(OnPause);
 
-            GetComponent<KeyboardBuilder>().BuildKeyboard(); // Construct keyboard.
-            Initialize();
+            var builder = GetComponent<KeyboardBuilder>(); // Construct keyboard.
+            builder.BuildKeyboard();
+            Initialize(builder.Keys);
         }
 
-        public void Initialize()
+        public void Initialize(IEnumerable<Key> keys)
         {
             keyMap.Clear();
             unaffectedKeys.Clear();
-            foreach (Key key in keys.GetComponentsInChildren<Key>())
+            foreach (Key key in keys)
             {
                 // Add keys to map.
                 keyMap[key.letter] = key;
