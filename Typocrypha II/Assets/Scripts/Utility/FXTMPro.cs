@@ -13,10 +13,8 @@ public class FXTMPro : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(text.mesh.vertexCount);
-
         Color32[] colors = new Color32[text.mesh.vertexCount];
-        for (int i = 0; i < text.mesh.vertexCount; i++)
+        for (int i = 4; i < text.mesh.vertexCount; i++)
         {
             colors[i] = new Color32(255, 0, 0, 255);
         }
