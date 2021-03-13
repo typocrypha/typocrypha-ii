@@ -71,7 +71,7 @@ namespace Typocrypha
         // Remove effect when time runs out.
         IEnumerator DestroyAfterTime(float seconds)
         {
-            yield return new WaitForSecondsPause(seconds, PH);
+            yield return new WaitForSecondsPause(seconds / Settings.GameplaySpeed, PH);
             Remove();
         }
     }

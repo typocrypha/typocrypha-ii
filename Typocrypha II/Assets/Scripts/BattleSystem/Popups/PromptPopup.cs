@@ -38,7 +38,7 @@ public class PromptPopup : MonoBehaviour
             yield return new WaitForEndOfFrame();
             if(time > 0)
             {
-                currTime += Time.deltaTime;
+                currTime += Time.deltaTime * Settings.GameplaySpeed;
                 if (currTime >= time)
                     break;
             }

@@ -40,13 +40,14 @@ namespace ATB3
         {
             Caster.Charge = 0f;
             Caster.ChargeTime = Caster.Spell.Cost;
-            while (Caster.Charge + Time.fixedDeltaTime < Caster.ChargeTime)
+            do
             {
                 // Charge while in charge state
                 do yield return new WaitForFixedUpdate();
                 while (Pause || !IsCurrentState(ATBStateID.Charge));
-                Caster.Charge += Time.fixedDeltaTime * Caster.Stats.CastingSpeedMod;
+                Caster.Charge += Time.fixedDeltaTime * Settings.GameplaySpeed * Caster.Stats.CastingSpeedMod;
             }
+            while (Caster.Charge < Caster.ChargeTime);
             Caster.Charge = Caster.ChargeTime;
             //Debug.Log("DONE CHARGING");
             //sendEvent("enemyPreCast");
