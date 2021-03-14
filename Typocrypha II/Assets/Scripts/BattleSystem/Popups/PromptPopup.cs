@@ -17,7 +17,7 @@ public class PromptPopup : MonoBehaviour
         completed = true;
     }
 
-    public Coroutine Show(string header, string prompt, float time = 0)
+    public Coroutine Show(string header, string prompt, float time)
     {
         completed = false;
         LastPromptSuccess = false;

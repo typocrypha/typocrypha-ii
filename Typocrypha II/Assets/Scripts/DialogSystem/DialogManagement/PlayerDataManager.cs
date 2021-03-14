@@ -98,6 +98,9 @@ public class PlayerDataManager : MonoBehaviour, ISavable
     public const string textDelayScale = "text-delay-scale";
     #endregion
 
+    public PlayerEquipment equipment;
+    public ResearchData researchData;
+
     private void Awake()
     {
         if (instance == null)

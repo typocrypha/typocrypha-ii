@@ -41,7 +41,7 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
 
     private void Start()
     {
-        var equipment = PlayerEquipment.instance.EquippedWords;
+        var equipment = PlayerDataManager.instance.equipment.EquippedWords;
         foreach (var spell in equipment)
         {
             var cd = Instantiate(cooldownPrefab, cooldownTr).GetComponent<SpellCooldown>();
