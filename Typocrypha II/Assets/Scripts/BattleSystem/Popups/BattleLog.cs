@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class BattleLog : MonoBehaviour
 {
-    public Text text;
+    public TextMeshProUGUI text;
     public Image icon;
 
     public void SetContent(string text, Sprite icon)
