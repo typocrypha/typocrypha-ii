@@ -44,11 +44,7 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
         var equipment = PlayerDataManager.instance.equipment.EquippedWords;
         foreach (var spell in equipment)
         {
-            var cd = Instantiate(cooldownPrefab, cooldownTr).GetComponent<SpellCooldown>();
-            cd.spellText.text = spell.internalName.ToUpper();
-            cd.TotalCooldown = spell.cooldown;
-            cd.CurrCooldown = 0;
-            cooldowns.Add(spell.internalName.ToUpper(), cd);
+            AddWord(spell);
         }
     }
 
@@ -57,6 +53,17 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
         System.Func<Transform, Transform, int> comp = (a, b) =>
             b.GetComponent<SpellCooldown>().CurrCooldown - a.GetComponent<SpellCooldown>().CurrCooldown;
         cooldownTr.SortHiearchy(comp);
+    }
+
+    public void AddWord(SpellWord word)
+    {
+        if (IsOnCooldown(word.internalName.ToUpper()))
+            return;
+        var cd = Instantiate(cooldownPrefab, cooldownTr).GetComponent<SpellCooldown>();
+        cd.spellText.text = word.internalName.ToUpper();
+        cd.TotalCooldown = word.cooldown;
+        cd.CurrCooldown = 0;
+        cooldowns.Add(word.internalName.ToUpper(), cd);
     }
 
     /// <summary>

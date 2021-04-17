@@ -349,10 +349,16 @@ public static class Damage
                     if (success)
                     {
                         research.SetDecoded(target.ResearchKey);
+                        var word = research.GetWord(target.ResearchKey);
+                        if (word != null)
+                        {
+                            PlayerDataManager.instance.equipment.Unlock(word, true);
+                            SpellCooldownManager.instance.AddWord(word);
+                        }
                     }
                     return null;
                 }
-                SpellManager.instance.LogPrompt("Decode Chance!", "DECODE", 5, LogDecoded);
+                SpellManager.instance.LogDecodePopup("Decode Chance!", target.ResearchKey, 5, LogDecoded);
             }
         }
     }

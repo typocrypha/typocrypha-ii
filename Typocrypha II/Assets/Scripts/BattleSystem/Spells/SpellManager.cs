@@ -13,7 +13,9 @@ public class SpellManager : MonoBehaviour
     public static SpellManager instance;
     public SpellWord counterWord;
     [SerializeField]
-    private PromptPopup promptPopup;
+    private GameObject critPopupPrefab = null;
+    [SerializeField]
+    private GameObject decodePopupPrefab = null;
 
     /// <summary> Singleton implementation </summary>
     private void Awake()
@@ -76,8 +78,13 @@ public class SpellManager : MonoBehaviour
         if (roots.Any((r) => r.effects.Any((e) => e.CanCrit)) && UnityEngine.Random.Range(0, 1f) <= Damage.baseCritChance)
         {
             bool friendly = caster.CasterClass == Caster.Class.Player || caster.CasterClass == Caster.Class.PartyMember;
-            yield return promptPopup.Show("Critical Chance!", friendly ? "CRITICAL" : "BLOCK", 5);
-            crit = friendly == promptPopup.LastPromptSuccess;
+            IEnumerator OnCritPopupComplete(bool popupSuccess)
+            {
+                crit = friendly == popupSuccess;
+                return null;
+            }
+            LogInteractivePopup(critPopupPrefab, "Critical Chance!", friendly ? "CRITICAL" : "BLOCK", 5, OnCritPopupComplete);
+            yield return StartCoroutine(PlayPrompts());
         }
         var casterSpace = Battlefield.instance.GetSpace(caster.FieldPos);
         List<Coroutine> crList = new List<Coroutine>();
@@ -173,9 +180,14 @@ public class SpellManager : MonoBehaviour
         yield return SpellFxManager.instance.PlayMessages();
     }
 
-    public void LogPrompt(string title, string prompt, float time, Func<bool, IEnumerator> onComplete = null)
+    public void LogInteractivePopup(GameObject prefab, string title, string prompt, float time, Func<bool, IEnumerator> onComplete = null)
     {
-        popupRequests.Enqueue(new PopupData() { title = title, prompt = prompt, time = time, onComplete = onComplete });
+        popupRequests.Enqueue(new PopupData() { popupPrefab = prefab, title = title, prompt = prompt, time = time, onComplete = onComplete });
+    }
+
+    public void LogDecodePopup(string title, string prompt, float time, Func<bool, IEnumerator> onComplete = null)
+    {
+        LogInteractivePopup(decodePopupPrefab, title, prompt, time, onComplete);
     }
 
     private IEnumerator PlayPrompts()
@@ -183,12 +195,16 @@ public class SpellManager : MonoBehaviour
         while(HasPrompts)
         {
             var req = popupRequests.Dequeue();
-            yield return promptPopup.Show(req.title, req.prompt, req.time);
-            var nextAction = req.onComplete?.Invoke(promptPopup.LastPromptSuccess);
+            var popup = Instantiate(req.popupPrefab, Vector2.zero, Quaternion.identity)?.GetComponent<InteractivePopup>();
+            if (popup == null)
+                continue;
+            yield return popup.Show(req.title, req.prompt, req.time);
+            var nextAction = req.onComplete?.Invoke(popup.LastPromptSuccess);
             if(nextAction != null)
             {
                 yield return StartCoroutine(nextAction);
             }
+            Destroy(popup.gameObject);
         }
     }
 
@@ -200,6 +216,7 @@ public class SpellManager : MonoBehaviour
         public string title;
         public string prompt;
         public float time;
+        public GameObject popupPrefab;
         public Func<bool, IEnumerator> onComplete;
     }
 }

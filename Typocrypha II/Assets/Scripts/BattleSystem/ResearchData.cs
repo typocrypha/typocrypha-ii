@@ -4,9 +4,23 @@ using UnityEngine;
 
 public class ResearchData : MonoBehaviour
 {
+    [SerializeField] private List<string> researchKeys;
+    [SerializeField] private List<SpellWord> researchWords;
     private readonly Dictionary<string, float> values = new Dictionary<string, float>();
     private readonly HashSet<string> decoded = new HashSet<string>();
-    
+    private readonly Dictionary<string, SpellWord> words = new Dictionary<string, SpellWord>();
+
+    private void Awake()
+    {
+        for(int i = 0; i < Mathf.Min(researchKeys.Count, researchWords.Count); ++i)
+        {
+            if (!words.ContainsKey(researchKeys[i]))
+            {
+                words.Add(researchKeys[i], researchWords[i]);
+            }
+        }
+    }
+
     public void Add(string key, float amount)
     {
         if (values.ContainsKey(key))
@@ -30,5 +44,10 @@ public class ResearchData : MonoBehaviour
         if (IsDecoded(key))
             return;
         decoded.Add(key);
+    }
+
+    public SpellWord GetWord(string key)
+    {
+        return words.ContainsKey(key) ? words[key] : null;
     }
 }
