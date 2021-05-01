@@ -46,14 +46,14 @@ public class BackgroundElementAnimator : MonoBehaviour
                 {
                     anim.transformToAnimate.DOBlendableMoveBy(movement, anim.animationSpeed, false)
                         .SetEase(anim.animationCurve)
-                        .SetLoops(0, anim.loopBehavior)
+                        .SetLoops(-1, anim.loopBehavior)
                         .SetDelay(anim.animationStartOffset);
                 }
                 else
                 {
                     anim.transformToAnimate.DOBlendableMoveBy(movement, anim.animationSpeed, false)
                         .SetEase(anim.customCurve)
-                        .SetLoops(0, anim.loopBehavior)
+                        .SetLoops(-1, anim.loopBehavior)
                         .SetDelay(anim.animationStartOffset);
                 }
 
@@ -66,14 +66,14 @@ public class BackgroundElementAnimator : MonoBehaviour
                 {
                     anim.transformToAnimate.DOBlendableLocalRotateBy(rotation, anim.animationSpeed, RotateMode.LocalAxisAdd)
                         .SetEase(anim.animationCurve)
-                        .SetLoops(0, anim.loopBehavior)
+                        .SetLoops(-1, anim.loopBehavior)
                         .SetDelay(anim.animationStartOffset);
                 }
                 else
                 {
                     anim.transformToAnimate.DOBlendableRotateBy(rotation, anim.animationSpeed, RotateMode.LocalAxisAdd)
                         .SetEase(anim.customCurve)
-                        .SetLoops(0, anim.loopBehavior)
+                        .SetLoops(-1, anim.loopBehavior)
                         .SetDelay(anim.animationStartOffset);
                 }
 
@@ -89,14 +89,14 @@ public class BackgroundElementAnimator : MonoBehaviour
                 {
                     anim.transformToAnimate.DOBlendableMoveBy(scale, anim.animationSpeed, false)
                         .SetEase(anim.animationCurve)
-                        .SetLoops(0, anim.loopBehavior)
+                        .SetLoops(-1, anim.loopBehavior)
                         .SetDelay(anim.animationStartOffset);
                 }
                 else
                 {
                     anim.transformToAnimate.DOBlendableMoveBy(scale, anim.animationSpeed, false)
                         .SetEase(anim.customCurve)
-                        .SetLoops(0, anim.loopBehavior)
+                        .SetLoops(-1, anim.loopBehavior)
                         .SetDelay(anim.animationStartOffset);
                 }
 
@@ -114,14 +114,14 @@ public class BackgroundElementAnimator : MonoBehaviour
         public AnimationType animationType;
         public MovementAxis movementOrScaleAxis;
         [Range(0.1f, 1000.0f)] public float targetScale;
-        [Range(-1000f, 1000f)] public float targetPositionOffset;
+        [Range(-10f, 10f)] public float targetPositionOffset;
         [Range(0f, 360f)] public float targetRotation;
 
         public Ease animationCurve;
         public bool useCustomCurve;
         public AnimationCurve customCurve;
-        [Range(0.1f, 10.0f)] public float animationSpeed;
-        [Range(0.0f, 1.0f)] public float animationStartOffset;
+        [Range(0.1f, 25.0f)] public float animationSpeed;
+        [Range(-10.0f, 10.0f)] public float animationStartOffset;
         public LoopType loopBehavior;
 
     }
