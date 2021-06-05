@@ -16,14 +16,16 @@ public class CasterInspector : Editor
 
         #region Info GUI
         GUILayout.Label(data.DisplayName + " " + " (" + data.CasterState.ToString() + ")");
-        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+        EditorUtils.Separator();
         #endregion
 
         #region Field Object Data GUI
         data.DisplayName = EditorGUILayout.TextField(new GUIContent("Display Name"), data.DisplayName);
         data.CasterClass = EditorUtils.EnumPopup(new GUIContent("Caster Class"), data.CasterClass);
-        data.CasterState = EditorUtils.EnumPopup(new GUIContent("Caster State"), data.CasterState);     
+        data.CasterState = EditorUtils.EnumPopup(new GUIContent("Caster State"), data.CasterState);
         data.IsMoveable = EditorGUILayout.Toggle(new GUIContent("Movable"), data.IsMoveable);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("researchKeyOverride"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("researchAmount"));
         #endregion
 
         #region Spawning GUI
@@ -61,7 +63,7 @@ public class CasterInspector : Editor
         {
             EditorUtils.SetSceneDirty(target);
         }
-
+        serializedObject.ApplyModifiedProperties();
         EditorUtils.SetSceneDirtyIfGUIChanged(target);
     }
 }

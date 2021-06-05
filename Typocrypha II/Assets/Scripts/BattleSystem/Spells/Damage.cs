@@ -301,6 +301,7 @@ public static class Damage
             return;
         if (ApplyReflect(results, effect, caster, target))
             return;
+        ApplyResearch(results, effect, caster, target);
         ApplyDamage(results, effect, caster, target);
         ApplyStaggerDamage(results, effect, caster, target);
         ApplyKeyboardEffects(results, effect, caster, target);
@@ -331,6 +332,35 @@ public static class Damage
         target.Stagger -= Mathf.FloorToInt(results.StaggerDamage);
         if (target.Stunned)
             SpellFxManager.instance.LogMessage(target.DisplayName + " is stunned!");
+    }
+
+    public static void ApplyResearch(CastResults results, RootWordEffect effect, Caster caster, Caster target)
+    {
+        if(!MoveDoesDamage(results.Effectiveness))
+                return;
+        if (caster.CasterClass == Caster.Class.Player && target.BStatus == Caster.BattleStatus.SpiritMode)
+        {
+            var research = PlayerDataManager.instance.researchData;
+            research.Add(target.ResearchKey, target.ResearchAmount);
+            if (research.ReadyToDecode(target.ResearchKey))
+            {
+                IEnumerator LogDecoded(bool success)
+                {
+                    if (success)
+                    {
+                        research.SetDecoded(target.ResearchKey);
+                        var word = research.GetWord(target.ResearchKey);
+                        if (word != null)
+                        {
+                            PlayerDataManager.instance.equipment.Unlock(word, true);
+                            SpellCooldownManager.instance.AddWord(word);
+                        }
+                    }
+                    return null;
+                }
+                SpellManager.instance.LogDecodePopup("Decode Chance!", target.ResearchKey, 5, LogDecoded);
+            }
+        }
     }
 
     #region Apply Special Tags

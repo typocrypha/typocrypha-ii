@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Gameflow;
+using TMPro;
 
 [RequireComponent(typeof(BattleGraphParser))]
 public class BattleManager : MonoBehaviour, IPausable
@@ -180,8 +181,8 @@ public class BattleManager : MonoBehaviour, IPausable
     private IEnumerator WaveTransition(BattleWave waveData)
     { 
         GameObject wT = Instantiate(defaultWaveTransitionPrefab, waveTransitionCanvas.transform);
-        wT.transform.Find("WaveBanner").GetComponentInChildren<Text>().text = DialogParser.instance.SubstituteMacros(waveData.waveTitle);
-        wT.transform.Find("WaveTitle").GetComponentInChildren<Text>().text = "Wave " + waveNum + "/ " + totalWaves;
+        wT.transform.Find("WaveTitle").GetComponentInChildren<Text>().text = DialogParser.instance.SubstituteMacros(waveData.waveTitle);
+        wT.transform.Find("WaveBanner").GetComponentInChildren<TextMeshProUGUI>().text = "Wave " + waveNum + "/ " + totalWaves;
         yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
         yield return new WaitForSeconds(0.5f);
     }

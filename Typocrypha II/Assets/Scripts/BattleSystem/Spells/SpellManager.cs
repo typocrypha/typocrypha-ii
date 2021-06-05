@@ -13,7 +13,9 @@ public class SpellManager : MonoBehaviour
     public static SpellManager instance;
     public SpellWord counterWord;
     [SerializeField]
-    private PromptPopup criticalPopup;
+    private GameObject critPopupPrefab = null;
+    [SerializeField]
+    private GameObject decodePopupPrefab = null;
 
     /// <summary> Singleton implementation </summary>
     private void Awake()
@@ -28,7 +30,7 @@ public class SpellManager : MonoBehaviour
     /// Cast the spell's effect with a given caster at a given target position 
     /// Returns the case coroutine (in case the end of casting must be waited on)
     /// </summary>
-    public Coroutine Cast (Spell spell, Caster caster, Battlefield.Position target)
+    public Coroutine Cast(Spell spell, Caster caster, Battlefield.Position target)
     {
         return StartCoroutine(CastCR(spell, caster, target));
     }
@@ -48,7 +50,7 @@ public class SpellManager : MonoBehaviour
     public RootWord[] Modify(Spell spell)
     {
         SpellWord[] cloneWords = spell.Select((word) => word.Clone()).ToArray();
-        for(int i = 0; i < cloneWords.Length; ++i)
+        for (int i = 0; i < cloneWords.Length; ++i)
         {
             var mod = cloneWords[i] as ModifierWord;
             mod?.Modify(cloneWords, i);
@@ -76,8 +78,13 @@ public class SpellManager : MonoBehaviour
         if (roots.Any((r) => r.effects.Any((e) => e.CanCrit)) && UnityEngine.Random.Range(0, 1f) <= Damage.baseCritChance)
         {
             bool friendly = caster.CasterClass == Caster.Class.Player || caster.CasterClass == Caster.Class.PartyMember;
-            yield return criticalPopup.Show("Critical Chance!", friendly ? "CRITICAL" : "BLOCK", 5);
-            crit = friendly == criticalPopup.LastPromptSuccess;
+            IEnumerator OnCritPopupComplete(bool popupSuccess)
+            {
+                crit = friendly == popupSuccess;
+                return null;
+            }
+            LogInteractivePopup(critPopupPrefab, "Critical Chance!", friendly ? "CRITICAL" : "BLOCK", 5, OnCritPopupComplete);
+            yield return StartCoroutine(PlayPrompts());
         }
         var casterSpace = Battlefield.instance.GetSpace(caster.FieldPos);
         List<Coroutine> crList = new List<Coroutine>();
@@ -91,10 +98,10 @@ public class SpellManager : MonoBehaviour
                 var targets = effect.pattern.Target(caster.FieldPos, target);
                 // Log the effect of each effect
                 var effectResults = new List<CastResults>();
-                crList.Clear();                
+                crList.Clear();
                 foreach (var t in targets)
-                {                   
-                    var targetCaster = Battlefield.instance.GetCaster(t); 
+                {
+                    var targetCaster = Battlefield.instance.GetCaster(t);
                     var targetSpace = Battlefield.instance.GetSpace(t);
                     if (targetCaster == null || targetCaster.BStatus == Caster.BattleStatus.Dead || targetCaster.BStatus == Caster.BattleStatus.Fled)
                     {
@@ -118,7 +125,7 @@ public class SpellManager : MonoBehaviour
                         effectResults.Add(castResults);
                         // Wait for delay between targets
                         yield return new WaitForSeconds(delayBetweenTargets);
-                    }                 
+                    }
                 }
                 // Wait for all of the animations to finish
                 foreach (var cr in crList)
@@ -134,10 +141,14 @@ public class SpellManager : MonoBehaviour
                 rootResults.Add(effectResults);
             }
         }
-        if(crit)
+        if (crit)
         {
             SpellFxManager.instance.LogMessage("A critical hit!");
             yield return SpellFxManager.instance.PlayMessages();
+        }
+        if (HasPrompts)
+        {
+            yield return StartCoroutine(PlayPrompts());
         }
         // Apply callbacks after the whole cast is finished
         caster.OnAfterCastResolved?.Invoke(spell, caster);
@@ -154,7 +165,7 @@ public class SpellManager : MonoBehaviour
             if (remainingWords.Count() == cancelTarget.Spell.Count)
                 continue;
             // Full counter (no remaining roots)
-            if(remainingWords.Count((w) => w is RootWord) <= 0)
+            if (remainingWords.Count((w) => w is RootWord) <= 0)
             {
                 cancelTarget.Stagger--;
                 cancelTarget.Spell = new Spell(counterWord);
@@ -167,6 +178,46 @@ public class SpellManager : MonoBehaviour
             SpellFxManager.instance.LogMessage(cancelTarget.DisplayName + " has been countered!");
         }
         yield return SpellFxManager.instance.PlayMessages();
+    }
+
+    public void LogInteractivePopup(GameObject prefab, string title, string prompt, float time, Func<bool, IEnumerator> onComplete = null)
+    {
+        popupRequests.Enqueue(new PopupData() { popupPrefab = prefab, title = title, prompt = prompt, time = time, onComplete = onComplete });
+    }
+
+    public void LogDecodePopup(string title, string prompt, float time, Func<bool, IEnumerator> onComplete = null)
+    {
+        LogInteractivePopup(decodePopupPrefab, title, prompt, time, onComplete);
+    }
+
+    private IEnumerator PlayPrompts()
+    {
+        while(HasPrompts)
+        {
+            var req = popupRequests.Dequeue();
+            var popup = Instantiate(req.popupPrefab, Vector2.zero, Quaternion.identity)?.GetComponent<InteractivePopup>();
+            if (popup == null)
+                continue;
+            yield return popup.Show(req.title, req.prompt, req.time);
+            var nextAction = req.onComplete?.Invoke(popup.LastPromptSuccess);
+            if(nextAction != null)
+            {
+                yield return StartCoroutine(nextAction);
+            }
+            Destroy(popup.gameObject);
+        }
+    }
+
+    private bool HasPrompts => popupRequests.Count > 0;
+
+    private readonly Queue<PopupData> popupRequests = new Queue<PopupData>();
+    private class PopupData
+    {
+        public string title;
+        public string prompt;
+        public float time;
+        public GameObject popupPrefab;
+        public Func<bool, IEnumerator> onComplete;
     }
 }
 

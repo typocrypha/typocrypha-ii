@@ -66,10 +66,11 @@ public class Caster : FieldObject
     public System.Action<Battlefield.Position> OnNoTargetHit { get; set; }
 
     #region State, Status, and Class
-    [SerializeField] private State _type;
+
     public State CasterState { get => _type; set => _type = value; }
-    [SerializeField] private Class _casterClass;
+    [SerializeField] private State _type;
     public Class CasterClass { get => _casterClass; set => _casterClass = value; }
+    [SerializeField] private Class _casterClass;
     public BattleStatus BStatus
     {
         get => status;
@@ -98,6 +99,7 @@ public class Caster : FieldObject
         }
     }
     private BattleStatus status = BattleStatus.Normal;
+
     #endregion
 
     #region Health properties and UI functionality    
@@ -197,6 +199,16 @@ public class Caster : FieldObject
         }
     }
     float charge; // Charge amount (seconds) for enemies
+    #endregion
+
+    #region Research
+
+    public string ResearchKey => string.IsNullOrWhiteSpace(researchKeyOverride) ? DisplayName : researchKeyOverride;
+    [SerializeField] private string researchKeyOverride;
+
+    public float ResearchAmount => researchAmount;
+    [SerializeField] private float researchAmount = 0.1f;
+
     #endregion
 
     public void Damage(int amount)
