@@ -358,7 +358,7 @@ public static class Damage
                     }
                     return null;
                 }
-                SpellManager.instance.LogDecodePopup("Decode Chance!", target.ResearchKey, 5, LogDecoded);
+                SpellManager.instance.LogDecodePopup("Decode Chance!", target.ResearchKey, 0, LogDecoded);
             }
         }
     }
