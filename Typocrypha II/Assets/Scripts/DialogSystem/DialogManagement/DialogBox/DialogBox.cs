@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 /// <summary>
 /// Interface with general dialog box functionality.
@@ -45,7 +46,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
     }
     int speechInterval; // Number of character scrolls before speech sfx plays
 
-    public Text dialogText; // Text display component
+    public TextMeshProUGUI dialogText; // Text display component
     public AudioSource[] voiceAS; // AudioSources for playing speech sfx
     public bool resizeTextBox = true; // Should dialog box resize itself?
 
@@ -67,6 +68,11 @@ public class DialogBox : MonoBehaviour, IDialogBox
         voiceAS = GetComponents<AudioSource>();
     }
 
+    void Start()
+    {
+        SetBoxHeight();
+    }
+
     /// <summary>
     /// Initializes dialogue box (parses tags) and starts text scroll.
     /// </summary>
@@ -74,10 +80,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
     public void StartDialogBox(DialogItem dialogItem)
     {
         ResetDialogBox();
-        // Add text shadow.
-        var shadow = dialogText.gameObject.AddComponent<Shadow>();
-        shadow.effectDistance = new Vector2(2, -2);
-        shadow.effectColor = Color.black;
+
         // Get dialog.
         this.dialogItem = dialogItem;
         string rtext = DialogParser.instance.SubstituteMacros(dialogItem.text); // Parse macros
@@ -135,8 +138,6 @@ public class DialogBox : MonoBehaviour, IDialogBox
         var fxTexts = dialogText.GetComponents<FXText.FXTextBase>();
         foreach (var fxText in fxTexts)
             Destroy(fxText);
-        if (dialogText.gameObject.GetComponent<Shadow>() != null)
-            Destroy(dialogText.gameObject.GetComponent<Shadow>());
     }
 
     /// <summary>
