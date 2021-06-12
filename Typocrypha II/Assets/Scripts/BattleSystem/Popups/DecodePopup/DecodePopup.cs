@@ -8,6 +8,8 @@ using System.Text;
 
 public class DecodePopup : InteractivePopup
 {
+    [SerializeField] private GameObject bubblePrefab; 
+    [SerializeField] private Transform bubbleContainer; 
     private const char obscureChar = '?';
     private static readonly string highlightTag = "<color=red>"; 
     private static readonly string highlightCloseTag = "</color>"; 
@@ -16,6 +18,8 @@ public class DecodePopup : InteractivePopup
     private string realText = string.Empty;
     private StringBuilder obscuredText;
     private int currIndex;
+    private static readonly char[] letters = "qwertyuiopasdfghjklzxcvbn".ToArray();
+    private const int maxBubbleLetters = 6;
 
     private void Update()
     {
@@ -36,13 +40,54 @@ public class DecodePopup : InteractivePopup
         currIndex = 0;
         obscuredText = ObscureWord(prompt);
         SetPrompt(obscuredText.ToString());
-        ShowBubbles(realText[currIndex], RandomU.instance.RandomInt(1, 4));
+        ResetBubbles();
         gameObject.SetActive(true);
+    }
+
+    private void ResetBubbles()
+    {
+        CleanupBubbles();
+        if (obscuredText[currIndex] == obscureChar)
+        {
+            ShowBubbles(char.ToLower(realText[currIndex]), RandomU.instance.RandomInt(1, 4));
+        }
+    }
+
+    private void CleanupBubbles()
+    {
+        foreach (Transform bubble in bubbleContainer)
+        {
+            Destroy(bubble.gameObject);
+        }
     }
 
     private void ShowBubbles(char correctLetter, int num)
     {
-
+        int correctBubble = RandomU.instance.RandomInt(0, num);
+        var availibleLetters = new List<char>(letters);
+        availibleLetters.Remove(correctLetter);
+        var bubbleLetters = new List<char>(maxBubbleLetters);
+        for (int i = 0; i < num; ++i)
+        {
+            int numLetters = Mathf.Min(availibleLetters.Count, RandomU.instance.RandomInt(2, 6));
+            bubbleLetters.Clear();
+            if(i == correctBubble)
+            {
+                numLetters--;
+            }
+            while(numLetters-- > 0)
+            {
+                char letter = RandomU.instance.Choice(availibleLetters);
+                bubbleLetters.Add(letter);
+                availibleLetters.Remove(letter);
+            }
+            if(i == correctBubble)
+            {
+                bubbleLetters.Insert(RandomU.instance.RandomInt(0, bubbleLetters.Count), correctLetter);
+            }
+            var bubble = Instantiate(bubblePrefab, bubbleContainer).GetComponent<DecodeBubble>();
+            bubble?.Show(bubbleLetters, correctLetter);
+        }
     }
 
     private void RevealCurrent()
@@ -56,7 +101,7 @@ public class DecodePopup : InteractivePopup
         else
         {
             SetPrompt(obscuredText.ToString());
-            ShowBubbles(realText[currIndex], RandomU.instance.RandomInt(1, 4));
+            ResetBubbles();
         }
     }
 
