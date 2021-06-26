@@ -11,6 +11,8 @@ public class DecodePopup : InteractivePopup
     [SerializeField] private GameObject bubblePrefab; 
     [SerializeField] private Transform bubbleContainer; 
     private const char obscureChar = '?';
+    private const int maxBubbleLetters = 6;
+    private static readonly char[] letters = "qwertyuiopasdfghjklzxcvbn".ToArray();
     private static readonly string highlightTag = "<color=red>"; 
     private static readonly string highlightCloseTag = "</color>"; 
     public TextMeshProUGUI headerText;
@@ -18,8 +20,8 @@ public class DecodePopup : InteractivePopup
     private string realText = string.Empty;
     private StringBuilder obscuredText;
     private int currIndex;
-    private static readonly char[] letters = "qwertyuiopasdfghjklzxcvbn".ToArray();
-    private const int maxBubbleLetters = 6;
+    private int obscureIndex;
+
 
     private void Update()
     {
@@ -31,14 +33,16 @@ public class DecodePopup : InteractivePopup
         }
     }
 
-    protected override void Setup(string header, string prompt, float time)
+    protected override void Setup(string header, string dataKey, float time)
     {
         Completed = false;
         LastPromptSuccess = true;
         headerText.text = header;
-        realText = prompt;
+        var data = PlayerDataManager.instance.researchData.GetData(dataKey);
+        realText = data.unlockedWord.internalName;
         currIndex = 0;
-        obscuredText = ObscureWord(prompt);
+        obscureIndex = 0;
+        obscuredText = ObscureWord(data);
         SetPrompt(obscuredText.ToString());
         ResetBubbles();
         gameObject.SetActive(true);
@@ -49,8 +53,17 @@ public class DecodePopup : InteractivePopup
         CleanupBubbles();
         if (obscuredText[currIndex] == obscureChar)
         {
-            ShowBubbles(char.ToLower(realText[currIndex]), RandomU.instance.RandomInt(1, 4));
+            ShowBubbles(char.ToLower(realText[currIndex]), GetNumBubbles(++obscureIndex));
         }
+    }
+
+    private int GetNumBubbles(int index)
+    {
+        if (index < 2)
+            return 2;
+        if (index < 4)
+            return 3;
+        return 4;
     }
 
     private void CleanupBubbles()
@@ -69,7 +82,7 @@ public class DecodePopup : InteractivePopup
         var bubbleLetters = new List<char>(maxBubbleLetters);
         for (int i = 0; i < num; ++i)
         {
-            int numLetters = Mathf.Min(availibleLetters.Count, RandomU.instance.RandomInt(2, 6));
+            int numLetters = Mathf.Min(availibleLetters.Count, RandomU.instance.RandomInt(3, 6));
             bubbleLetters.Clear();
             if(i == correctBubble)
             {
@@ -105,18 +118,34 @@ public class DecodePopup : InteractivePopup
         }
     }
 
-    private StringBuilder ObscureWord(string word)
+    private StringBuilder ObscureWord(DecodeData data)
     {
+        string word = data.unlockedWord.internalName;
+        string obscuredWord = data.obscuredWord;
         if (string.IsNullOrWhiteSpace(word))
             return null;
         var builder = new StringBuilder(word);
-        int num = RandomU.instance.RandomInt(0, word.Length - 1);
-        var indices = Enumerable.Range(0, word.Length).ToList();
-        for (int i = 0; i < num; ++i)
+        // If the obscure word isn't specified, randomly generate
+        if (string.IsNullOrWhiteSpace(obscuredWord))
         {
-            var index = RandomU.instance.Choice(indices);
-            indices.Remove(index);
-            builder[index] = obscureChar; 
+            int num = RandomU.instance.RandomInt(0, word.Length - 1);
+            var indices = Enumerable.Range(0, word.Length).ToList();
+            for (int i = 0; i < num; ++i)
+            {
+                var index = RandomU.instance.Choice(indices);
+                indices.Remove(index);
+                builder[index] = obscureChar;
+            }
+        }
+        else // use the obscured word format
+        {
+            for (int i = 0; i < word.Length; ++i)
+            {
+                if(obscuredWord[i] == obscureChar)
+                {
+                    builder[i] = obscureChar;
+                }
+            }
         }
         return builder;
     }
