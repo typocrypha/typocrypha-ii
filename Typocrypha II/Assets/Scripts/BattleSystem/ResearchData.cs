@@ -4,19 +4,19 @@ using UnityEngine;
 
 public class ResearchData : MonoBehaviour
 {
-    [SerializeField] private List<string> researchKeys;
-    [SerializeField] private List<SpellWord> researchWords;
+    [SerializeField] private DecodeData[] editorData;
     private readonly Dictionary<string, float> values = new Dictionary<string, float>();
     private readonly HashSet<string> decoded = new HashSet<string>();
-    private readonly Dictionary<string, SpellWord> words = new Dictionary<string, SpellWord>();
+    private readonly Dictionary<string, DecodeData> data = new Dictionary<string, DecodeData>();
 
     private void Awake()
     {
-        for(int i = 0; i < Mathf.Min(researchKeys.Count, researchWords.Count); ++i)
+        for(int i = 0; i < editorData.Length; ++i)
         {
-            if (!words.ContainsKey(researchKeys[i]))
+            var decodeData = editorData[i];
+            if (!data.ContainsKey(decodeData.key))
             {
-                words.Add(researchKeys[i], researchWords[i]);
+                data.Add(decodeData.key, decodeData);
             }
         }
     }
@@ -46,8 +46,8 @@ public class ResearchData : MonoBehaviour
         decoded.Add(key);
     }
 
-    public SpellWord GetWord(string key)
+    public DecodeData GetData(string key)
     {
-        return words.ContainsKey(key) ? words[key] : null;
+        return data.ContainsKey(key) ? data[key] : null;
     }
 }

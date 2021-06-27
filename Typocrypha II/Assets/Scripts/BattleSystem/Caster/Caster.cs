@@ -83,8 +83,8 @@ public class Caster : FieldObject
                 case BattleStatus.SpiritMode:
                     ui?.onSpiritForm.Invoke();
                     ui?.onSpChanged.Invoke((float)sp / Stats.MaxSP);
-                    if(tags.ContainsTag("Demon"))
-                        ui?.onNameChanged.Invoke(DisplayName + "(WISP)");
+                    //if(tags.ContainsTag("Demon"))
+                    //    ui?.onNameChanged.Invoke(DisplayName + "(WISP)");
                     OnSpiritMode?.Invoke();
                     break;
                 case BattleStatus.Dead:

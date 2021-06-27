@@ -344,12 +344,14 @@ public static class Damage
             research.Add(target.ResearchKey, target.ResearchAmount);
             if (research.ReadyToDecode(target.ResearchKey))
             {
+                var word = research.GetData(target.ResearchKey).unlockedWord;
+                if (word == null)
+                    return;
                 IEnumerator LogDecoded(bool success)
                 {
                     if (success)
                     {
                         research.SetDecoded(target.ResearchKey);
-                        var word = research.GetWord(target.ResearchKey);
                         if (word != null)
                         {
                             PlayerDataManager.instance.equipment.Unlock(word, true);
@@ -358,7 +360,7 @@ public static class Damage
                     }
                     return null;
                 }
-                SpellManager.instance.LogDecodePopup("Decode Chance!", target.ResearchKey, 5, LogDecoded);
+                SpellManager.instance.LogDecodePopup("Decode Chance!", target.ResearchKey, 0, LogDecoded);
             }
         }
     }
