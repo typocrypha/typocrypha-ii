@@ -12,9 +12,13 @@ public class DecodeBubble : MonoBehaviour
     private Dictionary<string, GameObject> keyDict;
     private string correctInput;
     private bool isCorrect;
+    private DecodePopup popup;
+    private bool triggeredOnCorrectKey;
 
-    public void Show(List<char> keys, char correctChar)
+    public void Show(List<char> keys, char correctChar, DecodePopup popup)
     {
+        this.popup = popup;
+        triggeredOnCorrectKey = false;
         keyDict = new Dictionary<string, GameObject>(keys.Count);
         correctInput = correctChar.ToString();
         isCorrect = false;
@@ -45,6 +49,11 @@ public class DecodeBubble : MonoBehaviour
                 if (Input.GetKeyDown(kvp.Key))
                 {
                     kvp.Value.SetActive(false);
+                    if (!triggeredOnCorrectKey)
+                    {
+                        triggeredOnCorrectKey = true;
+                        popup.CleanupBubbles(gameObject);
+                    }
                 }
             }
         }

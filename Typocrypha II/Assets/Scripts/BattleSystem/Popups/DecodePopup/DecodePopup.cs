@@ -66,11 +66,14 @@ public class DecodePopup : InteractivePopup
         return 4;
     }
 
-    private void CleanupBubbles()
+    public void CleanupBubbles(GameObject except = null)
     {
         foreach (Transform bubble in bubbleContainer)
         {
-            Destroy(bubble.gameObject);
+            if(bubble.gameObject != except)
+            {
+                Destroy(bubble.gameObject);
+            }
         }
     }
 
@@ -99,7 +102,7 @@ public class DecodePopup : InteractivePopup
                 bubbleLetters.Insert(RandomU.instance.RandomInt(0, bubbleLetters.Count), correctLetter);
             }
             var bubble = Instantiate(bubblePrefab, bubbleContainer).GetComponent<DecodeBubble>();
-            bubble?.Show(bubbleLetters, correctLetter);
+            bubble?.Show(bubbleLetters, correctLetter, this);
         }
     }
 
