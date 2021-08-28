@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class DialogViewVNPlus : DialogView
 {
+    [SerializeField] GameObject rightDialogBoxPrefab;
+    [SerializeField] GameObject leftDialogBoxPrefab;
     public override void CleanUp()
     {
 
