@@ -162,10 +162,9 @@ public class DialogBox : MonoBehaviour, IDialogBox
     public void SetBoxHeight(bool add = false)
     {
         RectTransform rectTr = GetComponent<RectTransform>();
-        if (add) rectTr.sizeDelta = new Vector2(rectTr.sizeDelta.x, rectTr.sizeDelta.y +
-                                                dialogText.preferredHeight + textPad);
-        else rectTr.sizeDelta = new Vector2(rectTr.sizeDelta.x, 
-                                            dialogText.preferredHeight + textPad);
+        rectTr.sizeDelta = add 
+            ? new Vector2(rectTr.sizeDelta.x, rectTr.sizeDelta.y + dialogText.preferredHeight + textPad) 
+            : new Vector2(rectTr.sizeDelta.x, dialogText.preferredHeight + textPad);
     }
 
     /// <summary>

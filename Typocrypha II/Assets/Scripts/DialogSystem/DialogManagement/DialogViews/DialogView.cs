@@ -31,11 +31,20 @@ public abstract class DialogView : MonoBehaviour
     /// <param name="data">Information about input event.</param>
     public void DisplayInput(DialogInputItem data)
     {
-        GameObject go = Instantiate(dialogInputPrefab, transform);
+        Instantiate(dialogInputPrefab, transform);
     }
 
     /// <summary>
     /// Cleans up dialog view (e.g. removing dialog boxes)
     /// </summary>
     public abstract void CleanUp();
+
+    protected bool IsDialogItemCorrectType<T>(DialogItem item, out T itemT) where T : DialogItem
+    {
+        itemT = item as T;
+        if (itemT != null)
+            return true;
+        Debug.LogError($"Dialog item is not of type {typeof(T)}. Incorrect type for this view mode");
+        return false;
+    }
 }

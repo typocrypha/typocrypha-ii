@@ -30,14 +30,8 @@ public class DialogViewVN : DialogView
 
     public override DialogBox PlayDialog(DialogItem data)
     {
-        #region Check Arguments
-        DialogItemVN dialogItem = data as DialogItemVN;
-        if(dialogItem == null)
-        {
-            throw new System.Exception("Incorrect Type of dialog Item for the VN " +
-                                       "view mode (requires DialogItemVN)");
-        }
-        #endregion
+        if (!IsDialogItemCorrectType(data, out DialogItemVN dialogItem))
+            return null;
         
         // Set new dialog parameters
         nameText.text = dialogItem.speakerName;

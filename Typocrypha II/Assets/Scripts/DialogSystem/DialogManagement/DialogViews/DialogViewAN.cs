@@ -11,16 +11,10 @@ public class DialogViewAN : DialogView
 
     public override DialogBox PlayDialog(DialogItem data)
     {
-        #region Check Arguments
-        DialogItemAN dialogItem = data as DialogItemAN;
-        if (dialogItem == null)
-        {
-            throw new System.Exception("Incorrect Type of dialog Item for the AN " +
-                                       "view mode (requires DialogItemAN)");
-        }
-        #endregion
+        if (!IsDialogItemCorrectType(data, out DialogItemAN dialogItem))
+            return null;
         
-        DialogBox dialogBox = Instantiate(dialogBoxPrefab, ANContent).GetComponent<DialogBox>();
+        var dialogBox = Instantiate(dialogBoxPrefab, ANContent).GetComponent<DialogBox>();
         dialogBox.StartDialogBox(dialogItem);
         return dialogBox;
     }

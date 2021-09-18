@@ -25,14 +25,8 @@ public class DialogViewChat : DialogView
 
     public override DialogBox PlayDialog(DialogItem data)
     {
-        #region Check Arguments
-        DialogItemChat item = data as DialogItemChat;
-        if (item == null)
-        {
-            throw new System.Exception("Incorrect Type of dialog Item for the Chat " +
-                                       "view mode (requires DialogItemChat)");
-        }
-        #endregion
+        if (!IsDialogItemCorrectType(data, out DialogItemChat item))
+            return null;
 
         #region Instantiate and initialize new Dialog boxDialogueRightIcon
         GameObject obj = GameObject.Instantiate(dialogBoxPrefab, ChatContent);
