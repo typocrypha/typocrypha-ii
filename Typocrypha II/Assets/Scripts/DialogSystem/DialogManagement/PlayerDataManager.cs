@@ -96,6 +96,7 @@ public class PlayerDataManager : MonoBehaviour, ISavable
     public const string lastInputKey = "prompt";
 
     public const string textDelayScale = "text-delay-scale";
+    public const string mainCharacterName = "mc-name";
     #endregion
 
     public PlayerEquipment equipment;

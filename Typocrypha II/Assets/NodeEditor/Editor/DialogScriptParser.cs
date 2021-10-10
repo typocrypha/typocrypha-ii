@@ -17,7 +17,7 @@ public class DialogScriptParser : EditorWindow
     public const string assetPath = "Assets/ScriptableObjects/DialogScenes/";
     TextAsset textScript; // Text script asset
     NodeCanvas canvas; // Generated canvas
-    System.Type currView = typeof(DialogViewVN); // Current dialog view
+    System.Type currView = typeof(DialogViewVNPlus); // Current dialog view
     float pos; // Position of current node
     Node prev;
 
@@ -47,7 +47,8 @@ public class DialogScriptParser : EditorWindow
         {"chat", typeof(DialogNodeChat) },
         {"an", typeof(DialogNodeAN) },
         {"bubble", typeof(DialogNodeBubble) },
-        {"input", typeof(DialogNodeInput) }
+        {"input", typeof(DialogNodeInput) },
+        {"vnplus", typeof(DialogNodeVNPlus) }
     };
 
     // General node labels.
@@ -61,7 +62,8 @@ public class DialogScriptParser : EditorWindow
         {"fade", typeof(FadeNode) },
         {"end", typeof(GameflowEndNode) },
         {"start" , typeof(GameflowStartNode)},
-        {"endt", typeof(EndAndTransition) }
+        {"endt", typeof(EndAndTransition) },
+        {"setvar", typeof(SetVariableNode) }
     };
 
     AnimationCurve bgmFadeIn = new AnimationCurve(); // Default fade in curve
@@ -139,7 +141,7 @@ public class DialogScriptParser : EditorWindow
         }
         pos = 0f; // Position of current node
         prev = CreateNode(GameflowStartNode.ID) as GameflowStartNode;
-        currView = viewMap["vn"]; // Default to visual novel view
+        currView = viewMap["vnplus"]; // Default to visual novel view
     }
 
     /// <summary>
@@ -298,6 +300,13 @@ public class DialogScriptParser : EditorWindow
             gnode.nextScene = args[1];
             nodes.Add(gnode);
         }
+        else if(nodeType == typeof(SetVariableNode))
+        {
+            var gnode = CreateNode(SetVariableNode.Id) as SetVariableNode;
+            gnode.variableName = args[1];
+            gnode.value = args[2];
+            nodes.Add(gnode);
+        }
         return nodes;
     }
 
@@ -345,7 +354,7 @@ public class DialogScriptParser : EditorWindow
                     ? displayName.Substring(1, displayName.Length - 2) 
                     : "";
         DialogNode dnode = null; // Node for dialog.
-        if (currView == typeof(DialogNodeVN) || currView == typeof(DialogNodeInput))
+        if (currView == typeof(DialogNodeVN) || currView == typeof(DialogNodeInput) || currView == typeof(DialogNodeVNPlus))
         {
             // Create expression and pose nodes
             for (int i = 0; i < cds.Count; i++)
@@ -383,9 +392,13 @@ public class DialogScriptParser : EditorWindow
                     inode.choicePromptText[i - 1] = carr[i];
                 dnode = inode;
             }
-            else
+            else if(currView == typeof(DialogNodeVN))
             {
                 dnode = CreateNode(DialogNodeVN.ID) as DialogNodeVN;
+            }
+            else
+            {
+                dnode = CreateNode(DialogNodeVNPlus.ID) as DialogNodeVNPlus;
             }
         }
         else if (currView == typeof(DialogNodeChat))

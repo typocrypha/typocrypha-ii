@@ -135,6 +135,15 @@ public class DialogGraphParser : MonoBehaviour
                     if (cds[i] != null) DialogCharacterManager.instance.HighlightCharacter(cds[i], true);
                 return new DialogItemVN(dNode.text, voice, displayName, dNode.mcSprite, dNode.codecSprite);
             }
+            else if(currNode is DialogNodeVNPlus)
+            {
+                var dNode = currNode as DialogNodeVNPlus;
+                // Highlight speaking characters.
+                DialogCharacterManager.instance.HighlightAllCharacters(false);
+                for (int i = 0; i < cds.Count; i++)
+                    if (cds[i] != null) DialogCharacterManager.instance.HighlightCharacter(cds[i], true);
+                return new DialogItemVNPlus(dNode.text, voice, dNode.characterName == (string)PlayerDataManager.instance[PlayerDataManager.mainCharacterName]);
+            }
             else if(currNode is DialogNodeChat)
             {
                 var dNode = currNode as DialogNodeChat;

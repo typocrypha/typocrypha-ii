@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEditor;
 using NodeEditorFramework;
 
 namespace Gameflow
@@ -12,7 +11,7 @@ namespace Gameflow
         public override Vector2 MinSize { get { return new Vector2(150, 50); } }
         public override bool AutoLayout { get { return true; } }
 
-        private const string Id = "Set Variable Node";
+        public const string Id = "Set Variable Node";
         public override string GetID { get { return Id; } }
 
         public string variableName;
