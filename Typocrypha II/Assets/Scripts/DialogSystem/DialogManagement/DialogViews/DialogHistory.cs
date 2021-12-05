@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -60,7 +61,7 @@ public class DialogHistory : MonoBehaviour, IPausable
         var dialogBox = go.GetComponent<DialogBox>();
         dialogBox.dialogText.text = DialogParser.instance.RemoveTags(dialog);
         dialogBox.SetBoxHeight(true);
-        go.transform.Find("NameText").GetComponent<Text>().text = 
+        go.transform.Find("NameText").GetComponent<TextMeshProUGUI>().text = 
             speaker == "" ? "-" : speaker;
         // Resize window.
         content.sizeDelta = new Vector2(content.sizeDelta.x, 
