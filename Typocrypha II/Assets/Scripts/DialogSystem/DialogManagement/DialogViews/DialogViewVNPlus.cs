@@ -1,12 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
+using UnityEngine.UI;
 
 public class DialogViewVNPlus : DialogView
 {
     [SerializeField] private GameObject rightDialogBoxPrefab;
     [SerializeField] private GameObject leftDialogBoxPrefab;
-    [SerializeField] private Transform messageContainer;
+    [SerializeField] private RectTransform messageContainer;
+    [SerializeField] private VerticalLayoutGroup messageLayout;
+
     // Do Tween Of Some sort for the animation
     public override void CleanUp()
     {
@@ -25,8 +29,11 @@ public class DialogViewVNPlus : DialogView
 
     private IEnumerator AnimateNewMessageIn(DialogBox box, DialogItem item)
     {
-        box.StartDialogBox(item);
+        box.SetupDialogBox(item);
         // Play animation
+        messageContainer.DOAnchorPosY(messageContainer.anchoredPosition.y + (box.GetBoxHeight() + messageLayout.spacing), 1);//.SetEase(custom ? customCurve : presetCurve);
+        yield return new WaitForSeconds(1);
+        box.StartDialogScroll();
         yield break;
     }
 

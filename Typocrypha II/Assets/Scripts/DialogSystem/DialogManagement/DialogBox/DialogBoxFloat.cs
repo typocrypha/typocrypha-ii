@@ -12,7 +12,7 @@ public class DialogBoxFloat : DialogBox
 
     new public void StartDialogBox(DialogItem dialogItem)
     {
-        base.StartDialogBox(dialogItem);
+        base.SetupAndStartDialogBox(dialogItem);
         StartCoroutine(FadeAndDestroy());
     }
 

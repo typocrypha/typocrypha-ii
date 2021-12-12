@@ -43,7 +43,7 @@ public class DialogViewVN : DialogView
         {
             codecSprite.sprite = dialogItem.codecSprite;
         }
-        dialogBox.StartDialogBox(dialogItem);
+        dialogBox.SetupAndStartDialogBox(dialogItem);
         return dialogBox;
     }
 

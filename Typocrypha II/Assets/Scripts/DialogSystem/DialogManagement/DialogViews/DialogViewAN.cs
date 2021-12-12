@@ -15,7 +15,7 @@ public class DialogViewAN : DialogView
             return null;
         
         var dialogBox = Instantiate(dialogBoxPrefab, ANContent).GetComponent<DialogBox>();
-        dialogBox.StartDialogBox(dialogItem);
+        dialogBox.SetupAndStartDialogBox(dialogItem);
         return dialogBox;
     }
 

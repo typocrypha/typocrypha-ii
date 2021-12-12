@@ -52,7 +52,7 @@ public class DialogViewBubble : DialogView
         obj.GetComponent<RectTransform>().sizeDelta = 
             new Vector2(dialogItem.rect.width, dialogItem.rect.height) * res;
         var dialogBox = obj.GetComponent<DialogBox>();
-        dialogBox.StartDialogBox(dialogItem);
+        dialogBox.SetupAndStartDialogBox(dialogItem);
         return dialogBox;
     }
 

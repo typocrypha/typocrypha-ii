@@ -73,11 +73,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
         SetBoxHeight();
     }
 
-    /// <summary>
-    /// Initializes dialogue box (parses tags) and starts text scroll.
-    /// </summary>
-    /// <param name="dialogItem">Dialog line data to display.</param>
-    public void StartDialogBox(DialogItem dialogItem)
+    public void SetupDialogBox(DialogItem dialogItem)
     {
         ResetDialogBox();
 
@@ -110,7 +106,21 @@ public class DialogBox : MonoBehaviour, IDialogBox
                     voiceAS[i].clip = dialogItem.voice[i];
             }
         }
+    }
+
+    public void StartDialogScroll()
+    {
         scrollCR = StartCoroutine(TextScrollCR());
+    }
+
+    /// <summary>
+    /// Initializes dialogue box (parses tags) and starts text scroll.
+    /// </summary>
+    /// <param name="dialogItem">Dialog line data to display.</param>
+    public void SetupAndStartDialogBox(DialogItem dialogItem)
+    {
+        SetupDialogBox(dialogItem);
+        StartDialogScroll();
 	}
 
     /// <summary>
@@ -121,7 +131,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
     public void StartDialogBox(string dialogText)
     {
         DialogItem ditem = new DialogItemAN(dialogText, null);
-        StartDialogBox(ditem);
+        SetupAndStartDialogBox(ditem);
     }
 
     /// <summary>
