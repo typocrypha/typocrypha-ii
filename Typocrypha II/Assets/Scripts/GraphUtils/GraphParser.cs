@@ -22,9 +22,13 @@ public abstract class GraphParser : MonoBehaviour
     {
         string value = string.Empty;
         if (b.exprType == GameflowBranchNode.controlExpressionType.Last_Input)
-            value = PlayerDataManager.instance[PlayerDataManager.lastInputKey].ToString();
+        {
+            value = PlayerDataManager.instance.GetObj(PlayerDataManager.lastInputKey).ToString();
+        }
         else
-            value = PlayerDataManager.instance[b.variableName].ToString();
+        {
+            value = PlayerDataManager.instance.GetObj(b.variableName).ToString();
+        }
         foreach (var brCase in b.cases)
         {
             if (brCase.type == GameflowBranchNode.BranchCase.CaseType.Regex)

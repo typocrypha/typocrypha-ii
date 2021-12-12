@@ -57,7 +57,7 @@ public class BattleGraphParser : GraphParser
         else if (currNode is SetVariableNode)
         {
             var node = currNode as SetVariableNode;
-            PlayerDataManager.instance[node.variableName] = node.value;
+            PlayerDataManager.instance.Set(node.variableName, node.value);
         }
         else if (currNode is SetBackgroundNode)
         {

@@ -65,30 +65,7 @@ public class PlayerDataManager : MonoBehaviour, ISavable
     #endregion
 
     public static PlayerDataManager instance = null; // global static ref
-    public Dictionary<string, object> data; // string-object data map
-    public object this[string key] // Get/set data from internal data maps
-    {
-        get
-        {
-            if (data.ContainsKey(key))
-            {
-                return data[key];
-            }
-            Debug.LogWarning("PlayerDialogueInfo: no info with key " + key + ", returning null");
-            return null;
-        }
-        set
-        {
-            if (data.ContainsKey(key))
-            {
-                data[key] = value;
-            }
-            else
-            {
-                data.Add(key, value);
-            }
-        }
-    }
+    private readonly Dictionary<string, object> data = new Dictionary<string, object>(); // string-object data map
 
     #region Preset string key constants (faux named map)
     public const string nullKey = "NULL";
@@ -125,12 +102,40 @@ public class PlayerDataManager : MonoBehaviour, ISavable
     /// </summary>
     public void SetDefaults()
     {
-        data = new Dictionary<string, object>
+        data.Clear();
+        Set(playerName, "???");
+        Set(lastInputKey, "");
+        Set(textDelayScale, 1f);
+    }
+
+    public object GetObj(string key)
+    {
+        if (!data.ContainsKey(key))
         {
-            { playerName, "???" },
-            { lastInputKey, "" },
-            { textDelayScale, 1f }
-        };
+            Debug.LogWarning("PlayerDialogueInfo: no info with key " + key + ", returning null");
+            return null;
+        }
+        return data[key];
+    }
+
+    public T Get<T>(string key)
+    {
+        if (!data.ContainsKey(key))
+        {
+            Debug.LogWarning("PlayerDialogueInfo: no info with key " + key + ", returning default");
+            return default;
+        }
+        return (T)data[key];
+    }
+
+    public void Set(string key, object obj)
+    {
+        if (data.ContainsKey(key))
+        {
+            data[key] = obj;
+            return;
+        }
+        data.Add(key, obj);
     }
 
     /// <summary>
@@ -151,7 +156,7 @@ public class PlayerDataManager : MonoBehaviour, ISavable
     /// <param name="value">Value to set.</param>
     void SetTargetValueOBJ(object value)
     {
-        this[target] = value;
+        Set(target, value);
         target = nullKey;
     }
     public void SetTargetValue(float value)

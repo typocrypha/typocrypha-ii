@@ -41,7 +41,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
     float scrollDelay; // Delay in showing characters for text scroll.
     public float ScrollDelay
     {
-        get => scrollDelay * (float)PlayerDataManager.instance[PlayerDataManager.textDelayScale];
+        get => scrollDelay * PlayerDataManager.instance.Get<float>(PlayerDataManager.textDelayScale);
         set => scrollDelay = value;
     }
     int speechInterval; // Number of character scrolls before speech sfx plays

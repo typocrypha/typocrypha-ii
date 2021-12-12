@@ -28,9 +28,13 @@ public class DialogGraphParser : MonoBehaviour
     {
         string value = string.Empty;
         if (b.exprType == GameflowBranchNode.controlExpressionType.Last_Input)
-            value = PlayerDataManager.instance[PlayerDataManager.lastInputKey].ToString();
+        {
+            value = PlayerDataManager.instance.GetObj(PlayerDataManager.lastInputKey).ToString();
+        }
         else
-            value = PlayerDataManager.instance[b.variableName].ToString();
+        {
+            value = PlayerDataManager.instance.GetObj(b.variableName).ToString();
+        }
         foreach (var brCase in b.cases)
         {
             if (brCase.type == GameflowBranchNode.BranchCase.CaseType.Regex)
@@ -39,7 +43,9 @@ public class DialogGraphParser : MonoBehaviour
                     return brCase.connection.connections[0].body as BaseNode;
             }
             else if (CheckTextCase(brCase.pattern, value))//brCase.type == BranchCaseData.CaseType.Text
+            {
                 return brCase.connection.connections[0].body as BaseNode;
+            }
         }
         return b.toDefaultBranch.connection(0).body as BaseNode;
     }
@@ -142,7 +148,7 @@ public class DialogGraphParser : MonoBehaviour
                 DialogCharacterManager.instance.HighlightAllCharacters(false);
                 for (int i = 0; i < cds.Count; i++)
                     if (cds[i] != null) DialogCharacterManager.instance.HighlightCharacter(cds[i], true);
-                return new DialogItemVNPlus(dNode.text, voice, dNode.characterName == (string)PlayerDataManager.instance[PlayerDataManager.mainCharacterName]);
+                return new DialogItemVNPlus(dNode.text, voice, dNode.characterName == PlayerDataManager.instance.Get<string>(PlayerDataManager.mainCharacterName));
             }
             else if(currNode is DialogNodeChat)
             {
@@ -189,7 +195,7 @@ public class DialogGraphParser : MonoBehaviour
         else if (currNode is SetVariableNode)
         {
             var node = currNode as SetVariableNode;
-            PlayerDataManager.instance[node.variableName] = node.value;
+            PlayerDataManager.instance.Set(node.variableName, node.value);
         }
         else if (currNode is CharacterControlNode)
         {

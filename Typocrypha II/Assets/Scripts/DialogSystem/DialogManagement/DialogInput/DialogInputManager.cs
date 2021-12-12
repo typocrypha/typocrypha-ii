@@ -54,7 +54,7 @@ public class DialogInputManager : MonoBehaviour
     /// <param name="value">Submitted value.</param>
     public void SubmitInput(string value)
     {
-        PlayerDataManager.instance.data[target] = value; // Set input value.
+        PlayerDataManager.instance.Set(target, value); // Set input value.
         DialogManager.instance.NextDialog(); // Start next dialog.
         DialogManager.instance.PH.Pause = false; // Re-enable dialog skipping.
     }

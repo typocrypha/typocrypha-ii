@@ -83,7 +83,7 @@ public class TextMacros : MonoBehaviour {
     string macroTemp(string[] opt)
     {
         Debug.Log(opt[0]);
-        return PlayerDataManager.instance[opt[0]].ToString();
+        return PlayerDataManager.instance.GetObj(opt[0]).ToString();
     }
 
 	// substitutes player's name
