@@ -50,7 +50,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
     public AudioSource[] voiceAS; // AudioSources for playing speech sfx
     public bool resizeTextBox = true; // Should dialog box resize itself?
 
-    FXText.Color hideText; // Allows for hiding parts of text (for scrolling)
+    [SerializeField] FXText.TMProColor hideText; // Allows for hiding parts of text (for scrolling)
     DialogItem dialogItem; // Dialog line data
     Coroutine scrollCR; // Coroutine that scrolls the text
 
@@ -85,8 +85,6 @@ public class DialogBox : MonoBehaviour, IDialogBox
         dialogText.text = DialogParser.instance.RemoveTags(rtext); // Set dialog text (doesn't remove rich text tags)
         Debug.Log(dialogText.text);
         // Hide all text.
-        hideText = dialogText.gameObject.AddComponent<FXText.Color>();
-        hideText.ind = new List<int> { 0, 0 };
         hideText.color = Color.clear;
         hideText.ind[0] = 0;
         hideText.ind[1] = dialogItem.text.Length;

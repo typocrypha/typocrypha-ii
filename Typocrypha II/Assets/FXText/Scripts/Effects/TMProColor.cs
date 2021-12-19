@@ -22,6 +22,10 @@ namespace FXText
             for (int i = 0; i < text.textInfo.characterCount; ++i)
             {
                 int charIndex = i;
+                if (char.IsWhiteSpace(text.text[charIndex]))
+                {
+                    continue;
+                }
                 int meshIndex = text.textInfo.characterInfo[charIndex].materialReferenceIndex;
                 int vertexIndex = text.textInfo.characterInfo[charIndex].vertexIndex;
                 Color32[] vertexColors = text.textInfo.meshInfo[meshIndex].colors32;
