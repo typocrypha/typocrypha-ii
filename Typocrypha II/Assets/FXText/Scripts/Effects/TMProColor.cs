@@ -18,7 +18,6 @@ namespace FXText
 
         private void Update()
         {
-            TMPro.TMP_WordInfo info = text.textInfo.wordInfo[0];
             for (int i = 0; i < text.textInfo.characterCount; ++i)
             {
                 int charIndex = i;
