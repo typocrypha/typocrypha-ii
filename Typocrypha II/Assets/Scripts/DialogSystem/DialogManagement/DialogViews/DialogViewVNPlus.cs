@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class DialogViewVNPlus : DialogView
 {
+    private const float tweenTime = 0.5f;
+
     [SerializeField] private GameObject rightDialogBoxPrefab;
     [SerializeField] private GameObject leftDialogBoxPrefab;
     [SerializeField] private RectTransform messageContainer;
@@ -13,6 +15,11 @@ public class DialogViewVNPlus : DialogView
     [SerializeField] private Ease messageLayoutEase;
     [SerializeField] private bool useCustomMessageLayoutEase;
     [SerializeField] private AnimationCurve customMessageLayoutEase;
+
+    public override bool ReadyToContinue => readyToContinue;
+
+    private bool readyToContinue = false;
+    private Tween tween;
 
     // Do Tween Of Some sort for the animation
     public override void CleanUp()
@@ -26,6 +33,7 @@ public class DialogViewVNPlus : DialogView
             return null;
         var prefab = dialogItem.IsLeft ? leftDialogBoxPrefab : rightDialogBoxPrefab;
         var dialogBox = Instantiate(prefab, messageContainer).GetComponent<DialogBox>();
+        readyToContinue = false;
         StartCoroutine(AnimateNewMessageIn(dialogBox, dialogItem));
         return dialogBox;
     }
@@ -35,7 +43,8 @@ public class DialogViewVNPlus : DialogView
         box.SetupDialogBox(item);
         yield return null;
         box.SetBoxHeight();
-        var tween = messageContainer.DOAnchorPosY(messageContainer.anchoredPosition.y + (box.GetBoxHeight() + messageLayout.spacing), 0.5f);
+        tween?.Complete();
+        tween = messageContainer.DOAnchorPosY(messageContainer.anchoredPosition.y + (box.GetBoxHeight() + messageLayout.spacing), tweenTime);
         // Play animation
         if (useCustomMessageLayoutEase)
         {
@@ -45,7 +54,7 @@ public class DialogViewVNPlus : DialogView
         {
             tween.SetEase(messageLayoutEase);
         }
-        yield return new WaitForSeconds(1);
+        readyToContinue = true;
         box.StartDialogScroll();
         yield break;
     }
