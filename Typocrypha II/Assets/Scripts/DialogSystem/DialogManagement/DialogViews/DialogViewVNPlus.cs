@@ -33,6 +33,8 @@ public class DialogViewVNPlus : DialogView
     private IEnumerator AnimateNewMessageIn(DialogBox box, DialogItem item)
     {
         box.SetupDialogBox(item);
+        yield return null;
+        box.SetBoxHeight();
         var tween = messageContainer.DOAnchorPosY(messageContainer.anchoredPosition.y + (box.GetBoxHeight() + messageLayout.spacing), 0.5f);
         // Play animation
         if (useCustomMessageLayoutEase)

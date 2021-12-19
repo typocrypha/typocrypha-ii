@@ -77,6 +77,10 @@ public class DialogBox : MonoBehaviour, IDialogBox
     {
         ResetDialogBox();
 
+        // Hide all text.
+        hideText.color = Color.clear;
+        hideText.ind[0] = 0;
+        hideText.ind[1] = dialogItem.text.Length;
         // Get dialog.
         this.dialogItem = dialogItem;
         string rtext = DialogParser.instance.SubstituteMacros(dialogItem.text); // Parse macros
@@ -84,10 +88,6 @@ public class DialogBox : MonoBehaviour, IDialogBox
         DialogParser.instance.Parse(dialogItem, this); // Parse w/o rich text tags
         dialogText.text = DialogParser.instance.RemoveTags(rtext); // Set dialog text (doesn't remove rich text tags)
         Debug.Log(dialogText.text);
-        // Hide all text.
-        hideText.color = Color.clear;
-        hideText.ind[0] = 0;
-        hideText.ind[1] = dialogItem.text.Length;
         // Set box size based on text.
         if (resizeTextBox) SetBoxHeight();
         // Set voice sfx.
