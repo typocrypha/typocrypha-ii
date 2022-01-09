@@ -23,9 +23,9 @@ public class CharacterDataInspector : Editor
         EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
         if (data.poses == null)
         {
-            data.poses = new NameMap();
+            data.poses = new PoseMap();
         }
-        NameMapGUI("Poses", data.poses);
+        PoseMapGUI("Poses", data.poses);
         EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
         if (data.expressions == null)
         {
@@ -127,6 +127,41 @@ public class CharacterDataInspector : Editor
         }
         if (toDelete != null)
             nameMap.Remove(toDelete);
+        EditorGUI.indentLevel--;
+    }
+
+    void PoseMapGUI(string title, PoseMap poseMap)
+    {
+        GUILayout.BeginHorizontal();
+        GUILayout.Label(title + ": " + poseMap.Count, GUILayout.Width(100));
+        poseMap.addField = EditorGUILayout.TextField(poseMap.addField, GUILayout.Width(100));
+        if (GUILayout.Button("+") && !string.IsNullOrEmpty(poseMap.addField))
+            poseMap.Add(poseMap.addField, null);
+        GUIStyle header = new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold };
+        GUILayout.EndHorizontal();
+        EditorGUI.indentLevel++;
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("    Names", header);
+        GUILayout.Label("Sprites", header);
+        GUILayout.Label("xCenterNormalized", header);
+        GUILayout.Label("yHeadTopNormalized", header);
+        GUILayout.EndHorizontal();
+        string toDelete = null; // Item to delete; -1 if none chosen
+        string[] keys = new string[poseMap.Count];
+        poseMap.Keys.CopyTo(keys, 0);
+        foreach (var key in keys)
+        {
+            GUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField(key, GUILayout.Width(100));
+            poseMap[key].pose = EditorGUILayout.ObjectField(poseMap[key].pose, typeof(Sprite), false) as Sprite;
+            poseMap[key].xCenterNormalized = EditorGUILayout.FloatField(poseMap[key].xCenterNormalized);
+            poseMap[key].yHeadTopNormalized = EditorGUILayout.FloatField(poseMap[key].yHeadTopNormalized);
+            if (GUILayout.Button("-"))
+                toDelete = key;
+            GUILayout.EndHorizontal();
+        }
+        if (toDelete != null)
+            poseMap.Remove(toDelete);
         EditorGUI.indentLevel--;
     }
 }

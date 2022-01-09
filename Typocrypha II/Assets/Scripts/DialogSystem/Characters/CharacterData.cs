@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
+﻿using UnityEngine;
 
 // Container for data about specific characters (read only)
 [CreateAssetMenu]
@@ -9,7 +6,7 @@ using UnityEditor;
 public class CharacterData : ScriptableObject
 {
     public NameSet aliases; // Different aliases/names for this character
-    public NameMap poses; // Different body poses (DEPRECATED)
+    public PoseMap poses; // Different body poses
     public NameMap expressions; // Different facial expressions
     public NameMap bodies; // Different base bodies
     public NameMap clothes; // Different clothes
@@ -17,6 +14,14 @@ public class CharacterData : ScriptableObject
     public NameMap codecs; // Different codec sprites
     public Sprite chat_icon; // Chat mode sprite
     public AudioClip talk_sfx; // Talking sound effect
+
+    [System.Serializable]
+    public class PoseData
+    {
+        public Sprite pose;
+        public float xCenterNormalized;
+        public float yHeadTopNormalized;
+    }
 }
 
 // Serializable wrapper for dictionaries
@@ -26,4 +31,8 @@ public class NameMap : SerializableDictionary<string, Sprite> { [System.NonSeria
 // Serializable wrapper for sets
 [System.Serializable]
 public class NameSet : SerializableSet<string> { [System.NonSerialized] public string addField; }
+
+// Serializable wrapper for dictionaries
+[System.Serializable]
+public class PoseMap : SerializableDictionary<string, CharacterData.PoseData> {[System.NonSerialized] public string addField; }
 
