@@ -105,7 +105,8 @@ public class PlayerDataManager : MonoBehaviour, ISavable
         data.Clear();
         Set(playerName, "???");
         Set(lastInputKey, "");
-        Set(textDelayScale, 1f);
+        Set(textDelayScale, 30f);
+        Set(mainCharacterName, "Ayin");
     }
 
     public object GetObj(string key)

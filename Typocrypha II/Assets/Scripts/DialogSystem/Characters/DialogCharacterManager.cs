@@ -45,8 +45,8 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
     Dictionary<string, DialogCharacter> characterMap; // Map of string ids to characters in scene.
     static AssetBundle characterDataBundle; // All character data assets.
 
-    const string defaultPose = "base";
-    const string defaultExpr = "normal";
+    public const string defaultPose = "base";
+    public const string defaultExpr = "normal";
 
     void Awake()
     {

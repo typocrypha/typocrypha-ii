@@ -15,16 +15,58 @@ public class DialogViewVNPlus : DialogView
     [SerializeField] private Ease messageLayoutEase;
     [SerializeField] private bool useCustomMessageLayoutEase;
     [SerializeField] private AnimationCurve customMessageLayoutEase;
+    [SerializeField] private VNPlusCharacter speakingCharacter;
+    [SerializeField] private GameObject characterPrefab;
 
     public override bool ReadyToContinue => readyToContinue;
 
     private bool readyToContinue = false;
     private Tween tween;
 
-    // Do Tween Of Some sort for the animation
+    private readonly Dictionary<string, VNPlusCharacter> characterMap = new Dictionary<string, VNPlusCharacter>(4);
+
     public override void CleanUp()
     {
 
+    }
+
+    public void AddCharacter(CharacterData data)
+    {
+        // Main character
+        if (data.IsNamed(PlayerDataManager.instance.Get<string>(PlayerDataManager.mainCharacterName)))
+        {
+            speakingCharacter.Data = data;
+        }
+        else if(!characterMap.ContainsKey(data.name))// Scene character
+        {
+            var newCharacter = Instantiate(characterPrefab).GetComponent<VNPlusCharacter>(); // need to be put in a specific transform
+            newCharacter.Data = data;
+            characterMap.Add(data.name, newCharacter);
+        }
+    }
+
+    public void SetExpression(CharacterData data, string expression)
+    {
+        if (data.IsNamed(PlayerDataManager.instance.Get<string>(PlayerDataManager.mainCharacterName)))
+        {
+            speakingCharacter.SetExpression(expression);
+        }
+        else if (characterMap.ContainsKey(data.name))// Scene character
+        {
+            characterMap[data.name].SetExpression(expression);
+        }
+    }
+
+    public void SetPose(CharacterData data, string pose)
+    {
+        if (data.IsNamed(PlayerDataManager.instance.Get<string>(PlayerDataManager.mainCharacterName)))
+        {
+            speakingCharacter.SetPose(pose);
+        }
+        else if (characterMap.ContainsKey(data.name))// Scene character
+        {
+            characterMap[data.name].SetPose(pose);
+        }
     }
 
     public override DialogBox PlayDialog(DialogItem data)

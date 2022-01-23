@@ -22,6 +22,11 @@ public class CharacterData : ScriptableObject
         public float xCenterNormalized;
         public float yHeadTopNormalized;
     }
+
+    public bool IsNamed(string alias)
+    {
+        return aliases.Contains(alias);
+    }
 }
 
 // Serializable wrapper for dictionaries

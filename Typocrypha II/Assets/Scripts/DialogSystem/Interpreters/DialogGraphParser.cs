@@ -199,52 +199,70 @@ public class DialogGraphParser : MonoBehaviour
         }
         else if (currNode is CharacterControlNode)
         {
-            if (currNode is AddCharacter)
+            if(DialogManager.instance.dialogView is DialogViewVNPlus vnPlusView)
             {
-                var cNode = currNode as AddCharacter;
-                DialogCharacterManager.instance.AddCharacter(cNode.characterData, cNode.targetPos);
-            }
-            else if (currNode is RemoveCharacter)
-            {
-                var cNode = currNode as RemoveCharacter;
-                DialogCharacterManager.instance.RemoveCharacter(cNode.characterData);
-            }
-            else if (currNode is MoveCharacter)
-            {
-                var cNode = currNode as MoveCharacter;
-                if (cNode.movementType == CharacterMovementType.Teleport)
+                if (currNode is AddCharacter addNode)
                 {
-                    DialogCharacterManager.instance.TeleportCharacter(cNode.characterData, cNode.targetPos);
+                    vnPlusView.AddCharacter(addNode.characterData);
                 }
-                else if (cNode.movementType == CharacterMovementType.Lerp)
+                else if (currNode is SetPose setPoseNode)
                 {
-                    DialogCharacterManager.instance.LerpCharacter(cNode.characterData, cNode.targetPos, cNode.time);
+                    vnPlusView.SetPose(setPoseNode.characterData, setPoseNode.pose);
                 }
-                else if (cNode.movementType == CharacterMovementType.SmoothDamp)
+                else if (currNode is SetExpression setExpressionNode)
                 {
-                    DialogCharacterManager.instance.SmoothDampCharacter(cNode.characterData, cNode.targetPos, cNode.time);
+                    vnPlusView.SetExpression(setExpressionNode.characterData, setExpressionNode.expr);
                 }
             }
-            else if (currNode is SetPose)
+            else
             {
-                var cNode = currNode as SetPose;
-                DialogCharacterManager.instance.ChangePose(cNode.characterData, cNode.pose);
-            }
-            else if (currNode is SetExpression)
-            {
-                var cNode = currNode as SetExpression;
-                DialogCharacterManager.instance.ChangeExpression(cNode.characterData, cNode.expr);
-            }
-            else if (currNode is SetBCH)
-            {
-                var cNode = currNode as SetBCH;
-                DialogCharacterManager.instance.ChangeBCH(cNode.characterData, cNode.body, cNode.clothes, cNode.hair);
+                if (currNode is AddCharacter)
+                {
+                    var cNode = currNode as AddCharacter;
+                    DialogCharacterManager.instance.AddCharacter(cNode.characterData, cNode.targetPos);
+                }
+                else if (currNode is RemoveCharacter)
+                {
+                    var cNode = currNode as RemoveCharacter;
+                    DialogCharacterManager.instance.RemoveCharacter(cNode.characterData);
+                }
+                else if (currNode is MoveCharacter)
+                {
+                    var cNode = currNode as MoveCharacter;
+                    if (cNode.movementType == CharacterMovementType.Teleport)
+                    {
+                        DialogCharacterManager.instance.TeleportCharacter(cNode.characterData, cNode.targetPos);
+                    }
+                    else if (cNode.movementType == CharacterMovementType.Lerp)
+                    {
+                        DialogCharacterManager.instance.LerpCharacter(cNode.characterData, cNode.targetPos, cNode.time);
+                    }
+                    else if (cNode.movementType == CharacterMovementType.SmoothDamp)
+                    {
+                        DialogCharacterManager.instance.SmoothDampCharacter(cNode.characterData, cNode.targetPos, cNode.time);
+                    }
+                }
+                else if (currNode is SetPose)
+                {
+                    var cNode = currNode as SetPose;
+                    DialogCharacterManager.instance.ChangePose(cNode.characterData, cNode.pose);
+                }
+                else if (currNode is SetExpression)
+                {
+                    var cNode = currNode as SetExpression;
+                    DialogCharacterManager.instance.ChangeExpression(cNode.characterData, cNode.expr);
+                }
+                else if (currNode is SetBCH)
+                {
+                    var cNode = currNode as SetBCH;
+                    DialogCharacterManager.instance.ChangeBCH(cNode.characterData, cNode.body, cNode.clothes, cNode.hair);
 
-            }
-            else if (currNode is AnimateCharacter)
-            {
-                var cNode = currNode as AnimateCharacter;
-                DialogCharacterManager.instance.AnimateCharacter(cNode.characterData, cNode.clip);
+                }
+                else if (currNode is AnimateCharacter)
+                {
+                    var cNode = currNode as AnimateCharacter;
+                    DialogCharacterManager.instance.AnimateCharacter(cNode.characterData, cNode.clip);
+                }
             }
         }
         else if (currNode is SetBackgroundNode)
