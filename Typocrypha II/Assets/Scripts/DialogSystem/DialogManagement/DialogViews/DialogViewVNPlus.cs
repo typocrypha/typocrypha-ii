@@ -8,6 +8,12 @@ public class DialogViewVNPlus : DialogView
 {
     private const float tweenTime = 0.5f;
 
+    public enum CharacterColumn
+    {
+        Left,
+        Right
+    }
+
     [SerializeField] private GameObject rightDialogBoxPrefab;
     [SerializeField] private GameObject leftDialogBoxPrefab;
     [SerializeField] private RectTransform messageContainer;
@@ -30,7 +36,7 @@ public class DialogViewVNPlus : DialogView
 
     }
 
-    public void AddCharacter(CharacterData data)
+    public void AddCharacter(CharacterData data, CharacterColumn column)
     {
         // Main character
         if (data.IsNamed(PlayerDataManager.instance.Get<string>(PlayerDataManager.mainCharacterName)))

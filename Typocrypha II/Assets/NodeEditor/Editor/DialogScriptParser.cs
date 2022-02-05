@@ -250,6 +250,10 @@ public class DialogScriptParser : EditorWindow
             var gnode = CreateNode(AddCharacter.ID) as AddCharacter;
             gnode.characterData = GetCharacterData(args[1]);
             gnode.targetPos = new Vector2(float.Parse(args[2]) * 8.8888f, float.Parse(args[3]) * 5f); // Normalized coordinates (hardcoded 16/9 res with camera size 5).
+            if(args.Length > 4)
+            {
+                gnode.column = args[4].Trim().ToLower() == "left" ? DialogViewVNPlus.CharacterColumn.Left : DialogViewVNPlus.CharacterColumn.Right;
+            }
             nodes.Add(gnode);
         }
         else if (nodeType == typeof(RemoveCharacter))

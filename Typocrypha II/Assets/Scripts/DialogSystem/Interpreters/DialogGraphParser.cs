@@ -203,7 +203,7 @@ public class DialogGraphParser : MonoBehaviour
             {
                 if (currNode is AddCharacter addNode)
                 {
-                    vnPlusView.AddCharacter(addNode.characterData);
+                    vnPlusView.AddCharacter(addNode.characterData, addNode.column);
                 }
                 else if (currNode is SetPose setPoseNode)
                 {
