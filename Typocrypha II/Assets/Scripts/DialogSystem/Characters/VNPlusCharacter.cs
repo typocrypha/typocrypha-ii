@@ -12,7 +12,7 @@ public class VNPlusCharacter : MonoBehaviour
     {
         set
         {
-            if (data.name == value.name)
+            if (data != null && data.name == value.name)
                 return;
             data = value;
             SetPose(DialogCharacterManager.defaultPose);

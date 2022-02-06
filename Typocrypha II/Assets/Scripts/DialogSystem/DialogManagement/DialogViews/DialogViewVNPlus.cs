@@ -10,8 +10,8 @@ public class DialogViewVNPlus : DialogView
 
     public enum CharacterColumn
     {
+        Right,
         Left,
-        Right
     }
 
     [SerializeField] private GameObject rightDialogBoxPrefab;
@@ -21,8 +21,11 @@ public class DialogViewVNPlus : DialogView
     [SerializeField] private Ease messageLayoutEase;
     [SerializeField] private bool useCustomMessageLayoutEase;
     [SerializeField] private AnimationCurve customMessageLayoutEase;
-    [SerializeField] private VNPlusCharacter speakingCharacter;
-    [SerializeField] private GameObject characterPrefab;
+    [SerializeField] private GameObject rightCharacterPrefab;
+    [SerializeField] private GameObject leftCharacterPrefab;
+    [SerializeField] private RectTransform rightCharacterContainer;
+    [SerializeField] private RectTransform leftCharacterContainer;
+
 
     public override bool ReadyToContinue => readyToContinue;
 
@@ -38,14 +41,17 @@ public class DialogViewVNPlus : DialogView
 
     public void AddCharacter(CharacterData data, CharacterColumn column)
     {
-        // Main character
-        if (data.IsNamed(PlayerDataManager.instance.Get<string>(PlayerDataManager.mainCharacterName)))
+        if(!characterMap.ContainsKey(data.name))// Scene character
         {
-            speakingCharacter.Data = data;
-        }
-        else if(!characterMap.ContainsKey(data.name))// Scene character
-        {
-            var newCharacter = Instantiate(characterPrefab).GetComponent<VNPlusCharacter>(); // need to be put in a specific transform
+            VNPlusCharacter newCharacter;
+            if (column == CharacterColumn.Right)
+            {
+                newCharacter = Instantiate(rightCharacterPrefab, rightCharacterContainer).GetComponent<VNPlusCharacter>();
+            }
+            else
+            {
+                newCharacter = Instantiate(leftCharacterPrefab, leftCharacterContainer).GetComponent<VNPlusCharacter>();
+            }
             newCharacter.Data = data;
             characterMap.Add(data.name, newCharacter);
         }
@@ -53,11 +59,7 @@ public class DialogViewVNPlus : DialogView
 
     public void SetExpression(CharacterData data, string expression)
     {
-        if (data.IsNamed(PlayerDataManager.instance.Get<string>(PlayerDataManager.mainCharacterName)))
-        {
-            speakingCharacter.SetExpression(expression);
-        }
-        else if (characterMap.ContainsKey(data.name))// Scene character
+        if (characterMap.ContainsKey(data.name))// Scene character
         {
             characterMap[data.name].SetExpression(expression);
         }
@@ -65,11 +67,7 @@ public class DialogViewVNPlus : DialogView
 
     public void SetPose(CharacterData data, string pose)
     {
-        if (data.IsNamed(PlayerDataManager.instance.Get<string>(PlayerDataManager.mainCharacterName)))
-        {
-            speakingCharacter.SetPose(pose);
-        }
-        else if (characterMap.ContainsKey(data.name))// Scene character
+        if (characterMap.ContainsKey(data.name))// Scene character
         {
             characterMap[data.name].SetPose(pose);
         }
