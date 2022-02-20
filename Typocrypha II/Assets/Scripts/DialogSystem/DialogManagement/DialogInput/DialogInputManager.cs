@@ -45,7 +45,7 @@ public class DialogInputManager : MonoBehaviour
         yield return new WaitWhile(() => DialogManager.instance.dialogBox.IsDone); // COULD HAVE SYNCHRO ISSUES
         yield return new WaitUntil(() => DialogManager.instance.dialogBox.IsDone); // THAT IS, SPEEDRUN TECH
         DialogManager.instance.PH.Pause = true; // Disable player skipping dialog.
-        DialogManager.instance.dialogView.DisplayInput(data); // Display dialog.
+        DialogManager.instance.DialogView.DisplayInput(data); // Display dialog.
     }
 
     /// <summary>

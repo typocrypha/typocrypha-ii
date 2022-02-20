@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
+using System.Linq;
 
 public class DialogViewVNPlus : DialogView
 {
@@ -39,6 +40,8 @@ public class DialogViewVNPlus : DialogView
 
     }
 
+    #region Character Control
+
     public void AddCharacter(CharacterData data, CharacterColumn column)
     {
         if(!characterMap.ContainsKey(data.name))// Scene character
@@ -73,10 +76,27 @@ public class DialogViewVNPlus : DialogView
         }
     }
 
+    /// <summary>
+    /// Turns highlight on or off on a character.
+    /// </summary>
+    /// <param name="data">Id of selected character.</param>
+    /// <param name="on">Whether to turn on highlight.</param>
+    /// <returns>DialogCharacter component of selected character.</returns>
+    public void HighlightCharacter(IEnumerable<CharacterData> data)
+    {
+        foreach(var kvp in characterMap)
+        {
+            kvp.Value.Highlighted = data.Any(d => d.name == kvp.Key);
+        }
+    }
+
+    #endregion
+
     public override DialogBox PlayDialog(DialogItem data)
     {
         if (!IsDialogItemCorrectType(data, out DialogItemVNPlus dialogItem))
             return null;
+        HighlightCharacter(dialogItem.CharacterData);
         var prefab = dialogItem.IsLeft ? leftDialogBoxPrefab : rightDialogBoxPrefab;
         var dialogBox = Instantiate(prefab, messageContainer).GetComponent<DialogBox>();
         readyToContinue = false;

@@ -144,11 +144,7 @@ public class DialogGraphParser : MonoBehaviour
             else if(currNode is DialogNodeVNPlus)
             {
                 var dNode = currNode as DialogNodeVNPlus;
-                // Highlight speaking characters.
-                DialogCharacterManager.instance.HighlightAllCharacters(false);
-                for (int i = 0; i < cds.Count; i++)
-                    if (cds[i] != null) DialogCharacterManager.instance.HighlightCharacter(cds[i], true);
-                return new DialogItemVNPlus(dNode.text, voice, dNode.characterName == PlayerDataManager.instance.Get<string>(PlayerDataManager.mainCharacterName));
+                return new DialogItemVNPlus(dNode.text, voice, dNode.characterName == PlayerDataManager.instance.Get<string>(PlayerDataManager.mainCharacterName), cds);
             }
             else if(currNode is DialogNodeChat)
             {
@@ -199,7 +195,7 @@ public class DialogGraphParser : MonoBehaviour
         }
         else if (currNode is CharacterControlNode)
         {
-            if(DialogManager.instance.dialogView is DialogViewVNPlus vnPlusView)
+            if(DialogManager.instance.DialogView is DialogViewVNPlus vnPlusView)
             {
                 if (currNode is AddCharacter addNode)
                 {

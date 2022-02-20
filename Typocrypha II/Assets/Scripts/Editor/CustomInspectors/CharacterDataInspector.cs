@@ -136,7 +136,7 @@ public class CharacterDataInspector : Editor
         GUILayout.Label(title + ": " + poseMap.Count, GUILayout.Width(100));
         poseMap.addField = EditorGUILayout.TextField(poseMap.addField, GUILayout.Width(100));
         if (GUILayout.Button("+") && !string.IsNullOrEmpty(poseMap.addField))
-            poseMap.Add(poseMap.addField, null);
+            poseMap.Add(poseMap.addField, new CharacterData.PoseData());
         GUIStyle header = new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold };
         GUILayout.EndHorizontal();
         EditorGUI.indentLevel++;
