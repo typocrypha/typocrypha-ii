@@ -97,11 +97,28 @@ public class DialogViewVNPlus : DialogView
         if (!IsDialogItemCorrectType(data, out DialogItemVNPlus dialogItem))
             return null;
         HighlightCharacter(dialogItem.CharacterData);
-        var prefab = dialogItem.IsLeft ? leftDialogBoxPrefab : rightDialogBoxPrefab;
+        var prefab = GetMessagePrefab(dialogItem.CharacterData);
         var dialogBox = Instantiate(prefab, messageContainer).GetComponent<DialogBox>();
         readyToContinue = false;
         StartCoroutine(AnimateNewMessageIn(dialogBox, dialogItem));
         return dialogBox;
+    }
+
+    private GameObject GetMessagePrefab(List<CharacterData> data)
+    {
+        if(data.Count > 1)
+        {
+            throw new System.NotImplementedException("VNPlus mode doesn't currently support multi-character dialog lines");
+        }
+        var chara = data[0];
+        foreach (var kvp in characterMap)
+        {
+            if(kvp.Key == chara.name)
+            {
+                return kvp.Value.Column == CharacterColumn.Left ? leftDialogBoxPrefab : rightDialogBoxPrefab;
+            }
+        }
+        throw new System.NotImplementedException("VNPlus mode doesn't currently support system dialog lines");
     }
 
     private IEnumerator AnimateNewMessageIn(DialogBox box, DialogItem item)

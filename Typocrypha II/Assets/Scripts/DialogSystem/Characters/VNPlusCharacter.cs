@@ -8,6 +8,8 @@ public class VNPlusCharacter : MonoBehaviour
     private static readonly Color highlightColor = Color.white;
     private static readonly Color noHighlightColor = Color.gray;
 
+    public DialogViewVNPlus.CharacterColumn Column => column;
+    [SerializeField] private DialogViewVNPlus.CharacterColumn column;
     [SerializeField] private Image poseImage;
     [SerializeField] private Image expressionImage;
 

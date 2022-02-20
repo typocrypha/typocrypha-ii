@@ -144,7 +144,7 @@ public class DialogGraphParser : MonoBehaviour
             else if(currNode is DialogNodeVNPlus)
             {
                 var dNode = currNode as DialogNodeVNPlus;
-                return new DialogItemVNPlus(dNode.text, voice, dNode.characterName == PlayerDataManager.instance.Get<string>(PlayerDataManager.mainCharacterName), cds);
+                return new DialogItemVNPlus(dNode.text, voice, cds);
             }
             else if(currNode is DialogNodeChat)
             {
