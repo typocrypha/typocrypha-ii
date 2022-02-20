@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +13,17 @@ public class VNPlusCharacter : MonoBehaviour
     [SerializeField] private DialogViewVNPlus.CharacterColumn column;
     [SerializeField] private Image poseImage;
     [SerializeField] private Image expressionImage;
+    [SerializeField] private Image nameplateImage;
+    [SerializeField] private TextMeshProUGUI nameplateText;
+
+    public string NameText 
+    { 
+        get => nameplateText.text;
+        set
+        {
+            nameplateText.text = value;
+        }
+    }
 
     public CharacterData Data 
     {
@@ -22,6 +34,8 @@ public class VNPlusCharacter : MonoBehaviour
             data = value;
             SetPose(DialogCharacterManager.defaultPose);
             SetExpression(DialogCharacterManager.defaultExpr);
+            nameplateText.color = data.characterColorDark;
+            nameplateImage.color = data.characterColorLight;
         }
     }
     private CharacterData data;

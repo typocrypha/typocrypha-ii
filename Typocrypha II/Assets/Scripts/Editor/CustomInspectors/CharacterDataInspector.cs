@@ -15,11 +15,16 @@ public class CharacterDataInspector : Editor
         GUILayout.Label("Character: " + data.name);
 
         EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+        data.mainAlias = EditorGUILayout.TextField("Main Alias", data.mainAlias);
         if (data.aliases == null)
         {
             data.aliases = new NameSet();
         }
         NameSetGUI("Aliases", data.aliases);
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+        GUILayout.Label("Character Colors:");
+        data.characterColorLight = EditorGUILayout.ColorField("Light Color", data.characterColorLight);
+        data.characterColorDark = EditorGUILayout.ColorField("Dark Color", data.characterColorDark);
         EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
         if (data.poses == null)
         {

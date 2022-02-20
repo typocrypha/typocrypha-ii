@@ -56,6 +56,8 @@ public class DialogViewVNPlus : DialogView
                 newCharacter = Instantiate(leftCharacterPrefab, leftCharacterContainer).GetComponent<VNPlusCharacter>();
             }
             newCharacter.Data = data;
+            // TODO: name override
+            newCharacter.NameText = data.mainAlias;
             characterMap.Add(data.name, newCharacter);
         }
     }
