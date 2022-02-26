@@ -101,9 +101,26 @@ public class DialogViewVNPlus : DialogView
         HighlightCharacter(dialogItem.CharacterData);
         var prefab = GetMessagePrefab(dialogItem.CharacterData);
         var dialogBox = Instantiate(prefab, messageContainer).GetComponent<DialogBox>();
+        SetCharacterSpecificUI(dialogBox, dialogItem.CharacterData);
         readyToContinue = false;
         StartCoroutine(AnimateNewMessageIn(dialogBox, dialogItem));
         return dialogBox;
+    }
+
+    private void SetCharacterSpecificUI(DialogBox messageBox, List<CharacterData> data)
+    {
+        var vnPlusUI = messageBox.GetComponent<VNPlusDialogBoxUI>();
+        if (vnPlusUI == null)
+            return;
+        if (data.Count > 1)
+        {
+            throw new System.NotImplementedException("VNPlus mode doesn't currently support multi-character dialog lines");
+        }
+        if(data.Count <= 0)
+        {
+            throw new System.NotImplementedException("VNPlus mode doesn't currently support system dialog lines");
+        }
+        vnPlusUI.Bind(data[0]);
     }
 
     private GameObject GetMessagePrefab(List<CharacterData> data)
