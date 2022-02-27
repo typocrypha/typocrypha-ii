@@ -17,6 +17,7 @@ public class DialogViewVNPlus : DialogView
 
     [SerializeField] private GameObject rightDialogBoxPrefab;
     [SerializeField] private GameObject leftDialogBoxPrefab;
+    [SerializeField] private GameObject narratorDialogBoxPrefab;
     [SerializeField] private RectTransform messageContainer;
     [SerializeField] private VerticalLayoutGroup messageLayout;
     [SerializeField] private Ease messageLayoutEase;
@@ -129,6 +130,10 @@ public class DialogViewVNPlus : DialogView
         {
             throw new System.NotImplementedException("VNPlus mode doesn't currently support multi-character dialog lines");
         }
+        if(data.Count <= 0)
+        {
+            throw new System.NotImplementedException("VNPlus mode doesn't currently support dialog lines with no character data");
+        }
         var chara = data[0];
         foreach (var kvp in characterMap)
         {
@@ -137,7 +142,7 @@ public class DialogViewVNPlus : DialogView
                 return kvp.Value.Column == CharacterColumn.Left ? leftDialogBoxPrefab : rightDialogBoxPrefab;
             }
         }
-        throw new System.NotImplementedException("VNPlus mode doesn't currently support system dialog lines");
+        return narratorDialogBoxPrefab;
     }
 
     private IEnumerator AnimateNewMessageIn(DialogBox box, DialogItem item)
