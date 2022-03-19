@@ -32,7 +32,7 @@ public class DialogViewVNPlus : DialogView
     public override bool ReadyToContinue => readyToContinue;
 
     private bool readyToContinue = false;
-    private Tween tween;
+    private Tween messageTween;
 
     private readonly Dictionary<string, VNPlusCharacter> characterMap = new Dictionary<string, VNPlusCharacter>(4);
 
@@ -60,6 +60,7 @@ public class DialogViewVNPlus : DialogView
             // TODO: name override
             newCharacter.NameText = data.mainAlias;
             characterMap.Add(data.name, newCharacter);
+            newCharacter.PlayJoinTween();
         }
     }
 
@@ -150,16 +151,16 @@ public class DialogViewVNPlus : DialogView
         box.SetupDialogBox(item);
         yield return null;
         box.SetBoxHeight();
-        tween?.Complete();
-        tween = messageContainer.DOAnchorPosY(messageContainer.anchoredPosition.y + (box.GetBoxHeight() + messageLayout.spacing), tweenTime);
+        messageTween?.Complete();
+        messageTween = messageContainer.DOAnchorPosY(messageContainer.anchoredPosition.y + (box.GetBoxHeight() + messageLayout.spacing), tweenTime);
         // Play animation
         if (useCustomMessageLayoutEase)
         {
-            tween.SetEase(customMessageLayoutEase);
+            messageTween.SetEase(customMessageLayoutEase);
         }
         else
         {
-            tween.SetEase(messageLayoutEase);
+            messageTween.SetEase(messageLayoutEase);
         }
         readyToContinue = true;
         box.StartDialogScroll();

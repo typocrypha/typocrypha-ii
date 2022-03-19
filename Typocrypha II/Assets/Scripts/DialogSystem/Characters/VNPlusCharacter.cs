@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class VNPlusCharacter : MonoBehaviour
 {
@@ -15,6 +16,12 @@ public class VNPlusCharacter : MonoBehaviour
     [SerializeField] private Image expressionImage;
     [SerializeField] private Image nameplateImage;
     [SerializeField] private TextMeshProUGUI nameplateText;
+    [SerializeField] private RectTransform mainRect;
+
+    [SerializeField] private Ease joinEase;
+    [SerializeField] private bool useCustomJoinEase;
+    [SerializeField] private AnimationCurve customJoinEase;
+    [SerializeField] private float joinTweenTime = 0.25f;
 
     public string NameText 
     { 
@@ -83,6 +90,22 @@ public class VNPlusCharacter : MonoBehaviour
         else
         {
             Debug.LogError("No such pose:" + pose);
+        }
+    }
+
+    public void PlayJoinTween()
+    {
+        float scale = mainRect.localScale.y;
+        mainRect.localScale = new Vector3(mainRect.localScale.x, 0, mainRect.localScale.z);
+        var tween = mainRect.DOScaleY(scale, joinTweenTime);
+        // Play animation
+        if (useCustomJoinEase)
+        {
+            tween.SetEase(customJoinEase);
+        }
+        else
+        {
+            tween.SetEase(joinEase);
         }
     }
 
