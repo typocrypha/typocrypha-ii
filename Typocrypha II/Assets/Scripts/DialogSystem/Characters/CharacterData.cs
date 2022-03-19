@@ -5,6 +5,7 @@
 [System.Serializable]
 public class CharacterData : ScriptableObject
 {
+    public string mainAlias;
     public NameSet aliases; // Different aliases/names for this character
     public PoseMap poses; // Different body poses
     public NameMap expressions; // Different facial expressions
@@ -14,6 +15,8 @@ public class CharacterData : ScriptableObject
     public NameMap codecs; // Different codec sprites
     public Sprite chat_icon; // Chat mode sprite
     public AudioClip talk_sfx; // Talking sound effect
+    public Color characterColorDark = Color.white;
+    public Color characterColorLight = Color.white;
 
     [System.Serializable]
     public class PoseData

@@ -40,10 +40,11 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     public static DialogManager instance = null;
     public bool startOnStart = true; // Should dialog start when scene starts up? (should generally only be true for debugging)
     public bool isBattle = false; // Is this a battle scene?
-    public List<DialogView> allViews; // All dialog views (VN, CHAT, etc)
+    [SerializeField] private List<DialogView> allViews; // All dialog views (VN, CHAT, etc)
     public UnityEvent onNextDialog; // Event called when a new dialog line is started.
     public UnityEvent onSkip; // Event called when user manually skips text scroll.
-    [HideInInspector] public DialogView dialogView; // Currently displayed dialog view.
+    public DialogView DialogView => dialogView;
+    private DialogView dialogView; // Currently displayed dialog view.
     [HideInInspector] public IDialogBox dialogBox; // Latest displayed dialog box.
     [HideInInspector] public int dialogCounter = 0; // Number of dialog lines passed.
 
@@ -63,7 +64,8 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
 
         ph = new PauseHandle(OnPause);
         graphParser = GetComponent<DialogGraphParser>();
-        if (isBattle) Display(false);
+        dialogView = GetView<DialogViewVNPlus>(); // Set to VN plus by default
+        Display(!isBattle);
     }
 
     void Start()
@@ -129,7 +131,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
         if (dialogItem == null) return;
 
         // Get and display proper view.
-        DialogView view = allViews.Find(v => v.GetType() == dialogItem.GetView());
+        DialogView view = GetView(dialogItem.GetView());
         if (view != dialogView)
         {
             dialogView = view;
@@ -139,6 +141,16 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
         onNextDialog.Invoke();
 
         dialogCounter++;
+    }
+
+    private DialogView GetView<T>() where T : DialogView
+    {
+        return GetView(typeof(T));
+    }
+
+    private DialogView GetView(System.Type type)
+    {
+        return allViews.Find(v => v.GetType() == type);
     }
 
     /// <summary>

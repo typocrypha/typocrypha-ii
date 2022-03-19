@@ -15,11 +15,16 @@ public class CharacterDataInspector : Editor
         GUILayout.Label("Character: " + data.name);
 
         EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+        data.mainAlias = EditorGUILayout.TextField("Main Alias", data.mainAlias);
         if (data.aliases == null)
         {
             data.aliases = new NameSet();
         }
         NameSetGUI("Aliases", data.aliases);
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+        GUILayout.Label("Character Colors:");
+        data.characterColorLight = EditorGUILayout.ColorField("Light Color", data.characterColorLight);
+        data.characterColorDark = EditorGUILayout.ColorField("Dark Color", data.characterColorDark);
         EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
         if (data.poses == null)
         {
@@ -136,7 +141,7 @@ public class CharacterDataInspector : Editor
         GUILayout.Label(title + ": " + poseMap.Count, GUILayout.Width(100));
         poseMap.addField = EditorGUILayout.TextField(poseMap.addField, GUILayout.Width(100));
         if (GUILayout.Button("+") && !string.IsNullOrEmpty(poseMap.addField))
-            poseMap.Add(poseMap.addField, null);
+            poseMap.Add(poseMap.addField, new CharacterData.PoseData());
         GUIStyle header = new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold };
         GUILayout.EndHorizontal();
         EditorGUI.indentLevel++;

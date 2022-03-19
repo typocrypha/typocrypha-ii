@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class DialogItemVNPlus : DialogItem
 {
-    public bool IsLeft { get; }
-    public DialogItemVNPlus(string text, List<AudioClip> voice, bool isLeft) : base(text, voice)
+    public List<CharacterData> CharacterData { get; }
+    public DialogItemVNPlus(string text, List<AudioClip> voice, List<CharacterData> characterData) : base(text, voice)
     {
-        IsLeft = isLeft;
+        CharacterData = characterData;
     }
     public override Type GetView()
     {

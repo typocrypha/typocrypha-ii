@@ -31,7 +31,7 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
     {
         foreach (var cs in SaveManager.instance.loaded.characters)
         {
-            var data = characterDataBundle.LoadAsset<CharacterData>(cs.characterName);
+            var data = CharacterDataByName(cs.characterName);
             AddCharacter(data, cs.baseSprite, cs.expression, new Vector2(cs.xpos, cs.ypos));
             HighlightCharacter(data, cs.highlight);
         }
@@ -41,9 +41,10 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
     public static DialogCharacterManager instance = null;
     public GameObject characterPrefab; // Prefab of dialog character object
     public GameObject characterPrefabAyinCodec; // Prefab for ayin's codec object
+    [SerializeField] private List<CharacterData> allCharacterData;
+    private Dictionary<string, CharacterData> characterLookup;
 
     Dictionary<string, DialogCharacter> characterMap; // Map of string ids to characters in scene.
-    static AssetBundle characterDataBundle; // All character data assets.
 
     public const string defaultPose = "base";
     public const string defaultExpr = "normal";
@@ -61,8 +62,14 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
         }
 
         characterMap = new Dictionary<string, DialogCharacter>();
-        if (characterDataBundle == null)
-            characterDataBundle = AssetBundle.LoadFromFile(System.IO.Path.Combine(Application.streamingAssetsPath, "characterdata"));
+        characterLookup = new Dictionary<string, CharacterData>(allCharacterData.Count * 5);
+        foreach (var data in allCharacterData)
+        {
+            foreach(var alias in data.aliases)
+            {
+                characterLookup.Add(alias, data);
+            }
+        }
     }
 
     /// <summary>
@@ -325,9 +332,6 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
         }
     }
 
-    // Used for memoizing character data 
-    Dictionary<string, CharacterData> memoizeCD = new Dictionary<string, CharacterData>();
-
     /// <summary>
     /// Finds character data (in scene) that matches given alias.
     /// Will return null if alias exists, but that character isn't in the scene.
@@ -336,21 +340,11 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
     /// <returns>CharacterData found. 'null' if none found.</returns>
     public CharacterData CharacterDataByName(string alias)
     {
-        if (memoizeCD.ContainsKey(alias))
+        if (!characterLookup.ContainsKey(alias))
         {
-            return memoizeCD[alias];
+            Debug.LogError($"There is no character with alias {alias}");
+            return null;
         }
-        else
-        {
-            foreach(var cd in characterDataBundle.LoadAllAssets<CharacterData>())
-            {
-                if (cd.aliases.Contains(alias))
-                {
-                    memoizeCD[alias] = cd;
-                    return cd;
-                }
-            }
-        }
-        return null;
+        return characterLookup[alias];
     }
 }

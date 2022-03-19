@@ -21,6 +21,8 @@ namespace Gameflow
 
         public Vector2 targetPos = new Vector2(0, 0);
 
+        public DialogViewVNPlus.CharacterColumn column;
+
         #region Tooltip Strings
         protected const string tooltipPos = "Where to position character (center pivot)";
         #endregion
@@ -42,6 +44,9 @@ namespace Gameflow
             GUIStyle dialogTextStyle = new GUIStyle(GUI.skin.textArea);
             dialogTextStyle.wordWrap = true;
             targetPos = RTEditorGUI.Vector2Field(new Rect(4, 50, MinSize.x - 10, 20), "", targetPos);
+            GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
+            column = (DialogViewVNPlus.CharacterColumn)RTEditorGUI.EnumPopup(column);
             GUILayout.EndHorizontal();
             #endregion
         }
