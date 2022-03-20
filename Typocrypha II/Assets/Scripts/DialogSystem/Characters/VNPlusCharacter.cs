@@ -93,7 +93,7 @@ public class VNPlusCharacter : MonoBehaviour
         }
     }
 
-    public void PlayJoinTween()
+    public Tween PlayJoinTween()
     {
         float scale = mainRect.localScale.y;
         mainRect.localScale = new Vector3(mainRect.localScale.x, 0, mainRect.localScale.z);
@@ -107,6 +107,7 @@ public class VNPlusCharacter : MonoBehaviour
         {
             tween.SetEase(joinEase);
         }
+        return tween;
     }
 
 }

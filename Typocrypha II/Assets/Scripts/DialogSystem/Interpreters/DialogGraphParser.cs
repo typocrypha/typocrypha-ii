@@ -1,7 +1,7 @@
-﻿using System.Collections;
+﻿using Gameflow;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Gameflow;
 
 public class DialogGraphParser : MonoBehaviour
 {
@@ -200,6 +200,8 @@ public class DialogGraphParser : MonoBehaviour
                 if (currNode is AddCharacter addNode)
                 {
                     vnPlusView.AddCharacter(addNode.characterData, addNode.column);
+                    StartCoroutine(WaitOnFunc(vnPlusView.IsReadyToContinue));
+                    return null;
                 }
                 else if (currNode is SetPose setPoseNode)
                 {
@@ -338,6 +340,13 @@ public class DialogGraphParser : MonoBehaviour
     IEnumerator WaitOnNode(ITimedNode node)
     {
         yield return new WaitUntil(() => node.IsCompleted);
+        DialogManager.instance.PH.Pause = false;
+        DialogManager.instance.NextDialog(true);
+    }
+
+    IEnumerator WaitOnFunc(System.Func<bool> isComplete)
+    {
+        yield return new WaitUntil(isComplete);
         DialogManager.instance.PH.Pause = false;
         DialogManager.instance.NextDialog(true);
     }

@@ -41,12 +41,15 @@ public class DialogViewVNPlus : DialogView
 
     }
 
+    public bool IsReadyToContinue() => readyToContinue;
+
     #region Character Control
 
     public void AddCharacter(CharacterData data, CharacterColumn column)
     {
         if(!characterMap.ContainsKey(data.name))// Scene character
         {
+            readyToContinue = false;
             VNPlusCharacter newCharacter;
             if (column == CharacterColumn.Right)
             {
@@ -56,11 +59,12 @@ public class DialogViewVNPlus : DialogView
             {
                 newCharacter = Instantiate(leftCharacterPrefab, leftCharacterContainer).GetComponent<VNPlusCharacter>();
             }
+            HighlightCharacter(data);
             newCharacter.Data = data;
             // TODO: name override
             newCharacter.NameText = data.mainAlias;
             characterMap.Add(data.name, newCharacter);
-            newCharacter.PlayJoinTween();
+            newCharacter.PlayJoinTween().onComplete = () => readyToContinue = true;
         }
     }
 
@@ -94,13 +98,24 @@ public class DialogViewVNPlus : DialogView
         }
     }
 
+    public void HighlightCharacter(CharacterData data)
+    {
+        foreach (var kvp in characterMap)
+        {
+            kvp.Value.Highlighted = data.name == kvp.Key;
+        }
+    }
+
     #endregion
 
     public override DialogBox PlayDialog(DialogItem data)
     {
         if (!IsDialogItemCorrectType(data, out DialogItemVNPlus dialogItem))
             return null;
-        HighlightCharacter(dialogItem.CharacterData);
+        if (dialogItem.CharacterData.Count > 0 && characterMap.ContainsKey(dialogItem.CharacterData[0].name))
+        {
+            HighlightCharacter(dialogItem.CharacterData);
+        }
         var prefab = GetMessagePrefab(dialogItem.CharacterData);
         var dialogBox = Instantiate(prefab, messageContainer).GetComponent<DialogBox>();
         SetCharacterSpecificUI(dialogBox, dialogItem.CharacterData);
@@ -136,12 +151,9 @@ public class DialogViewVNPlus : DialogView
             throw new System.NotImplementedException("VNPlus mode doesn't currently support dialog lines with no character data");
         }
         var chara = data[0];
-        foreach (var kvp in characterMap)
+        if (characterMap.ContainsKey(chara.name))
         {
-            if(kvp.Key == chara.name)
-            {
-                return kvp.Value.Column == CharacterColumn.Left ? leftDialogBoxPrefab : rightDialogBoxPrefab;
-            }
+            return characterMap[chara.name].Column == CharacterColumn.Left ? leftDialogBoxPrefab : rightDialogBoxPrefab;
         }
         return narratorDialogBoxPrefab;
     }
