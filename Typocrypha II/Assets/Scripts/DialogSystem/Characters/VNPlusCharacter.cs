@@ -93,6 +93,11 @@ public class VNPlusCharacter : MonoBehaviour
         }
     }
 
+    public void SetInitialHeight(float height)
+    {
+        mainRect.sizeDelta = new Vector2(mainRect.sizeDelta.x, height);
+    }
+
     public Tween PlayJoinTween()
     {
         float scale = mainRect.localScale.y;

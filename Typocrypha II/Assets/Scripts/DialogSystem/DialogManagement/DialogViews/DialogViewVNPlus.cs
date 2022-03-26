@@ -54,10 +54,12 @@ public class DialogViewVNPlus : DialogView
             if (column == CharacterColumn.Right)
             {
                 newCharacter = Instantiate(rightCharacterPrefab, rightCharacterContainer).GetComponent<VNPlusCharacter>();
+                newCharacter.SetInitialHeight(rightCharacterContainer.rect.height);
             }
             else
             {
                 newCharacter = Instantiate(leftCharacterPrefab, leftCharacterContainer).GetComponent<VNPlusCharacter>();
+                newCharacter.SetInitialHeight(leftCharacterContainer.rect.height);
             }
             HighlightCharacter(data);
             newCharacter.Data = data;
