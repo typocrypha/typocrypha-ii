@@ -11,8 +11,9 @@
         _ColorA("Color 1", Color) = (1, 1, 1, 1)
         _ColorB("Color 2", Color) = (1, 1, 1, 1)
         [Enum(Horizontal,0,Vertical,1)] _Direction("Gradient Direction", Float) = 0
-        _OffsetA("Color 1 Offset", Range(0.0, 0.5)) = 0.0
-        _OffsetB("Color 2 Offset", Range(0.5, 1.0)) = 1.0
+        _OffsetA("Color 1 Offset", Range(0.0, 1.0)) = 0.0
+        _OffsetB("Color 2 Offset", Range(0.0, 1.0)) = 1.0
+        [IntRange] _Steps("Steps", Range(1, 25)) = 1
 
     }
 
@@ -50,6 +51,7 @@
                 fixed4 _ColorB;
                 float _OffsetB;
                 float _Direction;
+                int _Steps;
 
                 v2f vert(appdata_t IN) {
                     return SpriteVert(IN);
@@ -57,17 +59,16 @@
 
                 fixed4 frag(v2f IN) : SV_Target{
 
-                    float val = lerp(IN.texcoord.x, 1 - IN.texcoord.y, _Direction);
+                    // get val (u or v value depending on horizontal or vertical)
+                    float val = lerp(IN.texcoord.x, 1 - IN.texcoord.y, _Direction); 
 
-                    fixed4 col = lerp(_ColorA, _ColorB, val);
+                    val = (val - _OffsetA) / (_OffsetB - _OffsetA); // lerp with offset
 
-                    //if (val >= _OffsetA && val < _OffsetB) {
-                    //    col = lerp(_ColorA, _ColorB, ((val * (_OffsetB - _OffsetA)) + _OffsetA));
-                    //  }
-                    //else if (val >= _OffsetB) {
-                    //    col = _ColorB;
-                    //}
+                    float stepInv = 1.0f / _Steps; // step it
+                    float newVal = round(val * _Steps) * stepInv;
+                    newVal = lerp(newVal, val, floor(stepInv));
 
+                    fixed4 col = lerp(_ColorA, _ColorB, newVal);
                     return col;
                 }
             ENDCG
