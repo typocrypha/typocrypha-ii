@@ -17,11 +17,20 @@ public class VNPlusCharacter : MonoBehaviour
     [SerializeField] private Image nameplateImage;
     [SerializeField] private TextMeshProUGUI nameplateText;
     [SerializeField] private RectTransform mainRect;
-
+    [Header("Join Tween")]
     [SerializeField] private Ease joinEase;
     [SerializeField] private bool useCustomJoinEase;
     [SerializeField] private AnimationCurve customJoinEase;
     [SerializeField] private float joinTweenTime = 0.25f;
+    [Header("Adjustment Tweens")]
+    [SerializeField] private Ease adjustSizeEase;
+    [SerializeField] private bool useCustomAdjustSizeEase;
+    [SerializeField] private AnimationCurve customAdjustSizeEase;
+    [SerializeField] private Ease adjustPosEase;
+    [SerializeField] private bool useCustomAdjustPosEase;
+    [SerializeField] private AnimationCurve customAdjustPosEase;
+    [SerializeField] private float adjustTweenTime = 0.25f;
+    public float AdjustTweenTime => adjustTweenTime;
 
     public string NameText 
     { 
@@ -93,9 +102,28 @@ public class VNPlusCharacter : MonoBehaviour
         }
     }
 
+    public void SetInitialPos(float yPos)
+    {
+        mainRect.anchoredPosition = new Vector2(mainRect.anchoredPosition.x, yPos);
+    }
+
+    public Tween DoAdjustPosTween(float yPos)
+    {
+        var tween = mainRect.DOAnchorPosY(yPos, adjustTweenTime);
+        CustomTweenEase(tween, adjustPosEase, customAdjustPosEase, useCustomAdjustPosEase);
+        return tween;
+    }
+
     public void SetInitialHeight(float height)
     {
         mainRect.sizeDelta = new Vector2(mainRect.sizeDelta.x, height);
+    }
+
+    public Tween DoAdjustHeightTween(float height)
+    {
+        var tween = mainRect.DOSizeDelta(new Vector2(mainRect.sizeDelta.x, height), adjustTweenTime);
+        CustomTweenEase(tween, adjustSizeEase, customAdjustSizeEase, useCustomAdjustSizeEase);
+        return tween;
     }
 
     public Tween PlayJoinTween()
@@ -103,16 +131,20 @@ public class VNPlusCharacter : MonoBehaviour
         float scale = mainRect.localScale.y;
         mainRect.localScale = new Vector3(mainRect.localScale.x, 0, mainRect.localScale.z);
         var tween = mainRect.DOScaleY(scale, joinTweenTime);
-        // Play animation
-        if (useCustomJoinEase)
+        CustomTweenEase(tween, joinEase, customJoinEase, useCustomJoinEase);
+        return tween;
+    }
+
+    private void CustomTweenEase(Tween tween, Ease ease, AnimationCurve customEase, bool useCustom)
+    {
+        if (useCustom)
         {
-            tween.SetEase(customJoinEase);
+            tween.SetEase(customEase);
         }
         else
         {
-            tween.SetEase(joinEase);
+            tween.SetEase(ease);
         }
-        return tween;
     }
 
 }

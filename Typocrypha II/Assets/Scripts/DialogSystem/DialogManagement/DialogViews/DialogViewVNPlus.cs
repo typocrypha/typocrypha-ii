@@ -8,6 +8,7 @@ using System.Linq;
 public class DialogViewVNPlus : DialogView
 {
     private const float tweenTime = 0.5f;
+    private const int maxCharactersPerColumn = 5;
 
     public enum CharacterColumn
     {
@@ -34,7 +35,9 @@ public class DialogViewVNPlus : DialogView
     private bool readyToContinue = false;
     private Tween messageTween;
 
-    private readonly Dictionary<string, VNPlusCharacter> characterMap = new Dictionary<string, VNPlusCharacter>(4);
+    private readonly Dictionary<string, VNPlusCharacter> characterMap = new Dictionary<string, VNPlusCharacter>(maxCharactersPerColumn * 2);
+    private readonly List<VNPlusCharacter> rightCharacterList = new List<VNPlusCharacter>(maxCharactersPerColumn);
+    private readonly List<VNPlusCharacter> leftCharacterList = new List<VNPlusCharacter>(maxCharactersPerColumn);
 
     public override void CleanUp()
     {
@@ -50,24 +53,67 @@ public class DialogViewVNPlus : DialogView
         if(!characterMap.ContainsKey(data.name))// Scene character
         {
             readyToContinue = false;
-            VNPlusCharacter newCharacter;
-            if (column == CharacterColumn.Right)
-            {
-                newCharacter = Instantiate(rightCharacterPrefab, rightCharacterContainer).GetComponent<VNPlusCharacter>();
-                newCharacter.SetInitialHeight(rightCharacterContainer.rect.height);
-            }
-            else
-            {
-                newCharacter = Instantiate(leftCharacterPrefab, leftCharacterContainer).GetComponent<VNPlusCharacter>();
-                newCharacter.SetInitialHeight(leftCharacterContainer.rect.height);
-            }
-            HighlightCharacter(data);
-            newCharacter.Data = data;
-            // TODO: name override
-            newCharacter.NameText = data.mainAlias;
-            characterMap.Add(data.name, newCharacter);
-            newCharacter.PlayJoinTween().onComplete = () => readyToContinue = true;
+            StartCoroutine(AddCharacterCR(data, column));
         }
+    }
+    private IEnumerator AddCharacterCR(CharacterData data, CharacterColumn column)
+    {
+        VNPlusCharacter newCharacter;
+        if (column == CharacterColumn.Right)
+        {
+            if(rightCharacterList.Count > 0)
+            {
+                yield return StartCoroutine(AdjustCharacterListCR(leftCharacterContainer, rightCharacterList));
+            }
+            newCharacter = InstantiateCharacter(rightCharacterPrefab, rightCharacterContainer, rightCharacterList);
+        }
+        else
+        {
+            if (leftCharacterList.Count > 0)
+            {
+                yield return StartCoroutine(AdjustCharacterListCR(leftCharacterContainer, leftCharacterList));
+            }
+            newCharacter = InstantiateCharacter(leftCharacterPrefab, leftCharacterContainer, leftCharacterList);
+        }
+        HighlightCharacter(data);
+        newCharacter.Data = data;
+        // TODO: name override
+        newCharacter.NameText = data.mainAlias;
+        characterMap.Add(data.name, newCharacter);
+        yield return newCharacter.PlayJoinTween().WaitForCompletion();
+        readyToContinue = true;
+    }
+
+    private VNPlusCharacter InstantiateCharacter(GameObject prefab, RectTransform container, List<VNPlusCharacter> characterList)
+    {
+        var newCharacter = Instantiate(prefab, container).GetComponent<VNPlusCharacter>();
+        characterList.Add(newCharacter);
+        var height = container.rect.height / characterList.Count;
+        newCharacter.SetInitialHeight(height);
+        newCharacter.SetInitialPos((-height / 2) - ((characterList.Count - 1) * height));
+
+        return newCharacter;
+    }
+
+    private IEnumerator AdjustCharacterListCR(RectTransform container, List<VNPlusCharacter> characterList)
+    {
+        float newHeight = container.rect.height / (characterList.Count + 1);
+        float posStart = -newHeight / 2;
+        float staggerTime = 0;
+        for (int i = 0; i < characterList.Count; i++)
+        {
+            var chara = characterList[i];
+            chara.DoAdjustHeightTween(newHeight);
+            staggerTime = Mathf.Max(chara.AdjustTweenTime / 2, staggerTime);
+        }
+        yield return new WaitForSeconds(staggerTime);
+        Tween tween = null;
+        for (int i = 0; i < characterList.Count; i++)
+        {
+            var chara = characterList[i];
+            tween = chara.DoAdjustPosTween(posStart - (i * newHeight));
+        }
+        yield return tween.WaitForCompletion();
     }
 
     public void SetExpression(CharacterData data, string expression)
