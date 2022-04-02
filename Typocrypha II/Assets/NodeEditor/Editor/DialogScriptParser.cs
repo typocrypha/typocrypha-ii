@@ -173,9 +173,9 @@ public class DialogScriptParser : EditorWindow
             {
                 ParseLine(lines[i], ref prev);
             }
-            catch
+            catch (System.Exception e)
             {
-                Debug.LogError("Line Error " + (i + 1) + ": " + lines[i]);
+                Debug.LogError($"Line Error{(i + 1)}: {lines[i]}: {e}");
             }
         }
         // Create end node (if not already there).
@@ -282,8 +282,11 @@ public class DialogScriptParser : EditorWindow
             var gnode = CreateNode(SetBackgroundNode.ID) as SetBackgroundNode;
             gnode.bgType = (args[1].ToLower() == "sprite") ? SetBackgroundNode.BgType.Sprite 
                                                  : SetBackgroundNode.BgType.Prefab;
-            string path = (args[1].ToLower() == "sprite") ? AssetDatabase.FindAssets(args[2], AssetDatabase.GetSubFolders("Assets/Graphics/Sprites/Backgrounds"))[0] 
-                                                : AssetDatabase.FindAssets(args[2], AssetDatabase.GetSubFolders("Assets/Prefabs/Backgrounds"))[0];
+            var sub = AssetDatabase.GetSubFolders("Assets/Graphics/Sprites/Backgrounds");
+            //var a = AssetDatabase.FindAssets(args[2], );
+            string path = (args[1].ToLower() == "sprite") 
+                ? AssetDatabase.FindAssets(args[2], new string[] { "Assets/Graphics/Sprites/Backgrounds" })[0] 
+                : AssetDatabase.FindAssets(args[2], AssetDatabase.GetSubFolders("Assets/Prefabs/Backgrounds"))[0];
             path = AssetDatabase.GUIDToAssetPath(path);
             Debug.Log("bg:" + path);
             if (args[1].ToLower() == "sprite") gnode.bgSprite = AssetDatabase.LoadAssetAtPath<Sprite>(path);

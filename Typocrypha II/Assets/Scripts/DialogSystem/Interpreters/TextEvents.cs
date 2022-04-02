@@ -57,6 +57,8 @@ public class TextEvents : MonoBehaviour, IPausable
         {
             {"test", Test },
             {"pause-dialog", PauseDialog},
+            {"pause",PauseDialog },
+            {"screen-shake",ScreenShake },
             {"shake", ScreenShake},
             {"fade-screen", FadeScreen},
             {"text-delay", TextDelay},
