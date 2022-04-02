@@ -48,13 +48,48 @@ public class DialogViewVNPlus : DialogView
 
     #region Character Control
 
+    public void RemoveCharacter(CharacterData data)
+    {
+        // If the character isn't in the scene, simply return
+        if (!characterMap.ContainsKey(data.name))
+        {
+            return;
+        }
+        readyToContinue = false;
+        StartCoroutine(RmCharacterCR(characterMap[data.name]));
+    }
+    private IEnumerator RmCharacterCR(VNPlusCharacter character)
+    {
+
+        yield return character.PlayLeaveTween().WaitForCompletion();
+        if (character.Column == CharacterColumn.Right)
+        {
+            rightCharacterList.Remove(character);
+            if (rightCharacterList.Count > 0)
+            {
+                yield return StartCoroutine(AdjustCharacterListPostLeaveCR(rightCharacterContainer, rightCharacterList));
+            }
+        }
+        else
+        {
+            leftCharacterList.Remove(character);
+            if (leftCharacterList.Count > 0)
+            {
+                yield return StartCoroutine(AdjustCharacterListPostLeaveCR(leftCharacterContainer, leftCharacterList));
+            }
+        }
+        readyToContinue = true;
+    }
+
     public void AddCharacter(CharacterData data, CharacterColumn column)
     {
-        if(!characterMap.ContainsKey(data.name))// Scene character
+        // If the character is already in the scene, return
+        if (characterMap.ContainsKey(data.name))
         {
-            readyToContinue = false;
-            StartCoroutine(AddCharacterCR(data, column));
+            return;
         }
+        readyToContinue = false;
+        StartCoroutine(AddCharacterCR(data, column));
     }
     private IEnumerator AddCharacterCR(CharacterData data, CharacterColumn column)
     {
@@ -63,7 +98,7 @@ public class DialogViewVNPlus : DialogView
         {
             if(rightCharacterList.Count > 0)
             {
-                yield return StartCoroutine(AdjustCharacterListCR(leftCharacterContainer, rightCharacterList));
+                yield return StartCoroutine(AdjustCharacterListPreJoinCR(rightCharacterContainer, rightCharacterList));
             }
             newCharacter = InstantiateCharacter(rightCharacterPrefab, rightCharacterContainer, rightCharacterList);
         }
@@ -71,7 +106,7 @@ public class DialogViewVNPlus : DialogView
         {
             if (leftCharacterList.Count > 0)
             {
-                yield return StartCoroutine(AdjustCharacterListCR(leftCharacterContainer, leftCharacterList));
+                yield return StartCoroutine(AdjustCharacterListPreJoinCR(leftCharacterContainer, leftCharacterList));
             }
             newCharacter = InstantiateCharacter(leftCharacterPrefab, leftCharacterContainer, leftCharacterList);
         }
@@ -95,25 +130,54 @@ public class DialogViewVNPlus : DialogView
         return newCharacter;
     }
 
-    private IEnumerator AdjustCharacterListCR(RectTransform container, List<VNPlusCharacter> characterList)
+    private IEnumerator AdjustCharacterListPreJoinCR(RectTransform container, List<VNPlusCharacter> characterList)
     {
-        float newHeight = container.rect.height / (characterList.Count + 1);
-        float posStart = -newHeight / 2;
-        float staggerTime = 0;
+        GetCharacterAdjustmentValues(container, characterList, 1, out float newHeight, out float posStart);
+        AdjustCharacterHeights(characterList, newHeight, out float staggerTime);
+        yield return new WaitForSeconds(staggerTime);
+        yield return AdjustCharacterPositions(characterList, posStart, newHeight, out float _).WaitForCompletion();
+    }
+
+    private IEnumerator AdjustCharacterListPostLeaveCR(RectTransform container, List<VNPlusCharacter> characterList)
+    {
+        GetCharacterAdjustmentValues(container, characterList, 0, out float newHeight, out float posStart);
+        AdjustCharacterPositions(characterList, posStart, newHeight, out float staggerTime);
+        yield return new WaitForSeconds(staggerTime);
+        yield return AdjustCharacterHeights(characterList, newHeight, out float _).WaitForCompletion();
+    }
+
+    private void GetCharacterAdjustmentValues(RectTransform container, List<VNPlusCharacter> characterList, int extraCharacters, out float newHeight, out float posStart)
+    {
+        // Extra characters determines the space to leave for additional chracters that are not currently present
+        // For example, use 1 extra character when a character is about to join to leave space for the joining character
+        newHeight = container.rect.height / (characterList.Count + extraCharacters);
+        posStart = -newHeight / 2;
+    }
+
+    private Tween AdjustCharacterHeights(List<VNPlusCharacter> characterList, float newHeight, out float staggerTime)
+    {
+        Tween tween = null;
+        staggerTime = 0;
         for (int i = 0; i < characterList.Count; i++)
         {
             var chara = characterList[i];
-            chara.DoAdjustHeightTween(newHeight);
+            tween = chara.DoAdjustHeightTween(newHeight);
             staggerTime = Mathf.Max(chara.AdjustTweenTime / 2, staggerTime);
         }
-        yield return new WaitForSeconds(staggerTime);
+        return tween;
+    }
+
+    private Tween AdjustCharacterPositions(List<VNPlusCharacter> characterList, float posStart, float newHeight, out float staggerTime)
+    {
         Tween tween = null;
+        staggerTime = 0;
         for (int i = 0; i < characterList.Count; i++)
         {
             var chara = characterList[i];
             tween = chara.DoAdjustPosTween(posStart - (i * newHeight));
+            staggerTime = Mathf.Max(chara.AdjustTweenTime / 2, staggerTime);
         }
-        yield return tween.WaitForCompletion();
+        return tween;
     }
 
     public void SetExpression(CharacterData data, string expression)

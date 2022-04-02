@@ -135,6 +135,13 @@ public class VNPlusCharacter : MonoBehaviour
         return tween;
     }
 
+    public Tween PlayLeaveTween()
+    {
+        var tween = mainRect.DOScaleY(0, joinTweenTime);
+        CustomTweenEase(tween, joinEase, customJoinEase, useCustomJoinEase);
+        return tween;
+    }
+
     private void CustomTweenEase(Tween tween, Ease ease, AnimationCurve customEase, bool useCustom)
     {
         if (useCustom)

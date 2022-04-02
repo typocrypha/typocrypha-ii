@@ -203,6 +203,12 @@ public class DialogGraphParser : MonoBehaviour
                     StartCoroutine(WaitOnFunc(vnPlusView.IsReadyToContinue));
                     return null;
                 }
+                else if (currNode is RemoveCharacter removeNode)
+                {
+                    vnPlusView.RemoveCharacter(removeNode.characterData);
+                    StartCoroutine(WaitOnFunc(vnPlusView.IsReadyToContinue));
+                    return null;
+                }
                 else if (currNode is SetPose setPoseNode)
                 {
                     vnPlusView.SetPose(setPoseNode.characterData, setPoseNode.pose);
