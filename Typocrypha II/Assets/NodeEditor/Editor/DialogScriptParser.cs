@@ -63,7 +63,10 @@ public class DialogScriptParser : EditorWindow
         {"end", typeof(GameflowEndNode) },
         {"start" , typeof(GameflowStartNode)},
         {"endt", typeof(EndAndTransition) },
-        {"setvar", typeof(SetVariableNode) }
+        {"setvar", typeof(SetVariableNode) },
+        {"setexpr", typeof(SetExpression) },
+        {"setexpression", typeof(SetExpression) },
+        {"setpose", typeof(SetPose) },
     };
 
     AnimationCurve bgmFadeIn = new AnimationCurve(); // Default fade in curve
@@ -261,6 +264,20 @@ public class DialogScriptParser : EditorWindow
             var gnode = CreateNode(RemoveCharacter.ID) as RemoveCharacter;
             gnode.characterData = GetCharacterData(args[1]);
             nodes.Add(gnode);
+        }
+        else if (nodeType == typeof(SetExpression))
+        {
+            var node = CreateNode(SetExpression.ID) as SetExpression;
+            node.characterData = GetCharacterData(args[1]);
+            node.expr = args[2];
+            nodes.Add(node);
+        }
+        else if (nodeType == typeof(SetPose))
+        {
+            var node = CreateNode(SetPose.ID) as SetPose;
+            node.characterData = GetCharacterData(args[1]);
+            node.pose = args[2];
+            nodes.Add(node);
         }
         else if (nodeType == typeof(PlayBgm))
         {
