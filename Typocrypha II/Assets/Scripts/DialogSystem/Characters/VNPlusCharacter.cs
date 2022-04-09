@@ -9,6 +9,7 @@ public class VNPlusCharacter : MonoBehaviour
 {
     private static readonly Color highlightColor = Color.white;
     private static readonly Color noHighlightColor = Color.gray;
+    private const float leftColAdjustment = 0.1f;
 
     public DialogViewVNPlus.CharacterColumn Column => column;
     [SerializeField] private DialogViewVNPlus.CharacterColumn column;
@@ -94,6 +95,13 @@ public class VNPlusCharacter : MonoBehaviour
             var poseData = data.poses[pose];
             poseImage.sprite = poseData.pose;
             // Set position
+            float xValue = poseData.xCenterNormalized;
+            if(column == DialogViewVNPlus.CharacterColumn.Left)
+            {
+                xValue = Mathf.Abs(1 - xValue) + leftColAdjustment;
+            }
+            poseImage.rectTransform.anchorMin = new Vector2(xValue, poseData.yHeadTopNormalized);
+            poseImage.rectTransform.anchorMax = new Vector2(xValue, poseData.yHeadTopNormalized);
             // Set save data
         }
         else
