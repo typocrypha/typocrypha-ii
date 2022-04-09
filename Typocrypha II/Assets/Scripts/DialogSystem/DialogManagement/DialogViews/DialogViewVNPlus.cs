@@ -56,9 +56,9 @@ public class DialogViewVNPlus : DialogView
             return;
         }
         readyToContinue = false;
-        StartCoroutine(RmCharacterCR(characterMap[data.name]));
+        StartCoroutine(RmCharacterCR(characterMap[data.name], data.name));
     }
-    private IEnumerator RmCharacterCR(VNPlusCharacter character)
+    private IEnumerator RmCharacterCR(VNPlusCharacter character, string name)
     {
 
         yield return character.PlayLeaveTween().WaitForCompletion();
@@ -78,6 +78,7 @@ public class DialogViewVNPlus : DialogView
                 yield return StartCoroutine(AdjustCharacterListPostLeaveCR(leftCharacterContainer, leftCharacterList));
             }
         }
+        characterMap.Remove(name);
         readyToContinue = true;
     }
 
