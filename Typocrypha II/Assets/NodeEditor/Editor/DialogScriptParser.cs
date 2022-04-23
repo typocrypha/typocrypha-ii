@@ -26,7 +26,7 @@ public class DialogScriptParser : EditorWindow
 
     readonly char[] lineDelim = new char[] { '\n' }; // Line delimiter.
     readonly char[] argDelim = new char[] { ',' }; // List of arguments delimiter.
-    readonly char[] nameMarker = new char[] { ':' }; // Speaker's name marker for dialog lines.
+    const char nameMarker = ':'; // Speaker's name marker for dialog lines.
     readonly char[] nodeMarker = new char[] { '>' }; // Node marker.
     readonly char[] viewSwitchMarker = new char[] { '+' }; // View switching marker.
     readonly char[] exprMarker = new char[] { '(', ')' }; // Speaker's expression marker for dialog lines.
@@ -63,7 +63,10 @@ public class DialogScriptParser : EditorWindow
         {"end", typeof(GameflowEndNode) },
         {"start" , typeof(GameflowStartNode)},
         {"endt", typeof(EndAndTransition) },
-        {"setvar", typeof(SetVariableNode) }
+        {"setvar", typeof(SetVariableNode) },
+        {"setexpr", typeof(SetExpression) },
+        {"setexpression", typeof(SetExpression) },
+        {"setpose", typeof(SetPose) },
     };
 
     AnimationCurve bgmFadeIn = new AnimationCurve(); // Default fade in curve
@@ -262,6 +265,20 @@ public class DialogScriptParser : EditorWindow
             gnode.characterData = GetCharacterData(args[1]);
             nodes.Add(gnode);
         }
+        else if (nodeType == typeof(SetExpression))
+        {
+            var node = CreateNode(SetExpression.ID) as SetExpression;
+            node.characterData = GetCharacterData(args[1]);
+            node.expr = args[2];
+            nodes.Add(node);
+        }
+        else if (nodeType == typeof(SetPose))
+        {
+            var node = CreateNode(SetPose.ID) as SetPose;
+            node.characterData = GetCharacterData(args[1]);
+            node.pose = args[2];
+            nodes.Add(node);
+        }
         else if (nodeType == typeof(PlayBgm))
         {
             var gnode = CreateNode(PlayBgm.ID) as PlayBgm;
@@ -320,7 +337,9 @@ public class DialogScriptParser : EditorWindow
     // Parses a single dialog line. Returns constructed nodes.
     List<Node> ParseDialogNode(string line)
     {
-        string[] dialogLine = line.Split(nameMarker, escape);
+        int nameMarkerIndex = line.IndexOf(nameMarker);
+        int dialogStartIndex = nameMarkerIndex + 1;
+        string[] dialogLine = new string[] { nameMarkerIndex == -1 ? "" : line.Substring(0, nameMarkerIndex), line.Substring(dialogStartIndex, line.Length - dialogStartIndex)};
         List<Node> nodes = new List<Node>();
         string preMarker = dialogLine[0];
         // Remove specifiers from character name
