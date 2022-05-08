@@ -89,7 +89,7 @@ public static class Damage
             return;
         }
         float hitChance = 1 * CompareStatsWeak(caster.Stats.Acc, target.Stats.Evade);
-        results.Miss = (Random.Range(0, 1) > hitChance);
+        results.Miss = (Random.Range(0f, 1f) > hitChance);
     }
     /// <summary>
     /// Sets the Crit property and modifies damage and stagger based on a standard crit check
