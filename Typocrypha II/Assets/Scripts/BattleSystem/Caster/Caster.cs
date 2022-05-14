@@ -116,7 +116,7 @@ public class Caster : FieldObject
             else
             {
                 ui?.onHealthChanged.Invoke((float)health / Stats.MaxHP);
-                ui?.onHealthChangedNumber.Invoke(value + "/" + Stats.MaxHP);
+                ui?.onHealthChangedNumber.Invoke(health + "/" + Stats.MaxHP);
             }         
         }
     }
@@ -132,7 +132,7 @@ public class Caster : FieldObject
                 BStatus = BattleStatus.Dead;
             }
             ui?.onSpChanged.Invoke((float)sp / Stats.MaxSP);
-            ui?.onHealthChangedNumber.Invoke(value + "/" + Stats.MaxSP);
+            ui?.onHealthChangedNumber.Invoke(sp + "/" + Stats.MaxSP);
         }
     }
     int sp;
