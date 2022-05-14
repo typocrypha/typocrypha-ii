@@ -18,9 +18,8 @@ namespace FXText
 
         private void Update()
         {
-            for (int i = 0; i < text.textInfo.characterCount; ++i)
+            for (int charIndex = 0; charIndex < text.textInfo.characterCount && charIndex < text.text.Length; ++charIndex)
             {
-                int charIndex = i;
                 if (char.IsWhiteSpace(text.text[charIndex]))
                 {
                     continue;
@@ -28,15 +27,30 @@ namespace FXText
                 int meshIndex = text.textInfo.characterInfo[charIndex].materialReferenceIndex;
                 int vertexIndex = text.textInfo.characterInfo[charIndex].vertexIndex;
                 Color32[] vertexColors = text.textInfo.meshInfo[meshIndex].colors32;
-                for (int j = 0; j < vertsInQuad; j++)
+                bool inPair = false;
+                for(int pairIndex = 0; pairIndex < ind.Count / 2; pairIndex += 2)
                 {
-                    if (i >= ind[0] && i < ind[1])
-                        vertexColors[vertexIndex + j] = color;
-                    else
-                        vertexColors[vertexIndex + j] = white;
+                    if(charIndex >= ind[pairIndex] && charIndex < ind[pairIndex + 1])
+                    {
+                        inPair = true;
+                        SetVertexColors(vertexColors, vertexIndex, color);
+                        break;
+                    }
+                }
+                if (!inPair)
+                {
+                    SetVertexColors(vertexColors, vertexIndex, white);
                 }
             }
             text.UpdateVertexData(TMPro.TMP_VertexDataUpdateFlags.All);
+        }
+
+        private void SetVertexColors(Color32[] vertexColors, int vertexIndex, Color32 newColor)
+        {
+            for (int quadIndex = 0; quadIndex < vertsInQuad; quadIndex++)
+            {
+                vertexColors[vertexIndex + quadIndex] = newColor;
+            }
         }
     }
 }
