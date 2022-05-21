@@ -365,4 +365,16 @@ public class Caster : FieldObject
                 return null;
         }
     }
+
+    public void CastImmediate(Spell spell, Battlefield.Position target)
+    {
+        var actor = GetComponent<ATB3.ATBActor>();
+        if(actor == null) 
+            return;
+        ATB3.ATBManager.instance.EnterSolo(actor);
+        Spell = spell;
+        TargetPos = target;
+        actor.BaseStateMachine.PerformTransition(ATB3.ATBStateID.Cast);
+
+    }
 }

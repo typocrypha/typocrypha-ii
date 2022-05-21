@@ -14,11 +14,11 @@ public class AbilityDestroyIfHitByTag : CasterAbility
 
     public override void OnHit(RootWordEffect effect, Caster caster, Caster target, CastResults castResults)
     {
-        if (!effect.tags.Contains(tag))
+        if (!effect.tags.Contains(tag) || castResults.Miss)
         {
             return;
         }
-        target.OnSpiritMode += () => SpellManager.instance.Cast(castOnDestroy, target, target.FieldPos);
+        target.OnSpiritMode += () => target.CastImmediate(castOnDestroy, target.FieldPos);
         target.Damage(1000);
     }
 }
