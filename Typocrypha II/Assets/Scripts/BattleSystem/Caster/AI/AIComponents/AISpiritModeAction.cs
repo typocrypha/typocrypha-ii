@@ -32,5 +32,6 @@ public class AISpiritModeAction : AIComponent
         caster.Stagger = spiritStagger;
         caster.Stunned = false;
         caster.ChargeTime = action.Cost * caster.Stats.CastingSpeedMod;
+        caster.TargetPos = Battlefield.instance.Player.FieldPos;
     }
 }
