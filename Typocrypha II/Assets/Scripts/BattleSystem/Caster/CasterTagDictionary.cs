@@ -37,12 +37,6 @@ public class CasterTagDictionary : IEnumerable<CasterTag>
         tags.Add(tag);
         AddWithSubTags(tag);
     }
-    public void Add(string tagName)
-    {
-        var tag = TagLookup.instance.GetCasterTag(tagName);
-        if (tag != null)
-            Add(tag);
-    }
     private void AddWithSubTags(CasterTag tag)
     {
         allTags.Add(tag);

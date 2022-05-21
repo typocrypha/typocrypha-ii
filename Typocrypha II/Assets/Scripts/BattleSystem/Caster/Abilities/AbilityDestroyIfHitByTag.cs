@@ -2,24 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AbilityChangeTagOnHit : CasterAbility
+public class AbilityDestroyIfHitByTag : CasterAbility
 {
-    public SpellTag onHitTag;
-    public CasterTag removeTag;
-    public CasterTag addTag;
+    public SpellTag tag;
+    public Spell castOnDestroy;
 
     public override void OnBeforeSpellEffectResolved(RootWordEffect effect, Caster caster, Caster target)
     {
-
+        return;
     }
 
     public override void OnHit(RootWordEffect effect, Caster caster, Caster target, CastResults castResults)
     {
-        if (!effect.tags.Contains(onHitTag))
+        if (!effect.tags.Contains(tag))
         {
             return;
         }
-        target.RemoveTag(removeTag);
-        target.AddTag(addTag);
+        target.OnSpiritMode += () => SpellManager.instance.Cast(castOnDestroy, target, target.FieldPos);
+        target.Damage(1000);
     }
 }
