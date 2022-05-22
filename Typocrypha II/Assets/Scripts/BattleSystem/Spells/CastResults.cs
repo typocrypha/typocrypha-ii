@@ -21,4 +21,6 @@ public class CastResults
         this.caster = caster;
         this.target = target;
     }
+
+    public bool WillDealDamage => Damage > 0 && (Effectiveness == Reaction.Neutral || Effectiveness == Reaction.Weak || Effectiveness == Reaction.Resist);
 }

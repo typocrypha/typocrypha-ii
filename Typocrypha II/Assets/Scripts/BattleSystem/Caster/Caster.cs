@@ -57,7 +57,7 @@ public class Caster : FieldObject
     /// <summary>
     /// Callbacks applied by an effect target before being hit
     /// </summary>
-    public HitFn OnBeforeEffectApplied { get; set; }
+    public HitFn OnBeforeHitResolved { get; set; }
     /// <summary>
     /// Callbacks applied by an effect target after being hit
     /// </summary>
@@ -299,7 +299,7 @@ public class Caster : FieldObject
         {
             return;
         }
-        OnAfterHitResolved += ability.OnHit;
+        OnBeforeHitResolved += ability.OnBeforeHitApplied;
         OnBeforeSpellEffectResolved += ability.OnBeforeSpellEffectResolved;
     }
     private void RemoveAbilities(CasterTag tag)
@@ -320,7 +320,7 @@ public class Caster : FieldObject
         {
             return;
         }
-        OnAfterHitResolved -= ability.OnHit;
+        OnAfterHitResolved -= ability.OnBeforeHitApplied;
         OnBeforeSpellEffectResolved -= ability.OnBeforeSpellEffectResolved;
     }
     public CasterStats Stats { get => tags.statMod; }

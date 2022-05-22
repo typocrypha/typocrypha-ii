@@ -12,13 +12,15 @@ public class AbilityDestroyIfHitByTag : CasterAbility
         return;
     }
 
-    public override void OnHit(RootWordEffect effect, Caster caster, Caster target, CastResults castResults)
+    public override void OnBeforeHitApplied(RootWordEffect effect, Caster caster, Caster target, CastResults castResults)
     {
-        if (!effect.tags.Contains(tag) || castResults.Miss)
+        if (!effect.tags.Contains(tag) || castResults.Miss || !castResults.WillDealDamage || target.BStatus != Caster.BattleStatus.Normal)
         {
             return;
         }
-        target.OnSpiritMode += () => target.CastImmediate(castOnDestroy, target.FieldPos);
-        target.Damage(1000);
+        void DestroyCast() => target.CastImmediate(castOnDestroy, target.FieldPos);
+        target.OnSpiritMode -= DestroyCast;
+        target.OnSpiritMode += DestroyCast;
+        castResults.Damage = target.Health * 2;
     }
 }

@@ -296,7 +296,7 @@ public static class Damage
 
     public static void ApplyStandard(CastResults results, DamageEffect effect, Caster caster, Caster target)
     {
-        target.OnBeforeEffectApplied?.Invoke(effect, caster, target, results);
+        target.OnBeforeHitResolved?.Invoke(effect, caster, target, results);
         if (results.Miss)
             return;
         if (ApplyReflect(results, effect, caster, target))

@@ -12,20 +12,20 @@ public class BEConditionPlayerCast : BattleEventCondition
 
     void Start()
     {
-        Battlefield.instance.Player.OnBeforeEffectApplied += CheckCast;
+        Battlefield.instance.Player.OnBeforeHitResolved += CheckCast;
     }
 
     private void OnDestroy()
     {
         if (currCasts < numCasts)
-            Battlefield.instance.Player.OnBeforeEffectApplied -= CheckCast;
+            Battlefield.instance.Player.OnBeforeHitResolved -= CheckCast;
     }
 
     public void CheckCast(RootWordEffect effect,Caster caster,Caster target, CastResults data)
     {
         currCasts++;
         if (currCasts >= numCasts)
-            Battlefield.instance.Player.OnBeforeEffectApplied -= CheckCast;
+            Battlefield.instance.Player.OnBeforeHitResolved -= CheckCast;
     }
 
     public override bool Check()

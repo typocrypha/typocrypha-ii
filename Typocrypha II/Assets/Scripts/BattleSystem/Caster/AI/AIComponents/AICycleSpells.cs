@@ -21,15 +21,15 @@ public class AICycleSpells : AIComponent
 
     private void OnEnable()
     {
-        caster.OnAfterCastResolved += (spell, self) => CycleSpell();
+        caster.OnAfterCastResolved += CycleSpell;
     }
 
     private void OnDisable()
     {
-        caster.OnAfterCastResolved -= (spell, self) => CycleSpell();
+        caster.OnAfterCastResolved -= CycleSpell;
     }
 
-    public void CycleSpell()
+    public void CycleSpell(Spell spell, Caster self)
     {
         if (++curr >= spells.Count)
             curr = loopIndex;
