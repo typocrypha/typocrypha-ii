@@ -100,6 +100,8 @@ public class Caster : FieldObject
     }
     private BattleStatus status = BattleStatus.Normal;
 
+    public bool IsDeadOrFled => status == BattleStatus.Dead || status == BattleStatus.Fled;
+
     #endregion
 
     #region Health properties and UI functionality    
@@ -364,17 +366,5 @@ public class Caster : FieldObject
             default:
                 return null;
         }
-    }
-
-    public void CastImmediate(Spell spell, Battlefield.Position target)
-    {
-        var actor = GetComponent<ATB3.ATBActor>();
-        if(actor == null) 
-            return;
-        ATB3.ATBManager.instance.EnterSolo(actor);
-        Spell = spell;
-        TargetPos = target;
-        actor.BaseStateMachine.PerformTransition(ATB3.ATBStateID.Cast);
-
     }
 }

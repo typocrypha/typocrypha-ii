@@ -337,14 +337,16 @@ public static class Damage
     public static void ApplyResearch(CastResults results, RootWordEffect effect, Caster caster, Caster target)
     {
         if(!MoveDoesDamage(results.Effectiveness))
-                return;
+            return;
+        if (string.IsNullOrWhiteSpace(target.ResearchKey))
+            return;
         if (caster.CasterClass == Caster.Class.Player && target.BStatus == Caster.BattleStatus.SpiritMode)
         {
             var research = PlayerDataManager.instance.researchData;
             research.Add(target.ResearchKey, target.ResearchAmount);
             if (research.ReadyToDecode(target.ResearchKey))
             {
-                var word = research.GetData(target.ResearchKey).unlockedWord;
+                var word = research.GetData(target.ResearchKey)?.unlockedWord;
                 if (word == null)
                     return;
                 IEnumerator LogDecoded(bool success)

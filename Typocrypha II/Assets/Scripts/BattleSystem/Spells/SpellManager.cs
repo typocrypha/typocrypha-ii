@@ -30,9 +30,9 @@ public class SpellManager : MonoBehaviour
     /// Cast the spell's effect with a given caster at a given target position 
     /// Returns the case coroutine (in case the end of casting must be waited on)
     /// </summary>
-    public Coroutine Cast(Spell spell, Caster caster, Battlefield.Position target)
+    public Coroutine Cast(Spell spell, Caster caster, Battlefield.Position target, string castMessageOverride = null)
     {
-        return StartCoroutine(CastCR(spell, caster, target));
+        return StartCoroutine(CastCR(spell, caster, target, castMessageOverride));
     }
 
     /// <summary> 
@@ -58,7 +58,7 @@ public class SpellManager : MonoBehaviour
         return (cloneWords.Where((word) => word is RootWord).Select((word) => word as RootWord)).ToArray();
     }
     /// <summary> Cast the spell effects and play the associated fx</summary>
-    private IEnumerator CastCR(Spell spell, Caster caster, Battlefield.Position target)
+    private IEnumerator CastCR(Spell spell, Caster caster, Battlefield.Position target, string castMessageOverride = null)
     {
         // If the spell is restricted, break and do not cast
         if (SpellRestrictions.instance.IsRestricted(spell, caster, target, true))
@@ -70,7 +70,7 @@ public class SpellManager : MonoBehaviour
             }
             yield break;
         }
-        SpellFxManager.instance.LogMessage(caster.DisplayName + " casts " + spell.ToDisplayString(), spell.Icon);
+        SpellFxManager.instance.LogMessage(castMessageOverride ?? caster.DisplayName + " casts " + spell.ToDisplayString(), spell.Icon);
         yield return SpellFxManager.instance.PlayMessages();
         var roots = Modify(spell);
         // Critical chance
@@ -137,6 +137,10 @@ public class SpellManager : MonoBehaviour
                     yield return new WaitForSeconds(delayBeforeLog);
                     yield return SpellFxManager.instance.PlayMessages();
                 }
+                if (HasInterrupts)
+                {
+                    yield return StartCoroutine(ProcessInterrupts());
+                }
                 // Log the effects of this effect
                 rootResults.Add(effectResults);
             }
@@ -180,6 +184,25 @@ public class SpellManager : MonoBehaviour
         yield return SpellFxManager.instance.PlayMessages();
     }
 
+    public void LogInterruptCast(Spell spell, Caster caster, Battlefield.Position target, string messageOverride = null)
+    {
+        interrupts.Enqueue(new InterruptData(spell, caster, target, messageOverride));
+    }
+
+    private IEnumerator ProcessInterrupts()
+    {
+        while (HasInterrupts)
+        {
+            var interrupt = interrupts.Dequeue();
+            if (interrupt.caster == null || interrupt.caster.IsDeadOrFled)
+                continue;
+            yield return Cast(interrupt.spell, interrupt.caster, interrupt.target, interrupt.msgOverride);
+            //yield return Cast(interrupt.spell, interrupt.caster, interrupt.target);
+        }
+    }
+
+    public bool HasInterrupts => interrupts.Count > 0;
+
     public void LogInteractivePopup(GameObject prefab, string title, string prompt, float time, Func<bool, IEnumerator> onComplete = null)
     {
         popupRequests.Enqueue(new PopupData() { popupPrefab = prefab, title = title, prompt = prompt, time = time, onComplete = onComplete });
@@ -218,6 +241,23 @@ public class SpellManager : MonoBehaviour
         public float time;
         public GameObject popupPrefab;
         public Func<bool, IEnumerator> onComplete;
+    }
+
+    private readonly Queue<InterruptData> interrupts = new Queue<InterruptData>();
+    private class InterruptData
+    {
+        public Spell spell;
+        public Caster caster;
+        public Battlefield.Position target;
+        public string msgOverride;
+
+        public InterruptData(Spell spell, Caster caster, Battlefield.Position target, string msgOverride)
+        {
+            this.spell = spell;
+            this.caster = caster;
+            this.target = target;
+            this.msgOverride = msgOverride;
+        }
     }
 }
 

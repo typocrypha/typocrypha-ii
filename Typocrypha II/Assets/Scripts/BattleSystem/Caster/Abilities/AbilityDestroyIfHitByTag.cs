@@ -6,6 +6,7 @@ public class AbilityDestroyIfHitByTag : CasterAbility
 {
     public SpellTag tag;
     public Spell castOnDestroy;
+    public string message;
 
     public override void OnBeforeSpellEffectResolved(RootWordEffect effect, Caster caster, Caster target)
     {
@@ -18,9 +19,7 @@ public class AbilityDestroyIfHitByTag : CasterAbility
         {
             return;
         }
-        void DestroyCast() => target.CastImmediate(castOnDestroy, target.FieldPos);
-        target.OnSpiritMode -= DestroyCast;
-        target.OnSpiritMode += DestroyCast;
+        SpellManager.instance.LogInterruptCast(castOnDestroy, target, target.FieldPos, string.IsNullOrWhiteSpace(message) ? null : target.DisplayName + " " + message);
         castResults.Damage = target.Health * 2;
     }
 }
