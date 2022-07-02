@@ -11,11 +11,15 @@ public class VNPlusCharacter : MonoBehaviour
     private static readonly Color noHighlightColor = Color.gray;
     private const float leftColAdjustment = 0.1f;
 
+    private float nameplateRatio = 0.1f;
+
     public DialogViewVNPlus.CharacterColumn Column => column;
     [SerializeField] private DialogViewVNPlus.CharacterColumn column;
     [SerializeField] private Image poseImage;
     [SerializeField] private Image expressionImage;
-    [SerializeField] private Image nameplateImage;
+    [SerializeField] private Image nameplateBackground;
+    [SerializeField] private float nameplateBackgroundOpacity = 0.75f;
+    [SerializeField] private Image nameplateOutline;
     [SerializeField] private TextMeshProUGUI nameplateText;
     [SerializeField] private RectTransform mainRect;
     [Header("Join Tween")]
@@ -52,7 +56,11 @@ public class VNPlusCharacter : MonoBehaviour
             SetPose(DialogCharacterManager.defaultPose);
             SetExpression(DialogCharacterManager.defaultExpr);
             nameplateText.color = data.characterColorDark;
-            nameplateImage.color = data.characterColorLight;
+            nameplateOutline.color = data.characterColorDark;
+
+            Color nameplateCol = data.characterColorLight;
+            nameplateCol.a = nameplateBackgroundOpacity;
+            nameplateBackground.color = nameplateCol;
         }
     }
     private CharacterData data;
