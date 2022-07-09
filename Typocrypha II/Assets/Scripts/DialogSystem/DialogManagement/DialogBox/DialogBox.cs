@@ -34,7 +34,8 @@ public class DialogBox : MonoBehaviour, IDialogBox
 
     #region Constants
     const float defaultScrollDelay = 0.001f; // Default text scrolling speed.
-    const int defaultSpeechInterval = 2; // Default number of text scrolls before speech sfx plays
+    const int defaultScrollBatch = 2; // Default number of characters displayed each scroll.
+    const int defaultSpeechInterval = 4; // Default number of characters before speech sfx plays
     const float textPad = 16f; // Padding between text rect and dialog box rect.
     #endregion
 
@@ -195,7 +196,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
             yield return new WaitWhile(() => ph.Pause); // Wait on pause.
             if (pos % speechInterval == 0)
                 foreach(var v in voiceAS) if (v != null && v.clip != null) v.Play();
-            pos++; // Advance text position.
+            pos+=defaultScrollBatch; // Advance text position.
             hideText.ind[0] = pos;
             if (ScrollDelay > 0f)
             {

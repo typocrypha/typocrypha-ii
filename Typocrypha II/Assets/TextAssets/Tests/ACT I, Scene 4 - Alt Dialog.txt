@@ -1,0 +1,250 @@
+﻿//Battle design details: https://docs.google.com/spreadsheets/d/1hu8UtqEBtk_WAL-sV_cMHarX_OTckF7_suagISN0cGE/edit#gid=0
+//Round 1: Don’t Stop Typing
+//Opening Dialog:
+>start,alt-ACT-I-4-1-Opening
+
+
++vnplus
+
+
+>addchar,Ayin,0,0,left
+
+
+>addchar,Adelai,0,0,right
+
+
+Adelai(frustrated): We’re surrounded!
+
+
+Narrator: Demons are pouring out of the train station.
+
+
+Adelai(serious): ...
+
+
+Adelai(serious): We need to break through. 
+
+
+Adelai: I’ll take the ones in front, cover me!
+
+
+Ayin(nervous): I-I’ll try...!
+//If player types and enters a spell successfully:
+>start,alt-ACT-I-4-1-Success
+
+
++vnplus
+
+
+>addchar,Ayin,0,0,left
+
+
+>addchar,Adelai,0,0,right
+
+
+Adelai(caring): Hey, so you can still fight after all!
+
+
+Ayin(embarrassed): Somehow, haha...
+
+
+Adelai(normal): OK, just keep on typing in those spells!
+
+
+Adelai(normal): And remember...
+
+
++bubble
+
+
+Adelai[1,2]: After you use a spell it goes on {c,ui-terms}cooldown.{c}
+
+
+Adelai[1,2]: You’ll have to {c,ui-terms}use different spells{c} until it recharges.
+
+
+Adelai[1,2]: Just keep using whatever’s highlighted in your {c,ui-terms}Spell List{c}--it should be located at the {c,ui-terms}bottom left of your Typocrypha interface.{c}
+//Otherwise, after getting hit without attacking:
+>start,alt-ACT-I-4-1-Hit
+
+
+>addchar,Ayin,0,0,left
+
+
+>addchar,Adelai,0,0,right
+
+
++vnplus
+
+
+Adelai(serious): Ayin! What are you doing?
+
+
+Ayin(uncomfortable): I’m sorry I-
+
+
+Adelai(serious): Move out of the way!
+
+
++bubble
+
+
+Adelai[1,2]: SWORD!
+
+
+// TODO: Changeling takes damage.
+
+
+Adelai[1,2]: Ayin, you have to {c,ui-terms}type the spells{c} into your Typocrypha! Remember?
+
+
+Adelai[1,2]: In the {c,ui-terms}bottom left of your Typocrypha interface{c} is your {c,ui-terms}Spell List.{c}
+
+
+Adelai[1,2]: Try typing in the spell “PUNCH” and then {c,ui-terms}press enter{c} to cast the spell!
+
+
+// TODO: Waits for player to cast a spell. Enemy is paused in meantime.
+
+
+//Round 2: Table for Two
+//Opening Dialog:
+>start,alt-ACT-I-4-2-Opening
+
+
+>addchar,Ayin,0,0,left
+
+
+>addchar,Adelai,0,0,right
+
+
++vnplus
+
+
+Ayin(nervous): There’s more of them!
+
+
+Adelai(serious): You’ll have to use the targeting functionality of your Typocrypha, Ayin!
+
+
++bubble
+
+
+Adelai[1,2]: {c,ui-terms}Use the arrow keys to move your target cursor{c} to one of those demons.
+
+
+Adelai[1,2]: Your spells only hit a single target, so you’ll have to beat them separately.
+
+
+//After defeating one of the changelings:
+>start,alt-ACT-I-4-2-Defeat changeling
+
+
+Adelai[1,2]: Good work, Ayin!
+
+
+Adelai[1,2]: Now retarget and finish off the other one!
+
+
+Adelai[1,2]: If it’s easier, you can also use the {c,ui-terms}tab key to cycle through targets.{c}
+
+
+//Round 3: Three’s a Crowd
+//Opening Dialog:
+>start,alt-ACT-I-4-3-Opening
+
+
++vnplus
+
+
+>addchar,Ayin,0,0,left
+
+
+>addchar,Adelai,0,0,right
+
+
+Adelai(frustrated): Um, hey Ayin? I know these demons aren’t very strong, but...
+
+
+Adelai(teasing): Shouldn’t you use more spells than just PUNCH and KICK?
+
+
+Ayin(concerned): Wait, aren’t those the only ones I have?
+
+
+Adelai(serious): What.
+
+
+Adelai(caring): ... OH! Ayin you still have your Typocrypha on CIVILIAN mode!
+
+
+Adelai: Here, let me just...
+
+
++bubble
+
+
+Narrator[1,1]: Typocrypha mode switch: BATTLE mode.
+
+
+Adelai[1,2]: There!
+
+
+Ayin[0,0]: W-Woah! What do all these spells do?
+
+
+Adelai[1,2]: No time to explain! Just keep typing!!
+
+
+//Round 4: Right Back At Ya!
+//Opening Dialog:
+>start,alt-ACT-I-4-4-Opening
+
+
+Adelai[1,2]: See, you’re doing fine!
+
+
+Adelai[1,2]: Now that you have more spells, you can start looking out for opportunities to {c,ui-terms}Counter{c} enemy spells!
+
+
+Ayin[0,0]: Counter?
+
+
+Adelai[1,2]: Whenever you see an enemy casting a spell that you also have, try hitting them with it!
+
+
+Adelai[1,2]: When you see those Tanukis charging up a LANCE spell, use your own LANCE to stagger them!
+
+
+Adelai[1,2]: Your Typocrypha should highlight those opportunities in Orange, so just keep a lookout!
+
+
+//When an enemy is stunned
+>start,alt-ACT-I-4-4-Stun
+
+
+Adelai[1,2]: You {c,ui-terms}stunned{c} that demon, Ayin!
+
+
+Adelai[1,2]: Whenever you counter a demon or hit it with a weakness, it’ll get {c,ui-terms}staggered.{c}
+
+
+Adelai[1,2]: Keep on {c,ui-terms}staggering{c} a demon, and eventually you’ll {c,ui-terms}stun{c} them!
+
+
+Adelai[1,2]: {c,ui-terms}Stunned demons can’t use spells for a while{c}, leaving them open to attack!
+
+
+Adelai[1,2]: In your Typocrypha HUD, you can see how many times you have to stagger a demon to stun them in the {c,ui-terms}Shield icon.{c}
+
+
+Adelai[1,2]: Keeping your enemy stunned is a great way to do damage and also to protect yourself!
+//Round 5: Demon-Wave Tactics
+//Opening Dialog:
+>start,alt-ACT-I-4-5-Opening
+
+
+Adelai[1,2]: I think this is the last of them! 
+
+
+Adelai[1,2]: They’ll start swarming us out of desperation, so just keep taking them down!

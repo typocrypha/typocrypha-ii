@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Checks an caster's health.
+/// Checks when caster casts spell certain number of times
 /// </summary>
 public class BEConditionPlayerCast : BattleEventCondition
 {
+    public string casterName; // Name of caster whose health you want to check.
     public int numCasts;
     private int currCasts = 0;
 
@@ -24,7 +25,7 @@ public class BEConditionPlayerCast : BattleEventCondition
     public void CheckCast(RootWordEffect effect,Caster caster,Caster target, CastResults data)
     {
         currCasts++;
-        if (currCasts >= numCasts)
+        if (caster.DisplayName == casterName && currCasts >= numCasts)
             Battlefield.instance.Player.OnBeforeHitResolved -= CheckCast;
     }
 
