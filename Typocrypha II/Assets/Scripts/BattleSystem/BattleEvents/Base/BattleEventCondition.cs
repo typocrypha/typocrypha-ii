@@ -15,6 +15,26 @@ public abstract class BattleEventCondition : MonoBehaviour
         battleEvent = GetComponent<BattleEvent>();
     }
 
+    protected virtual void Start()
+    {
+        AddEventHandlers();
+    }
+
+    protected void OnDestroy()
+    {
+        RemoveEventHandlers();
+    }
+
+    protected virtual void AddEventHandlers()
+    {
+
+    }
+
+    protected virtual void RemoveEventHandlers()
+    {
+
+    }
+
     /// <summary>
     /// Return whether condition has been satisfied.
     /// </summary>

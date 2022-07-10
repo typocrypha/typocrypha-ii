@@ -10,8 +10,9 @@ public class BEConditionTimer : BattleEventCondition
     public float time;
     bool done;
 
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         StartTimer();
     }
 
