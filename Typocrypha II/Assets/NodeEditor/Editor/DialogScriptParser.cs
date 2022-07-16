@@ -72,8 +72,8 @@ public class DialogScriptParser : EditorWindow
         {"setpose", typeof(SetPose) },
     };
 
-    AnimationCurve bgmFadeIn = new AnimationCurve(); // Default fade in curve
-    AnimationCurve bgmFadeOut = new AnimationCurve(); // Default fade out curve
+    AnimationCurve bgmFadeIn = AnimationCurve.EaseInOut(0, 0, 1, 1); // Default fade in curve
+    AnimationCurve bgmFadeOut = AnimationCurve.EaseInOut(1, 1, 0, 0); // Default fade out curve
 
     const float nodeSpacing = 40f;
 
@@ -96,15 +96,6 @@ public class DialogScriptParser : EditorWindow
         GUILayout.BeginHorizontal();
         GUILayout.Label("Node Canvas");
         canvas = EditorGUILayout.ObjectField(canvas, typeof(NodeCanvas), false) as NodeCanvas;
-        GUILayout.EndHorizontal();
-
-        GUILayout.EndVertical();
-        // Custom settings
-        GUILayout.BeginVertical();
-
-        GUILayout.BeginHorizontal("Box");
-        bgmFadeIn = EditorGUILayout.CurveField("BGM Fade In Curve", bgmFadeIn, GUILayout.Height(50f));
-        bgmFadeOut = EditorGUILayout.CurveField("BGM Fade Out Curve", bgmFadeOut, GUILayout.Height(50f));
         GUILayout.EndHorizontal();
 
         GUILayout.EndVertical();
