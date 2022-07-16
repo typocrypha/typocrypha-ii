@@ -38,10 +38,30 @@ public class DialogViewVNPlus : DialogView
     private readonly Dictionary<string, VNPlusCharacter> characterMap = new Dictionary<string, VNPlusCharacter>(maxCharactersPerColumn * 2);
     private readonly List<VNPlusCharacter> rightCharacterList = new List<VNPlusCharacter>(maxCharactersPerColumn);
     private readonly List<VNPlusCharacter> leftCharacterList = new List<VNPlusCharacter>(maxCharactersPerColumn);
+    private float originalMessageAnchorPosY = float.MinValue;
+
+    private void Awake()
+    {
+        originalMessageAnchorPosY = messageContainer.anchoredPosition.y;
+    }
 
     public override void CleanUp()
     {
+        ClearLog();
+    }
 
+    private void ClearLog()
+    {
+        StopAllCoroutines();
+        foreach (Transform child in messageContainer)
+        {
+            Destroy(child.gameObject);
+        }
+        messageTween?.Complete();
+        if (originalMessageAnchorPosY != float.MinValue)
+        {
+            messageContainer.anchoredPosition = new Vector2(messageContainer.anchoredPosition.x, originalMessageAnchorPosY);
+        }
     }
 
     public bool IsReadyToContinue() => readyToContinue;
