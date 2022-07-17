@@ -8,6 +8,7 @@ using System.Linq;
 public class DialogViewVNPlus : DialogView
 {
     private const float tweenTime = 0.5f;
+    private const float scaleTweenTime = 0.25f;
     private const int maxCharactersPerColumn = 5;
 
     public enum CharacterColumn
@@ -24,6 +25,9 @@ public class DialogViewVNPlus : DialogView
     [SerializeField] private Ease messageLayoutEase;
     [SerializeField] private bool useCustomMessageLayoutEase;
     [SerializeField] private AnimationCurve customMessageLayoutEase;
+    [SerializeField] private Ease messageScaleEase;
+    [SerializeField] private bool useCustomMessageScaleEase;
+    [SerializeField] private AnimationCurve customMessageScaleEase;
     [SerializeField] private GameObject rightCharacterPrefab;
     [SerializeField] private GameObject leftCharacterPrefab;
     [SerializeField] private RectTransform rightCharacterContainer;
@@ -34,6 +38,7 @@ public class DialogViewVNPlus : DialogView
 
     private bool readyToContinue = false;
     private Tween messageTween;
+    private Tween messageScaleTween;
 
     private readonly Dictionary<string, VNPlusCharacter> characterMap = new Dictionary<string, VNPlusCharacter>(maxCharactersPerColumn * 2);
     private readonly List<VNPlusCharacter> rightCharacterList = new List<VNPlusCharacter>(maxCharactersPerColumn);
@@ -57,7 +62,7 @@ public class DialogViewVNPlus : DialogView
         {
             Destroy(child.gameObject);
         }
-        messageTween?.Complete();
+        CompleteMessageTweens();
         if (originalMessageAnchorPosY != float.MinValue)
         {
             messageContainer.anchoredPosition = new Vector2(messageContainer.anchoredPosition.x, originalMessageAnchorPosY);
@@ -249,11 +254,11 @@ public class DialogViewVNPlus : DialogView
         {
             HighlightCharacter(dialogItem.CharacterData);
         }
-        var prefab = GetMessagePrefab(dialogItem.CharacterData);
+        var prefab = GetMessagePrefab(dialogItem.CharacterData, out bool isNarrator);
         var dialogBox = Instantiate(prefab, messageContainer).GetComponent<DialogBox>();
         SetCharacterSpecificUI(dialogBox, dialogItem.CharacterData);
         readyToContinue = false;
-        StartCoroutine(AnimateNewMessageIn(dialogBox, dialogItem));
+        StartCoroutine(AnimateNewMessageIn(dialogBox, dialogItem, isNarrator));
         return dialogBox;
     }
 
@@ -273,8 +278,9 @@ public class DialogViewVNPlus : DialogView
         vnPlusUI.Bind(data[0]);
     }
 
-    private GameObject GetMessagePrefab(List<CharacterData> data)
+    private GameObject GetMessagePrefab(List<CharacterData> data, out bool isNarrator)
     {
+        isNarrator = false;
         if(data.Count > 1)
         {
             throw new System.NotImplementedException("VNPlus mode doesn't currently support multi-character dialog lines");
@@ -288,16 +294,31 @@ public class DialogViewVNPlus : DialogView
         {
             return characterMap[chara.name].Column == CharacterColumn.Left ? leftDialogBoxPrefab : rightDialogBoxPrefab;
         }
+        isNarrator = true;
         return narratorDialogBoxPrefab;
     }
 
-    private IEnumerator AnimateNewMessageIn(DialogBox box, DialogItem item)
+    private IEnumerator AnimateNewMessageIn(DialogBox box, DialogItem item, bool isNarrator)
     {
         box.SetupDialogBox(item);
         yield return null;
         box.SetBoxHeight();
-        messageTween?.Complete();
+        CompleteMessageTweens();
         messageTween = messageContainer.DOAnchorPosY(messageContainer.anchoredPosition.y + (box.GetBoxHeight() + messageLayout.spacing), tweenTime);
+        if (!isNarrator)
+        {
+            box.transform.localScale = new Vector3(0, 0, box.transform.localScale.z);
+            messageScaleTween = box.transform.DOScale(new Vector3(1, 1, box.transform.localScale.z), scaleTweenTime);
+            if (useCustomMessageScaleEase)
+            {
+                messageScaleTween.SetEase(customMessageScaleEase);
+            }
+            else
+            {
+                messageScaleTween.SetEase(messageScaleEase);
+            }
+        }
+
         // Play animation
         if (useCustomMessageLayoutEase)
         {
@@ -310,6 +331,14 @@ public class DialogViewVNPlus : DialogView
         readyToContinue = true;
         box.StartDialogScroll();
         yield break;
+    }
+
+    private void CompleteMessageTweens()
+    {
+        messageTween?.Complete();
+        messageScaleTween?.Complete();
+        messageTween = null;
+        messageScaleTween = null;
     }
 
     public override void SetEnabled(bool e)
