@@ -15,7 +15,7 @@ namespace FXText
         public List<int> ind; // List of text indices to apply effect on: in between consecutive pairs
         protected Text textComp; // Text component attached
 
-        protected const int vertsInQuad = 6; // Number of vertices in a single text quad.
+        protected virtual int vertsInQuad => 6; // Number of vertices in a single text quad.
 
         // Base initialization
         protected override void Awake()
