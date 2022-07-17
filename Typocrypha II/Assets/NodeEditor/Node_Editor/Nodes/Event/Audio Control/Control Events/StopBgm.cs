@@ -28,11 +28,14 @@ namespace Gameflow
         public override void NodeGUI()
         {
             #region FadeIn
-            GUILayout.Label(new GUIContent("Fade Out Curve", tooltipFade), NodeEditorGUI.nodeLabelBoldCentered);
-            GUILayout.BeginVertical();
-            GUILayout.Space(100);
-            fadeCurve = RTEditorGUI.CurveField(new Rect(4, 15, MinSize.x - 10, 100), fadeCurve);
-            GUILayout.EndVertical();
+            if(fadeCurve != null)
+            {
+                GUILayout.Label(new GUIContent("Fade Out Curve", tooltipFade), NodeEditorGUI.nodeLabelBoldCentered);
+                GUILayout.BeginVertical();
+                GUILayout.Space(100);
+                fadeCurve = RTEditorGUI.CurveField(new Rect(4, 15, MinSize.x - 10, 100), fadeCurve);
+                GUILayout.EndVertical();
+            }
             #endregion
         }
     }

@@ -7,25 +7,26 @@ using UnityEngine;
 /// </summary>
 public class BEConditionPlayerNoTarget : BattleEventCondition
 {
-    public int numCasts;
+    [SerializeField] private int numCasts;
     private int currCasts = 0;
 
-    void Start()
+    protected override void AddEventHandlers()
     {
         Battlefield.instance.Player.OnNoTargetHit += CheckCast;
     }
 
-    private void OnDestroy()
+    protected override void RemoveEventHandlers()
     {
-        if (currCasts < numCasts)
-            Battlefield.instance.Player.OnNoTargetHit -= CheckCast;
+        Battlefield.instance.Player.OnNoTargetHit -= CheckCast;
     }
 
     public void CheckCast(Battlefield.Position pos)
     {
         currCasts++;
-        if (currCasts >= numCasts)
-            Battlefield.instance.Player.OnNoTargetHit -= CheckCast;
+        if (Check())
+        {
+            RemoveEventHandlers();
+        }
     }
 
     public override bool Check()

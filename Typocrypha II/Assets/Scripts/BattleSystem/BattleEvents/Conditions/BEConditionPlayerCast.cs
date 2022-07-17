@@ -3,29 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Checks an caster's health.
+/// Check if the player has been hit by X damaging spells
 /// </summary>
 public class BEConditionPlayerCast : BattleEventCondition
 {
-    public int numCasts;
+    [SerializeField] private int numCasts;
     private int currCasts = 0;
 
-    void Start()
+    protected override void AddEventHandlers()
     {
-        Battlefield.instance.Player.OnBeforeEffectApplied += CheckCast;
+        Battlefield.instance.Player.OnAfterCastResolved += CheckCast;
     }
 
-    private void OnDestroy()
+    protected override void RemoveEventHandlers()
     {
-        if (currCasts < numCasts)
-            Battlefield.instance.Player.OnBeforeEffectApplied -= CheckCast;
+        Battlefield.instance.Player.OnAfterCastResolved -= CheckCast;
     }
 
-    public void CheckCast(RootWordEffect effect,Caster caster,Caster target, CastResults data)
+    public void CheckCast(Spell s, Caster caster)
     {
         currCasts++;
-        if (currCasts >= numCasts)
-            Battlefield.instance.Player.OnBeforeEffectApplied -= CheckCast;
+        if (Check())
+        {
+            RemoveEventHandlers();
+        }
     }
 
     public override bool Check()

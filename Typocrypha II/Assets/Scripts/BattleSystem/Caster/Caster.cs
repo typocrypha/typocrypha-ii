@@ -57,7 +57,7 @@ public class Caster : FieldObject
     /// <summary>
     /// Callbacks applied by an effect target before being hit
     /// </summary>
-    public HitFn OnBeforeEffectApplied { get; set; }
+    public HitFn OnBeforeHitResolved { get; set; }
     /// <summary>
     /// Callbacks applied by an effect target after being hit
     /// </summary>
@@ -100,6 +100,8 @@ public class Caster : FieldObject
     }
     private BattleStatus status = BattleStatus.Normal;
 
+    public bool IsDeadOrFled => status == BattleStatus.Dead || status == BattleStatus.Fled;
+
     #endregion
 
     #region Health properties and UI functionality    
@@ -116,7 +118,7 @@ public class Caster : FieldObject
             else
             {
                 ui?.onHealthChanged.Invoke((float)health / Stats.MaxHP);
-                ui?.onHealthChangedNumber.Invoke(value + "/" + Stats.MaxHP);
+                ui?.onHealthChangedNumber.Invoke(health + "/" + Stats.MaxHP);
             }         
         }
     }
@@ -132,7 +134,7 @@ public class Caster : FieldObject
                 BStatus = BattleStatus.Dead;
             }
             ui?.onSpChanged.Invoke((float)sp / Stats.MaxSP);
-            ui?.onHealthChangedNumber.Invoke(value + "/" + Stats.MaxSP);
+            ui?.onHealthChangedNumber.Invoke(sp + "/" + Stats.MaxSP);
         }
     }
     int sp;
@@ -248,21 +250,28 @@ public class Caster : FieldObject
             Destroy(effect);
             statusEffects.Remove(tag);
         }
+        RemoveAbilities(tag);
+
     }
     public void AddTag(CasterTag tag)
     {
+        if(tag == null)
+        {
+            return;
+        }
+        AddAbilities(tag);
         tags.Add(tag);
     }
     public void AddTag(string tagName)
     {
-        tags.Add(tagName);
+        AddTag(TagLookup.instance.GetCasterTag(tagName));
     }
     public void AddTagWithStatusEffect(StatusEffect effect, CasterTag tag)
     {
         if (statusEffects.ContainsKey(tag))
             return;
         statusEffects.Add(tag, effect);
-        tags.Add(tag);
+        AddTag(tag);
     }
     public StatusEffect GetStatusEffect(CasterTag tag)
     {
@@ -273,6 +282,48 @@ public class Caster : FieldObject
     public CasterTagDictionary.ReactionMultiSet GetReactions(SpellTag tag)
     {
         return tags.GetReactions(tag);
+    }
+    private void AddAbilities(CasterTag tag)
+    {
+        AddAbility(tag.ability1);
+        AddAbility(tag.ability2);
+        foreach (var subtag in tag.subTags)
+        {
+            if (!HasTag(subtag))
+            {
+                AddAbilities(subtag);
+            }
+        }
+    }
+    private void AddAbility(CasterAbility ability)
+    {
+        if (ability == null)
+        {
+            return;
+        }
+        OnBeforeHitResolved += ability.OnBeforeHitApplied;
+        OnBeforeSpellEffectResolved += ability.OnBeforeSpellEffectResolved;
+    }
+    private void RemoveAbilities(CasterTag tag)
+    {
+        RemoveAbility(tag.ability1);
+        RemoveAbility(tag.ability2);
+        foreach (var subtag in tag.subTags)
+        {
+            if (!HasTag(subtag))
+            {
+                RemoveAbilities(subtag);
+            }
+        }
+    }
+    private void RemoveAbility(CasterAbility ability)
+    {
+        if(ability == null)
+        {
+            return;
+        }
+        OnAfterHitResolved -= ability.OnBeforeHitApplied;
+        OnBeforeSpellEffectResolved -= ability.OnBeforeSpellEffectResolved;
     }
     public CasterStats Stats { get => tags.statMod; }
 
@@ -289,6 +340,11 @@ public class Caster : FieldObject
     {
         if (ui == null) ui = GetComponentInChildren<CasterUI>();
         tags.RecalculateAggregate();
+        foreach (var tag in tags)
+        {
+            AddAbility(tag.ability1);
+            AddAbility(tag.ability2);
+        }
         sp = Stats.MaxSP;
         Health = Stats.MaxHP;       
         Stagger = Stats.MaxStagger;

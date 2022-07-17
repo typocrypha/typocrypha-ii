@@ -8,18 +8,18 @@ public class AbilityChangeTagOnHit : CasterAbility
     public CasterTag removeTag;
     public CasterTag addTag;
 
-    public override void OnCast(Spell spell, RootWordEffect effect, Caster caster, Caster target)
+    public override void OnBeforeSpellEffectResolved(RootWordEffect effect, Caster caster, Caster target)
     {
 
     }
 
-    public override void OnHit(Spell spell, RootWordEffect effect, Caster caster, Caster target, CastResults castResults)
+    public override void OnBeforeHitApplied(RootWordEffect effect, Caster caster, Caster target, CastResults castResults)
     {
-        //if (contains slashing)
+        if (!effect.tags.Contains(onHitTag))
         {
-            target.RemoveTag(removeTag);
-            target.AddTag(addTag);
+            return;
         }
-        return;
+        target.RemoveTag(removeTag);
+        target.AddTag(addTag);
     }
 }

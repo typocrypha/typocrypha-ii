@@ -104,6 +104,11 @@ namespace ATB3
         // Exit solo mode for this actor (should be at top of stack)
         public void ExitSolo(ATBActor soloActor)
         {
+            if (soloStack.Count == 0)
+            {
+                Debug.LogWarning($"ExitSolo with empty solostack:{soloActor}");
+                return;
+            }
             //Debug.Log("exit:" + soloActor.gameObject.name);
             if (soloActor != soloStack.Pop())
                 Debug.LogError("StateManager: Solo Stack Mismatch");

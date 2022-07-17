@@ -123,6 +123,9 @@ GameObject:
   - component: {fileID: 3153964314891133041}
   - component: {fileID: 2338606548894032303}
   - component: {fileID: 5216593908265871094}
+  - component: {fileID: 4290812349318704635}
+  - component: {fileID: 6789955054606308479}
+  - component: {fileID: 7612677495557903287}
   m_Layer: 0
   m_Name: EnemyUI
   m_TagString: Untagged
@@ -309,8 +312,8 @@ MonoBehaviour:
   onStaggerChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: set_text
+      - m_Target: {fileID: 4531547076429202498}
+        m_MethodName: SetText
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -413,6 +416,55 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEvent_sprite, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
+--- !u!114 &4290812349318704635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1252018226811768606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bb492db6c3383a4ab520be159ebb720, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SpellText: {fileID: 7491740521410653100}
+  CounterableHighlight: {fileID: 6789955054606308479}
+  CounteredHighlight: {fileID: 7612677495557903287}
+--- !u!114 &6789955054606308479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1252018226811768606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff6430cfff7ff1041a624f65344c62be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 7491740521410653100}
+  ind: 000000000000000000000000000000000000000000000000
+  color:
+    serializedVersion: 2
+    rgba: 4278233855
+--- !u!114 &7612677495557903287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1252018226811768606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff6430cfff7ff1041a624f65344c62be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 7491740521410653100}
+  ind: 0000000000000000
+  color:
+    serializedVersion: 2
+    rgba: 4289761419
 --- !u!1 &1274310865103235821
 GameObject:
   m_ObjectHideFlags: 0
@@ -914,7 +966,7 @@ GameObject:
   - component: {fileID: 7165736001775431511}
   - component: {fileID: 7491740521410653100}
   m_Layer: 0
-  m_Name: Spell(Debug)
+  m_Name: SpellText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

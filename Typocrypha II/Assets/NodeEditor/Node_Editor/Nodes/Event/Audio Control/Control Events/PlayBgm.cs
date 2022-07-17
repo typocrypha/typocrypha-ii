@@ -40,11 +40,14 @@ namespace Gameflow
             #endregion
 
             #region FadeIn
-            GUILayout.Label(new GUIContent("Fade In Curve", tooltipFade), NodeEditorGUI.nodeLabelBoldCentered);
-            GUILayout.BeginVertical();
-            GUILayout.Space(100);
-            fadeCurve = RTEditorGUI.CurveField(new Rect(4, 50, MinSize.x - 10, 100), fadeCurve);
-            GUILayout.EndVertical();
+            if(fadeCurve != null)
+            {
+                GUILayout.Label(new GUIContent("Fade In Curve", tooltipFade), NodeEditorGUI.nodeLabelBoldCentered);
+                GUILayout.BeginVertical();
+                GUILayout.Space(100);
+                fadeCurve = RTEditorGUI.CurveField(new Rect(4, 50, MinSize.x - 10, 100), fadeCurve);
+                GUILayout.EndVertical();
+            }
             #endregion
         }
     }

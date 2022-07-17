@@ -40,6 +40,9 @@ public class DialogScriptParser : EditorWindow
     readonly char[] displayNameChars = new char[] { '"', '“', '”' }; // Characters that could delimit a display name.
     readonly string googleCommentPat = @"\[\w\]";
 
+    private const string spriteBgPath = "Assets/Graphics/Sprites/Backgrounds";
+    private const string prefabBgPath = "Assets/Prefabs/Backgrounds";
+
     // Dialog view labels.
     Dictionary<string, System.Type> viewMap = new Dictionary<string, System.Type>
     {
@@ -69,8 +72,8 @@ public class DialogScriptParser : EditorWindow
         {"setpose", typeof(SetPose) },
     };
 
-    AnimationCurve bgmFadeIn = new AnimationCurve(); // Default fade in curve
-    AnimationCurve bgmFadeOut = new AnimationCurve(); // Default fade out curve
+    AnimationCurve bgmFadeIn = AnimationCurve.EaseInOut(0, 0, 1, 1); // Default fade in curve
+    AnimationCurve bgmFadeOut = AnimationCurve.EaseInOut(1, 1, 0, 0); // Default fade out curve
 
     const float nodeSpacing = 40f;
 
@@ -93,15 +96,6 @@ public class DialogScriptParser : EditorWindow
         GUILayout.BeginHorizontal();
         GUILayout.Label("Node Canvas");
         canvas = EditorGUILayout.ObjectField(canvas, typeof(NodeCanvas), false) as NodeCanvas;
-        GUILayout.EndHorizontal();
-
-        GUILayout.EndVertical();
-        // Custom settings
-        GUILayout.BeginVertical();
-
-        GUILayout.BeginHorizontal("Box");
-        bgmFadeIn = EditorGUILayout.CurveField("BGM Fade In Curve", bgmFadeIn, GUILayout.Height(50f));
-        bgmFadeOut = EditorGUILayout.CurveField("BGM Fade Out Curve", bgmFadeOut, GUILayout.Height(50f));
         GUILayout.EndHorizontal();
 
         GUILayout.EndVertical();
@@ -297,17 +291,16 @@ public class DialogScriptParser : EditorWindow
         else if (nodeType == typeof(SetBackgroundNode))
         {
             var gnode = CreateNode(SetBackgroundNode.ID) as SetBackgroundNode;
-            gnode.bgType = (args[1].ToLower() == "sprite") ? SetBackgroundNode.BgType.Sprite 
-                                                 : SetBackgroundNode.BgType.Prefab;
-            var sub = AssetDatabase.GetSubFolders("Assets/Graphics/Sprites/Backgrounds");
-            //var a = AssetDatabase.FindAssets(args[2], );
-            string path = (args[1].ToLower() == "sprite") 
-                ? AssetDatabase.FindAssets(args[2], new string[] { "Assets/Graphics/Sprites/Backgrounds" })[0] 
-                : AssetDatabase.FindAssets(args[2], AssetDatabase.GetSubFolders("Assets/Prefabs/Backgrounds"))[0];
+            bool isSprite = args[1].ToLower() == "sprite";
+            gnode.bgType = isSprite ? SetBackgroundNode.BgType.Sprite : SetBackgroundNode.BgType.Prefab;
+            string[] folders = GetPathWithSubFolders(isSprite ? spriteBgPath : prefabBgPath);
+            // Find asset path
+            string path = AssetDatabase.FindAssets(args[2], folders)[0];
             path = AssetDatabase.GUIDToAssetPath(path);
             Debug.Log("bg:" + path);
-            if (args[1].ToLower() == "sprite") gnode.bgSprite = AssetDatabase.LoadAssetAtPath<Sprite>(path);
-            else                     gnode.bgPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            // Load actual asset
+            if (isSprite) gnode.bgSprite = AssetDatabase.LoadAssetAtPath<Sprite>(path);
+            else          gnode.bgPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
             nodes.Add(gnode);
         }
         else if (nodeType == typeof(FadeNode))
@@ -501,5 +494,14 @@ public class DialogScriptParser : EditorWindow
         var gnode = Node.Create(id, Vector2.right * pos, canvas);
         pos += gnode.MinSize.x + nodeSpacing;
         return gnode;
+    }
+
+    private static string[] GetPathWithSubFolders(string path)
+    {
+        var sub = AssetDatabase.GetSubFolders(path);
+        var folders = new string[sub.Length + 1];
+        folders[0] = path;
+        System.Array.Copy(sub, 0, folders, 1, sub.Length);
+        return folders;
     }
 }

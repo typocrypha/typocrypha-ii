@@ -89,7 +89,7 @@ public static class Damage
             return;
         }
         float hitChance = 1 * CompareStatsWeak(caster.Stats.Acc, target.Stats.Evade);
-        results.Miss = (Random.Range(0, 1) > hitChance);
+        results.Miss = (Random.Range(0f, 1f) > hitChance);
     }
     /// <summary>
     /// Sets the Crit property and modifies damage and stagger based on a standard crit check
@@ -296,7 +296,7 @@ public static class Damage
 
     public static void ApplyStandard(CastResults results, DamageEffect effect, Caster caster, Caster target)
     {
-        target.OnBeforeEffectApplied?.Invoke(effect, caster, target, results);
+        target.OnBeforeHitResolved?.Invoke(effect, caster, target, results);
         if (results.Miss)
             return;
         if (ApplyReflect(results, effect, caster, target))
@@ -337,14 +337,16 @@ public static class Damage
     public static void ApplyResearch(CastResults results, RootWordEffect effect, Caster caster, Caster target)
     {
         if(!MoveDoesDamage(results.Effectiveness))
-                return;
+            return;
+        if (string.IsNullOrWhiteSpace(target.ResearchKey))
+            return;
         if (caster.CasterClass == Caster.Class.Player && target.BStatus == Caster.BattleStatus.SpiritMode)
         {
             var research = PlayerDataManager.instance.researchData;
             research.Add(target.ResearchKey, target.ResearchAmount);
             if (research.ReadyToDecode(target.ResearchKey))
             {
-                var word = research.GetData(target.ResearchKey).unlockedWord;
+                var word = research.GetData(target.ResearchKey)?.unlockedWord;
                 if (word == null)
                     return;
                 IEnumerator LogDecoded(bool success)

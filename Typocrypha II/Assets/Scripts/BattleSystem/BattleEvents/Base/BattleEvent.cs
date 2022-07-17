@@ -46,6 +46,8 @@ public class BattleEvent : MonoBehaviour, IPausable
     // Check all conditions.
     bool CheckAll()
     {
+        if (conditions.Length <= 0)
+            return true;
         if (logic == Logic.Or)
         {
             foreach (var cond in conditions)

@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class AbilityDoubleDamage : CasterAbility
 {
-    SpellTag tag;
+    [SerializeField] SpellTag tag;
 
-    public override void OnCast(Spell spell, RootWordEffect effect, Caster caster, Caster target)
+    public override void OnBeforeSpellEffectResolved(RootWordEffect effect, Caster caster, Caster target)
     {
        if(effect.tags.Contains(tag) && effect is DamageEffect)
             (effect as DamageEffect).power *= 2;
     }
 
-    public override void OnHit(Spell spell, RootWordEffect effect, Caster caster, Caster target, CastResults castResults)
+    public override void OnBeforeHitApplied(RootWordEffect effect, Caster caster, Caster target, CastResults castResults)
     {
         return;
     }
