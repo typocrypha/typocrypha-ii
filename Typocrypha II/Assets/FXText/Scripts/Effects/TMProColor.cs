@@ -44,10 +44,12 @@ namespace FXText
         {
             for (int charIndex = 0; charIndex < text.textInfo.characterCount && charIndex < text.text.Length; ++charIndex)
             {
+                // Skip white space (not included in vertices)
                 if (char.IsWhiteSpace(text.text[charIndex]))
                 {
                     continue;
                 }
+                // TODO: '-' character also causes issues
                 int meshIndex = text.textInfo.characterInfo[charIndex].materialReferenceIndex;
                 int vertexIndex = text.textInfo.characterInfo[charIndex].vertexIndex;
                 Color32[] vertexColors = text.textInfo.meshInfo[meshIndex].colors32;
