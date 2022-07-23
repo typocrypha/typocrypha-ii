@@ -4,6 +4,7 @@ using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
 using System.Linq;
+using TMPro;
 
 public class DialogViewVNPlus : DialogView
 {
@@ -28,6 +29,7 @@ public class DialogViewVNPlus : DialogView
     [SerializeField] private TweenInfo messageTween;
     [SerializeField] private TweenInfo messageScaleTween;
     [SerializeField] private TweenInfo messageFadeTween;
+    [SerializeField] private TextMeshProUGUI locationText;
 
 
     public override bool ReadyToContinue => readyToContinue;
@@ -325,5 +327,11 @@ public class DialogViewVNPlus : DialogView
     public override void SetEnabled(bool e)
     {
         gameObject.SetActive(e);
+    }
+
+    protected override void SetLocation(string location)
+    {
+        base.SetLocation(location);
+        locationText.text = location;
     }
 }
