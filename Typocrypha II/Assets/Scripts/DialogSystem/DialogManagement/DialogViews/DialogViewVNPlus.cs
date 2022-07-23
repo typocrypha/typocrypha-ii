@@ -7,9 +7,6 @@ using System.Linq;
 
 public class DialogViewVNPlus : DialogView
 {
-    private const float tweenTime = 0.5f;
-    private const float scaleTweenTime = 0.25f;
-    private const float fadeTweenTime = 0.1f;
     private const int maxCharactersPerColumn = 5;
 
     public enum CharacterColumn
@@ -23,27 +20,19 @@ public class DialogViewVNPlus : DialogView
     [SerializeField] private GameObject narratorDialogBoxPrefab;
     [SerializeField] private RectTransform messageContainer;
     [SerializeField] private VerticalLayoutGroup messageLayout;
-    [SerializeField] private Ease messageLayoutEase;
-    [SerializeField] private bool useCustomMessageLayoutEase;
-    [SerializeField] private AnimationCurve customMessageLayoutEase;
-    [SerializeField] private Ease messageScaleEase;
-    [SerializeField] private bool useCustomMessageScaleEase;
-    [SerializeField] private AnimationCurve customMessageScaleEase;
-    [SerializeField] private Ease messageFadeEase;
-    [SerializeField] private bool useCustomMessageFadeEase;
-    [SerializeField] private AnimationCurve customMessageFadeEase;
     [SerializeField] private GameObject rightCharacterPrefab;
     [SerializeField] private GameObject leftCharacterPrefab;
     [SerializeField] private RectTransform rightCharacterContainer;
     [SerializeField] private RectTransform leftCharacterContainer;
 
+    [SerializeField] private TweenInfo messageTween;
+    [SerializeField] private TweenInfo messageScaleTween;
+    [SerializeField] private TweenInfo messageFadeTween;
+
 
     public override bool ReadyToContinue => readyToContinue;
 
     private bool readyToContinue = false;
-    private Tween messageTween;
-    private Tween messageScaleTween;
-    private Tween messageFadeTween;
 
     private readonly Dictionary<string, VNPlusCharacter> characterMap = new Dictionary<string, VNPlusCharacter>(maxCharactersPerColumn * 2);
     private readonly List<VNPlusCharacter> rightCharacterList = new List<VNPlusCharacter>(maxCharactersPerColumn);
@@ -310,43 +299,17 @@ public class DialogViewVNPlus : DialogView
         yield return null;
         box.SetBoxHeight();
         CompleteMessageTweens();
-        messageTween = messageContainer.DOAnchorPosY(messageContainer.anchoredPosition.y + (box.GetBoxHeight() + messageLayout.spacing), tweenTime);
+        messageTween.Start(messageContainer.DOAnchorPosY(messageContainer.anchoredPosition.y + (box.GetBoxHeight() + messageLayout.spacing), messageTween.Time));
         if (!isNarrator)
         {
             box.transform.localScale = new Vector3(0, 0, box.transform.localScale.z);
-            messageScaleTween = box.transform.DOScale(new Vector3(1, 1, box.transform.localScale.z), scaleTweenTime);
-            if (useCustomMessageScaleEase)
-            {
-                messageScaleTween.SetEase(customMessageScaleEase);
-            }
-            else
-            {
-                messageScaleTween.SetEase(messageScaleEase);
-            }
+            messageScaleTween.Start(box.transform.DOScale(new Vector3(1, 1, box.transform.localScale.z), messageScaleTween.Time));
         }
         if(lastBoxUI != null)
         {
-            messageFadeTween = lastBoxUI.CanvasGroup.DOFade(0.55f, fadeTweenTime);
-            if (useCustomMessageFadeEase)
-            {
-                messageFadeTween.SetEase(customMessageFadeEase);
-            }
-            else
-            {
-                messageFadeTween.SetEase(messageFadeEase);
-            }
+            messageFadeTween.Start(lastBoxUI.CanvasGroup.DOFade(0.55f, messageFadeTween.Time));
         }
         lastBoxUI = vNPlusDialogUI;
-
-        // Play animation
-        if (useCustomMessageLayoutEase)
-        {
-            messageTween.SetEase(customMessageLayoutEase);
-        }
-        else
-        {
-            messageTween.SetEase(messageLayoutEase);
-        }
         readyToContinue = true;
         box.StartDialogScroll();
         yield break;
@@ -354,12 +317,9 @@ public class DialogViewVNPlus : DialogView
 
     private void CompleteMessageTweens()
     {
-        messageTween?.Complete();
-        messageScaleTween?.Complete();
-        messageFadeTween?.Complete();
-        messageTween = null;
-        messageScaleTween = null;
-        messageFadeTween = null;
+        messageTween.Complete();
+        messageScaleTween.Complete();
+        messageFadeTween.Complete();
     }
 
     public override void SetEnabled(bool e)
