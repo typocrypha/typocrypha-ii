@@ -9,6 +9,7 @@ public class DialogViewVNPlus : DialogView
 {
     private const float tweenTime = 0.5f;
     private const float scaleTweenTime = 0.25f;
+    private const float fadeTweenTime = 0.1f;
     private const int maxCharactersPerColumn = 5;
 
     public enum CharacterColumn
@@ -28,6 +29,9 @@ public class DialogViewVNPlus : DialogView
     [SerializeField] private Ease messageScaleEase;
     [SerializeField] private bool useCustomMessageScaleEase;
     [SerializeField] private AnimationCurve customMessageScaleEase;
+    [SerializeField] private Ease messageFadeEase;
+    [SerializeField] private bool useCustomMessageFadeEase;
+    [SerializeField] private AnimationCurve customMessageFadeEase;
     [SerializeField] private GameObject rightCharacterPrefab;
     [SerializeField] private GameObject leftCharacterPrefab;
     [SerializeField] private RectTransform rightCharacterContainer;
@@ -39,11 +43,13 @@ public class DialogViewVNPlus : DialogView
     private bool readyToContinue = false;
     private Tween messageTween;
     private Tween messageScaleTween;
+    private Tween messageFadeTween;
 
     private readonly Dictionary<string, VNPlusCharacter> characterMap = new Dictionary<string, VNPlusCharacter>(maxCharactersPerColumn * 2);
     private readonly List<VNPlusCharacter> rightCharacterList = new List<VNPlusCharacter>(maxCharactersPerColumn);
     private readonly List<VNPlusCharacter> leftCharacterList = new List<VNPlusCharacter>(maxCharactersPerColumn);
     private float originalMessageAnchorPosY = float.MinValue;
+    private VNPlusDialogBoxUI lastBoxUI = null;
 
     private void Awake()
     {
@@ -256,15 +262,15 @@ public class DialogViewVNPlus : DialogView
         }
         var prefab = GetMessagePrefab(dialogItem.CharacterData, out bool isNarrator);
         var dialogBox = Instantiate(prefab, messageContainer).GetComponent<DialogBox>();
-        SetCharacterSpecificUI(dialogBox, dialogItem.CharacterData);
+        var dialogBoxUI = dialogBox.GetComponent<VNPlusDialogBoxUI>();
+        SetCharacterSpecificUI(dialogBoxUI, dialogItem.CharacterData);
         readyToContinue = false;
-        StartCoroutine(AnimateNewMessageIn(dialogBox, dialogItem, isNarrator));
+        StartCoroutine(AnimateNewMessageIn(dialogBox, dialogBoxUI, dialogItem, isNarrator));
         return dialogBox;
     }
 
-    private void SetCharacterSpecificUI(DialogBox messageBox, List<CharacterData> data)
+    private void SetCharacterSpecificUI(VNPlusDialogBoxUI vnPlusUI, List<CharacterData> data)
     {
-        var vnPlusUI = messageBox.GetComponent<VNPlusDialogBoxUI>();
         if (vnPlusUI == null)
             return;
         if (data.Count > 1)
@@ -298,7 +304,7 @@ public class DialogViewVNPlus : DialogView
         return narratorDialogBoxPrefab;
     }
 
-    private IEnumerator AnimateNewMessageIn(DialogBox box, DialogItem item, bool isNarrator)
+    private IEnumerator AnimateNewMessageIn(DialogBox box, VNPlusDialogBoxUI vNPlusDialogUI, DialogItem item, bool isNarrator)
     {
         box.SetupDialogBox(item);
         yield return null;
@@ -318,6 +324,19 @@ public class DialogViewVNPlus : DialogView
                 messageScaleTween.SetEase(messageScaleEase);
             }
         }
+        if(lastBoxUI != null)
+        {
+            messageFadeTween = lastBoxUI.CanvasGroup.DOFade(0.55f, fadeTweenTime);
+            if (useCustomMessageFadeEase)
+            {
+                messageFadeTween.SetEase(customMessageFadeEase);
+            }
+            else
+            {
+                messageFadeTween.SetEase(messageFadeEase);
+            }
+        }
+        lastBoxUI = vNPlusDialogUI;
 
         // Play animation
         if (useCustomMessageLayoutEase)
@@ -337,8 +356,10 @@ public class DialogViewVNPlus : DialogView
     {
         messageTween?.Complete();
         messageScaleTween?.Complete();
+        messageFadeTween?.Complete();
         messageTween = null;
         messageScaleTween = null;
+        messageFadeTween = null;
     }
 
     public override void SetEnabled(bool e)
