@@ -17,6 +17,8 @@ public class VNPlusCharacter : MonoBehaviour
     [SerializeField] private DialogViewVNPlus.CharacterColumn column;
     [SerializeField] private Image poseImage;
     [SerializeField] private Image expressionImage;
+    [SerializeField] private Image leftHighlightImage;
+    [SerializeField] private Image rightHighlightImage;
     [SerializeField] private Image nameplateBackground;
     [SerializeField] private float nameplateBackgroundOpacity = 0.75f;
     [SerializeField] private Image nameplateOutline;
@@ -61,6 +63,9 @@ public class VNPlusCharacter : MonoBehaviour
             Color nameplateCol = data.characterColorLight;
             nameplateCol.a = nameplateBackgroundOpacity;
             nameplateBackground.color = nameplateCol;
+
+            leftHighlightImage.color = data.characterHighlightColorLeft;
+            rightHighlightImage.color = data.characterHighlightColorRight;
         }
     }
     private CharacterData data;
