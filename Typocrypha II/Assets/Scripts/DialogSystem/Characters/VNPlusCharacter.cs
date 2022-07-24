@@ -17,25 +17,16 @@ public class VNPlusCharacter : MonoBehaviour
     [SerializeField] private DialogViewVNPlus.CharacterColumn column;
     [SerializeField] private Image poseImage;
     [SerializeField] private Image expressionImage;
+    [SerializeField] private Image leftHighlightImage;
+    [SerializeField] private Image rightHighlightImage;
     [SerializeField] private Image nameplateBackground;
     [SerializeField] private float nameplateBackgroundOpacity = 0.75f;
     [SerializeField] private Image nameplateOutline;
     [SerializeField] private TextMeshProUGUI nameplateText;
     [SerializeField] private RectTransform mainRect;
-    [Header("Join Tween")]
-    [SerializeField] private Ease joinEase;
-    [SerializeField] private bool useCustomJoinEase;
-    [SerializeField] private AnimationCurve customJoinEase;
-    [SerializeField] private float joinTweenTime = 0.25f;
-    [Header("Adjustment Tweens")]
-    [SerializeField] private Ease adjustSizeEase;
-    [SerializeField] private bool useCustomAdjustSizeEase;
-    [SerializeField] private AnimationCurve customAdjustSizeEase;
-    [SerializeField] private Ease adjustPosEase;
-    [SerializeField] private bool useCustomAdjustPosEase;
-    [SerializeField] private AnimationCurve customAdjustPosEase;
-    [SerializeField] private float adjustTweenTime = 0.25f;
-    public float AdjustTweenTime => adjustTweenTime;
+    [SerializeField] private TweenInfo joinTween;
+    [SerializeField] private TweenInfo adjustSizeTween;
+    [SerializeField] private TweenInfo adjustPosTween;
 
     public string NameText 
     { 
@@ -61,6 +52,9 @@ public class VNPlusCharacter : MonoBehaviour
             Color nameplateCol = data.characterColorLight;
             nameplateCol.a = nameplateBackgroundOpacity;
             nameplateBackground.color = nameplateCol;
+
+            leftHighlightImage.color = data.characterHighlightColorLeft;
+            rightHighlightImage.color = data.characterHighlightColorRight;
         }
     }
     private CharacterData data;
@@ -123,11 +117,10 @@ public class VNPlusCharacter : MonoBehaviour
         mainRect.anchoredPosition = new Vector2(mainRect.anchoredPosition.x, yPos);
     }
 
-    public Tween DoAdjustPosTween(float yPos)
+    public TweenInfo DoAdjustPosTween(float yPos)
     {
-        var tween = mainRect.DOAnchorPosY(yPos, adjustTweenTime);
-        CustomTweenEase(tween, adjustPosEase, customAdjustPosEase, useCustomAdjustPosEase);
-        return tween;
+        adjustPosTween.Start(mainRect.DOAnchorPosY(yPos, adjustPosTween.Time));
+        return adjustPosTween;
     }
 
     public void SetInitialHeight(float height)
@@ -135,39 +128,23 @@ public class VNPlusCharacter : MonoBehaviour
         mainRect.sizeDelta = new Vector2(mainRect.sizeDelta.x, height);
     }
 
-    public Tween DoAdjustHeightTween(float height)
+    public TweenInfo DoAdjustHeightTween(float height)
     {
-        var tween = mainRect.DOSizeDelta(new Vector2(mainRect.sizeDelta.x, height), adjustTweenTime);
-        CustomTweenEase(tween, adjustSizeEase, customAdjustSizeEase, useCustomAdjustSizeEase);
-        return tween;
+        adjustSizeTween.Start(mainRect.DOSizeDelta(new Vector2(mainRect.sizeDelta.x, height), adjustSizeTween.Time));
+        return adjustSizeTween;
     }
 
-    public Tween PlayJoinTween()
+    public TweenInfo PlayJoinTween()
     {
         float scale = mainRect.localScale.y;
         mainRect.localScale = new Vector3(mainRect.localScale.x, 0, mainRect.localScale.z);
-        var tween = mainRect.DOScaleY(scale, joinTweenTime);
-        CustomTweenEase(tween, joinEase, customJoinEase, useCustomJoinEase);
-        return tween;
+        joinTween.Start(mainRect.DOScaleY(scale, joinTween.Time));
+        return joinTween;
     }
 
-    public Tween PlayLeaveTween()
+    public TweenInfo PlayLeaveTween()
     {
-        var tween = mainRect.DOScaleY(0, joinTweenTime);
-        CustomTweenEase(tween, joinEase, customJoinEase, useCustomJoinEase);
-        return tween;
+        joinTween.Start(mainRect.DOScaleY(0, joinTween.Time));
+        return joinTween;
     }
-
-    private void CustomTweenEase(Tween tween, Ease ease, AnimationCurve customEase, bool useCustom)
-    {
-        if (useCustom)
-        {
-            tween.SetEase(customEase);
-        }
-        else
-        {
-            tween.SetEase(ease);
-        }
-    }
-
 }

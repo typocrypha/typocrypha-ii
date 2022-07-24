@@ -25,6 +25,8 @@ public class CharacterDataInspector : Editor
         GUILayout.Label("Character Colors:");
         data.characterColorLight = EditorGUILayout.ColorField("Light Color", data.characterColorLight);
         data.characterColorDark = EditorGUILayout.ColorField("Dark Color", data.characterColorDark);
+        data.characterHighlightColorLeft = EditorGUILayout.ColorField("Highlight Color One (Left)", data.characterHighlightColorLeft);
+        data.characterHighlightColorRight = EditorGUILayout.ColorField("Highlight Color Two (Right)", data.characterHighlightColorRight);
         EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
         if (data.poses == null)
         {

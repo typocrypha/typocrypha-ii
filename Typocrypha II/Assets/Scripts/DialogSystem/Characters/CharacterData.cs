@@ -17,6 +17,8 @@ public class CharacterData : ScriptableObject
     public AudioClip talk_sfx; // Talking sound effect
     public Color characterColorDark = Color.white;
     public Color characterColorLight = Color.white;
+    public Color characterHighlightColorLeft = Color.white;
+    public Color characterHighlightColorRight = Color.white;
 
     [System.Serializable]
     public class PoseData

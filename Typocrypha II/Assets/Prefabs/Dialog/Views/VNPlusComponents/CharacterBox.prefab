@@ -32,7 +32,7 @@ RectTransform:
   - {fileID: 8537390911494064079}
   - {fileID: 5350418457978073708}
   m_Father: {fileID: 4973019392312529538}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.04}
   m_AnchorMax: {x: 0, y: 0.06}
@@ -106,6 +106,7 @@ RectTransform:
   m_Children:
   - {fileID: 4304276864954824247}
   - {fileID: 8986685674062360039}
+  - {fileID: 9144864110763693247}
   - {fileID: 7160119537912410174}
   - {fileID: 4502530421265286274}
   - {fileID: 2456057702396175859}
@@ -132,38 +133,43 @@ MonoBehaviour:
   column: 0
   poseImage: {fileID: 9176260891960641290}
   expressionImage: {fileID: 5404746457194020536}
+  leftHighlightImage: {fileID: 1293536283572272297}
+  rightHighlightImage: {fileID: 6168320731037928742}
   nameplateBackground: {fileID: 6361849202246935267}
   nameplateBackgroundOpacity: 0.9
-  nameplateRect: {fileID: 2456057702396175859}
   nameplateOutline: {fileID: 3729132025353215641}
   nameplateText: {fileID: 784062777502721363}
   mainRect: {fileID: 4973019392312529538}
-  joinEase: 19
-  useCustomJoinEase: 0
-  customJoinEase:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  joinTweenTime: 1
-  adjustSizeEase: 19
-  useCustomAdjustSizeEase: 0
-  customAdjustSizeEase:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  adjustPosEase: 19
-  useCustomAdjustPosEase: 0
-  customAdjustPosEase:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  adjustTweenTime: 1
+  joinTween:
+    time: 1
+    useCustomEase: 0
+    ease: 19
+    customEase:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  adjustSizeTween:
+    time: 1
+    useCustomEase: 0
+    ease: 19
+    customEase:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  adjustPosTween:
+    time: 1
+    useCustomEase: 0
+    ease: 19
+    customEase:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
 --- !u!1 &1575324969093273154
 GameObject:
   m_ObjectHideFlags: 0
@@ -194,7 +200,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4973019392312529538}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -324,7 +330,7 @@ GameObject:
   - component: {fileID: 6254020385729729244}
   - component: {fileID: 1293536283572272297}
   m_Layer: 0
-  m_Name: Highlight
+  m_Name: Highlight (Left)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -370,14 +376,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 1, b: 0.9604409, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 74c54061ce8760d40abaed955ffca1a9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a12502cea15640348b5513709c9926b4, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -767,6 +773,80 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
+--- !u!1 &7767551501188176341
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9144864110763693247}
+  - component: {fileID: 4440993312407467187}
+  - component: {fileID: 6168320731037928742}
+  m_Layer: 0
+  m_Name: Highlight (Right)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &9144864110763693247
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7767551501188176341}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.00008, y: 1.00008, z: 1.00008}
+  m_Children: []
+  m_Father: {fileID: 4973019392312529538}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0.000061035156, y: -0.00012207031}
+  m_SizeDelta: {x: -50, y: -50}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &4440993312407467187
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7767551501188176341}
+  m_CullTransparentMesh: 0
+--- !u!114 &6168320731037928742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7767551501188176341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.96098137, g: 0, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_Sprite: {fileID: 21300000, guid: e4d8ab36c159e784694539cefddb1402, type: 3}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
 --- !u!1 &9033601296738820033
 GameObject:
   m_ObjectHideFlags: 0
@@ -797,7 +877,7 @@ RectTransform:
   m_Children:
   - {fileID: 1433363802858972951}
   m_Father: {fileID: 4973019392312529538}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
