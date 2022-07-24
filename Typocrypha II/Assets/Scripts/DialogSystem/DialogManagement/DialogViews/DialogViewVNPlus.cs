@@ -247,7 +247,7 @@ public class DialogViewVNPlus : DialogView
     {
         if (!IsDialogItemCorrectType(data, out DialogItemVNPlus dialogItem))
             return null;
-        if (dialogItem.CharacterData.Count > 0 && characterMap.ContainsKey(dialogItem.CharacterData[0].name))
+        if (dialogItem.CharacterData.Count > 0)// && characterMap.ContainsKey(dialogItem.CharacterData[0].name))
         {
             HighlightCharacter(dialogItem.CharacterData);
         }
