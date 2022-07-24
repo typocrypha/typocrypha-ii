@@ -132,16 +132,16 @@ public class TextMacros : MonoBehaviour {
 		return System.DateTime.Now.Hour + ":" + System.DateTime.Now.Minute;
 	}
 
-	// substitutes in appropriate color tag
+	// substitutes in appropriate color tag (TMProColor)
 	// input: [0]: string, color name (must be implemented in Unity rich tags)
-	//             if argument is empty, subsitutes the closing tag '</color>'
+	//             if argument is empty, subsitutes the closing tag '|color|'
 	string macroColor(string[] opt) {
 		if (opt.Length != 0 && opt [0] != null && opt[0] != "") {
 			if (color_map.ContainsKey(opt[0]))
-				return "<color=" + color_map[opt[0]] + ">";
-			else return "<color=" + opt [0] + ">";
+				return "^color," + opt[0] + "^";
+			else throw new System.NotImplementedException("Unimplemented color macro:" + opt[0]);
 		} else {
-			return "</color>";
+			return "|color|";
 		}
 	}
 
