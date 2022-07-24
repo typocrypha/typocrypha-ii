@@ -32,4 +32,9 @@ public class TweenInfo
         currTween?.Complete();
         currTween = null;
     }
+
+    public YieldInstruction WaitForCompletion()
+    {
+        return currTween?.WaitForCompletion();
+    }
 }

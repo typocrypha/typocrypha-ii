@@ -177,28 +177,28 @@ public class DialogViewVNPlus : DialogView
         posStart = -newHeight / 2;
     }
 
-    private Tween AdjustCharacterHeights(List<VNPlusCharacter> characterList, float newHeight, out float staggerTime)
+    private TweenInfo AdjustCharacterHeights(List<VNPlusCharacter> characterList, float newHeight, out float staggerTime)
     {
-        Tween tween = null;
+        TweenInfo tween = null;
         staggerTime = 0;
         for (int i = 0; i < characterList.Count; i++)
         {
             var chara = characterList[i];
             tween = chara.DoAdjustHeightTween(newHeight);
-            staggerTime = Mathf.Max(chara.AdjustTweenTime / 2, staggerTime);
+            staggerTime = Mathf.Max(tween.Time / 2, staggerTime);
         }
         return tween;
     }
 
-    private Tween AdjustCharacterPositions(List<VNPlusCharacter> characterList, float posStart, float newHeight, out float staggerTime)
+    private TweenInfo AdjustCharacterPositions(List<VNPlusCharacter> characterList, float posStart, float newHeight, out float staggerTime)
     {
-        Tween tween = null;
+        TweenInfo tween = null;
         staggerTime = 0;
         for (int i = 0; i < characterList.Count; i++)
         {
             var chara = characterList[i];
             tween = chara.DoAdjustPosTween(posStart - (i * newHeight));
-            staggerTime = Mathf.Max(chara.AdjustTweenTime / 2, staggerTime);
+            staggerTime = Mathf.Max(tween.Time / 2, staggerTime);
         }
         return tween;
     }
