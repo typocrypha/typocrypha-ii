@@ -8,7 +8,7 @@ using DG.Tweening;
 public class VNPlusCharacter : MonoBehaviour
 {
     private static readonly Color highlightColor = Color.white;
-    private static readonly Color noHighlightColor = Color.gray;
+    private static readonly Color noHighlightColor = new Color(0.65f, 0.65f, 0.65f, 1);
     private const float leftColAdjustment = 0.1f;
 
     private float nameplateRatio = 0.1f;
@@ -27,6 +27,13 @@ public class VNPlusCharacter : MonoBehaviour
     [SerializeField] private TweenInfo joinTween;
     [SerializeField] private TweenInfo adjustSizeTween;
     [SerializeField] private TweenInfo adjustPosTween;
+    [SerializeField] private TweenInfo highlightTween;
+    private TweenInfo exprHighlightTween;
+
+    private void Awake()
+    {
+        exprHighlightTween = new TweenInfo(highlightTween);
+    }
 
     public string NameText 
     { 
@@ -58,21 +65,19 @@ public class VNPlusCharacter : MonoBehaviour
         }
     }
     private CharacterData data;
+    private bool isHighlighted = true;
 
     public bool Highlighted
     {
+        get => isHighlighted;
         set
         {
-            if (value)
-            {
-                poseImage.color = highlightColor;
-                expressionImage.color = highlightColor;
-            }
-            else
-            {
-                poseImage.color = noHighlightColor;
-                expressionImage.color = noHighlightColor;
-            }
+            if (isHighlighted == value)
+                return;
+            isHighlighted = value;
+            var color = value ? highlightColor : noHighlightColor;
+            highlightTween.Start(poseImage.DOColor(color, highlightTween.Time));
+            exprHighlightTween.Start(expressionImage.DOColor(color, exprHighlightTween.Time));
         }
     }
 

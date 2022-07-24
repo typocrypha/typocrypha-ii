@@ -13,6 +13,14 @@ public class TweenInfo
     public Tween Tween => currTween;
     private Tween currTween;
 
+    public TweenInfo(TweenInfo toCopy)
+    {
+        time = toCopy.time;
+        useCustomEase = toCopy.useCustomEase;
+        ease = toCopy.ease;
+        customEase = new AnimationCurve(toCopy.customEase.keys);
+    }
+
     public void Start(Tween tween)
     {
         Complete();
