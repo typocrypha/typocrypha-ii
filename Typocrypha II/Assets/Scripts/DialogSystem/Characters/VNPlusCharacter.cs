@@ -8,7 +8,10 @@ using DG.Tweening;
 public class VNPlusCharacter : MonoBehaviour
 {
     private static readonly Color highlightColor = Color.white;
-    private static readonly Color noHighlightColor = new Color(0.65f, 0.65f, 0.65f, 1);
+    private static readonly Color noHighlightColor = new Color(noHighlightValue, noHighlightValue, noHighlightValue, 1);
+    private static readonly Color nameHighlightColor = new Color(0, 0, 0, 0);
+    private static readonly Color nameNoHighlightColor = new Color(0, 0, 0, 1 - noHighlightValue);
+    private const float noHighlightValue = 0.65f;
     private const float leftColAdjustment = 0.1f;
 
     private float nameplateRatio = 0.1f;
@@ -21,6 +24,7 @@ public class VNPlusCharacter : MonoBehaviour
     [SerializeField] private Image rightHighlightImage;
     [SerializeField] private Image nameplateBackground;
     [SerializeField] private float nameplateBackgroundOpacity = 0.75f;
+    [SerializeField] private Image nameplateDimmer;
     [SerializeField] private Image nameplateOutline;
     [SerializeField] private TextMeshProUGUI nameplateText;
     [SerializeField] private RectTransform mainRect;
@@ -29,10 +33,12 @@ public class VNPlusCharacter : MonoBehaviour
     [SerializeField] private TweenInfo adjustPosTween;
     [SerializeField] private TweenInfo highlightTween;
     private TweenInfo exprHighlightTween;
+    private TweenInfo nameHighlightTween;
 
     private void Awake()
     {
         exprHighlightTween = new TweenInfo(highlightTween);
+        nameHighlightTween = new TweenInfo(highlightTween);
     }
 
     public string NameText 
@@ -78,6 +84,7 @@ public class VNPlusCharacter : MonoBehaviour
             var color = value ? highlightColor : noHighlightColor;
             highlightTween.Start(poseImage.DOColor(color, highlightTween.Time));
             exprHighlightTween.Start(expressionImage.DOColor(color, exprHighlightTween.Time));
+            nameHighlightTween.Start(nameplateDimmer.DOColor(value ? nameHighlightColor : nameNoHighlightColor, nameHighlightTween.Time));
         }
     }
 
