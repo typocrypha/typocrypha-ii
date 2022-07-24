@@ -1,0 +1,169 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using System.Linq;
+using TMPro;
+
+namespace FXText
+{
+    /// <summary>
+    /// Base class for TMPro effects
+    /// TODO: replace Linq
+    /// </summary>
+    public abstract class TMProEffect : MonoBehaviour
+    {
+        /// <summary>
+        /// Enum for different priority groups.
+        /// If multiple effects of the same priority group are applied to the same character, \
+        /// only the effect instance with the highest priority is applied. Effects in different \
+        /// groups may be applied at the same time (e.g. a color effect + a movement effect).
+        /// </summary>
+        public enum PriorityGroupEnum
+        {
+            DEFAULT,   // Default - shouldnt be used in general
+            COLOR,     // Effects which modify the color of a character
+            POSITION,  // Effects which modify the position of a character,
+        }
+
+        public TextMeshProUGUI text; // Text component attached
+        public List<int> ind; // List of text indices to apply effect on: in between consecutive pairs
+        public int Priority = 0; // Priority of effect when multiple are working. Higher priority = displayed.
+        public abstract PriorityGroupEnum PriorityGroup // Priority group of effect
+        {
+            get;
+        }
+
+        protected const int vertsInQuad = 4; // Number of vertices in a single text quad.
+
+        private void Update()
+        {
+            // Get all other TMProEffect components to determine priority
+            var allEffects = GetComponents<TMProEffect>();
+            allEffects.OrderBy(a => a.Priority);
+            // All effects managed by highest priority instance
+            if (allEffects.Last() == this)
+            {
+                UpdateMesh(text, allEffects);
+            }
+        }
+
+        /// <summary>
+        /// Update text mesh with all effects
+        /// </summary>
+        static void UpdateMesh(TextMeshProUGUI text, IEnumerable<TMProEffect> allEffects)
+        {
+            // Iterate through each character
+            for (int charIndex = 0; charIndex < text.textInfo.characterCount && charIndex < text.text.Length; ++charIndex)
+            {
+                // Skip characters that aren't affected by effects
+                if (SkipCharacters(text.text[charIndex])) continue;
+                // Get mesh info for current character
+                int meshIndex = text.textInfo.characterInfo[charIndex].materialReferenceIndex;
+                int vertexIndex = text.textInfo.characterInfo[charIndex].vertexIndex;
+                // Apply default effects (overridden if actually applied)
+                foreach (var effect in allEffects)
+                {
+                    effect.ApplyDefaultEffect(text.textInfo.meshInfo[meshIndex], vertexIndex);
+                }
+                // Get effects on current character, and continue if no effects.
+                var currEffects = GetApplicableEffects(charIndex, allEffects);
+                if (currEffects.Count() == 0) continue;
+                // Split list of effects based on priority groups, and get highest priority for each group
+                var splitEffects = SplitByPriorityGroup(currEffects);                
+                // Apply effects
+                foreach (var effect in splitEffects)
+                {
+                    effect.ApplyVertexEffect(text.textInfo.meshInfo[meshIndex], vertexIndex);
+                }
+            }
+            text.UpdateVertexData(TMP_VertexDataUpdateFlags.All);
+        }
+
+        /// <summary>
+        /// Returns true if character should be skipped for effects.
+        /// </summary>
+        static bool SkipCharacters(char character)
+        {
+            if (char.IsWhiteSpace(character)) // Skip white space (not included in vertices)
+            {
+                return true;
+            }
+            // TODO: '-' character also causes issues
+            return false;
+        }
+
+        /// <summary>
+        /// Get all effects affecting current character (retains previous sorting)
+        /// </summary>
+        /// <param name="charIndex">Index of current character</param>
+        /// <param name="effects">All effects on this text object</param>
+        /// <returns>List of effects on current character</returns>
+        static IEnumerable<TMProEffect> GetApplicableEffects(int charIndex, IEnumerable<TMProEffect> effects)
+        {
+            var currEffects = new List<TMProEffect>();
+            for (int priority = 0; priority < effects.Count(); priority++)
+            {
+                var effect = effects.ElementAt(priority);
+                for (int pairIndex = 0; pairIndex < effect.ind.Count / 2; pairIndex += 2)
+                {
+                    // If effect includes current character, apply effect
+                    if (charIndex >= effect.ind[pairIndex] && charIndex < effect.ind[pairIndex + 1])
+                    {
+                        currEffects.Add(effect);
+                    }
+                }
+            }
+            return currEffects;
+        }
+
+        /// <summary>
+        /// Split a list of effects by their priority group, and retain only highest priority for each group.
+        /// </summary>
+        /// <param name="effects">List of effects to split</param>
+        /// <returns>Nested list of effects by priority group</returns>
+        static IEnumerable<TMProEffect> SplitByPriorityGroup(IEnumerable<TMProEffect> effects)
+        {
+            // Organize by priority group
+            var grouped = effects.OrderBy(a => (int)a.PriorityGroup); 
+            // Initialize loop
+            var split = new List<List<TMProEffect>>();
+            var currGroup = grouped.First().PriorityGroup;
+            split.Add(new List<TMProEffect>());
+            // Go through all effects and split by priority group
+            foreach (var effect in grouped)
+            {
+                // If effect is not in current group, create a new group
+                if (effect.PriorityGroup != currGroup)
+                {
+                    split.Add(new List<TMProEffect>());
+                }
+                // Add effect to current group
+                split.Last().Add(effect);
+            }
+            // Only retain highest priority
+            var highestPriorityEffects = new List<TMProEffect>();
+            foreach (var group in split)
+            {
+                var sorted = group.OrderBy(a => a.Priority);
+                highestPriorityEffects.Add(sorted.Last());
+            }
+            return highestPriorityEffects;
+        }
+
+        /// <summary>
+        /// Apply effect to specific character
+        /// </summary>
+        /// <param name="meshInfo">Text mesh data</param>
+        /// <param name="vertexIndex">Starting vertex index for character</param>
+        protected abstract void ApplyVertexEffect(TMP_MeshInfo meshInfo, int vertexIndex);
+
+        /// <summary>
+        /// Apply default if effect is not applied to character
+        /// </summary>
+        /// <param name="meshInfo">Text mesh data</param>
+        /// <param name="vertexIndex">Starting vertex index for character</param>
+        protected abstract void ApplyDefaultEffect(TMP_MeshInfo meshInfo, int vertexIndex);
+
+    }
+}
+
