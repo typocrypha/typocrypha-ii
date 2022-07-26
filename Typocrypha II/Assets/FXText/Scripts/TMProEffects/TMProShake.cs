@@ -11,7 +11,7 @@ namespace FXText
     /// </summary>
     public class TMProShake : TMProEffect
     {
-        public float Intensity = 10f; // Amount of shake
+        public float Intensity = 1.5f; // Amount of shake
 
         public override PriorityGroupEnum PriorityGroup => PriorityGroupEnum.POSITION;
 
@@ -24,6 +24,10 @@ namespace FXText
             {
                 basePos = new Vector3[meshInfo.vertexCount];
                 System.Array.Copy(meshInfo.vertices, basePos, meshInfo.vertexCount);
+            }
+            for (int quadIndex = 0; quadIndex < vertsInQuad; quadIndex++)
+            {
+                meshInfo.vertices[vertexIndex + quadIndex] = basePos[vertexIndex + quadIndex];
             }
         }
 

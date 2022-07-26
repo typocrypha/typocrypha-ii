@@ -13,7 +13,7 @@ public class DialogParser : MonoBehaviour
     public static DialogParser instance = null;
 
 	Dictionary<string, System.Type> FXTextMap; // Reference FXText effects by name
-	Stack<MonoBehaviour> FXTextStack; // Stack for managing nested effects
+	Stack<FXText.TMProEffect> FXTextStack; // Stack for managing nested effects
 	char[] optDelim = new char[1] { ',' }; // Option delimiter
     char[] FXTextDelim = new char[2] { '^', '|' }; // FXText delimiters
     char[] TextEventDelim = new char[2] { '[' , ']' }; // TextEvent delimiters
@@ -37,11 +37,11 @@ public class DialogParser : MonoBehaviour
             {"color", typeof(FXText.TMProColor) },
 			//{"scramble", typeof(FXText.Scramble)},
 			//{"wavy", typeof(FXText.Wavy)},
-            //{"shake", typeof(FXText.Shake)},
+            {"shake", typeof(FXText.TMProShake)},
             //{"rainbow", typeof(FXText.Rainbow) },
             //{"tips", typeof(FXText.TIPS) }
         };
-		FXTextStack = new Stack<MonoBehaviour> ();
+		FXTextStack = new Stack<FXText.TMProEffect> ();
 	}
 
 	/// <summary>
@@ -123,19 +123,17 @@ public class DialogParser : MonoBehaviour
         int endPos = text.IndexOf (FXTextDelim[0], startPos) - 1;
         var args = text.Substring(startPos, endPos - startPos + 1).Split(optDelim);
         var fxName = args[0];
-        var colorName = args[1];
-        // Hardcoding for color (since only wording effect)
-        var fx = dialogBox.gameObject.AddComponent(FXTextMap[fxName]) as FXText.TMProColor;
+        var fx = dialogBox.gameObject.AddComponent(FXTextMap[fxName]) as FXText.TMProEffect;
         fx.text = dialogBox.dialogText; // Set text component reference
-        fx.ind = new List<int> {startPos - 1, -1 }; // Set start position: End position set by ParseEffectEnd
-        fx.color = color_map[colorName]; // Set color
-        FXTextStack.Push(fx);
-        /*
-         * Old FXText
-        FXText.FXTextBase fx = dialogBox.dialogText.gameObject.AddComponent(FXTextMap[fxName]) as FXText.FXTextBase;
-		fx.ind = new List<int> {parsed.Length, -1};
-		FXTextStack.Push(fx);
-        */
+        fx.ind = new List<int> {parsed.Length, -1 }; // Set start position: End position set by ParseEffectEnd
+        FXTextStack.Push(fx); // Add to stack
+        // Hardcoded check for color effect (extra parameter)
+        if (fx is FXText.TMProColor)
+        {
+            var colorName = args[1];
+            (fx as FXText.TMProColor).color = color_map[colorName]; // Set color
+        }
+        Debug.Log($"EffectStart:{parsed.Length};{fxName};{FXTextStack.Count};{parsed}");
     }
 
 	// Parses an effect's ending tag, and matches with top of effect stack
@@ -144,23 +142,14 @@ public class DialogParser : MonoBehaviour
 		int endPos = text.IndexOf (FXTextDelim[1], startPos) - 1;
 		string fxName = text.Substring (startPos, endPos - startPos + 1);
         // Hardcoding for color
-        var top = FXTextStack.Pop() as FXText.TMProColor;
+        var top = FXTextStack.Pop();
         if (FXTextMap[fxName] != top.GetType())
         {
             throw new System.Exception("Mismatched FXTextEffect tags:" + fxName);
         }
         top.ind[1] = parsed.Length;
         dialogItem.FXTextList.Add(top);
-        /*
-         * Old FXText
-        FXText.FXTextBase top = FXTextStack.Pop ();
-        if (FXTextMap [fxName] != top.GetType ())
-        {
-            throw new System.Exception("Mismatched FXTextEffect tags:" + fxName);
-        }
-		top.ind [1] = parsed.Length;
-		dialogItem.FXTextList.Add (top);
-        */
+        Debug.Log($"EffectEnd:{parsed.Length};{fxName};{FXTextStack.Count};{parsed}");
     }
 
 	// Parses a Text Event
