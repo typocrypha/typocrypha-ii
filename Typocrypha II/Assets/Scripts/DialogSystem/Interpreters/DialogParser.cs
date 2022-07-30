@@ -126,6 +126,7 @@ public class DialogParser : MonoBehaviour
         var fx = dialogBox.gameObject.AddComponent(FXTextMap[fxName]) as FXText.TMProEffect;
         fx.text = dialogBox.dialogText; // Set text component reference
         fx.ind = new List<int> {parsed.Length, -1 }; // Set start position: End position set by ParseEffectEnd
+        fx.Priority = -10; // Set to low priority
         FXTextStack.Push(fx); // Add to stack
         // Hardcoded check for color effect (extra parameter)
         if (fx is FXText.TMProColor)
@@ -133,7 +134,6 @@ public class DialogParser : MonoBehaviour
             var colorName = args[1];
             (fx as FXText.TMProColor).color = color_map[colorName]; // Set color
         }
-        Debug.Log($"EffectStart:{parsed.Length};{fxName};{FXTextStack.Count};{parsed}");
     }
 
 	// Parses an effect's ending tag, and matches with top of effect stack
@@ -149,7 +149,6 @@ public class DialogParser : MonoBehaviour
         }
         top.ind[1] = parsed.Length;
         dialogItem.FXTextList.Add(top);
-        Debug.Log($"EffectEnd:{parsed.Length};{fxName};{FXTextStack.Count};{parsed}");
     }
 
 	// Parses a Text Event
