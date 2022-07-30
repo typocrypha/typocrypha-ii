@@ -11,7 +11,7 @@ namespace FXText
     /// </summary>
     public class TMProShake : TMProEffect
     {
-        public float Intensity = 1.5f; // Amount of shake
+        public float Intensity = 1f; // Amount of shake
 
         public override PriorityGroupEnum PriorityGroup => PriorityGroupEnum.POSITION;
 
