@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
+using UnityEngine;
 using TMPro;
 
 namespace FXText
@@ -33,13 +33,18 @@ namespace FXText
             get;
         }
 
+        IEnumerable<TMProEffect> allEffects; // All effects on this text.
+
         protected const int vertsInQuad = 4; // Number of vertices in a single text quad.
+
+        private void Start()
+        {
+            // Get all other TMProEffect components to determine priority
+            allEffects = GetComponents<TMProEffect>().OrderBy(a => a.Priority);
+        }
 
         private void Update()
         {
-            // Get all other TMProEffect components to determine priority
-            var allEffects = GetComponents<TMProEffect>();
-            allEffects.OrderBy(a => a.Priority);
             // All effects managed by highest priority instance
             if (allEffects.Last() == this)
             {
@@ -67,7 +72,7 @@ namespace FXText
                 }
                 // Get effects on current character, and continue if no effects.
                 var currEffects = GetApplicableEffects(charIndex, allEffects);
-                if (currEffects.Count() == 0) continue;
+                if (currEffects.Count == 0) continue;
                 // Split list of effects based on priority groups, and get highest priority for each group
                 var splitEffects = SplitByPriorityGroup(currEffects);                
                 // Apply effects
@@ -98,7 +103,7 @@ namespace FXText
         /// <param name="charIndex">Index of current character</param>
         /// <param name="effects">All effects on this text object</param>
         /// <returns>List of effects on current character</returns>
-        static IEnumerable<TMProEffect> GetApplicableEffects(int charIndex, IEnumerable<TMProEffect> effects)
+        static List<TMProEffect> GetApplicableEffects(int charIndex, IEnumerable<TMProEffect> effects)
         {
             var currEffects = new List<TMProEffect>();
             for (int priority = 0; priority < effects.Count(); priority++)
@@ -121,16 +126,16 @@ namespace FXText
         /// </summary>
         /// <param name="effects">List of effects to split</param>
         /// <returns>Nested list of effects by priority group</returns>
-        static IEnumerable<TMProEffect> SplitByPriorityGroup(IEnumerable<TMProEffect> effects)
+        static List<TMProEffect> SplitByPriorityGroup(List<TMProEffect> effects)
         {
             // Organize by priority group
-            var grouped = effects.OrderBy(a => (int)a.PriorityGroup); 
+            effects.Sort((a, b) => a.PriorityGroup.CompareTo(b.PriorityGroup)); 
             // Initialize loop
             var split = new List<List<TMProEffect>>();
-            var currGroup = grouped.First().PriorityGroup;
+            var currGroup = effects.First().PriorityGroup;
             split.Add(new List<TMProEffect>());
             // Go through all effects and split by priority group
-            foreach (var effect in grouped)
+            foreach (var effect in effects)
             {
                 // If effect is not in current group, create a new group
                 if (effect.PriorityGroup != currGroup)
@@ -144,8 +149,8 @@ namespace FXText
             var highestPriorityEffects = new List<TMProEffect>();
             foreach (var group in split)
             {
-                var sorted = group.OrderBy(a => a.Priority);
-                highestPriorityEffects.Add(sorted.Last());
+                group.Sort((a, b) => a.Priority.CompareTo(b.Priority));
+                highestPriorityEffects.Add(group.Last());
             }
             return highestPriorityEffects;
         }
@@ -163,7 +168,6 @@ namespace FXText
         /// <param name="meshInfo">Text mesh data</param>
         /// <param name="vertexIndex">Starting vertex index for character</param>
         protected abstract void ApplyDefaultEffect(TMP_MeshInfo meshInfo, int vertexIndex);
-
     }
 }
 
