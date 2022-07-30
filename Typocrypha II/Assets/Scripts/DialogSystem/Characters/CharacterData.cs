@@ -5,6 +5,12 @@
 [System.Serializable]
 public class CharacterData : ScriptableObject
 {
+    public enum FacingDirection
+    {
+        Left,
+        Right,
+        None,
+    }
     public string mainAlias;
     public NameSet aliases; // Different aliases/names for this character
     public PoseMap poses; // Different body poses
@@ -19,6 +25,7 @@ public class CharacterData : ScriptableObject
     public Color characterColorLight = Color.white;
     public Color characterHighlightColorLeft = Color.white;
     public Color characterHighlightColorRight = Color.white;
+    public FacingDirection defaultFacingDirection = FacingDirection.Left;
 
     [System.Serializable]
     public class PoseData

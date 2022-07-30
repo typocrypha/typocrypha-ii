@@ -39,6 +39,17 @@ public class VNPlusCharacter : MonoBehaviour
     private TweenInfo nameHighlightTween;
     private TweenInfo rightHighlightTween;
     private TweenInfo leftHighlightTween;
+    private bool Flipped
+    {
+        get => poseImage.transform.localScale.x == -1;
+        set
+        {
+            if (value == Flipped)
+                return;
+            float xScale = value ? -1 : 1;
+            poseImage.transform.localScale = new Vector3(xScale, poseImage.transform.localScale.y);
+        }
+    }
 
     private void Awake()
     {
@@ -118,15 +129,20 @@ public class VNPlusCharacter : MonoBehaviour
         {
             var poseData = data.poses[pose];
             poseImage.sprite = poseData.pose;
+            // Set flipped
+            CharacterData.FacingDirection facing = data.defaultFacingDirection;
+            Flipped = facing == CharacterData.FacingDirection.Right && Column == DialogViewVNPlus.CharacterColumn.Right
+                || facing == CharacterData.FacingDirection.Left && Column == DialogViewVNPlus.CharacterColumn.Left;
             // Set position
-            float xValue = poseData.xCenterNormalized;
-            if(column == DialogViewVNPlus.CharacterColumn.Left)
+            float xValue = Flipped ? Mathf.Abs(1 - poseData.xCenterNormalized) : poseData.xCenterNormalized;
+            if(Column == DialogViewVNPlus.CharacterColumn.Left)
             {
-                xValue = Mathf.Abs(1 - xValue) + leftColAdjustment;
+                xValue += leftColAdjustment;
             }
             poseImage.rectTransform.anchorMin = new Vector2(xValue, poseData.yHeadTopNormalized);
             poseImage.rectTransform.anchorMax = new Vector2(xValue, poseData.yHeadTopNormalized);
             // Set save data
+
         }
         else
         {
