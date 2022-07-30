@@ -21,7 +21,9 @@ public class VNPlusCharacter : MonoBehaviour
     [SerializeField] private Image poseImage;
     [SerializeField] private Image expressionImage;
     [SerializeField] private Image leftHighlightImage;
+    [SerializeField] private Image leftHighlightDimmer;
     [SerializeField] private Image rightHighlightImage;
+    [SerializeField] private Image rightHighlightDimmer;
     [SerializeField] private Image nameplateBackground;
     [SerializeField] private float nameplateBackgroundOpacity = 0.75f;
     [SerializeField] private Image nameplateDimmer;
@@ -32,13 +34,18 @@ public class VNPlusCharacter : MonoBehaviour
     [SerializeField] private TweenInfo adjustSizeTween;
     [SerializeField] private TweenInfo adjustPosTween;
     [SerializeField] private TweenInfo highlightTween;
+    [SerializeField] private TweenInfo frameDimTween;
     private TweenInfo exprHighlightTween;
     private TweenInfo nameHighlightTween;
+    private TweenInfo rightHighlightTween;
+    private TweenInfo leftHighlightTween;
 
     private void Awake()
     {
         exprHighlightTween = new TweenInfo(highlightTween);
         nameHighlightTween = new TweenInfo(highlightTween);
+        rightHighlightTween = new TweenInfo(frameDimTween);
+        leftHighlightTween = new TweenInfo(frameDimTween);
     }
 
     public string NameText 
@@ -82,9 +89,12 @@ public class VNPlusCharacter : MonoBehaviour
                 return;
             isHighlighted = value;
             var color = value ? highlightColor : noHighlightColor;
+            var dimColor = value ? nameHighlightColor : nameNoHighlightColor;
             highlightTween.Start(poseImage.DOColor(color, highlightTween.Time));
             exprHighlightTween.Start(expressionImage.DOColor(color, exprHighlightTween.Time));
-            nameHighlightTween.Start(nameplateDimmer.DOColor(value ? nameHighlightColor : nameNoHighlightColor, nameHighlightTween.Time));
+            nameHighlightTween.Start(nameplateDimmer.DOColor(dimColor, nameHighlightTween.Time));
+            rightHighlightTween.Start(rightHighlightDimmer.DOColor(dimColor, rightHighlightTween.Time));
+            leftHighlightTween.Start(leftHighlightDimmer.DOColor(dimColor, leftHighlightTween.Time));
         }
     }
 
