@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using UnityEngine;
+using System.Collections.Generic;
 
 [System.Serializable]
 public class TweenInfo
@@ -10,8 +11,8 @@ public class TweenInfo
     [SerializeField] private Ease ease;
     [SerializeField] private AnimationCurve customEase;
 
-    public Tween Tween => currTween;
-    private Tween currTween;
+    private List<Tween> tweens;
+    private List<Tween> Tweens => tweens = tweens ?? new List<Tween>();
 
     public TweenInfo(TweenInfo toCopy)
     {
@@ -21,28 +22,34 @@ public class TweenInfo
         customEase = new AnimationCurve(toCopy.customEase.keys);
     }
 
-    public void Start(Tween tween)
+    public void Start(params Tween[] newTweens)
     {
         Complete();
-        currTween = tween;
-        if (useCustomEase)
+        Tweens.AddRange(newTweens);
+        foreach(var tween in Tweens)
         {
-            currTween.SetEase(customEase);
-        }
-        else 
-        {
-            currTween.SetEase(ease);
+            if (useCustomEase)
+            {
+                tween.SetEase(customEase);
+            }
+            else
+            {
+                tween.SetEase(ease);
+            }
         }
     }
 
     public void Complete()
     {
-        currTween?.Complete();
-        currTween = null;
+        foreach(var tween in Tweens)
+        {
+            tween.Complete();
+        }
+        Tweens.Clear();
     }
 
     public YieldInstruction WaitForCompletion()
     {
-        return currTween?.WaitForCompletion();
+        return Tweens.Count > 0 ? Tweens[0].WaitForCompletion() : null;
     }
 }

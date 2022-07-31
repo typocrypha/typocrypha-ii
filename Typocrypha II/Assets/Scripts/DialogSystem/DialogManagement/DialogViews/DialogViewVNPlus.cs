@@ -309,7 +309,7 @@ public class DialogViewVNPlus : DialogView
         }
         if(lastBoxUI != null)
         {
-            messageFadeTween.Start(lastBoxUI.CanvasGroup.DOFade(0.55f, messageFadeTween.Time));
+            lastBoxUI.DoDim(messageFadeTween);
         }
         lastBoxUI = vNPlusDialogUI;
         readyToContinue = true;
