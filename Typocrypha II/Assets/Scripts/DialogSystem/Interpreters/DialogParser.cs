@@ -106,13 +106,13 @@ public class DialogParser : MonoBehaviour
         // TEMP: hardcoded color map
         var color_map = new Dictionary<string, Color32> {
             {"ui-terms", new Color32(5, 171, 255, 255) },
+            {"evil-eye", new Color32(255, 0, 66, 255) },
+            {"whisper", new Color32(200, 200, 200, 220) },
+            {"highlight", new Color32(255, 132, 12, 255) },
             //{ "spell",      "#ff6eff" },
-            //{ "ui-terms",   "#05abff" },
-            //{ "evil-eye",   "#ff0042" },
             //{ "enemy-talk", "#974dfe" },
             //{ "enemy-name", "#16e00c" },
             //{ "tips",       "#ffdb16" },
-            //{ "whisper",    "#c8c8c8" },
             //{ "highlight",  "#ff840c" },
             //{ "mc",         "#d043e2" },
             //{ "illyia",     "#c70126" },

@@ -88,7 +88,6 @@ public class DialogBox : MonoBehaviour, IDialogBox
         dialogItem.text = Regex.Replace(rtext, @"<.*?>", ""); // Remove rich text tags
         DialogParser.instance.Parse(dialogItem, this); // Parse w/o rich text tags
         dialogText.text = DialogParser.instance.RemoveTags(rtext); // Set dialog text (doesn't remove rich text tags)
-        Debug.Log(dialogText.text);
         // Set box size based on text.
         if (resizeTextBox) SetBoxHeight();
         // Set voice sfx.
@@ -144,7 +143,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
         // Remove old text
         dialogText.text = "";
         // Remove old text effects.
-        var fxTexts = dialogText.GetComponents<FXText.FXTextBase>();
+        var fxTexts = dialogText.GetComponents<FXText.TMProEffect>();
         foreach (var fxText in fxTexts)
             Destroy(fxText);
     }
