@@ -34,7 +34,7 @@ public class DialogViewVNPlus : DialogView
 
     public override bool ReadyToContinue => readyToContinue;
 
-    private bool readyToContinue = false;
+    private bool readyToContinue = true;
 
     private readonly Dictionary<string, VNPlusCharacter> characterMap = new Dictionary<string, VNPlusCharacter>(maxCharactersPerColumn * 2);
     private readonly List<VNPlusCharacter> rightCharacterList = new List<VNPlusCharacter>(maxCharactersPerColumn);
@@ -253,10 +253,10 @@ public class DialogViewVNPlus : DialogView
         }
         var prefab = GetMessagePrefab(dialogItem.CharacterData, out bool isNarrator);
         var dialogBox = Instantiate(prefab, messageContainer).GetComponent<DialogBox>();
+        dialogBox.transform.SetAsFirstSibling();
         var dialogBoxUI = dialogBox.GetComponent<VNPlusDialogBoxUI>();
         SetCharacterSpecificUI(dialogBoxUI, dialogItem.CharacterData);
-        readyToContinue = false;
-        StartCoroutine(AnimateNewMessageIn(dialogBox, dialogBoxUI, dialogItem, isNarrator));
+        AnimateNewMessageIn(dialogBox, dialogBoxUI, dialogItem, isNarrator);
         return dialogBox;
     }
 
@@ -295,13 +295,14 @@ public class DialogViewVNPlus : DialogView
         return narratorDialogBoxPrefab;
     }
 
-    private IEnumerator AnimateNewMessageIn(DialogBox box, VNPlusDialogBoxUI vNPlusDialogUI, DialogItem item, bool isNarrator)
+    private void AnimateNewMessageIn(DialogBox box, VNPlusDialogBoxUI vNPlusDialogUI, DialogItem item, bool isNarrator)
     {
         box.SetupDialogBox(item);
-        yield return null;
-        box.SetBoxHeight();
         CompleteMessageTweens();
-        messageTween.Start(messageContainer.DOAnchorPosY(messageContainer.anchoredPosition.y + (box.GetBoxHeight() + messageLayout.spacing), messageTween.Time));
+        LayoutRebuilder.ForceRebuildLayoutImmediate(messageContainer);
+        var yTemp = messageContainer.anchoredPosition.y;
+        messageContainer.anchoredPosition = new Vector2(messageContainer.anchoredPosition.x, messageContainer.anchoredPosition.y + (box.GetBoxHeight() + messageLayout.spacing));
+        messageTween.Start(messageContainer.DOAnchorPosY(yTemp, messageTween.Time));
         if (!isNarrator)
         {
             box.transform.localScale = new Vector3(0, 0, box.transform.localScale.z);
@@ -312,9 +313,7 @@ public class DialogViewVNPlus : DialogView
             lastBoxUI.DoDim(messageFadeTween);
         }
         lastBoxUI = vNPlusDialogUI;
-        readyToContinue = true;
         box.StartDialogScroll();
-        yield break;
     }
 
     private void CompleteMessageTweens()

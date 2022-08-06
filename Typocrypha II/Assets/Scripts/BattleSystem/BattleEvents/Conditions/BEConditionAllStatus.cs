@@ -5,10 +5,10 @@ using System.Linq;
 
 public class BEConditionAllStatus : BattleEventCondition
 {
-    public List<Caster.BattleStatus> statuses = new List<Caster.BattleStatus>();
+    [SerializeField] private List<Caster.BattleStatus> statuses = new List<Caster.BattleStatus>();
     public override bool Check()
     {
-        bool ret = Battlefield.instance.Enemies.All((e) => statuses.Contains(e.BStatus));
-        return ret;
+        var enemies = Battlefield.instance.Enemies;
+        return enemies.Count() > 0 && enemies.All(e => statuses.Contains(e.BStatus));
     }
 }
