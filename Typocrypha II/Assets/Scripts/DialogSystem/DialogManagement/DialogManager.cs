@@ -130,7 +130,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
         DialogItem dialogItem = graphParser.NextDialog(next);
         if (dialogItem == null) return;
         // Remove certain old text effects from previous box
-        if (dialogBox != null) DisableOldTextEffects(dialogBox); 
+        if ((dialogBox as DialogBox) != null) DisableOldTextEffects(dialogBox); 
         // Get and display proper view.
         DialogView view = GetView(dialogItem.GetView());
         if (view != dialogView)
