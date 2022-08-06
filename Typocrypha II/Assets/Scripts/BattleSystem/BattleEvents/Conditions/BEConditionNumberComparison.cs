@@ -1,4 +1,8 @@
-﻿public class BEConditionNumberOfEnemies : BattleEventCondition
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public abstract class BEConditionNumberComparison : BattleEventCondition
 {
     [System.Flags]
     public enum Operator
@@ -10,19 +14,19 @@
         LessThanOrEqual = LessThan | EqualTo,
         GreaterThanOrEqual = GreaterThan | EqualTo,
     }
-    
-    public int num;
-    public Operator op;
+
+    [SerializeField] private int num;
+    [SerializeField] private Operator op;
 
     public override bool Check()
     {
-        int count = Battlefield.instance.Enemies.Length;
+        int count = Number;
         if (op.HasFlag(Operator.EqualTo) && count == num)
             return true;
         if (op.HasFlag(Operator.GreaterThan) && count > num)
             return true;
-        if (op.HasFlag(Operator.LessThan) && count < num)
-            return true;
-        return false;
+        return op.HasFlag(Operator.LessThan) && count < num;
     }
+
+    protected abstract int Number { get; }
 }
