@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8946415977830941343
+--- !u!114 &-7855287806506062602
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,17 +9,48 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76e0088c2087f424d8475015e23d70c7, type: 3}
-  m_Name: Set Pose
+  m_Script: {fileID: 11500000, guid: 648e1859616c185439cc1cabbedf0a64, type: 3}
+  m_Name: Bubble Dialog
   m_EditorClassIdentifier: 
-  position: {x: 3090, y: 0}
+  position: {x: 1060, y: 0}
   dynamicConnectionPorts: []
   backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: -4493876685241154773}
-  fromPreviousIN: {fileID: 1832521911849421845}
-  characterData: {fileID: 11400000, guid: ef5b41e7e06f4b74f952e825682fca78, type: 2}
-  pose: 1,2
---- !u!114 &-8572446833375802608
+  toNextOUT: {fileID: 7875821428244554111}
+  fromPreviousIN: {fileID: -1789701191647787438}
+  characterName: Adelai
+  displayName: 
+  text: '{c,ui-terms}Stunned demons can''t use spells for a while{c}, leaving them
+    open to attack!'
+  tipsData: {fileID: 0}
+  rectVal:
+    serializedVersion: 2
+    x: 0.7
+    y: -0.4
+    width: 0.25
+    height: 0.5
+  multi: 0
+--- !u!114 &-6761924349227817867
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
+  m_Name: To Next
+  m_EditorClassIdentifier: 
+  body: {fileID: -396349092278007912}
+  direction: 2
+  maxConnectionCount: 0
+  styleID: Gameflow
+  _connections:
+  - {fileID: -2957579921343370288}
+  side: 2
+  sidePosition: 30
+  sideOffset: 0
+--- !u!114 &-4965606860649204108
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -31,56 +62,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
   m_Name: From Previous
   m_EditorClassIdentifier: 
-  body: {fileID: -4755474663231927791}
+  body: {fileID: 6073538823917902982}
   direction: 1
   maxConnectionCount: 1
   styleID: Gameflow
   _connections:
-  - {fileID: 6568225569141830196}
+  - {fileID: 4256518526112087058}
   side: 4
   sidePosition: 30
   sideOffset: 0
---- !u!114 &-8336241564057055617
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76e0088c2087f424d8475015e23d70c7, type: 3}
-  m_Name: Set Pose
-  m_EditorClassIdentifier: 
-  position: {x: 1350, y: 0}
-  dynamicConnectionPorts: []
-  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: 2777660048907759433}
-  fromPreviousIN: {fileID: -43135591521704315}
-  characterData: {fileID: 11400000, guid: ef5b41e7e06f4b74f952e825682fca78, type: 2}
-  pose: 1,2
---- !u!114 &-8093798093970910902
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 415de72d05d258747af7617bc103f2e2, type: 3}
-  m_Name: VN Plus Dialog
-  m_EditorClassIdentifier: 
-  position: {x: 1060, y: 0}
-  dynamicConnectionPorts: []
-  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: -342248348231366525}
-  fromPreviousIN: {fileID: 6831932827387154927}
-  characterName: Adelai
-  displayName: 
-  text: Whenever you counter a demon or hit it with a weakness, it'll get {c,ui-terms}staggered.{c}
-  tipsData: {fileID: 0}
---- !u!114 &-7284662196441196498
+--- !u!114 &-4867738201593617691
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -92,53 +83,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
   m_Name: To Next
   m_EditorClassIdentifier: 
-  body: {fileID: 8580159559150595922}
+  body: {fileID: 9021431275711308532}
   direction: 2
   maxConnectionCount: 0
   styleID: Gameflow
   _connections:
-  - {fileID: 1629572301304676739}
+  - {fileID: -1789701191647787438}
   side: 2
   sidePosition: 30
   sideOffset: 0
---- !u!114 &-5679763620510769053
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0fc64b704248afd4a889e6a8984d17c9, type: 3}
-  m_Name: End And Hide
-  m_EditorClassIdentifier: 
-  position: {x: 3670, y: 0}
-  dynamicConnectionPorts: []
-  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  fromPreviousIN: {fileID: -1201163269572488766}
---- !u!114 &-4755474663231927791
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 415de72d05d258747af7617bc103f2e2, type: 3}
-  m_Name: VN Plus Dialog
-  m_EditorClassIdentifier: 
-  position: {x: 480, y: 0}
-  dynamicConnectionPorts: []
-  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: 2433082250728625097}
-  fromPreviousIN: {fileID: -8572446833375802608}
-  characterName: Adelai
-  displayName: 
-  text: You {c,ui-terms}stunned{c} that demon, Ayin!
-  tipsData: {fileID: 0}
---- !u!114 &-4493876685241154773
+--- !u!114 &-3703010799533950454
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -148,80 +102,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: To Next
+  m_Name: From Previous
   m_EditorClassIdentifier: 
-  body: {fileID: -8946415977830941343}
-  direction: 2
-  maxConnectionCount: 0
+  body: {fileID: -608056062055727246}
+  direction: 1
+  maxConnectionCount: 1
   styleID: Gameflow
   _connections:
-  - {fileID: 8185723299859221322}
-  side: 2
+  - {fileID: -2699089707617314713}
+  side: 4
   sidePosition: 30
   sideOffset: 0
---- !u!114 &-4411416583042170329
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: To Next
-  m_EditorClassIdentifier: 
-  body: {fileID: 8327722233705299068}
-  direction: 2
-  maxConnectionCount: 0
-  styleID: Gameflow
-  _connections:
-  - {fileID: 3063439156236348497}
-  side: 2
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &-4118489006871612853
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76e0088c2087f424d8475015e23d70c7, type: 3}
-  m_Name: Set Pose
-  m_EditorClassIdentifier: 
-  position: {x: 190, y: 0}
-  dynamicConnectionPorts: []
-  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: 6568225569141830196}
-  fromPreviousIN: {fileID: 1987265122558703835}
-  characterData: {fileID: 11400000, guid: ef5b41e7e06f4b74f952e825682fca78, type: 2}
-  pose: 1,2
---- !u!114 &-3295859122261763857
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 415de72d05d258747af7617bc103f2e2, type: 3}
-  m_Name: VN Plus Dialog
-  m_EditorClassIdentifier: 
-  position: {x: 3380, y: 0}
-  dynamicConnectionPorts: []
-  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: 4812156008393159556}
-  fromPreviousIN: {fileID: 8185723299859221322}
-  characterName: Adelai
-  displayName: 
-  text: Keeping your enemy stunned is a great way to do damage and also to protect
-    yourself!
-  tipsData: {fileID: 0}
---- !u!114 &-2945917264399169160
+--- !u!114 &-3077919981294337651
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -236,27 +128,8 @@ MonoBehaviour:
   position: {x: 0, y: 0}
   dynamicConnectionPorts: []
   backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: 5986295255011160846}
---- !u!114 &-2466360450282478974
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76e0088c2087f424d8475015e23d70c7, type: 3}
-  m_Name: Set Pose
-  m_EditorClassIdentifier: 
-  position: {x: 1930, y: 0}
-  dynamicConnectionPorts: []
-  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: 2256800321376530077}
-  fromPreviousIN: {fileID: 7062072729690064089}
-  characterData: {fileID: 11400000, guid: ef5b41e7e06f4b74f952e825682fca78, type: 2}
-  pose: 1,2
---- !u!114 &-1201163269572488766
+  toNextOUT: {fileID: -2699089707617314713}
+--- !u!114 &-2957579921343370288
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -268,16 +141,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
   m_Name: From Previous
   m_EditorClassIdentifier: 
-  body: {fileID: -5679763620510769053}
+  body: {fileID: 9012787933172881128}
   direction: 1
   maxConnectionCount: 1
   styleID: Gameflow
   _connections:
-  - {fileID: 4812156008393159556}
+  - {fileID: -6761924349227817867}
   side: 4
   sidePosition: 30
   sideOffset: 0
---- !u!114 &-342248348231366525
+--- !u!114 &-2699089707617314713
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -289,16 +162,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
   m_Name: To Next
   m_EditorClassIdentifier: 
-  body: {fileID: -8093798093970910902}
+  body: {fileID: -3077919981294337651}
   direction: 2
   maxConnectionCount: 0
   styleID: Gameflow
   _connections:
-  - {fileID: -43135591521704315}
+  - {fileID: -3703010799533950454}
   side: 2
   sidePosition: 30
   sideOffset: 0
---- !u!114 &-299916391497905777
+--- !u!114 &-1789701191647787438
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -310,16 +183,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
   m_Name: From Previous
   m_EditorClassIdentifier: 
-  body: {fileID: 8327722233705299068}
+  body: {fileID: -7855287806506062602}
   direction: 1
   maxConnectionCount: 1
   styleID: Gameflow
   _connections:
-  - {fileID: 2256800321376530077}
+  - {fileID: -4867738201593617691}
   side: 4
   sidePosition: 30
   sideOffset: 0
---- !u!114 &-96294297861446602
+--- !u!114 &-1053580889832007866
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
+  m_Name: To Next
+  m_EditorClassIdentifier: 
+  body: {fileID: 9012787933172881128}
+  direction: 2
+  maxConnectionCount: 0
+  styleID: Gameflow
+  _connections:
+  - {fileID: 6133188195196542826}
+  side: 2
+  sidePosition: 30
+  sideOffset: 0
+--- !u!114 &-631552543788003241
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -331,16 +225,73 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
   m_Name: From Previous
   m_EditorClassIdentifier: 
-  body: {fileID: 8115024136247034376}
+  body: {fileID: -396349092278007912}
   direction: 1
   maxConnectionCount: 1
   styleID: Gameflow
   _connections:
-  - {fileID: 2777660048907759433}
+  - {fileID: 7875821428244554111}
   side: 4
   sidePosition: 30
   sideOffset: 0
---- !u!114 &-43135591521704315
+--- !u!114 &-608056062055727246
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 648e1859616c185439cc1cabbedf0a64, type: 3}
+  m_Name: Bubble Dialog
+  m_EditorClassIdentifier: 
+  position: {x: 190, y: 0}
+  dynamicConnectionPorts: []
+  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+  toNextOUT: {fileID: 4256518526112087058}
+  fromPreviousIN: {fileID: -3703010799533950454}
+  characterName: Adelai
+  displayName: 
+  text: You {c,ui-terms}stunned{c} that demon, Ayin!
+  tipsData: {fileID: 0}
+  rectVal:
+    serializedVersion: 2
+    x: 0.7
+    y: -0.4
+    width: 0.25
+    height: 0.5
+  multi: 0
+--- !u!114 &-396349092278007912
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 648e1859616c185439cc1cabbedf0a64, type: 3}
+  m_Name: Bubble Dialog
+  m_EditorClassIdentifier: 
+  position: {x: 1350, y: 0}
+  dynamicConnectionPorts: []
+  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+  toNextOUT: {fileID: -6761924349227817867}
+  fromPreviousIN: {fileID: -631552543788003241}
+  characterName: Adelai
+  displayName: 
+  text: In your Typocrypha HUD, you can see how many times you have to stagger a demon
+    to stun them in the {c,ui-terms}Shield icon.{c}
+  tipsData: {fileID: 0}
+  rectVal:
+    serializedVersion: 2
+    x: 0.7
+    y: -0.4
+    width: 0.25
+    height: 0.5
+  multi: 0
+--- !u!114 &-86167996618700446
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -352,12 +303,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
   m_Name: From Previous
   m_EditorClassIdentifier: 
-  body: {fileID: -8336241564057055617}
+  body: {fileID: 9021431275711308532}
   direction: 1
   maxConnectionCount: 1
   styleID: Gameflow
   _connections:
-  - {fileID: -342248348231366525}
+  - {fileID: 7079026341637026980}
   side: 4
   sidePosition: 30
   sideOffset: 0
@@ -378,22 +329,16 @@ MonoBehaviour:
   savePath: Assets\ScriptableObjects\DialogScenes\alt-ACT-I-4-4-Stun.asset
   livesInScene: 0
   nodes:
-  - {fileID: -2945917264399169160}
-  - {fileID: -4118489006871612853}
-  - {fileID: -4755474663231927791}
-  - {fileID: 8613122922470801590}
-  - {fileID: -8093798093970910902}
-  - {fileID: -8336241564057055617}
-  - {fileID: 8115024136247034376}
-  - {fileID: -2466360450282478974}
-  - {fileID: 8327722233705299068}
-  - {fileID: 8580159559150595922}
-  - {fileID: 2001519640441100910}
-  - {fileID: -8946415977830941343}
-  - {fileID: -3295859122261763857}
-  - {fileID: -5679763620510769053}
+  - {fileID: -3077919981294337651}
+  - {fileID: -608056062055727246}
+  - {fileID: 6073538823917902982}
+  - {fileID: 9021431275711308532}
+  - {fileID: -7855287806506062602}
+  - {fileID: -396349092278007912}
+  - {fileID: 9012787933172881128}
+  - {fileID: 8511909964012013369}
   groups: []
---- !u!114 &1037597021122424239
+--- !u!114 &4256518526112087058
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -405,16 +350,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
   m_Name: To Next
   m_EditorClassIdentifier: 
-  body: {fileID: 2001519640441100910}
+  body: {fileID: -608056062055727246}
   direction: 2
   maxConnectionCount: 0
   styleID: Gameflow
   _connections:
-  - {fileID: 1832521911849421845}
+  - {fileID: -4965606860649204108}
   side: 2
   sidePosition: 30
   sideOffset: 0
---- !u!114 &1382729098807704634
+--- !u!114 &6073538823917902982
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -423,167 +368,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: To Next
+  m_Script: {fileID: 11500000, guid: 648e1859616c185439cc1cabbedf0a64, type: 3}
+  m_Name: Bubble Dialog
   m_EditorClassIdentifier: 
-  body: {fileID: 8115024136247034376}
-  direction: 2
-  maxConnectionCount: 0
-  styleID: Gameflow
-  _connections:
-  - {fileID: 7062072729690064089}
-  side: 2
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &1629572301304676739
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: From Previous
-  m_EditorClassIdentifier: 
-  body: {fileID: 2001519640441100910}
-  direction: 1
-  maxConnectionCount: 1
-  styleID: Gameflow
-  _connections:
-  - {fileID: -7284662196441196498}
-  side: 4
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &1832521911849421845
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: From Previous
-  m_EditorClassIdentifier: 
-  body: {fileID: -8946415977830941343}
-  direction: 1
-  maxConnectionCount: 1
-  styleID: Gameflow
-  _connections:
-  - {fileID: 1037597021122424239}
-  side: 4
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &1987265122558703835
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: From Previous
-  m_EditorClassIdentifier: 
-  body: {fileID: -4118489006871612853}
-  direction: 1
-  maxConnectionCount: 1
-  styleID: Gameflow
-  _connections:
-  - {fileID: 5986295255011160846}
-  side: 4
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &2001519640441100910
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 415de72d05d258747af7617bc103f2e2, type: 3}
-  m_Name: VN Plus Dialog
-  m_EditorClassIdentifier: 
-  position: {x: 2800, y: 0}
+  position: {x: 480, y: 0}
   dynamicConnectionPorts: []
   backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: 1037597021122424239}
-  fromPreviousIN: {fileID: 1629572301304676739}
+  toNextOUT: {fileID: 7079026341637026980}
+  fromPreviousIN: {fileID: -4965606860649204108}
   characterName: Adelai
   displayName: 
-  text: In your Typocrypha HUD, you can see how many times you have to stagger a demon
-    to stun them in the {c,ui-terms}Shield icon.{c}
+  text: Whenever you counter a demon or hit it with a weakness, it'll get {c,ui-terms}staggered.{c}
   tipsData: {fileID: 0}
---- !u!114 &2256800321376530077
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: To Next
-  m_EditorClassIdentifier: 
-  body: {fileID: -2466360450282478974}
-  direction: 2
-  maxConnectionCount: 0
-  styleID: Gameflow
-  _connections:
-  - {fileID: -299916391497905777}
-  side: 2
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &2433082250728625097
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: To Next
-  m_EditorClassIdentifier: 
-  body: {fileID: -4755474663231927791}
-  direction: 2
-  maxConnectionCount: 0
-  styleID: Gameflow
-  _connections:
-  - {fileID: 4386743511838181518}
-  side: 2
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &2777660048907759433
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: To Next
-  m_EditorClassIdentifier: 
-  body: {fileID: -8336241564057055617}
-  direction: 2
-  maxConnectionCount: 0
-  styleID: Gameflow
-  _connections:
-  - {fileID: -96294297861446602}
-  side: 2
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &3063439156236348497
+  rectVal:
+    serializedVersion: 2
+    x: 0.7
+    y: -0.4
+    width: 0.25
+    height: 0.5
+  multi: 0
+--- !u!114 &6133188195196542826
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -595,37 +399,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
   m_Name: From Previous
   m_EditorClassIdentifier: 
-  body: {fileID: 8580159559150595922}
+  body: {fileID: 8511909964012013369}
   direction: 1
   maxConnectionCount: 1
   styleID: Gameflow
   _connections:
-  - {fileID: -4411416583042170329}
+  - {fileID: -1053580889832007866}
   side: 4
   sidePosition: 30
   sideOffset: 0
---- !u!114 &4386743511838181518
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: From Previous
-  m_EditorClassIdentifier: 
-  body: {fileID: 8613122922470801590}
-  direction: 1
-  maxConnectionCount: 1
-  styleID: Gameflow
-  _connections:
-  - {fileID: 2433082250728625097}
-  side: 4
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &4812156008393159556
+--- !u!114 &7079026341637026980
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -637,16 +420,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
   m_Name: To Next
   m_EditorClassIdentifier: 
-  body: {fileID: -3295859122261763857}
+  body: {fileID: 6073538823917902982}
   direction: 2
   maxConnectionCount: 0
   styleID: Gameflow
   _connections:
-  - {fileID: -1201163269572488766}
+  - {fileID: -86167996618700446}
   side: 2
   sidePosition: 30
   sideOffset: 0
---- !u!114 &5986295255011160846
+--- !u!114 &7875821428244554111
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -658,16 +441,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
   m_Name: To Next
   m_EditorClassIdentifier: 
-  body: {fileID: -2945917264399169160}
+  body: {fileID: -7855287806506062602}
   direction: 2
   maxConnectionCount: 0
   styleID: Gameflow
   _connections:
-  - {fileID: 1987265122558703835}
+  - {fileID: -631552543788003241}
   side: 2
   sidePosition: 30
   sideOffset: 0
---- !u!114 &6568225569141830196
+--- !u!114 &8511909964012013369
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -676,19 +459,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: To Next
+  m_Script: {fileID: 11500000, guid: 0fc64b704248afd4a889e6a8984d17c9, type: 3}
+  m_Name: End And Hide
   m_EditorClassIdentifier: 
-  body: {fileID: -4118489006871612853}
-  direction: 2
-  maxConnectionCount: 0
-  styleID: Gameflow
-  _connections:
-  - {fileID: -8572446833375802608}
-  side: 2
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &6831932827387154927
+  position: {x: 1930, y: 0}
+  dynamicConnectionPorts: []
+  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+  fromPreviousIN: {fileID: 6133188195196542826}
+--- !u!114 &9012787933172881128
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -697,160 +475,52 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: From Previous
-  m_EditorClassIdentifier: 
-  body: {fileID: -8093798093970910902}
-  direction: 1
-  maxConnectionCount: 1
-  styleID: Gameflow
-  _connections:
-  - {fileID: 7469422560240343972}
-  side: 4
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &7062072729690064089
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: From Previous
-  m_EditorClassIdentifier: 
-  body: {fileID: -2466360450282478974}
-  direction: 1
-  maxConnectionCount: 1
-  styleID: Gameflow
-  _connections:
-  - {fileID: 1382729098807704634}
-  side: 4
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &7469422560240343972
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: To Next
-  m_EditorClassIdentifier: 
-  body: {fileID: 8613122922470801590}
-  direction: 2
-  maxConnectionCount: 0
-  styleID: Gameflow
-  _connections:
-  - {fileID: 6831932827387154927}
-  side: 2
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &8115024136247034376
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 415de72d05d258747af7617bc103f2e2, type: 3}
-  m_Name: VN Plus Dialog
+  m_Script: {fileID: 11500000, guid: 648e1859616c185439cc1cabbedf0a64, type: 3}
+  m_Name: Bubble Dialog
   m_EditorClassIdentifier: 
   position: {x: 1640, y: 0}
   dynamicConnectionPorts: []
   backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: 1382729098807704634}
-  fromPreviousIN: {fileID: -96294297861446602}
+  toNextOUT: {fileID: -1053580889832007866}
+  fromPreviousIN: {fileID: -2957579921343370288}
+  characterName: Adelai
+  displayName: 
+  text: Keeping your enemy stunned is a great way to do damage and also to protect
+    yourself!
+  tipsData: {fileID: 0}
+  rectVal:
+    serializedVersion: 2
+    x: 0.7
+    y: -0.4
+    width: 0.25
+    height: 0.5
+  multi: 0
+--- !u!114 &9021431275711308532
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 648e1859616c185439cc1cabbedf0a64, type: 3}
+  m_Name: Bubble Dialog
+  m_EditorClassIdentifier: 
+  position: {x: 770, y: 0}
+  dynamicConnectionPorts: []
+  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+  toNextOUT: {fileID: -4867738201593617691}
+  fromPreviousIN: {fileID: -86167996618700446}
   characterName: Adelai
   displayName: 
   text: Keep on {c,ui-terms}staggering{c} a demon, and eventually you'll {c,ui-terms}stun{c}
     them!
   tipsData: {fileID: 0}
---- !u!114 &8185723299859221322
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: From Previous
-  m_EditorClassIdentifier: 
-  body: {fileID: -3295859122261763857}
-  direction: 1
-  maxConnectionCount: 1
-  styleID: Gameflow
-  _connections:
-  - {fileID: -4493876685241154773}
-  side: 4
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &8327722233705299068
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 415de72d05d258747af7617bc103f2e2, type: 3}
-  m_Name: VN Plus Dialog
-  m_EditorClassIdentifier: 
-  position: {x: 2220, y: 0}
-  dynamicConnectionPorts: []
-  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: -4411416583042170329}
-  fromPreviousIN: {fileID: -299916391497905777}
-  characterName: Adelai
-  displayName: 
-  text: '{c,ui-terms}Stunned demons can''t use spells for a while{c}, leaving them
-    open to attack!'
-  tipsData: {fileID: 0}
---- !u!114 &8580159559150595922
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76e0088c2087f424d8475015e23d70c7, type: 3}
-  m_Name: Set Pose
-  m_EditorClassIdentifier: 
-  position: {x: 2510, y: 0}
-  dynamicConnectionPorts: []
-  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: -7284662196441196498}
-  fromPreviousIN: {fileID: 3063439156236348497}
-  characterData: {fileID: 11400000, guid: ef5b41e7e06f4b74f952e825682fca78, type: 2}
-  pose: 1,2
---- !u!114 &8613122922470801590
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76e0088c2087f424d8475015e23d70c7, type: 3}
-  m_Name: Set Pose
-  m_EditorClassIdentifier: 
-  position: {x: 770, y: 0}
-  dynamicConnectionPorts: []
-  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: 7469422560240343972}
-  fromPreviousIN: {fileID: 4386743511838181518}
-  characterData: {fileID: 11400000, guid: ef5b41e7e06f4b74f952e825682fca78, type: 2}
-  pose: 1,2
+  rectVal:
+    serializedVersion: 2
+    x: 0.7
+    y: -0.4
+    width: 0.25
+    height: 0.5
+  multi: 0
