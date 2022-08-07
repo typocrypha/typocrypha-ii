@@ -33,7 +33,6 @@ public class VNPlusCharacter : MonoBehaviour
     [SerializeField] private TextMeshProUGUI nameplateText;
     [SerializeField] private RectTransform mainRect;
     [SerializeField] private TweenInfo joinTween;
-    [SerializeField] private TweenInfo adjustSizeTween;
     [SerializeField] private TweenInfo highlightTween;
     [SerializeField] private TweenInfo frameDimTween;
     private TweenInfo exprHighlightTween;
@@ -159,12 +158,6 @@ public class VNPlusCharacter : MonoBehaviour
     public void SetInitialHeight(float height)
     {
         mainRect.sizeDelta = new Vector2(mainRect.sizeDelta.x, height);
-    }
-
-    public TweenInfo DoAdjustHeightTween(float height)
-    {
-        adjustSizeTween.Start(mainRect.DOSizeDelta(new Vector2(mainRect.sizeDelta.x, height), adjustSizeTween.Time));
-        return adjustSizeTween;
     }
 
     public TweenInfo PlayJoinTween()

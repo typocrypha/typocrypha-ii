@@ -50,6 +50,6 @@ public class TweenInfo
 
     public YieldInstruction WaitForCompletion()
     {
-        return Tweens.Count > 0 ? Tweens[0].WaitForCompletion() : null;
+        return Tweens.Count > 0 ? Tweens[Tweens.Count - 1].WaitForCompletion() : null;
     }
 }

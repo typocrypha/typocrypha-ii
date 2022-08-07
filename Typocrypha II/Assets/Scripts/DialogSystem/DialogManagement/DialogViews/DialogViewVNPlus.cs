@@ -30,7 +30,7 @@ public class DialogViewVNPlus : DialogView
     [SerializeField] private TweenInfo messageScaleTween;
     [SerializeField] private TweenInfo messageFadeTween;
     [SerializeField] private TweenInfo moveCharaToTopTween;
-    [SerializeField] private TweenInfo moveCharacterJoinOrLeaveTween;
+    [SerializeField] private TweenInfo characterJoinLeaveTween;
     [SerializeField] private TextMeshProUGUI locationText;
 
 
@@ -157,18 +157,19 @@ public class DialogViewVNPlus : DialogView
     private IEnumerator AdjustCharacterListPreJoinCR(RectTransform container, List<VNPlusCharacter> characterList)
     {
         GetCharacterAdjustmentValues(container, characterList, 1, out float newHeight, out float posStart);
-        AdjustCharacterHeights(characterList, newHeight, out float staggerTime);
-        yield return new WaitForSeconds(staggerTime);
-        AdjustCharacterPositions(moveCharacterJoinOrLeaveTween, characterList, posStart, newHeight);
-        yield return moveCharacterJoinOrLeaveTween.WaitForCompletion();
+        AdjustCharacterHeights(characterJoinLeaveTween, characterList, newHeight);
+        yield return new WaitForSeconds(characterJoinLeaveTween.Time / 2);
+        AdjustCharacterPositions(characterJoinLeaveTween, characterList, posStart, newHeight);
+        yield return characterJoinLeaveTween.WaitForCompletion();
     }
 
     private IEnumerator AdjustCharacterListPostLeaveCR(RectTransform container, List<VNPlusCharacter> characterList)
     {
         GetCharacterAdjustmentValues(container, characterList, 0, out float newHeight, out float posStart);
-        AdjustCharacterPositions(moveCharacterJoinOrLeaveTween, characterList, posStart, newHeight);
-        yield return new WaitForSeconds(moveCharacterJoinOrLeaveTween.Time / 2);
-        yield return AdjustCharacterHeights(characterList, newHeight, out float _).WaitForCompletion();
+        AdjustCharacterPositions(characterJoinLeaveTween, characterList, posStart, newHeight);
+        yield return new WaitForSeconds(characterJoinLeaveTween.Time / 2);
+        AdjustCharacterHeights(characterJoinLeaveTween, characterList, newHeight);
+        yield return characterJoinLeaveTween.WaitForCompletion();
     }
 
     private void GetCharacterAdjustmentValues(RectTransform container, List<VNPlusCharacter> characterList, int extraCharacters, out float newHeight, out float posStart)
@@ -189,22 +190,17 @@ public class DialogViewVNPlus : DialogView
         yield return moveCharaToTopTween.WaitForCompletion();
     }
 
-    private TweenInfo AdjustCharacterHeights(List<VNPlusCharacter> characterList, float newHeight, out float staggerTime)
+    private void AdjustCharacterHeights(TweenInfo tweenInfo, List<VNPlusCharacter> characterList, float newHeight)
     {
-        TweenInfo tween = null;
-        staggerTime = 0;
         for (int i = 0; i < characterList.Count; i++)
         {
             var chara = characterList[i];
-            tween = chara.DoAdjustHeightTween(newHeight);
-            staggerTime = Mathf.Max(tween.Time / 2, staggerTime);
+            tweenInfo.Start(chara.MainRect.DOSizeDelta(new Vector2(chara.MainRect.sizeDelta.x, newHeight), tweenInfo.Time));
         }
-        return tween;
     }
 
     private void AdjustCharacterPositions(TweenInfo tweenInfo, List<VNPlusCharacter> characterList, float posStart, float newHeight)
     {
-        tweenInfo.Complete();
         for (int i = 0; i < characterList.Count; i++)
         {
             var chara = characterList[i]; 
