@@ -177,6 +177,15 @@ public class DialogViewVNPlus : DialogView
         posStart = -newHeight / 2;
     }
 
+    private IEnumerator MoveSpeakingCharacterToTop(RectTransform container, List<VNPlusCharacter> characterList, VNPlusCharacter character)
+    {
+        characterList.Remove(character);
+        characterList.Insert(0, character);
+        character.transform.SetAsLastSibling();
+        GetCharacterAdjustmentValues(container, characterList, 0, out float newHeight, out float posStart);
+        yield return AdjustCharacterPositions(characterList, posStart, newHeight, out float staggerTime).WaitForCompletion();
+    }
+
     private TweenInfo AdjustCharacterHeights(List<VNPlusCharacter> characterList, float newHeight, out float staggerTime)
     {
         TweenInfo tween = null;
@@ -257,6 +266,18 @@ public class DialogViewVNPlus : DialogView
         var dialogBoxUI = dialogBox.GetComponent<VNPlusDialogBoxUI>();
         SetCharacterSpecificUI(dialogBoxUI, dialogItem.CharacterData);
         AnimateNewMessageIn(dialogBox, dialogBoxUI, dialogItem, isNarrator);
+        // Move speaking character to top if necessary
+        var character = dialogItem.CharacterData.Count > 0 ? dialogItem.CharacterData[0] : null;
+        if(character != null && characterMap.ContainsKey(character.name))
+        {
+            var vnChara = characterMap[character.name];
+            var charaList = vnChara.Column == CharacterColumn.Left ? leftCharacterList : rightCharacterList;
+            if(charaList.Count > 0 && charaList[0] != vnChara)
+            {
+                var charaContainer = vnChara.Column == CharacterColumn.Left ? leftCharacterContainer : rightCharacterContainer;
+                StartCoroutine(MoveSpeakingCharacterToTop(charaContainer, charaList, vnChara));
+            }
+        }
         return dialogBox;
     }
 
