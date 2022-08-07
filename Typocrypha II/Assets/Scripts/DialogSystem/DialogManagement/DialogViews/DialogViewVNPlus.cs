@@ -156,6 +156,7 @@ public class DialogViewVNPlus : DialogView
 
     private IEnumerator AdjustCharacterListPreJoinCR(RectTransform container, List<VNPlusCharacter> characterList)
     {
+        characterJoinLeaveTween.Complete();
         GetCharacterAdjustmentValues(container, characterList, 1, out float newHeight, out float posStart);
         AdjustCharacterHeights(characterJoinLeaveTween, characterList, newHeight);
         yield return new WaitForSeconds(characterJoinLeaveTween.Time / 2);
@@ -165,6 +166,7 @@ public class DialogViewVNPlus : DialogView
 
     private IEnumerator AdjustCharacterListPostLeaveCR(RectTransform container, List<VNPlusCharacter> characterList)
     {
+        characterJoinLeaveTween.Complete();
         GetCharacterAdjustmentValues(container, characterList, 0, out float newHeight, out float posStart);
         AdjustCharacterPositions(characterJoinLeaveTween, characterList, posStart, newHeight);
         yield return new WaitForSeconds(characterJoinLeaveTween.Time / 2);
@@ -195,7 +197,7 @@ public class DialogViewVNPlus : DialogView
         for (int i = 0; i < characterList.Count; i++)
         {
             var chara = characterList[i];
-            tweenInfo.Start(chara.MainRect.DOSizeDelta(new Vector2(chara.MainRect.sizeDelta.x, newHeight), tweenInfo.Time));
+            tweenInfo.Start(chara.MainRect.DOSizeDelta(new Vector2(chara.MainRect.sizeDelta.x, newHeight), tweenInfo.Time), false);
         }
     }
 
