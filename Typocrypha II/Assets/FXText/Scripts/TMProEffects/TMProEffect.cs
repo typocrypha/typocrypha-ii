@@ -33,14 +33,16 @@ namespace FXText
             get;
         }
 
-        IEnumerable<TMProEffect> allEffects; // All effects on this text.
+        List<TMProEffect> allEffects; // All effects on this text.
+        private readonly SharedMemory sharedMemory = new SharedMemory();
 
         protected const int vertsInQuad = 4; // Number of vertices in a single text quad.
 
         private void Start()
         {
             // Get all other TMProEffect components to determine priority
-            allEffects = GetComponents<TMProEffect>().OrderBy(a => a.Priority);
+            allEffects = GetComponents<TMProEffect>().OrderBy(a => a.Priority).ToList();
+            sharedMemory.EnsureCapacity(allEffects.Count);
         }
 
         private void Update()
@@ -48,14 +50,15 @@ namespace FXText
             // All effects managed by highest priority instance
             if (allEffects.Last() == this)
             {
-                UpdateMesh(text, allEffects);
+                UpdateMesh(text, allEffects, sharedMemory);
+                sharedMemory.Clear();
             }
         }
 
         /// <summary>
         /// Update text mesh with all effects
         /// </summary>
-        static void UpdateMesh(TextMeshProUGUI text, IEnumerable<TMProEffect> allEffects)
+        static void UpdateMesh(TextMeshProUGUI text, List<TMProEffect> allEffects, SharedMemory sharedMemory)
         {
             // Iterate through each character
             for (int charIndex = 0; charIndex < text.textInfo.characterCount && charIndex < text.text.Length; ++charIndex)
@@ -71,10 +74,10 @@ namespace FXText
                     effect.ApplyDefaultEffect(text.textInfo.meshInfo[meshIndex], vertexIndex);
                 }
                 // Get effects on current character, and continue if no effects.
-                var currEffects = GetApplicableEffects(charIndex, allEffects);
+                var currEffects = GetApplicableEffects(charIndex, allEffects, sharedMemory.CurrEffects);
                 if (currEffects.Count == 0) continue;
                 // Split list of effects based on priority groups, and get highest priority for each group
-                var splitEffects = SplitByPriorityGroup(currEffects);                
+                var splitEffects = SplitByPriorityGroup(currEffects, sharedMemory.SplitEffects, sharedMemory.HighestPriorityEffects);                
                 // Apply effects
                 foreach (var effect in splitEffects)
                 {
@@ -103,18 +106,19 @@ namespace FXText
         /// <param name="charIndex">Index of current character</param>
         /// <param name="effects">All effects on this text object</param>
         /// <returns>List of effects on current character</returns>
-        static List<TMProEffect> GetApplicableEffects(int charIndex, IEnumerable<TMProEffect> effects)
+        static List<TMProEffect> GetApplicableEffects(int charIndex, List<TMProEffect> effects, List<TMProEffect> currEffects)
         {
-            var currEffects = new List<TMProEffect>();
-            for (int priority = 0; priority < effects.Count(); priority++)
+            currEffects.Clear();
+            for (int priority = 0; priority < effects.Count; priority++)
             {
-                var effect = effects.ElementAt(priority);
+                var effect = effects[priority];
                 for (int pairIndex = 0; pairIndex < effect.ind.Count / 2; pairIndex += 2)
                 {
                     // If effect includes current character, apply effect
                     if (charIndex >= effect.ind[pairIndex] && charIndex < effect.ind[pairIndex + 1])
                     {
                         currEffects.Add(effect);
+                        break;
                     }
                 }
             }
@@ -126,31 +130,33 @@ namespace FXText
         /// </summary>
         /// <param name="effects">List of effects to split</param>
         /// <returns>Nested list of effects by priority group</returns>
-        static List<TMProEffect> SplitByPriorityGroup(List<TMProEffect> effects)
+        static List<TMProEffect> SplitByPriorityGroup(List<TMProEffect> effects, Dictionary<PriorityGroupEnum, List<TMProEffect>> split, List<TMProEffect> highestPriorityEffects)
         {
-            // Organize by priority group
-            effects.Sort((a, b) => a.PriorityGroup.CompareTo(b.PriorityGroup)); 
-            // Initialize loop
-            var split = new List<List<TMProEffect>>();
-            var currGroup = effects.First().PriorityGroup;
-            split.Add(new List<TMProEffect>());
+            // Clear shared memory
+            foreach (var kvp in split)
+            {
+                kvp.Value.Clear();
+            }
             // Go through all effects and split by priority group
             foreach (var effect in effects)
             {
-                // If effect is not in current group, create a new group
-                if (effect.PriorityGroup != currGroup)
+                // If group is not in split, add it to the split
+                if (!split.ContainsKey(effect.PriorityGroup))
                 {
-                    split.Add(new List<TMProEffect>());
+                    split.Add(effect.PriorityGroup, new List<TMProEffect>(effects.Count));
                 }
-                // Add effect to current group
-                split.Last().Add(effect);
+                // Add effect to group
+                split[effect.PriorityGroup].Add(effect);            
             }
             // Only retain highest priority
-            var highestPriorityEffects = new List<TMProEffect>();
-            foreach (var group in split)
+            highestPriorityEffects.Clear();
+            foreach (var kvp in split)
             {
+                var group = kvp.Value;
+                if (group.Count <= 0)
+                    continue;
                 group.Sort((a, b) => a.Priority.CompareTo(b.Priority));
-                highestPriorityEffects.Add(group.Last());
+                highestPriorityEffects.Add(group[group.Count - 1]);
             }
             return highestPriorityEffects;
         }
@@ -168,6 +174,36 @@ namespace FXText
         /// <param name="meshInfo">Text mesh data</param>
         /// <param name="vertexIndex">Starting vertex index for character</param>
         protected abstract void ApplyDefaultEffect(TMP_MeshInfo meshInfo, int vertexIndex);
+
+        private class SharedMemory
+        {
+            // Reusable memory (to prevent continuous allocation)
+            public List<TMProEffect> CurrEffects { get; } = new List<TMProEffect>(0);
+            public List<TMProEffect> HighestPriorityEffects { get; } = new List<TMProEffect>(0);
+            public Dictionary<PriorityGroupEnum, List<TMProEffect>> SplitEffects { get; } = new Dictionary<PriorityGroupEnum, List<TMProEffect>>(3);
+
+            public void EnsureCapacity(int capacity)
+            {
+                if(CurrEffects.Capacity < capacity)
+                {
+                    CurrEffects.Capacity = capacity;
+                }
+                if(HighestPriorityEffects.Capacity < capacity)
+                {
+                    HighestPriorityEffects.Capacity = capacity;
+                }
+            }
+
+            public void Clear()
+            {
+                CurrEffects.Clear();
+                HighestPriorityEffects.Clear();
+                foreach(var kvp in SplitEffects)
+                {
+                    kvp.Value.Clear();
+                }
+            }
+        }
     }
 }
 
