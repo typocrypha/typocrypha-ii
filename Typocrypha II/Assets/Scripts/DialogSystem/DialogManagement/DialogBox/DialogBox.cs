@@ -50,7 +50,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
     public TextMeshProUGUI dialogText; // Text display component
     public AudioSource[] voiceAS; // AudioSources for playing speech sfx
     public bool resizeTextBox = true; // Should dialog box resize itself?
-
+    [SerializeField] private RectTransform textHolder;
     [SerializeField] FXText.TMProColor hideText; // Allows for hiding parts of text (for scrolling)
     DialogItem dialogItem; // Dialog line data
     Coroutine scrollCR; // Coroutine that scrolls the text
@@ -169,8 +169,12 @@ public class DialogBox : MonoBehaviour, IDialogBox
     /// <param name="add">Add on size rather than reset size.</param>
     public void SetBoxHeight(bool add = false)
     {
+        if (textHolder != null)
+        {
+            LayoutRebuilder.ForceRebuildLayoutImmediate(textHolder);
+        }
         RectTransform rectTr = GetComponent<RectTransform>();
-        if(rectTr != null && dialogText != null)
+        if (rectTr != null && dialogText != null)
         {
             rectTr.sizeDelta = add
                 ? new Vector2(rectTr.sizeDelta.x, rectTr.sizeDelta.y + dialogText.preferredHeight + textPad)
@@ -190,7 +194,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
 	// Scrolls text character by character
 	protected IEnumerator TextScrollCR()
     {
-        yield return null;
+        //yield return null;
         int pos = 0;
         while (pos < dialogItem.text.Length)
         {
