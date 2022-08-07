@@ -16,6 +16,8 @@ public class VNPlusCharacter : MonoBehaviour
 
     private float nameplateRatio = 0.1f;
 
+    public RectTransform MainRect => mainRect;
+
     public DialogViewVNPlus.CharacterColumn Column => column;
     [SerializeField] private DialogViewVNPlus.CharacterColumn column;
     [SerializeField] private Image poseImage;
@@ -32,7 +34,6 @@ public class VNPlusCharacter : MonoBehaviour
     [SerializeField] private RectTransform mainRect;
     [SerializeField] private TweenInfo joinTween;
     [SerializeField] private TweenInfo adjustSizeTween;
-    [SerializeField] private TweenInfo adjustPosTween;
     [SerializeField] private TweenInfo highlightTween;
     [SerializeField] private TweenInfo frameDimTween;
     private TweenInfo exprHighlightTween;
@@ -153,12 +154,6 @@ public class VNPlusCharacter : MonoBehaviour
     public void SetInitialPos(float yPos)
     {
         mainRect.anchoredPosition = new Vector2(mainRect.anchoredPosition.x, yPos);
-    }
-
-    public TweenInfo DoAdjustPosTween(float yPos)
-    {
-        adjustPosTween.Start(mainRect.DOAnchorPosY(yPos, adjustPosTween.Time));
-        return adjustPosTween;
     }
 
     public void SetInitialHeight(float height)

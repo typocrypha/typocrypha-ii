@@ -29,11 +29,12 @@ public class DialogViewVNPlus : DialogView
     [SerializeField] private TweenInfo messageTween;
     [SerializeField] private TweenInfo messageScaleTween;
     [SerializeField] private TweenInfo messageFadeTween;
+    [SerializeField] private TweenInfo moveCharaToTopTween;
+    [SerializeField] private TweenInfo moveCharacterJoinOrLeaveTween;
     [SerializeField] private TextMeshProUGUI locationText;
 
 
     public override bool ReadyToContinue => readyToContinue;
-
     private bool readyToContinue = true;
 
     private readonly Dictionary<string, VNPlusCharacter> characterMap = new Dictionary<string, VNPlusCharacter>(maxCharactersPerColumn * 2);
@@ -158,14 +159,15 @@ public class DialogViewVNPlus : DialogView
         GetCharacterAdjustmentValues(container, characterList, 1, out float newHeight, out float posStart);
         AdjustCharacterHeights(characterList, newHeight, out float staggerTime);
         yield return new WaitForSeconds(staggerTime);
-        yield return AdjustCharacterPositions(characterList, posStart, newHeight, out float _).WaitForCompletion();
+        AdjustCharacterPositions(moveCharacterJoinOrLeaveTween, characterList, posStart, newHeight);
+        yield return moveCharacterJoinOrLeaveTween.WaitForCompletion();
     }
 
     private IEnumerator AdjustCharacterListPostLeaveCR(RectTransform container, List<VNPlusCharacter> characterList)
     {
         GetCharacterAdjustmentValues(container, characterList, 0, out float newHeight, out float posStart);
-        AdjustCharacterPositions(characterList, posStart, newHeight, out float staggerTime);
-        yield return new WaitForSeconds(staggerTime);
+        AdjustCharacterPositions(moveCharacterJoinOrLeaveTween, characterList, posStart, newHeight);
+        yield return new WaitForSeconds(moveCharacterJoinOrLeaveTween.Time / 2);
         yield return AdjustCharacterHeights(characterList, newHeight, out float _).WaitForCompletion();
     }
 
@@ -183,7 +185,8 @@ public class DialogViewVNPlus : DialogView
         characterList.Insert(0, character);
         character.transform.SetAsLastSibling();
         GetCharacterAdjustmentValues(container, characterList, 0, out float newHeight, out float posStart);
-        yield return AdjustCharacterPositions(characterList, posStart, newHeight, out float staggerTime).WaitForCompletion();
+        AdjustCharacterPositions(moveCharaToTopTween, characterList, posStart, newHeight);
+        yield return moveCharaToTopTween.WaitForCompletion();
     }
 
     private TweenInfo AdjustCharacterHeights(List<VNPlusCharacter> characterList, float newHeight, out float staggerTime)
@@ -199,17 +202,14 @@ public class DialogViewVNPlus : DialogView
         return tween;
     }
 
-    private TweenInfo AdjustCharacterPositions(List<VNPlusCharacter> characterList, float posStart, float newHeight, out float staggerTime)
+    private void AdjustCharacterPositions(TweenInfo tweenInfo, List<VNPlusCharacter> characterList, float posStart, float newHeight)
     {
-        TweenInfo tween = null;
-        staggerTime = 0;
+        tweenInfo.Complete();
         for (int i = 0; i < characterList.Count; i++)
         {
-            var chara = characterList[i];
-            tween = chara.DoAdjustPosTween(posStart - (i * newHeight));
-            staggerTime = Mathf.Max(tween.Time / 2, staggerTime);
+            var chara = characterList[i]; 
+            tweenInfo.Start(chara.MainRect.DOAnchorPosY(posStart - (i * newHeight), tweenInfo.Time), false);
         }
-        return tween;
     }
 
     public void SetExpression(CharacterData data, string expression)
@@ -342,6 +342,7 @@ public class DialogViewVNPlus : DialogView
         messageTween.Complete();
         messageScaleTween.Complete();
         messageFadeTween.Complete();
+        moveCharaToTopTween.Complete();
     }
 
     public override void SetEnabled(bool e)

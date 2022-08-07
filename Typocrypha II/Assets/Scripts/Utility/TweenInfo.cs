@@ -22,20 +22,20 @@ public class TweenInfo
         customEase = new AnimationCurve(toCopy.customEase.keys);
     }
 
-    public void Start(params Tween[] newTweens)
+    public void Start(Tween tween, bool complete = true)
     {
-        Complete();
-        Tweens.AddRange(newTweens);
-        foreach(var tween in Tweens)
+        if (complete)
         {
-            if (useCustomEase)
-            {
-                tween.SetEase(customEase);
-            }
-            else
-            {
-                tween.SetEase(ease);
-            }
+            Complete();
+        }
+        Tweens.Add(tween);
+        if (useCustomEase)
+        {
+            tween.SetEase(customEase);
+        }
+        else
+        {
+            tween.SetEase(ease);
         }
     }
 

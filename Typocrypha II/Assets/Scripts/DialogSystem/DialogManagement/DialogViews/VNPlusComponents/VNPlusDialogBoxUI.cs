@@ -22,14 +22,12 @@ public class VNPlusDialogBoxUI : MonoBehaviour
 
     public void DoDim(TweenInfo tweenInfo)
     {
-        var allTweens = new Tween[borderImages.Length + nonBorderComponents];
-        allTweens[0] = canvasGroup.DOFade(dimAmount, tweenInfo.Time);
-        allTweens[1] = iconImage.DOColor(iconImage.color * dimColor, tweenInfo.Time);
+        tweenInfo.Start(canvasGroup.DOFade(dimAmount, tweenInfo.Time));
+        tweenInfo.Start(iconImage.DOColor(iconImage.color * dimColor, tweenInfo.Time), false);
         for(int i = 0; i < borderImages.Length; ++i)
         {
             var image = borderImages[i];
-            allTweens[i + nonBorderComponents] = image.DOColor(image.color * dimColor, tweenInfo.Time);
+            tweenInfo.Start(image.DOColor(image.color * dimColor, tweenInfo.Time), false);
         }
-        tweenInfo.Start(allTweens);
     }
 }
