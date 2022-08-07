@@ -342,7 +342,6 @@ public class DialogViewVNPlus : DialogView
         messageTween.Complete();
         messageScaleTween.Complete();
         messageFadeTween.Complete();
-        moveCharaToTopTween.Complete();
     }
 
     public override void SetEnabled(bool e)
