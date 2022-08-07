@@ -37,17 +37,27 @@ namespace FXText
         private readonly SharedMemory sharedMemory = new SharedMemory();
 
         protected const int vertsInQuad = 4; // Number of vertices in a single text quad.
+        private bool firstUpdate = true;
 
+        public void UpdateAllEffects()
+        {
+            firstUpdate = false;
+            // Get all other TMProEffect components to determine priority
+            allEffects = GetComponents<TMProEffect>().Where(a => a != null).OrderBy(a => a.Priority).ToList();
+            sharedMemory.EnsureCapacity(allEffects.Count);
+        }
         private void Start()
         {
-            // Get all other TMProEffect components to determine priority
-            allEffects = GetComponents<TMProEffect>().OrderBy(a => a.Priority).ToList();
-            sharedMemory.EnsureCapacity(allEffects.Count);
+            if (firstUpdate)
+            {
+                UpdateAllEffects();
+            }
         }
 
         private void Update()
         {
             // All effects managed by highest priority instance
+            allEffects.RemoveAll(a => a == null);
             if (allEffects.Last() == this)
             {
                 UpdateMesh(text, allEffects, sharedMemory);

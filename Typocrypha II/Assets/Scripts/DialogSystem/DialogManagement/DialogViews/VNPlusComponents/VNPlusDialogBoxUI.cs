@@ -18,6 +18,8 @@ public class VNPlusDialogBoxUI : MonoBehaviour
             image.color = character.characterColorLight;
         }
         iconImage.sprite = character.chat_icon;
+        iconImage.color = Color.white;
+        canvasGroup.alpha = 1;
     }
 
     public void DoDim(TweenInfo tweenInfo)

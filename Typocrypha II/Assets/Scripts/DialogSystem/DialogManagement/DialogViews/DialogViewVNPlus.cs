@@ -9,6 +9,8 @@ using TMPro;
 public class DialogViewVNPlus : DialogView
 {
     private const int maxCharactersPerColumn = 5;
+    private const int maxMessages = 7;
+    private const int messagePrefabTypes = 3;
 
     public enum CharacterColumn
     {
@@ -43,6 +45,9 @@ public class DialogViewVNPlus : DialogView
     private float originalMessageAnchorPosY = float.MinValue;
     private VNPlusDialogBoxUI lastBoxUI = null;
 
+    private readonly Dictionary<GameObject, List<DialogBox>> dialogBoxPool = new Dictionary<GameObject, List<DialogBox>>(messagePrefabTypes);
+
+
     private void Awake()
     {
         originalMessageAnchorPosY = messageContainer.anchoredPosition.y;
@@ -56,11 +61,12 @@ public class DialogViewVNPlus : DialogView
     private void ClearLog()
     {
         StopAllCoroutines();
+        CompleteMessageTweens();
+        dialogBoxPool.Clear();
         foreach (Transform child in messageContainer)
         {
             Destroy(child.gameObject);
         }
-        CompleteMessageTweens();
         if (originalMessageAnchorPosY != float.MinValue)
         {
             messageContainer.anchoredPosition = new Vector2(messageContainer.anchoredPosition.x, originalMessageAnchorPosY);
@@ -259,7 +265,29 @@ public class DialogViewVNPlus : DialogView
             HighlightCharacter(dialogItem.CharacterData);
         }
         var prefab = GetMessagePrefab(dialogItem.CharacterData, out bool isNarrator);
-        var dialogBox = Instantiate(prefab, messageContainer).GetComponent<DialogBox>();
+        DialogBox dialogBox;
+        if (!dialogBoxPool.ContainsKey(prefab))
+        {
+            dialogBox = Instantiate(prefab, messageContainer).GetComponent<DialogBox>();
+            var newList = new List<DialogBox>(maxMessages);
+            newList.Add(dialogBox);
+            dialogBoxPool.Add(prefab, newList);
+        }
+        else
+        {
+            var boxList = dialogBoxPool[prefab];
+            if (dialogBoxPool[prefab].Count < maxMessages)
+            {
+                dialogBox = Instantiate(prefab, messageContainer).GetComponent<DialogBox>();
+                boxList.Insert(0, dialogBox);
+            }
+            else
+            {
+                dialogBox = boxList[boxList.Count - 1];
+                boxList.RemoveAt(boxList.Count - 1);
+                boxList.Insert(0, dialogBox);
+            }
+        }
         dialogBox.transform.SetAsFirstSibling();
         var dialogBoxUI = dialogBox.GetComponent<VNPlusDialogBoxUI>();
         SetCharacterSpecificUI(dialogBoxUI, dialogItem.CharacterData);

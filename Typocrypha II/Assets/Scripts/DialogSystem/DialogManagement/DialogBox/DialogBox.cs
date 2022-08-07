@@ -69,25 +69,16 @@ public class DialogBox : MonoBehaviour, IDialogBox
         voiceAS = GetComponents<AudioSource>();
     }
 
-    void Start()
-    {
-        SetBoxHeight();
-    }
-
     public void SetupDialogBox(DialogItem dialogItem)
     {
-        ResetDialogBox();
-
-        // Hide all text.
-        hideText.color = Color.clear;
-        hideText.ind[0] = 0;
-        hideText.ind[1] = dialogItem.text.Length;
         // Get dialog.
         this.dialogItem = dialogItem;
+        ResetDialogBox();
         string rtext = DialogParser.instance.SubstituteMacros(dialogItem.text); // Parse macros
         dialogItem.text = Regex.Replace(rtext, @"<.*?>", ""); // Remove rich text tags
         DialogParser.instance.Parse(dialogItem, this); // Parse w/o rich text tags
-        dialogText.text = DialogParser.instance.RemoveTags(rtext); // Set dialog text (doesn't remove rich text tags)
+        dialogText.text = DialogParser.instance.RemoveTags(rtext); // Set dialog text (doesn't remove rich text tags
+        hideText.UpdateAllEffects();
         // Set box size based on text.
         if (resizeTextBox) SetBoxHeight();
         // Set voice sfx.
@@ -143,9 +134,18 @@ public class DialogBox : MonoBehaviour, IDialogBox
         // Remove old text
         dialogText.text = "";
         // Remove old text effects.
-        var fxTexts = dialogText.GetComponents<FXText.TMProEffect>();
+        var fxTexts = gameObject.GetComponents<FXText.TMProEffect>();
         foreach (var fxText in fxTexts)
-            Destroy(fxText);
+        {
+            if(fxText != hideText)
+            {
+                Destroy(fxText);
+            }
+        }
+        // Hide all text.
+        hideText.color = Color.clear;
+        hideText.ind[0] = 0;
+        hideText.ind[1] = dialogItem.text.Length;
     }
 
     /// <summary>
