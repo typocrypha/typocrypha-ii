@@ -25,6 +25,7 @@ namespace FXText
             POSITION,  // Effects which modify the position of a character,
         }
 
+        public bool done = false; // Remove self from allEffects lists when done
         public TextMeshProUGUI text; // Text component attached
         public List<int> ind; // List of text indices to apply effect on: in between consecutive pairs
         public int Priority = 0; // Priority of effect when multiple are working. Higher priority = displayed.
@@ -56,13 +57,16 @@ namespace FXText
 
         private void Update()
         {
+            if (allEffects.Count <= 0)
+                return;
             // All effects managed by highest priority instance
             allEffects.RemoveAll(a => a == null);
-            if (allEffects.Last() == this)
+            if (allEffects[allEffects.Count - 1] == this)
             {
                 UpdateMesh(text, allEffects, sharedMemory);
                 sharedMemory.Clear();
             }
+            allEffects.RemoveAll(a => a.done);
         }
 
         /// <summary>

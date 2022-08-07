@@ -159,6 +159,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
             {
                 effect.ind.Clear();
             }
+            effect.done = true;
         }
     }
 

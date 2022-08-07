@@ -146,6 +146,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
         hideText.color = Color.clear;
         hideText.ind[0] = 0;
         hideText.ind[1] = dialogItem.text.Length;
+        hideText.done = false;
     }
 
     /// <summary>
@@ -160,6 +161,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
         }
 		scrollCR = null;
         hideText.ind[0] = dialogItem.text.Length;
+        hideText.done = true;
         DialogManager.instance.onSkip.Invoke();
     }
 
@@ -215,6 +217,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
                 hideText.ind[0] = pos;
             }
         }
+        hideText.done = true;
         yield return StartCoroutine(CheckEvents (dialogItem.text.Length)); // Play events at end of text.
 		scrollCR = null;
 	}
