@@ -45,7 +45,7 @@ public class DialogViewVNPlus : DialogView
     private float originalMessageAnchorPosY = float.MinValue;
     private VNPlusDialogBoxUI lastBoxUI = null;
 
-    private readonly Dictionary<GameObject, List<DialogBox>> dialogBoxPool = new Dictionary<GameObject, List<DialogBox>>(messagePrefabTypes);
+    private readonly List<DialogBox> dialogBoxPool = new List<DialogBox>(maxMessages * (messagePrefabTypes + 1));
 
 
     private void Awake()
@@ -265,28 +265,25 @@ public class DialogViewVNPlus : DialogView
             HighlightCharacter(dialogItem.CharacterData);
         }
         var prefab = GetMessagePrefab(dialogItem.CharacterData, out bool isNarrator);
-        DialogBox dialogBox;
-        if (!dialogBoxPool.ContainsKey(prefab))
+        DialogBox dialogBox = null;
+        if(dialogBoxPool.Count > maxMessages)
+        {
+            var prefabId = prefab.GetComponent<DialogBox>().ID;
+            for(int i = 0; i < dialogBoxPool.Count - maxMessages; ++i)
+            {
+                if(prefabId == dialogBoxPool[i].ID)
+                {
+                    dialogBox = dialogBoxPool[i];
+                    dialogBoxPool.RemoveAt(i);
+                    dialogBoxPool.Add(dialogBox);
+                    break;
+                }
+            }
+        }
+        if (dialogBox == null)
         {
             dialogBox = Instantiate(prefab, messageContainer).GetComponent<DialogBox>();
-            var newList = new List<DialogBox>(maxMessages);
-            newList.Add(dialogBox);
-            dialogBoxPool.Add(prefab, newList);
-        }
-        else
-        {
-            var boxList = dialogBoxPool[prefab];
-            if (dialogBoxPool[prefab].Count < maxMessages)
-            {
-                dialogBox = Instantiate(prefab, messageContainer).GetComponent<DialogBox>();
-                boxList.Insert(0, dialogBox);
-            }
-            else
-            {
-                dialogBox = boxList[boxList.Count - 1];
-                boxList.RemoveAt(boxList.Count - 1);
-                boxList.Insert(0, dialogBox);
-            }
+            dialogBoxPool.Add(dialogBox);
         }
         dialogBox.transform.SetAsFirstSibling();
         var dialogBoxUI = dialogBox.GetComponent<VNPlusDialogBoxUI>();
