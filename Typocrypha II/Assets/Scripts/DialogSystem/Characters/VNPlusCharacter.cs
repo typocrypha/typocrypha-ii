@@ -8,36 +8,56 @@ using DG.Tweening;
 public class VNPlusCharacter : MonoBehaviour
 {
     private static readonly Color highlightColor = Color.white;
-    private static readonly Color noHighlightColor = Color.gray;
+    private static readonly Color noHighlightColor = new Color(noHighlightValue, noHighlightValue, noHighlightValue, 1);
+    private static readonly Color nameHighlightColor = new Color(0, 0, 0, 0);
+    private static readonly Color nameNoHighlightColor = new Color(0, 0, 0, 1 - noHighlightValue);
+    private const float noHighlightValue = 0.65f;
     private const float leftColAdjustment = 0.1f;
 
     private float nameplateRatio = 0.1f;
+
+    public RectTransform MainRect => mainRect;
 
     public DialogViewVNPlus.CharacterColumn Column => column;
     [SerializeField] private DialogViewVNPlus.CharacterColumn column;
     [SerializeField] private Image poseImage;
     [SerializeField] private Image expressionImage;
     [SerializeField] private Image leftHighlightImage;
+    [SerializeField] private Image leftHighlightDimmer;
     [SerializeField] private Image rightHighlightImage;
+    [SerializeField] private Image rightHighlightDimmer;
     [SerializeField] private Image nameplateBackground;
     [SerializeField] private float nameplateBackgroundOpacity = 0.75f;
+    [SerializeField] private Image nameplateDimmer;
     [SerializeField] private Image nameplateOutline;
     [SerializeField] private TextMeshProUGUI nameplateText;
     [SerializeField] private RectTransform mainRect;
-    [Header("Join Tween")]
-    [SerializeField] private Ease joinEase;
-    [SerializeField] private bool useCustomJoinEase;
-    [SerializeField] private AnimationCurve customJoinEase;
-    [SerializeField] private float joinTweenTime = 0.25f;
-    [Header("Adjustment Tweens")]
-    [SerializeField] private Ease adjustSizeEase;
-    [SerializeField] private bool useCustomAdjustSizeEase;
-    [SerializeField] private AnimationCurve customAdjustSizeEase;
-    [SerializeField] private Ease adjustPosEase;
-    [SerializeField] private bool useCustomAdjustPosEase;
-    [SerializeField] private AnimationCurve customAdjustPosEase;
-    [SerializeField] private float adjustTweenTime = 0.25f;
-    public float AdjustTweenTime => adjustTweenTime;
+    [SerializeField] private TweenInfo joinTween;
+    [SerializeField] private TweenInfo highlightTween;
+    [SerializeField] private TweenInfo frameDimTween;
+    private TweenInfo exprHighlightTween;
+    private TweenInfo nameHighlightTween;
+    private TweenInfo rightHighlightTween;
+    private TweenInfo leftHighlightTween;
+    private bool Flipped
+    {
+        get => poseImage.transform.localScale.x == -1;
+        set
+        {
+            if (value == Flipped)
+                return;
+            float xScale = value ? -1 : 1;
+            poseImage.transform.localScale = new Vector3(xScale, poseImage.transform.localScale.y);
+        }
+    }
+
+    private void Awake()
+    {
+        exprHighlightTween = new TweenInfo(highlightTween);
+        nameHighlightTween = new TweenInfo(highlightTween);
+        rightHighlightTween = new TweenInfo(frameDimTween);
+        leftHighlightTween = new TweenInfo(frameDimTween);
+    }
 
     public string NameText 
     { 
@@ -69,21 +89,23 @@ public class VNPlusCharacter : MonoBehaviour
         }
     }
     private CharacterData data;
+    private bool isHighlighted = true;
 
     public bool Highlighted
     {
+        get => isHighlighted;
         set
         {
-            if (value)
-            {
-                poseImage.color = highlightColor;
-                expressionImage.color = highlightColor;
-            }
-            else
-            {
-                poseImage.color = noHighlightColor;
-                expressionImage.color = noHighlightColor;
-            }
+            if (isHighlighted == value)
+                return;
+            isHighlighted = value;
+            var color = value ? highlightColor : noHighlightColor;
+            var dimColor = value ? nameHighlightColor : nameNoHighlightColor;
+            highlightTween.Start(poseImage.DOColor(color, highlightTween.Time));
+            exprHighlightTween.Start(expressionImage.DOColor(color, exprHighlightTween.Time));
+            nameHighlightTween.Start(nameplateDimmer.DOColor(dimColor, nameHighlightTween.Time));
+            rightHighlightTween.Start(rightHighlightDimmer.DOColor(dimColor, rightHighlightTween.Time));
+            leftHighlightTween.Start(leftHighlightDimmer.DOColor(dimColor, leftHighlightTween.Time));
         }
     }
 
@@ -107,15 +129,20 @@ public class VNPlusCharacter : MonoBehaviour
         {
             var poseData = data.poses[pose];
             poseImage.sprite = poseData.pose;
+            // Set flipped
+            CharacterData.FacingDirection facing = data.defaultFacingDirection;
+            Flipped = facing == CharacterData.FacingDirection.Right && Column == DialogViewVNPlus.CharacterColumn.Right
+                || facing == CharacterData.FacingDirection.Left && Column == DialogViewVNPlus.CharacterColumn.Left;
             // Set position
-            float xValue = poseData.xCenterNormalized;
-            if(column == DialogViewVNPlus.CharacterColumn.Left)
+            float xValue = Flipped ? Mathf.Abs(1 - poseData.xCenterNormalized) : poseData.xCenterNormalized;
+            if(Column == DialogViewVNPlus.CharacterColumn.Left)
             {
-                xValue = Mathf.Abs(1 - xValue) + leftColAdjustment;
+                xValue += leftColAdjustment;
             }
             poseImage.rectTransform.anchorMin = new Vector2(xValue, poseData.yHeadTopNormalized);
             poseImage.rectTransform.anchorMax = new Vector2(xValue, poseData.yHeadTopNormalized);
             // Set save data
+
         }
         else
         {
@@ -128,51 +155,22 @@ public class VNPlusCharacter : MonoBehaviour
         mainRect.anchoredPosition = new Vector2(mainRect.anchoredPosition.x, yPos);
     }
 
-    public Tween DoAdjustPosTween(float yPos)
-    {
-        var tween = mainRect.DOAnchorPosY(yPos, adjustTweenTime);
-        CustomTweenEase(tween, adjustPosEase, customAdjustPosEase, useCustomAdjustPosEase);
-        return tween;
-    }
-
     public void SetInitialHeight(float height)
     {
         mainRect.sizeDelta = new Vector2(mainRect.sizeDelta.x, height);
     }
 
-    public Tween DoAdjustHeightTween(float height)
-    {
-        var tween = mainRect.DOSizeDelta(new Vector2(mainRect.sizeDelta.x, height), adjustTweenTime);
-        CustomTweenEase(tween, adjustSizeEase, customAdjustSizeEase, useCustomAdjustSizeEase);
-        return tween;
-    }
-
-    public Tween PlayJoinTween()
+    public TweenInfo PlayJoinTween()
     {
         float scale = mainRect.localScale.y;
         mainRect.localScale = new Vector3(mainRect.localScale.x, 0, mainRect.localScale.z);
-        var tween = mainRect.DOScaleY(scale, joinTweenTime);
-        CustomTweenEase(tween, joinEase, customJoinEase, useCustomJoinEase);
-        return tween;
+        joinTween.Start(mainRect.DOScaleY(scale, joinTween.Time));
+        return joinTween;
     }
 
-    public Tween PlayLeaveTween()
+    public TweenInfo PlayLeaveTween()
     {
-        var tween = mainRect.DOScaleY(0, joinTweenTime);
-        CustomTweenEase(tween, joinEase, customJoinEase, useCustomJoinEase);
-        return tween;
+        joinTween.Start(mainRect.DOScaleY(0, joinTween.Time));
+        return joinTween;
     }
-
-    private void CustomTweenEase(Tween tween, Ease ease, AnimationCurve customEase, bool useCustom)
-    {
-        if (useCustom)
-        {
-            tween.SetEase(customEase);
-        }
-        else
-        {
-            tween.SetEase(ease);
-        }
-    }
-
 }

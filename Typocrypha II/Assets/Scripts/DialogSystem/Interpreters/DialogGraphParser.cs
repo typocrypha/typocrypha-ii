@@ -325,6 +325,10 @@ public class DialogGraphParser : MonoBehaviour
             float fadeEnd = 1f - fadeStart;
             StartCoroutine(FadeNode.FadeScreenOverTime(node.fadeTime, fadeStart, fadeEnd, node.fadeColor));
         }
+        else if (currNode is SetLocationTextNode setLocationTextNode)
+        {
+            DialogManager.instance.DialogView.SetLocationText(setLocationTextNode.text);
+        }
         // Check if need to wait on node to complete.
         if (currNode is ITimedNode)
         {

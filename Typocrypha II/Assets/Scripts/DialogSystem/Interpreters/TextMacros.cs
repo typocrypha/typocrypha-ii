@@ -41,20 +41,6 @@ public class TextMacros : MonoBehaviour {
 			{"languageTL", macroTranslatedLanguage},
 			{"rc", macroRemoveCharacter}
         };
-		color_map = new Dictionary<string, string> {
-			{ "spell",      "#ff6eff" },
-			{ "ui-terms",   "#05abff" },
-			{ "evil-eye",   "#ff0042" },
-			{ "enemy-talk", "#974dfe" },
-			{ "enemy-name", "#16e00c" },
-			{ "tips",       "#ffdb16" },
-			{ "whisper",    "#c8c8c8" },
-			{ "highlight",  "#ff840c" },
-			{ "mc",         "#d043e2" },
-			{ "illyia",     "#c70126" },
-			{ "dahlia",     "#8097e0" },
-			{ "doppel",     "#E0015A" }
-		};
 		character_map = new Dictionary<string, System.Tuple<string, string>> {
 			{"dahlia", new System.Tuple<string, string>("dahlia", "vo_dahlia") },
 			{"illyia", new System.Tuple<string, string>("illyia", "vo_illyia") },
@@ -132,16 +118,14 @@ public class TextMacros : MonoBehaviour {
 		return System.DateTime.Now.Hour + ":" + System.DateTime.Now.Minute;
 	}
 
-	// substitutes in appropriate color tag
+	// substitutes in appropriate color tag (TMProColor)
 	// input: [0]: string, color name (must be implemented in Unity rich tags)
-	//             if argument is empty, subsitutes the closing tag '</color>'
+	//             if argument is empty, subsitutes the closing tag '|color|'
 	string macroColor(string[] opt) {
 		if (opt.Length != 0 && opt [0] != null && opt[0] != "") {
-			if (color_map.ContainsKey(opt[0]))
-				return "<color=" + color_map[opt[0]] + ">";
-			else return "<color=" + opt [0] + ">";
+			return "^color," + opt[0] + "^";
 		} else {
-			return "</color>";
+			return "|color|";
 		}
 	}
 

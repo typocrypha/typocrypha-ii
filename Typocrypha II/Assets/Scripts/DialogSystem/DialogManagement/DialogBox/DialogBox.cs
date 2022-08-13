@@ -34,7 +34,8 @@ public class DialogBox : MonoBehaviour, IDialogBox
 
     #region Constants
     const float defaultScrollDelay = 0.001f; // Default text scrolling speed.
-    const int defaultSpeechInterval = 2; // Default number of text scrolls before speech sfx plays
+    const int defaultScrollBatch = 2; // Default number of characters displayed each scroll.
+    const int defaultSpeechInterval = 4; // Default number of characters before speech sfx plays
     const float textPad = 16f; // Padding between text rect and dialog box rect.
     #endregion
 
@@ -49,7 +50,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
     public TextMeshProUGUI dialogText; // Text display component
     public AudioSource[] voiceAS; // AudioSources for playing speech sfx
     public bool resizeTextBox = true; // Should dialog box resize itself?
-
+    [SerializeField] private RectTransform textHolder;
     [SerializeField] FXText.TMProColor hideText; // Allows for hiding parts of text (for scrolling)
     DialogItem dialogItem; // Dialog line data
     Coroutine scrollCR; // Coroutine that scrolls the text
@@ -68,26 +69,16 @@ public class DialogBox : MonoBehaviour, IDialogBox
         voiceAS = GetComponents<AudioSource>();
     }
 
-    void Start()
-    {
-        SetBoxHeight();
-    }
-
     public void SetupDialogBox(DialogItem dialogItem)
     {
-        ResetDialogBox();
-
-        // Hide all text.
-        hideText.color = Color.clear;
-        hideText.ind[0] = 0;
-        hideText.ind[1] = dialogItem.text.Length;
         // Get dialog.
         this.dialogItem = dialogItem;
+        ResetDialogBox();
         string rtext = DialogParser.instance.SubstituteMacros(dialogItem.text); // Parse macros
         dialogItem.text = Regex.Replace(rtext, @"<.*?>", ""); // Remove rich text tags
         DialogParser.instance.Parse(dialogItem, this); // Parse w/o rich text tags
-        dialogText.text = DialogParser.instance.RemoveTags(rtext); // Set dialog text (doesn't remove rich text tags)
-        Debug.Log(dialogText.text);
+        dialogText.text = DialogParser.instance.RemoveTags(rtext); // Set dialog text (doesn't remove rich text tags
+        hideText.UpdateAllEffects();
         // Set box size based on text.
         if (resizeTextBox) SetBoxHeight();
         // Set voice sfx.
@@ -143,9 +134,19 @@ public class DialogBox : MonoBehaviour, IDialogBox
         // Remove old text
         dialogText.text = "";
         // Remove old text effects.
-        var fxTexts = dialogText.GetComponents<FXText.FXTextBase>();
+        var fxTexts = gameObject.GetComponents<FXText.TMProEffect>();
         foreach (var fxText in fxTexts)
-            Destroy(fxText);
+        {
+            if(fxText != hideText)
+            {
+                Destroy(fxText);
+            }
+        }
+        // Hide all text.
+        hideText.color = Color.clear;
+        hideText.ind[0] = 0;
+        hideText.ind[1] = dialogItem.text.Length;
+        hideText.done = false;
     }
 
     /// <summary>
@@ -160,6 +161,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
         }
 		scrollCR = null;
         hideText.ind[0] = dialogItem.text.Length;
+        hideText.done = true;
         DialogManager.instance.onSkip.Invoke();
     }
 
@@ -169,8 +171,12 @@ public class DialogBox : MonoBehaviour, IDialogBox
     /// <param name="add">Add on size rather than reset size.</param>
     public void SetBoxHeight(bool add = false)
     {
+        if (textHolder != null)
+        {
+            LayoutRebuilder.ForceRebuildLayoutImmediate(textHolder);
+        }
         RectTransform rectTr = GetComponent<RectTransform>();
-        if(rectTr != null && dialogText != null)
+        if (rectTr != null && dialogText != null)
         {
             rectTr.sizeDelta = add
                 ? new Vector2(rectTr.sizeDelta.x, rectTr.sizeDelta.y + dialogText.preferredHeight + textPad)
@@ -190,7 +196,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
 	// Scrolls text character by character
 	protected IEnumerator TextScrollCR()
     {
-        yield return null;
+        //yield return null;
         int pos = 0;
         while (pos < dialogItem.text.Length)
         {
@@ -198,7 +204,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
             yield return new WaitWhile(() => ph.Pause); // Wait on pause.
             if (pos % speechInterval == 0)
                 foreach(var v in voiceAS) if (v != null && v.clip != null) v.Play();
-            pos++; // Advance text position.
+            pos+=defaultScrollBatch; // Advance text position.
             hideText.ind[0] = pos;
             if (ScrollDelay > 0f)
             {
@@ -211,6 +217,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
                 hideText.ind[0] = pos;
             }
         }
+        hideText.done = true;
         yield return StartCoroutine(CheckEvents (dialogItem.text.Length)); // Play events at end of text.
 		scrollCR = null;
 	}

@@ -129,7 +129,8 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     {
         DialogItem dialogItem = graphParser.NextDialog(next);
         if (dialogItem == null) return;
-
+        // Remove certain old text effects from previous box
+        if ((dialogBox as DialogBox) != null) DisableOldTextEffects(dialogBox); 
         // Get and display proper view.
         DialogView view = GetView(dialogItem.GetView());
         if (view != dialogView)
@@ -141,6 +142,25 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
         onNextDialog.Invoke();
 
         dialogCounter++;
+    }
+
+    /// <summary>
+    /// Disable certain text effects on dialog box to reduce visual noise
+    /// </summary>
+    /// <param name="box">Box to disable text effects</param>
+    void DisableOldTextEffects(IDialogBox box)
+    {
+        var dbox = box as DialogBox;
+        var effects = dbox.GetComponents<FXText.TMProEffect>();
+        // Disable all movement based effects
+        foreach (var effect in effects)
+        {
+            if (effect.PriorityGroup == FXText.TMProEffect.PriorityGroupEnum.POSITION)
+            {
+                effect.ind.Clear();
+            }
+            effect.done = true;
+        }
     }
 
     private DialogView GetView<T>() where T : DialogView

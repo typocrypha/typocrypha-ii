@@ -97,9 +97,9 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8595570446395821475}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.29609376, y: 0.29609376, z: 0.29609376}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2556470473372090968}
   - {fileID: 5445686237176227194}
@@ -109,8 +109,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 189.5, y: 478}
-  m_SizeDelta: {x: 1280, y: 3228.707}
+  m_AnchoredPosition: {x: 347, y: 636.5}
+  m_SizeDelta: {x: 694, y: 1273}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &6085015773363169306
 Canvas:
@@ -195,36 +195,63 @@ MonoBehaviour:
     type: 3}
   messageContainer: {fileID: 8195031944675967117}
   messageLayout: {fileID: 8787431344676005894}
-  messageLayoutEase: 9
-  useCustomMessageLayoutEase: 0
-  customMessageLayoutEase:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  messageScaleEase: 9
-  useCustomMessageScaleEase: 0
-  customMessageScaleEase:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  messageFadeEase: 9
-  useCustomMessageFadeEase: 0
-  customMessageFadeEase:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
   rightCharacterPrefab: {fileID: 571344177007065975, guid: dfd704979df7c4344a2715614598bce9,
     type: 3}
   leftCharacterPrefab: {fileID: 3726833500584198732, guid: 61c9705a9e626954fb35a5db4711c850,
     type: 3}
   rightCharacterContainer: {fileID: 5445686237176227194}
   leftCharacterContainer: {fileID: 2556470473372090968}
+  messageTween:
+    time: 0.5
+    useCustomEase: 0
+    ease: 9
+    customEase:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  messageScaleTween:
+    time: 0.25
+    useCustomEase: 0
+    ease: 9
+    customEase:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  messageFadeTween:
+    time: 0.1
+    useCustomEase: 0
+    ease: 9
+    customEase:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  moveCharaToTopTween:
+    time: 0.75
+    useCustomEase: 0
+    ease: 9
+    customEase:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  characterJoinLeaveTween:
+    time: 1
+    useCustomEase: 0
+    ease: 19
+    customEase:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  locationText: {fileID: 4370196417433420151}
 --- !u!1001 &3889287527766020070
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -249,11 +276,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3145444792694792660, guid: 6cbb6d60a952d234e9699f8fc4ffb396,
         type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3145444792694792660, guid: 6cbb6d60a952d234e9699f8fc4ffb396,
-        type: 3}
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
@@ -270,16 +292,6 @@ PrefabInstance:
     - target: {fileID: 3145444792694792660, guid: 6cbb6d60a952d234e9699f8fc4ffb396,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3145444792694792660, guid: 6cbb6d60a952d234e9699f8fc4ffb396,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 25
-      objectReference: {fileID: 0}
-    - target: {fileID: 3145444792694792660, guid: 6cbb6d60a952d234e9699f8fc4ffb396,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5526128820113479333, guid: 6cbb6d60a952d234e9699f8fc4ffb396,
@@ -595,6 +607,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 3889287527766020070}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4370196417433420151 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 675408117367049873, guid: 6cbb6d60a952d234e9699f8fc4ffb396,
+    type: 3}
+  m_PrefabInstance: {fileID: 3889287527766020070}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &8195031944675967117 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4918806296414261099, guid: 6cbb6d60a952d234e9699f8fc4ffb396,

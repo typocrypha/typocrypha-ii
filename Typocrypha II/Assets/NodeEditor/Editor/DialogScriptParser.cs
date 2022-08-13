@@ -70,6 +70,8 @@ public class DialogScriptParser : EditorWindow
         {"setexpr", typeof(SetExpression) },
         {"setexpression", typeof(SetExpression) },
         {"setpose", typeof(SetPose) },
+        {"setlocation", typeof(SetLocationTextNode) },
+        {"setlocationtext", typeof(SetLocationTextNode) },
     };
 
     AnimationCurve bgmFadeIn = AnimationCurve.EaseInOut(0, 0, 1, 1); // Default fade in curve
@@ -322,6 +324,12 @@ public class DialogScriptParser : EditorWindow
             var gnode = CreateNode(SetVariableNode.Id) as SetVariableNode;
             gnode.variableName = args[1];
             gnode.value = args[2];
+            nodes.Add(gnode);
+        }
+        else if(nodeType == typeof(SetLocationTextNode))
+        {
+            var gnode = CreateNode(SetLocationTextNode.Id) as SetLocationTextNode;
+            gnode.text = args[1];
             nodes.Add(gnode);
         }
         return nodes;

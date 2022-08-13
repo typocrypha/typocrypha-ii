@@ -33,6 +33,7 @@ public class CharacterDataInspector : Editor
             data.poses = new PoseMap();
         }
         PoseMapGUI("Poses", data.poses);
+        data.defaultFacingDirection = EditorUtils.EnumPopup(new GUIContent("Facing Direction"), data.defaultFacingDirection);
         EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
         if (data.expressions == null)
         {

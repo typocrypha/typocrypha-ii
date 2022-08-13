@@ -49,4 +49,9 @@ public abstract class DialogView : MonoBehaviour
         Debug.LogError($"Dialog item is not of type {typeof(T)}. Incorrect type for this view mode");
         return false;
     }
+    public void SetLocationText(string location)
+    {
+        SetLocation(DialogParser.instance.SubstituteMacros(location));
+    }
+    protected virtual void SetLocation(string location) { }
 }
