@@ -63,6 +63,9 @@ public class DialogBox : MonoBehaviour, IDialogBox
         get => scrollCR == null;
     }
 
+    public string ID => boxID;
+    [SerializeField] private string boxID = "dialogBox";
+
     void Awake()
     {
         ph = new PauseHandle(OnPause);
