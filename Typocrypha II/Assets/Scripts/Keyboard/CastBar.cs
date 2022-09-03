@@ -60,6 +60,12 @@ namespace Typocrypha
                     HandleBackSpace();
                 return true;
             }
+            else if(inputChar == 127) // Ctrl + backspace
+            {
+                if (pos > 0)
+                    Clear();
+                return true;
+            }
             return false;
         }
         private bool CheckSpace(char inputChar)
@@ -121,7 +127,6 @@ namespace Typocrypha
         {
             Debug.Log("CastBar:" + Text);
             onCast.Invoke(Text);
-            pos = 0;
             Clear();
         }
 
@@ -186,6 +191,7 @@ namespace Typocrypha
 
         void Clear()
         {
+            pos = 0;
             foreach (var letter in letters)
             {
                 letter.text = "";
