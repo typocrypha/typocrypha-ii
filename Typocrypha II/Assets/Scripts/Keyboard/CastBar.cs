@@ -52,14 +52,18 @@ namespace Typocrypha
             sb.Remove(pos, 1);
         }
 
-        private bool CheckSpecialCharacter(char inputChar)
+        private bool CheckBackspace(char inputChar)
         {
             if (inputChar == 8) // Backspace. Don't allow backspace on first character.
             {
-                if(pos > 0)
+                if (pos > 0)
                     HandleBackSpace();
                 return true;
             }
+            return false;
+        }
+        private bool CheckSpace(char inputChar)
+        {
             if (inputChar == SpaceChar) // Space. Don't allow space on first character.
             {
                 if (pos > 0 && sb[pos - 1] != keywordDelim[0]) // Ignore multiple spaces.
@@ -89,12 +93,16 @@ namespace Typocrypha
         /// <param name="inputChar">Input character</param>
         public void CheckInput(char inputChar)
         {
+            if (CheckBackspace(inputChar))
+            {
+                return;
+            }
             if (pos >= letters.Length - 1) // No more room.
             {
                 Debug.Log("CastBar full");
                 return;
             }
-            if(CheckSpecialCharacter(inputChar) || CheckStandardCharacter(inputChar))
+            if(CheckSpace(inputChar) || CheckStandardCharacter(inputChar))
             {
                 MatchKeywords(); // Find keywords and combos
             }
