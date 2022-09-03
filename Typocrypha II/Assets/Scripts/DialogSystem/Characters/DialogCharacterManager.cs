@@ -342,7 +342,6 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
     {
         if (!characterLookup.ContainsKey(alias))
         {
-            Debug.LogError($"There is no character with alias {alias}");
             return null;
         }
         return characterLookup[alias];

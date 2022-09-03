@@ -13,8 +13,29 @@ public class VNPlusDialogBoxUI : MonoBehaviour
     [SerializeField] private Image arrowImage;
     [SerializeField] private CanvasGroup canvasGroup;
 
+    private Color initialColor = Color.clear;
+
     public void Bind(CharacterData character)
     {
+        iconImage.color = Color.white;
+        canvasGroup.alpha = 1;
+        // Generic Character functionality
+        if (character == null)
+        {
+            if(initialColor == Color.clear)
+            {
+                initialColor = borderImages[0].color;
+            }
+            else
+            {
+                foreach (var image in borderImages)
+                {
+                    image.color = initialColor;
+                }
+            }
+            return;
+        }
+        // Actual character
         foreach(var image in borderImages)
         {
             image.color = character.characterColorLight;
@@ -22,8 +43,6 @@ public class VNPlusDialogBoxUI : MonoBehaviour
         arrowImage.enabled = true;
         arrowImage.color = character.characterColorLight;
         iconImage.sprite = character.chat_icon;
-        iconImage.color = Color.white;
-        canvasGroup.alpha = 1;
     }
 
     public void DoDim(TweenInfo tweenInfo)

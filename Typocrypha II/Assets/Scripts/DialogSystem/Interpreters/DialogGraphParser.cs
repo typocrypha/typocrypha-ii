@@ -118,9 +118,9 @@ public class DialogGraphParser : MonoBehaviour
             {
                 // Get speaking SFX if valid name.
                 var cd = DialogCharacterManager.instance.CharacterDataByName(charName.Trim());
+                cds.Add(cd);
                 if (cd != null)
                 {
-                    cds.Add(cd);
                     voice.Add(cd.talk_sfx);
                 }
             } 
@@ -144,7 +144,7 @@ public class DialogGraphParser : MonoBehaviour
             else if(currNode is DialogNodeVNPlus)
             {
                 var dNode = currNode as DialogNodeVNPlus;
-                return new DialogItemVNPlus(dNode.text, voice, cds);
+                return new DialogItemVNPlus(dNode.text, voice, cds, charNames);
             }
             else if(currNode is DialogNodeChat)
             {

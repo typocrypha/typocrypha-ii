@@ -8,6 +8,7 @@ using TMPro;
 
 public class DialogViewVNPlus : DialogView
 {
+    public const string narratorName = "narrator";
     private const int maxCharactersPerColumn = 5;
     private const int maxMessages = 7;
     private const int messagePrefabTypes = 3;
@@ -21,6 +22,7 @@ public class DialogViewVNPlus : DialogView
     [SerializeField] private GameObject rightDialogBoxPrefab;
     [SerializeField] private GameObject leftDialogBoxPrefab;
     [SerializeField] private GameObject narratorDialogBoxPrefab;
+    [SerializeField] private GameObject randoDialogBoxPrefab;
     [SerializeField] private RectTransform messageContainer;
     [SerializeField] private VerticalLayoutGroup messageLayout;
     [SerializeField] private GameObject rightCharacterPrefab;
@@ -242,12 +244,14 @@ public class DialogViewVNPlus : DialogView
     {
         foreach(var kvp in characterMap)
         {
-            kvp.Value.Highlighted = data.Any(d => d.name == kvp.Key);
+            kvp.Value.Highlighted = data.Any(d => d != null && d.name == kvp.Key);
         }
     }
 
     public void HighlightCharacter(CharacterData data)
     {
+        if (data == null)
+            return;
         foreach (var kvp in characterMap)
         {
             kvp.Value.Highlighted = data.name == kvp.Key;
@@ -331,6 +335,10 @@ public class DialogViewVNPlus : DialogView
             throw new System.NotImplementedException("VNPlus mode doesn't currently support dialog lines with no character data");
         }
         var chara = data[0];
+        if (chara == null)
+        {
+            return randoDialogBoxPrefab;
+        }
         if (characterMap.ContainsKey(chara.name))
         {
             return characterMap[chara.name].Column == CharacterColumn.Left ? leftDialogBoxPrefab : rightDialogBoxPrefab;
