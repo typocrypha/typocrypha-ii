@@ -26,12 +26,12 @@ public class DialogViewBubble : DialogView
     public override DialogBox PlayDialog(DialogItem data)
     {
         RemoveOld();
-        if (data is DialogItemBubble_Multi)
+        if (data is DialogItemBubble_Multi dialogItemBubble_Multi)
         {
-            List<DialogBox> boxes = new List<DialogBox>();
-            foreach(var bdata in (data as DialogItemBubble_Multi).bubbleList)
+            var boxes = new List<DialogBox>(dialogItemBubble_Multi.bubbleList.Count);
+            foreach(var bdata in dialogItemBubble_Multi.bubbleList)
             {
-                boxes.Add(PlayDialog(bdata as DialogItemBubble));
+                boxes.Add(PlayDialog(bdata));
             }
             multiBox.boxes = boxes;
             return multiBox;
