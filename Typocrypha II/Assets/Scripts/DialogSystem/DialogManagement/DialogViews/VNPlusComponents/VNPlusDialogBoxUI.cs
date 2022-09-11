@@ -12,6 +12,7 @@ public class VNPlusDialogBoxUI : MonoBehaviour
     [SerializeField] private Image[] borderImages;
     [SerializeField] private Image arrowImage;
     [SerializeField] private CanvasGroup canvasGroup;
+    [SerializeField] private DialogContinueIndicator continueIndicator;
 
     public void Bind(CharacterData character)
     {
@@ -24,6 +25,7 @@ public class VNPlusDialogBoxUI : MonoBehaviour
         iconImage.sprite = character.chat_icon;
         iconImage.color = Color.white;
         canvasGroup.alpha = 1;
+        continueIndicator.enabled = true;
     }
 
     public void DoDim(TweenInfo tweenInfo)
@@ -36,5 +38,6 @@ public class VNPlusDialogBoxUI : MonoBehaviour
             tweenInfo.Start(image.DOColor(image.color * dimColor, tweenInfo.Time), false);
         }
         arrowImage.enabled = false;
+        continueIndicator.enabled = false;
     }
 }
