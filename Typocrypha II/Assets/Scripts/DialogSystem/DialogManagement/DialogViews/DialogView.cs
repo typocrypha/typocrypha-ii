@@ -54,4 +54,14 @@ public abstract class DialogView : MonoBehaviour
         SetLocation(DialogParser.instance.SubstituteMacros(location));
     }
     protected virtual void SetLocation(string location) { }
+
+    public virtual IEnumerator PlayEnterAnimation()
+    {
+        yield break;
+    }
+
+    public virtual IEnumerator PlayExitAnimation()
+    {
+        yield break;
+    }
 }

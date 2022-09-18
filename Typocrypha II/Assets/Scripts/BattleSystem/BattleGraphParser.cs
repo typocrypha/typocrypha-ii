@@ -23,7 +23,7 @@ public class BattleGraphParser : GraphParser
         {
             if (currNode is EndAndHide)
             {
-                DialogManager.instance.Display(false);
+                DialogManager.instance.Display(false, null);
                 return null;
             }
             // NON-FUNCTIONAL WITH BATTLES (CHECK WITH JAMES)

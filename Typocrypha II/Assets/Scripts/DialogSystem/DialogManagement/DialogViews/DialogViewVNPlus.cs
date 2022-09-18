@@ -12,6 +12,7 @@ public class DialogViewVNPlus : DialogView
     private const int maxCharactersPerColumn = 5;
     private const int maxMessages = 7;
     private const int messagePrefabTypes = 3;
+    private const float enterExitStaggerTime = 0.5f;
 
     public enum CharacterColumn
     {
@@ -29,12 +30,14 @@ public class DialogViewVNPlus : DialogView
     [SerializeField] private GameObject leftCharacterPrefab;
     [SerializeField] private RectTransform rightCharacterContainer;
     [SerializeField] private RectTransform leftCharacterContainer;
+    [SerializeField] private RectTransform contentRoot;
 
     [SerializeField] private TweenInfo messageTween;
     [SerializeField] private TweenInfo messageScaleTween;
     [SerializeField] private TweenInfo messageFadeTween;
     [SerializeField] private TweenInfo moveCharaToTopTween;
     [SerializeField] private TweenInfo characterJoinLeaveTween;
+    [SerializeField] private TweenInfo enterExitViewTween;
     [SerializeField] private TextMeshProUGUI locationText;
 
 
@@ -378,6 +381,41 @@ public class DialogViewVNPlus : DialogView
     public override void SetEnabled(bool e)
     {
         gameObject.SetActive(e);
+    }
+
+    public override IEnumerator PlayEnterAnimation()
+    {
+        contentRoot.localScale = new Vector3(contentRoot.localScale.x, 0, contentRoot.localScale.z);
+        enterExitViewTween.Start(contentRoot.DOScaleY(1, enterExitViewTween.Time));
+        if (rightCharacterList.Count + leftCharacterList.Count > 0)
+        {
+            yield return new WaitForSeconds(enterExitStaggerTime);
+            foreach (var chara in rightCharacterList)
+            {
+                enterExitViewTween.Start(chara.MainRect.DOScaleY(1, enterExitViewTween.Time), false);
+            }
+            foreach (var chara in leftCharacterList)
+            {
+                enterExitViewTween.Start(chara.MainRect.DOScaleY(1, enterExitViewTween.Time), false);
+            }
+        }
+        yield return enterExitViewTween.WaitForCompletion();
+    }
+    public override IEnumerator PlayExitAnimation()
+    {
+        contentRoot.localScale = new Vector3(contentRoot.localScale.x, 1, contentRoot.localScale.z);
+        enterExitViewTween.Complete();
+        foreach(var chara in rightCharacterList)
+        {
+            enterExitViewTween.Start(chara.MainRect.DOScaleY(0, enterExitViewTween.Time), false);
+        }
+        foreach (var chara in leftCharacterList)
+        {
+            enterExitViewTween.Start(chara.MainRect.DOScaleY(0, enterExitViewTween.Time), false);
+        }
+        yield return new WaitForSeconds(enterExitStaggerTime);
+        enterExitViewTween.Start(contentRoot.DOScaleY(0, enterExitViewTween.Time), false);
+        yield return enterExitViewTween.WaitForCompletion();
     }
 
     protected override void SetLocation(string location)

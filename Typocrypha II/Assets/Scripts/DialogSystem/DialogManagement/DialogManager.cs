@@ -48,6 +48,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     [HideInInspector] public IDialogBox dialogBox; // Latest displayed dialog box.
     [HideInInspector] public int dialogCounter = 0; // Number of dialog lines passed.
 
+    private bool readyToContinue = true;
     private DialogGraphParser graphParser; // Dialog graph currently playing.
 
     void Awake()
@@ -64,8 +65,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
 
         ph = new PauseHandle(OnPause);
         graphParser = GetComponent<DialogGraphParser>();
-        dialogView = GetView<DialogViewVNPlus>(); // Set to VN plus by default
-        Display(!isBattle);
+        SetDefaultView();
     }
 
     void Start()
@@ -78,7 +78,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     void Update()
     {
         // Check if submit key is pressed
-        if (dialogBox != null && dialogView.ReadyToContinue && Input.GetKeyDown(KeyCode.Space))
+        if (readyToContinue && dialogBox != null && dialogView.ReadyToContinue && Input.GetKeyDown(KeyCode.Space))
         {
             if (dialogBox.IsDone) // If dialog is done, go to next dialog
             {
@@ -89,6 +89,11 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
                 dialogBox.DumpText();
             }
         }
+    }
+
+    private void SetDefaultView()
+    {
+        dialogView = GetView<DialogViewVNPlus>(); // Set to VN plus by default
     }
 
     /// <summary>
@@ -107,11 +112,12 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     /// </summary>
     public void StartDialog()
     {
+        SetDefaultView();
         graphParser.Init();
         if (isBattle || dialogCounter <= 0) // Start from beginning of scene if no save file load (can't save in middle of battle).
         {
             dialogCounter = -1;
-            NextDialog();
+            NextDialog(true);
         }
         else // Otherwise, go to saved position.
         {
@@ -135,12 +141,22 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
         DialogView view = GetView(dialogItem.GetView());
         if (view != dialogView)
         {
-            dialogView = view;
-            SoloView(dialogView); 
+            StartCoroutine(ChangeViews(view, () => PlayNextDialog(dialogItem)));
         }
+        else if (!dialogView.isActiveAndEnabled)
+        {
+            Display(true, () => PlayNextDialog(dialogItem));
+        }
+        else
+        {
+            PlayNextDialog(dialogItem);
+        }
+    }
+
+    private void PlayNextDialog(DialogItem dialogItem)
+    {
         dialogBox = dialogView.PlayDialog(dialogItem); // Play Dialog
         onNextDialog.Invoke();
-
         dialogCounter++;
     }
 
@@ -177,10 +193,32 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     /// Show/Hide dialog UI/characters/etc.
     /// </summary>
     /// <param name="show">If true, display dialog. Otherwise, hide.</param>
-    public void Display(bool show)
+    public void Display(bool show, System.Action onComplete)
     {
         PH.Pause = !show;
-        dialogView?.SetEnabled(show);
+        if (dialogView == null || show == dialogView.isActiveAndEnabled)
+        {
+            onComplete?.Invoke();
+            return;
+        }
+        StartCoroutine(ShowHideView(show, onComplete));
+    }
+
+    private IEnumerator ShowHideView(bool show, System.Action onComplete)
+    {
+        readyToContinue = false;
+        if (show)
+        {
+            dialogView.gameObject.SetActive(true);
+            yield return dialogView.PlayEnterAnimation();
+        }
+        else
+        {
+            yield return dialogView.PlayExitAnimation();
+            dialogView.gameObject.SetActive(false);
+        }
+        readyToContinue = true;
+        onComplete?.Invoke();
     }
 
     /// <summary>
@@ -192,13 +230,22 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     }
 
     // Hide all views except for current.
-    void SoloView(DialogView view)
+    private IEnumerator ChangeViews(DialogView newView, System.Action callback)
     {
-        foreach (var dv in allViews)
+        readyToContinue = false;
+        if (dialogView.isActiveAndEnabled)
         {
-            dv.gameObject.SetActive(false);
+            if (dialogView != null)
+            {
+                yield return dialogView.PlayExitAnimation();
+            }
+            dialogView.gameObject.SetActive(false);
         }
-        view.gameObject.SetActive(true);
+        dialogView = newView;
+        dialogView.gameObject.SetActive(true);
+        yield return dialogView.PlayEnterAnimation();
+        readyToContinue = true;
+        callback?.Invoke();
     }
 }
 
