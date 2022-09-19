@@ -101,11 +101,22 @@ public class VNPlusCharacter : MonoBehaviour
             isHighlighted = value;
             var color = value ? highlightColor : noHighlightColor;
             var dimColor = value ? nameHighlightColor : nameNoHighlightColor;
-            highlightTween.Start(poseImage.DOColor(color, highlightTween.Time));
-            exprHighlightTween.Start(expressionImage.DOColor(color, exprHighlightTween.Time));
-            nameHighlightTween.Start(nameplateDimmer.DOColor(dimColor, nameHighlightTween.Time));
-            rightHighlightTween.Start(rightHighlightDimmer.DOColor(dimColor, rightHighlightTween.Time));
-            leftHighlightTween.Start(leftHighlightDimmer.DOColor(dimColor, leftHighlightTween.Time));
+            if (isActiveAndEnabled)
+            {
+                highlightTween.Start(poseImage.DOColor(color, highlightTween.Time));
+                exprHighlightTween.Start(expressionImage.DOColor(color, exprHighlightTween.Time));
+                nameHighlightTween.Start(nameplateDimmer.DOColor(dimColor, nameHighlightTween.Time));
+                rightHighlightTween.Start(rightHighlightDimmer.DOColor(dimColor, rightHighlightTween.Time));
+                leftHighlightTween.Start(leftHighlightDimmer.DOColor(dimColor, leftHighlightTween.Time));
+            }
+            else
+            {
+                poseImage.color = color;
+                expressionImage.color = color;
+                nameplateDimmer.color = dimColor;
+                rightHighlightDimmer.color = dimColor;
+                leftHighlightDimmer.color = dimColor;
+            }
         }
     }
 

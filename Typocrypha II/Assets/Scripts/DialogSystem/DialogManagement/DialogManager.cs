@@ -112,6 +112,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     /// </summary>
     public void StartDialog()
     {
+        PH.Pause = false;
         SetDefaultView();
         graphParser.Init();
         if (isBattle || dialogCounter <= 0) // Start from beginning of scene if no save file load (can't save in middle of battle).

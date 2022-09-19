@@ -13,11 +13,6 @@ public class BEFunctionDialog : BattleEventFunction
     public override void Run()
     {
         BattleManager.instance.PH.Pause = true;
-        DialogManager.instance.Display(true, StartDialog);
-    }
-
-    private void StartDialog()
-    {
         DialogManager.instance.StartDialog(graph);
         StartCoroutine(WaitForDialogEnd());
     }
