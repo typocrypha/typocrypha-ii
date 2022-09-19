@@ -446,16 +446,8 @@ public class DialogViewVNPlus : DialogView
         if (rightCharacterList.Count + leftCharacterList.Count > 0)
         {
             yield return new WaitForSeconds(enterExitStaggerTime);
-            foreach (var chara in leftCharacterList)
-            {
-                enterExitViewTween.Start(chara.MainRect.DOScaleY(1, enterExitViewTween.Time), false);
-                yield return new WaitForSeconds(enterExitIndividualStaggerTime);
-            }
-            foreach (var chara in rightCharacterList)
-            {
-                enterExitViewTween.Start(chara.MainRect.DOScaleY(1, enterExitViewTween.Time), false);
-                yield return new WaitForSeconds(enterExitIndividualStaggerTime);
-            }
+            yield return StartCoroutine(JoinLeaveAll(true, leftCharacterList, rightCharacterList.Count > 0));
+            yield return StartCoroutine(JoinLeaveAll(true, rightCharacterList));
         }
         yield return enterExitViewTween.WaitForCompletion();
     }
@@ -463,19 +455,30 @@ public class DialogViewVNPlus : DialogView
     {
         contentRoot.localScale = new Vector3(contentRoot.localScale.x, 1, contentRoot.localScale.z);
         enterExitViewTween.Complete();
-        foreach(var chara in rightCharacterList)
+        if (rightCharacterList.Count + leftCharacterList.Count > 0)
         {
-            enterExitViewTween.Start(chara.MainRect.DOScaleY(0, enterExitViewTween.Time), false);
-            yield return new WaitForSeconds(enterExitIndividualStaggerTime);
+            yield return StartCoroutine(JoinLeaveAll(false, rightCharacterList, leftCharacterList.Count > 0));
+            yield return StartCoroutine(JoinLeaveAll(false, leftCharacterList));
+            yield return new WaitForSeconds(enterExitStaggerTime);
         }
-        foreach (var chara in leftCharacterList)
-        {
-            enterExitViewTween.Start(chara.MainRect.DOScaleY(0, enterExitViewTween.Time), false);
-            yield return new WaitForSeconds(enterExitIndividualStaggerTime);
-        }
-        yield return new WaitForSeconds(enterExitStaggerTime);
         enterExitViewTween.Start(contentRoot.DOScaleY(0, enterExitViewTween.Time), false);
         yield return enterExitViewTween.WaitForCompletion();
+    }
+
+
+
+    private IEnumerator JoinLeaveAll(bool join, List<VNPlusCharacter> characterList, bool staggerLast = false)
+    {
+        float targetScale = join ? 1 : 0;
+        for (int i = 0; i < characterList.Count; i++)
+        {
+            var chara = characterList[i];
+            enterExitViewTween.Start(chara.MainRect.DOScaleY(targetScale, enterExitViewTween.Time), false);
+            if (staggerLast || i < characterList.Count - 1)
+            {
+                yield return new WaitForSeconds(enterExitIndividualStaggerTime);
+            }
+        }
     }
 
     protected override void SetLocation(string location)
