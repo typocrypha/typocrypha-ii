@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class AbilityIncomingDamageMod : CasterAbility
 {
-    public override void OnBeforeHitApplied(RootWordEffect effect, Caster caster, Caster target, CastResults castResults)
+    public override void OnBeforeHitApplied(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults castResults)
     {
         if (!castResults.WillDealDamage || !ShouldApplyAbility(effect, caster, target, castResults))
             return;

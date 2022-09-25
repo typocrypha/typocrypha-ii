@@ -8,7 +8,7 @@ public class ApplyStatusEffect : RootWordEffect
 
     public override bool CanCrit => false;
 
-    public override CastResults Cast(Caster caster, Caster target, bool crit, Spell spell, RootCastResults prevResults = null)
+    public override CastResults Cast(Caster caster, Caster target, bool crit, RootCastData spellData, RootCastResults prevResults = null)
     {
         var results = new CastResults(caster, target);
         Damage.StandardHitCheck(results, this, caster, target);
@@ -16,7 +16,7 @@ public class ApplyStatusEffect : RootWordEffect
             return results;
         results.Effectiveness = Damage.GetReaction(this, caster, target, out float mult);
         results.DisplayDamage = false;
-        if (Damage.ApplyReflect(results, this, caster, target, spell))
+        if (Damage.ApplyReflect(results, this, caster, target, spellData))
             return results;
         var effect = Instantiate(statusEffectPrefab, target.transform).GetComponent<StatusEffect>();
         effect.Apply(this, caster, target, results);

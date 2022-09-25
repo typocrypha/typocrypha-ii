@@ -12,7 +12,7 @@ public class AbilityDoubleDamage : CasterAbility
             damageEffect.power *= 2;
     }
 
-    public override void OnBeforeHitApplied(RootWordEffect effect, Caster caster, Caster target, CastResults castResults)
+    public override void OnBeforeHitApplied(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults castResults)
     {
         return;
     }

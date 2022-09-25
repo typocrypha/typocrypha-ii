@@ -6,7 +6,7 @@ using System.Linq;
 public class FormulaDrainDamage : CustomFormula
 {
     public float drainMod = 0.5f;
-    public override CastResults Apply(DamageEffect effect, Caster caster, Caster target, bool crit, Spell spell, RootCastResults prevResults = null)
+    public override CastResults Apply(DamageEffect effect, Caster caster, Caster target, bool crit, RootCastData spellData, RootCastResults prevResults = null)
     {
         var results = new CastResults(caster, target);
         if (prevResults == null || prevResults.Count <= 0)
@@ -20,7 +20,7 @@ public class FormulaDrainDamage : CustomFormula
             results.Crit = true;
             results.Damage *= Damage.critDamageMod;
         }
-        Damage.ApplyStandard(results, effect, caster, target, spell);
+        Damage.ApplyStandard(results, effect, caster, target, spellData);
         return results;
     }
 }

@@ -13,7 +13,7 @@ public class AbilityDestroyIfHitByTag : CasterAbility
         return;
     }
 
-    public override void OnBeforeHitApplied(RootWordEffect effect, Caster caster, Caster target, CastResults castResults)
+    public override void OnBeforeHitApplied(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults castResults)
     {
         if (!effect.tags.Contains(tag) || castResults.Miss || !castResults.WillDealDamage || target.BStatus != Caster.BattleStatus.Normal)
         {

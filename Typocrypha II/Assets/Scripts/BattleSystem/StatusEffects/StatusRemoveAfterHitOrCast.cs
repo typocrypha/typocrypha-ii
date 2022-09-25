@@ -11,7 +11,7 @@ public class StatusRemoveAfterHitOrCast : StatusEffect
     bool firstCastDone = false;
     private int casts;
     private int hits;
-    public override void OnAfterHit(RootWordEffect effect, Caster caster, Caster target, CastResults data)
+    public override void OnAfterHit(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults data)
     {
         // If the caster isn't also the target and the first cast isn't done, this is the first cast and this isn't a self-cast
         if(caster != target && !firstCastDone)

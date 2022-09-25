@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class AbilityBrittle : CasterAbility
 {
-    public override void OnBeforeHitApplied(RootWordEffect effect, Caster caster, Caster target, CastResults castResults)
+    public override void OnBeforeHitApplied(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults castResults)
     {
-        if(castResults.Combo >= 2)
+        if(spellData.IsLastRoot && castResults.Combo >= 2)
         {
             castResults.StaggerDamage += 1;
+            SpellFxManager.instance.LogMessage($"{target.DisplayName} was shattered!");
         }
     }
 
