@@ -60,7 +60,7 @@ public class DialogHistory : MonoBehaviour, IPausable
         var go = Instantiate(dialogBoxPrefab, content);
         var dialogBox = go.GetComponent<DialogBox>();
         dialogBox.dialogText.text = DialogParser.instance.RemoveTags(dialog);
-        dialogBox.SetBoxHeight(true);
+        dialogBox.SetBoxHeight(true, false);
         go.transform.Find("NameText").GetComponent<TextMeshProUGUI>().text = 
             speaker == "" ? "-" : speaker;
         // Resize window.

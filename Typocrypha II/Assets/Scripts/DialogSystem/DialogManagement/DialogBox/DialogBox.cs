@@ -51,6 +51,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
     public AudioSource[] voiceAS; // AudioSources for playing speech sfx
     public bool resizeTextBox = true; // Should dialog box resize itself?
     [SerializeField] private RectTransform textHolder;
+    [SerializeField] private RectTransform continueIndicator = null;
     [SerializeField] FXText.TMProColor hideText; // Allows for hiding parts of text (for scrolling)
     DialogItem dialogItem; // Dialog line data
     Coroutine scrollCR; // Coroutine that scrolls the text
@@ -172,13 +173,21 @@ public class DialogBox : MonoBehaviour, IDialogBox
     /// Set dialog box's height based on amount of text.
     /// </summary>
     /// <param name="add">Add on size rather than reset size.</param>
-    public void SetBoxHeight(bool add = false)
+    /// <param name="hasContinueIndicator">Whether the dialog box has a continue indicator.<param>
+    public void SetBoxHeight(bool add = false, bool hasContinueIndicator = true)
     {
         if (textHolder != null)
         {
             LayoutRebuilder.ForceRebuildLayoutImmediate(textHolder);
         }
         RectTransform rectTr = GetComponent<RectTransform>();
+        
+        if (hasContinueIndicator && continueIndicator != null &&
+            dialogText.preferredWidth % dialogText.rectTransform.sizeDelta.x > continueIndicator.localPosition.x - 20f)
+        {
+            dialogText.text += "\n\n";
+            LayoutRebuilder.ForceRebuildLayoutImmediate(textHolder);
+        }
         if (rectTr != null && dialogText != null)
         {
             rectTr.sizeDelta = add
