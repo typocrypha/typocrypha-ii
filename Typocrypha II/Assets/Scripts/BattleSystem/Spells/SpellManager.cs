@@ -115,7 +115,7 @@ public class SpellManager : MonoBehaviour
                         // Apply OnCast Callbacks
                         caster.OnBeforeSpellEffectResolved?.Invoke(effect, caster, targetCaster);
                         // Cast the effect
-                        var castResults = effect.Cast(caster, targetCaster, crit, rootResults);
+                        var castResults = effect.Cast(caster, targetCaster, crit, spell, rootResults);
                         // Apply OnHit Callbacks (Updates AI)
                         targetCaster.OnAfterHitResolved?.Invoke(effect, caster, targetCaster, castResults);
                         // Play Effects

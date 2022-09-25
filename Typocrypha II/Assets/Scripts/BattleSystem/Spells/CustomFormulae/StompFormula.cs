@@ -5,10 +5,10 @@ using UnityEngine;
 public class StompFormula : CustomFormula
 {
     public float damageBonusMod = 2; 
-    public override CastResults Apply(DamageEffect effect, Caster caster, Caster target, bool crit, RootCastResults prevResults = null)
+    public override CastResults Apply(DamageEffect effect, Caster caster, Caster target, bool crit, Spell spell, RootCastResults prevResults = null)
     {
         // Calculate standard results using the standard formula
-        var results = Damage.Standard(effect, caster, target, crit);
+        var results = Damage.Standard(effect, caster, target, crit, spell);
         if (target.HasTag("Short") || target.HasTag("Baby"))
         {
             results.Damage *= damageBonusMod;
@@ -16,7 +16,7 @@ public class StompFormula : CustomFormula
             LogMessage(caster.DisplayName + " used a low blow!");
         }         
         // Apply the results of the cast in the standard manner
-        Damage.ApplyStandard(results, effect, caster, target);
+        Damage.ApplyStandard(results, effect, caster, target, spell);
         return results;
     }
 }

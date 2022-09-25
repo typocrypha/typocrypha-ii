@@ -83,10 +83,9 @@ public class DialogGraphParser : MonoBehaviour
                 return NextDialog(false);
             }
             else if (currNode is EndAndHide)
-            {
-                DialogManager.instance.CleanUp();
+            {         
                 DialogCharacterManager.instance?.RemoveAllCharacters();
-                DialogManager.instance.Display(false);
+                DialogManager.instance.Display(false, DialogManager.instance.CleanUp);
                 return null;
             }
             else if (currNode is EndAndGoto) // Immediately start new dialog graph.
@@ -99,7 +98,7 @@ public class DialogGraphParser : MonoBehaviour
             else if (currNode is EndAndTransition) // Transitions scenes.
             {
                 var node = currNode as EndAndTransition;
-                TransitionManager.instance.TransitionScene(node.nextScene, node.loadingScreen);
+                DialogManager.instance.Display(false, () => TransitionManager.instance.TransitionScene(node.nextScene, node.loadingScreen));
                 return null;
             }
         }

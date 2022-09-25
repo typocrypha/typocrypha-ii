@@ -9,7 +9,7 @@ public abstract class RootWordEffect : ScriptableObject
     public TargetData pattern = new TargetData();
 
     public abstract bool CanCrit { get; }
-    public abstract CastResults Cast(Caster caster, Caster target, bool crit, RootCastResults prevResults = null);
+    public abstract CastResults Cast(Caster caster, Caster target, bool crit, Spell spell, RootCastResults prevResults = null);
 
     protected void LogMessage(string message, Sprite icon = null)
     {

@@ -12,6 +12,8 @@ public class DialogViewVNPlus : DialogView
     private const int maxCharactersPerColumn = 5;
     private const int maxMessages = 7;
     private const int messagePrefabTypes = 3;
+    private const float enterExitStaggerTime = 0.5f;
+    private const float enterExitIndividualStaggerTime = 0.05f;
 
     public enum CharacterColumn
     {
@@ -29,12 +31,14 @@ public class DialogViewVNPlus : DialogView
     [SerializeField] private GameObject leftCharacterPrefab;
     [SerializeField] private RectTransform rightCharacterContainer;
     [SerializeField] private RectTransform leftCharacterContainer;
+    [SerializeField] private RectTransform contentRoot;
 
     [SerializeField] private TweenInfo messageTween;
     [SerializeField] private TweenInfo messageScaleTween;
     [SerializeField] private TweenInfo messageFadeTween;
     [SerializeField] private TweenInfo moveCharaToTopTween;
     [SerializeField] private TweenInfo characterJoinLeaveTween;
+    [SerializeField] private TweenInfo enterExitViewTween;
     [SerializeField] private TextMeshProUGUI locationText;
 
 
@@ -120,9 +124,57 @@ public class DialogViewVNPlus : DialogView
         {
             return;
         }
-        readyToContinue = false;
-        StartCoroutine(AddCharacterCR(data, column));
+        if (isActiveAndEnabled)
+        {
+            readyToContinue = false;
+            StartCoroutine(AddCharacterCR(data, column));
+        }
+        else
+        {
+            AddCharacterInstant(data, column);
+        }
     }
+    private void AddCharacterInstant(CharacterData data, CharacterColumn column)
+    {
+        VNPlusCharacter newCharacter;
+        if (column == CharacterColumn.Right)
+        {
+            if (rightCharacterList.Count > 0)
+            {
+                AdjustCharactersPreJoinInstant(rightCharacterContainer, rightCharacterList);
+            }
+            newCharacter = InstantiateCharacter(rightCharacterPrefab, rightCharacterContainer, rightCharacterList);
+        }
+        else
+        {
+            if (leftCharacterList.Count > 0)
+            {
+                AdjustCharactersPreJoinInstant(leftCharacterContainer, leftCharacterList);
+            }
+            newCharacter = InstantiateCharacter(leftCharacterPrefab, leftCharacterContainer, leftCharacterList);
+        }
+        ProcessNewCharacter(newCharacter, data);
+    }
+
+    private void AdjustCharactersPreJoinInstant(RectTransform container, List<VNPlusCharacter> characterList)
+    {
+        GetCharacterAdjustmentValues(container, characterList, 1, out float newHeight, out float posStart);
+        for (int i = 0; i < characterList.Count; i++)
+        {
+            var chara = characterList[i];
+            chara.MainRect.sizeDelta = new Vector2(chara.MainRect.sizeDelta.x, newHeight);
+            chara.MainRect.anchoredPosition = new Vector2(chara.MainRect.anchoredPosition.x, posStart - (i * newHeight));
+        }
+    }
+
+    private void ProcessNewCharacter(VNPlusCharacter newCharacter, CharacterData data)
+    {
+        HighlightCharacter(data);
+        newCharacter.Data = data;
+        newCharacter.NameText = data.mainAlias;
+        characterMap.Add(data.name, newCharacter);
+    }
+
     private IEnumerator AddCharacterCR(CharacterData data, CharacterColumn column)
     {
         VNPlusCharacter newCharacter;
@@ -142,11 +194,7 @@ public class DialogViewVNPlus : DialogView
             }
             newCharacter = InstantiateCharacter(leftCharacterPrefab, leftCharacterContainer, leftCharacterList);
         }
-        HighlightCharacter(data);
-        newCharacter.Data = data;
-        // TODO: name override
-        newCharacter.NameText = data.mainAlias;
-        characterMap.Add(data.name, newCharacter);
+        ProcessNewCharacter(newCharacter, data);
         yield return newCharacter.PlayJoinTween().WaitForCompletion();
         readyToContinue = true;
     }
@@ -158,7 +206,6 @@ public class DialogViewVNPlus : DialogView
         var height = container.rect.height / characterList.Count;
         newCharacter.SetInitialHeight(height);
         newCharacter.SetInitialPos((-height / 2) - ((characterList.Count - 1) * height));
-
         return newCharacter;
     }
 
@@ -378,6 +425,60 @@ public class DialogViewVNPlus : DialogView
     public override void SetEnabled(bool e)
     {
         gameObject.SetActive(e);
+    }
+
+    public override IEnumerator PlayEnterAnimation()
+    {
+        contentRoot.localScale = new Vector3(contentRoot.localScale.x, 0, contentRoot.localScale.z);
+        if (rightCharacterList.Count + leftCharacterList.Count > 0)
+        {
+            // Initialize chara scale
+            foreach (var chara in leftCharacterList)
+            {
+                chara.MainRect.localScale = new Vector2(chara.MainRect.localScale.x, 0);
+            }
+            foreach (var chara in rightCharacterList)
+            {
+                chara.MainRect.localScale = new Vector2(chara.MainRect.localScale.x, 0);
+            }
+        }
+        enterExitViewTween.Start(contentRoot.DOScaleY(1, enterExitViewTween.Time));
+        if (rightCharacterList.Count + leftCharacterList.Count > 0)
+        {
+            yield return new WaitForSeconds(enterExitStaggerTime);
+            yield return StartCoroutine(JoinLeaveAll(true, leftCharacterList, rightCharacterList.Count > 0));
+            yield return StartCoroutine(JoinLeaveAll(true, rightCharacterList));
+        }
+        yield return enterExitViewTween.WaitForCompletion();
+    }
+    public override IEnumerator PlayExitAnimation()
+    {
+        contentRoot.localScale = new Vector3(contentRoot.localScale.x, 1, contentRoot.localScale.z);
+        enterExitViewTween.Complete();
+        if (rightCharacterList.Count + leftCharacterList.Count > 0)
+        {
+            yield return StartCoroutine(JoinLeaveAll(false, rightCharacterList, leftCharacterList.Count > 0));
+            yield return StartCoroutine(JoinLeaveAll(false, leftCharacterList));
+            yield return new WaitForSeconds(enterExitStaggerTime);
+        }
+        enterExitViewTween.Start(contentRoot.DOScaleY(0, enterExitViewTween.Time), false);
+        yield return enterExitViewTween.WaitForCompletion();
+    }
+
+
+
+    private IEnumerator JoinLeaveAll(bool join, List<VNPlusCharacter> characterList, bool staggerLast = false)
+    {
+        float targetScale = join ? 1 : 0;
+        for (int i = 0; i < characterList.Count; i++)
+        {
+            var chara = characterList[i];
+            enterExitViewTween.Start(chara.MainRect.DOScaleY(targetScale, enterExitViewTween.Time), false);
+            if (staggerLast || i < characterList.Count - 1)
+            {
+                yield return new WaitForSeconds(enterExitIndividualStaggerTime);
+            }
+        }
     }
 
     protected override void SetLocation(string location)

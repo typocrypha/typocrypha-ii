@@ -6,7 +6,7 @@ public class RunEffect : RootWordEffect
 {
     public override bool CanCrit => false;
 
-    public override CastResults Cast(Caster caster, Caster target, bool crit, RootCastResults prevResults = null)
+    public override CastResults Cast(Caster caster, Caster target, bool crit, Spell spell, RootCastResults prevResults = null)
     {
         CastResults results = new CastResults(caster, target);
         results.Miss = false;

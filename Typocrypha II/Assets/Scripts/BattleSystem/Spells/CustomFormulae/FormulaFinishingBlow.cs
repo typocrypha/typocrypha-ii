@@ -8,9 +8,9 @@ public class FormulaFinishingBlow : CustomFormula
     public List<CasterTag> tags = new List<CasterTag>();
     public bool finishStunned = false;
     public float finishMultiplier;
-    public override CastResults Apply(DamageEffect effect, Caster caster, Caster target, bool crit, RootCastResults prevResults = null)
+    public override CastResults Apply(DamageEffect effect, Caster caster, Caster target, bool crit, Spell spell, RootCastResults prevResults = null)
     {
-        var results = Damage.Standard(effect, caster, target, crit);
+        var results = Damage.Standard(effect, caster, target, crit, spell);
 
         if ((finishStunned && target.Stunned) || tags.Any((t) => target.HasTag(t)))
         {
@@ -26,7 +26,7 @@ public class FormulaFinishingBlow : CustomFormula
         else
             LogMessage(target.DisplayName + " wasn't vulnerable.");
 
-        Damage.ApplyStandard(results, effect, caster, target);
+        Damage.ApplyStandard(results, effect, caster, target, spell);
         return results;
     }
 }

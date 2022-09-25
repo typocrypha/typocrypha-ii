@@ -15,7 +15,7 @@ public static class Damage
         Custom,
         StandardHeal,
     }
-    public delegate CastResults Formula(DamageEffect effect, Caster caster, Caster target, bool crit);
+    public delegate CastResults Formula(DamageEffect effect, Caster caster, Caster target, bool crit, Spell spell);
 
     public static Dictionary<FormulaType, Formula> PresetFormulae { get; } = new Dictionary<FormulaType, Formula>
     {
@@ -23,23 +23,23 @@ public static class Damage
         { FormulaType.StandardHeal, StandardHealApplied },
     };
 
-    private static CastResults StandardApplied(DamageEffect effect, Caster caster, Caster target, bool crit)
+    private static CastResults StandardApplied(DamageEffect effect, Caster caster, Caster target, bool crit, Spell spell)
     {
-        var results = Standard(effect, caster, target, crit);
-        ApplyStandard(results, effect, caster, target);
+        var results = Standard(effect, caster, target, crit, spell);
+        ApplyStandard(results, effect, caster, target, spell);
         return results;
     }
 
-    private static CastResults StandardHealApplied(DamageEffect effect, Caster caster, Caster target, bool crit)
+    private static CastResults StandardHealApplied(DamageEffect effect, Caster caster, Caster target, bool crit, Spell spell)
     {
-        var results = StandardHeal(effect, caster, target, crit);
-        ApplyStandard(results, effect, caster, target);
+        var results = StandardHeal(effect, caster, target, crit, spell);
+        ApplyStandard(results, effect, caster, target, spell);
         return results;
     }
 
     #region Calculation
 
-    public static CastResults Standard(DamageEffect effect, Caster caster, Caster target, bool crit)
+    public static CastResults Standard(DamageEffect effect, Caster caster, Caster target, bool crit, Spell spell)
     {
         var results = new CastResults(caster, target);
         StandardHitCheck(results, effect, caster, target);
@@ -50,11 +50,12 @@ public static class Damage
         }
         StandardElements(results, effect, caster, target);
         StandardPower(results, effect, caster, target);
+        ApplyStandardComboMod(results, spell);
         StandardStunBonus(results, effect, caster, target);
         return results;
     }
 
-    public static CastResults StandardHeal(DamageEffect effect, Caster caster, Caster target, bool crit)
+    public static CastResults StandardHeal(DamageEffect effect, Caster caster, Caster target, bool crit, Spell spell)
     {
         var results = new CastResults(caster, target)
         {
@@ -138,6 +139,21 @@ public static class Damage
         results.Crit = true;
         results.Damage *= critDamageMod;
         results.StaggerDamage = 1;
+    }
+
+    public static void ApplyStandardComboMod(CastResults results, Spell spell)
+    {
+        results.Damage *= StandardComboMod(spell);
+    }
+
+    public static float StandardComboMod(Spell spell)
+    {
+        return 1 + (ComputeComboValue(spell) * 0.1f);
+    }
+
+    public static int ComputeComboValue(Spell spell)
+    {
+        return spell.Count - 1;
     }
 
     /// <summary>
@@ -294,12 +310,12 @@ public static class Damage
 
     #region Application
 
-    public static void ApplyStandard(CastResults results, DamageEffect effect, Caster caster, Caster target)
+    public static void ApplyStandard(CastResults results, DamageEffect effect, Caster caster, Caster target, Spell spell)
     {
         target.OnBeforeHitResolved?.Invoke(effect, caster, target, results);
         if (results.Miss)
             return;
-        if (ApplyReflect(results, effect, caster, target))
+        if (ApplyReflect(results, effect, caster, target, spell))
             return;
         ApplyResearch(results, effect, caster, target);
         ApplyDamage(results, effect, caster, target);
@@ -307,12 +323,12 @@ public static class Damage
         ApplyKeyboardEffects(results, effect, caster, target);
     }
 
-    public static bool ApplyReflect(CastResults results, RootWordEffect effect, Caster caster, Caster target)
+    public static bool ApplyReflect(CastResults results, RootWordEffect effect, Caster caster, Caster target, Spell spell)
     {
         if (results.Effectiveness == Reaction.Repel)
         {
             effect.tags.Add("Reflected");
-            effect.Cast(caster, caster, results.Crit);
+            effect.Cast(caster, caster, results.Crit, spell);
             return true;
         }
         return false;

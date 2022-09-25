@@ -5,17 +5,17 @@ using UnityEngine;
 public class FomulaLuckDmg : CustomFormula
 {
     public float scalingFactor = 0.33f; 
-    public override CastResults Apply(DamageEffect effect, Caster caster, Caster target, bool crit, RootCastResults prevResults = null)
+    public override CastResults Apply(DamageEffect effect, Caster caster, Caster target, bool crit, Spell spell, RootCastResults prevResults = null)
     {
         // Calculate standard results using the standard formula
-        var results = Damage.Standard(effect, caster, target, crit);
+        var results = Damage.Standard(effect, caster, target, crit, spell);
         // Calculate the luck factor and multiply damage by it
         float luckfactor = Damage.CompareStats(caster.Stats.Luck, target.Stats.Luck) * scalingFactor;
         results.Damage *= luckfactor;
         // Log some extra messages
         LogMessage(caster.DisplayName + " is feeling lucky!");
         // Apply the results of the cast in the standard manner
-        Damage.ApplyStandard(results, effect, caster, target);
+        Damage.ApplyStandard(results, effect, caster, target, spell);
         return results;
     }
 }

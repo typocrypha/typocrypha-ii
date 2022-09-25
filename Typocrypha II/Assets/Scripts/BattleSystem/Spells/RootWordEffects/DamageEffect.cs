@@ -11,10 +11,10 @@ public class DamageEffect : RootWordEffect
 
     public override bool CanCrit => true;
 
-    public override CastResults Cast(Caster caster, Caster target, bool crit, RootCastResults prevResults = null)
+    public override CastResults Cast(Caster caster, Caster target, bool crit, Spell spell, RootCastResults prevResults = null)
     {
         if (formula == Damage.FormulaType.Custom)
-            return customFormula.Apply(this, caster, target, crit, prevResults);
-        return Damage.PresetFormulae[formula](this, caster, target, crit);
+            return customFormula.Apply(this, caster, target, crit, spell, prevResults);
+        return Damage.PresetFormulae[formula](this, caster, target, crit, spell);
     }
 }
