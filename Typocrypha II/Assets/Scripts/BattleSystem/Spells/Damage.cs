@@ -50,7 +50,8 @@ public static class Damage
         }
         StandardElements(results, effect, caster, target);
         StandardPower(results, effect, caster, target);
-        ApplyStandardComboMod(results, spell);
+        ComputeStandardComboValue(results, spell);
+        ApplyStandardComboMod(results);
         StandardStunBonus(results, effect, caster, target);
         return results;
     }
@@ -141,19 +142,19 @@ public static class Damage
         results.StaggerDamage = 1;
     }
 
-    public static void ApplyStandardComboMod(CastResults results, Spell spell)
+    public static void ApplyStandardComboMod(CastResults results)
     {
-        results.Damage *= StandardComboMod(spell);
+        results.Damage *= StandardComboMod(results.Combo);
     }
 
-    public static float StandardComboMod(Spell spell)
+    public static float StandardComboMod(float comboValue)
     {
-        return 1 + (ComputeComboValue(spell) * 0.1f);
+        return 1 + (comboValue * 0.25f);
     }
 
-    public static int ComputeComboValue(Spell spell)
+    public static void ComputeStandardComboValue(CastResults results, Spell spell)
     {
-        return spell.Count - 1;
+        results.Combo = spell.Count - 1;
     }
 
     /// <summary>

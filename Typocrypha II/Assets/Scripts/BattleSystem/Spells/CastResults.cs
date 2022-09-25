@@ -14,6 +14,7 @@ public class CastResults
     public bool Crit { get; set; } = false;
     public float StaggerDamage { get; set; } = 0;
     public float Damage { get; set; } = 1;
+    public float Combo { get; set; } = 0;
     public Reaction Effectiveness { get; set; } = Reaction.Neutral;
 
     public CastResults(Caster caster, Caster target)
