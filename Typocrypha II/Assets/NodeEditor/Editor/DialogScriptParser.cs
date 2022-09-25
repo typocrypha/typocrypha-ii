@@ -38,7 +38,7 @@ public class DialogScriptParser : EditorWindow
     readonly string choicePat = @"\<([^\)]*)\>"; // Input choice prompt marker pattern.
     readonly char[] escape = new char[] { '\\' }; // Escape character.
     readonly char[] displayNameChars = new char[] { '"', '“', '”' }; // Characters that could delimit a display name.
-    readonly string googleCommentPat = @"\[\w\]";
+    readonly string googleCommentPat = @"(\w)(?:\[\w\])+";
 
     private const string spriteBgPath = "Assets/Graphics/Sprites/Backgrounds";
     private const string prefabBgPath = "Assets/Prefabs/Backgrounds";
@@ -157,7 +157,7 @@ public class DialogScriptParser : EditorWindow
     {
         string text = textScript.text;
         #region Preprocessing text
-        text = Regex.Replace(text, googleCommentPat, "");
+        text = Regex.Replace(text, googleCommentPat, "$1");
         text = Regex.Replace(text, "/{2}.*?\n", "\n"); // Remove comments
         text = Regex.Replace(text, "/[\x2A].*?[\x2A]/", "", RegexOptions.Singleline); // Remove block comments
         text = Regex.Replace(text, "\r", ""); // Remove carriage returns
