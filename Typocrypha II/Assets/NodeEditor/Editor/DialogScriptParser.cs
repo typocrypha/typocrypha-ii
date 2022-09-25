@@ -170,7 +170,10 @@ public class DialogScriptParser : EditorWindow
             //Debug.Log("parsing:" + (i+1) +":" + lines[i]);
             try
             {
-                ParseLine(lines[i], ref prev);
+                if(ParseLine(lines[i], ref prev))
+                {
+                    break;
+                }
             }
             catch (System.Exception e)
             {
@@ -187,10 +190,12 @@ public class DialogScriptParser : EditorWindow
     }
 
     // Parses a single line
-    void ParseLine(string line, ref Node prev)
+    bool ParseLine(string line, ref Node prev)
     {
         line = line.Trim();
-        if (line.Length < 2) return; // Empty line.
+        if (line.Length < 2) return false; // Empty line.
+        if (line.StartsWith("["))
+            return true;
         List<Node> nodes = null; // Constructed nodes.
         if (viewSwitchMarker.Contains(line[0])) // View switch.
         {
@@ -221,6 +226,7 @@ public class DialogScriptParser : EditorWindow
                 prev = node;
             }
         }
+        return false;
     }
 
     // Parses a general node (not dialog) line. Returns constructed nodes.
