@@ -21,6 +21,11 @@ public class SpellFxManager : MonoBehaviour
     [SerializeField] private GameObject popupPrefab = null;
     [Header("Effectiveness Sprites")]
     [SerializeField] private Sprite weakSprite = null;
+    [SerializeField] private Sprite resistSprite = null;
+    [SerializeField] private Sprite drainSprite = null;
+    [SerializeField] private Sprite blockSprite = null;
+    [SerializeField] private Sprite repelSprite = null;
+    [SerializeField] private Sprite missSprite = null;
     [Header("Log Fields")]
     [SerializeField] private GameObject battleLogPrefab = null;
     [SerializeField] private Vector2 logPosition = new Vector2(0.5f, 0.5f);
@@ -145,14 +150,19 @@ public class SpellFxManager : MonoBehaviour
             case Reaction.Neutral:
                 break;
             case Reaction.Resist:
+                yield return popper.PopImage(resistSprite, targetPos, popTime);
                 break;
             case Reaction.Block:
+                yield return popper.PopImage(blockSprite, targetPos, popTime);
                 break;
             case Reaction.Dodge:
+                yield return popper.PopImage(missSprite, targetPos, popTime);
                 break;
             case Reaction.Drain:
+                yield return popper.PopImage(drainSprite, targetPos, popTime);
                 break;
             case Reaction.Repel:
+                yield return popper.PopImage(repelSprite, targetPos, popTime);
                 break;
         }
         popper.Cleanup();
