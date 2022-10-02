@@ -6,6 +6,7 @@ using UnityEngine;
 public class SpellFxManager : MonoBehaviour
 {
     private const float popTime = 0.5f;
+    private const float shortPopTime = 0.3f;
     private const float logTime = 1.1f;
     public static SpellFxManager instance;
     public bool HasMessages { get => logData.Count > 0; }
@@ -145,24 +146,24 @@ public class SpellFxManager : MonoBehaviour
         switch (data.Effectiveness)
         {
             case Reaction.Weak:
-                yield return popper.PopImage(weakSprite, targetPos, popTime);
+                yield return popper.PopImage(weakSprite, targetPos, shortPopTime);
                 break;
             case Reaction.Neutral:
                 break;
             case Reaction.Resist:
-                yield return popper.PopImage(resistSprite, targetPos, popTime);
+                yield return popper.PopImage(resistSprite, targetPos, shortPopTime);
                 break;
             case Reaction.Block:
-                yield return popper.PopImage(blockSprite, targetPos, popTime);
+                yield return popper.PopImage(blockSprite, targetPos, shortPopTime);
                 break;
             case Reaction.Dodge:
-                yield return popper.PopImage(missSprite, targetPos, popTime);
+                yield return popper.PopImage(missSprite, targetPos, shortPopTime);
                 break;
             case Reaction.Drain:
-                yield return popper.PopImage(drainSprite, targetPos, popTime);
+                yield return popper.PopImage(drainSprite, targetPos, shortPopTime);
                 break;
             case Reaction.Repel:
-                yield return popper.PopImage(repelSprite, targetPos, popTime);
+                yield return popper.PopImage(repelSprite, targetPos, shortPopTime);
                 break;
         }
         popper.Cleanup();
