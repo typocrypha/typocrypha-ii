@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class AbilityIncomingDamageMod : CasterAbility
+public abstract class AbilityIncomingDamageMultiplier : CasterAbility
 {
     public override void OnBeforeHitApplied(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults castResults)
     {

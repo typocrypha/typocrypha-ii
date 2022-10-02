@@ -215,6 +215,7 @@ public static class Damage
     public static void StandardElements(CastResults results, RootWordEffect effect, Caster caster, Caster target)
     {
         results.Effectiveness = GetReaction(effect, caster, target, out float effectMagnitude);
+        results.EffectivenessMagnitude = effectMagnitude;
         results.Damage *= GetReactionDmgMod(effect, caster, target, results.Effectiveness, effectMagnitude);
         if (results.Effectiveness == Reaction.Weak)
             results.StaggerDamage = 1;
