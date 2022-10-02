@@ -151,7 +151,7 @@ public static class Damage
 
     public static float StandardComboMod(float comboValue)
     {
-        return 1 + (comboValue * 0.25f);
+        return 1 + (comboValue * 0.15f);
     }
 
     public static void ComputeStandardComboValue(CastResults results, Spell spell)
