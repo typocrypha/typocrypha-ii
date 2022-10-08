@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Check if the player has been hit by X damaging spells
+/// Check if the player has cast X times
 /// </summary>
 public class BEConditionPlayerCast : BattleEventCondition
 {
