@@ -332,7 +332,8 @@ public static class Damage
         if (results.Effectiveness == Reaction.Repel)
         {
             effect.tags.Add("Reflected");
-            effect.Cast(caster, caster, results.Crit, spellData);
+            var newResults = effect.Cast(caster, caster, results.Crit, spellData);
+            caster.OnAfterHitResolved(effect, caster, caster, spellData, newResults);
             return true;
         }
         return false;
