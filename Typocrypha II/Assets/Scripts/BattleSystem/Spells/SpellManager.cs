@@ -166,6 +166,8 @@ public class SpellManager : MonoBehaviour
         var cancelTargets = Battlefield.instance.Casters.Where((c) => pred(c));
         foreach (var cancelTarget in cancelTargets)
         {
+            if (cancelTarget.Spell == null)
+                continue;
             var remainingWords = cancelTarget.Spell.Where((word) => !spell.Contains(word));
             // No words were countered, continue to next target
             if (remainingWords.Count() == cancelTarget.Spell.Count)
