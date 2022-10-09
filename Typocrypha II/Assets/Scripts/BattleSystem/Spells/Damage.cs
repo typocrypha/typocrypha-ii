@@ -333,7 +333,7 @@ public static class Damage
         {
             effect.tags.Add("Reflected");
             var newResults = effect.Cast(caster, caster, results.Crit, spellData);
-            caster.OnAfterHitResolved(effect, caster, caster, spellData, newResults);
+            caster.OnAfterHitResolved?.Invoke(effect, caster, caster, spellData, newResults);
             return true;
         }
         return false;
