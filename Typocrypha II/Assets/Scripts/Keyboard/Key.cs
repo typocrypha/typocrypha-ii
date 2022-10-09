@@ -18,6 +18,8 @@ namespace Typocrypha
         public SpriteRenderer highlightSR; // Sprite renderer for key highlight.
         public TextMeshPro letterText; // Text for key label.
         float highlight = 0f; // Normalized highlight value.
+        Color originalColor;
+        
         public bool Highlight // Key highlight (when pressed).
         {
             set
@@ -32,9 +34,14 @@ namespace Typocrypha
             Highlight = false;
         }
 
+        private void Start()
+        {
+            originalColor = new Color(highlightSR.color.r, highlightSR.color.g, highlightSR.color.b, 1.0f);
+        }
+
         void Update()
         {
-            highlightSR.color = Color.white * highlight;
+            highlightSR.color = originalColor * highlight;
         }
 
         public virtual void SetText(char c)
