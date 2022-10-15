@@ -38,7 +38,7 @@ public class DialogScriptParser : EditorWindow
     readonly string choicePat = @"\<([^\)]*)\>"; // Input choice prompt marker pattern.
     readonly char[] escape = new char[] { '\\' }; // Escape character.
     readonly char[] displayNameChars = new char[] { '"', '“', '”' }; // Characters that could delimit a display name.
-    readonly string googleCommentPat = @"\[\w\]";
+    readonly string googleCommentPat = @"(\w)(?:\[\w\])+";
 
     private const string spriteBgPath = "Assets/Graphics/Sprites/Backgrounds";
     private const string prefabBgPath = "Assets/Prefabs/Backgrounds";
@@ -157,7 +157,7 @@ public class DialogScriptParser : EditorWindow
     {
         string text = textScript.text;
         #region Preprocessing text
-        text = Regex.Replace(text, googleCommentPat, "");
+        text = Regex.Replace(text, googleCommentPat, "$1");
         text = Regex.Replace(text, "/{2}.*?\n", "\n"); // Remove comments
         text = Regex.Replace(text, "/[\x2A].*?[\x2A]/", "", RegexOptions.Singleline); // Remove block comments
         text = Regex.Replace(text, "\r", ""); // Remove carriage returns
@@ -170,7 +170,10 @@ public class DialogScriptParser : EditorWindow
             //Debug.Log("parsing:" + (i+1) +":" + lines[i]);
             try
             {
-                ParseLine(lines[i], ref prev);
+                if(ParseLine(lines[i], ref prev))
+                {
+                    break;
+                }
             }
             catch (System.Exception e)
             {
@@ -187,10 +190,12 @@ public class DialogScriptParser : EditorWindow
     }
 
     // Parses a single line
-    void ParseLine(string line, ref Node prev)
+    bool ParseLine(string line, ref Node prev)
     {
         line = line.Trim();
-        if (line.Length < 2) return; // Empty line.
+        if (line.Length < 2) return false; // Empty line.
+        if (line.StartsWith("["))
+            return true;
         List<Node> nodes = null; // Constructed nodes.
         if (viewSwitchMarker.Contains(line[0])) // View switch.
         {
@@ -221,6 +226,7 @@ public class DialogScriptParser : EditorWindow
                 prev = node;
             }
         }
+        return false;
     }
 
     // Parses a general node (not dialog) line. Returns constructed nodes.

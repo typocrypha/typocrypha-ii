@@ -8,11 +8,11 @@ public class AbilityDoubleDamage : CasterAbility
 
     public override void OnBeforeSpellEffectResolved(RootWordEffect effect, Caster caster, Caster target)
     {
-       if(effect.tags.Contains(tag) && effect is DamageEffect)
-            (effect as DamageEffect).power *= 2;
+       if(effect.tags.Contains(tag) && effect is DamageEffect damageEffect)
+            damageEffect.power *= 2;
     }
 
-    public override void OnBeforeHitApplied(RootWordEffect effect, Caster caster, Caster target, CastResults castResults)
+    public override void OnBeforeHitApplied(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults castResults)
     {
         return;
     }

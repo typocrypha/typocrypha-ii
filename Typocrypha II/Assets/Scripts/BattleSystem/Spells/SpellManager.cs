@@ -88,8 +88,10 @@ public class SpellManager : MonoBehaviour
         }
         var casterSpace = Battlefield.instance.GetSpace(caster.FieldPos);
         List<Coroutine> crList = new List<Coroutine>();
-        foreach (var root in roots)
+        for (int rootIndex = 0; rootIndex < roots.Length; rootIndex++)
         {
+            var root = roots[rootIndex];
+            var spellData = new RootCastData(spell, roots, rootIndex);
             // Log the effect of each effect
             var rootResults = new RootCastResults();
             foreach (var effect in root.effects)
@@ -115,9 +117,9 @@ public class SpellManager : MonoBehaviour
                         // Apply OnCast Callbacks
                         caster.OnBeforeSpellEffectResolved?.Invoke(effect, caster, targetCaster);
                         // Cast the effect
-                        var castResults = effect.Cast(caster, targetCaster, crit, spell, rootResults);
+                        var castResults = effect.Cast(caster, targetCaster, crit, spellData, rootResults);
                         // Apply OnHit Callbacks (Updates AI)
-                        targetCaster.OnAfterHitResolved?.Invoke(effect, caster, targetCaster, castResults);
+                        targetCaster.OnAfterHitResolved?.Invoke(effect, caster, targetCaster, spellData, castResults);
                         // Play Effects
                         var fx = new SpellFxData[] { root.leftMod?.fx, effect.fx, root.rightMod?.fx };
                         crList.Add(SpellFxManager.instance.Play(fx, castResults, targetSpace, casterSpace));
@@ -164,6 +166,8 @@ public class SpellManager : MonoBehaviour
         var cancelTargets = Battlefield.instance.Casters.Where((c) => pred(c));
         foreach (var cancelTarget in cancelTargets)
         {
+            if (cancelTarget.Spell == null)
+                continue;
             var remainingWords = cancelTarget.Spell.Where((word) => !spell.Contains(word));
             // No words were countered, continue to next target
             if (remainingWords.Count() == cancelTarget.Spell.Count)
@@ -267,4 +271,20 @@ public class SpellManager : MonoBehaviour
 public class RootCastResults : List<List<CastResults>>
 {
     public List<CastResults> LastEffect => this[Count - 1];
+}
+
+public class RootCastData
+{
+    public RootCastData(Spell spell, RootWord[] roots, int rootIndex)
+    {
+        Spell = spell;
+        Roots = roots;
+        RootIndex = rootIndex;
+    }
+
+    public Spell Spell { get; }
+    public RootWord[] Roots { get; }
+    public int RootIndex { get; }
+
+    public bool IsLastRoot => RootIndex == Roots.Length - 1;
 }

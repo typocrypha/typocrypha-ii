@@ -5,8 +5,9 @@ using UnityEngine;
 [RequireComponent(typeof(SpellManager))]
 public class SpellFxManager : MonoBehaviour
 {
-    private const float popTime = 0.5f;
-    private const float logTime = 1.1f;
+    private const float popTime = 0.4f;
+    private const float shortPopTime = 0.3f;
+    private const float logTime = 1f;
     public static SpellFxManager instance;
     public bool HasMessages { get => logData.Count > 0; }
     [Header("No Target FX")]
@@ -21,6 +22,11 @@ public class SpellFxManager : MonoBehaviour
     [SerializeField] private GameObject popupPrefab = null;
     [Header("Effectiveness Sprites")]
     [SerializeField] private Sprite weakSprite = null;
+    [SerializeField] private Sprite resistSprite = null;
+    [SerializeField] private Sprite drainSprite = null;
+    [SerializeField] private Sprite blockSprite = null;
+    [SerializeField] private Sprite repelSprite = null;
+    [SerializeField] private Sprite missSprite = null;
     [Header("Log Fields")]
     [SerializeField] private GameObject battleLogPrefab = null;
     [SerializeField] private Vector2 logPosition = new Vector2(0.5f, 0.5f);
@@ -140,19 +146,24 @@ public class SpellFxManager : MonoBehaviour
         switch (data.Effectiveness)
         {
             case Reaction.Weak:
-                yield return popper.PopImage(weakSprite, targetPos, popTime);
+                yield return popper.PopImage(weakSprite, targetPos, shortPopTime);
                 break;
             case Reaction.Neutral:
                 break;
             case Reaction.Resist:
+                yield return popper.PopImage(resistSprite, targetPos, shortPopTime);
                 break;
             case Reaction.Block:
+                yield return popper.PopImage(blockSprite, targetPos, shortPopTime);
                 break;
             case Reaction.Dodge:
+                yield return popper.PopImage(missSprite, targetPos, shortPopTime);
                 break;
             case Reaction.Drain:
+                yield return popper.PopImage(drainSprite, targetPos, shortPopTime);
                 break;
             case Reaction.Repel:
+                yield return popper.PopImage(repelSprite, targetPos, shortPopTime);
                 break;
         }
         popper.Cleanup();

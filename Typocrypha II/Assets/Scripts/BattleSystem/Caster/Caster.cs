@@ -29,7 +29,7 @@ public class Caster : FieldObject
 
     #region Delegate Declarations
     public delegate void ApplyToEffectFn(RootWordEffect effect, Caster caster, Caster target);
-    public delegate void HitFn(RootWordEffect effect, Caster caster, Caster target, CastResults data);
+    public delegate void HitFn(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults data);
     public delegate CasterTagDictionary.ReactionMultiSet GetReactionsFn(SpellTag tag);
     public delegate void AfterCastFn(Spell s, Caster caster); // Add targets and results?
     #endregion
@@ -301,8 +301,7 @@ public class Caster : FieldObject
         {
             return;
         }
-        OnBeforeHitResolved += ability.OnBeforeHitApplied;
-        OnBeforeSpellEffectResolved += ability.OnBeforeSpellEffectResolved;
+        ability.AddTo(this);
     }
     private void RemoveAbilities(CasterTag tag)
     {
@@ -322,8 +321,7 @@ public class Caster : FieldObject
         {
             return;
         }
-        OnAfterHitResolved -= ability.OnBeforeHitApplied;
-        OnBeforeSpellEffectResolved -= ability.OnBeforeSpellEffectResolved;
+        ability.RemoveFrom(this);
     }
     public CasterStats Stats { get => tags.statMod; }
 

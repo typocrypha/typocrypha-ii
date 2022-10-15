@@ -20,7 +20,7 @@ public class BEConditionPlayerHit : BattleEventCondition
         Battlefield.instance.Player.OnBeforeHitResolved -= CheckCast;
     }
 
-    public void CheckCast(RootWordEffect effect,Caster caster,Caster target, CastResults data)
+    public void CheckCast(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults data)
     {
         if (!data.WillDealDamage)
             return;
