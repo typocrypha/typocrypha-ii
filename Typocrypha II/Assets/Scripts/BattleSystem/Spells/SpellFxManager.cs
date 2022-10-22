@@ -9,6 +9,7 @@ public class SpellFxManager : MonoBehaviour
     private const float shortPopTime = 0.3f;
     private const float logTime = 1f;
     public static SpellFxManager instance;
+    private static readonly Vector2 reactionOffset = new Vector2(0, -0.75f);
     public bool HasMessages { get => logData.Count > 0; }
     [Header("No Target FX")]
     [SerializeField] private SpellFxData noTargetFx = new SpellFxData();
@@ -136,35 +137,21 @@ public class SpellFxManager : MonoBehaviour
         if (data == null)
             yield break;
         var popper = Instantiate(data.popupPrefab ?? popupPrefab).GetComponent<PopupBase>();
+        Coroutine damageRoutine = null;
         // If damage should be displayed, display damage
         if(data.DisplayDamage)
         {
-            yield return PlayDamageNumber(data.Damage, targetPos, popper);
+            damageRoutine = PlayDamageNumber(data.Damage, targetPos, popper);
         }
-
         // Effectiveness popup
-        switch (data.Effectiveness)
+        Coroutine reactionRoutine = PlayReaction(data.Effectiveness, targetPos, casterPos, popper);       
+        if(damageRoutine != null)
         {
-            case Reaction.Weak:
-                yield return popper.PopImage(weakSprite, targetPos, shortPopTime);
-                break;
-            case Reaction.Neutral:
-                break;
-            case Reaction.Resist:
-                yield return popper.PopImage(resistSprite, targetPos, shortPopTime);
-                break;
-            case Reaction.Block:
-                yield return popper.PopImage(blockSprite, targetPos, shortPopTime);
-                break;
-            case Reaction.Dodge:
-                yield return popper.PopImage(missSprite, targetPos, shortPopTime);
-                break;
-            case Reaction.Drain:
-                yield return popper.PopImage(drainSprite, targetPos, shortPopTime);
-                break;
-            case Reaction.Repel:
-                yield return popper.PopImage(repelSprite, targetPos, shortPopTime);
-                break;
+            yield return damageRoutine;
+        }
+        if(reactionRoutine != null)
+        {
+            yield return reactionRoutine;
         }
         popper.Cleanup();
     }
@@ -178,6 +165,37 @@ public class SpellFxManager : MonoBehaviour
         if (popperOverride == null)
             return popper.PopTextAndCleanup(numberText, targetPos, popTime, damageColor);
         return popper.PopText(numberText, targetPos, popTime, damageColor);
+    }
+
+    public Coroutine PlayReaction(Reaction reaction, Vector2 targetPos, Vector2 casterPos, PopupBase popper = null)
+    {
+        switch (reaction)
+        {
+            case Reaction.Weak:
+                return PlayReaction(weakSprite, targetPos, popper);
+            case Reaction.Neutral:
+                break;
+            case Reaction.Resist:
+                return PlayReaction(resistSprite, targetPos, popper);
+            case Reaction.Block:
+                return PlayReaction(blockSprite, targetPos, popper);
+            case Reaction.Dodge:
+                return PlayReaction(missSprite, targetPos, popper);
+            case Reaction.Drain:
+                return PlayReaction(drainSprite, targetPos, popper);
+            case Reaction.Repel:
+                return PlayReaction(repelSprite, targetPos, popper);
+        } 
+        return null;
+    }
+
+    private Coroutine PlayReaction(Sprite sprite, Vector2 targetPos, PopupBase popper)
+    {
+        if (popper == null)
+        {
+            popper = Instantiate(popupPrefab).GetComponent<PopupBase>();
+        }
+        return popper.PopImage(sprite, targetPos + reactionOffset, popTime);
     }
 
     #endregion
