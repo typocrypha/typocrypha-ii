@@ -9,8 +9,6 @@ public class DamageEffect : RootWordEffect
     public CustomFormula customFormula;
     public int power;
 
-    public override bool CanCrit => true;
-
     public override CastResults Cast(Caster caster, Caster target, bool crit, RootCastData spellData, RootCastResults prevResults = null)
     {
         if (formula == Damage.FormulaType.Custom)
