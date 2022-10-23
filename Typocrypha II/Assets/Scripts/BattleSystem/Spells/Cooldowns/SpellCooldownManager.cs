@@ -9,7 +9,6 @@ using UnityEngine.UI;
 /// </summary>
 public class SpellCooldownManager : MonoBehaviour, IPausable
 {
-    public const int invalidCooldown = -1;
     #region IPausable
     PauseHandle ph;
     public PauseHandle PH { get => ph; }
@@ -49,121 +48,82 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
     }
 
     public void SortCooldowns()
+    {       
+        cooldownTr.SortHiearchy(CompareCooldowns);
+    }
+
+    private int CompareCooldowns(Transform a, Transform b)
     {
-        System.Func<Transform, Transform, int> comp = (a, b) =>
-            b.GetComponent<SpellCooldown>().CurrCooldown - a.GetComponent<SpellCooldown>().CurrCooldown;
-        cooldownTr.SortHiearchy(comp);
+        return b.GetComponent<SpellCooldown>().Cooldown.CompareTo(a.GetComponent<SpellCooldown>().Cooldown);
     }
 
     public void AddWord(SpellWord word)
     {
-        if (IsOnCooldown(word.internalName.ToUpper()))
+        if (IsOnCooldown(word))
             return;
         var cd = Instantiate(cooldownPrefab, cooldownTr).GetComponent<SpellCooldown>();
-        cd.spellText.text = word.internalName.ToUpper();
-        cd.TotalCooldown = word.cooldown;
-        cd.CurrCooldown = 0;
+        cd.SpellText = word.internalName.ToUpper();
+        cd.FullCooldown = word.cooldown;
+        cd.Cooldown = 0;
         cooldowns.Add(word.internalName.ToUpper(), cd);
     }
 
-    /// <summary>
-    /// Start cooldown timer for given spell.
-    /// If the spell is already on cooldown, return and do nothing
-    /// </summary>
-    /// <param name="word">Name of spell to put on cooldown</param>
-    public void StartCooldown(string word)
+    public bool IsOnCooldown(SpellWord word)
     {
-        word = word.ToUpper();
-        if (IsOnCooldown(word))
-            return;
-        cooldowns[word].StartCooldown();
+        return TryGetCooldown(word, out var cooldown) && cooldown.Cooldown > 0;
     }
 
-    /// <summary>
-    /// Returns true if the word is on cooldown.
-    /// </summary>
-    /// <param name="word"></param>
-    /// <returns></returns>
     public bool IsOnCooldown(string word)
     {
-        word = word.ToUpper();
-        return GetCooldown(word) > 0;
+        return TryGetCooldown(word, out var cooldown) && cooldown.Cooldown > 0;
     }
 
-    /// <summary>
-    /// Returns the number of uses left on this word's cooldowns if the word is on cooldown.
-    /// Returns -1 if the word is not on cooldown.
-    /// </summary>
-    /// <param name="word"></param>
-    /// <returns></returns>
-    int GetCooldown(string word)
+    public bool IsOnCooldown(Spell spell, out SpellWord word)
     {
-        if (cooldowns.ContainsKey(word))
+        foreach (var item in spell)
         {
-            return cooldowns[word].CurrCooldown;
+            if (IsOnCooldown(item))
+            {
+                word = item;
+                return true;
+            }
         }
-        else
-        {
-            return -1;
-        }
+        word = null;
+        return false;
     }
 
-    /// <summary>
-    /// Changes the cooldown amount by the number in modifier.
-    /// If the cooldown reaches 0, the spell is taken off of cooldown.
-    /// If mustAlreadyBeOnCooldown is false and the modifier >= t, the spell will be put on cooldown
-    /// </summary>
-    /// <param name="word"></param>
-    /// <param name="modifier"></param>
-    void ModifyCooldown(string word, int modifier, bool mustAlreadyBeOnCooldown = true)
+    public void DoCooldowns(Spell spell)
     {
-        if(!IsOnCooldown(word))
+        var rootCounts = spell.RootCounts;
+        foreach (var kvp in cooldowns)
         {
-            if (mustAlreadyBeOnCooldown || modifier <= 0)
-                return;
-            StartCooldown(word);
+            kvp.Value.Cooldown -= rootCounts.Count; // Unique roots
         }
-        else if(cooldowns[word].CurrCooldown + modifier <= 0)
+        foreach (var kvp in rootCounts)
         {
-            ResetCooldown(word);
+            if (TryGetCooldown(kvp.Key, out var cooldown))
+            {
+                cooldown.Cooldown = cooldown.FullCooldown + (kvp.Value - 1);
+            }
         }
-        else
-        {
-            cooldowns[word].CurrCooldown += modifier;
-        }
-        System.Func<Transform, Transform, int> comp = (a, b) =>
-            a.GetComponent<SpellCooldown>().CurrCooldown < b.GetComponent<SpellCooldown>().CurrCooldown
-            ? 1
-            : -1;
-        cooldownTr.SortHiearchy(comp);
+        SortCooldowns();
     }
 
-    public void ModifyAllCooldowns(int modifier, bool mustAlreadyBeOnCooldown = true)
+    private bool TryGetCooldown(string word, out SpellCooldown cooldown)
     {
-        foreach (var word in cooldowns.Keys.ToArray())
-            ModifyCooldown(word, modifier, mustAlreadyBeOnCooldown);
+        return cooldowns.TryGetValue(word, out cooldown);
     }
 
-    /// <summary>
-    /// Reset the cooldown for the given spell.
-    /// </summary>
-    /// <param name="word">Name of spell to reset cooldown.</param>
-    public void ResetCooldown(string word)
+    private bool TryGetCooldown(SpellWord word, out SpellCooldown cooldown)
     {
-        word = word.ToUpper();
-        if (IsOnCooldown(word))
-        {
-            cooldowns[word].CurrCooldown = 0;
-        }
+        return cooldowns.TryGetValue(word.internalName.ToUpper(), out cooldown);
     }
-    /// <summary>
-    /// Resets the cooldown for all spells to 0
-    /// </summary>
+
     public void ResetAllCooldowns()
     {
-        foreach(var spell in cooldowns.Keys)
+        foreach(var kvp in cooldowns)
         {
-            ResetCooldown(spell);
+            kvp.Value.Cooldown = 0;
         }
     }
 }

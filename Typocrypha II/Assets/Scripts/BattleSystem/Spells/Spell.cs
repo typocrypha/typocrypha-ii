@@ -20,9 +20,31 @@ public class Spell : IList<SpellWord>, IEquatable<Spell>
 
     public float Cost { get => items.Select((item) => item.cost).Sum(); }
 
-    public Sprite Icon => items.Where((w) => w is RootWord).Select((w) => w as RootWord).FirstOrDefault().icon;
+    public Sprite Icon => Roots.FirstOrDefault().icon;
 
     public bool Countered => items.Count == 1 && SpellWord.CompareKeys(items[0], SpellManager.instance.counterWord);
+
+    public IEnumerable<RootWord> Roots => items.Where((w) => w is RootWord).Select((w) => w as RootWord);
+
+    public int UniqueRoots => Roots.Select(word => word.name).Distinct().Count();
+
+    public Dictionary<SpellWord, int> RootCounts
+    {
+        get
+        {
+            var dict = new Dictionary<SpellWord, int>(Count);
+            foreach(var root in Roots)
+            {
+                if (!dict.ContainsKey(root))
+                {
+                    dict.Add(root, 1);
+                    continue;
+                }
+                dict[root]++;
+            }
+            return dict;
+        }
+    }
 
     public Spell()
     {

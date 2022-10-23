@@ -25,25 +25,20 @@ public class Player : Caster
     /// </summary>
     public void CastString(string spellString)
     {
-        Spell words = new Spell();// = new List<SpellWord>();
-        var results = SpellParser.instance?.Parse(spellString.TrimEnd().Split(separator), PlayerDataManager.instance.equipment.EquippedWordsDict, out words);
+        Spell spell = new Spell();// = new List<SpellWord>();
+        var results = SpellParser.instance?.Parse(spellString.TrimEnd().Split(separator), PlayerDataManager.instance.equipment.EquippedWordsDict, out spell);
         if (results == SpellParser.ParseResults.Valid) 
         {
             // Check cooldowns
             var cooldowns = SpellCooldownManager.instance;
-            if(words.Any((w) => cooldowns.IsOnCooldown(w.Key)))
+            if(cooldowns.IsOnCooldown(spell, out _))
             {
                 results = SpellParser.ParseResults.OnCooldown;
             }
             if (results != SpellParser.ParseResults.OnCooldown)
             {
-                // Find the roots
-                var roots = new List<SpellWord>(words.Where((w) => w is RootWord));
-                // Lower Cooldowns of all words currently on cooldown by the number of words in the successful spell
-                cooldowns.ModifyAllCooldowns(-roots.Count);
-                // Start the roots in the spell on cooldown
-                roots.ForEach((w) => cooldowns.StartCooldown(w.Key));
-                GetComponent<Caster>().Spell = words;
+                cooldowns.DoCooldowns(spell);
+                GetComponent<Caster>().Spell = spell;
                 GetComponent<ATB3.ATBPlayer>().Cast(TargetPos); // Start casting sequence
             }
         }
