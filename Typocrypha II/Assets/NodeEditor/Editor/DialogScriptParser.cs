@@ -74,8 +74,8 @@ public class DialogScriptParser : EditorWindow
         {"setlocationtext", typeof(SetLocationTextNode) },
     };
 
-    AnimationCurve bgmFadeIn = AnimationCurve.EaseInOut(0, 0, 1, 1); // Default fade in curve
-    AnimationCurve bgmFadeOut = AnimationCurve.EaseInOut(1, 1, 0, 0); // Default fade out curve
+    AnimationCurve bgmFadeIn = AnimationCurve.Constant(0,0,1);//AnimationCurve.EaseInOut(0, 0, 0.1, 1); // Default fade in curve
+    AnimationCurve bgmFadeOut = AnimationCurve.EaseInOut(0, 1, 1, 0); // Default fade out curve
 
     const float nodeSpacing = 40f;
 
