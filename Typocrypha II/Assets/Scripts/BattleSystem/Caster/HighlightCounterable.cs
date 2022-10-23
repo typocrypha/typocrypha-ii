@@ -29,23 +29,23 @@ public class HighlightCounterable : MonoBehaviour
             CounteredHighlight.enabled = false;
         }
         CounterableHighlight.enabled = true;
-        string[] spells = SpellText.text.Split(Spell.separators);
+        string[] spellWords = SpellText.text.Split(Spell.separators);
         int pos = 0; // Text character position in spell words.
         // check for any words that can be countered, and highlight them appropriately if found
-        for (int i = 0; i < spells.Length; i++)
+        for (int i = 0; i < spellWords.Length; i++)
         {
-            string spell = spells[i];
+            string spellWord = spellWords[i];
             int index = i * 2;
-            if (PlayerDataManager.instance.equipment.EquippedWordsDict.ContainsKey(spell.ToLower()) && !SpellCooldownManager.instance.IsOnCooldown(spell))
+            if (PlayerDataManager.instance.equipment.EquippedWordsDict.ContainsKey(spellWord.ToLower()) && !SpellCooldownManager.instance.IsOnCooldown(spellWord))
             {
                 CounterableHighlight.ind[index] = pos;
-                CounterableHighlight.ind[index + 1] = pos + spell.Length;
+                CounterableHighlight.ind[index + 1] = pos + spellWord.Length;
             }
             else
             {
                 CounterableHighlight.ind[index] = CounterableHighlight.ind[index + 1] = 0;
             }
-            pos += spell.Length + 1;
+            pos += spellWord.Length + 1;
         }
     }
 }
