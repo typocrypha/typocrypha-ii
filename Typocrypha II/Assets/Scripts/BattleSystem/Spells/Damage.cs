@@ -370,6 +370,7 @@ public static class Damage
                 var word = research.GetData(target.ResearchKey)?.unlockedWord;
                 if (word == null)
                     return;
+                research.SetDecodeInProgress(target.ResearchKey);
                 IEnumerator LogDecoded(bool success)
                 {
                     if (success)
@@ -380,6 +381,10 @@ public static class Damage
                             PlayerDataManager.instance.equipment.Unlock(word, true);
                             SpellCooldownManager.instance.AddWord(word);
                         }
+                    }
+                    else
+                    {
+                        research.CancelDecodeInProgress(target.ResearchKey);
                     }
                     return null;
                 }
