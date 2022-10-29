@@ -77,6 +77,12 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
 
     void Update()
     {
+#if DEBUG
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            StartDialog();
+        }
+#endif
         // Check if submit key is pressed
         if (readyToContinue && dialogBox != null && dialogView.ReadyToContinue && Input.GetKeyDown(KeyCode.Space))
         {
