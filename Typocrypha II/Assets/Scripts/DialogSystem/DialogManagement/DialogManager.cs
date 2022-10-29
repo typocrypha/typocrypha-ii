@@ -78,7 +78,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     void Update()
     {
 #if DEBUG
-        if (Input.GetKeyDown(KeyCode.S))
+        if (!isBattle && Input.GetKeyDown(KeyCode.S))
         {
             StartDialog();
         }
