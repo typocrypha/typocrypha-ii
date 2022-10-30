@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 /// <summary>
 /// Manages all faders in the scene.
@@ -19,7 +20,7 @@ public class FaderManager : MonoBehaviour, IPausable
 
     public static FaderManager instance = null;
     public List<Fader> allFaders; // List of all faders. Fader instances add themselves.
-    public SpriteRenderer ScreenFader; // SpriteRenderer for fading entire screen.
+    public Image ScreenFader; // Image for fading entire screen.
 
     void Awake()
     {
@@ -29,7 +30,7 @@ public class FaderManager : MonoBehaviour, IPausable
         }
         else
         {
-            Destroy(this);
+            Destroy(gameObject);
             return;
         }
         DontDestroyOnLoad(gameObject);
