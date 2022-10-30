@@ -52,8 +52,6 @@ public class BattleManager : MonoBehaviour, IPausable
 
     private void Start()
     {
-        // Set so that battle waits for transition
-        TransitionManager.instance?.onStartScene.AddListener(StartBattle); 
         if (startOnStart) StartBattle();
     }
 

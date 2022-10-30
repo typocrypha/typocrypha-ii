@@ -97,8 +97,7 @@ public class DialogGraphParser : MonoBehaviour
             }
             else if (currNode is EndAndTransition) // Transitions scenes.
             {
-                var node = currNode as EndAndTransition;
-                DialogManager.instance.Display(false, () => TransitionManager.instance.TransitionScene(node.nextScene, node.loadingScreen));
+                DialogManager.instance.Display(false, TransitionManager.instance.TransitionToNextScene);
                 return null;
             }
         }

@@ -7,39 +7,15 @@ using UnityEngine;
 /// </summary>
 public class LoadingScreenImmediate : LoadingScreen
 {
-    private void Start()
+    public override float Progress { set { } }
+
+    public override Coroutine FinishLoading()
     {
-        _ready = true;
+        return null;
     }
 
-    public override float Progress
+    public override Coroutine StartLoading()
     {
-        set
-        {
-            if (value == 1.0f)
-            {
-                _done = true;
-            }
-        }
-    }
-
-    // Ready is set when loading screen faded in.
-    bool _ready = false;
-    public override bool ReadyToLoad
-    {
-        get
-        {
-            return _ready;
-        }
-    }
-
-    // Done is set when scene is loaded.
-    bool _done = false;
-    public override bool DoneLoading
-    {
-        get
-        {
-            return _done;
-        }
+        return null;
     }
 }
