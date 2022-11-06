@@ -100,7 +100,7 @@ public class TransitionManager : MonoBehaviour
         // Initialize Scene
         if (data.sceneData is DialogCanvas dialogCanvas)
         {
-            DialogManager.instance.StartDialog(dialogCanvas);
+            DialogManager.instance.StartDialog(dialogCanvas, true);
             yield return null;
         }
         yield return loadingScreen.FinishLoading();

@@ -105,20 +105,24 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     /// May load save if applicable.
     /// </summary>
     /// <param name="graph">Graph object to start.</param>
-    public void StartDialog(DialogCanvas graph)
+    public void StartDialog(DialogCanvas graph, bool reset = false)
     {
         graphParser.Graph = graph;
-        StartDialog();
+        StartDialog(reset);
     }
 
     /// <summary>
     /// Start new dialog graph. Implicitly uses graph already in parser.
     /// </summary>
-    public void StartDialog()
+    private void StartDialog(bool reset = false)
     {
         PH.Pause = false;
         SetDefaultView();
         graphParser.Init();
+        if (reset)
+        {
+            ResetDialog();
+        }
         if (isBattle || dialogCounter <= 0) // Start from beginning of scene if no save file load (can't save in middle of battle).
         {
             dialogCounter = -1;
@@ -129,6 +133,11 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
             graphParser.SkipTo(dialogCounter);
             NextDialog(false);
         }
+    }
+
+    private void ResetDialog()
+    {
+        dialogCounter = 0;
     }
 
     /// <summary>
