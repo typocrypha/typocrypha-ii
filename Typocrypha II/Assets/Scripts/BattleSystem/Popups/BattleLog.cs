@@ -9,10 +9,13 @@ public class BattleLog : MonoBehaviour
     public TextMeshProUGUI text;
     public Image icon;
 
+    [SerializeField]
+    private GameObject iconContainer;
+
     public void SetContent(string text, Sprite icon)
     {
-        this.text.text = text;
+        this.text.text = "> " + text;
         this.icon.sprite = icon;
-        this.icon.color = icon == null ? Color.clear : Color.white;
+        iconContainer.SetActive(icon != null);
     }
 }
