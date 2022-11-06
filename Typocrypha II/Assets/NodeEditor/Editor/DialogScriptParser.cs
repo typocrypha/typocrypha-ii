@@ -17,6 +17,7 @@ public class DialogScriptParser : EditorWindow
     public const string assetPath = "Assets/ScriptableObjects/DialogScenes/";
     TextAsset textScript; // Text script asset
     NodeCanvas canvas; // Generated canvas
+    bool endAndTransition = true;
     System.Type currView = typeof(DialogViewVNPlus); // Current dialog view
     float pos; // Position of current node
     Node prev;
@@ -100,6 +101,8 @@ public class DialogScriptParser : EditorWindow
         canvas = EditorGUILayout.ObjectField(canvas, typeof(NodeCanvas), false) as NodeCanvas;
         GUILayout.EndHorizontal();
 
+        endAndTransition = EditorGUILayout.ToggleLeft("Use End and Transition as Default End Node", endAndTransition);
+
         GUILayout.EndVertical();
         // Generate button
         if (textScript != null && GUILayout.Button("Generate Canvas", GUILayout.Width(120f)))
@@ -180,15 +183,18 @@ public class DialogScriptParser : EditorWindow
                 Debug.LogError($"Line Error{(i + 1)}: {lines[i]}: {e}");
             }
         }
-        // Create end node (if not already there).
-        if (!(prev is GameflowEndNode))
-        {
-            var endNode = CreateNode(EndAndHide.ID) as EndAndHide;
-            (prev as BaseNodeIO).toNextOUT.TryApplyConnection(endNode.fromPreviousIN, true);
-        }
+        // Create end node (if not already there)
+        CreateEndNodeIfNeeded(prev);
         EndCanvas();
     }
 
+    private void CreateEndNodeIfNeeded(Node prev)
+    {
+        if (prev is GameflowEndNode)
+            return;
+        var endNode = (endAndTransition ? CreateNode(EndAndTransition.ID) : CreateNode(EndAndHide.ID)) as GameflowEndNode;
+        (prev as BaseNodeIO).toNextOUT.TryApplyConnection(endNode.fromPreviousIN, true);
+    }
     // Parses a single line
     bool ParseLine(string line, ref Node prev)
     {
@@ -240,12 +246,8 @@ public class DialogScriptParser : EditorWindow
         {
             if (canvas != null)
             {
-                // Create end node (if not already there).
-                if (!(prev is GameflowEndNode))
-                {
-                    var endNode = CreateNode(EndAndHide.ID) as EndAndHide;
-                    (prev as BaseNodeIO).toNextOUT.TryApplyConnection(endNode.fromPreviousIN, true);
-                }
+                // Create end node (if not already there)
+                CreateEndNodeIfNeeded(prev);
                 EndCanvas(); // End previous canvas.
             }
             StartCanvas(args[1]); // Start new canvas.
@@ -322,7 +324,10 @@ public class DialogScriptParser : EditorWindow
         else if (nodeType == typeof(EndAndTransition))
         {
             var gnode = CreateNode(EndAndTransition.ID) as EndAndTransition;
-            gnode.nextScene = args[1];
+            if(args.Length > 1)
+            {
+                gnode.nextScene = args[1];
+            }
             nodes.Add(gnode);
         }
         else if(nodeType == typeof(SetVariableNode))

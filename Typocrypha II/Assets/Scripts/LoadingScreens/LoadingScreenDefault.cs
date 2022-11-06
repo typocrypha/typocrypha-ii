@@ -6,16 +6,14 @@ using TMPro;
 /// <summary>
 /// Default loading screen. Fades in and out to hide loading.
 /// </summary>
-[RequireComponent(typeof(Animator))]
 public class LoadingScreenDefault : LoadingScreen
 {
-    public TextMeshPro loadingPercent; // Text display of loading percentage
+    private const float fadeTime = 2f;
+    [SerializeField] private TextMeshProUGUI loadingPercent; // Text display of loading percentage
 
     void Awake()
     {
         loadingPercent.text = 0f.ToString() + "%";
-        animator = GetComponent<Animator>();
-        StartCoroutine(CheckFading());
     }
 
     public override float Progress
@@ -23,38 +21,40 @@ public class LoadingScreenDefault : LoadingScreen
         set
         {
             loadingPercent.text = (value * 100).ToString() + "%";
-            // When done loading, start fading out animation. Animator handles destruction.
-            if (value == 1.0f)
-            {
-                _done = true;
-            }
         }
     }
 
-    // When done fading in, set Done.
-    IEnumerator CheckFading()
+    public override Coroutine StartLoading()
     {
-        yield return new WaitWhile(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime < .9f);
-        _ready = true;
-    }
-
-    // Ready is set when loading screen faded in.
-    bool _ready = false;
-    public override bool ReadyToLoad
-    {
-        get
+        if (FaderManager.instance.ScreenFadeColor == Color.black)
         {
-            return _ready;
+            loadingPercent.gameObject.SetActive(true);
+            return null;
+        }
+        else
+        {
+            return StartCoroutine(StartLoadingCr());
         }
     }
 
-    // Done is set when scene is loaded.
-    bool _done = false;
-    public override bool DoneLoading
+    private IEnumerator StartLoadingCr()
     {
-        get
+        yield return FaderManager.instance.FadeScreenOverTime(fadeTime, FaderManager.instance.ScreenFadeColor.a, 1, Color.black);
+        loadingPercent.gameObject.SetActive(true);
+    }
+
+    public override Coroutine FinishLoading()
+    {
+        loadingPercent.gameObject.SetActive(false);
+        if (FaderManager.instance.IsFadingScreen)
         {
-            return _done;
+            return StartCoroutine(WaitUntilScreenFadeIsComplete());
         }
+        return FaderManager.instance.FadeScreenOverTime(fadeTime, 1, 0, Color.black);
+    }
+
+    private IEnumerator WaitUntilScreenFadeIsComplete()
+    {
+        yield return new WaitWhile(() => FaderManager.instance.IsFadingScreen);
     }
 }

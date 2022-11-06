@@ -32,15 +32,7 @@ namespace Gameflow {
         public static IEnumerator FadeScreenOverTime(float fadeTime, float fadeStart, float fadeEnd, Color fadeColor)
         {
             isCompleted = false;
-            float time = 0f;
-            while (time < fadeTime)
-            {
-                yield return new WaitWhile(() => FaderManager.instance.PH.Pause);
-                FaderManager.instance.FadeScreen(Mathf.Lerp(fadeStart, fadeEnd, time / fadeTime), fadeColor);
-                yield return new WaitForFixedUpdate();
-                time += Time.fixedDeltaTime;
-            }
-            FaderManager.instance.FadeScreen(fadeEnd, fadeColor);
+            yield return FaderManager.instance.FadeScreenOverTime(fadeTime, fadeStart, fadeEnd, fadeColor);
             isCompleted = true;
         }
 

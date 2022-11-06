@@ -7,7 +7,9 @@ using UnityEngine;
 /// </summary>
 public abstract class LoadingScreen : MonoBehaviour
 {
-    public Animator animator; // Loading screen animator
+    public abstract Coroutine StartLoading();
+
+    public abstract Coroutine FinishLoading();
 
     /// <summary>
     /// Handle for setting progress of load. 
@@ -17,21 +19,5 @@ public abstract class LoadingScreen : MonoBehaviour
     public abstract float Progress
     {
         set;
-    }
-
-    /// <summary>
-    /// Returns true if ready to start loading scene.
-    /// </summary>
-    public abstract bool ReadyToLoad
-    {
-        get;
-    }
-
-    /// <summary>
-    /// Returns true if ready to load next scene.
-    /// </summary>
-    public abstract bool DoneLoading
-    {
-        get;
     }
 }

@@ -36,8 +36,7 @@ public class BattleGraphParser : GraphParser
             //}
             else if (currNode is EndAndTransition) // Transitions scenes.
             {
-                var node = currNode as EndAndTransition;
-                TransitionManager.instance.TransitionScene(node.nextScene, node.loadingScreen);
+                TransitionManager.instance.TransitionToNextScene();
                 return null;
             }
         }

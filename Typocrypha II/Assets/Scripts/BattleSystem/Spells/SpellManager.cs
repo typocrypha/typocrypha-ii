@@ -70,8 +70,11 @@ public class SpellManager : MonoBehaviour
             }
             yield break;
         }
-        SpellFxManager.instance.LogMessage(castMessageOverride ?? caster.DisplayName + " casts " + spell.ToDisplayString(), spell.Icon);
-        yield return SpellFxManager.instance.PlayMessages();
+        if(caster.CasterClass != Caster.Class.Player)
+        {
+            SpellFxManager.instance.LogMessage(castMessageOverride ?? caster.DisplayName + " casts " + spell.ToDisplayString(), spell.Icon);
+            yield return SpellFxManager.instance.PlayMessages();
+        }
         var roots = Modify(spell);
         // Critical chance
         bool crit = false;

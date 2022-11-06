@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 /// <summary>
 /// Manages all faders in the scene.
@@ -17,9 +18,12 @@ public class FaderManager : MonoBehaviour, IPausable
     }
     #endregion
 
+    public bool IsFadingScreen { get; private set; }
+    public Color ScreenFadeColor => ScreenFader.color;
+
     public static FaderManager instance = null;
     public List<Fader> allFaders; // List of all faders. Fader instances add themselves.
-    public SpriteRenderer ScreenFader; // SpriteRenderer for fading entire screen.
+    [SerializeField] private Image ScreenFader; // Image for fading entire screen.
 
     void Awake()
     {
@@ -29,7 +33,7 @@ public class FaderManager : MonoBehaviour, IPausable
         }
         else
         {
-            Destroy(this);
+            Destroy(gameObject);
             return;
         }
         DontDestroyOnLoad(gameObject);
@@ -107,5 +111,25 @@ public class FaderManager : MonoBehaviour, IPausable
     public void FadeScreen(float fadeAmount, Color fadeColor)
     {
         ScreenFader.color = new Color(fadeColor.r, fadeColor.g, fadeColor.b, fadeAmount);
+    }
+
+    public Coroutine FadeScreenOverTime(float fadeTime, float fadeStart, float fadeEnd, Color fadeColor)
+    {
+        return StartCoroutine(FadeScreenCr(fadeTime, fadeStart, fadeEnd, fadeColor));
+    }
+
+    private IEnumerator FadeScreenCr(float fadeTime, float fadeStart, float fadeEnd, Color fadeColor)
+    {
+        IsFadingScreen = true;
+        float time = 0f;
+        while (time < fadeTime)
+        {
+            yield return new WaitWhile(() => PH.Pause);
+            FadeScreen(Mathf.Lerp(fadeStart, fadeEnd, time / fadeTime), fadeColor);
+            yield return new WaitForFixedUpdate();
+            time += Time.fixedDeltaTime;
+        }
+        FadeScreen(fadeEnd, fadeColor);
+        IsFadingScreen = false;
     }
 }
