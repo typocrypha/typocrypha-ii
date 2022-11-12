@@ -20,15 +20,13 @@ public class HighlightCounterable : MonoBehaviour
         {
             CounteredHighlight.ind[0] = 0;
             CounteredHighlight.ind[1] = SpellManager.instance.counterWord.internalName.Length;
-            CounteredHighlight.enabled = true;
-            CounterableHighlight.enabled = false;
             return;
         }
         else
         {
-            CounteredHighlight.enabled = false;
+            CounteredHighlight.ind[0] = 0;
+            CounteredHighlight.ind[1] = 0;
         }
-        CounterableHighlight.enabled = true;
         string[] spellWords = SpellText.text.Split(Spell.separators);
         int pos = 0; // Text character position in spell words.
         // check for any words that can be countered, and highlight them appropriately if found
