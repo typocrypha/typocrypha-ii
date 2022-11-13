@@ -15,6 +15,7 @@ namespace ATB3
             stuntime = Owner.Caster.Stats.StaggerTime;
             //Debug.Log("ENEMY " + this.Owner.actorName + " has ENTERED the STUNNED state!");
             Owner.GetComponent<Animator>().SetTrigger("Stun");
+            Owner.Caster.StunProgress = 0;
             timer = 0.0f;
         }
 
@@ -22,6 +23,7 @@ namespace ATB3
         public override void OnUpdate()
         {
             timer += Time.fixedDeltaTime;
+            Owner.Caster.StunProgress = timer / stuntime;
             if (Owner.Caster.BStatus == Caster.BattleStatus.Dead)
             {
                 Source.PerformTransition(ATBStateID.Dead);

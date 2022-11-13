@@ -169,11 +169,19 @@ public class Caster : FieldObject
             else
             {
                 // If unstunned reset stagger to full
+                ui?.onUnstun.Invoke();
                 Stagger = Stats.MaxStagger;
             }
         }
     }
-    private bool stunned = false;   
+    private bool stunned = false; 
+    public float StunProgress 
+    {
+        set
+        {
+            ui?.onStunProgressChanged.Invoke(value);
+        } 
+    }
     public Spell Spell
     {
         get => spell;

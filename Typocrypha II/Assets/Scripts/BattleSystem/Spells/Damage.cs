@@ -80,8 +80,8 @@ public static class Damage
     /// </summary>
     public static void StandardHitCheck(CastResults results, RootWordEffect effect, Caster caster, Caster target)
     {
-        // If the move always hits, bypass accuracy checks
-        if(effect.tags.Contains("AlwaysHit"))
+        // If the move always hits or the target is stunned, bypass accuracy checks
+        if(effect.tags.Contains("AlwaysHit") || target.Stunned)
         {
             results.Miss = false;
             return;
@@ -314,7 +314,7 @@ public static class Damage
 
     #region Application
 
-    public static void ApplyStandard(CastResults results, DamageEffect effect, Caster caster, Caster target, RootCastData spellData)
+    public static void ApplyStandard(CastResults results, RootWordEffect effect, Caster caster, Caster target, RootCastData spellData)
     {
         target.OnBeforeHitResolved?.Invoke(effect, caster, target, spellData, results);
         if (results.Miss)
@@ -398,7 +398,7 @@ public static class Damage
     /// Apply "Status Conditions" based on the prescence of certain tags
     /// Specifically, this function hadles anything that could affect the player's keyboard if the target is the player
     /// </summary>
-    public static void ApplyKeyboardEffects(CastResults results, DamageEffect effect, Caster caster, Caster target)
+    public static void ApplyKeyboardEffects(CastResults results, RootWordEffect effect, Caster caster, Caster target)
     {
         //Inflict keyboard effects if the target is the player
         if(target.CasterClass == Caster.Class.Player)
