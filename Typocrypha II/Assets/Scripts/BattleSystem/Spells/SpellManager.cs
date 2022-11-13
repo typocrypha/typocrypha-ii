@@ -178,7 +178,6 @@ public class SpellManager : MonoBehaviour
             // Full counter (no remaining roots)
             if (remainingWords.Count((w) => w is RootWord) <= 0)
             {
-                cancelTarget.Stagger--;
                 cancelTarget.Spell = new Spell(counterWord);
             }
             else // Partial counter
