@@ -65,7 +65,7 @@ public class SpellFxManager : MonoBehaviour
     }
     public Coroutine NoTargetFx(Vector2 pos)
     {
-        return StartCoroutine(noTargetFx.Play(pos));
+        return Instantiate(popupPrefab).GetComponent<PopupBase>().PopTextAndCleanup("No Target!", pos, popTime, Color.red); //StartCoroutine(noTargetFx.Play(pos));
     }
     public Coroutine Play(SpellFxData[] fxData, CastResults data, Vector2 targetPos, Vector2 casterPos)
     {
