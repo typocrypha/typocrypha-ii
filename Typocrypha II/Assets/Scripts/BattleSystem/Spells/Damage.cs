@@ -352,7 +352,11 @@ public static class Damage
             return;
         target.Stagger -= Mathf.FloorToInt(results.StaggerDamage);
         if (target.Stunned)
-            SpellFxManager.instance.LogMessage(target.DisplayName + " is stunned!");
+        {
+            results.Stun = true;
+            //SpellFxManager.instance.LogMessage(target.DisplayName + " is stunned!");
+        }
+
     }
 
     public static void ApplyResearch(CastResults results, RootWordEffect effect, Caster caster, Caster target)

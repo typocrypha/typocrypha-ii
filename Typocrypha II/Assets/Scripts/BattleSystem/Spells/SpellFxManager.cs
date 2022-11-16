@@ -10,6 +10,7 @@ public class SpellFxManager : MonoBehaviour
     private const float logTime = 1f;
     public static SpellFxManager instance;
     private static readonly Vector2 reactionOffset = new Vector2(0, -0.75f);
+    private static readonly Vector2 stunOffset = new Vector2(0, 0.75f);
     public bool HasMessages { get => logData.Count > 0; }
     [Header("No Target FX")]
     [SerializeField] private SpellFxData noTargetFx = new SpellFxData();
@@ -144,7 +145,16 @@ public class SpellFxManager : MonoBehaviour
             damageRoutine = PlayDamageNumber(data.Damage, targetPos, popper);
         }
         // Effectiveness popup
-        Coroutine reactionRoutine = PlayReaction(data.Effectiveness, targetPos, casterPos, popper);       
+        Coroutine reactionRoutine = PlayReaction(data.Effectiveness, targetPos, casterPos, popper);
+        Coroutine stunRoutine = null;
+        if (data.Stun)
+        {
+            stunRoutine = popper.PopText("Stun!", data.DisplayDamage ? targetPos + stunOffset : targetPos, popTime, Color.red);
+        }
+        if(stunRoutine != null)
+        {
+            yield return stunRoutine;
+        }
         if(damageRoutine != null)
         {
             yield return damageRoutine;
