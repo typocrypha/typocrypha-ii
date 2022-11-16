@@ -23,14 +23,25 @@ namespace ATB3
         public override void OnUpdate()
         {
             timer += Time.fixedDeltaTime;
-            Owner.Caster.StunProgress = timer / stuntime;
-            if (Owner.Caster.BStatus == Caster.BattleStatus.Dead)
+            var caster = Owner.Caster;
+            caster.StunProgress = timer / stuntime;
+            if (caster.BStatus == Caster.BattleStatus.Dead)
             {
                 Source.PerformTransition(ATBStateID.Dead);
             }
             else if (timer >= stuntime || !Owner.Caster.Stunned)
             {
-                Source.PerformTransition(ATBStateID.PreviousState);
+                // Interrupt if stunned in precast
+                if(Source.PreviousStateID == ATBStateID.PreCast)
+                {
+                    caster.Charge = 0;
+                    caster.OnAfterCastResolved?.Invoke(caster.Spell, caster);
+                    Source.PerformTransition(ATBStateID.Charge);
+                }
+                else
+                {
+                    Source.PerformTransition(ATBStateID.PreviousState);
+                }
             }
         }
 

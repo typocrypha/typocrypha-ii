@@ -12,7 +12,7 @@ namespace ATB3
         {
             //Debug.Log("ENEMY " + this.Owner.actorName + " has ENTERED the CHARGE state! (id: " + StateID.ToString() + ")");
             Owner.GetComponent<Animator>().SetTrigger("Idle");
-            if(Source.PreviousStateID != ATBStateID.Stunned)
+            if (Source.PreviousStateID != ATBStateID.Stunned || Owner.Caster.Charge <= 0)
             {
                 Owner.StartCharge();
             }
