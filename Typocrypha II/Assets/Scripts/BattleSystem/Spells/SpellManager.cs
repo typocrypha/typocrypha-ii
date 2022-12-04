@@ -77,13 +77,23 @@ public class SpellManager : MonoBehaviour
         }
         var roots = Modify(spell);
         // Critical chance
-        bool crit = false;
+        Damage.SpecialModifier mod = Damage.SpecialModifier.None;
         if (roots.Any((r) => r.effects.Any((e) => e.CanCrit)) && UnityEngine.Random.Range(0, 1f) <= Damage.baseCritChance)
         {
             bool friendly = caster.CasterClass == Caster.Class.Player || caster.CasterClass == Caster.Class.PartyMember;
             IEnumerator OnCritPopupComplete(bool popupSuccess)
             {
-                crit = friendly == popupSuccess;
+                if (friendly)
+                {
+                    if (popupSuccess)
+                    {
+                        mod = Damage.SpecialModifier.Critical;
+                    }
+                }
+                else
+                {
+                    mod = popupSuccess ? Damage.SpecialModifier.CritBlock : Damage.SpecialModifier.Critical;
+                }
                 return null;
             }
             LogInteractivePopup(critPopupPrefab, "Critical Chance!", friendly ? "CRITICAL" : "BLOCK", 5, OnCritPopupComplete);
@@ -120,7 +130,7 @@ public class SpellManager : MonoBehaviour
                         // Apply OnCast Callbacks
                         caster.OnBeforeSpellEffectResolved?.Invoke(effect, caster, targetCaster);
                         // Cast the effect
-                        var castResults = effect.Cast(caster, targetCaster, crit, spellData, rootResults);
+                        var castResults = effect.Cast(caster, targetCaster, spellData, mod, rootResults);
                         // Apply OnHit Callbacks (Updates AI)
                         targetCaster.OnAfterHitResolved?.Invoke(effect, caster, targetCaster, spellData, castResults);
                         // Play Effects
@@ -150,7 +160,7 @@ public class SpellManager : MonoBehaviour
                 rootResults.Add(effectResults);
             }
         }
-        if (crit)
+        if (mod == Damage.SpecialModifier.Critical)
         {
             SpellFxManager.instance.LogMessage("A critical hit!");
             yield return SpellFxManager.instance.PlayMessages();

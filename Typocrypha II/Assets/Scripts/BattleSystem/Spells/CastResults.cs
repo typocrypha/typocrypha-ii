@@ -11,7 +11,8 @@ public class CastResults
 
     public bool DisplayDamage { get; set; } = true;
     public bool Miss { get; set; } = false;
-    public bool Crit { get; set; } = false;
+    public bool IsCrit => Mod == global::Damage.SpecialModifier.Critical;
+    public Damage.SpecialModifier Mod { get; set; }
     public float StaggerDamage { get; set; } = 0;
     public bool Stun { get; set; } = false;
     public float Damage { get; set; } = 1;

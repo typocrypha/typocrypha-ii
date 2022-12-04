@@ -13,7 +13,7 @@ public class StatusCryostasis : StatusRemoveAfterHitOrCast
 
     public override void OnBeforeAffectApplied(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults data)
     {
-        if(!effect.tags.Contains("Fire") && !data.Crit)
+        if(!effect.tags.Contains("Fire") && !data.IsCrit)
         {
             data.Effectiveness = Reaction.Block;
             data.Damage = 0;

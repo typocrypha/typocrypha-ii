@@ -12,7 +12,7 @@ public class StatusRegenAccelerating : StatusRemoveAfterHitOrCast
 
     public override void Apply(ApplyStatusEffect effect, Caster caster, Caster target, CastResults data)
     {
-        if (data.Crit)
+        if (data.IsCrit)
         {
             healthPerTick *= (int)Damage.critDamageMod;
         }

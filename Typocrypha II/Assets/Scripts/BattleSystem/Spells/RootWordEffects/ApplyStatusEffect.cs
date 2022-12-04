@@ -8,7 +8,7 @@ public class ApplyStatusEffect : RootWordEffect
 
     public override bool CanCrit => false;
 
-    public override CastResults Cast(Caster caster, Caster target, bool crit, RootCastData spellData, RootCastResults prevResults = null)
+    public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.SpecialModifier mod, RootCastResults prevResults = null)
     {
         var results = new CastResults(caster, target);
         Damage.StandardHitCheck(results, this, caster, target);

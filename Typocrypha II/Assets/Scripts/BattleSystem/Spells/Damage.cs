@@ -6,7 +6,7 @@ using System.Linq;
 public static class Damage
 {
     public const float stunBonusDamageMod = 1.25f;
-    public const float critDamageMod = 2.5f;
+    public const float critDamageMod = 2f;
     public const float baseCritChance = 0.075f;
 
     public enum FormulaType
@@ -15,7 +15,15 @@ public static class Damage
         Custom,
         StandardHeal,
     }
-    public delegate CastResults Formula(DamageEffect effect, Caster caster, Caster target, bool crit, RootCastData spellData);
+
+    public delegate CastResults Formula(DamageEffect effect, Caster caster, Caster target, SpecialModifier mod, RootCastData spellData);
+
+    public enum SpecialModifier
+    {
+        None,
+        Critical,
+        CritBlock
+    }
 
     public static Dictionary<FormulaType, Formula> PresetFormulae { get; } = new Dictionary<FormulaType, Formula>
     {
@@ -23,32 +31,29 @@ public static class Damage
         { FormulaType.StandardHeal, StandardHealApplied },
     };
 
-    private static CastResults StandardApplied(DamageEffect effect, Caster caster, Caster target, bool crit, RootCastData spellData)
+    private static CastResults StandardApplied(DamageEffect effect, Caster caster, Caster target, SpecialModifier mod, RootCastData spellData)
     {
-        var results = Standard(effect, caster, target, crit, spellData);
+        var results = Standard(effect, caster, target, mod, spellData);
         ApplyStandard(results, effect, caster, target, spellData);
         return results;
     }
 
-    private static CastResults StandardHealApplied(DamageEffect effect, Caster caster, Caster target, bool crit, RootCastData spellData)
+    private static CastResults StandardHealApplied(DamageEffect effect, Caster caster, Caster target, SpecialModifier mod, RootCastData spellData)
     {
-        var results = StandardHeal(effect, caster, target, crit, spellData);
+        var results = StandardHeal(effect, caster, target, mod, spellData);
         ApplyStandard(results, effect, caster, target, spellData);
         return results;
     }
 
     #region Calculation
 
-    public static CastResults Standard(DamageEffect effect, Caster caster, Caster target, bool crit, RootCastData spellData)
+    public static CastResults Standard(DamageEffect effect, Caster caster, Caster target, SpecialModifier mod, RootCastData spellData)
     {
         var results = new CastResults(caster, target);
         StandardHitCheck(results, effect, caster, target);
         StandardAtkDef(results, effect, caster, target);
-        if (crit)
-        {
-            StandardCritMod(results, effect, caster, target);
-        }
         StandardElements(results, effect, caster, target);
+        StandardSpecialMod(results, effect, caster, target, mod);
         StandardPower(results, effect, caster, target);
         ComputeStandardComboValue(results, spellData.Spell);
         ApplyStandardComboMod(results);
@@ -56,17 +61,14 @@ public static class Damage
         return results;
     }
 
-    public static CastResults StandardHeal(DamageEffect effect, Caster caster, Caster target, bool crit, RootCastData spellData)
+    public static CastResults StandardHeal(DamageEffect effect, Caster caster, Caster target, SpecialModifier mod, RootCastData spellData)
     {
         var results = new CastResults(caster, target)
         {
             Miss = effect.tags.Contains("AlwaysMiss"),
         };
-        if (crit)
-        {
-            StandardCritMod(results, effect, caster, target);
-        }
         StandardElements(results, effect, caster, target);
+        StandardSpecialMod(results, effect, caster, target, mod);
         results.StaggerDamage = 0;
         StandardPower(results, effect, caster, target);
         ComputeStandardComboValue(results, spellData.Spell);
@@ -137,11 +139,19 @@ public static class Damage
     /// Applies the standard modification to the results
     /// Sets crit to true, sets stagger damage to 1, and multiplies the Damage by Damage.critDamageMod;
     /// </summary>
-    public static void StandardCritMod(CastResults results, RootWordEffect effect, Caster caster, Caster target)
+    public static void StandardSpecialMod(CastResults results, RootWordEffect effect, Caster caster, Caster target, SpecialModifier mod)
     {
-        results.Crit = true;
-        results.Damage *= critDamageMod;
-        results.StaggerDamage = 1;
+        results.Mod = mod;
+        if (mod == SpecialModifier.Critical)
+        {
+            results.Damage *= critDamageMod;
+            results.StaggerDamage = 1;
+        }
+        else if(mod == SpecialModifier.CritBlock)
+        {
+            results.Effectiveness = Reaction.Block;
+            results.Damage *= GetReactionDmgMod(effect, caster, target, Reaction.Block, 1);
+        }
     }
 
     public static void ApplyStandardComboMod(CastResults results)
@@ -332,7 +342,7 @@ public static class Damage
         if (results.Effectiveness == Reaction.Repel)
         {
             effect.tags.Add("Reflected");
-            var newResults = effect.Cast(caster, caster, results.Crit, spellData);
+            var newResults = effect.Cast(caster, caster, spellData, results.Mod);
             caster.OnAfterHitResolved?.Invoke(effect, caster, caster, spellData, newResults);
             return true;
         }

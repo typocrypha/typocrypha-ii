@@ -9,7 +9,7 @@ public class StatusGuard : StatusRemoveAfterHitOrCast
     public override void Apply(ApplyStatusEffect effect, Caster caster, Caster target, CastResults data)
     {
         resistTags.Add(effect.tags);
-        resistReaction = data.Crit ? Reaction.Block : Reaction.Resist;      
+        resistReaction = data.IsCrit ? Reaction.Block : Reaction.Resist;      
     }
 
     public CasterTagDictionary.ReactionMultiSet GetReactions(SpellTag tag)
