@@ -6,8 +6,6 @@ using UnityEngine;
 public class SpellFxManager : MonoBehaviour
 {
     private const float popTime = 0.4f;
-    private const float shortPopTime = 0.3f;
-    private const float logTime = 1f;
     public static SpellFxManager instance;
     private static readonly Vector2 reactionOffset = new Vector2(0, -0.75f);
     private static readonly Vector2 stunOffset = new Vector2(0, 0.75f);
@@ -55,7 +53,7 @@ public class SpellFxManager : MonoBehaviour
             var message = logData.Dequeue();
             var log = Instantiate(battleLogPrefab, Camera.main.WorldToScreenPoint(logPosition), Quaternion.identity, logCanvas.transform).GetComponent<BattleLog>();
             log.SetContent(message.text, message.icon);
-            yield return new WaitForSeconds(logTime);
+            yield return log.Play();
             Destroy(log.gameObject);
         }
     }
