@@ -8,8 +8,9 @@ using DG.Tweening;
 public class DialogContinueIndicator : MonoBehaviour
 {
     [SerializeField] private Image continueIndicator;
-    [SerializeField] private float moveXDistance = 5;
-    [SerializeField] private float moveXDuration = 0.25f;
+    [SerializeField] private float moveYDistance = 5;
+    [SerializeField] private float scaleYAmount = 0.75f;
+    [SerializeField] private float animationDuration = 0.25f;
     [SerializeField] private float indicatorDelay = 0.0f;
     private WaitForSeconds indicatorDelaySeconds;
 
@@ -17,14 +18,17 @@ public class DialogContinueIndicator : MonoBehaviour
 
 
     private Vector3 originalIndicatorPosition = Vector3.zero;
+    private Vector3 originalIndicatorScale = Vector3.zero;
 
     private Coroutine activeCoroutine = null;
-    private object activeTween = null;
+    private object activeMoveTween = null;
+    private object activeScaleTween = null;
 
     private void Start()
     {
         indicatorDelaySeconds = new WaitForSeconds(indicatorDelay);
         originalIndicatorPosition = continueIndicator.rectTransform.localPosition;
+        originalIndicatorScale = continueIndicator.rectTransform.localScale;
     }
 
     private void OnEnable()
@@ -63,7 +67,12 @@ public class DialogContinueIndicator : MonoBehaviour
     {
         continueIndicator.enabled = true;
         originalIndicatorPosition = continueIndicator.rectTransform.localPosition;
-        activeTween = continueIndicator.rectTransform.DOLocalMoveX(originalIndicatorPosition.x + moveXDistance, moveXDuration, false)
+        activeMoveTween = continueIndicator.rectTransform.DOLocalMoveY(originalIndicatorPosition.y - moveYDistance, animationDuration, false)
+            .SetEase(Ease.InOutSine)
+            .SetLoops(-1, LoopType.Yoyo)
+            .id;
+        activeScaleTween = continueIndicator.rectTransform.localScale;
+        activeScaleTween = continueIndicator.rectTransform.DOScaleY(scaleYAmount, animationDuration)
             .SetEase(Ease.InOutSine)
             .SetLoops(-1, LoopType.Yoyo)
             .id;
@@ -71,12 +80,18 @@ public class DialogContinueIndicator : MonoBehaviour
 
     private void StopAnimation()
     {
-        if (activeTween != null)
+        if (activeMoveTween != null)
         {
-            DOTween.Kill(activeTween);
-            activeTween = null;
+            DOTween.Kill(activeMoveTween);
+            activeMoveTween = null;
+        }
+        if (activeScaleTween != null)
+        {
+            DOTween.Kill(activeScaleTween);
+            activeScaleTween = null;
         }
         continueIndicator.rectTransform.localPosition = originalIndicatorPosition;
+        continueIndicator.rectTransform.localScale = originalIndicatorScale;
         continueIndicator.enabled = false;
     }
 }
