@@ -5,8 +5,9 @@ using System.Collections.Generic;
 [System.Serializable]
 public class TweenInfo
 {
-    public float Time => time;
+    public float Time => applyUISpeed ? time / Settings.UISpeed : time;
     [SerializeField] private float time;
+    [SerializeField] private bool applyUISpeed;
     [SerializeField] private bool useCustomEase;
     [SerializeField] private Ease ease;
     [SerializeField] private AnimationCurve customEase;

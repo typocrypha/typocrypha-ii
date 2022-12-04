@@ -32,7 +32,7 @@ public class PopupDefault : PopupBase
             rect.localScale = scale;
             yield return new WaitForEndOfFrame();
         }
-        yield return new WaitForSeconds(time);
+        yield return new WaitForSeconds(time / Settings.UISpeed);
         for (int i = 6; i > 0; i--)
         {
             Vector3 scale = new Vector3(rect.localScale.x * (16 - i) / 10, ((rect.localScale.y) * i) / 10, rect.localScale.z);
@@ -62,7 +62,7 @@ public class PopupDefault : PopupBase
             rect.localScale = scale;
             yield return new WaitForEndOfFrame();
         }
-        yield return new WaitForSeconds(time);
+        yield return new WaitForSeconds(time / Settings.UISpeed);
         for (int i = 6; i > 0; i--)
         {
             Vector3 scale = new Vector3(rect.localScale.x * (16 - i) / 10, ((rect.localScale.y) * i) / 10, rect.localScale.z);

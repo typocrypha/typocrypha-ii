@@ -7,6 +7,8 @@ public static class Settings
 {
     private const string gameSpeedKey = "gameSpeed";
     private const float gameSpeedDefault = 1;
+    private const string uiSpeedKey = "uiSpeed";
+    private const float uiSpeedDefault = 1;
     private const string keyLayoutKey = "keyLayout";
     private const KeyLayoutType keyLayoutDefault = KeyLayoutType.QWERTY;
     private const string customKeyLayoutKey = "customKeyLayout";
@@ -60,6 +62,21 @@ public static class Settings
         }
     }
     private static float gameSpeed = gameSpeedDefault;
+
+    public static float UISpeed
+    {
+        get
+        {
+            SafeIntialize();
+            return uiSpeed;
+        }
+        set
+        {
+            uiSpeed = value;
+            PlayerPrefs.SetFloat(uiSpeedKey, value);
+        }
+    }
+    private static float uiSpeed = uiSpeedDefault;
 
     private static bool initialized = false;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
