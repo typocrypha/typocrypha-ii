@@ -61,7 +61,23 @@ public class DialogViewVNPlus : DialogView
 
     public override void CleanUp()
     {
+        StopAllCoroutines();
         ClearLog();
+        foreach (Transform child in leftCharacterContainer)
+        {
+            Destroy(child.gameObject);
+        }
+        foreach (Transform child in rightCharacterContainer)
+        {
+            Destroy(child.gameObject);
+        }
+        foreach (var kvp in characterMap)
+        {
+            Destroy(kvp.Value.gameObject);
+        }
+        characterMap.Clear();
+        rightCharacterList.Clear();
+        leftCharacterList.Clear();
     }
 
     private void ClearLog()
