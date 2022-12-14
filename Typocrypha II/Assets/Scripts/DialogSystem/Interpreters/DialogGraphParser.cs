@@ -163,27 +163,8 @@ public class DialogGraphParser : MonoBehaviour
             else if (currNode is DialogNodeBubble)
             {
                 var dNode = currNode as DialogNodeBubble;
-                var ditem = new DialogItemBubble(dNode.text, voice, dNode.rectVal);
-                // If mutliple speech bubbles at once, gather all multi boxes.
-                if (dNode.multi) 
-                {
-                    var dlist = new DialogItemBubble_Multi("", null);
-                    dlist.bubbleList.Add(ditem);
-                    while (dNode.multi)
-                    {
-                        var tmpNode = Next();
-                        if (tmpNode is DialogNodeBubble)
-                        {
-                            currNode = tmpNode;
-                            dNode = currNode as DialogNodeBubble;
-                            ditem = new DialogItemBubble(dNode.text, null, dNode.rectVal);
-                            dlist.bubbleList.Add(ditem);
-                        }
-                        else break;
-                    }
-                    return dlist;
-                }
-                else return ditem;
+                var ditem = new DialogItemBubble(dNode.text, voice, dNode.gridPosition, dNode.absolutePosition);
+                return ditem;
             }    
         }
         else if (currNode is SetVariableNode)

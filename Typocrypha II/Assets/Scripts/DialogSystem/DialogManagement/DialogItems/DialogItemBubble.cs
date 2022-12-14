@@ -8,11 +8,13 @@ using UnityEngine;
 /// </summary>
 public class DialogItemBubble : DialogItem
 {
-    public Rect rect; // Position and size of speech bubble.
+    public Vector2Int GridPosition { get; set; }
+    public Vector2 AbsolutePosition { get; set; }
 
-    public DialogItemBubble(string text, List<AudioClip> voice, Rect rect) : base(text, voice)
+    public DialogItemBubble(string text, List<AudioClip> voice, Vector2Int gridPosition, Vector2 absolutePosition) : base(text, voice)
     {
-        this.rect = rect;
+        GridPosition = gridPosition;
+        AbsolutePosition = absolutePosition;
     }
 
     public override Type GetView() => typeof(DialogViewBubble);

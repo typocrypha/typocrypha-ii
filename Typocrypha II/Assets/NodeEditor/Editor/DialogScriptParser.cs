@@ -463,33 +463,26 @@ public class DialogScriptParser : EditorWindow
         }
         else if (currView == typeof(DialogNodeBubble))
         {
-            dnode = CreateNode(DialogNodeBubble.ID) as DialogNodeBubble;
-            (dnode as DialogNodeBubble).multi = (exprs[0] == "multi");
+            var bubbleNode = CreateNode(DialogNodeBubble.ID) as DialogNodeBubble;
+            dnode = bubbleNode;
+            //(dnode as DialogNodeBubble).multi = (exprs[0] == "multi");
             var coords = poses[0].Split(',');
-            if (coords.Length == 4) // Full coordinate specification
+            if (coords.Length == 1)
             {
-                (dnode as DialogNodeBubble).rectVal.x = float.Parse(coords[0]);
-                (dnode as DialogNodeBubble).rectVal.y = float.Parse(coords[1]);
-                (dnode as DialogNodeBubble).rectVal.width = float.Parse(coords[2]);
-                (dnode as DialogNodeBubble).rectVal.height = float.Parse(coords[3]);
+                throw new System.NotImplementedException("Special bubble location aliases not yet supported. Use grid coords or absolute positioning");
             }
-            else // Shorthand battlefield coordinates
+            else if (coords.Length == 2) // Battle grid coords (0 is bottom row, 0 is left col)
             {
-                float[] bfc_row = new float[]
-                {
-                    0.1f,
-                    0.4f,
-                    0.7f,
-                };
-                float[] bfc_col = new float[]
-{
-                    -0.1f,
-                    -0.4f,
-                };
-                (dnode as DialogNodeBubble).rectVal.x = bfc_row[int.Parse(coords[1])];
-                (dnode as DialogNodeBubble).rectVal.y = bfc_col[int.Parse(coords[0])];
-                (dnode as DialogNodeBubble).rectVal.width = 0.25f;
-                (dnode as DialogNodeBubble).rectVal.height = 0.5f;
+                bubbleNode.gridPosition = new Vector2Int(int.Parse(coords[0]), int.Parse(coords[1]));
+            }
+            else if (coords.Length == 4)// absolute position specification
+            {
+                bubbleNode.gridPosition = new Vector2Int(int.Parse(coords[0]), int.Parse(coords[1]));
+                bubbleNode.absolutePosition = new Vector2(float.Parse(coords[2]), float.Parse(coords[3]));
+            }
+            else
+            {
+                throw new System.Exception($"Incorrect number of arguments ({coords.Length}) for bubble dialog");
             }
         }
         dnode.characterName = cname.Substring(0, cname.Length-1);

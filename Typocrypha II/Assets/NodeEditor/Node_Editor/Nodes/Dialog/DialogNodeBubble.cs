@@ -17,8 +17,9 @@ namespace Gameflow
         public override string Title { get { return "Bubble Dialog"; } }
         public override Vector2 MinSize { get { return new Vector2(250, 60); } }
 
-        public Rect rectVal;
-        public bool multi = false; // Gathers current bubble with next bubble
+        public Vector2Int gridPosition;
+        public Vector2 absolutePosition = DialogViewBubble.nullAbsolutePos;
+
 
         protected override void OnCreate()
         {
@@ -32,9 +33,7 @@ namespace Gameflow
             TextGUI();
             
             GUILayout.Space(50);
-            rectVal = RTEditorGUI.RectField(new Rect(20, 140, MinSize.x - 65, 20), "Rect", rectVal);
-            
-            multi = RTEditorGUI.Toggle(multi, "Multiple Mode");
+            //gridPosition = RTEditorGUI.RectField(new Rect(20, 140, MinSize.x - 65, 20), "Rect", rectVal);
 
             //Don't know why this code needs to be here exactly, but it makes everything nicer? maybe add to some static stuff?
             GUILayout.BeginHorizontal();

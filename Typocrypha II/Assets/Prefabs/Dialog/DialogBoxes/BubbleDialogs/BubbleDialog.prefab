@@ -10,7 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 224549024265766654}
   - component: {fileID: 222281826632412072}
+  - component: {fileID: 6329626260945273085}
   - component: {fileID: 2237199940858503603}
+  - component: {fileID: 2270185214941010007}
   - component: {fileID: 2779695716035544375}
   m_Layer: 5
   m_Name: BubbleDialog
@@ -48,6 +50,26 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1598601082375312}
   m_CullTransparentMesh: 0
+--- !u!114 &6329626260945273085
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1598601082375312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a31c70beef8983941af16100efec3b8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogText: {fileID: 1171970627213568542}
+  voiceAS:
+  - {fileID: 2237199940858503603}
+  resizeTextBox: 1
+  textHolder: {fileID: 9028820362556812648}
+  continueIndicator: {fileID: 4079421384302258914}
+  hideText: {fileID: 2270185214941010007}
+  boxID: dialogBox
 --- !u!82 &2237199940858503603
 AudioSource:
   m_ObjectHideFlags: 0
@@ -59,7 +81,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -144,6 +166,25 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &2270185214941010007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1598601082375312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff6430cfff7ff1041a624f65344c62be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  done: 0
+  text: {fileID: 1171970627213568542}
+  ind: 0000000000000000
+  Priority: 0
+  color:
+    serializedVersion: 2
+    rgba: 0
 --- !u!114 &2779695716035544375
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -455,7 +496,7 @@ MonoBehaviour:
   scaleYAmount: 0.9
   animationDuration: 0.25
   indicatorDelay: 0
-  dialogBox: {fileID: 1556563588530840452}
+  dialogBox: {fileID: 6329626260945273085}
 --- !u!1 &4801305561873939380
 GameObject:
   m_ObjectHideFlags: 0
@@ -542,9 +583,6 @@ GameObject:
   - component: {fileID: 8887692292550716289}
   - component: {fileID: 6730420096664678200}
   - component: {fileID: 7684847869310620893}
-  - component: {fileID: 3217321427525268105}
-  - component: {fileID: 1556563588530840452}
-  - component: {fileID: 3012113963163345722}
   - component: {fileID: 3867329443842333835}
   - component: {fileID: 8788507799490248750}
   m_Layer: 5
@@ -632,141 +670,6 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
---- !u!82 &3217321427525268105
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6369678765693430071}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
---- !u!114 &1556563588530840452
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6369678765693430071}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a31c70beef8983941af16100efec3b8b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dialogText: {fileID: 1171970627213568542}
-  voiceAS:
-  - {fileID: 0}
-  resizeTextBox: 1
-  textHolder: {fileID: 9028820362556812648}
-  continueIndicator: {fileID: 0}
-  hideText: {fileID: 3012113963163345722}
-  boxID: dialogBox
---- !u!114 &3012113963163345722
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6369678765693430071}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff6430cfff7ff1041a624f65344c62be, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  done: 0
-  text: {fileID: 1171970627213568542}
-  ind: 0000000000000000
-  Priority: 0
-  color:
-    serializedVersion: 2
-    rgba: 0
 --- !u!114 &3867329443842333835
 MonoBehaviour:
   m_ObjectHideFlags: 0
