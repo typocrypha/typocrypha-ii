@@ -18,6 +18,9 @@ public class DialogViewBubble : DialogView
     private Vector2Int lastBoxPosition = nullGridPos;
     private Vector2 lastBoxAbsolutePosition = nullAbsolutePos;
 
+    public override bool ReadyToContinue => readyToContinue;
+    private bool readyToContinue = true;
+
     private void Awake()
     {
         initialPositions.Clear();
@@ -78,13 +81,12 @@ public class DialogViewBubble : DialogView
         }
         // Else, hide last box and show new box
         StartCoroutine(AnimateNewMessageIn(dialogBox, bubbleData, bubbleData.GridPosition, bubbleData.AbsolutePosition));
-
-
         return dialogBox;
     }
 
     private IEnumerator AnimateNewMessageIn(DialogBox box, DialogItem data, Vector2Int gridPos, Vector2 absPos)
     {
+        readyToContinue = false;
         if (lastBoxPosition != nullGridPos)
         {
             // hide last
@@ -99,12 +101,14 @@ public class DialogViewBubble : DialogView
         // Setup dialog box
         box.SetupDialogBox(data);
 
-        // Enable new dialog box
+        // Enable ans start new dialog box
         box.transform.localScale = Vector2.zero;
         box.gameObject.SetActive(true);
+        box.StartDialogScroll();
+        readyToContinue = true;
 
         // set position of new dialog box
-        if(absPos != nullAbsolutePos) // absolute pos (in relative screen coords)
+        if (absPos != nullAbsolutePos) // absolute pos (in relative screen coords)
         {
             // Normalized World Positioning (Top Left)
             var res = new Vector2(1280, 720);
@@ -119,9 +123,6 @@ public class DialogViewBubble : DialogView
         // show new dialog box
         showHideBoxTween.Start(box.transform.DOScale(Vector2.one, showHideBoxTween.Time));
         yield return showHideBoxTween.WaitForCompletion();
-
-        // start scroll
-        box.StartDialogScroll();
     }
 
     public override void CleanUp()

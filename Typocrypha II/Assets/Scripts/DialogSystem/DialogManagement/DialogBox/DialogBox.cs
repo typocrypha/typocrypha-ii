@@ -55,13 +55,14 @@ public class DialogBox : MonoBehaviour, IDialogBox
     [SerializeField] FXText.TMProColor hideText; // Allows for hiding parts of text (for scrolling)
     DialogItem dialogItem; // Dialog line data
     Coroutine scrollCR; // Coroutine that scrolls the text
+    private bool started = false;
 
     /// <summary>
     /// Returns whether text is done scrolling or not.
     /// </summary>
     public bool IsDone
     {
-        get => scrollCR == null;
+        get => started && scrollCR == null;
     }
 
     public string ID => boxID;
@@ -99,6 +100,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
                     voiceAS[i].clip = dialogItem.voice[i];
             }
         }
+        started = false;
     }
 
     public void StartDialogScroll()
@@ -158,8 +160,12 @@ public class DialogBox : MonoBehaviour, IDialogBox
     /// </summary>
     public void DumpText()
     {
+        if (!started)
+        {
+            return;
+        }
         // End text scroll and display all text.
-        if (!IsDone)
+        if (scrollCR != null)
         {
             StopCoroutine(scrollCR);
         }
@@ -208,6 +214,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
 	// Scrolls text character by character
 	protected IEnumerator TextScrollCR()
     {
+        started = true;
         //yield return null;
         int pos = 0;
         while (pos < dialogItem.text.Length)
