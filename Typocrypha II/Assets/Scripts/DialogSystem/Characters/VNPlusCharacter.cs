@@ -12,16 +12,19 @@ public class VNPlusCharacter : MonoBehaviour
     private static readonly Color nameHighlightColor = new Color(0, 0, 0, 0);
     private static readonly Color nameNoHighlightColor = new Color(0, 0, 0, 1 - noHighlightValue);
     private const float noHighlightValue = 0.65f;
-    private const float leftColAdjustment = 0.1f;
+    private const float leftColAdjustment = 0.05f;
 
     private float nameplateRatio = 0.1f;
 
     public RectTransform MainRect => mainRect;
+    public RectTransform CharacterRect => poseImage.rectTransform;
 
     public DialogViewVNPlus.CharacterColumn Column => column;
     [SerializeField] private DialogViewVNPlus.CharacterColumn column;
     [SerializeField] private Image poseImage;
     [SerializeField] private Image expressionImage;
+    [SerializeField] private float characterImagePadding = 50f;
+    [SerializeField] private AnimationCurve characterYOffsetIntensityCurve;
     [SerializeField] private Image leftHighlightImage;
     [SerializeField] private Image leftHighlightDimmer;
     [SerializeField] private Image rightHighlightImage;
@@ -39,6 +42,8 @@ public class VNPlusCharacter : MonoBehaviour
     private TweenInfo nameHighlightTween;
     private TweenInfo rightHighlightTween;
     private TweenInfo leftHighlightTween;
+
+    private Vector2 currentPivot = Vector2.negativeInfinity;
     private bool Flipped
     {
         get => poseImage.transform.localScale.x == -1;
@@ -126,6 +131,12 @@ public class VNPlusCharacter : MonoBehaviour
         if (data.expressions.ContainsKey(expr))
         {
             expressionImage.sprite = data.expressions[expr];
+
+            if(currentPivot == Vector2.negativeInfinity)
+            {
+                UpdateSpritePivot(expressionImage.sprite);
+                UpdateSpritePosition();
+            }
             // Set Save data
         }
         else
@@ -140,18 +151,24 @@ public class VNPlusCharacter : MonoBehaviour
         {
             var poseData = data.poses[pose];
             poseImage.sprite = poseData.pose;
+
             // Set flipped
             CharacterData.FacingDirection facing = data.defaultFacingDirection;
             Flipped = facing == CharacterData.FacingDirection.Right && Column == DialogViewVNPlus.CharacterColumn.Right
                 || facing == CharacterData.FacingDirection.Left && Column == DialogViewVNPlus.CharacterColumn.Left;
-            // Set position
-            float xValue = Flipped ? Mathf.Abs(1 - poseData.xCenterNormalized) : poseData.xCenterNormalized;
-            if(Column == DialogViewVNPlus.CharacterColumn.Left)
+
+
+            if (poseImage.sprite != null)
             {
-                xValue += leftColAdjustment;
+                poseImage.enabled = true;
+                UpdateSpritePivot(poseImage.sprite);
+                UpdateSpritePosition();
             }
-            poseImage.rectTransform.anchorMin = new Vector2(xValue, poseData.yHeadTopNormalized);
-            poseImage.rectTransform.anchorMax = new Vector2(xValue, poseData.yHeadTopNormalized);
+            else
+            {
+                poseImage.enabled = false;
+            }
+            
             // Set save data
 
         }
@@ -184,4 +201,58 @@ public class VNPlusCharacter : MonoBehaviour
         joinTween.Start(mainRect.DOScaleY(0, joinTween.Time));
         return joinTween;
     }
+
+    private void UpdateSpritePivot(Sprite spriteToUse)
+    {
+        currentPivot = new Vector2()
+        {
+            x = spriteToUse.pivot.x / spriteToUse.rect.width,
+            y = spriteToUse.pivot.y / spriteToUse.rect.height
+        };
+        Debug.Log(data.mainAlias + ": " + spriteToUse.pivot.y + " " + spriteToUse.rect.height);
+    }
+
+    public void UpdateSpritePosition()
+    {
+        if(poseImage.sprite != null)
+        {
+            UpdateSpritePivot(poseImage.sprite);
+        }
+        else if (expressionImage.sprite != null)
+        {
+            UpdateSpritePivot(expressionImage.sprite);
+        }
+        else
+        {
+            return;
+        }
+        CharacterRect.anchoredPosition = GetSpriteOffset();
+    }
+
+    private Vector2 GetSpriteOffset()
+    {
+        float xOffset = Mathf.Abs(0.5f - currentPivot.x) * mainRect.sizeDelta.x * (Flipped ? -1 : 1);
+        if(currentPivot.x > 0.5f)
+        {
+            xOffset *= -1;
+        }
+        if(Column == DialogViewVNPlus.CharacterColumn.Left)
+        {
+            xOffset += (leftColAdjustment * mainRect.sizeDelta.x);
+        }
+        float yOffset = CalculateSpriteYOffset();
+        return new Vector2(xOffset, yOffset);
+    }
+
+    public float CalculateSpriteYOffset(float targetHeight = 0f)
+    {
+        float heightDiff = targetHeight > 0f ? poseImage.rectTransform.sizeDelta.y - targetHeight
+                                             : poseImage.rectTransform.sizeDelta.y - mainRect.sizeDelta.y;
+
+        float intensity = characterYOffsetIntensityCurve.Evaluate(currentPivot.y < 0.75f ? 1f : (heightDiff / poseImage.rectTransform.sizeDelta.y));
+
+        return heightDiff > 0f ? poseImage.rectTransform.sizeDelta.y * (1.0f - currentPivot.y) * intensity : 0f;
+    }
+
+     
 }
