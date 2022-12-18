@@ -17,6 +17,7 @@ public class DialogViewBubble : DialogView
     private readonly List<Vector2> initialPositions = new List<Vector2>(6);
     private Vector2Int lastBoxPosition = nullGridPos;
     private Vector2 lastBoxAbsolutePosition = nullAbsolutePos;
+    private CharacterData lastCharacterData = null;
 
     public override bool ReadyToContinue => readyToContinue;
     private bool readyToContinue = true;
@@ -72,19 +73,21 @@ public class DialogViewBubble : DialogView
     {
         var bubbleData = data as DialogItemBubble;
         var dialogBox = GetBoxFromGrid(bubbleData.GridPosition);
-
+        var dialogBoxUI = dialogBox.GetComponent<BubbleDialogBoxUI>();
+        var character = bubbleData.CharacterData.Count > 0 ? bubbleData.CharacterData[0] : null; 
         // If same position and box, just continue playing in that box
-        if(bubbleData.GridPosition == lastBoxPosition && bubbleData.AbsolutePosition == lastBoxAbsolutePosition)
+        if (bubbleData.GridPosition == lastBoxPosition && bubbleData.AbsolutePosition == lastBoxAbsolutePosition && character == lastCharacterData)
         {
+            dialogBoxUI.Refresh();
             dialogBox.SetupAndStartDialogBox(data);
             return dialogBox;
         }
         // Else, hide last box and show new box
-        StartCoroutine(AnimateNewMessageIn(dialogBox, bubbleData, bubbleData.GridPosition, bubbleData.AbsolutePosition));
+        StartCoroutine(AnimateNewMessageIn(dialogBox, character, dialogBoxUI, bubbleData, bubbleData.GridPosition, bubbleData.AbsolutePosition));
         return dialogBox;
     }
 
-    private IEnumerator AnimateNewMessageIn(DialogBox box, DialogItem data, Vector2Int gridPos, Vector2 absPos)
+    private IEnumerator AnimateNewMessageIn(DialogBox box, CharacterData character, BubbleDialogBoxUI ui, DialogItem data, Vector2Int gridPos, Vector2 absPos)
     {
         readyToContinue = false;
         if (lastBoxPosition != nullGridPos)
@@ -97,9 +100,11 @@ public class DialogViewBubble : DialogView
         }
         lastBoxPosition = gridPos;
         lastBoxAbsolutePosition = absPos;
+        lastCharacterData = character;
 
         // Setup dialog box
         box.SetupDialogBox(data);
+        ui.Bind(character);
 
         // Enable ans start new dialog box
         box.transform.localScale = Vector2.zero;

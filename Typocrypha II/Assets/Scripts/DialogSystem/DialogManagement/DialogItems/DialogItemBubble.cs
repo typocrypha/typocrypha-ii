@@ -8,11 +8,13 @@ using UnityEngine;
 /// </summary>
 public class DialogItemBubble : DialogItem
 {
+    public List<CharacterData> CharacterData { get; }
     public Vector2Int GridPosition { get; set; }
     public Vector2 AbsolutePosition { get; set; }
 
-    public DialogItemBubble(string text, List<AudioClip> voice, Vector2Int gridPosition, Vector2 absolutePosition) : base(text, voice)
+    public DialogItemBubble(string text, List<AudioClip> voice, List<CharacterData> characterData, Vector2Int gridPosition, Vector2 absolutePosition) : base(text, voice)
     {
+        CharacterData = characterData;
         GridPosition = gridPosition;
         AbsolutePosition = absolutePosition;
     }

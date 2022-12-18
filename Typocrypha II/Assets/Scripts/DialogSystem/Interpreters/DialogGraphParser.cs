@@ -163,7 +163,7 @@ public class DialogGraphParser : MonoBehaviour
             else if (currNode is DialogNodeBubble)
             {
                 var dNode = currNode as DialogNodeBubble;
-                var ditem = new DialogItemBubble(dNode.text, voice, dNode.gridPosition, dNode.absolutePosition);
+                var ditem = new DialogItemBubble(dNode.text, voice, cds, dNode.gridPosition, dNode.absolutePosition);
                 return ditem;
             }    
         }
