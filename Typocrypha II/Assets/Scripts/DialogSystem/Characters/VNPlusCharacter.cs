@@ -209,7 +209,6 @@ public class VNPlusCharacter : MonoBehaviour
             x = spriteToUse.pivot.x / spriteToUse.rect.width,
             y = spriteToUse.pivot.y / spriteToUse.rect.height
         };
-        Debug.Log(data.mainAlias + ": " + spriteToUse.pivot.y + " " + spriteToUse.rect.height);
     }
 
     public void UpdateSpritePosition()
