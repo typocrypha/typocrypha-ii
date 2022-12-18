@@ -71,7 +71,7 @@ public class DialogContinueIndicator : MonoBehaviour
             .SetEase(Ease.InOutSine)
             .SetLoops(-1, LoopType.Yoyo)
             .id;
-        activeScaleTween = continueIndicator.rectTransform.localScale;
+        originalIndicatorScale = continueIndicator.rectTransform.localScale;
         activeScaleTween = continueIndicator.rectTransform.DOScaleY(scaleYAmount, animationDuration)
             .SetEase(Ease.InOutSine)
             .SetLoops(-1, LoopType.Yoyo)
