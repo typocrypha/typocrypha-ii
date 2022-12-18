@@ -189,6 +189,7 @@ public class DialogViewVNPlus : DialogView
         newCharacter.Data = data;
         newCharacter.NameText = data.mainAlias;
         characterMap.Add(data.name, newCharacter);
+        newCharacter.UpdateSpritePosition();
     }
 
     private IEnumerator AddCharacterCR(CharacterData data, CharacterColumn column)
@@ -269,6 +270,7 @@ public class DialogViewVNPlus : DialogView
         {
             var chara = characterList[i];
             tweenInfo.Start(chara.MainRect.DOSizeDelta(new Vector2(chara.MainRect.sizeDelta.x, newHeight), tweenInfo.Time), false);
+            tweenInfo.Start(chara.CharacterRect.DOAnchorPosY(chara.CalculateSpriteYOffset(newHeight), tweenInfo.Time), false);
         }
     }
 
