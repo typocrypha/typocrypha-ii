@@ -15,7 +15,7 @@ namespace ATB3
     {
         public static ATBManager instance;
 
-        public bool HasReadyAllies => Battlefield.instance.Actors.Any((a) => a is ATBAlly && (a as ATBAlly).allyMenu.CanCast);
+        public bool HasReadyAllies => Battlefield.instance.Actors.Any(a => a is ATBAlly ally && (ally.allyMenu?.CanCast ?? false));
 
         private void Awake()
         {

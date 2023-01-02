@@ -27,7 +27,7 @@ public class DialogViewBubble : DialogView
         initialPositions.Clear();
         foreach(var box in dialogBoxGrid)
         {
-            initialPositions.Add(box.transform.position);
+            initialPositions.Add(box.GetComponent<RectTransform>().anchoredPosition);
         }
     }
 
@@ -112,17 +112,17 @@ public class DialogViewBubble : DialogView
         box.StartDialogScroll();
         readyToContinue = true;
 
+        var rect = box.GetComponent<RectTransform>();
         // set position of new dialog box
         if (absPos != nullAbsolutePos) // absolute pos (in relative screen coords)
         {
             // Normalized World Positioning (Top Left)
             var res = new Vector2(1280, 720);
-            var rect = box.GetComponent<RectTransform>();
             rect.anchoredPosition = (absPos * res) - (rect.pivot * res);
         }
         else // fixed position
         {
-            box.transform.position = GetFixedPositionFromGrid(gridPos);
+            rect.anchoredPosition = GetFixedPositionFromGrid(gridPos);
         }
 
         // show new dialog box
