@@ -27,6 +27,11 @@ namespace ATB3
         public void OnPause(bool b)
         {
             enabled = !b;
+            var anim = Owner.GetComponent<Animator>();
+            if(anim != null)
+            {
+                anim.enabled = !b;
+            }
         }
         #endregion
         //----------------------------------------------------------------//
