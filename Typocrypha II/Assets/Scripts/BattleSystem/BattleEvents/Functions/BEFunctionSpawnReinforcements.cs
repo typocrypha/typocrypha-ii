@@ -8,6 +8,7 @@ public class BEFunctionSpawnReinforcements : BattleEventFunction
     public int number;
     public override void Run()
     {
+        Running = true;
         StartCoroutine(SpawnReinforcements());
     }
 
@@ -31,8 +32,10 @@ public class BEFunctionSpawnReinforcements : BattleEventFunction
                 break;
             var pos = RandomUtils.RandomU.instance.Choice(availableSpaces);
             availableSpaces.Remove(pos);
-            yield return StartCoroutine(BattleManager.instance.AddFieldObject(reinforcements[0], pos.Row, pos.Col, true));
+            var unit = reinforcements[0];
             reinforcements.RemoveAt(0);
+            yield return StartCoroutine(BattleManager.instance.AddFieldObject(unit, pos.Row, pos.Col, true));
         }
+        Running = false;
     }
 }

@@ -39,7 +39,17 @@ public class BattleEvent : MonoBehaviour, IPausable
     // Check conditions each frame.
     void Update()
     {
-        if (done) return;
+        if (done) 
+        {
+            return; 
+        }
+        foreach(var function in functions)
+        {
+            if (function.Running)
+            {
+                return;
+            }
+        }
         if (CheckAll()) RunAll();
     }
 

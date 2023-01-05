@@ -8,6 +8,8 @@ using UnityEngine;
 [RequireComponent(typeof(BattleEvent))]
 public abstract class BattleEventFunction : MonoBehaviour
 {
+    public bool Running { get; protected set; }
+
     protected BattleEvent battleEvent; // Battle event management code.
 
     protected void Awake()
