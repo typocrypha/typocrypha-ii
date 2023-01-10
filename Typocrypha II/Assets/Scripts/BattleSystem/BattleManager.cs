@@ -41,7 +41,7 @@ public class BattleManager : MonoBehaviour, IPausable
         }
         else
         {
-            Destroy(this);
+            Destroy(gameObject);
             return;
         }
         graphParser = GetComponent<BattleGraphParser>();

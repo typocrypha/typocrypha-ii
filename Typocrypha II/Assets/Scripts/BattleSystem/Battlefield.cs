@@ -88,7 +88,7 @@ public class Battlefield : MonoBehaviour, IPausable
         }
         else
         {
-            Destroy(this);
+            Destroy(gameObject);
             return;
         }
         ph = new PauseHandle(OnPause);
