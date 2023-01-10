@@ -15,7 +15,7 @@ public class AbilityDestroyIfHitByTag : CasterAbility
 
     public override void OnBeforeHitApplied(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults castResults)
     {
-        if (!effect.tags.Contains(tag) || castResults.Miss || !castResults.WillDealDamage || target.BStatus != Caster.BattleStatus.Normal)
+        if (!effect.tags.Contains(tag) || !castResults.WillDealDamage || target.BStatus != Caster.BattleStatus.Normal)
         {
             return;
         }

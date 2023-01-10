@@ -13,6 +13,7 @@ public abstract class BEConditionUnitHit : BattleEventCondition
     [SerializeField] private UnitSelectType selectionType;
     [SerializeField] private Battlefield.Position position;
     [SerializeField] private string unitName;
+    [SerializeField] private bool requireDamage = true;
 
     private bool conditionFulfilled;
 
@@ -73,6 +74,10 @@ public abstract class BEConditionUnitHit : BattleEventCondition
 
     private void CheckHitTopLevel(RootWordEffect effect, Caster caster, Caster self, RootCastData spellData, CastResults data)
     {
+        if((requireDamage && !data.WillDealDamage) || data.Miss)
+        {
+            return;
+        }
         if(CheckHit(effect, caster, self, spellData, data))
         {
             conditionFulfilled = true;
