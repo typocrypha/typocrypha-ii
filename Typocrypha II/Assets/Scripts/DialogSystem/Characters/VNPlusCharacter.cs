@@ -75,6 +75,7 @@ public class VNPlusCharacter : MonoBehaviour
 
     public CharacterData Data 
     {
+        get => data;
         set
         {
             if (data != null && data.name == value.name)

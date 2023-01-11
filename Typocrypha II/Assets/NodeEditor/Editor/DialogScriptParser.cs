@@ -466,6 +466,44 @@ public class DialogScriptParser : EditorWindow
             var bubbleNode = CreateNode(DialogNodeBubble.ID) as DialogNodeBubble;
             dnode = bubbleNode;
             //(dnode as DialogNodeBubble).multi = (exprs[0] == "multi");
+            // Pose / Expression Change
+            if (cds.Count > 0 && cds[0] != null)
+            {
+                if (exprs.Count > 0 && !string.IsNullOrWhiteSpace(exprs[0]))
+                {
+                    var exprData = exprs[0].Split(',');
+                    if (exprData.Length == 1)
+                    {
+                        // Just an expression setter
+                        var setExprNode = CreateNode(SetExpression.ID) as SetExpression;
+                        setExprNode.characterData = cds[0];
+                        setExprNode.expr = exprs[0];
+                        nodes.Add(setExprNode);
+                    }
+                    else if (exprData.Length == 2)
+                    {
+                        // Pose + expression
+                        var setPoseNode = CreateNode(SetPose.ID) as SetPose;
+                        setPoseNode.characterData = cds[0];
+                        setPoseNode.pose = exprData[0];
+                        nodes.Add(setPoseNode);
+
+                        // (Optional) expression change
+                        if (!string.IsNullOrWhiteSpace(exprData[1]))
+                        {
+                            var setExprNote = CreateNode(SetExpression.ID) as SetExpression;
+                            setExprNote.characterData = cds[1];
+                            setExprNote.expr = exprs[1];
+                            nodes.Add(setExprNote);
+                        }
+                    }
+                    else
+                    {
+                        throw new System.Exception($"Incorrect number of expr arguments ({exprData.Length}) for bubble dialog line");
+                    }
+                }
+            }
+            // Actual Dialog Node
             var coords = poses[0].Split(',');
             if (coords.Length == 1)
             {

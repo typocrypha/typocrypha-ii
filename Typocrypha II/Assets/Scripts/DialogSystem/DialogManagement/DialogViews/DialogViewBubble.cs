@@ -22,6 +22,11 @@ public class DialogViewBubble : DialogView
     public override bool ReadyToContinue => readyToContinue;
     private bool readyToContinue = true;
 
+    protected AllyBattleBoxManager CharacterManager => AllyBattleBoxManager.instance;
+    protected bool CharacterManagerUnavailable => CharacterManager == null;
+
+    protected bool IsBoxShowing => lastBoxPosition != nullGridPos;
+
     private void Awake()
     {
         initialPositions.Clear();
@@ -29,6 +34,12 @@ public class DialogViewBubble : DialogView
         {
             initialPositions.Add(box.GetComponent<RectTransform>().anchoredPosition);
         }
+    }
+
+    private void ResetLastBox()
+    {
+        lastBoxPosition = nullGridPos;
+        lastBoxAbsolutePosition = nullAbsolutePos;
     }
 
     private static int GridIndex(Vector2Int index)
@@ -90,13 +101,9 @@ public class DialogViewBubble : DialogView
     private IEnumerator AnimateNewMessageIn(DialogBox box, CharacterData character, BubbleDialogBoxUI ui, DialogItem data, Vector2Int gridPos, Vector2 absPos)
     {
         readyToContinue = false;
-        if (lastBoxPosition != nullGridPos)
+        if (IsBoxShowing)
         {
-            // hide last
-            var lastDialogBox = GetBoxFromGrid(lastBoxPosition);
-            showHideBoxTween.Start(lastDialogBox.transform.DOScale(Vector2.zero, showHideBoxTween.Time));
-            yield return showHideBoxTween.WaitForCompletion();
-            lastDialogBox.gameObject.SetActive(false);
+            yield return StartCoroutine(HideCurrentBox());
         }
         lastBoxPosition = gridPos;
         lastBoxAbsolutePosition = absPos;
@@ -130,6 +137,17 @@ public class DialogViewBubble : DialogView
         yield return showHideBoxTween.WaitForCompletion();
     }
 
+    private IEnumerator HideCurrentBox()
+    {
+        if (!IsBoxShowing)
+            yield break;
+        // hide Current
+        var currentBox = GetBoxFromGrid(lastBoxPosition);
+        showHideBoxTween.Start(currentBox.transform.DOScale(Vector2.zero, showHideBoxTween.Time));
+        yield return showHideBoxTween.WaitForCompletion();
+        currentBox.gameObject.SetActive(false);
+    }
+
     public override void CleanUp()
     {
         lastBoxPosition = nullGridPos;
@@ -138,5 +156,68 @@ public class DialogViewBubble : DialogView
         {
             box.gameObject.SetActive(false);
         }
+    }
+
+    public override bool AddCharacter(AddCharacterArgs args)
+    {
+        if(CharacterManagerUnavailable || CharacterManager.CurrentChar.Data == args.CharacterData)
+        {
+            return false;
+        }
+        if (isActiveAndEnabled)
+        {
+            readyToContinue = false;
+            StartCoroutine(AddCharacterCR(args.CharacterData));
+            return true;
+        }
+        CharacterManager.SetCharacterInstant(args.CharacterData);;
+        return false;
+    }
+
+    private IEnumerator AddCharacterCR(CharacterData data)
+    {
+        if (IsBoxShowing)
+        {
+            yield return StartCoroutine(HideCurrentBox());
+            ResetLastBox();
+        }
+        yield return CharacterManager.AddCharacter(data);
+        readyToContinue = true;
+    }
+
+    public override bool RemoveCharacter(CharacterData data)
+    {
+        if (CharacterManagerUnavailable)
+        {
+            return false;
+        }
+        readyToContinue = false;
+        StartCoroutine(RemoveCharacterCR());
+        return true;
+    }
+
+    private IEnumerator RemoveCharacterCR()
+    {
+        if (IsBoxShowing)
+        {
+            yield return StartCoroutine(HideCurrentBox());
+            ResetLastBox();
+        }
+        yield return CharacterManager.HideCharacter();
+        readyToContinue = true;
+    }
+
+    public override void SetExpression(CharacterData data, string expression)
+    {
+        if (CharacterManagerUnavailable)
+            return;
+        CharacterManager.SetExpression(expression);
+    }
+
+    public override void SetPose(CharacterData data, string pose)
+    {
+        if (CharacterManagerUnavailable)
+            return;
+        CharacterManager.SetPose(pose);
     }
 }

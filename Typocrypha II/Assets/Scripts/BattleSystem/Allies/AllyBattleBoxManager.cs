@@ -40,6 +40,8 @@ public class AllyBattleBoxManager : MonoBehaviour
 
     public YieldInstruction AddCharacter(CharacterData data)
     {
+        if (CurrentChar.Data == data)
+            return null;
         if (allCharactersHidden)
         {
             SetCharacterInstant(data);
@@ -87,6 +89,16 @@ public class AllyBattleBoxManager : MonoBehaviour
     private void PlayJoinLeaveTween(VNPlusCharacter chara, RectTransform target, bool complete)
     {
         joinTweenInfo.Start(chara.MainRect.DOAnchorPosX(target.anchoredPosition.x, joinTweenInfo.Time), complete);
+    }
+
+    public void SetExpression(string expression)
+    {
+        CurrentChar.SetExpression(expression);
+    }
+
+    public void SetPose(string pose)
+    {
+        CurrentChar.SetPose(pose);
     }
 
 }
