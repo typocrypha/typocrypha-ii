@@ -51,4 +51,26 @@ public class DialogViewVN : DialogView
     {
         // Does nothing.
     }
+
+    public override bool AddCharacter(AddCharacterArgs args)
+    {
+        DialogCharacterManager.instance.AddCharacter(args.CharacterData, args.AbsolutePosition);
+        return false;
+    }
+
+    public override bool RemoveCharacter(CharacterData data)
+    {
+        DialogCharacterManager.instance.RemoveCharacter(data);
+        return false;
+    }
+
+    public override void SetExpression(CharacterData data, string expression)
+    {
+        DialogCharacterManager.instance.ChangeExpression(data, expression);
+    }
+
+    public override void SetPose(CharacterData data, string pose)
+    {
+        DialogCharacterManager.instance.ChangePose(data, pose);
+    }
 }

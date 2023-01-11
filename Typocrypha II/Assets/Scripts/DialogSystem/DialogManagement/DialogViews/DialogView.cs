@@ -12,6 +12,7 @@ public abstract class DialogView : MonoBehaviour
     public GameObject dialogInputPrefab; // Dialog input prefab specific to view
 
     public virtual bool ReadyToContinue => true;
+    public bool IsReadyToContinue() => ReadyToContinue;
 
     /// <summary>
     /// Enable/Disable this dialog view. Does not disable others.
@@ -63,5 +64,40 @@ public abstract class DialogView : MonoBehaviour
     public virtual IEnumerator PlayExitAnimation()
     {
         yield break;
+    }
+
+    // Character control
+
+    public virtual bool AddCharacter(AddCharacterArgs args)
+    {
+        return false;
+    }
+
+    public virtual bool RemoveCharacter(CharacterData data)
+    {
+        return false;
+    }
+
+    public virtual void SetExpression(CharacterData data, string expression)
+    {
+
+    }
+
+    public virtual void SetPose(CharacterData data, string pose)
+    {
+
+    }
+
+    public class AddCharacterArgs
+    {
+        public CharacterData CharacterData { get; }
+        public DialogViewVNPlus.CharacterColumn Column { get; }
+        public Vector2 AbsolutePosition { get; }
+        public AddCharacterArgs(CharacterData data, DialogViewVNPlus.CharacterColumn column, Vector2 pos)
+        {
+            CharacterData = data;
+            Column = column;
+            AbsolutePosition = pos;
+        }
     }
 }

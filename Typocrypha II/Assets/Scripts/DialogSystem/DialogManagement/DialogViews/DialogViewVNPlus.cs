@@ -95,19 +95,18 @@ public class DialogViewVNPlus : DialogView
         }
     }
 
-    public bool IsReadyToContinue() => readyToContinue;
-
     #region Character Control
 
-    public void RemoveCharacter(CharacterData data)
+    public override bool RemoveCharacter(CharacterData data)
     {
         // If the character isn't in the scene, simply return
         if (!characterMap.ContainsKey(data.name))
         {
-            return;
+            return false; // don't wait for completion
         }
         readyToContinue = false;
         StartCoroutine(RmCharacterCR(characterMap[data.name], data.name));
+        return true; // Wait for completion
     }
     private IEnumerator RmCharacterCR(VNPlusCharacter character, string name)
     {
@@ -133,22 +132,21 @@ public class DialogViewVNPlus : DialogView
         readyToContinue = true;
     }
 
-    public void AddCharacter(CharacterData data, CharacterColumn column)
+    public override bool AddCharacter(AddCharacterArgs args)
     {
         // If the character is already in the scene, return
-        if (characterMap.ContainsKey(data.name))
+        if (characterMap.ContainsKey(args.CharacterData.name))
         {
-            return;
+            return false;
         }
         if (isActiveAndEnabled)
         {
             readyToContinue = false;
-            StartCoroutine(AddCharacterCR(data, column));
+            StartCoroutine(AddCharacterCR(args.CharacterData, args.Column));
+            return true;
         }
-        else
-        {
-            AddCharacterInstant(data, column);
-        }
+        AddCharacterInstant(args.CharacterData, args.Column);
+        return false;
     }
     private void AddCharacterInstant(CharacterData data, CharacterColumn column)
     {
