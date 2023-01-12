@@ -85,7 +85,7 @@ public class DialogGraphParser : MonoBehaviour
             else if (currNode is EndAndHide)
             {         
                 DialogCharacterManager.instance?.RemoveAllCharacters();
-                DialogManager.instance.Hide(DialogManager.instance.CleanUp);
+                DialogManager.instance.Hide(true, DialogManager.instance.CleanUp);
                 return null;
             }
             else if (currNode is EndAndGoto) // Immediately start new dialog graph.
@@ -97,7 +97,7 @@ public class DialogGraphParser : MonoBehaviour
             }
             else if (currNode is EndAndTransition) // Transitions scenes.
             {
-                DialogManager.instance.Hide(TransitionManager.instance.TransitionToNextScene);
+                DialogManager.instance.Hide(true, TransitionManager.instance.TransitionToNextScene);
                 return null;
             }
         }

@@ -220,4 +220,13 @@ public class DialogViewBubble : DialogView
             return;
         CharacterManager.SetPose(pose);
     }
+
+    public override IEnumerator PlayExitAnimation(bool isEndOfDialog)
+    {
+        if (isEndOfDialog)
+        {
+            yield break;
+        }
+        yield return StartCoroutine(RemoveCharacterCR());
+    }
 }

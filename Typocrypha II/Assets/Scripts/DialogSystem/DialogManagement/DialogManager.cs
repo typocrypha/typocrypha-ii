@@ -233,10 +233,10 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
             onComplete?.Invoke();
             return;
         }
-        StartCoroutine(ShowHideView(true, onComplete));
+        StartCoroutine(ShowView(onComplete));
     }
 
-    public void Hide(System.Action onComplete)
+    public void Hide(bool isEndOfDialog, System.Action onComplete)
     {
         PH.Pause = true;
         if (DialogView == null || DialogView.IsHidden)
@@ -244,22 +244,22 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
             onComplete?.Invoke();
             return;
         }
-        StartCoroutine(ShowHideView(false, onComplete));
+        StartCoroutine(HideView(isEndOfDialog, onComplete));
     }
 
-    private IEnumerator ShowHideView(bool show, System.Action onComplete)
+    private IEnumerator ShowView(System.Action onComplete)
     {
         readyToContinue = false;
-        if (show)
-        {
-            DialogView.gameObject.SetActive(true);
-            yield return DialogView.PlayEnterAnimation();
-        }
-        else
-        {
-            yield return DialogView.PlayExitAnimation();
-            DialogView.gameObject.SetActive(false);
-        }
+        DialogView.gameObject.SetActive(true);
+        yield return DialogView.PlayEnterAnimation();
+        readyToContinue = true;
+        onComplete?.Invoke();
+    }
+    private IEnumerator HideView(bool isEndOfDialog, System.Action onComplete)
+    {
+        readyToContinue = false;
+        yield return DialogView.PlayExitAnimation(isEndOfDialog);
+        DialogView.gameObject.SetActive(false);
         readyToContinue = true;
         onComplete?.Invoke();
     }
@@ -289,7 +289,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
         readyToContinue = false;
         if (lastView != null && !lastView.IsHidden)
         {
-            yield return lastView.PlayExitAnimation();
+            yield return lastView.PlayExitAnimation(false);
             lastView.gameObject.SetActive(false);
         }
         dialogView.gameObject.SetActive(true);

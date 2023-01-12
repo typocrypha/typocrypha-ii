@@ -468,7 +468,7 @@ public class DialogViewVNPlus : DialogView
         }
         yield return enterExitViewTween.WaitForCompletion();
     }
-    public override IEnumerator PlayExitAnimation()
+    public override IEnumerator PlayExitAnimation(bool isEndOfDialog)
     {
         contentRoot.localScale = new Vector3(contentRoot.localScale.x, 1, contentRoot.localScale.z);
         enterExitViewTween.Complete();

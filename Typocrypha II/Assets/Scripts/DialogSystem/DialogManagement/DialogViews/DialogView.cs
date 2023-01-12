@@ -64,7 +64,7 @@ public abstract class DialogView : MonoBehaviour
         yield break;
     }
 
-    public virtual IEnumerator PlayExitAnimation()
+    public virtual IEnumerator PlayExitAnimation(bool isEndOfDialog)
     {
         yield break;
     }
