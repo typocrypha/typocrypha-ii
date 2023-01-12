@@ -75,7 +75,6 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
 
         ph = new PauseHandle(OnPause);
         graphParser = GetComponent<DialogGraphParser>();
-        SetDefaultView();
     }
 
     void Start()
@@ -105,11 +104,6 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
         }
     }
 
-    private void SetDefaultView()
-    {
-        DialogView = GetView<DialogViewVNPlus>(); // Set to VN plus by default
-    }
-
     /// <summary>
     /// Start new dialog graph.
     /// May load save if applicable.
@@ -127,7 +121,6 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     private void StartDialog(bool reset = false)
     {
         PH.Pause = false;
-        SetDefaultView();
         graphParser.Init();
         if (reset)
         {
@@ -148,6 +141,8 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     private void ResetDialog()
     {
         dialogCounter = 0;
+        DialogView = null;
+        lastView = null;
     }
 
     /// <summary>
@@ -238,9 +233,9 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
 
     public void Hide(bool isEndOfDialog, System.Action onComplete)
     {
-        PH.Pause = true;
         if (DialogView == null || DialogView.IsHidden)
         {
+            PH.Pause = true;
             onComplete?.Invoke();
             return;
         }
@@ -250,6 +245,10 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     private IEnumerator ShowView(System.Action onComplete)
     {
         readyToContinue = false;
+        if (ShouldHideAllyBox)
+        {
+            yield return StartCoroutine(HideAllyBoxCr());
+        }
         DialogView.gameObject.SetActive(true);
         yield return DialogView.PlayEnterAnimation();
         readyToContinue = true;
@@ -260,9 +259,17 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
         readyToContinue = false;
         yield return DialogView.PlayExitAnimation(isEndOfDialog);
         DialogView.gameObject.SetActive(false);
+        if(isEndOfDialog && isBattle && AllyBattleBoxManager.instance != null && AllyBattleBoxManager.instance.AllCharactersHidden)
+        {
+            AllyBattleBoxManager.instance.ShowCharacter();
+            yield return new WaitForSeconds(0.5f);
+        }
         readyToContinue = true;
+        PH.Pause = true;
         onComplete?.Invoke();
     }
+
+    private bool ShouldHideAllyBox => isBattle && lastView == null && DialogView != GetView<DialogViewBubble>() && AllyBattleBoxManager.instance != null;
 
     /// <summary>
     /// Cleans up all dialog views (e.g. deletes old dialog boxes).
@@ -280,7 +287,18 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
         {
             return StartCoroutine(ChangeViews(null));
         }
+        else if(ShouldHideAllyBox)
+        {
+            return StartCoroutine(HideAllyBoxCr());
+        }
         return null;
+    }
+
+    private IEnumerator HideAllyBoxCr()
+    {
+        //yield return AllyBattleBoxManager.instance.HideCharacter();
+        AllyBattleBoxManager.instance.HideCharacter();
+        yield return new WaitForSeconds(0.2f);
     }
 
     // Hide all views except for current.
@@ -292,10 +310,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
             yield return lastView.PlayExitAnimation(false);
             lastView.gameObject.SetActive(false);
         }
-        dialogView.gameObject.SetActive(true);
-        yield return dialogView.PlayEnterAnimation();
-        readyToContinue = true;
-        callback?.Invoke();
+        yield return ShowView(callback); // callback will get called at the end of here
     }
 }
 

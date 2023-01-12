@@ -14,7 +14,7 @@ public class AllyBattleBoxManager : MonoBehaviour
 
     public VNPlusCharacter CurrentChar => rightColumnCharas[rightColumnIndex];
     private int rightColumnIndex = 0;
-    private bool allCharactersHidden = false;
+    public bool AllCharactersHidden { get; private set; } = false;
 
     // Toggle between 0 and 1
     private static int Toggle(int arg) => Mathf.Abs(arg - 1);
@@ -42,7 +42,7 @@ public class AllyBattleBoxManager : MonoBehaviour
     {
         if (CurrentChar.Data == data)
             return null;
-        if (allCharactersHidden)
+        if (AllCharactersHidden)
         {
             SetCharacterInstant(data);
             return ShowCharacter();
@@ -62,27 +62,25 @@ public class AllyBattleBoxManager : MonoBehaviour
 
     public YieldInstruction HideCharacter()
     {
-        if (allCharactersHidden)
+        if (AllCharactersHidden)
         {
             return null;
         }
         // Move current character offscreen
         PlayJoinLeaveTween(CurrentChar, offScreenPos, true);
-        // Reset values
-        rightColumnIndex = 0;
-        allCharactersHidden = true;
+        AllCharactersHidden = true;
         return joinTweenInfo.WaitForCompletion();
     }
 
     public YieldInstruction ShowCharacter()
     {
-        if (!allCharactersHidden)
+        if (!AllCharactersHidden)
         {
             return null;
         }
         // Move current character offscreen
         PlayJoinLeaveTween(CurrentChar, onScreenPos, true);
-        allCharactersHidden = false;
+        AllCharactersHidden = false;
         return joinTweenInfo.WaitForCompletion();
     }
 

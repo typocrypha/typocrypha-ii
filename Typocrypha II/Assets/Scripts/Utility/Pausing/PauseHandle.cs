@@ -13,6 +13,7 @@ public class PauseHandle
     OnPauseDel onPause; // Function called when paused/unpaused.
     int pauseCount = 0; // Number of nested pause states.
 
+    public bool IsPaused() => Pause;
     public bool Pause
     {
         get => pauseCount != 0;

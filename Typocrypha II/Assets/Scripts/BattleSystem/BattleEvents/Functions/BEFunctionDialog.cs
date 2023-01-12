@@ -13,14 +13,14 @@ public class BEFunctionDialog : BattleEventFunction
     public override void Run()
     {
         BattleManager.instance.PH.Pause = true;
-        DialogManager.instance.StartDialog(graph);
+        DialogManager.instance.StartDialog(graph, true);
         StartCoroutine(WaitForDialogEnd());
     }
 
     // Wait for dialog to end to unpause battle
     IEnumerator WaitForDialogEnd()
     {
-        yield return new WaitUntil(() => DialogManager.instance.PH.Pause);
+        yield return new WaitUntil(DialogManager.instance.PH.IsPaused);
         BattleManager.instance.PH.Pause = false;
     }
 }
