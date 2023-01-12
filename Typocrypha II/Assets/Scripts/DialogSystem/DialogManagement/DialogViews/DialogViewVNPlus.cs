@@ -53,6 +53,7 @@ public class DialogViewVNPlus : DialogView
 
     private readonly List<DialogBox> dialogBoxPool = new List<DialogBox>(maxMessages * (messagePrefabTypes + 1));
 
+    public override bool ShowImmediately => false;
 
     private void Awake()
     {

@@ -43,8 +43,18 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     [SerializeField] private List<DialogView> allViews; // All dialog views (VN, CHAT, etc)
     public UnityEvent onNextDialog; // Event called when a new dialog line is started.
     public UnityEvent onSkip; // Event called when user manually skips text scroll.
-    public DialogView DialogView => dialogView;
+    public DialogView DialogView
+    {
+        get => dialogView;
+        private set
+        {
+            if(dialogView == value) return;
+            lastView = dialogView;
+            dialogView = value;
+        }
+    }
     private DialogView dialogView; // Currently displayed dialog view.
+    private DialogView lastView; // Previously displayed dialog view.
     [HideInInspector] public IDialogBox dialogBox; // Latest displayed dialog box.
     [HideInInspector] public int dialogCounter = 0; // Number of dialog lines passed.
 
@@ -82,7 +92,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
         }
 #endif
         // Check if submit key is pressed
-        if (readyToContinue && dialogBox != null && dialogView.ReadyToContinue && Input.GetKeyDown(KeyCode.Space))
+        if (readyToContinue && dialogBox != null && DialogView.ReadyToContinue && Input.GetKeyDown(KeyCode.Space))
         {
             if (dialogBox.IsDone) // If dialog is done, go to next dialog
             {
@@ -97,7 +107,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
 
     private void SetDefaultView()
     {
-        dialogView = GetView<DialogViewVNPlus>(); // Set to VN plus by default
+        DialogView = GetView<DialogViewVNPlus>(); // Set to VN plus by default
     }
 
     /// <summary>
@@ -153,13 +163,14 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
         if ((dialogBox as DialogBox) != null) DisableOldTextEffects(dialogBox); 
         // Get and display proper view.
         DialogView view = GetView(dialogItem.GetView());
-        if (view != dialogView)
+        if (view != DialogView)
         {
-            StartCoroutine(ChangeViews(view, () => PlayNextDialog(dialogItem)));
+            DialogView = view;
+            StartCoroutine(ChangeViews(() => PlayNextDialog(dialogItem)));
         }
-        else if (!dialogView.isActiveAndEnabled)
+        else if (DialogView.IsHidden)
         {
-            Display(true, () => PlayNextDialog(dialogItem));
+            Show(() => PlayNextDialog(dialogItem));
         }
         else
         {
@@ -169,7 +180,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
 
     private void PlayNextDialog(DialogItem dialogItem)
     {
-        dialogBox = dialogView.PlayDialog(dialogItem); // Play Dialog
+        dialogBox = DialogView.PlayDialog(dialogItem); // Play Dialog
         onNextDialog.Invoke();
         dialogCounter++;
     }
@@ -207,15 +218,26 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     /// Show/Hide dialog UI/characters/etc.
     /// </summary>
     /// <param name="show">If true, display dialog. Otherwise, hide.</param>
-    public void Display(bool show, System.Action onComplete)
+    public void Show(System.Action onComplete)
     {
-        PH.Pause = !show;
-        if (dialogView == null || show == dialogView.isActiveAndEnabled)
+        PH.Pause = false;
+        if (DialogView == null || !DialogView.IsHidden)
         {
             onComplete?.Invoke();
             return;
         }
-        StartCoroutine(ShowHideView(show, onComplete));
+        StartCoroutine(ShowHideView(true, onComplete));
+    }
+
+    public void Hide(System.Action onComplete)
+    {
+        PH.Pause = true;
+        if (DialogView == null || DialogView.IsHidden)
+        {
+            onComplete?.Invoke();
+            return;
+        }
+        StartCoroutine(ShowHideView(false, onComplete));
     }
 
     private IEnumerator ShowHideView(bool show, System.Action onComplete)
@@ -223,13 +245,13 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
         readyToContinue = false;
         if (show)
         {
-            dialogView.gameObject.SetActive(true);
-            yield return dialogView.PlayEnterAnimation();
+            DialogView.gameObject.SetActive(true);
+            yield return DialogView.PlayEnterAnimation();
         }
         else
         {
-            yield return dialogView.PlayExitAnimation();
-            dialogView.gameObject.SetActive(false);
+            yield return DialogView.PlayExitAnimation();
+            DialogView.gameObject.SetActive(false);
         }
         readyToContinue = true;
         onComplete?.Invoke();
@@ -243,19 +265,26 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
         foreach (var view in allViews) view.CleanUp();
     }
 
+    public Coroutine SetView(System.Type viewType)
+    {
+        var view = GetView(viewType);
+        DialogView = view;
+        if (view.ShowImmediately)
+        {
+            return StartCoroutine(ChangeViews(null));
+        }
+        return null;
+    }
+
     // Hide all views except for current.
-    private IEnumerator ChangeViews(DialogView newView, System.Action callback)
+    private IEnumerator ChangeViews(System.Action callback)
     {
         readyToContinue = false;
-        if (dialogView.isActiveAndEnabled)
+        if (lastView != null && !lastView.IsHidden)
         {
-            if (dialogView != null)
-            {
-                yield return dialogView.PlayExitAnimation();
-            }
-            dialogView.gameObject.SetActive(false);
+            yield return lastView.PlayExitAnimation();
+            lastView.gameObject.SetActive(false);
         }
-        dialogView = newView;
         dialogView.gameObject.SetActive(true);
         yield return dialogView.PlayEnterAnimation();
         readyToContinue = true;

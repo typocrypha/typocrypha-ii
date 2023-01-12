@@ -45,15 +45,7 @@ public class DialogScriptParser : EditorWindow
     private const string prefabBgPath = "Assets/Prefabs/Backgrounds";
 
     // Dialog view labels.
-    Dictionary<string, System.Type> viewMap = new Dictionary<string, System.Type>
-    {
-        {"vn", typeof(DialogNodeVN) },
-        {"chat", typeof(DialogNodeChat) },
-        {"an", typeof(DialogNodeAN) },
-        {"bubble", typeof(DialogNodeBubble) },
-        {"input", typeof(DialogNodeInput) },
-        {"vnplus", typeof(DialogNodeVNPlus) }
-    };
+    Dictionary<string, System.Type> viewMap => SetDialogViewNode.viewMap;
 
     // General node labels.
     Dictionary<string, System.Type> nodeMap = new Dictionary<string, System.Type>
@@ -207,6 +199,7 @@ public class DialogScriptParser : EditorWindow
         {
             string[] dialogLine = line.Split(viewSwitchMarker, escape);
             currView = viewMap[dialogLine[1]];
+            nodes = ParseViewSwitchNode(dialogLine[1]);
         }
         else if (nodeMarker.Contains(line[0])) // General node.
         {
@@ -233,6 +226,15 @@ public class DialogScriptParser : EditorWindow
             }
         }
         return false;
+    }
+
+    List<Node> ParseViewSwitchNode(string viewName)
+    {
+        var nodes = new List<Node>();
+        var switchNode = CreateNode(SetDialogViewNode.Id) as SetDialogViewNode;
+        switchNode.viewName = viewName;
+        nodes.Add(switchNode);
+        return nodes;
     }
 
     // Parses a general node (not dialog) line. Returns constructed nodes.
@@ -392,7 +394,7 @@ public class DialogScriptParser : EditorWindow
                     ? displayName.Substring(1, displayName.Length - 2) 
                     : "";
         DialogNode dnode = null; // Node for dialog.
-        if (currView == typeof(DialogNodeVN) || currView == typeof(DialogNodeInput) || currView == typeof(DialogNodeVNPlus))
+        if (currView == typeof(DialogViewVN) || currView == typeof(DialogNodeInput) || currView == typeof(DialogViewVNPlus))
         {
             // Create expression and pose nodes
             for (int i = 0; i < cds.Count; i++)
@@ -439,7 +441,7 @@ public class DialogScriptParser : EditorWindow
                 dnode = CreateNode(DialogNodeVNPlus.ID) as DialogNodeVNPlus;
             }
         }
-        else if (currView == typeof(DialogNodeChat))
+        else if (currView == typeof(DialogViewChat))
         {
             // USE EXPRESSION TO CHANGE ICON (currently only 1 icon)
             dnode = CreateNode(DialogNodeChat.ID) as DialogNodeChat;
@@ -457,11 +459,11 @@ public class DialogScriptParser : EditorWindow
                 (dnode as DialogNodeChat).rightIcon = cds[0].chat_icon;
             }
         }
-        else if (currView == typeof(DialogNodeAN))
+        else if (currView == typeof(DialogViewAN))
         {
             dnode = CreateNode(DialogNodeAN.ID) as DialogNodeAN;
         }
-        else if (currView == typeof(DialogNodeBubble))
+        else if (currView == typeof(DialogViewBubble))
         {
             var bubbleNode = CreateNode(DialogNodeBubble.ID) as DialogNodeBubble;
             dnode = bubbleNode;

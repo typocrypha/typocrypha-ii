@@ -11,8 +11,11 @@ public abstract class DialogView : MonoBehaviour
     public GameObject dialogBoxPrefab; // Dialog box prefab specific to view
     public GameObject dialogInputPrefab; // Dialog input prefab specific to view
 
+    public bool IsHidden => !isActiveAndEnabled;
     public virtual bool ReadyToContinue => true;
     public bool IsReadyToContinue() => ReadyToContinue;
+
+    public virtual bool ShowImmediately => true;
 
     /// <summary>
     /// Enable/Disable this dialog view. Does not disable others.

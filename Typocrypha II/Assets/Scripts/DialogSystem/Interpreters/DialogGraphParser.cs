@@ -85,7 +85,7 @@ public class DialogGraphParser : MonoBehaviour
             else if (currNode is EndAndHide)
             {         
                 DialogCharacterManager.instance?.RemoveAllCharacters();
-                DialogManager.instance.Display(false, DialogManager.instance.CleanUp);
+                DialogManager.instance.Hide(DialogManager.instance.CleanUp);
                 return null;
             }
             else if (currNode is EndAndGoto) // Immediately start new dialog graph.
@@ -97,7 +97,7 @@ public class DialogGraphParser : MonoBehaviour
             }
             else if (currNode is EndAndTransition) // Transitions scenes.
             {
-                DialogManager.instance.Display(false, TransitionManager.instance.TransitionToNextScene);
+                DialogManager.instance.Hide(TransitionManager.instance.TransitionToNextScene);
                 return null;
             }
         }
@@ -166,6 +166,12 @@ public class DialogGraphParser : MonoBehaviour
                 var ditem = new DialogItemBubble(dNode.text, voice, cds, dNode.gridPosition, dNode.absolutePosition);
                 return ditem;
             }    
+        }
+        else if (currNode is SetDialogViewNode)
+        {
+            var dialogViewNode = currNode as SetDialogViewNode;
+            StartCoroutine(WaitOnRoutine(DialogManager.instance.SetView(dialogViewNode.ViewType)));
+            return null;
         }
         else if (currNode is SetVariableNode)
         {
@@ -315,6 +321,13 @@ public class DialogGraphParser : MonoBehaviour
     IEnumerator WaitOnFunc(System.Func<bool> isComplete)
     {
         yield return new WaitUntil(isComplete);
+        DialogManager.instance.PH.Pause = false;
+        DialogManager.instance.NextDialog(true);
+    }
+
+    IEnumerator WaitOnRoutine(Coroutine routine)
+    {
+        yield return routine;
         DialogManager.instance.PH.Pause = false;
         DialogManager.instance.NextDialog(true);
     }
