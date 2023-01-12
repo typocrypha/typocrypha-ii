@@ -170,7 +170,14 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
         }
         else if (DialogView.IsHidden)
         {
-            Show(() => PlayNextDialog(dialogItem));
+            if (lastView == null || lastView.IsHidden)
+            {
+                Show(() => PlayNextDialog(dialogItem));
+            }
+            else
+            {
+                StartCoroutine(ChangeViews(() => PlayNextDialog(dialogItem)));
+            }
         }
         else
         {
