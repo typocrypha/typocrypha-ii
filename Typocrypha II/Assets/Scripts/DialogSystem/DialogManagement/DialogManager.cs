@@ -259,17 +259,23 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
         readyToContinue = false;
         yield return DialogView.PlayExitAnimation(isEndOfDialog);
         DialogView.gameObject.SetActive(false);
-        if(isEndOfDialog && isBattle && AllyBattleBoxManager.instance != null && AllyBattleBoxManager.instance.AllCharactersHidden)
+        if(isEndOfDialog && isBattle && AllyBattleBoxManager.instance != null)
         {
-            AllyBattleBoxManager.instance.ShowCharacter();
-            yield return new WaitForSeconds(0.5f);
+            if(AllyBattleBoxManager.instance.ShowBattleAlly() != null)
+            {
+                yield return new WaitForSeconds(0.5f);
+            }
         }
         readyToContinue = true;
         PH.Pause = true;
         onComplete?.Invoke();
     }
 
-    private bool ShouldHideAllyBox => isBattle && lastView == null && DialogView != GetView<DialogViewBubble>() && AllyBattleBoxManager.instance != null;
+    private bool ShouldHideAllyBox => isBattle 
+                                   && lastView == null 
+                                   && DialogView != GetView<DialogViewBubble>() 
+                                   && AllyBattleBoxManager.instance != null 
+                                   && AllyBattleBoxManager.instance.HasActiveCharacter;
 
     /// <summary>
     /// Cleans up all dialog views (e.g. deletes old dialog boxes).
@@ -296,9 +302,10 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
 
     private IEnumerator HideAllyBoxCr()
     {
-        //yield return AllyBattleBoxManager.instance.HideCharacter();
-        AllyBattleBoxManager.instance.HideCharacter();
-        yield return new WaitForSeconds(0.2f);
+        if(AllyBattleBoxManager.instance.HideCharacter() != null)
+        {
+            yield return new WaitForSeconds(0.2f);
+        }
     }
 
     // Hide all views except for current.

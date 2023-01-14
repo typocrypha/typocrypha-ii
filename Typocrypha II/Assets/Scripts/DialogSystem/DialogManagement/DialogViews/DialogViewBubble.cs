@@ -160,7 +160,7 @@ public class DialogViewBubble : DialogView
 
     public override bool AddCharacter(AddCharacterArgs args)
     {
-        if(CharacterManagerUnavailable || CharacterManager.CurrentChar.Data == args.CharacterData)
+        if(CharacterManagerUnavailable || CharacterManager.IsCurrentCharacter(args.CharacterData))
         {
             return false;
         }

@@ -12,41 +12,45 @@ public class AllyBattleBoxManager : MonoBehaviour
     [SerializeField] private RectTransform offScreenPos;
     [SerializeField] private TweenInfo joinTweenInfo;
 
+    public bool HasActiveCharacter => !AllCharactersHidden && CurrentChar.Data != null;
     public VNPlusCharacter CurrentChar => rightColumnCharas[rightColumnIndex];
     private int rightColumnIndex = 0;
     public bool AllCharactersHidden { get; private set; } = false;
+    public CharacterData BattleAllyData { get; set; }
+
+    public bool IsCurrentCharacter(CharacterData data)
+    {
+        return HasActiveCharacter && CurrentChar.Data == data;
+    }
 
     // Toggle between 0 and 1
     private static int Toggle(int arg) => Mathf.Abs(arg - 1);
 
     private void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
+        if (instance != null)
         {
             Destroy(gameObject);
             return;
         }
+        instance = this;
     }
 
     public void SetCharacterInstant(CharacterData data)
     {
         CurrentChar.Data = data;
-        CurrentChar.NameText = data.mainAlias;
+        CurrentChar.NameText = data?.mainAlias ?? "No Ally";
     }
 
     public YieldInstruction AddCharacter(CharacterData data)
     {
-        if (CurrentChar.Data == data)
-            return null;
         if (AllCharactersHidden)
         {
             SetCharacterInstant(data);
             return ShowCharacter();
         }
+        if (CurrentChar.Data == data)
+            return null;
         var oldChar = CurrentChar;
         // Set to ne character
         rightColumnIndex = Toggle(rightColumnIndex);
@@ -82,6 +86,11 @@ public class AllyBattleBoxManager : MonoBehaviour
         PlayJoinLeaveTween(CurrentChar, onScreenPos, true);
         AllCharactersHidden = false;
         return joinTweenInfo.WaitForCompletion();
+    }
+
+    public YieldInstruction ShowBattleAlly()
+    {
+        return AddCharacter(BattleAllyData);
     }
 
     private void PlayJoinLeaveTween(VNPlusCharacter chara, RectTransform target, bool complete)

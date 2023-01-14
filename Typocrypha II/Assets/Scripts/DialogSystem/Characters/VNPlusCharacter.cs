@@ -42,6 +42,9 @@ public class VNPlusCharacter : MonoBehaviour
     private TweenInfo nameHighlightTween;
     private TweenInfo rightHighlightTween;
     private TweenInfo leftHighlightTween;
+    private Color defaultNameplateOutlineColor;
+    private Color defaultNameplateTextColor;
+    private Color defaultNameplateColor;
 
     private Vector2 currentPivot = Vector2.negativeInfinity;
     private bool Flipped
@@ -62,6 +65,9 @@ public class VNPlusCharacter : MonoBehaviour
         nameHighlightTween = new TweenInfo(highlightTween);
         rightHighlightTween = new TweenInfo(frameDimTween);
         leftHighlightTween = new TweenInfo(frameDimTween);
+        defaultNameplateColor = nameplateBackground.color;
+        defaultNameplateTextColor = nameplateText.color;
+        defaultNameplateOutlineColor = nameplateOutline.color;
     }
 
     public string NameText 
@@ -78,20 +84,33 @@ public class VNPlusCharacter : MonoBehaviour
         get => data;
         set
         {
-            if (data != null && data.name == value.name)
+            if (data == value)
                 return;
             data = value;
-            SetPose(DialogCharacterManager.defaultPose);
-            SetExpression(DialogCharacterManager.defaultExpr);
-            nameplateText.color = data.characterColorDark;
-            nameplateOutline.color = data.characterColorDark;
+            if(value == null)
+            {
+                poseImage.enabled = false;
+                expressionImage.enabled = false;
+                nameplateBackground.color = defaultNameplateColor;
+                nameplateOutline.color = defaultNameplateOutlineColor;
+                nameplateText.color = defaultNameplateTextColor;
+            }
+            else
+            {
+                poseImage.enabled = true;
+                expressionImage.enabled = true;
+                SetPose(DialogCharacterManager.defaultPose);
+                SetExpression(DialogCharacterManager.defaultExpr);
+                nameplateText.color = data.characterColorDark;
+                nameplateOutline.color = data.characterColorDark;
 
-            Color nameplateCol = data.characterColorLight;
-            nameplateCol.a = nameplateBackgroundOpacity;
-            nameplateBackground.color = nameplateCol;
+                Color nameplateCol = data.characterColorLight;
+                nameplateCol.a = nameplateBackgroundOpacity;
+                nameplateBackground.color = nameplateCol;
 
-            leftHighlightImage.color = data.characterHighlightColorLeft;
-            rightHighlightImage.color = data.characterHighlightColorRight;
+                leftHighlightImage.color = data.characterHighlightColorLeft;
+                rightHighlightImage.color = data.characterHighlightColorRight;
+            }
         }
     }
     private CharacterData data;
@@ -128,55 +147,52 @@ public class VNPlusCharacter : MonoBehaviour
 
     public void SetExpression(string expression)
     {
+        if(data == null)
+        {
+            return;
+        }
         string expr = expression.ToLower().Replace("default", "normal");
-        if (data.expressions.ContainsKey(expr))
+        if (!data.expressions.ContainsKey(expr))
         {
-            expressionImage.sprite = data.expressions[expr];
-
-            if(currentPivot == Vector2.negativeInfinity)
-            {
-                UpdateSpritePivot(expressionImage.sprite);
-                UpdateSpritePosition();
-            }
-            // Set Save data
+            Debug.LogError($"{expr} is not a valid expression for {data.mainAlias}");
+            return;
         }
-        else
+        expressionImage.sprite = data.expressions[expr];
+        if (currentPivot == Vector2.negativeInfinity)
         {
-            Debug.LogError("No such expression:" + expr);
+            UpdateSpritePivot(expressionImage.sprite);
+            UpdateSpritePosition();
         }
+        // Set Save data
     }
 
     public void SetPose(string pose)
     {
-        if (data.poses.ContainsKey(pose))
+        if (data == null)
+            return;
+        if (!data.poses.ContainsKey(pose))
         {
-            var poseData = data.poses[pose];
-            poseImage.sprite = poseData.pose;
-
-            // Set flipped
-            CharacterData.FacingDirection facing = data.defaultFacingDirection;
-            Flipped = facing == CharacterData.FacingDirection.Right && Column == DialogViewVNPlus.CharacterColumn.Right
-                || facing == CharacterData.FacingDirection.Left && Column == DialogViewVNPlus.CharacterColumn.Left;
-
-
-            if (poseImage.sprite != null)
-            {
-                poseImage.enabled = true;
-                UpdateSpritePivot(poseImage.sprite);
-                UpdateSpritePosition();
-            }
-            else
-            {
-                poseImage.enabled = false;
-            }
-            
-            // Set save data
-
+            Debug.LogError($"{pose} is not a valid pose for {data.mainAlias}");
+            return;
+        }
+        var poseData = data.poses[pose];
+        poseImage.sprite = poseData.pose;
+        // Set flipped
+        CharacterData.FacingDirection facing = data.defaultFacingDirection;
+        Flipped = facing == CharacterData.FacingDirection.Right && Column == DialogViewVNPlus.CharacterColumn.Right
+            || facing == CharacterData.FacingDirection.Left && Column == DialogViewVNPlus.CharacterColumn.Left;
+        // Set sprite pivot and position
+        if (poseImage.sprite != null)
+        {
+            poseImage.enabled = true;
+            UpdateSpritePivot(poseImage.sprite);
+            UpdateSpritePosition();
         }
         else
         {
-            Debug.LogError("No such pose:" + pose);
+            poseImage.enabled = false;
         }
+        // Set save data
     }
 
     public void SetInitialPos(float yPos)
@@ -252,7 +268,5 @@ public class VNPlusCharacter : MonoBehaviour
         float intensity = characterYOffsetIntensityCurve.Evaluate(currentPivot.y < 0.75f ? 1f : (heightDiff / poseImage.rectTransform.sizeDelta.y));
 
         return heightDiff > 0f ? poseImage.rectTransform.sizeDelta.y * (1.0f - currentPivot.y) * intensity : 0f;
-    }
-
-     
+    }   
 }
