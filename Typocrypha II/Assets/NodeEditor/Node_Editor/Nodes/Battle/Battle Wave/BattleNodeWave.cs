@@ -39,6 +39,7 @@ namespace Gameflow
             battleField = new GOMatrix2D(2, 3);
             battleEvents = new List<GameObject>();
             reinforcements = new List<GameObject>();
+            clearFieldOptions = Battlefield.ClearOptions.ClearEnemies | Battlefield.ClearOptions.ClearObjects;
         }
 
         public override void NodeGUI()
