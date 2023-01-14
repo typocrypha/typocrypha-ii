@@ -21,16 +21,17 @@ namespace Gameflow
         public override string Title => "Battle Start";
 
         public GameObject player;
-        public int numWaves;
+        public string totalWaves;
         public TransitionType transitionType;
 
         public override void NodeGUI()
         {
             GUILayout.Space(3);
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Player", GUILayout.Width(40));
-            player = RTEditorGUI.ObjectField(player, false, GUILayout.Width(150));
+            GUILayout.Label("Player", GUILayout.Width(60));
+            player = RTEditorGUI.ObjectField(player, false, GUILayout.Width(125));
             GUILayout.EndHorizontal();
+            totalWaves = RTEditorGUI.TextField(new GUIContent("Total Waves"), totalWaves, null, GUILayout.Width(175));
             GUILayout.BeginHorizontal();
             GUILayout.EndHorizontal();
         }

@@ -22,7 +22,6 @@ public class BattleManager : MonoBehaviour, IPausable
     public static BattleManager instance = null;
     public BattleWave CurrWave { get; private set; }
     public GameObject[] stdBattleEvents;
-    // DEBUG (come up with something better later)
     public string totalWaves = string.Empty;
     public Canvas waveTransitionCanvas;
     public GameObject defaultWaveTransitionPrefab = null;
@@ -71,6 +70,7 @@ public class BattleManager : MonoBehaviour, IPausable
     public void StartBattle()
     {
         var startNode = graphParser.Init();
+        totalWaves = startNode.totalWaves;
         var player = Instantiate(startNode.player, transform).GetComponent<FieldObject>();
         Battlefield.instance.Add(player, new Battlefield.Position(1, 1));
         // TEMP CASTBAR HOOKUP
