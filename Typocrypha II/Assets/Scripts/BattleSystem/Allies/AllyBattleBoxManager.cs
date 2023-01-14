@@ -42,6 +42,11 @@ public class AllyBattleBoxManager : MonoBehaviour
         CurrentChar.NameText = data?.mainAlias ?? "No Ally";
     }
 
+    public void SetBattleAllyCharacterInstant()
+    {
+        SetCharacterInstant(BattleAllyData);
+    }
+
     public YieldInstruction AddCharacter(CharacterData data)
     {
         if (AllCharactersHidden)

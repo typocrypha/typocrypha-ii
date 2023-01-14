@@ -51,30 +51,37 @@ public class BattleManager : MonoBehaviour, IPausable
 
     private void Start()
     {
-        if (startOnStart) StartBattle();
+        if (startOnStart)
+        {
+            LoadBattle();
+            StartBattle();
+        }
     }
 
-    /// <summary>
-    /// Start new dialog graph.
-    /// </summary>
-    /// <param name="graph">Graph object to start.</param>
-    public void StartBattle(BattleCanvas graph)
-    {
-        graphParser.Graph = graph;
-        StartBattle();
-    }
-
-    /// <summary>
-    /// Start new dialog graph. Implicitly uses graph already in parser.
-    /// </summary>
-    public void StartBattle()
+    private void LoadBattle()
     {
         var startNode = graphParser.Init();
         totalWaves = startNode.totalWaves;
+        // Initialize Player
         var player = Instantiate(startNode.player, transform).GetComponent<FieldObject>();
         Battlefield.instance.Add(player, new Battlefield.Position(1, 1));
-        // TEMP CASTBAR HOOKUP
         Typocrypha.Keyboard.instance?.castBar.onCast.AddListener(player.GetComponent<Player>().CastString);
+        // Initialize ally character
+        AllyBattleBoxManager.instance.BattleAllyData = startNode.initialAllyData;
+        AllyBattleBoxManager.instance.SetBattleAllyCharacterInstant();
+    }
+
+    public void LoadBattle(BattleCanvas graph)
+    {
+        graphParser.Graph = graph;
+        LoadBattle();
+    }
+
+    /// <summary>
+    /// Start new battle graph. Uses graph set in parser by "LoadBattle"
+    /// </summary>
+    public void StartBattle()
+    {
         waveNum = 0;
         NextWave();
     }
@@ -87,12 +94,18 @@ public class BattleManager : MonoBehaviour, IPausable
     public void SetBattleEvents(IEnumerable<GameObject> eventObjects, bool pause = true, bool addStd = true)
     {
         // Add the standard battle events for this battle to the list
-        if(addStd)
+        if (addStd)
+        {
             foreach (var e in stdBattleEvents)
+            {
                 currEvents.Add(Instantiate(e).GetComponent<BattleEvent>());
+            }
+        }
         // Add the new battle events
         foreach (var e in eventObjects)
+        {
             currEvents.Add(Instantiate(e).GetComponent<BattleEvent>());
+        }
         // Pause all of the new battle events so they don't activate during the tarnsition
         //PH.Pause = pause;
     }

@@ -14,7 +14,7 @@ namespace Gameflow
             Swirl,
         }
 
-        public override Vector2 MinSize => new Vector2(200, 100);
+        public override Vector2 MinSize => new Vector2(250, 100);
 
         new public const string ID = "Battle Start Node";
         public override string GetID { get { return ID; } }
@@ -22,17 +22,25 @@ namespace Gameflow
 
         public GameObject player;
         public string totalWaves;
+        public CharacterData initialAllyData;
         public TransitionType transitionType;
 
         public override void NodeGUI()
         {
             GUILayout.Space(3);
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Player", GUILayout.Width(60));
+            GUILayout.Label("Player", GUILayout.Width(100));
             player = RTEditorGUI.ObjectField(player, false, GUILayout.Width(125));
             GUILayout.EndHorizontal();
-            totalWaves = RTEditorGUI.TextField(new GUIContent("Total Waves"), totalWaves, null, GUILayout.Width(175));
+
             GUILayout.BeginHorizontal();
+            GUILayout.Label("Total Waves", GUILayout.Width(100));
+            totalWaves = RTEditorGUI.TextField(totalWaves, GUILayout.Width(125));
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Ally Character", GUILayout.Width(100));
+            initialAllyData = RTEditorGUI.ObjectField(initialAllyData, false, GUILayout.Width(125));
             GUILayout.EndHorizontal();
         }
     }

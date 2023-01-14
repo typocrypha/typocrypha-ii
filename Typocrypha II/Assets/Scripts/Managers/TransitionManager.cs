@@ -103,10 +103,15 @@ public class TransitionManager : MonoBehaviour
             DialogManager.instance.StartDialog(dialogCanvas, true);
             yield return null;
         }
-        yield return loadingScreen.FinishLoading();
+        // Initialize Battle
         if (data.sceneData is BattleCanvas battleCanvas)
         {
-            BattleManager.instance.StartBattle(battleCanvas);
+            BattleManager.instance.LoadBattle(battleCanvas);
+        }
+        yield return loadingScreen.FinishLoading();
+        if (data.sceneData is BattleCanvas)
+        {
+            BattleManager.instance.StartBattle();
         }
     }
 
