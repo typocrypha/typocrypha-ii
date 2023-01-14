@@ -13,7 +13,7 @@ namespace Gameflow
 
         public GameflowStartNode getStartNode()
         {
-            return nodes.Find((node) => { return node is BattleStartNode; }) as GameflowStartNode;
+            return nodes.Find((node) => node is BattleStartNode) as GameflowStartNode;
         }
 
     }
