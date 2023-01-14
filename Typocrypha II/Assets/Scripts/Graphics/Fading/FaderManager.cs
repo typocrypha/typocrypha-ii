@@ -98,8 +98,12 @@ public class FaderManager : MonoBehaviour, IPausable
         FadeAll(0.5f, Color.black);
         foreach (var target in spell.AllTargets(fieldPos, targetPos).Where((a) => a != null))
         {
-            target.GetComponent<FaderGroup>().FadeAmount = 0f;
-            target.GetComponent<FaderGroup>().FadeColor = Color.black;
+            var fader = target.GetComponent<FaderGroup>();
+            if(fader != null)
+            {
+                fader.FadeAmount = 0f;
+                fader.FadeColor = Color.black;
+            }
         }
     }
 
