@@ -167,21 +167,21 @@ public class DialogViewBubble : DialogView
         if (isActiveAndEnabled)
         {
             readyToContinue = false;
-            StartCoroutine(AddCharacterCR(args.CharacterData, args.InitialPose, args.InitialExpression));
+            StartCoroutine(AddCharacterCR(args.CharacterData, args.InitialExpression, args.InitialPose));
             return true;
         }
-        CharacterManager.SetCharacterInstant(args.CharacterData, args.InitialPose, args.InitialExpression);
+        CharacterManager.SetCharacterInstant(args.CharacterData, args.InitialExpression, args.InitialPose);
         return false;
     }
 
-    private IEnumerator AddCharacterCR(CharacterData data, string initialPose, string initialExpr)
+    private IEnumerator AddCharacterCR(CharacterData data, string initialExpr, string initialPose)
     {
         if (IsBoxShowing)
         {
             yield return StartCoroutine(HideCurrentBox());
             ResetLastBox();
         }
-        yield return CharacterManager.AddCharacter(data, initialPose, initialExpr);
+        yield return CharacterManager.AddCharacter(data, initialExpr, initialPose);
         readyToContinue = true;
     }
 

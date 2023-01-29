@@ -45,7 +45,7 @@ public class AllyBattleBoxManager : MonoBehaviour
         instance = this;
     }
 
-    public void SetCharacterInstant(CharacterData data, string initialPose = "", string initialExpr = "")
+    public void SetCharacterInstant(CharacterData data, string initialExpr = "", string initialPose = "")
     {
         CurrentChar.Data = data;
         CurrentChar.NameText = data?.mainAlias ?? "No Ally";
@@ -65,26 +65,26 @@ public class AllyBattleBoxManager : MonoBehaviour
 
     public void SetBattleAllyCharacterInstant()
     {
-        SetCharacterInstant(BattleAllyData, battleAllyPose, battleAllyExpr);
+        SetCharacterInstant(BattleAllyData, battleAllyExpr, battleAllyPose);
     }
 
-    public YieldInstruction AddCharacter(CharacterData data, string initialPose = "", string initialExpr = "")
+    public YieldInstruction AddCharacter(CharacterData data, string initialExpr = "", string initialPose = "")
     {
         if (AllCharactersHidden)
         {
-            SetCharacterInstant(data, initialPose, initialExpr);
+            SetCharacterInstant(data, initialExpr, initialPose);
             return ShowCharacter();
         }
         if (CurrentChar.Data == data)
         {
             // Character data will be the same, but expression might be different
-            SetCharacterInstant(data, initialPose, initialExpr);
+            SetCharacterInstant(data, initialExpr, initialPose);
             return null;
         }
         var oldChar = CurrentChar;
         // Set to new character
         rightColumnIndex = Toggle(rightColumnIndex);
-        SetCharacterInstant(data, initialPose, initialExpr);
+        SetCharacterInstant(data, initialExpr, initialPose);
         // Set new Character to be layered above old one
         CurrentChar.transform.SetAsLastSibling();
         // Remove old character
@@ -120,7 +120,7 @@ public class AllyBattleBoxManager : MonoBehaviour
 
     public YieldInstruction ShowBattleAlly()
     {
-        return AddCharacter(BattleAllyData, battleAllyPose, battleAllyExpr);
+        return AddCharacter(BattleAllyData, battleAllyExpr, battleAllyPose);
     }
 
     private void PlayJoinLeaveTween(VNPlusCharacter chara, RectTransform target, bool complete)
