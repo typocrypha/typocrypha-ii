@@ -23,6 +23,8 @@ namespace Gameflow
         public GameObject player;
         public string totalWaves;
         public CharacterData initialAllyData;
+        public string initialAllyPose;
+        public string initialAllyExpr;
         public TransitionType transitionType;
 
         public override void NodeGUI()
@@ -41,6 +43,16 @@ namespace Gameflow
             GUILayout.BeginHorizontal();
             GUILayout.Label("Ally Character", GUILayout.Width(100));
             initialAllyData = RTEditorGUI.ObjectField(initialAllyData, false, GUILayout.Width(125));
+            GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(new GUIContent("Initial Ally Expr"), GUILayout.Width(100));
+            initialAllyExpr = RTEditorGUI.TextField(initialAllyExpr);
+            GUILayout.Space(5);
+            GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(new GUIContent("Initial Ally Pose"), GUILayout.Width(100));
+            initialAllyPose = RTEditorGUI.TextField(initialAllyPose);
+            GUILayout.Space(5);
             GUILayout.EndHorizontal();
         }
     }

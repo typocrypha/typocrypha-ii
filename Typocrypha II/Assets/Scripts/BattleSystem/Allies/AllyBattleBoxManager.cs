@@ -16,7 +16,16 @@ public class AllyBattleBoxManager : MonoBehaviour
     public VNPlusCharacter CurrentChar => rightColumnCharas[rightColumnIndex];
     private int rightColumnIndex = 0;
     public bool AllCharactersHidden { get; private set; } = false;
-    public CharacterData BattleAllyData { get; set; }
+    public CharacterData BattleAllyData { get; private set; }
+    private string battleAllyPose = "";
+    private string battleAllyExpr = "";
+
+    public void SetBattleAllyData(CharacterData data, string expr = "", string pose = "")
+    {
+        BattleAllyData = data;
+        battleAllyExpr = expr;
+        battleAllyPose = pose;
+    }
 
     public bool IsCurrentCharacter(CharacterData data)
     {
@@ -56,7 +65,7 @@ public class AllyBattleBoxManager : MonoBehaviour
 
     public void SetBattleAllyCharacterInstant()
     {
-        SetCharacterInstant(BattleAllyData);
+        SetCharacterInstant(BattleAllyData, battleAllyPose, battleAllyExpr);
     }
 
     public YieldInstruction AddCharacter(CharacterData data, string initialPose = "", string initialExpr = "")
@@ -67,7 +76,11 @@ public class AllyBattleBoxManager : MonoBehaviour
             return ShowCharacter();
         }
         if (CurrentChar.Data == data)
+        {
+            // Character data will be the same, but expression might be different
+            SetCharacterInstant(data, initialPose, initialExpr);
             return null;
+        }
         var oldChar = CurrentChar;
         // Set to new character
         rightColumnIndex = Toggle(rightColumnIndex);
@@ -107,7 +120,7 @@ public class AllyBattleBoxManager : MonoBehaviour
 
     public YieldInstruction ShowBattleAlly()
     {
-        return AddCharacter(BattleAllyData);
+        return AddCharacter(BattleAllyData, battleAllyPose, battleAllyExpr);
     }
 
     private void PlayJoinLeaveTween(VNPlusCharacter chara, RectTransform target, bool complete)
