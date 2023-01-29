@@ -282,7 +282,7 @@ public class DialogViewVNPlus : DialogView
         }
     }
 
-    public void SetExpression(CharacterData data, string expression)
+    public override void SetExpression(CharacterData data, string expression)
     {
         if (characterMap.ContainsKey(data.name))// Scene character
         {
@@ -290,7 +290,7 @@ public class DialogViewVNPlus : DialogView
         }
     }
 
-    public void SetPose(CharacterData data, string pose)
+    public override void SetPose(CharacterData data, string pose)
     {
         if (characterMap.ContainsKey(data.name))// Scene character
         {
