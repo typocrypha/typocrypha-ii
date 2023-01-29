@@ -263,6 +263,15 @@ public class DialogScriptParser : EditorWindow
             {
                 gnode.column = args[4].Trim().ToLower() == "left" ? DialogViewVNPlus.CharacterColumn.Left : DialogViewVNPlus.CharacterColumn.Right;
             }
+            if(args.Length == 6)
+            {
+                gnode.initialExpr = args[5];
+            }
+            else if(args.Length >= 7)
+            {
+                gnode.initialPose = args[5];
+                gnode.initialExpr = args[6];
+            }
             nodes.Add(gnode);
         }
         else if (nodeType == typeof(RemoveCharacter))

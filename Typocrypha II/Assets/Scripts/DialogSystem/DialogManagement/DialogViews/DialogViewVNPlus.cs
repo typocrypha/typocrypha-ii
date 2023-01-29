@@ -143,16 +143,16 @@ public class DialogViewVNPlus : DialogView
         if (isActiveAndEnabled)
         {
             readyToContinue = false;
-            StartCoroutine(AddCharacterCR(args.CharacterData, args.Column));
+            StartCoroutine(AddCharacterCR(args));
             return true;
         }
-        AddCharacterInstant(args.CharacterData, args.Column);
+        AddCharacterInstant(args);
         return false;
     }
-    private void AddCharacterInstant(CharacterData data, CharacterColumn column)
+    private void AddCharacterInstant(AddCharacterArgs args)
     {
         VNPlusCharacter newCharacter;
-        if (column == CharacterColumn.Right)
+        if (args.Column == CharacterColumn.Right)
         {
             if (rightCharacterList.Count > 0)
             {
@@ -168,7 +168,7 @@ public class DialogViewVNPlus : DialogView
             }
             newCharacter = InstantiateCharacter(leftCharacterPrefab, leftCharacterContainer, leftCharacterList);
         }
-        ProcessNewCharacter(newCharacter, data);
+        ProcessNewCharacter(newCharacter, args);
     }
 
     private void AdjustCharactersPreJoinInstant(RectTransform container, List<VNPlusCharacter> characterList)
@@ -182,19 +182,28 @@ public class DialogViewVNPlus : DialogView
         }
     }
 
-    private void ProcessNewCharacter(VNPlusCharacter newCharacter, CharacterData data)
+    private void ProcessNewCharacter(VNPlusCharacter newCharacter, AddCharacterArgs args)
     {
+        var data = args.CharacterData;
         HighlightCharacter(data);
         newCharacter.Data = data;
         newCharacter.NameText = data.mainAlias;
+        if (!string.IsNullOrEmpty(args.InitialPose))
+        {
+            newCharacter.SetPose(args.InitialPose);
+        }
+        if (!string.IsNullOrEmpty(args.InitialExpression))
+        {
+            newCharacter.SetExpression(args.InitialExpression);
+        }
         characterMap.Add(data.name, newCharacter);
         newCharacter.UpdateSpritePosition();
     }
 
-    private IEnumerator AddCharacterCR(CharacterData data, CharacterColumn column)
+    private IEnumerator AddCharacterCR(AddCharacterArgs args)
     {
         VNPlusCharacter newCharacter;
-        if (column == CharacterColumn.Right)
+        if (args.Column == CharacterColumn.Right)
         {
             if(rightCharacterList.Count > 0)
             {
@@ -210,7 +219,7 @@ public class DialogViewVNPlus : DialogView
             }
             newCharacter = InstantiateCharacter(leftCharacterPrefab, leftCharacterContainer, leftCharacterList);
         }
-        ProcessNewCharacter(newCharacter, data);
+        ProcessNewCharacter(newCharacter, args);
         yield return newCharacter.PlayJoinTween().WaitForCompletion();
         readyToContinue = true;
     }

@@ -183,7 +183,7 @@ public class DialogGraphParser : MonoBehaviour
             var currView = DialogManager.instance.DialogView;
             if (currNode is AddCharacter addNode)
             {
-                if(currView.AddCharacter(new DialogView.AddCharacterArgs(addNode.characterData, addNode.column, addNode.targetPos)))
+                if(currView.AddCharacter(new DialogView.AddCharacterArgs(addNode.characterData, addNode.column, addNode.targetPos, addNode.initialPose, addNode.initialExpr)))
                 {
                     StartCoroutine(WaitOnFunc(currView.IsReadyToContinue));
                     return null;

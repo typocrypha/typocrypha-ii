@@ -36,10 +36,22 @@ public class AllyBattleBoxManager : MonoBehaviour
         instance = this;
     }
 
-    public void SetCharacterInstant(CharacterData data)
+    public void SetCharacterInstant(CharacterData data, string initialPose = "", string initialExpr = "")
     {
         CurrentChar.Data = data;
         CurrentChar.NameText = data?.mainAlias ?? "No Ally";
+        if(data == null)
+        {
+            return;
+        }
+        if (!string.IsNullOrEmpty(initialPose))
+        {
+            CurrentChar.SetPose(initialPose);
+        }
+        if (!string.IsNullOrEmpty(initialExpr))
+        {
+            CurrentChar.SetExpression(initialExpr);
+        }
     }
 
     public void SetBattleAllyCharacterInstant()
@@ -47,19 +59,19 @@ public class AllyBattleBoxManager : MonoBehaviour
         SetCharacterInstant(BattleAllyData);
     }
 
-    public YieldInstruction AddCharacter(CharacterData data)
+    public YieldInstruction AddCharacter(CharacterData data, string initialPose = "", string initialExpr = "")
     {
         if (AllCharactersHidden)
         {
-            SetCharacterInstant(data);
+            SetCharacterInstant(data, initialPose, initialExpr);
             return ShowCharacter();
         }
         if (CurrentChar.Data == data)
             return null;
         var oldChar = CurrentChar;
-        // Set to ne character
+        // Set to new character
         rightColumnIndex = Toggle(rightColumnIndex);
-        SetCharacterInstant(data);
+        SetCharacterInstant(data, initialPose, initialExpr);
         // Set new Character to be layered above old one
         CurrentChar.transform.SetAsLastSibling();
         // Remove old character

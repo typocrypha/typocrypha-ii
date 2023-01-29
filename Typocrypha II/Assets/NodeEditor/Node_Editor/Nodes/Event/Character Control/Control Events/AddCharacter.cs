@@ -23,6 +23,9 @@ namespace Gameflow
 
         public DialogViewVNPlus.CharacterColumn column;
 
+        public string initialPose;
+        public string initialExpr;
+
         #region Tooltip Strings
         protected const string tooltipPos = "Where to position character (center pivot)";
         #endregion
@@ -47,6 +50,16 @@ namespace Gameflow
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             column = (DialogViewVNPlus.CharacterColumn)RTEditorGUI.EnumPopup(column);
+            GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(new GUIContent("Initial Expression"), GUILayout.Width(100));
+            initialExpr = RTEditorGUI.TextField(initialExpr);
+            GUILayout.Space(5);
+            GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(new GUIContent("Initial Pose"), GUILayout.Width(100));
+            initialPose = RTEditorGUI.TextField(initialPose);
+            GUILayout.Space(5);
             GUILayout.EndHorizontal();
             #endregion
         }

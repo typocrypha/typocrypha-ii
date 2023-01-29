@@ -96,11 +96,15 @@ public abstract class DialogView : MonoBehaviour
         public CharacterData CharacterData { get; }
         public DialogViewVNPlus.CharacterColumn Column { get; }
         public Vector2 AbsolutePosition { get; }
-        public AddCharacterArgs(CharacterData data, DialogViewVNPlus.CharacterColumn column, Vector2 pos)
+        public string InitialPose { get; }
+        public string InitialExpression { get; }
+        public AddCharacterArgs(CharacterData data, DialogViewVNPlus.CharacterColumn column, Vector2 pos, string pose, string expr)
         {
             CharacterData = data;
             Column = column;
             AbsolutePosition = pos;
+            InitialPose = pose;
+            InitialExpression = expr;
         }
     }
 }
