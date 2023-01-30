@@ -12,9 +12,7 @@ GameObject:
   - component: {fileID: 114990921970923566}
   - component: {fileID: 114132221231211062}
   - component: {fileID: 222281826632412072}
-  - component: {fileID: 114950130733708564}
   - component: {fileID: 2237199940858503603}
-  - component: {fileID: 935134062}
   - component: {fileID: 4918477729877518923}
   m_Layer: 5
   m_Name: ANDialogueBox
@@ -41,7 +39,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 482, y: -542}
-  m_SizeDelta: {x: 873, y: 52}
+  m_SizeDelta: {x: 873, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &114990921970923566
 MonoBehaviour:
@@ -55,11 +53,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a31c70beef8983941af16100efec3b8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogText: {fileID: 0}
+  dialogText: {fileID: 2850531111682813798}
   voiceAS:
-  - {fileID: 0}
+  - {fileID: 2237199940858503603}
   resizeTextBox: 1
+  textHolder: {fileID: 224549024265766654}
+  continueIndicator: {fileID: 0}
   hideText: {fileID: 4918477729877518923}
+  boxID: dialogBox
 --- !u!114 &114132221231211062
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88,35 +89,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1598601082375312}
   m_CullTransparentMesh: 0
---- !u!114 &114950130733708564
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1598601082375312}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
 --- !u!82 &2237199940858503603
 AudioSource:
   m_ObjectHideFlags: 0
@@ -213,26 +185,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &935134062
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1598601082375312}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1679637790, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: -1
-  m_PreferredWidth: -1
-  m_PreferredHeight: -1
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &4918477729877518923
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -245,8 +197,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff6430cfff7ff1041a624f65344c62be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  done: 0
   text: {fileID: 2850531111682813798}
   ind: 0000000000000000
+  Priority: 0
   color:
     serializedVersion: 2
     rgba: 0
