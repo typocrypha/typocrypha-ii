@@ -9,8 +9,12 @@ using DG.Tweening;
 /// </summary>
 public class DialogViewAN : DialogView
 {
+    private const int maxMessages = 10;
     [SerializeField] private RectTransform ANContent; // Content of scroll view
     [SerializeField] private Image background;
+
+    private readonly List<DialogBox> dialogBoxPool = new List<DialogBox>(maxMessages);
+    private readonly List<DialogBox> activeDialogBoxes = new List<DialogBox>(maxMessages);
 
     private void Awake()
     {
@@ -20,8 +24,24 @@ public class DialogViewAN : DialogView
     public override DialogBox PlayDialog(DialogItem data)
     {
         if (!IsDialogItemCorrectType(data, out DialogItemAN dialogItem))
-            return null;       
-        var dialogBox = Instantiate(dialogBoxPrefab, ANContent).GetComponent<DialogBox>();
+            return null;
+        if(activeDialogBoxes.Count >= maxMessages)
+        {
+            ClearLog();
+        }
+        DialogBox dialogBox;
+        if(dialogBoxPool.Count > 0)
+        {
+            dialogBox = dialogBoxPool[dialogBoxPool.Count - 1];
+            dialogBoxPool.RemoveAt(dialogBoxPool.Count - 1);
+            dialogBox.transform.SetAsLastSibling();
+            dialogBox.gameObject.SetActive(true);
+        }
+        else
+        {
+            dialogBox = Instantiate(dialogBoxPrefab, ANContent).GetComponent<DialogBox>();
+        }
+        activeDialogBoxes.Add(dialogBox);
         dialogBox.SetupAndStartDialogBox(dialogItem);
         return dialogBox;
     }
@@ -43,6 +63,7 @@ public class DialogViewAN : DialogView
 
     public override IEnumerator PlayExitAnimation(bool isEndOfDialog)
     {
+        ClearLog();
         var fadeOut = background.DOFade(0, 2);
         yield return fadeOut.WaitForCompletion();
     }
@@ -50,7 +71,12 @@ public class DialogViewAN : DialogView
     // Clear all AN dialogue (TODO)
     public void ClearLog()
     {
-        
+        foreach(var dialogBox in activeDialogBoxes)
+        {
+            dialogBox.gameObject.SetActive(false);
+            dialogBoxPool.Add(dialogBox);
+        }
+        activeDialogBoxes.Clear();
     }
 
     public override void CleanUp()
