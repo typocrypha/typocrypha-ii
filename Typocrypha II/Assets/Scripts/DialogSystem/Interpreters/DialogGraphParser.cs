@@ -293,6 +293,10 @@ public class DialogGraphParser : MonoBehaviour
         {
             DialogManager.instance.DialogView.SetLocationText(setLocationTextNode.text);
         }
+        else if (currNode is ClearNode clearNode)
+        {
+            DialogManager.instance.DialogView.CleanUp();
+        }
         // Check if need to wait on node to complete.
         if (currNode is ITimedNode)
         {

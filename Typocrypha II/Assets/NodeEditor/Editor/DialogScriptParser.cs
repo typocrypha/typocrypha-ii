@@ -65,6 +65,14 @@ public class DialogScriptParser : EditorWindow
         {"setpose", typeof(SetPose) },
         {"setlocation", typeof(SetLocationTextNode) },
         {"setlocationtext", typeof(SetLocationTextNode) },
+        {"clear", typeof(ClearNode) }
+    };
+
+    // Generic node ID map. types that have entries in this map and the nodeMap can be created without additional partsing code
+    // This should only be done with nodes that have no arguments
+    readonly Dictionary<System.Type, string> nodeIDMap = new Dictionary<System.Type, string>
+    {
+        {typeof(ClearNode), ClearNode.ID }
     };
 
     AnimationCurve bgmFadeIn = AnimationCurve.Constant(0,0,1);//AnimationCurve.EaseInOut(0, 0, 0.1, 1); // Default fade in curve
@@ -354,8 +362,18 @@ public class DialogScriptParser : EditorWindow
             gnode.text = args[1];
             nodes.Add(gnode);
         }
+        else
+        {
+            var gnode = CreateNodeGeneric(nodeType);
+            if(gnode != null)
+            {
+                nodes.Add(gnode);
+            }
+        }
         return nodes;
     }
+
+
 
     // Parses a single dialog line. Returns constructed nodes.
     List<Node> ParseDialogNode(string line)
@@ -555,6 +573,15 @@ public class DialogScriptParser : EditorWindow
         var gnode = Node.Create(id, Vector2.right * pos, canvas);
         pos += gnode.MinSize.x + nodeSpacing;
         return gnode;
+    }
+
+    private Node CreateNodeGeneric(System.Type nodeType)
+    {
+        if(!nodeIDMap.TryGetValue(nodeType, out var id))
+        {
+            return null;
+        }
+        return CreateNode(id);
     }
 
     private static string[] GetPathWithSubFolders(string path)
