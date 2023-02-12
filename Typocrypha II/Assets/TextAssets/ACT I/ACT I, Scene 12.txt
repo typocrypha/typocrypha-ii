@@ -1,184 +1,168 @@
 ﻿//Battle design details: https://docs.google.com/spreadsheets/d/1hu8UtqEBtk_WAL-sV_cMHarX_OTckF7_suagISN0cGE/edit#gid=0
-//Round 1: Don’t Stop Typing
+//Round 1: C-C-C-Combo!
 //Opening Dialog:
->start,ACT I-4-1-Opening
+>start,ACT I-12-1-Opening
 
 
 +vnplus
 
 
->addchar,Ayin,0,0,left
->addchar,Adelai,0,0,right
+>addchar,Ayin,0,0,left,nervous
+>addchar,Adelai,0,0,right,base,laughing
 
 
+Ayin(nervous): M-More demons?
 
 
-Narrator: Demons are pouring out of the train station.
+Illyia: Alright, I hope you’re done moping around “Leader!”
 
 
-Narrator: This doesn’t look good.
+Illyia(normal): You know how to use your scanner, right?
 
 
-Adelai(frustrated): We’re surrounded!
+Ayin(cheerful): Y-yes! I just have to hold SHIFT.
 
 
-Adelai(serious): ...
+Illyia: Good! You’ll need it.
 
 
-Adelai(serious): We need to break through. 
+Illyia(serious): These demons look like they have tough defenses.
 
 
-Adelai: I’ll take the ones in front, cover me!
-
-
-Ayin(nervous): I-I’ll try...!
+//Unlock multicasting
 
 
 >end
-//If player types and enters a spell successfully:
->start,ACT I-4-1-Success
+//When Ayin uses a single spell on Adderstone
+>start,ACT I-12-1-SingleSpell
+
+
++bubble
+
+
+Illyia[0,2](pissed): What do you think you’re doing?
+
+
+Illyia[0,2]: You won’t do any damage like that!
+
+
+Ayin[0,1]: I, Uh, what else am I supposed to do?
+
+
+Illyia[0,2](concerned): ... 
+
+
+Illyia[0,2]: Ya know, I’ve been meaning to ask.
+
+
+Illyia[0,2](serious): Why have you been just casting one spell at a time?
+
+
+Ayin[0,1](concerned): ...
+
+
+Ayin[0,1](ohfuck): I-Is that bad? 
+
+
+Illyia[0,2](concerned): ...
+
+
+Illyia[0,2](ashamed): I can’t believe you’re the leader instead of me...
+
+
+Illyia[0,2](serious): Just- Just try typing in multiple words before casting.
+
+
+>end
+//When Ayin uses a multi spell on Adderstone
+>start,ACT I-12-1-MultiSpell
+
+
++bubble
+
+
+Illyia[0,2](laughing): There ya go! Hey, maybe you’re not so bad after all!
+
+
+Illyia[0,2](normal): Using multiple words in a spell at once increases the effect of the spell words.
+
+
+Ayin[0,1](surprised): Wow!
+
+
+Ayin[0,1](squint): Are there any downsides?
+
+
+Illyia[0,2](laughing): No, not really! It’s basically free damage!
+
+
+Illyia[0,2](concerned): ...
+
+
+Illyia[0,2](ashamed): Weeell, your spells do still go on cooldown.
+
+
+Illyia[0,2]: ... and if you use the same spell word multiple times it goes on longer cooldown.
+
+
+Illyia[0,2](laughing): But, I never really have that issue, so you should be fine!
+
+
+Ayin[0,1]: ...
+
+
+Narrator[1,0]: When you multicast, the extra cooldown time can be seen in {c,highlight}orange{c}.
+
+
+Narrator[1,0]: Make sure to multicast responsibly!
+
+
+>end
+//Round 2: Triple Tap
+//Opening
+>start,ACT I-12-2-Opening
 
 
 +vnplus
 
 
->addchar,Ayin,0,0,left
+>addchar,Ayin,0,0,left,uncomfortable
+>addchar,Illyia,0,0,right,normal
 
 
->addchar,Adelai,0,0,right
+Ayin: Phew...
 
 
-Adelai(caring): Hey, so you can still fight after all!
+Illyia: You take care of the ones over there, “Leader?”
 
 
-Ayin(embarrassed): Somehow, haha...
+Ayin(nervoussmile): Y-yeah, somehow.
 
 
-Adelai(normal): OK, just keep on typing in those spells!
+Ayin(normal): How about you-
 
 
-Adelai(normal): And remember...
+Narrator: You see a large pile of incapacitated demon souls behind Illyia.
 
 
-+bubble
+Illyia(ashamed): There weren’t too many who came my way, to be honest.
 
 
->addchar,Adelai,0,0,right
+Ayin(ohfuck): I-I see...
 
 
-Adelai[0,2]: After you use a spell it goes on {c,ui-terms}cooldown.{c}
+Narrator: You’re very glad Illyia is on your side.
 
 
-Adelai[0,2]: You’ll have to {c,ui-terms}use different spells{c} until it recharges.
-
-
-Adelai[0,2]: Just keep using whatever’s highlighted in your {c,ui-terms}Spell List{c}--it should be located at the {c,ui-terms}bottom left of your Typocrypha interface.{c}
-
-
->end
-//Otherwise, after getting hit without attacking:
->start,ACT I-4-1-Hit
-
-
->addchar,Ayin,0,0,left
-
-
->addchar,Adelai,0,0,right
-
-
-+vnplus
-
-
-Adelai(serious): Ayin! What are you doing?
-
-
-Ayin(uncomfortable): I’m sorry I-
-
-
-Adelai(serious): Move out of the way!
-
-
-+bubble
-
-
->addchar,Adelai,0,0,right
-
-
-Adelai[0,2]: SWORD!
-
-
-// TODO: Changeling takes damage.
-
-
-Adelai[0,2]: Ayin, you have to {c,ui-terms}type the spells{c} into your Typocrypha! Remember?
-
-
-Adelai[0,2]: In the {c,ui-terms}bottom left of your Typocrypha interface{c} is your {c,ui-terms}Spell List.{c}
-
-
-Adelai[0,2]: Try typing in the spell “PUNCH” and then {c,ui-terms}press enter{c} to cast the spell!
-
-
-// TODO: Waits for player to cast a spell. Enemy is paused in meantime.
+Illyia(serious): But enough chatting. Here come some more!
 
 
 >end
-//Round 2: Table for Two
-//Opening Dialog:
->start,ACT I-4-2-Opening
 
 
-+vnplus
-
-
->addchar,Ayin,0,0,left
-
-
->addchar,Adelai,0,0,right
-
-
-Ayin(nervous): There’s more of them!
-
-
-Adelai(serious): You’ll have to use the targeting functionality of your Typocrypha, Ayin!
-
-
-+bubble
-
-
->addchar,Adelai,0,0,right
-
-
-Adelai[0,2]: {c,ui-terms}Use the arrow keys to move your target cursor{c} to one of those demons.
-
-
-Adelai[0,2]: Your spells only hit a single target, so you’ll have to beat them separately.
-
-
->end
-//After defeating one of the changelings:
->start,ACT I-4-2-Defeat changeling
-
-
-+bubble
-
-
->addchar,Adelai,0,0,right
-
-
-Adelai[0,2]: Good work, Ayin!
-
-
-Adelai[0,2]: Now retarget and finish off the other one!
-
-
-Adelai[0,2]: If it’s easier, you can also use the {c,ui-terms}tab key to cycle through targets.{c}
-
-
->end
-//Round 3: Three’s a Crowd
-//Opening Dialog:
->start,ACT I-4-3-Opening
+//Round 3: Haircut and Massage
+//Opening
+>start,ACT I-12-3-Opening
 
 
 +vnplus
@@ -187,129 +171,29 @@ Adelai[0,2]: If it’s easier, you can also use the {c,ui-terms}tab key to cycle
 >addchar,Ayin,0,0,left
 
 
->addchar,Adelai,0,0,right
+>addchar,Illyia,0,0,right,quietlyhappy
 
 
-Adelai(frustrated): Um, hey Ayin? I know these demons aren’t very strong, but...
+Ayin(normal): OK, I think I’m getting the hang of it.
 
 
-Adelai(teasing): Shouldn’t you use more spells than just PUNCH and KICK?
+Illyia(quietlyhappy): Hey, maybe you’re worth more than a distraction after all.
 
 
-Ayin(concerned): Wait, aren’t those the only ones I have?
+Ayin(sheepish): Th-Thanks?
 
 
-Adelai(serious): What.
+Illyia(serious): Little tip: these next demons are tough.
 
 
-Adelai(caring): ... OH! Ayin you still have your Typocrypha on CIVILIAN mode!
+Illyia: You do not want to get caught in their spells.
 
 
-Adelai: Here, let me just...
+Illyia(normal): So just remember: Go for the beard!
 
 
-+bubble
-
-
->addchar,Adelai,0,0,right
-
-
-Clarke[0,1]: Typocrypha mode switch: BATTLE mode.
-
-
-Adelai[0,2]: There!
-
-
-Ayin[0,1]: W-Woah! What do all these spells do?
-
-
-Adelai[0,2]: No time to explain! Just keep typing!!
+Ayin(ohfuck): The... The what?
 
 
 >end
-//Round 4: Right Back At Ya!
-//Opening Dialog:
->start,ACT I-4-4-Opening
-
-
-+vnplus
-
-
->addchar,Ayin,0,0,left
-
-
->addchar,Adelai,0,0,right
-
-
-Adelai(bffs4ever): See, you’re doing fine!
-
-
-Adelai(normal): Now that you have more spells, you can start looking out for opportunities to {c,ui-terms}Counter{c} enemy spells!
-
-
-Ayin(surprised): Counter?
-
-
-+bubble
-
-
->addchar,Adelai,0,0,right
-
-
-Adelai[0,2]: Whenever you see an enemy casting a spell that you also have, try hitting them with it!
-
-
-Adelai[0,2]: Like those Tanukis! When they start charging up a {c,ui-terms}LANCE{c} spell, use your own {c,ui-terms}LANCE{c} to stagger them!
-
-
-Adelai[0,2]: Your Typocrypha should highlight those opportunities in {c,highlight}Orange{c}, so just keep a lookout!
-
-
->end
-//When an enemy is stunned
->start,ACT I-4-4-Stun
-
-
-+bubble
-
-
->addchar,Adelai,0,0,right
-
-
-Adelai[0,2]: You {c,ui-terms}stunned{c} that demon, Ayin!
-
-
-Adelai[0,2]: Whenever you counter a demon or hit it with a weakness, it’ll get {c,ui-terms}staggered.{c}
-
-
-Adelai[0,2]: Keep on {c,ui-terms}staggering{c} a demon, and eventually you’ll {c,ui-terms}stun{c} them!
-
-
-Adelai[0,2]: {c,ui-terms}Stunned demons can’t use spells for a while{c}, leaving them open to attack!
-
-
-Adelai[0,2]: In your Typocrypha HUD, you can see how many times you have to stagger a demon to stun them in the {c,ui-terms}Shield icon.{c}
-
-
-Adelai[0,2]: Keeping your enemy stunned is a great way to do damage and also to protect yourself!
-
-
->end
-//Round 5: Demon-Wave Tactics
-//Opening Dialog:
->start,ACT I-4-5-Opening
-
-
-+bubble
-
-
->addchar,Adelai,0,0,right
-
-
-Adelai[0,2]: I think this is the last of them! 
-
-
-Adelai[0,2]: They’ll start swarming us out of desperation, so just keep taking them down!
-
-
->end
+//Round 4: Rock n' Roll

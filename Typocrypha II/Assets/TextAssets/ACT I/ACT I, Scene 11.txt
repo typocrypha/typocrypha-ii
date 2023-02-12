@@ -1,19 +1,13 @@
 ﻿>start,ACT I-11
 
 
->fade,out,0,0,0,0
++vnplus
 
 
 >setbg,Sprite,BgObscurianRuins
-
-
->addchar,Ayin,0,0,left
-
-
->fade,in,1,0,0,0
-
-
->addchar,Esaias,0,0,right
+>setlocation,Ruins
+>addchar,Ayin,0,0,left,concerned
+>addchar,Esaias,0,0,right,anxious
 
 
 Narrator: You pause for a moment, the adrenaline still pumping through your veins.
@@ -88,7 +82,7 @@ Narrator: In the distance, you see a shadowy figure approach.
 Niya: ...! Ayin[a]?
 
 
-Ayin: N-Niya?
+Ayin(surprisedbad): N-Niya?
 
 
 Narrator: Oh fuck.
@@ -97,13 +91,13 @@ Narrator: Oh fuck.
 Niya: Long time no see, traitor.
 
 
-Ayin: ...
+Ayin(nervous): ...
 
 
 Niya: What? Not even going to greet your own family?
 
 
-Ayin: Th-that’s not... I...
+Ayin(uncomfortable): Th-that’s not... I...
 
 
 Ayin: S-Sorry...
@@ -115,7 +109,7 @@ Niya: Hmph.
 Niya: ... How’s Ivan?
 
 
-Ayin: He-Uh, he’s fine.
+Ayin(serious): He-Uh, he’s fine.
 
 
 Ayin: W-What are you doing here anyways, Niya?
@@ -139,7 +133,7 @@ Niya: The question is, why are you here?
 Niya: You’re here to kill me, right? To kill all demons?
 
 
-Ayin: N-no! I don’t... I-I-
+Ayin(surprisedbad): N-no! I don’t... I-I-
 
 
 Niya: Please, save me the sob story.
@@ -154,10 +148,10 @@ Narrator: Niya pulls their mask over their face.
 Niya: Pick up your Typocrypha, Ayin.
 
 
-//TODO: Fake, battle UI comes up, but with no keyboard, with Niya in the center.
+//TODO: Fake battle UI comes up, but with no keyboard, with Niya in the center.
 
 
-Ayin: Niya, please, we don’t have to do this...
+Ayin(nervous): Niya, please, we don’t have to do this...
 
 
 Niya: Yes we do. You chose your side and I chose mine.
@@ -169,7 +163,7 @@ Niya: And now that you’re here, there can only be one outcome...
 Niya: Fight me, Ayin!
 
 
-Ayin: I... I can’t...
+Ayin(concerned): I... I can’t...
 
 
 Niya: ... Coward.
@@ -181,10 +175,10 @@ Niya: Fine. I’m done holding back.
 Narrator: Niya readies a spell, pointed right at you.
 
 
-Narrator: You close your eyes: In your mind, you deserve this.
+Narrator: You close your eyes: You deserve this.
 
 
->addchar,Illyia,0,0,left
+>addchar,Illyia,0,0,left,action,yell
 
 
 Illyia: SWORD!
@@ -208,16 +202,16 @@ Niya: Tch... I guess we’ll settle this another time.
 >removechar,Illyia
 
 
->addchar,Illyia,0,0,right
+>addchar,Illyia,0,0,right,base,serious
 
 
-Illyia: Damn demon...
+Illyia(serious): Damn demon...
 
 
-Illyia: Hey “Leader”, you OK?
+Illyia(concerned): Hey “Leader”, you OK?
 
 
-Ayin: I-Illyia? I... 
+Ayin(ohfuck): I-Illyia? I... 
 
 
 Narrator: Your breathing quickens. It’s happening again.
@@ -226,10 +220,10 @@ Narrator: Your breathing quickens. It’s happening again.
 Ayin: I, I can’t-
 
 
-Illyia: Woah, don’t go losing it on me.
+Illyia(pissed): Woah, don’t go losing it on me.
 
 
-Ayin: (I’m sorry, I can’t anymore. I-)
+Ayin(uncomfortable): I’m sorry, I can’t anymore. I-
 
 
 Narrator: Illyia lifts you up by the shoulders (quite easily) and starts shaking you.
@@ -238,46 +232,40 @@ Narrator: Illyia lifts you up by the shoulders (quite easily) and starts shaking
 Illyia: Hey. HEY! Look at me.
 
 
-Illyia: Breathe!
+Illyia(serious): Breathe!
 
 
 Narrator: Illyia stares right at you, but behind her fierce visage, you sense a surprising warmth[b].
 
 
-Ayin: (Breathe in... Breathe out...)
+Ayin(serious): (Breathe in... Breathe out...)
 
 
 Ayin: ...
 
 
-Ayin: S-Sorry, Illyia... I’m good now.
+Ayin(sheepish): S-Sorry, Illyia... I feel a little better now.
 
 
-Illyia: Good! 
+Illyia(normal): Good! 
 
 
-Illyia: Cause we’re not wasting anymore time. Let’s go.
+Illyia(serious): Cause we’re not wasting anymore time. Let’s go.
 
 
-Ayin: But I-
-
-
-Illyia: The demons don’t care about any of your excuses, soldier.
-
-
-Illyia: And I also don’t want to end up with a team member casualty on my record...
+Illyia(ashamed): I don’t want to end up with another team member casualty on my record...
 
 
 Illyia: Understand?
 
 
-Ayin: Uh, yeah...
+Ayin(nervous): Uh, yeah...
 
 
-Illyia: I SAID, DO YOU UNDERSTAND?
+Illyia(pissed): I SAID, DO YOU UNDERSTAND?
 
 
-Ayin: Y-yes ma’am!
+Ayin(surprised): Y-yes ma’am!
 
 
 Narrator: You instinctively give a tight salute.
@@ -289,10 +277,12 @@ Narrator: You instinctively give a tight salute.
 Clarke: WARNING! WARNING!
 
 
-Ayin: ...!
+Ayin(surprisedbad): ...!
 
 
-Illyia: Alright! Here comes the perfect wake-up call!
+Illyia(laughing): Alright! Here comes the perfect wake-up call!
 
+
+>endt
 [a]pending new niya expressions for markup
 [b]experience helping illiam with panic attacks? tied into overall family theme (illyia trying to protect illiam)
