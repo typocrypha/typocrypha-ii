@@ -24,6 +24,17 @@ public class DialogContinueIndicator : MonoBehaviour
     private object activeMoveTween = null;
     private object activeScaleTween = null;
 
+    public void SetDialogBox(DialogBox box)
+    {
+        dialogBox = box;
+    }
+
+    public void Activate()
+    {
+        continueIndicator.enabled = false;
+        activeCoroutine = StartCoroutine(ActivateContinueIndicator());
+    }
+
     private void Start()
     {
         indicatorDelaySeconds = new WaitForSeconds(indicatorDelay);
@@ -33,8 +44,7 @@ public class DialogContinueIndicator : MonoBehaviour
 
     private void OnEnable()
     {
-        continueIndicator.enabled = false;
-        activeCoroutine = StartCoroutine(ActivateContinueIndicator());
+        Activate();
     }
 
     private void OnDisable()
