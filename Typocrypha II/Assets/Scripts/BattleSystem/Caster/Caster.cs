@@ -182,6 +182,7 @@ public class Caster : FieldObject
             ui?.onStunProgressChanged.Invoke(value);
         } 
     }
+    public bool Countered => Spell.Countered;
     public Spell Spell
     {
         get => spell;
