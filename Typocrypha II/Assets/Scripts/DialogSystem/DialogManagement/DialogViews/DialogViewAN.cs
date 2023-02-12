@@ -12,6 +12,7 @@ public class DialogViewAN : DialogView
     private const int maxMessages = 10;
     [SerializeField] private RectTransform ANContent; // Content of scroll view
     [SerializeField] private Image background;
+    [SerializeField] private DialogContinueIndicator continueIndicator;
 
     private readonly List<DialogBox> dialogBoxPool = new List<DialogBox>(maxMessages);
     private readonly List<DialogBox> activeDialogBoxes = new List<DialogBox>(maxMessages);
@@ -42,7 +43,9 @@ public class DialogViewAN : DialogView
             dialogBox = Instantiate(dialogBoxPrefab, ANContent).GetComponent<DialogBox>();
         }
         activeDialogBoxes.Add(dialogBox);
+        continueIndicator.SetDialogBox(dialogBox);
         dialogBox.SetupAndStartDialogBox(dialogItem);
+        continueIndicator.Activate();
         return dialogBox;
     }
 
