@@ -57,7 +57,7 @@ public class DialogScriptParser : EditorWindow
         {"setbg", typeof(SetBackgroundNode) },
         {"fade", typeof(FadeNode) },
         {"end", typeof(GameflowEndNode) },
-        {"start" , typeof(GameflowStartNode)},
+        {"start" , typeof(GameflowStartNode) },
         {"endt", typeof(EndAndTransition) },
         {"setvar", typeof(SetVariableNode) },
         {"setexpr", typeof(SetExpression) },
@@ -162,6 +162,7 @@ public class DialogScriptParser : EditorWindow
         #region Preprocessing text
         text = Regex.Replace(text, googleCommentPat, "$1");
         text = Regex.Replace(text, "/{2}.*?\n", "\n"); // Remove comments
+        text = Regex.Replace(text, "/{2}.*", ""); // Remove comments (end of file)
         text = Regex.Replace(text, "/[\x2A].*?[\x2A]/", "", RegexOptions.Singleline); // Remove block comments
         text = Regex.Replace(text, "\r", ""); // Remove carriage returns
         text = Regex.Replace(text, ":\\s*\n", ":"); // Remove newlines after character name delimiters.
