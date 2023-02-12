@@ -1,32 +1,14 @@
 ﻿>start,ACT I-6
 
 
->fade,out,0,0,0,0
-
-
++vnplus
 >setbg,Sprite,BgPlayerBedroom
-
-
->addchar,Ayin,0,0,left
-
-
->addchar,Adelai,0,0,right
-
-
+>setlocation,Ayin’s Room
 >playbgm,BGMSecondHand
 
 
->fade,in,1,0,0,0
-
-
-/*Should probably be a separate message rather than narrator text*/
-Narrator: DATE: 3/13 
-
-
-Narrator: LOCATION: Residential Block A
-
-
-Narrator: DEMON ACTIVITY: Medium
+>addchar,Ayin,0,0,left
+>addchar,Adelai,0,0,right
 
 
 Adelai(caring): We... We made it...
@@ -62,10 +44,16 @@ Adelai(frustrateddistant): ... Damn demons. Isn’t it enough that they forced u
 Adelai: If only I was stronger, I’d-
 
 
+Narrator: An alert pops up on both of your Typocrypha.
+
+
 /* alert sounds */
 
 
 >stopbgm
+
+
+>addchar,Clarke,0,0,left
 
 
 Clarke: Notice to all Agarthan citizens: please standby for official announcement from AEIOU on demon attack at Seven Stars Station.
@@ -77,7 +65,13 @@ Clarke: Notice to all Agarthan citizens: please standby for official announcemen
 >playbgm,BGMMilitary
 
 
-Kaia: Citizens of Agartha. I am General Kaia Agnes, head of the Administrative branch of AEIOU.
+>addchar,Kaia,0,0,right
+
+
+Narrator: A video starts playing of General Kaia, the same General you saw fighting not hours ago, Typocrypha still armed and ready.
+
+
+Kaia: Citizens of Agartha. I am General Kaia Agnes, head of the AEIOU Exterminators.
 
 
 Kaia: It has been 15 long years since the Demons of Obscurai broke the peace by attacking and slaughtering our people.
@@ -137,13 +131,13 @@ Kaia: I leave you all with a prayer for those who have lost their lives fighting
 Kaia: ...
 
 
-Kaia: Thank you for your time.
+>removechar,Kaia
 
 
 /* Screen pop up disappears */
 
 
->addchar,Clarke,0,0,right
+Narrator: There’s only a moment of pause, just enough time to digest what was said, before another screen comes up.
 
 
 Clarke: To volunteer for the Agarthan Sanitization Project, please use the following link.
@@ -161,25 +155,36 @@ Clarke: Thank you, and have a nice day!
 >stopbgm
 
 
-Ayin(embarrassed): Huh... I guess that’s the thing AEIOU was planning, huh?
 
 
-Narrator: Adelai doesn’t respond, seeming deep in thought.
+Narrator: Neither of you say anything, but for different reasons.
 
 
-Ayin(concerned): Are you sure you’re OK, Adelai?
+Narrator: You’re overloaded with information and struggling to process it.
 
 
-Adelai(normal): ... Yeah, sorry. I was just... thinking.
+Narrator: But Adelai,
 
 
-Adelai(ifonly): I mean, this is it, right? This is a chance to finally go into the Ruins and destroy the Evil Eye!
+Ayin(embarrassed): I g-guess that’s the thing AEIOU was planning, huh?
 
 
-Adelai: Finally, we’ll be free from the demons and the lockdown.
+Ayin(concerned): ...
 
 
-Adelai(serious): ... I’m going to volunteer.
+Ayin(concerned): A-Adelai?
+
+
+Adelai(interested): -Hm? [pause,0.2] Yeah, sorry. I was just…
+
+
+Adelai: ...
+
+
+Adelai(serious): I’m going to volunteer.
+
+
+Narrator: You were dreading these words, but you knew they would come.
 
 
 Ayin(nervous): B-but, won’t it be dangerous? I mean, just look at what happened today...
@@ -200,7 +205,7 @@ Ayin(uncomfortable): ... I, I don’t know... I mean-
 Adelai(normal): No, I’m sorry Ayin. I know it’s been a long day.
 
 
-Adelai: We should both go home and rest, yeah?
+Adelai: We should both rest for today, yeah?
 
 
 Ayin(nervoussmile): Y-yeah...
@@ -214,3 +219,5 @@ Adelai(bffs4ever): OK, I’ll see you later.
 
 Ayin(nervous): ...
 
+
+>endt

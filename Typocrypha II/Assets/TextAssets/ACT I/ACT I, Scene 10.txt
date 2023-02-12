@@ -1,24 +1,14 @@
 ﻿//Battle design details: https://docs.google.com/spreadsheets/d/1hu8UtqEBtk_WAL-sV_cMHarX_OTckF7_suagISN0cGE/edit#gid=0
 //Round 1: Basic Wrist Exercises
 //Opening Dialog:
->start,alt-ACT-I-10-1-Opening
+>start,ACT I-10-1-Opening
 
 
 +vnplus
->addchar,Ayin,0,0,left
->setexpr,Ayin,concerned
-
-
->addchar,Esaias,0,0,right
->setexpr,Esaias,anxious
-
-
->addchar,Dahlia,0,0,right
->setexpr,Dahlia,serious
-
-
->addchar,Illyia,0,0,right
->setexpr,Illyia,concerned
+>addchar,Ayin,0,0,left,concerned
+>addchar,Esaias,0,0,right,anxious
+>addchar,Dahlia,0,0,left,serious
+>addchar,Illyia,0,0,right,concerned
 
 
 Dahlia: What happened to “minimal demon resistance”, Saia?
@@ -55,89 +45,76 @@ Esaias: Ayin, are you prepared to engage?
 
 
 Ayin(serious): H-huh?! Uh, yeah! I-I’m ready!
+
+
+>end
 //Round 2: Know Thy Enemy
 //When pufferfish is hit by non-piercing move:
->start,alt-ACT-I-10-2-AyinPoked
+>start,ACT I-10-2-AyinPoked
 
 
-+vnplus
->addchar,Ayin,0,0,left
->setexpr,Ayin,concerned
++bubble
 
 
->addchar,Esaias,0,0,right
->setexpr,Esaias,anxious
+Ayin[0,1]: Ow!
 
 
-Ayin(concerned[a]): Ow!
+Esaias[0,2]: Ayin! Please exercise more caution when attacking these demons.
 
 
-Esaias: Ayin! Please exercise more caution when attacking these demons.
+Esaias[0,2](lookingright): Their spikes can cause you great harm if attacked recklessly.
 
 
-Esaias(lookingright): Their spikes can cause you great harm if attacked recklessly.
+Esaias[0,2](whut): Was this information not located on your scanner?
 
 
-Esaias(whut): Was this information not located on your scanner?
+Ayin[0,1](uncomfortable): Uh, scan...?
 
 
-Ayin(uncomfortable): Uh, scan...?
+Esaias[0,2](embarrassed): ... Ah, I see. My apologies.
 
 
-Esaias(embarrassed): ... Ah, I see. My apologies.
+Esaias[0,2](lookingleft): Hold SHIFT to activate your Typocrypha’s {c,ui-terms}scanning{c} functionality.
 
 
-Esaias(lookingleft): On your Typocrypha, hold SHIFT to scan for additional information on demons.
+Esaias[0,2](normal): It should tell you how to properly handle these Puffergeist demons.
+
+
+>end
 //When pufferfish is hit by piercing move:
->start,alt-ACT-I-10-2-AyinPokesBack
+>start,ACT I-10-2-AyinPokesBack
 
 
-+vnplus
->addchar,Ayin,0,0,left
->setexpr,Ayin,surprised
++bubble
 
 
->addchar,Esaias,0,0,right
->setexpr,Esaias,normal
+Ayin[0,1]: W-woah!
 
 
-Ayin(concerned[b]): W-woah!
+Esaias[0,2]: Good work, Ayin.
 
 
-Esaias: Good work, Ayin.
+Esaias[0,2]: Pufferfish demons have spikes which reflect most attacks.
 
 
-Esaias: Pufferfish demons have spikes which reflect most attacks.
+Esaias[0,2]: However, {c,ui-terms}Piercing{c} spells like {c,ui-terms}LANCE{c} do extra damage and cause them to burst when defeated.
 
 
-Esaias: However, due to their inflated nature, piercing spells like LANCE do extra damage and cause them to burst when defeated.
-
-
-Ayin(nervous): Oh, uh, c-can you say that one more time?
-
-
-Esaias: Do not worry, you can review this information by holding SHIFT on your Typocrypha while targeting the enemy to scan it.
-
-
+>end
 //Round 3: A Prickly Situation
 //Round 4: Hammer Time
 //Opening Dialog:
->start,alt-ACT-I-10-4-Opening
+>start,ACT I-10-4-Opening
 
 
-+vnplus
->addchar,Ayin,0,0,left
->setexpr,Ayin,concerned
++bubble
 
 
->addchar,Esaias,0,0,right
->setexpr,Esaias,normal
+Esaias[0,2]: Watch out, Ayin. Some of these demons have strong defenses.
 
 
-Esaias: Watch out, Ayin. Some of these demons have strong defences.
+Esaias[0,2]: Remember to use your scanner by pressing SHIFT to identify their weaknesses.
 
 
-Esaias: Remember to use your scanner by pressing SHIFT to identify their weaknesses.
+>end
 //Round 5: Poppin’ Off
-[a]might need better 'in pain' expression
-[b]might need better 'in pain' expression

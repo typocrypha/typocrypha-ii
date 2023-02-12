@@ -1,19 +1,16 @@
 ﻿>start,ACT I-8
 
 
++vnplus
+
+
 >setlocation,The End of the Line
-
-
->fade,out,0,0,0,0
-
-
 >setbg,Sprite,BgEndOfTheLine1
 
 
 >playbgm,BGMExplorer
 
 
->fade,in,1,0,0,0
 
 
 /*Should probably be a separate message rather than narrator text*/
@@ -32,7 +29,7 @@ Narrator: DEMON ACTIVITY: {c,evil-eye}High{c}
 /*Typocrypha rings.*/
 
 
->addchar,Ayin,0,0,left
+>addchar,Ayin,0,0,left,nervous
 >addchar,Clarke,0,0,right
 
 
@@ -49,6 +46,9 @@ Clarke: You have been assigned to Infiltration Team Q.
 
 
 Clarke: Listing all team members and associated roles...
+
+
+Narrator: Your Typocrypha lists out your team members.
 
 
 Narrator: Team Q - Operation “Raindance”, Sub-Operation “Trickle Down”.\
@@ -172,7 +172,7 @@ Dahlia(happy): OK OK, I’ll stop you right there.
 Dahlia(serious): Why don’t you introduce yourself to our new leader first, yeah?
 
 
-Esaias(embarrassed): {c,whisper}... Apologies.{c}
+Esaias(embarrassed): ... Apologies.
 
 
 Esaias(normal): I am {c,ui-terms}Esaias Walker{c}, Navigator. He/him pronouns.
@@ -199,7 +199,10 @@ Dahlia(normal): I mean, we’re just scouting the place out. Should be easy!
 Esaias(anxious): Agreed. If you look here...
 
 
-// TODO: Map appears.
+Narrator: Esaias brings up a map projections on his Typocrypha.
+
+
+Narrator: It’s, to Esaias’s credit, horribly complicated and you don’t understand any of it.
 
 
 Esaias(normal): Our planned path will follow along an old Obscurian aqueduct, which was abandoned thousands of years before the construction of the surrounding atria allowing us to exploit the-
@@ -229,7 +232,7 @@ Narrator: You begin to think, with these two, things might be OK after all.
 Narrator: Just as you’re thinking this, another person walks up to your group. 
 
 
->addchar,Illyia,0,0,right
+>addchar,Illyia,0,0,right,serious
 
 
 Narrator: They don’t look at you in the eyes, seeming to look farther into the distance.
@@ -238,6 +241,7 @@ Narrator: They don’t look at you in the eyes, seeming to look farther into the
 Narrator: They kind of remind you of Adelai.
 
 
+>setexpr,Ayin,nervous
 Illyia(serious): ...
 
 
@@ -361,7 +365,7 @@ Clarke: NOTICE: Operation “Raindance”, Sub-Operation “Trickle-Down” begi
 Illyia(ashamed): ...
 
 
-Narrator: Without a single word, Illyia starts walking towards the Ruins entrance.
+Narrator: Without a word, Illyia starts walking towards the Ruins entrance.
 
 
 >removechar,Illyia
@@ -391,7 +395,7 @@ Esaias(embarrassed): -Ah... We will support you, Ayin.
 Ayin(ohfuck): G-got it, thanks...
 
 
-//END SCENE
+>endt,ACT I-9
 
 
 [a]TIPS: One of 3 massive barriers erected by the Obscurians to protect the Ruins from invaders. beyond the barriers, at the lowest point of the Ruins, lies the Evil Eye.
