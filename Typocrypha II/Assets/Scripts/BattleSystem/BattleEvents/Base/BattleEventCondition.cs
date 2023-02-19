@@ -18,11 +18,17 @@ public abstract class BattleEventCondition : MonoBehaviour
     protected virtual void Start()
     {
         AddEventHandlers();
+        Initialize();
     }
 
     protected void OnDestroy()
     {
         RemoveEventHandlers();
+    }
+
+    protected virtual void Initialize()
+    {
+
     }
 
     protected virtual void AddEventHandlers()

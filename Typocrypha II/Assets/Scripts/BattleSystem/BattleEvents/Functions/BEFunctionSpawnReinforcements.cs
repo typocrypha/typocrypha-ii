@@ -5,35 +5,50 @@ using UnityEngine;
 
 public class BEFunctionSpawnReinforcements : BattleEventFunction
 {
-    public int number;
+    [SerializeField] private bool consume = true;
+    [SerializeField] private int number;
     public override void Run()
     {
         Running = true;
         StartCoroutine(SpawnReinforcements());
     }
 
+    protected bool IsValidPos(Battlefield.Position p)
+    {
+        var field = Battlefield.instance;
+        if (p.Row != 0)
+            return false;
+        if (field.GetObject(p) == null)
+            return true;
+        var caster = field.GetCaster(p);
+        return caster.BStatus == Caster.BattleStatus.Dead || caster.BStatus == Caster.BattleStatus.Fled;
+    }
+
+    protected int GetReinforcementIndex(List<GameObject> reinforcements)
+    {
+        return 0;
+    }
+
     private IEnumerator SpawnReinforcements()
     {
         var field = Battlefield.instance;
         var reinforcements = BattleManager.instance.CurrWave.reinforcementPrefabs;
-        bool ValidPos(Battlefield.Position p)
-        {
-            if (p.Row != 0)
-                return false;
-            if (field.GetObject(p) == null)
-                return true;
-            var caster = field.GetCaster(p);
-            return caster.BStatus == Caster.BattleStatus.Dead || caster.BStatus == Caster.BattleStatus.Fled;
-        }
-        var availableSpaces = field.AllPositions.Where(ValidPos).ToList();
+        var availableSpaces = field.AllPositions.Where(IsValidPos).ToList();
         foreach (var _ in Enumerable.Range(0, number))
         {
             if (availableSpaces.Count <= 0 || reinforcements.Count <= 0)
                 break;
+            // Choose position
             var pos = RandomUtils.RandomU.instance.Choice(availableSpaces);
             availableSpaces.Remove(pos);
-            var unit = reinforcements[0];
-            reinforcements.RemoveAt(0);
+            // Choose reinforcement
+            int reinforcementIndex = GetReinforcementIndex(reinforcements);
+            var unit = reinforcements[reinforcementIndex];
+            if (consume)
+            {
+                reinforcements.RemoveAt(reinforcementIndex);
+            }
+            // Spawn reinforcement
             yield return StartCoroutine(BattleManager.instance.AddFieldObject(unit, pos.Row, pos.Col, true));
         }
         Running = false;
