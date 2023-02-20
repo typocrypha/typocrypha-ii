@@ -45,6 +45,7 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
         {
             AddWord(spell);
         }
+        SortCooldowns();
     }
 
     public void SortCooldowns()
@@ -54,18 +55,37 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
 
     private int CompareCooldowns(Transform a, Transform b)
     {
-        return b.GetComponent<SpellCooldown>().Cooldown.CompareTo(a.GetComponent<SpellCooldown>().Cooldown);
+        var aCooldown = a.GetComponent<SpellCooldown>();
+        var bCooldown = b.GetComponent<SpellCooldown>();
+        if(aCooldown.Cooldown == bCooldown.Cooldown)
+        {
+            if(aCooldown.SpellWord.category == bCooldown.SpellWord.category)
+            {
+                if (aCooldown.FullCooldown == bCooldown.FullCooldown)
+                {
+                    return aCooldown.SpellText.CompareTo(bCooldown.SpellText);
+                }
+                return bCooldown.FullCooldown.CompareTo(aCooldown.FullCooldown);
+            }
+            return bCooldown.SpellWord.category.CompareTo(aCooldown.SpellWord.category);
+        }
+        return bCooldown.Cooldown.CompareTo(aCooldown.Cooldown);
     }
 
-    public void AddWord(SpellWord word)
+    public void AddWord(SpellWord word, bool sort = false)
     {
         if (IsOnCooldown(word))
             return;
         var cd = Instantiate(cooldownPrefab, cooldownTr).GetComponent<SpellCooldown>();
         cd.SpellText = word.internalName.ToUpper();
+        cd.SpellWord = word;
         cd.FullCooldown = word.cooldown;
         cd.Cooldown = 0;
         cooldowns.Add(word.internalName.ToUpper(), cd);
+        if (sort)
+        {
+            SortCooldowns();
+        }
     }
 
     public bool IsOnCooldown(SpellWord word)

@@ -83,4 +83,6 @@ public class SpellCooldown : MonoBehaviour
         get => spellText.text;
         set => spellText.text = value;
     }
+
+    public SpellWord SpellWord { get; set; }
 }
