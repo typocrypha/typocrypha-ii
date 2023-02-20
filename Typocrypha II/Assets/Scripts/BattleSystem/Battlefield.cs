@@ -73,6 +73,7 @@ public class Battlefield : MonoBehaviour, IPausable
     public List<Caster> ExternalCasters { get => Casters.Where((obj) => !obj.FieldPos.IsLegal) as List<Caster>; }
     public List<Caster> Casters { get; } = new List<Caster>();
     public IEnumerable<Position> AllPositions => Enumerable.Range(0, Rows).SelectMany((row) => Enumerable.Range(0, Columns).Select((col) => new Position(row, col)));
+    public List<Position> ValidReinforcementPositions => AllPositions.Where(IsValidEnemyReinforcementPos).ToList();
     #endregion
 
     #region Data and Representative Lists
@@ -278,6 +279,19 @@ public class Battlefield : MonoBehaviour, IPausable
         obj.FieldPos = destination;
         obj.transform.position = spaces[destination].position;        
         field[destination] = obj;      
+    }
+
+    public bool IsValidEnemyReinforcementPos(Position position)
+    {
+        return position.Row == 0 && IsEmpty(position);
+    }
+
+    public bool IsEmpty(Position position)
+    {
+        if (GetObject(position) == null)
+            return true;
+        var caster = GetCaster(position);
+        return caster != null && caster.IsDeadOrFled;
     }
 
     private class FieldMatrix : Serializable2DMatrix<FieldObject>

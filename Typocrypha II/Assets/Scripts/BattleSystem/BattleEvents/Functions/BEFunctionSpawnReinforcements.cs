@@ -13,17 +13,6 @@ public class BEFunctionSpawnReinforcements : BattleEventFunction
         StartCoroutine(SpawnReinforcements());
     }
 
-    protected bool IsValidPos(Battlefield.Position p)
-    {
-        var field = Battlefield.instance;
-        if (p.Row != 0)
-            return false;
-        if (field.GetObject(p) == null)
-            return true;
-        var caster = field.GetCaster(p);
-        return caster.BStatus == Caster.BattleStatus.Dead || caster.BStatus == Caster.BattleStatus.Fled;
-    }
-
     protected int GetReinforcementIndex(List<GameObject> reinforcements)
     {
         return 0;
@@ -33,7 +22,7 @@ public class BEFunctionSpawnReinforcements : BattleEventFunction
     {
         var field = Battlefield.instance;
         var reinforcements = BattleManager.instance.CurrWave.reinforcementPrefabs;
-        var availableSpaces = field.AllPositions.Where(IsValidPos).ToList();
+        var availableSpaces = field.ValidReinforcementPositions;
         foreach (var _ in Enumerable.Range(0, number))
         {
             if (availableSpaces.Count <= 0 || reinforcements.Count <= 0)
