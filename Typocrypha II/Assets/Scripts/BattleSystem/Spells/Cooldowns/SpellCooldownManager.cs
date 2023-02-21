@@ -63,7 +63,7 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
             {
                 if (aCooldown.FullCooldown == bCooldown.FullCooldown)
                 {
-                    return aCooldown.SpellText.CompareTo(bCooldown.SpellText);
+                    return bCooldown.SpellText.CompareTo(aCooldown.SpellText);
                 }
                 return bCooldown.FullCooldown.CompareTo(aCooldown.FullCooldown);
             }
@@ -145,5 +145,6 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
         {
             kvp.Value.Cooldown = 0;
         }
+        SortCooldowns();
     }
 }
