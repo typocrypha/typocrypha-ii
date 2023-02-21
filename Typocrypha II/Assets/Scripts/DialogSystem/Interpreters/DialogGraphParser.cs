@@ -159,7 +159,7 @@ public class DialogGraphParser : MonoBehaviour
             else if (currNode is DialogNodeAN)
             {
                 var dNode = currNode as DialogNodeAN;
-                return new DialogItemAN(dNode.text, voice, dNode.alignmentOptions);
+                return new DialogItemAN(dNode.text, voice, dNode.alignmentOptions, dNode.layoutSetting);
             }
             else if (currNode is DialogNodeBubble)
             {

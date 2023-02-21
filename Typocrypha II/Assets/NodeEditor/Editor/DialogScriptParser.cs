@@ -491,9 +491,9 @@ public class DialogScriptParser : EditorWindow
         {
             var dnodeAN = CreateNode(DialogNodeAN.ID) as DialogNodeAN;
 
-            if(poses.Count > 0)
+            if(exprs.Count > 0)
             {
-                string alignment = poses[0];
+                string alignment = exprs[0];
                 if(alignment == "left")
                 {
                     dnodeAN.alignmentOptions = TMPro.TextAlignmentOptions.Left;
@@ -505,6 +505,22 @@ public class DialogScriptParser : EditorWindow
                 else if (alignment == "center")
                 {
                     dnodeAN.alignmentOptions = TMPro.TextAlignmentOptions.Center;
+                }
+            }
+            if(poses.Count > 0)
+            {
+                string layout = poses[0];
+                if (layout == "upper" || layout == "top")
+                {
+                    dnodeAN.layoutSetting = TextAnchor.UpperLeft;
+                }
+                else if (layout == "lower" || layout == "bottom")
+                {
+                    dnodeAN.layoutSetting = TextAnchor.LowerLeft;
+                }
+                else if (layout == "middle" || layout == "center")
+                {
+                    dnodeAN.layoutSetting = TextAnchor.MiddleLeft;
                 }
             }
             dnode = dnodeAN;

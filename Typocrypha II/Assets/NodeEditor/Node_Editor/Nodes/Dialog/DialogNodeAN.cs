@@ -18,6 +18,7 @@ namespace Gameflow
         public override Vector2 MinSize { get { return new Vector2(250, 60); } }
 
         public TMPro.TextAlignmentOptions alignmentOptions = TMPro.TextAlignmentOptions.Left;
+        public TextAnchor layoutSetting;
 
         protected override void OnCreate()
         {
@@ -30,6 +31,7 @@ namespace Gameflow
             NameGUI();
             TextGUI();
             alignmentOptions = (TMPro.TextAlignmentOptions)RTEditorGUI.EnumPopup(new GUIContent("Alignment"), alignmentOptions);
+            layoutSetting = (TextAnchor)RTEditorGUI.EnumPopup(new GUIContent("Layout Group Alignment"), layoutSetting);
 
             //Don't know why this code needs to be here exactly, but it makes everything nicer? maybe add to some static stuff?
             GUILayout.BeginHorizontal();

@@ -11,6 +11,7 @@ public class DialogViewAN : DialogView
 {
     private const int maxMessages = 10;
     [SerializeField] private RectTransform ANContent; // Content of scroll view
+    [SerializeField] private VerticalLayoutGroup ANLayout;
     [SerializeField] private Image background;
     [SerializeField] private DialogContinueIndicator continueIndicator;
 
@@ -31,7 +32,7 @@ public class DialogViewAN : DialogView
             ClearLog();
         }
         DialogBox dialogBox;
-        if(dialogBoxPool.Count > 0)
+        if (dialogBoxPool.Count > 0)
         {
             dialogBox = dialogBoxPool[dialogBoxPool.Count - 1];
             dialogBoxPool.RemoveAt(dialogBoxPool.Count - 1);
@@ -45,6 +46,10 @@ public class DialogViewAN : DialogView
         activeDialogBoxes.Add(dialogBox);
         continueIndicator.SetDialogBox(dialogBox);
         dialogBox.dialogText.alignment = dialogItem.AlignmentOptions;
+        if(ANLayout.childAlignment != dialogItem.LayoutSetting)
+        {
+            ANLayout.childAlignment = dialogItem.LayoutSetting;
+        }
         dialogBox.SetupAndStartDialogBox(dialogItem);
         continueIndicator.Activate();
         return dialogBox;
