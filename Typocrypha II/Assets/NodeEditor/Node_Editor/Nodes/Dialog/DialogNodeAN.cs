@@ -17,6 +17,8 @@ namespace Gameflow
         public override string Title { get { return "AN Dialog"; } }
         public override Vector2 MinSize { get { return new Vector2(250, 60); } }
 
+        public TMPro.TextAlignmentOptions alignmentOptions = TMPro.TextAlignmentOptions.Left;
+
         protected override void OnCreate()
         {
             base.OnCreate();
@@ -27,6 +29,7 @@ namespace Gameflow
         {
             NameGUI();
             TextGUI();
+            alignmentOptions = (TMPro.TextAlignmentOptions)RTEditorGUI.EnumPopup(new GUIContent("Alignment"), alignmentOptions);
 
             //Don't know why this code needs to be here exactly, but it makes everything nicer? maybe add to some static stuff?
             GUILayout.BeginHorizontal();

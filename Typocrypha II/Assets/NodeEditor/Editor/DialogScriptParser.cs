@@ -489,7 +489,25 @@ public class DialogScriptParser : EditorWindow
         }
         else if (currView == typeof(DialogViewAN))
         {
-            dnode = CreateNode(DialogNodeAN.ID) as DialogNodeAN;
+            var dnodeAN = CreateNode(DialogNodeAN.ID) as DialogNodeAN;
+
+            if(poses.Count > 0)
+            {
+                string alignment = poses[0];
+                if(alignment == "left")
+                {
+                    dnodeAN.alignmentOptions = TMPro.TextAlignmentOptions.Left;
+                }
+                else if(alignment == "right")
+                {
+                    dnodeAN.alignmentOptions = TMPro.TextAlignmentOptions.Right;
+                }
+                else if (alignment == "center")
+                {
+                    dnodeAN.alignmentOptions = TMPro.TextAlignmentOptions.Center;
+                }
+            }
+            dnode = dnodeAN;
         }
         else if (currView == typeof(DialogViewBubble))
         {

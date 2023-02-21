@@ -7,7 +7,12 @@ using UnityEngine;
 /// </summary>
 public class DialogItemAN : DialogItem
 {
-    public DialogItemAN(string text, List<AudioClip> voice) : base(text, voice) { }
+    public TMPro.TextAlignmentOptions AlignmentOptions { get; }
+
+    public DialogItemAN(string text, List<AudioClip> voice, TMPro.TextAlignmentOptions textAlignment = TMPro.TextAlignmentOptions.Left) : base(text, voice) 
+    {
+        AlignmentOptions = textAlignment;
+    }
 
     public override System.Type GetView()
     {
