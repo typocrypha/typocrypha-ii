@@ -40,6 +40,7 @@ public class DialogViewVNPlus : DialogView
     [SerializeField] private TweenInfo characterJoinLeaveTween;
     [SerializeField] private TweenInfo enterExitViewTween;
     [SerializeField] private TextMeshProUGUI locationText;
+    [SerializeField] private TextMeshProUGUI dateTimeText;
 
 
     public override bool ReadyToContinue => readyToContinue;
@@ -511,5 +512,11 @@ public class DialogViewVNPlus : DialogView
     {
         base.SetLocation(location);
         locationText.text = location;
+    }
+
+    protected override void SetDateTime(string dateTime)
+    {
+        base.SetDateTime(dateTime);
+        dateTimeText.text = dateTime;
     }
 }

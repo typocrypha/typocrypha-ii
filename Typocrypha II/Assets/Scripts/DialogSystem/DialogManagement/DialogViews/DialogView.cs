@@ -59,6 +59,12 @@ public abstract class DialogView : MonoBehaviour
     }
     protected virtual void SetLocation(string location) { }
 
+    public void SetDateTimeText(string dateTime)
+    {
+        SetDateTime(DialogParser.instance.SubstituteMacros(dateTime));
+    }
+    protected virtual void SetDateTime(string dateTime) { }
+
     public virtual IEnumerator PlayEnterAnimation()
     {
         yield break;

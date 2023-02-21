@@ -294,6 +294,10 @@ public class DialogGraphParser : MonoBehaviour
         {
             DialogManager.instance.DialogView.SetLocationText(setLocationTextNode.text);
         }
+        else if (currNode is SetDateTimeTextNode setDateTimeTextNode)
+        {
+            DialogManager.instance.DialogView.SetDateTimeText(setDateTimeTextNode.text);
+        }
         else if (currNode is ClearNode clearNode)
         {
             DialogManager.instance.DialogView.CleanUp();

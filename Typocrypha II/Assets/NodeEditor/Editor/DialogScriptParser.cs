@@ -65,6 +65,10 @@ public class DialogScriptParser : EditorWindow
         {"setpose", typeof(SetPose) },
         {"setlocation", typeof(SetLocationTextNode) },
         {"setlocationtext", typeof(SetLocationTextNode) },
+        {"setdatetimetext", typeof(SetDateTimeTextNode) },
+        {"setdatetime", typeof(SetDateTimeTextNode) },
+        {"setdate", typeof(SetDateTimeTextNode) },
+        {"settime", typeof(SetDateTimeTextNode) },
         {"clear", typeof(ClearNode) }
     };
 
@@ -360,6 +364,12 @@ public class DialogScriptParser : EditorWindow
         else if(nodeType == typeof(SetLocationTextNode))
         {
             var gnode = CreateNode(SetLocationTextNode.Id) as SetLocationTextNode;
+            gnode.text = args[1];
+            nodes.Add(gnode);
+        }
+        else if(nodeType == typeof(SetDateTimeTextNode))
+        {
+            var gnode = CreateNode(SetDateTimeTextNode.Id) as SetDateTimeTextNode;
             gnode.text = args[1];
             nodes.Add(gnode);
         }
