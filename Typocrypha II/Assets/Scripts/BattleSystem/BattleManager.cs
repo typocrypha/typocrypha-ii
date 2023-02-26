@@ -191,9 +191,16 @@ public class BattleManager : MonoBehaviour, IPausable
 
     private IEnumerator WaveTransition(BattleWave waveData)
     { 
-        GameObject wT = Instantiate(defaultWaveTransitionPrefab, waveTransitionCanvas.transform);
-        wT.transform.Find("WaveTitle").GetComponentInChildren<TextMeshProUGUI>().text = DialogParser.instance.SubstituteMacros(waveData.waveTitle);
-        wT.transform.Find("WaveBanner").GetComponentInChildren<TextMeshProUGUI>().text = "Wave " + waveNum + "/" + totalWaves;
+        var wT = Instantiate(defaultWaveTransitionPrefab, waveTransitionCanvas.transform).GetComponent<WaveTransitionBanner>();
+        wT.TitleText = DialogParser.instance.SubstituteMacros(waveData.waveTitle);
+        if (!string.IsNullOrEmpty(waveData.waveNumberOverride))
+        {
+            wT.NumberText = DialogParser.instance.SubstituteMacros(waveData.waveNumberOverride);
+        }
+        else
+        {
+            wT.NumberText = "Wave " + waveNum + "/" + totalWaves;
+        }
         yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
         yield return new WaitForSeconds(0.5f);
     }

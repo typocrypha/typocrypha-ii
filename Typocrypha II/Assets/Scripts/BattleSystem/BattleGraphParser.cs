@@ -46,6 +46,7 @@ public class BattleGraphParser : GraphParser
             return new BattleWave()
             {
                 waveTitle = node.waveTitle,
+                waveNumberOverride = node.waveNumberOverride,
                 music = node.music,
                 battleField = new GOMatrix2D(node.battleField),
                 battleEvents = new List<GameObject>(node.battleEvents),

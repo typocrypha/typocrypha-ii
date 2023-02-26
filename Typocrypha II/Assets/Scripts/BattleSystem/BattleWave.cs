@@ -10,6 +10,7 @@ public class BattleWave
 {
     public Battlefield.ClearOptions fieldOptions;
     public string waveTitle;
+    public string waveNumberOverride;
     public AudioClip music;
     public GOMatrix2D battleField;
     public List<GameObject> battleEvents;

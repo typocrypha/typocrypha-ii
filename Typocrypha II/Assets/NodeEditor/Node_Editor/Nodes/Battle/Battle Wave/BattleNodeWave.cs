@@ -21,6 +21,7 @@ namespace Gameflow
 
         public Battlefield.ClearOptions clearFieldOptions;
         public string waveTitle;
+        public string waveNumberOverride;
         public AudioClip music;
         public GOMatrix2D battleField;
 
@@ -52,6 +53,10 @@ namespace Gameflow
             GUILayout.BeginHorizontal();
             GUILayout.Label(new GUIContent("Title"), GUI.skin.label, GUILayout.Width(50));
             waveTitle = GUILayout.TextField(waveTitle);
+            GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(new GUIContent("Num Override"), GUI.skin.label, GUILayout.Width(80));
+            waveNumberOverride = GUILayout.TextField(waveNumberOverride);
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             GUILayout.Label(new GUIContent("Music", tooltip_music), GUI.skin.label, GUILayout.Width(50));
