@@ -349,8 +349,7 @@ public class Caster : FieldObject
         tags.RecalculateAggregate();
         foreach (var tag in tags)
         {
-            AddAbility(tag.ability1);
-            AddAbility(tag.ability2);
+            AddAbilities(tag);
         }
         sp = Stats.MaxSP;
         Health = Stats.MaxHP;       
