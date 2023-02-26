@@ -7,9 +7,10 @@ using DG.Tweening;
 
 public class BattleLog : MonoBehaviour
 {
-    public TextMeshProUGUI text;
-    public Image icon;
+    public const float defaultLogTime = 0.6f;
 
+    [SerializeField] private TextMeshProUGUI text;
+    [SerializeField] private Image icon;
     [SerializeField]
     private GameObject iconContainer;
     [SerializeField]
@@ -19,10 +20,13 @@ public class BattleLog : MonoBehaviour
     [SerializeField]
     private TweenInfo enterExitTweener;
 
-    public void SetContent(string text, Sprite icon)
+    private float time;
+
+    public void SetContent(string text, Sprite icon, float? time = null)
     {
         this.text.text = "> " + text;
         this.icon.sprite = icon;
+        this.time = time ?? defaultLogTime;
         iconContainer.SetActive(icon != null);
     }
 
@@ -33,7 +37,7 @@ public class BattleLog : MonoBehaviour
         enterExitTweener.Start(logContainer.DOScaleY(1, enterExitTweener.Time));
         enterExitTweener.Start(logGroup.DOFade(1, enterExitTweener.Time), false);
         yield return enterExitTweener.WaitForCompletion();
-        yield return new WaitForSeconds(0.6f / Settings.UISpeed);
+        yield return new WaitForSeconds(time / Settings.UISpeed);
         enterExitTweener.Start(logContainer.DOScaleY(0, enterExitTweener.Time));
         enterExitTweener.Start(logGroup.DOFade(0, enterExitTweener.Time),false);
         yield return enterExitTweener.WaitForCompletion();

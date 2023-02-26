@@ -52,14 +52,14 @@ public class SpellFxManager : MonoBehaviour
         {
             var message = logData.Dequeue();
             var log = Instantiate(battleLogPrefab, Camera.main.WorldToScreenPoint(logPosition), Quaternion.identity, logCanvas.transform).GetComponent<BattleLog>();
-            log.SetContent(message.text, message.icon);
+            log.SetContent(message.text, message.icon, message.time);
             yield return log.Play();
             Destroy(log.gameObject);
         }
     }
-    public void LogMessage(string message, Sprite icon = null)
+    public void LogMessage(string message, Sprite icon = null, float? time = null)
     {
-        logData.Enqueue(new LogData() { text = message, icon = icon });
+        logData.Enqueue(new LogData() { text = message, icon = icon, time = time});
     }
     public Coroutine NoTargetFx(Vector2 pos)
     {
@@ -212,5 +212,6 @@ public class SpellFxManager : MonoBehaviour
     {
         public string text;
         public Sprite icon = null;
+        public float? time;
     }
 }

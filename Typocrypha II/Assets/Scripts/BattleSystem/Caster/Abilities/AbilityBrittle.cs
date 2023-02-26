@@ -9,7 +9,7 @@ public class AbilityBrittle : CasterAbility
         if(spellData.IsLastRoot && castResults.Combo >= 2 && !target.Stunned)
         {
             castResults.StaggerDamage += 1;
-            SpellFxManager.instance.LogMessage($"{target.DisplayName} was shattered!");
+            SpellFxManager.instance.LogMessage($"The multicast staggered {target.DisplayName}!", null, 1f);
         }
     }
 
