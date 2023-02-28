@@ -25,8 +25,8 @@ public static class LoadSpellBundlesOnPlayMode
             var words = AssetUtils.LoadAllAssetsInDirectoryRecursive<SpellWord>(bundle.assetPath);
             foreach (var word in words)
             {
-                if(!bundle.words.ContainsKey(word.internalName))
-                    bundle.words.Add(word.internalName, word);
+                if(!bundle.words.ContainsKey(word.Key))
+                    bundle.words.Add(word.Key, word);
             }
             if(bundle != null)
                 EditorUtility.SetDirty(bundle);

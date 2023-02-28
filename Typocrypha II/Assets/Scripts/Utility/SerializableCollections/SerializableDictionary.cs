@@ -5,7 +5,7 @@ using UnityEditor;
 
 // Serializable dictionary wrapper (native Dictionary serialization not yet available)
 // MUST BE INHERITED WITH TEMPLATE VARIABLES SET: generic classes are not serialized
-public class SerializableDictionary<TKey, TValue> : ISerializationCallbackReceiver, IEnumerable<KeyValuePair<TKey, TValue>>
+public class SerializableDictionary<TKey, TValue> : ISerializationCallbackReceiver, IDictionary<TKey, TValue>, IEnumerable<KeyValuePair<TKey, TValue>>
 {
     private Dictionary<TKey, TValue> _dictionary = new Dictionary<TKey, TValue>(); // Internal dictionary interface
     [SerializeField] private List<TKey> _keys = new List<TKey>(); // Serlializable list of keys; Keys and values match up 1-to-1
@@ -47,6 +47,12 @@ public class SerializableDictionary<TKey, TValue> : ISerializationCallbackReceiv
         }
     }
     public Dictionary<TKey,TValue>.KeyCollection Keys { get { return _dictionary.Keys; } }
+
+    ICollection<TKey> IDictionary<TKey, TValue>.Keys => _dictionary.Keys;
+
+    public ICollection<TValue> Values => _dictionary.Values;
+
+    public bool IsReadOnly => false;
     #endregion
 
     #region IEnumarable Implementation
@@ -88,6 +94,36 @@ public class SerializableDictionary<TKey, TValue> : ISerializationCallbackReceiv
                 Debug.LogError("SDict Error: " + e.ToString() + " " + this.ToString());
             }
         }
+    }
+
+    bool IDictionary<TKey, TValue>.Remove(TKey key)
+    {
+        return _dictionary.Remove(key);
+    }
+
+    public bool TryGetValue(TKey key, out TValue value)
+    {
+        return _dictionary.TryGetValue(key, out value);
+    }
+
+    public void Add(KeyValuePair<TKey, TValue> item)
+    {
+        _dictionary.Add(item.Key, item.Value);
+    }
+
+    public bool Contains(KeyValuePair<TKey, TValue> item)
+    {
+        return _dictionary.ContainsKey(item.Key);
+    }
+
+    public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
+    {
+        throw new System.NotImplementedException("Cannot copy to serialized dict");
+    }
+
+    public bool Remove(KeyValuePair<TKey, TValue> item)
+    {
+        return _dictionary.Remove(item.Key);
     }
     #endregion
 }

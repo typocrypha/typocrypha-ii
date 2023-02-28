@@ -28,7 +28,7 @@ public class SpellManager : MonoBehaviour
 
     /// <summary> 
     /// Cast the spell's effect with a given caster at a given target position 
-    /// Returns the case coroutine (in case the end of casting must be waited on)
+    /// Returns the cast coroutine (in case the end of casting must be waited on)
     /// </summary>
     public Coroutine Cast(Spell spell, Caster caster, Battlefield.Position target, string castMessageOverride = null)
     {

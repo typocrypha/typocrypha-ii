@@ -59,7 +59,7 @@ public class SpellParser : MonoBehaviour
     /// Returns other ParseResults to indicate different failure conditions 
     /// Returns the parsed spell in out list s.
     /// Also Checks and starts spell cooldowns. </summary>
-    public ParseResults Parse(string[] spellwords, Dictionary<string, SpellWord> words, out Spell s)
+    public ParseResults Parse(string[] spellwords, IDictionary<string, SpellWord> words, out Spell s)
     {
         s = new Spell();
         int roots = 0;
