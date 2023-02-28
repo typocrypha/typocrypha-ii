@@ -1,12 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 using NodeEditorFramework;
-using NodeEditorFramework.Utilities;
-
-using System;
-using Gameflow.GUIUtilities;
 
 namespace Gameflow
 {

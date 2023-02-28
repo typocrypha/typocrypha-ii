@@ -691,6 +691,15 @@ namespace NodeEditorFramework.Utilities
         #endif
             return Vector2.zero;
         }
+
+		public static Vector2Int Vector2IntField(string label, Vector2Int value)
+		{
+#if UNITY_EDITOR
+			if (!Application.isPlaying)
+				return UnityEditor.EditorGUILayout.Vector2IntField(label, value);
+#endif
+			return Vector2Int.zero;
+		}
         #endregion
 
         #region RectField
@@ -729,7 +738,16 @@ namespace NodeEditorFramework.Utilities
 			return selected;
 		}
 
-        public static System.Enum EnumFlagsPopup(System.Enum selected, params GUILayoutOption[] options)
+		public static System.Enum EnumPopup(Rect rect, GUIContent label, System.Enum selected)
+		{
+#if UNITY_EDITOR
+			if (!Application.isPlaying)
+				return UnityEditor.EditorGUI.EnumPopup(rect, label, selected);
+#endif
+			return selected;
+		}
+
+		public static System.Enum EnumFlagsPopup(System.Enum selected, params GUILayoutOption[] options)
         {
             return EnumFlagsPopup(GUIContent.none, selected, options);
         }

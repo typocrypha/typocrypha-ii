@@ -1,11 +1,10 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 using NodeEditorFramework;
 using NodeEditorFramework.Utilities;
 
-namespace Gameflow {
+namespace Gameflow
+{
     [Node(false, "Event/Transition/Fade", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
     public class FadeNode : BaseNodeIO, ITimedNode {
         public enum FadeType

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEditor;
 using NodeEditorFramework;
 using NodeEditorFramework.Utilities;
 

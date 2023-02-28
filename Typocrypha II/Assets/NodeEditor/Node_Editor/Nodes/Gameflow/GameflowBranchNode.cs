@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 using NodeEditorFramework;
 using NodeEditorFramework.Utilities;
 using Gameflow.GUIUtilities;
@@ -68,7 +67,7 @@ namespace Gameflow
                     #if UNITY_EDITOR
                     float xOffset = 0;
                     Rect UIrect = new Rect(rect.x, rect.y + 2, 60, RTEditorGUI.lineHeight);
-                    elt.type = (BranchCase.CaseType)EditorGUI.EnumPopup(UIrect, GUIContent.none, elt.type);
+                    elt.type = (BranchCase.CaseType)RTEditorGUI.EnumPopup(UIrect, GUIContent.none, elt.type);
                     xOffset += (UIrect.width + 2);
                     UIrect = new Rect(rect.x + xOffset, rect.y + 1, 170, RTEditorGUI.lineHeight);
                     elt.pattern = GUI.TextField(UIrect, elt.pattern);
