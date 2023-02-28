@@ -15,6 +15,7 @@ using Gameflow;
 public class DialogScriptParser : EditorWindow
 {
     public const string assetPath = "Assets/ScriptableObjects/DialogScenes/";
+    public const string spellWordBundlePath = "Assets/ScriptableObjects/Bundles/AllWordsBundle.asset";
     TextAsset textScript; // Text script asset
     NodeCanvas canvas; // Generated canvas
     bool endAndTransition = true;
@@ -23,6 +24,7 @@ public class DialogScriptParser : EditorWindow
     Node prev;
 
     AssetBundle characterDataBundle; // Character data bundle
+    SpellWordBundle spellWords; // All spell words
     CharacterData[] allCharacterData; // All loaded character data
 
     readonly char[] lineDelim = new char[] { '\n' }; // Line delimiter.
@@ -69,7 +71,9 @@ public class DialogScriptParser : EditorWindow
         {"setdatetime", typeof(SetDateTimeTextNode) },
         {"setdate", typeof(SetDateTimeTextNode) },
         {"settime", typeof(SetDateTimeTextNode) },
-        {"clear", typeof(ClearNode) }
+        {"cast", typeof(CastSpellNode) },
+        {"castSpell", typeof(CastSpellNode) },
+        {"clear", typeof(ClearNode) },
     };
 
     // Generic node ID map. types that have entries in this map and the nodeMap can be created without additional partsing code
@@ -120,6 +124,7 @@ public class DialogScriptParser : EditorWindow
     {
         AssetBundle.UnloadAllAssetBundles(true);
         characterDataBundle = AssetBundle.LoadFromFile(System.IO.Path.Combine(Application.streamingAssetsPath, "characterdata"));
+        spellWords = AssetDatabase.LoadAssetAtPath<SpellWordBundle>(spellWordBundlePath);
         allCharacterData = characterDataBundle.LoadAllAssets<CharacterData>();
         canvas = null;
         Parse();
@@ -372,6 +377,42 @@ public class DialogScriptParser : EditorWindow
             var gnode = CreateNode(SetDateTimeTextNode.Id) as SetDateTimeTextNode;
             gnode.text = args[1];
             nodes.Add(gnode);
+        }
+        else if (nodeType == typeof(CastSpellNode))
+        {
+            var castNode = CreateNode(CastSpellNode.Id) as CastSpellNode;
+            if(args.Length < 6)
+            {
+                throw new System.Exception($"Incorrect number of args for cast node ({args.Length - 1}). Expected at least 5");
+            }
+            // Parse spell
+            var spellWordStrings = args[1].TrimEnd().ToLower().Split(Player.separator);
+            void TryParseSpellWord(int index, out SpellWord output)
+            {
+                if (spellWordStrings.Length > index)
+                {
+                    if (!spellWords.words.TryGetValue(spellWordStrings[index], out output))
+                    {
+                        throw new System.Exception($"Spell word {index + 1} of cast node ({spellWordStrings[index]}) doesn't exist!");
+                    }
+                }
+                else
+                {
+                    output = null;
+                }
+            }
+            TryParseSpellWord(0, out castNode.word1);
+            TryParseSpellWord(1, out castNode.word2);
+            TryParseSpellWord(2, out castNode.word3);
+
+            // Parse other data
+            castNode.targetPos = new Vector2Int(int.Parse(args[3]), int.Parse(args[2]));
+            castNode.casterPos = new Vector2Int(int.Parse(args[5]), int.Parse(args[4]));
+            if(args.Length >= 7)
+            {
+                castNode.messageOverride = args[6];
+            }
+            nodes.Add(castNode);
         }
         else
         {

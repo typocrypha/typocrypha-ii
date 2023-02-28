@@ -13,8 +13,8 @@ namespace Gameflow
         public override string Title { get { return "Cast Spell"; } }
         public override Vector2 MinSize { get { return new Vector2(300, 40); } }
 
-        public const string ID = "castSpell";
-        public override string GetID { get { return ID; } }
+        public const string Id = "castSpell";
+        public override string GetID { get { return Id; } }
 
         public SpellWord word1;
         public SpellWord word2;
