@@ -8,7 +8,7 @@
 
 
 >addchar,Ayin,0,0,left
->addchar,Adelai,0,0,right
+>addchar,Adelai,0,0,right,frustrated
 
 
 Narrator: Demons are pouring out of the train station.
@@ -70,7 +70,7 @@ Adelai[0,2]: After you use a spell it goes on {c,ui-terms}cooldown.{c}
 Adelai[0,2]: You’ll have to {c,ui-terms}use different spells{c} until it recharges.
 
 
-Adelai[0,2]: Just keep using whatever’s highlighted in your {c,ui-terms}Spell List{c}--it should be located at the {c,ui-terms}bottom left of your Typocrypha interface.{c}
+Adelai[0,2[a]]: Just keep using whatever’s highlighted in your {c,ui-terms}Spell List{c}--it should be located at the {c,ui-terms}bottom left of your Typocrypha interface.{c}
 
 
 >end
@@ -103,16 +103,16 @@ Adelai(serious): Move out of the way!
 Adelai[0,2]: SWORD!
 
 
-// TODO: Changeling takes damage.
+>castSpell,SWORD,0,1,1,2
 
 
 Adelai[0,2]: Ayin, you have to {c,ui-terms}type the spells{c} into your Typocrypha! Remember?
 
 
-Adelai[0,2]: In the {c,ui-terms}bottom left of your Typocrypha interface{c} is your {c,ui-terms}Spell List.{c}
+Adelai[0,2[b]]: In the {c,ui-terms}bottom left of your Typocrypha interface{c} is your {c,ui-terms}Spell List.{c}
 
 
-Adelai[0,2]: Try typing in the spell “PUNCH” and then {c,ui-terms}press enter{c} to cast the spell!
+Adelai[0,2[c]]: Try typing in the spell “PUNCH” and then {c,ui-terms}press enter{c} to cast the spell!
 
 
 // TODO: Waits for player to cast a spell. Enemy is paused in meantime.
@@ -209,13 +209,13 @@ Adelai: Here, let me just...
 Clarke[0,1]: Typocrypha mode switch: BATTLE mode.
 
 
-Adelai[0,2]: There!
+Adelai(normal)[0,2]: There!
 
 
 Ayin[0,1]: W-Woah! What do all these spells do?
 
 
-Adelai[0,2]: No time to explain! Just keep typing!!
+Adelai(serious)[0,2]: No time to explain! Just keep typing!!
 
 
 >end
@@ -246,7 +246,7 @@ Ayin(surprised): Counter?
 >addchar,Adelai,0,0,right
 
 
-Adelai[0,2]: Whenever you see an enemy casting a spell that you also have, try hitting them with it!
+Adelai(normal)[0,2]: Whenever you see an enemy casting a spell that you also have, try hitting them with it!
 
 
 Adelai[0,2]: Like those Tanukis! 
@@ -260,7 +260,7 @@ Tanuki[1,1]: Feel the pointy wrath of my {c,highlight}LANCE{c} spell!
 Adelai[0,2]: When they start charging up a {c,ui-terms}LANCE{c} spell, use your own {c,ui-terms}LANCE{c} to counter them!
 
 
-Adelai[0,2]: Your Typocrypha should highlight those opportunities in {c,highlight}Orange{c}, so just keep a lookout!
+Adelai(serious)[0,2]: Your Typocrypha should highlight those opportunities in {c,highlight}Orange{c}, so just keep a lookout!
 
 
 >end
@@ -274,7 +274,7 @@ Adelai[0,2]: Your Typocrypha should highlight those opportunities in {c,highligh
 >addchar,Adelai,0,0,right
 
 
-Adelai[0,2]: You {c,ui-terms}countered{c} that demon, Ayin!
+Adelai(normal)[0,2]: You {c,ui-terms}countered{c} that demon, Ayin!
 
 
 Adelai[0,2]: Whenever you counter a demon, it’ll make them stop casting their current spell!
@@ -302,3 +302,8 @@ Adelai[0,2]: They’ll start swarming us out of desperation, so just keep taking
 
 
 >end
+
+
+[a]to update placement near spelllist
+[b]update position near spell list
+[c]update position near spell list

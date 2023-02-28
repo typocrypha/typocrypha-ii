@@ -1,50 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8188256041871339895
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 648e1859616c185439cc1cabbedf0a64, type: 3}
-  m_Name: Bubble Dialog
-  m_EditorClassIdentifier: 
-  position: {x: 960, y: 0}
-  dynamicConnectionPorts: []
-  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: 7512243748189299621}
-  fromPreviousIN: {fileID: 7266806720470848105}
-  characterName: Adelai
-  displayName: 
-  text: They'll start swarming us out of desperation, so just keep taking them down!
-  tipsData: {fileID: 0}
-  gridPosition: {x: 0, y: 2}
-  absolutePosition: {x: -100, y: -100}
---- !u!114 &-7938915412499015185
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: From Previous
-  m_EditorClassIdentifier: 
-  body: {fileID: 1277860608410319956}
-  direction: 1
-  maxConnectionCount: 1
-  styleID: Gameflow
-  _connections:
-  - {fileID: -3089183206155078167}
-  side: 4
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &-7631395601937089576
+--- !u!114 &-8069714425226723321
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -56,16 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
   m_Name: To Next
   m_EditorClassIdentifier: 
-  body: {fileID: -3067727407155934659}
+  body: {fileID: 628821662438309713}
   direction: 2
   maxConnectionCount: 0
   styleID: Gameflow
   _connections:
-  - {fileID: -7278655983252633247}
+  - {fileID: -2881489589602030324}
   side: 2
   sidePosition: 30
   sideOffset: 0
---- !u!114 &-7278655983252633247
+--- !u!114 &-7211050138587428963
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -77,37 +33,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
   m_Name: From Previous
   m_EditorClassIdentifier: 
-  body: {fileID: -1940465799768325606}
+  body: {fileID: 628821662438309713}
   direction: 1
   maxConnectionCount: 1
   styleID: Gameflow
   _connections:
-  - {fileID: -7631395601937089576}
+  - {fileID: 5290523750931861321}
   side: 4
   sidePosition: 30
   sideOffset: 0
---- !u!114 &-6597349736684755935
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: From Previous
-  m_EditorClassIdentifier: 
-  body: {fileID: -6040386646657160980}
-  direction: 1
-  maxConnectionCount: 1
-  styleID: Gameflow
-  _connections:
-  - {fileID: -5422457980979202340}
-  side: 4
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &-6040386646657160980
+--- !u!114 &-4080580991330434350
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -122,15 +57,57 @@ MonoBehaviour:
   position: {x: 670, y: 0}
   dynamicConnectionPorts: []
   backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: 2825884770899062296}
-  fromPreviousIN: {fileID: -6597349736684755935}
+  toNextOUT: {fileID: -588060678565088708}
+  fromPreviousIN: {fileID: -2881489589602030324}
   characterName: Adelai
   displayName: 
   text: I think this is the last of them!
   tipsData: {fileID: 0}
   gridPosition: {x: 0, y: 2}
   absolutePosition: {x: -100, y: -100}
---- !u!114 &-5422457980979202340
+--- !u!114 &-2881489589602030324
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
+  m_Name: From Previous
+  m_EditorClassIdentifier: 
+  body: {fileID: -4080580991330434350}
+  direction: 1
+  maxConnectionCount: 1
+  styleID: Gameflow
+  _connections:
+  - {fileID: -8069714425226723321}
+  side: 4
+  sidePosition: 30
+  sideOffset: 0
+--- !u!114 &-2588956535026541920
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
+  m_Name: From Previous
+  m_EditorClassIdentifier: 
+  body: {fileID: 9008920957502148513}
+  direction: 1
+  maxConnectionCount: 1
+  styleID: Gameflow
+  _connections:
+  - {fileID: -588060678565088708}
+  side: 4
+  sidePosition: 30
+  sideOffset: 0
+--- !u!114 &-870217971660769566
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -142,32 +119,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
   m_Name: To Next
   m_EditorClassIdentifier: 
-  body: {fileID: 1277860608410319956}
+  body: {fileID: -440373694546444260}
   direction: 2
   maxConnectionCount: 0
   styleID: Gameflow
   _connections:
-  - {fileID: -6597349736684755935}
+  - {fileID: 2972587608845528878}
   side: 2
   sidePosition: 30
   sideOffset: 0
---- !u!114 &-4381076449079659542
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0fc64b704248afd4a889e6a8984d17c9, type: 3}
-  m_Name: End And Hide
-  m_EditorClassIdentifier: 
-  position: {x: 1250, y: 0}
-  dynamicConnectionPorts: []
-  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  fromPreviousIN: {fileID: 7197295024513630109}
---- !u!114 &-3089183206155078167
+--- !u!114 &-588060678565088708
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -179,16 +140,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
   m_Name: To Next
   m_EditorClassIdentifier: 
-  body: {fileID: -1940465799768325606}
+  body: {fileID: -4080580991330434350}
   direction: 2
   maxConnectionCount: 0
   styleID: Gameflow
   _connections:
-  - {fileID: -7938915412499015185}
+  - {fileID: -2588956535026541920}
   side: 2
   sidePosition: 30
   sideOffset: 0
---- !u!114 &-3067727407155934659
+--- !u!114 &-440373694546444260
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -203,25 +164,7 @@ MonoBehaviour:
   position: {x: 0, y: 0}
   dynamicConnectionPorts: []
   backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: -7631395601937089576}
---- !u!114 &-1940465799768325606
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f5e563f8691e544bae09d8876e19413, type: 3}
-  m_Name: Set Dialog View
-  m_EditorClassIdentifier: 
-  position: {x: 190, y: 0}
-  dynamicConnectionPorts: []
-  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: -3089183206155078167}
-  fromPreviousIN: {fileID: -7278655983252633247}
-  viewName: bubble
+  toNextOUT: {fileID: -870217971660769566}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -239,14 +182,14 @@ MonoBehaviour:
   savePath: Assets\ScriptableObjects\DialogScenes\ACT I-4-5-Opening.asset
   livesInScene: 0
   nodes:
-  - {fileID: -3067727407155934659}
-  - {fileID: -1940465799768325606}
-  - {fileID: 1277860608410319956}
-  - {fileID: -6040386646657160980}
-  - {fileID: -8188256041871339895}
-  - {fileID: -4381076449079659542}
+  - {fileID: -440373694546444260}
+  - {fileID: 1684629106921680136}
+  - {fileID: 628821662438309713}
+  - {fileID: -4080580991330434350}
+  - {fileID: 9008920957502148513}
+  - {fileID: 1397579230779333602}
   groups: []
---- !u!114 &1277860608410319956
+--- !u!114 &628821662438309713
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -261,14 +204,14 @@ MonoBehaviour:
   position: {x: 380, y: 0}
   dynamicConnectionPorts: []
   backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: -5422457980979202340}
-  fromPreviousIN: {fileID: -7938915412499015185}
+  toNextOUT: {fileID: -8069714425226723321}
+  fromPreviousIN: {fileID: -7211050138587428963}
   characterData: {fileID: 11400000, guid: ef5b41e7e06f4b74f952e825682fca78, type: 2}
   targetPos: {x: 0, y: 0}
   column: 0
   initialPose: 
   initialExpr: 
---- !u!114 &2825884770899062296
+--- !u!114 &1397579230779333602
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -277,19 +220,32 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: To Next
+  m_Script: {fileID: 11500000, guid: 0fc64b704248afd4a889e6a8984d17c9, type: 3}
+  m_Name: End And Hide
   m_EditorClassIdentifier: 
-  body: {fileID: -6040386646657160980}
-  direction: 2
-  maxConnectionCount: 0
-  styleID: Gameflow
-  _connections:
-  - {fileID: 7266806720470848105}
-  side: 2
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &7197295024513630109
+  position: {x: 1250, y: 0}
+  dynamicConnectionPorts: []
+  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+  fromPreviousIN: {fileID: 5833878271580150458}
+--- !u!114 &1684629106921680136
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f5e563f8691e544bae09d8876e19413, type: 3}
+  m_Name: Set Dialog View
+  m_EditorClassIdentifier: 
+  position: {x: 190, y: 0}
+  dynamicConnectionPorts: []
+  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+  toNextOUT: {fileID: 5290523750931861321}
+  fromPreviousIN: {fileID: 2972587608845528878}
+  viewName: bubble
+--- !u!114 &2972587608845528878
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -301,37 +257,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
   m_Name: From Previous
   m_EditorClassIdentifier: 
-  body: {fileID: -4381076449079659542}
+  body: {fileID: 1684629106921680136}
   direction: 1
   maxConnectionCount: 1
   styleID: Gameflow
   _connections:
-  - {fileID: 7512243748189299621}
+  - {fileID: -870217971660769566}
   side: 4
   sidePosition: 30
   sideOffset: 0
---- !u!114 &7266806720470848105
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: From Previous
-  m_EditorClassIdentifier: 
-  body: {fileID: -8188256041871339895}
-  direction: 1
-  maxConnectionCount: 1
-  styleID: Gameflow
-  _connections:
-  - {fileID: 2825884770899062296}
-  side: 4
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &7512243748189299621
+--- !u!114 &2977741382495135811
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -343,12 +278,77 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
   m_Name: To Next
   m_EditorClassIdentifier: 
-  body: {fileID: -8188256041871339895}
+  body: {fileID: 9008920957502148513}
   direction: 2
   maxConnectionCount: 0
   styleID: Gameflow
   _connections:
-  - {fileID: 7197295024513630109}
+  - {fileID: 5833878271580150458}
   side: 2
   sidePosition: 30
   sideOffset: 0
+--- !u!114 &5290523750931861321
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
+  m_Name: To Next
+  m_EditorClassIdentifier: 
+  body: {fileID: 1684629106921680136}
+  direction: 2
+  maxConnectionCount: 0
+  styleID: Gameflow
+  _connections:
+  - {fileID: -7211050138587428963}
+  side: 2
+  sidePosition: 30
+  sideOffset: 0
+--- !u!114 &5833878271580150458
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
+  m_Name: From Previous
+  m_EditorClassIdentifier: 
+  body: {fileID: 1397579230779333602}
+  direction: 1
+  maxConnectionCount: 1
+  styleID: Gameflow
+  _connections:
+  - {fileID: 2977741382495135811}
+  side: 4
+  sidePosition: 30
+  sideOffset: 0
+--- !u!114 &9008920957502148513
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 648e1859616c185439cc1cabbedf0a64, type: 3}
+  m_Name: Bubble Dialog
+  m_EditorClassIdentifier: 
+  position: {x: 960, y: 0}
+  dynamicConnectionPorts: []
+  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+  toNextOUT: {fileID: 2977741382495135811}
+  fromPreviousIN: {fileID: -2588956535026541920}
+  characterName: Adelai
+  displayName: 
+  text: They'll start swarming us out of desperation, so just keep taking them down!
+  tipsData: {fileID: 0}
+  gridPosition: {x: 0, y: 2}
+  absolutePosition: {x: -100, y: -100}
