@@ -22,7 +22,7 @@ public static class LoadSpellBundlesOnPlayMode
         foreach (var bundle in spellBundles)
         {
             bundle.words.Clear();
-            var words = AssetUtils.LoadAllAssetsInDirectory<SpellWord>(bundle.assetPath);
+            var words = AssetUtils.LoadAllAssetsInDirectoryRecursive<SpellWord>(bundle.assetPath);
             foreach (var word in words)
             {
                 if(!bundle.words.ContainsKey(word.internalName))
