@@ -5,7 +5,7 @@ using System.Collections.Generic;
 [RequireComponent(typeof(ATB3.ATBPlayer))]
 public class Player : Caster
 {
-    public char[] separator = { ' ', '-' };
+    public static readonly char[] separator = { ' ', '-' };
 
     ATB3.ATBPlayer playerActor;
 
