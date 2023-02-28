@@ -344,6 +344,12 @@ public class Battlefield : MonoBehaviour, IPausable
             _col = toCopy.Col;
         }
 
+        public Position(Vector2Int toCopy)
+        {
+            _row = toCopy.y;
+            _col = toCopy.x;
+        }
+
         public void SetIllegalPosition (int row, int col)
         {
             _row = row;

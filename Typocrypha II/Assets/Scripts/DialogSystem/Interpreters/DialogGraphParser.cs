@@ -302,6 +302,25 @@ public class DialogGraphParser : MonoBehaviour
         {
             DialogManager.instance.DialogView.CleanUp();
         }
+        else if (currNode is CastSpellNode castNode)
+        {
+            var spellManager = SpellManager.instance;
+            var battleField = Battlefield.instance;
+            if(spellManager != null && battleField != null)
+            {
+                var caster = battleField.GetCaster(new Battlefield.Position(castNode.casterPos));
+                if (caster != null)
+                {
+                    var msgOverride = string.IsNullOrEmpty(castNode.messageOverride) ? null : castNode.messageOverride;
+                    StartCoroutine(WaitOnRoutine(spellManager.Cast(castNode.GetSpell(), caster, new Battlefield.Position(castNode.targetPos), msgOverride)));
+                    return null;
+                }
+                else
+                {
+                    Debug.LogError($"Caster found at (row {castNode.casterPos.y}, col {castNode.casterPos.x}). Cast will be skipped");
+                }
+            }
+        }
         // Check if need to wait on node to complete.
         if (currNode is ITimedNode)
         {
