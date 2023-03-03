@@ -72,6 +72,15 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
         return bCooldown.Cooldown.CompareTo(aCooldown.Cooldown);
     }
 
+    public void ClearWords()
+    {
+        foreach(var kvp in cooldowns)
+        {
+            Destroy(kvp.Value.gameObject);
+        }
+        cooldowns.Clear();
+    }
+
     public void AddWord(SpellWord word, bool sort = false)
     {
         if (IsOnCooldown(word))

@@ -74,13 +74,17 @@ public class DialogScriptParser : EditorWindow
         {"cast", typeof(CastSpellNode) },
         {"castSpell", typeof(CastSpellNode) },
         {"clear", typeof(ClearNode) },
+        {"clearSpells", typeof(ClearEquippedSpellsNode) },
+        {"addSpell", typeof(AddEquippedSpellsNode) },
+        {"addSpells", typeof(AddEquippedSpellsNode) },
     };
 
     // Generic node ID map. types that have entries in this map and the nodeMap can be created without additional partsing code
     // This should only be done with nodes that have no arguments
     readonly Dictionary<System.Type, string> nodeIDMap = new Dictionary<System.Type, string>
     {
-        {typeof(ClearNode), ClearNode.ID }
+        {typeof(ClearNode), ClearNode.ID },
+        {typeof(ClearEquippedSpellsNode), ClearEquippedSpellsNode.ID },
     };
 
     AnimationCurve bgmFadeIn = AnimationCurve.Constant(0,0,1);//AnimationCurve.EaseInOut(0, 0, 0.1, 1); // Default fade in curve
@@ -383,27 +387,13 @@ public class DialogScriptParser : EditorWindow
             var castNode = CreateNode(CastSpellNode.Id) as CastSpellNode;
             if(args.Length < 6)
             {
-                throw new System.Exception($"Incorrect number of args for cast node ({args.Length - 1}). Expected at least 5");
+                throw new System.Exception($"Incorrect number of args for cast spell node ({args.Length - 1}). Expected at least 5");
             }
             // Parse spell
-            var spellWordStrings = args[1].TrimEnd().ToLower().Split(Player.separator);
-            void TryParseSpellWord(int index, out SpellWord output)
-            {
-                if (spellWordStrings.Length > index)
-                {
-                    if (!spellWords.words.TryGetValue(spellWordStrings[index], out output))
-                    {
-                        throw new System.Exception($"Spell word {index + 1} of cast node ({spellWordStrings[index]}) doesn't exist!");
-                    }
-                }
-                else
-                {
-                    output = null;
-                }
-            }
-            TryParseSpellWord(0, out castNode.word1);
-            TryParseSpellWord(1, out castNode.word2);
-            TryParseSpellWord(2, out castNode.word3);
+            var spellWordStrings = args[1].Split(Player.separator);
+            TryParseSpellWord(spellWordStrings, 0, out castNode.word1, CastSpellNode.Id);
+            TryParseSpellWord(spellWordStrings, 1, out castNode.word2, CastSpellNode.Id);
+            TryParseSpellWord(spellWordStrings, 2, out castNode.word3, CastSpellNode.Id);
 
             // Parse other data
             castNode.targetPos = new Vector2Int(int.Parse(args[3]), int.Parse(args[2]));
@@ -413,6 +403,24 @@ public class DialogScriptParser : EditorWindow
                 castNode.messageOverride = args[6];
             }
             nodes.Add(castNode);
+        }
+        else if(nodeType == typeof(AddEquippedSpellsNode))
+        {
+            var addSpellsNode = CreateNode(AddEquippedSpellsNode.Id) as AddEquippedSpellsNode;
+            if(args.Length < 2)
+            {
+                throw new System.Exception($"Incorrect number of args for add spell node ({args.Length - 1}). Expected at least 2");
+            }
+            TryParseSpellWord(args[1], out addSpellsNode.word1, AddEquippedSpellsNode.Id);
+            if(args.Length >= 3)
+            {
+                TryParseSpellWord(args[2], out addSpellsNode.word2, AddEquippedSpellsNode.Id);
+            }
+            if (args.Length >= 4)
+            {
+                TryParseSpellWord(args[3], out addSpellsNode.word3, AddEquippedSpellsNode.Id);
+            }
+            nodes.Add(addSpellsNode);
         }
         else
         {
@@ -677,5 +685,25 @@ public class DialogScriptParser : EditorWindow
         folders[0] = path;
         System.Array.Copy(sub, 0, folders, 1, sub.Length);
         return folders;
+    }
+
+    private void TryParseSpellWord(string[] words, int index, out SpellWord output, string nodeName)
+    {
+        if (words.Length > index)
+        {
+            TryParseSpellWord(words[index], out output, nodeName);
+        }
+        else
+        {
+            output = null;
+        }
+    }
+
+    private void TryParseSpellWord(string word, out SpellWord output, string nodeName)
+    {
+        if (!spellWords.words.TryGetValue(word.Trim().ToLower(), out output))
+        {
+            throw new System.Exception($"Spell word \"{word}\" doesn't exist! Node type: {nodeName}");
+        }
     }
 }

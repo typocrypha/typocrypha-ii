@@ -321,6 +321,44 @@ public class DialogGraphParser : MonoBehaviour
                 }
             }
         }
+        else if (currNode is ClearEquippedSpellsNode)
+        {
+            var playerData = PlayerDataManager.instance;
+            if(playerData != null)
+            {
+                var cooldowns = SpellCooldownManager.instance;
+                var equipment = playerData.equipment;
+                if (cooldowns != null && equipment != null)
+                {
+                    cooldowns.ClearWords();
+                    equipment.EquippedWords.Clear();
+                }
+            }
+        }
+        else if(currNode is AddEquippedSpellsNode addSpellsNode)
+        {
+            var playerData = PlayerDataManager.instance;
+            if (playerData != null)
+            {
+                var cooldowns = SpellCooldownManager.instance;
+                var equipment = playerData.equipment;
+                if (cooldowns != null && equipment != null)
+                {
+                    void AddWord(SpellWord word)
+                    {
+                        if(word != null)
+                        {
+                            cooldowns.AddWord(word);
+                            equipment.EquippedWords.Add(word);
+                        }
+                    }
+                    AddWord(addSpellsNode.word1);
+                    AddWord(addSpellsNode.word2);
+                    AddWord(addSpellsNode.word3);
+                    cooldowns.SortCooldowns();
+                }
+            }
+        }
         // Check if need to wait on node to complete.
         if (currNode is ITimedNode)
         {
