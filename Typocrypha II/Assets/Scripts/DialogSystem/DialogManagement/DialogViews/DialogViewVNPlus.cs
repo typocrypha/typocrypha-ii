@@ -82,6 +82,11 @@ public class DialogViewVNPlus : DialogView
         leftCharacterList.Clear();
     }
 
+    public override Coroutine Clear()
+    {
+        ClearLog();
+        return null;
+    }
     private void ClearLog()
     {
         StopAllCoroutines();

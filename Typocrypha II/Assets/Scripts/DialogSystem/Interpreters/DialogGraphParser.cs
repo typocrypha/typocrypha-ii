@@ -300,7 +300,12 @@ public class DialogGraphParser : MonoBehaviour
         }
         else if (currNode is ClearNode clearNode)
         {
-            DialogManager.instance.DialogView.CleanUp();
+            var clearRoutine = DialogManager.instance.DialogView.Clear();
+            if(clearRoutine != null)
+            {
+                StartCoroutine(WaitOnRoutine(clearRoutine));
+                return null;
+            }
         }
         else if (currNode is CastSpellNode castNode)
         {

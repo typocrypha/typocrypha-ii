@@ -77,7 +77,6 @@ public class DialogViewAN : DialogView
         yield return fadeOut.WaitForCompletion();
     }
 
-    // Clear all AN dialogue (TODO)
     public void ClearLog()
     {
         foreach(var dialogBox in activeDialogBoxes)

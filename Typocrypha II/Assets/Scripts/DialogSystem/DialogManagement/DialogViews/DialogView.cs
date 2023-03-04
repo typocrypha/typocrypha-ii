@@ -45,6 +45,15 @@ public abstract class DialogView : MonoBehaviour
     /// </summary>
     public abstract void CleanUp();
 
+    /// <summary>
+    /// Clears all dialog boxes from the current view
+    /// </summary>
+    public virtual Coroutine Clear()
+    {
+        CleanUp();
+        return null;
+    }
+
     protected bool IsDialogItemCorrectType<T>(DialogItem item, out T itemT) where T : DialogItem
     {
         itemT = item as T;

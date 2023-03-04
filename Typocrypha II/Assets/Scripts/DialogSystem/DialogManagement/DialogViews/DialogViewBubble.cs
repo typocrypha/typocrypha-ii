@@ -103,7 +103,7 @@ public class DialogViewBubble : DialogView
         readyToContinue = false;
         if (IsBoxShowing)
         {
-            yield return StartCoroutine(HideCurrentBox());
+            yield return StartCoroutine(HideCurrentBox(false));
         }
         lastBoxPosition = gridPos;
         lastBoxAbsolutePosition = absPos;
@@ -137,7 +137,7 @@ public class DialogViewBubble : DialogView
         yield return showHideBoxTween.WaitForCompletion();
     }
 
-    private IEnumerator HideCurrentBox()
+    private IEnumerator HideCurrentBox(bool resetLastBox = true)
     {
         if (!IsBoxShowing)
             yield break;
@@ -146,16 +146,24 @@ public class DialogViewBubble : DialogView
         showHideBoxTween.Start(currentBox.transform.DOScale(Vector2.zero, showHideBoxTween.Time));
         yield return showHideBoxTween.WaitForCompletion();
         currentBox.gameObject.SetActive(false);
+        if (resetLastBox)
+        {
+            ResetLastBox();
+        }
     }
 
     public override void CleanUp()
     {
-        lastBoxPosition = nullGridPos;
-        lastBoxAbsolutePosition = nullAbsolutePos;
-        foreach(var box in dialogBoxGrid)
+        ResetLastBox();
+        foreach (var box in dialogBoxGrid)
         {
             box.gameObject.SetActive(false);
         }
+    }
+
+    public override Coroutine Clear()
+    {
+        return StartCoroutine(HideCurrentBox());
     }
 
     public override bool AddCharacter(AddCharacterArgs args)
@@ -179,7 +187,6 @@ public class DialogViewBubble : DialogView
         if (IsBoxShowing)
         {
             yield return StartCoroutine(HideCurrentBox());
-            ResetLastBox();
         }
         yield return CharacterManager.AddCharacter(data, initialExpr, initialPose);
         readyToContinue = true;
@@ -201,7 +208,6 @@ public class DialogViewBubble : DialogView
         if (IsBoxShowing)
         {
             yield return StartCoroutine(HideCurrentBox());
-            ResetLastBox();
         }
         yield return CharacterManager.HideCharacter();
         readyToContinue = true;
