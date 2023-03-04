@@ -1,11 +1,10 @@
-﻿using System.Collections;
+﻿using Gameflow;
+using NodeEditorFramework;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
-using NodeEditorFramework;
-using Gameflow;
 
 // Syntax: https://docs.google.com/document/d/1za4Xt3NwA6cOirZnnqCrD0kbA193A7Ypk6n_yVwa1e4/edit#heading=h.jg4trxckxznj
 
@@ -89,8 +88,10 @@ public class DialogScriptParser : EditorWindow
         {typeof(EndAndHide), EndAndHide.ID },
     };
 
-    AnimationCurve bgmFadeIn = AnimationCurve.Constant(0,0,1);//AnimationCurve.EaseInOut(0, 0, 0.1, 1); // Default fade in curve
-    AnimationCurve bgmFadeOut = AnimationCurve.EaseInOut(0, 1, 1, 0); // Default fade out curve
+    private const float defaultBgmFadeLength = 1.0f;
+    AnimationCurve bgmFadeInDefault = AnimationCurve.Constant(0,0,1); // Default fade in curve
+    AnimationCurve bgmFadeOutDefault = AnimationCurve.EaseInOut(0, 1, defaultBgmFadeLength, 0); // Default fade out curve
+    readonly Dictionary<string, AnimationCurve> customFadeCurves = new Dictionary<string, AnimationCurve>();
 
     const float nodeSpacing = 40f;
 
@@ -324,13 +325,49 @@ public class DialogScriptParser : EditorWindow
             string path = AssetDatabase.FindAssets(args[1], AssetDatabase.GetSubFolders("Assets/Audio/Clips/Music"))[0];
             path = AssetDatabase.GUIDToAssetPath(path);
             gnode.bgm = AssetDatabase.LoadAssetAtPath<AudioClip>(path);
-            gnode.fadeCurve = bgmFadeIn;
+            // If there aren't enough args to contain a fade curve or the curve parse fails, use the default
+            if (args.Length == 3)
+            {
+                if(!TryParseFadeCurve(args[2], defaultBgmFadeLength, true, out gnode.fadeCurve))
+                {
+                    gnode.fadeCurve = bgmFadeInDefault;
+                }
+            }
+            else if(args.Length >= 4)
+            {
+                if (!TryParseFadeCurve(args[2], args[3], true, out gnode.fadeCurve))
+                {
+                    gnode.fadeCurve = bgmFadeInDefault;
+                }
+            }
+            else
+            {
+                gnode.fadeCurve = bgmFadeInDefault;
+            }
             nodes.Add(gnode);
         }
         else if (nodeType == typeof(StopBgm))
         {
             var gnode = CreateNode(StopBgm.ID) as StopBgm;
-            gnode.fadeCurve = bgmFadeOut;
+            // If there aren't enough args to contain a fade curve or the curve parse fails, use the default
+            if (args.Length == 2)
+            {
+                if (!TryParseFadeCurve(args[1], defaultBgmFadeLength, false, out gnode.fadeCurve))
+                {
+                    gnode.fadeCurve = bgmFadeOutDefault;
+                }
+            }
+            else if (args.Length >= 3)
+            {
+                if (!TryParseFadeCurve(args[1], args[2], false, out gnode.fadeCurve))
+                {
+                    gnode.fadeCurve = bgmFadeOutDefault;
+                }
+            }
+            else
+            {
+                gnode.fadeCurve = bgmFadeOutDefault;
+            }
             nodes.Add(gnode);
         }
         else if (nodeType == typeof(SetBackgroundNode))
@@ -698,5 +735,44 @@ public class DialogScriptParser : EditorWindow
         {
             throw new System.Exception($"Spell word \"{word}\" doesn't exist! Node type: {nodeName}");
         }
+    }
+
+    private bool TryParseFadeCurve(string curveType, float time, bool isFadeIn, out AnimationCurve curve)
+    {
+        float start = isFadeIn ? 0 : 1;
+        float end = isFadeIn ? 1 : 0;
+        string curveTypeProcessed = curveType.ToLower();
+        if (curveTypeProcessed == "ease")
+        {
+            curve = AnimationCurve.EaseInOut(0, start, time, end);
+            return true;
+        }
+        if (curveTypeProcessed == "linear")
+        {
+            curve = AnimationCurve.Linear(0, start, time, end);
+            return true;
+        }
+        if (curveTypeProcessed == "constant" || curveTypeProcessed == "immediate")
+        {
+            curve = AnimationCurve.Constant(0, 0, end);
+            return true;
+        }
+        if (customFadeCurves.ContainsKey(curveTypeProcessed))
+        {
+            curve = customFadeCurves[curveTypeProcessed];
+            return true;
+        }
+        curve = null;
+        return false;
+    }
+
+    private bool TryParseFadeCurve(string curveType, string time, bool isFadeIn, out AnimationCurve curve)
+    {
+        if(!float.TryParse(time, out float timeNumber))
+        {
+            curve = null;
+            return false;
+        }
+        return TryParseFadeCurve(curveType, timeNumber, isFadeIn, out curve);
     }
 }

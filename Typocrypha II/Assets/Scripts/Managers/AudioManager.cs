@@ -34,6 +34,7 @@ public class AudioManager : MonoBehaviour, ISavable
 
     AssetBundle audioBundle; // Asset bundle containing all clips.
     int bgmInd; // Index of in use bgm audio source.
+    private Coroutine fadeRoutine;
 
     public AudioClip this[string clipName] // Allows access to audio clips by name.
     {
@@ -77,7 +78,11 @@ public class AudioManager : MonoBehaviour, ISavable
         bgm[bgmInd].loop = true;
         if (fadeCurve != null)
         {
-            StartCoroutine(FadeIn(fadeCurve));
+            if(fadeRoutine != null)
+            {
+                StopCoroutine(fadeRoutine);
+            }
+            fadeRoutine = StartCoroutine(FadeIn(fadeCurve));
         }
         else
         {
@@ -94,12 +99,15 @@ public class AudioManager : MonoBehaviour, ISavable
         bgm[bgmInd].volume = 0f;
         bgm[bgmInd].Play();
         float time = 0f;
-        while (time < 1f)
+        float length = fadeCurve.keys[fadeCurve.length - 1].time;
+        while (time < length)
         {
             bgm[bgmInd].volume = fadeCurve.Evaluate(time);
             yield return new WaitForFixedUpdate();
             time += Time.fixedDeltaTime;
         }
+        bgm[bgmInd].volume = 1f;
+        fadeRoutine = null;
     }
 
     /// <summary>
@@ -110,7 +118,11 @@ public class AudioManager : MonoBehaviour, ISavable
     {
         if (fadeCurve != null)
         {
-            StartCoroutine(FadeOut(fadeCurve));
+            if (fadeRoutine != null)
+            {
+                StopCoroutine(fadeRoutine);
+            }
+            fadeRoutine = StartCoroutine(FadeOut(fadeCurve));
         }
         else
         {
@@ -125,13 +137,15 @@ public class AudioManager : MonoBehaviour, ISavable
     IEnumerator FadeOut(AnimationCurve fadeCurve)
     {
         float time = 0f;
-        while (time < 1f)
+        float length = fadeCurve.keys[fadeCurve.length - 1].time;
+        while (time < length)
         {
             bgm[bgmInd].volume = fadeCurve.Evaluate(time);
             yield return new WaitForFixedUpdate();
             time += Time.fixedDeltaTime;
         }
         bgm[bgmInd].Stop();
+        fadeRoutine = null;
     }
 
     /// <summary>
