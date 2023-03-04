@@ -121,6 +121,10 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     private void StartDialog(bool reset = false)
     {
         PH.Pause = false;
+        if (isBattle)
+        {
+            BattleManager.instance.PH.Pause = true;
+        }
         graphParser.Init();
         if (reset)
         {
@@ -259,12 +263,13 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
         ReadyToContinue = false;
         yield return DialogView.PlayExitAnimation(isEndOfDialog);
         DialogView.gameObject.SetActive(false);
-        if(isEndOfDialog && isBattle && AllyBattleBoxManager.instance != null)
+        if(isEndOfDialog && isBattle)
         {
-            if(AllyBattleBoxManager.instance.ShowBattleAlly() != null)
+            if(AllyBattleBoxManager.instance != null && AllyBattleBoxManager.instance.ShowBattleAlly() != null)
             {
                 yield return new WaitForSeconds(0.5f);
             }
+            BattleManager.instance.PH.Pause = false;
         }
         ReadyToContinue = true;
         PH.Pause = true;
