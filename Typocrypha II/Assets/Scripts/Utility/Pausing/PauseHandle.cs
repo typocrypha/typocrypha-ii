@@ -19,10 +19,22 @@ public class PauseHandle
         get => pauseCount != 0;
         set
         {
-            if (pauseCount == 0 && value) onPause(true);
-            if (pauseCount == 1 && !value) onPause(false);
-            if (value) pauseCount++;
-            else if (pauseCount > 0) pauseCount--;
+            if (value)
+            {
+                pauseCount++;
+                if(pauseCount == 1)
+                {
+                    onPause(true);
+                }
+            }
+            else if (pauseCount > 0)
+            {
+                pauseCount--;
+                if(pauseCount == 0)
+                {
+                    onPause(false);
+                }
+            }
         }
     }
 
