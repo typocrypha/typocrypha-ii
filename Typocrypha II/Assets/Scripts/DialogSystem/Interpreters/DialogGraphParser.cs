@@ -367,7 +367,6 @@ public class DialogGraphParser : MonoBehaviour
         // Check if need to wait on node to complete.
         if (currNode is ITimedNode)
         {
-            DialogManager.instance.PH.Pause = true;
             StartCoroutine(WaitOnNode(currNode as ITimedNode));
             return null;
         }
@@ -384,22 +383,25 @@ public class DialogGraphParser : MonoBehaviour
     /// <param name="node">Node to wait on.</param>
     IEnumerator WaitOnNode(ITimedNode node)
     {
+        DialogManager.instance.ReadyToContinue = false;
         yield return new WaitUntil(() => node.IsCompleted);
-        DialogManager.instance.PH.Pause = false;
+        DialogManager.instance.ReadyToContinue = true;
         DialogManager.instance.NextDialog(true);
     }
 
     IEnumerator WaitOnFunc(System.Func<bool> isComplete)
     {
+        DialogManager.instance.ReadyToContinue = false;
         yield return new WaitUntil(isComplete);
-        DialogManager.instance.PH.Pause = false;
+        DialogManager.instance.ReadyToContinue = true;
         DialogManager.instance.NextDialog(true);
     }
 
     IEnumerator WaitOnRoutine(Coroutine routine)
     {
+        DialogManager.instance.ReadyToContinue = false;
         yield return routine;
-        DialogManager.instance.PH.Pause = false;
+        DialogManager.instance.ReadyToContinue = true;
         DialogManager.instance.NextDialog(true);
     }
 

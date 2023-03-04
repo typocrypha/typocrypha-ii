@@ -58,7 +58,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     [HideInInspector] public IDialogBox dialogBox; // Latest displayed dialog box.
     [HideInInspector] public int dialogCounter = 0; // Number of dialog lines passed.
 
-    private bool readyToContinue = true;
+    public bool ReadyToContinue { get; set; } = true;
     private DialogGraphParser graphParser; // Dialog graph currently playing.
 
     void Awake()
@@ -91,7 +91,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
         }
 #endif
         // Check if submit key is pressed
-        if (readyToContinue && dialogBox != null && DialogView.ReadyToContinue && Input.GetKeyDown(KeyCode.Space))
+        if (ReadyToContinue && dialogBox != null && DialogView.ReadyToContinue && Input.GetKeyDown(KeyCode.Space))
         {
             if (dialogBox.IsDone) // If dialog is done, go to next dialog
             {
@@ -244,19 +244,19 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
 
     private IEnumerator ShowView(System.Action onComplete)
     {
-        readyToContinue = false;
+        ReadyToContinue = false;
         if (ShouldHideAllyBox)
         {
             yield return StartCoroutine(HideAllyBoxCr());
         }
         DialogView.gameObject.SetActive(true);
         yield return DialogView.PlayEnterAnimation();
-        readyToContinue = true;
+        ReadyToContinue = true;
         onComplete?.Invoke();
     }
     private IEnumerator HideView(bool isEndOfDialog, System.Action onComplete)
     {
-        readyToContinue = false;
+        ReadyToContinue = false;
         yield return DialogView.PlayExitAnimation(isEndOfDialog);
         DialogView.gameObject.SetActive(false);
         if(isEndOfDialog && isBattle && AllyBattleBoxManager.instance != null)
@@ -266,7 +266,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
                 yield return new WaitForSeconds(0.5f);
             }
         }
-        readyToContinue = true;
+        ReadyToContinue = true;
         PH.Pause = true;
         onComplete?.Invoke();
     }
@@ -311,7 +311,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     // Hide all views except for current.
     private IEnumerator ChangeViews(System.Action callback)
     {
-        readyToContinue = false;
+        ReadyToContinue = false;
         if (lastView != null && !lastView.IsHidden)
         {
             yield return lastView.PlayExitAnimation(false);
