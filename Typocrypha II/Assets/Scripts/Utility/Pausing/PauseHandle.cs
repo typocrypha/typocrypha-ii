@@ -12,8 +12,7 @@ public class PauseHandle
 {
     OnPauseDel onPause; // Function called when paused/unpaused.
     int pauseCount = 0; // Number of nested pause states.
-
-    public bool IsPaused() => Pause;
+    private PauseHandle parent;
     public bool Pause
     {
         get => pauseCount != 0;
@@ -38,6 +37,24 @@ public class PauseHandle
         }
     }
 
+    public void SetParent(PauseHandle newParent)
+    {
+        if (newParent == null)
+            return;
+        FreeFromParent();
+        newParent.onPause += onPause;
+        parent = newParent;
+    }
+
+    private void FreeFromParent()
+    {
+        if(parent != null)
+        {
+            parent.onPause -= onPause;
+            parent = null;
+        }
+    }
+
     /// <summary>
     /// Initialize pause handle.
     /// </summary>
@@ -51,5 +68,6 @@ public class PauseHandle
     ~PauseHandle()
     {
         PauseManager.instance?.allPausable.Remove(this);
+        FreeFromParent();
     }
 }

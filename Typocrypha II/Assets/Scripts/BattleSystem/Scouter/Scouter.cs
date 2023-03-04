@@ -9,19 +9,18 @@ using UnityEngine.UI;
 public class Scouter : MonoBehaviour, IPausable
 {
     #region IPausable
-    PauseHandle ph;
-    public PauseHandle PH => ph;
+    public PauseHandle PH { get; private set; }
     // Stop target reticule movement and animation.
     public void OnPause(bool pause)
     {
         enabled = !pause;
-        GetComponent<Animator>().speed = pause ? 0f : 1f;
     }
     #endregion
 
     public GameObject scouterDisplay; // Scouter display object.
     public DialogBox scouterDialog; // Scouter text dialog.
     public Image scouterImage; // Scouter image.
+    [SerializeField] private TargetReticle targetReticle;
 
     public bool ScouterActive // Is the scouter active (i.e. display is active)?
     {
@@ -31,27 +30,22 @@ public class Scouter : MonoBehaviour, IPausable
 
     void Awake()
     {
-        ph = new PauseHandle(OnPause);
+        PH = new PauseHandle(OnPause);
     }
 
-    public float MoveSpeed = 0.5f; // Speed of target reticule movement (when selecting diff targets).
-    Vector2 TargetPos // Position of player target.
+    void Start()
     {
-        get => Battlefield.instance.Player != null
-            ? Battlefield.instance.GetSpace(Battlefield.instance.Player.TargetPos)
-            : Vector2.zero;
+        PH.SetParent(BattleManager.instance.PH);
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Move scouter reticule
-        if (!ScouterActive)
-            transform.position = Vector2.Lerp(transform.position, TargetPos, MoveSpeed);
         // Toggle scouter
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (Input.GetKeyDown(KeyCode.LeftShift) && (!Battlefield.instance.PH.Pause || ScouterActive))
         {
             ScouterActive = !ScouterActive;
+            targetReticle.PH.Pause = ScouterActive;
             Battlefield.instance.PH.Pause = ScouterActive;
             if (ScouterActive)
             {

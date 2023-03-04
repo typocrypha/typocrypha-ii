@@ -91,12 +91,13 @@ namespace ATB3
 
             if (soloStack.Count == 0)
             {
-                if (BattleManager.instance != null)
-                    BattleManager.instance.PH.Pause = true; // Pause Battle events.
+                BattleManager.instance.SetBattleEventPause(true); // Pause Battle events.
                 Battlefield.instance.PH.Pause = true; // Pause battle field
             }
             else
+            {
                 soloStack.Peek().Pause = true;
+            }
             soloActor.Pause = false;
             soloStack.Push(soloActor);
         }
@@ -118,8 +119,7 @@ namespace ATB3
                 //CastBar.MainBar.focus = true;
                 foreach (ATBActor actor in Battlefield.instance.Actors)
                     actor.isCast = false;
-                if (BattleManager.instance != null)
-                    BattleManager.instance.PH.Pause = false; // Unpause Battle events.
+                BattleManager.instance.SetBattleEventPause(false);
                 Battlefield.instance.PH.Pause = false; // Pause battle field
             }
             // Otherwise, give solo to next in stack

@@ -343,7 +343,7 @@ public class Caster : FieldObject
     public Battlefield.Position TargetPos { get; set; } = new Battlefield.Position(0, 0);
     public CasterUI ui = null;
 
-    protected void Awake()
+    protected virtual void Awake()
     {
         if (ui == null) ui = GetComponentInChildren<CasterUI>();
         tags.RecalculateAggregate();

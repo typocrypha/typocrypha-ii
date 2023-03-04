@@ -1,9 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using Gameflow;
-using TMPro;
 
 [RequireComponent(typeof(BattleGraphParser))]
 public class BattleManager : MonoBehaviour, IPausable
@@ -11,11 +9,10 @@ public class BattleManager : MonoBehaviour, IPausable
     #region IPausable
     PauseHandle ph;
     public PauseHandle PH { get => ph; }
-    public void OnPause(bool b) // Pauses battle events and battlefield
+    public void OnPause(bool pauseState) // Pauses battle events and battlefield
     {
-        foreach (var e in currEvents)
-            e.PH.Pause = b;
-        Battlefield.instance.PH.Pause = b;
+        SetBattleEventPause(pauseState);
+        Battlefield.instance.PH.Pause = pauseState;
     }
     #endregion
 
@@ -114,6 +111,12 @@ public class BattleManager : MonoBehaviour, IPausable
     {
         currEvents.Add(battleEvent);
         // Start it paused if the battleManager is in a paused state
+    }
+
+    public void SetBattleEventPause(bool pause)
+    {
+        foreach (var e in currEvents)
+            e.PH.Pause = pause;
     }
 
     public void NextWave()

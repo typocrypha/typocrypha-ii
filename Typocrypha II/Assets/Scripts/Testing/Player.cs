@@ -3,20 +3,33 @@ using UnityEngine;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(ATB3.ATBPlayer))]
-public class Player : Caster
+public class Player : Caster, IPausable
 {
     public static readonly char[] separator = { ' ', '-' };
 
-    ATB3.ATBPlayer playerActor;
+    #region IPausable
+    public PauseHandle PH { get; private set; }
 
-    new public void Awake()
+    public void OnPause(bool pause)
+    {
+        // Stop input (target control)
+        enabled = !pause;
+    }
+    #endregion
+
+    protected override void Awake()
     {
         base.Awake();
         Stats.MaxHP = 100; // DEBUG
         Health = Stats.MaxHP;
-        playerActor = GetComponent<ATB3.ATBPlayer>();
         DisplayName = "Ayin";
         TargetPos = new Battlefield.Position(0, 1);
+        PH = new PauseHandle(OnPause);
+    }
+
+    private void Start()
+    {
+        PH.SetParent(BattleManager.instance.PH);
     }
 
     /// <summary>
@@ -46,8 +59,6 @@ public class Player : Caster
     }
     private void Update()
     {
-        //if (playerActor.Pause || playerActor.isCast)
-        //    return;
         if (Input.GetKeyDown(KeyCode.LeftArrow))
             TargetPos.Col = Mathf.Max(0, TargetPos.Col - 1);
         if (Input.GetKeyDown(KeyCode.RightArrow))
@@ -72,6 +83,5 @@ public class Player : Caster
             while (newPos.Col != TargetPos.Col);
             TargetPos.Col = newPos.Col;
         }
-
     }
 }
