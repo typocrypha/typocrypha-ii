@@ -21,24 +21,9 @@ public class BattleGraphParser : GraphParser
         if (currNode == null) return null;
         if (currNode is GameflowEndNode)
         {
-            if (currNode is EndAndHide)
-            {
-                DialogManager.instance.Hide(true, null);
-                return null;
-            }
-            // NON-FUNCTIONAL WITH BATTLES (CHECK WITH JAMES)
-            //else if (currNode is EndAndGoto) // Immediately start new dialog graph.
-            //{
-            //    var node = currNode as EndAndGoto;
-            //    Graph = node.nextDialog;
-            //    Init();
-            //    return NextDialog();
-            //}
-            else if (currNode is EndAndTransition) // Transitions scenes.
-            {
-                TransitionManager.instance.TransitionToNextScene();
-                return null;
-            }
+            // Transition to next scene regardless of which end node is used
+            TransitionManager.instance.TransitionToNextScene();
+            return null;
         }
         else if (currNode is BattleNodeWave)
         {
