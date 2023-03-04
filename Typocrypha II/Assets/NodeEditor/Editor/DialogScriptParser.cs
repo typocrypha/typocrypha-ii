@@ -58,8 +58,8 @@ public class DialogScriptParser : EditorWindow
         {"stopbgm", typeof(StopBgm) },
         {"setbg", typeof(SetBackgroundNode) },
         {"fade", typeof(FadeNode) },
-        {"end", typeof(GameflowEndNode) },
         {"start" , typeof(GameflowStartNode) },
+        {"end", typeof(EndAndHide) },
         {"endt", typeof(EndAndTransition) },
         {"setvar", typeof(SetVariableNode) },
         {"setexpr", typeof(SetExpression) },
@@ -85,6 +85,8 @@ public class DialogScriptParser : EditorWindow
     {
         {typeof(ClearNode), ClearNode.ID },
         {typeof(ClearEquippedSpellsNode), ClearEquippedSpellsNode.ID },
+        {typeof(EndAndTransition), EndAndTransition.ID },
+        {typeof(EndAndHide), EndAndHide.ID },
     };
 
     AnimationCurve bgmFadeIn = AnimationCurve.Constant(0,0,1);//AnimationCurve.EaseInOut(0, 0, 0.1, 1); // Default fade in curve
@@ -352,15 +354,6 @@ public class DialogScriptParser : EditorWindow
             gnode.fadeType = args[1] == "in" ? FadeNode.FadeType.Fade_In : FadeNode.FadeType.Fade_Out;
             gnode.fadeTime = float.Parse(args[2]);
             gnode.fadeColor = new Color(float.Parse(args[3]), float.Parse(args[4]), float.Parse(args[5]), 1f);
-            nodes.Add(gnode);
-        }
-        else if (nodeType == typeof(EndAndTransition))
-        {
-            var gnode = CreateNode(EndAndTransition.ID) as EndAndTransition;
-            if(args.Length > 1)
-            {
-                gnode.nextScene = args[1];
-            }
             nodes.Add(gnode);
         }
         else if(nodeType == typeof(SetVariableNode))
