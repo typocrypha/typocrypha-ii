@@ -55,6 +55,7 @@ public class DialogScriptParser : EditorWindow
         {"removechar", typeof(RemoveCharacter) },
         {"playbgm", typeof(PlayBgm) },
         {"stopbgm", typeof(StopBgm) },
+        {"playsfx", typeof(PlaySfx) },
         {"setbg", typeof(SetBackgroundNode) },
         {"fade", typeof(FadeNode) },
         {"start" , typeof(GameflowStartNode) },
@@ -322,9 +323,7 @@ public class DialogScriptParser : EditorWindow
         else if (nodeType == typeof(PlayBgm))
         {
             var gnode = CreateNode(PlayBgm.ID) as PlayBgm;
-            string path = AssetDatabase.FindAssets(args[1], AssetDatabase.GetSubFolders("Assets/Audio/Clips/Music"))[0];
-            path = AssetDatabase.GUIDToAssetPath(path);
-            gnode.bgm = AssetDatabase.LoadAssetAtPath<AudioClip>(path);
+            gnode.bgm = LoadAsset<AudioClip>(args[1], "Assets/Audio/Clips/BGM");
             // If there aren't enough args to contain a fade curve or the curve parse fails, use the default
             if (args.Length == 3)
             {
@@ -369,6 +368,12 @@ public class DialogScriptParser : EditorWindow
                 gnode.fadeCurve = bgmFadeOutDefault;
             }
             nodes.Add(gnode);
+        }
+        else if (nodeType == typeof(PlaySfx))
+        {
+            var playSfxNode = CreateNode(PlaySfx.ID) as PlaySfx;
+            playSfxNode.sfx = LoadAsset<AudioClip>(args[1], "Assets/Audio/Clips/SFX");
+            nodes.Add(playSfxNode);
         }
         else if (nodeType == typeof(SetBackgroundNode))
         {
@@ -774,5 +779,12 @@ public class DialogScriptParser : EditorWindow
             return false;
         }
         return TryParseFadeCurve(curveType, timeNumber, isFadeIn, out curve);
+    }
+
+    private T LoadAsset<T>(string assetName, string folderPath) where T : UnityEngine.Object
+    {
+        string path = AssetDatabase.FindAssets(assetName, AssetDatabase.GetSubFolders(folderPath))[0];
+        path = AssetDatabase.GUIDToAssetPath(path);
+        return AssetDatabase.LoadAssetAtPath<T>(path);
     }
 }
