@@ -55,6 +55,8 @@ public class DialogScriptParser : EditorWindow
         {"removechar", typeof(RemoveCharacter) },
         {"playbgm", typeof(PlayBgm) },
         {"stopbgm", typeof(StopBgm) },
+        {"pausebgm", typeof(PauseBgm) },
+        {"unpausebgm", typeof(PauseBgm) },
         {"playsfx", typeof(PlaySfx) },
         {"setbg", typeof(SetBackgroundNode) },
         {"fade", typeof(FadeNode) },
@@ -368,6 +370,12 @@ public class DialogScriptParser : EditorWindow
                 gnode.fadeCurve = bgmFadeOutDefault;
             }
             nodes.Add(gnode);
+        }
+        else if (nodeType == typeof(PauseBgm))
+        {
+            var pauseBgmNode = CreateNode(PauseBgm.ID) as PauseBgm;
+            pauseBgmNode.pause = args[0] != "unpausebgm";
+            nodes.Add(pauseBgmNode);
         }
         else if (nodeType == typeof(PlaySfx))
         {
