@@ -11,13 +11,6 @@ public class FieldObject : MonoBehaviour
     [SerializeField] private bool _moveable = true;
     public bool IsMoveable { get => _moveable; set => _moveable = value; }
 
-    /// <summary>
-    /// Get the scouter info for this object.
-    /// Generally, this function should be overidden.
-    /// </summary>
-    /// <returns>Scouter Info for this object</returns>
-    public virtual ScouterInfo GetScouterInfo()
-    {
-        return null;
-    }
+    private ScouterData scouterData;
+    public ScouterData ScouterData => scouterData ?? (scouterData = GetComponent<ScouterData>());
 }

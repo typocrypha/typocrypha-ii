@@ -358,19 +358,4 @@ public class Caster : FieldObject
     }
 
     [System.Serializable] private class StatusEffectDict : SerializableDictionary<CasterTag, StatusEffect> { }
-
-    public override ScouterInfo GetScouterInfo()
-    {
-        switch (CasterState)
-        {
-            case State.Player:
-                return new ScouterInfo_Player(this);
-            case State.Ally:
-                return new ScouterInfo_Ally(this);
-            case State.Hostile:
-                return new ScouterInfo_Enemy(this);
-            default:
-                return null;
-        }
-    }
 }

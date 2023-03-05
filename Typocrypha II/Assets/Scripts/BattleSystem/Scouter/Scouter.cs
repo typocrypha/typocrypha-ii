@@ -44,28 +44,28 @@ public class Scouter : MonoBehaviour, IPausable
         // Toggle scouter
         if (Input.GetKeyDown(KeyCode.LeftShift) && (!Battlefield.instance.PH.Pause || ScouterActive))
         {
-            ScouterActive = !ScouterActive;
-            targetReticle.PH.Pause = ScouterActive;
-            Battlefield.instance.PH.Pause = ScouterActive;
-            if (ScouterActive)
-            {
-                var obj = Battlefield.instance.GetObject(Battlefield.instance.Player.TargetPos);
-                scouterDialog.StartDialogBox(obj?.GetScouterInfo().DescriptionText);
-                scouterImage.sprite = obj?.GetScouterInfo().DisplayImage;
-            }
+            ToggleScouter();
         }
     }
-
-    /// <summary>
-    /// Get scouter data from database.
-    /// </summary>
-    /// <param name="key">Name of data file.</param>
-    /// <returns>Scouter data object.</returns>
-    public static ScouterData GetScouterData(string key)
+    private void ToggleScouter()
     {
-        var bundle = AssetBundle.LoadFromFile(System.IO.Path.Combine(Application.streamingAssetsPath, "scouterdata"));
-        var data = bundle.LoadAsset<ScouterData>(key);
-        bundle.Unload(false);
-        return data;
+        if (ScouterActive)
+        {
+            ScouterActive = false;
+            targetReticle.PH.Pause = false;
+            Battlefield.instance.PH.Pause = false;
+            return;
+        }
+        var obj = Battlefield.instance.GetObject(Battlefield.instance.Player.TargetPos);
+        if(obj == null || obj.ScouterData == null)
+        {
+            return;
+        }
+
+        targetReticle.PH.Pause = true;
+        Battlefield.instance.PH.Pause = true;
+        ScouterActive = true;
+        scouterDialog.StartDialogBox(obj.ScouterData.Description);
+        scouterImage.sprite = obj.ScouterData.Image;
     }
 }
