@@ -35,12 +35,13 @@ public class Spell : IList<SpellWord>, IEquatable<Spell>
             var dict = new Dictionary<SpellWord, int>(Count);
             foreach(var root in Roots)
             {
-                if (!dict.ContainsKey(root))
+                var word = root.synonymOf ?? root;
+                if (!dict.ContainsKey(word))
                 {
-                    dict.Add(root, 1);
+                    dict.Add(word, 1);
                     continue;
                 }
-                dict[root]++;
+                dict[word]++;
             }
             return dict;
         }
@@ -129,7 +130,7 @@ public class Spell : IList<SpellWord>, IEquatable<Spell>
 
     public void Clear() => items.Clear();
 
-    public bool Contains(SpellWord item) => items.Contains(item);
+    public bool Contains(SpellWord item) => items.Exists(word => word == item || (word.synonymOf != null && word.synonymOf == item));
 
     public void CopyTo(SpellWord[] array, int arrayIndex) => items.CopyTo(array, arrayIndex);
 

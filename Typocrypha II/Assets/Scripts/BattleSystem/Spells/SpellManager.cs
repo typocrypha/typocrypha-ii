@@ -173,10 +173,10 @@ public class SpellManager : MonoBehaviour
         caster.OnAfterCastResolved?.Invoke(spell, caster);
     }
 
-    private IEnumerator CastAndCounterCR(Spell spell, Caster caster, Battlefield.Position target, Predicate<Caster> pred)
+    private IEnumerator CastAndCounterCR(Spell spell, Caster caster, Battlefield.Position target, Func<Caster, bool> pred)
     {
         yield return StartCoroutine(CastCR(spell, caster, target));
-        var cancelTargets = Battlefield.instance.Casters.Where((c) => pred(c));
+        var cancelTargets = Battlefield.instance.Casters.Where(pred);
         foreach (var cancelTarget in cancelTargets)
         {
             if (cancelTarget.Spell == null || cancelTarget.Stunned)

@@ -26,6 +26,7 @@ public class SpellWordInspector : Editor
         word.category = EditorUtils.EnumPopup(new GUIContent("Category", "The category of spell word this is. Used for sorting cooldowns"), word.category);
         word.cost = EditorGUILayout.FloatField(new GUIContent("Cost", "The MP or time cost of the action, if cast by an ally or enemy"), word.cost);
         word.cooldown = EditorGUILayout.IntField(new GUIContent("Cooldown", "The cooldown of the word, if cast by the player"), word.cooldown);
+        word.synonymOf = EditorUtils.ObjectField(new GUIContent("Is Synonym of", "The base word this word is a synonym of, if applicable"), word.synonymOf, false);
         EditorUtils.Separator();
     }
 }

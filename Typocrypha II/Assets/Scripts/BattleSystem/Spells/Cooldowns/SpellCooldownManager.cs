@@ -132,7 +132,7 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
         {
             if (TryGetCooldown(kvp.Key, out var cooldown))
             {
-                cooldown.Cooldown = cooldown.FullCooldown + (kvp.Value - 1);
+                cooldown.Cooldown = kvp.Key.cooldown + (kvp.Value - 1);
             }
         }
         SortCooldowns();
@@ -145,6 +145,10 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
 
     private bool TryGetCooldown(SpellWord word, out SpellCooldown cooldown)
     {
+        if(word.synonymOf != null)
+        {
+            return cooldowns.TryGetValue(word.synonymOf.internalName.ToUpper(), out cooldown);
+        }
         return cooldowns.TryGetValue(word.internalName.ToUpper(), out cooldown);
     }
 

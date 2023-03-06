@@ -25,6 +25,7 @@ public class SpellParser : MonoBehaviour
     public static SpellParser instance = null;
     // Words that are availible even if not equipped
     [SerializeField] private SpellWordBundle freeWordBundle;
+    [SerializeField] private SpellWordBundle synonymBundle;
     private readonly Dictionary<string, SpellWord> freeWords = new Dictionary<string, SpellWord>();
     //public SpellWordBundle roots;
     //public SpellWordBundle modifiers;
@@ -77,6 +78,14 @@ public class SpellParser : MonoBehaviour
             {
                 s.Add(freeWords[word]);
                 if (freeWords[word] is RootWord)
+                {
+                    ++roots;
+                }
+            }
+            else if (synonymBundle.words.TryGetValue(word, out var synonym) && (words.ContainsKey(synonym.synonymOf.Key) || freeWords.ContainsKey(synonym.synonymOf.Key)))
+            {
+                s.Add(synonym);
+                if(synonym is RootWord)
                 {
                     ++roots;
                 }
