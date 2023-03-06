@@ -244,18 +244,19 @@ public static class Damage
         // Compute cumulative reactions
         foreach (var tag in effect.tags)
         {
-            if (tag != null)
+            if (tag == null)
             {
-                var r = target.GetReactions(tag);
-                if (r != null) reactions.AddSet(r);
-                if(target.ExtraReactions != null)
+                continue;
+            }
+            var tagReactions = target.GetReactions(tag);
+            if (tagReactions != null) reactions.AddSet(tagReactions);
+            if (target.ExtraReactions != null)
+            {
+                foreach (Caster.GetReactionsFn deleg in target.ExtraReactions.GetInvocationList())
                 {
-                    foreach (Caster.GetReactionsFn deleg in target.ExtraReactions.GetInvocationList())
-                    {
-                        var r2 = deleg.Invoke(tag);
-                        if (r2 != null)
-                            reactions.AddSet(r2);
-                    }
+                    var extraReactions = deleg.Invoke(tag);
+                    if (extraReactions != null)
+                        reactions.AddSet(extraReactions);
                 }
             }
         }

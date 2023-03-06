@@ -5,6 +5,7 @@ using UnityEngine;
 public class StatusRemoveAfterHitOrCast : StatusEffect
 {
     public bool removeFromHits = true;
+    public bool onlyCountLastHitOfCast;
     public int hitsToRemove = 1;
     public bool removeFromCasts = true;
     public int castsToRemove = 1;
@@ -13,18 +14,12 @@ public class StatusRemoveAfterHitOrCast : StatusEffect
     private int hits;
     public override void OnAfterHit(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults data)
     {
-        // If the caster isn't also the target and the first cast isn't done, this is the first cast and this isn't a self-cast
-        if(caster != target && !firstCastDone)
-        {
-            firstCastDone = true;
-            return;
-        }
         if (!removeFromHits)
             return;
-        if (!firstCastDone && caster == target)
+        // Only count damage-dealing hits
+        if (!data.WillDealDamage)
             return;
-        // Don't destroy if the attack missed
-        if (data.Miss)
+        if (onlyCountLastHitOfCast && !spellData.IsLastRoot)
             return;
         if(++hits >= hitsToRemove)
             Remove();

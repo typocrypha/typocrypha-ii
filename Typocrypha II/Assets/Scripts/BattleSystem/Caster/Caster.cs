@@ -256,7 +256,7 @@ public class Caster : FieldObject
         if(statusEffects.ContainsKey(tag))
         {
             var effect = statusEffects[tag];
-            Destroy(effect);
+            Destroy(effect.gameObject);
             statusEffects.Remove(tag);
         }
         RemoveAbilities(tag);
