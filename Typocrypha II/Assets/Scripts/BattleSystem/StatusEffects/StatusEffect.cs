@@ -30,7 +30,7 @@ public abstract class StatusEffect : MonoBehaviour
         }         
         affected.OnAfterHitResolved += OnAfterHit;
         affected.OnAfterSpellEffectResolved += OnAfterCastResolved;
-        affected.OnBeforeHitResolved += OnBeforeAffectApplied;
+        affected.OnBeforeHitResolved += OnBeforeEffectApplied;
     }
 
     public abstract void Apply(ApplyStatusEffect effect, Caster caster, Caster target, CastResults data);
@@ -40,7 +40,7 @@ public abstract class StatusEffect : MonoBehaviour
 
     }
 
-    public virtual void OnBeforeAffectApplied(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults data)
+    public virtual void OnBeforeEffectApplied(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults data)
     {
 
     }
@@ -57,7 +57,7 @@ public abstract class StatusEffect : MonoBehaviour
     {
         affected.OnAfterHitResolved -= OnAfterHit;
         affected.OnAfterSpellEffectResolved -= OnAfterCastResolved;
-        affected.OnBeforeHitResolved -= OnBeforeAffectApplied;
+        affected.OnBeforeHitResolved -= OnBeforeEffectApplied;
     }
 
     /// <summary>
