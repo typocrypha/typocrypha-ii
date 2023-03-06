@@ -13,7 +13,7 @@ public class StompFormula : CustomFormula
         {
             results.Damage *= damageBonusMod;
             // Log some extra messages
-            LogMessage(caster.DisplayName + " used a low blow!");
+            LogMessage(target.DisplayName + " was crushed!");
         }
         // Apply the results of the cast in the standard manner
         Damage.ApplyStandard(results, effect, caster, target, spellData);
