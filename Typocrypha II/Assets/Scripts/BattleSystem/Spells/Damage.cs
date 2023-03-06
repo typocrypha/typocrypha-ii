@@ -49,7 +49,7 @@ public static class Damage
 
     public static CastResults Standard(DamageEffect effect, Caster caster, Caster target, SpecialModifier mod, RootCastData spellData)
     {
-        var results = new CastResults(caster, target);
+        var results = new CastResults(caster, target, 1);
         StandardHitCheck(results, effect, caster, target);
         StandardAtkDef(results, effect, caster, target);
         StandardElements(results, effect, caster, target);
@@ -63,7 +63,7 @@ public static class Damage
 
     public static CastResults StandardHeal(DamageEffect effect, Caster caster, Caster target, SpecialModifier mod, RootCastData spellData)
     {
-        var results = new CastResults(caster, target)
+        var results = new CastResults(caster, target, 1)
         {
             Miss = effect.tags.Contains("AlwaysMiss"),
         };
@@ -265,12 +265,6 @@ public static class Damage
             multiplier = reactions.Freq(Reaction.Repel);
             return Reaction.Repel;
         }
-        // If the target is weak to any of the tags, return weak
-        else if(reactions.Contains(Reaction.Weak))
-        {
-            multiplier = reactions.Freq(Reaction.Weak);
-            return Reaction.Weak;            
-        }
         #region  Drain and Dodge (currently deprecated)
         //// Else if any drain, drain
         //else if (reactions.Contains(Reaction.Drain))
@@ -286,19 +280,19 @@ public static class Damage
         //}
         #endregion
         // If the target blocks any of the tags, return block
-        else if (reactions.Contains(Reaction.Block))
+        if (reactions.Contains(Reaction.Block))
         {
             multiplier = reactions.Freq(Reaction.Block);
             return Reaction.Block;
         }
-        // If the target resists any of the tags, return resist
-        else if(reactions.Contains(Reaction.Resist))
+        // If the spell isn't blocked or repelled, compare number of weaknesses to resistances
+        multiplier = reactions.Freq(Reaction.Weak) - reactions.Freq(Reaction.Resist);
+        if(multiplier < 0)
         {
-            multiplier = reactions.Freq(Reaction.Resist);
-            return Reaction.Resist;            
+            multiplier = Mathf.Abs(multiplier);
+            return Reaction.Resist;
         }
-        else
-            return Reaction.Neutral;
+        return multiplier > 0 ? Reaction.Weak : Reaction.Neutral;
     }
     /// <summary>
     /// Get the standard damage multiplier for a given reaction.

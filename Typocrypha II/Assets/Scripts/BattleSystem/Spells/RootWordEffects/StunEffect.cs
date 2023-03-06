@@ -13,7 +13,6 @@ public class StunEffect : RootWordEffect
         Damage.StandardElements(results, this, caster, target);
         results.StaggerDamage = target.Stagger;
         results.DisplayDamage = false;
-        results.Damage = 0;
         Damage.ApplyStandard(results, this, caster, target, spellData);
         return results;
     }

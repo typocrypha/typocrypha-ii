@@ -15,15 +15,16 @@ public class CastResults
     public Damage.SpecialModifier Mod { get; set; }
     public float StaggerDamage { get; set; } = 0;
     public bool Stun { get; set; } = false;
-    public float Damage { get; set; } = 1;
+    public float Damage { get; set; } = 0;
     public float Combo { get; set; } = 0;
     public Reaction Effectiveness { get; set; } = Reaction.Neutral;
     public float EffectivenessMagnitude { get; set; } = 1;
 
-    public CastResults(Caster caster, Caster target)
+    public CastResults(Caster caster, Caster target, int startingDamage = 0)
     {
         this.caster = caster;
         this.target = target;
+        Damage = startingDamage;
     }
 
     public bool WillDealDamage => Damage > 0 && !Miss && (Effectiveness == Reaction.Neutral || Effectiveness == Reaction.Weak || Effectiveness == Reaction.Resist);
