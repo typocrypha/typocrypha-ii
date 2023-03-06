@@ -15,6 +15,7 @@ public class ApplyStatusEffectInspector : RootWordEffectInspector
         EditorUtils.Separator();
         var effect = target as ApplyStatusEffect;
         effect.statusEffectPrefab = EditorUtils.ObjectField(new GUIContent("Status Effect Prefab"), effect.statusEffectPrefab, false);
+        effect.canCrit = EditorGUILayout.ToggleLeft(new GUIContent("Can Crit"), effect.canCrit);
         serializedObject.ApplyModifiedProperties();
         if (GUI.changed)
             EditorUtility.SetDirty(target);

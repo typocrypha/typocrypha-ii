@@ -5,13 +5,19 @@ using UnityEngine;
 public class ApplyStatusEffect : RootWordEffect
 {
     public GameObject statusEffectPrefab;
+    public bool canCrit = false;
 
-    public override bool CanCrit => false;
+    public override bool CanCrit => canCrit;
 
     public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.SpecialModifier mod, RootCastResults prevResults = null)
     {
         var results = new CastResults(caster, target);
         Damage.StandardHitCheck(results, this, caster, target);
+        if(mod == Damage.SpecialModifier.CritBlock)
+        {
+            results.Miss = true;
+            return results;
+        }
         if (results.Miss)
             return results;
         results.Effectiveness = Damage.GetReaction(this, caster, target, out float mult);
@@ -19,8 +25,8 @@ public class ApplyStatusEffect : RootWordEffect
         if (Damage.ApplyReflect(results, this, caster, target, spellData))
             return results;
         var effect = Instantiate(statusEffectPrefab, target.transform).GetComponent<StatusEffect>();
-        effect.Apply(this, caster, target, results);
         target.AddTagWithStatusEffect(effect, effect.casterTag);
+        effect.Apply(this, caster, target, results);
         return results;
     }
 }
