@@ -11,7 +11,10 @@ public class ApplyStatusEffect : RootWordEffect
 
     public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.SpecialModifier mod, RootCastResults prevResults = null)
     {
-        var results = new CastResults(caster, target);
+        var results = new CastResults(caster, target)
+        {
+            Mod = mod,
+        };
         Damage.StandardHitCheck(results, this, caster, target);
         if(mod == Damage.SpecialModifier.CritBlock)
         {

@@ -12,12 +12,18 @@ public class StatusRemoveAfterHitOrCast : StatusEffect
     bool firstCastDone = false;
     private int casts;
     private int hits;
+
+    protected virtual bool DoesHitCount(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults data)
+    {
+        // Only count hits that would deal damage and are not misses
+        return data.WillDealDamage;
+    }
     public override void OnAfterHit(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults data)
     {
         if (!removeFromHits)
             return;
         // Only count damage-dealing hits
-        if (!data.WillDealDamage)
+        if (!DoesHitCount(effect, caster, target, spellData, data))
             return;
         if (onlyCountLastHitOfCast && !spellData.IsLastRoot)
             return;
