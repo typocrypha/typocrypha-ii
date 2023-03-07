@@ -7,6 +7,11 @@ public class StatusGuard : StatusRemoveAfterHitOrCast
     private SpellTag.TagSet resistTags = new SpellTag.TagSet();
     private Reaction resistReaction;
 
+    public override string FailMessage(Caster caster)
+    {
+        return $"{caster.DisplayName} is already guarding!";
+    }
+
     protected override bool DoesHitCount(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults data)
     {
         return base.DoesHitCount(effect, caster, target, spellData, data)
@@ -16,7 +21,10 @@ public class StatusGuard : StatusRemoveAfterHitOrCast
     {
         resistTags.Add(effect.tags);
         resistReaction = data.IsCrit ? Reaction.Block : Reaction.Resist;
-        SpellFxManager.instance.LogMessage($"{target.DisplayName} put its shield up!");
+        if(caster.CasterClass != Caster.Class.Player)
+        {
+            SpellFxManager.instance.LogMessage($"{target.DisplayName} put their shield up!");
+        }
     }
 
     public CasterTagDictionary.ReactionMultiSet GetReactions(SpellTag tag)

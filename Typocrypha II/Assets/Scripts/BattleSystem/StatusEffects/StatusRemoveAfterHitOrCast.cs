@@ -13,6 +13,11 @@ public class StatusRemoveAfterHitOrCast : StatusEffect
     private int casts;
     private int hits;
 
+    public override string FailMessage(Caster caster)
+    {
+        return "But it failed!";
+    }
+
     protected virtual bool DoesHitCount(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults data)
     {
         // Only count hits that would deal damage and are not misses

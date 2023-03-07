@@ -61,6 +61,8 @@ public class SerializableMultiSet<T> : ISerializationCallbackReceiver, IEnumerab
     //Removes the item from the multiset if its frequency is less than amount, else lowers the frequency by amount
     public void Remove(T item, int amount = 1)
     {
+        if (!_dictionary.ContainsKey(item))
+            return;
         if (_dictionary[item] <= amount)
             _dictionary.Remove(item);
         else

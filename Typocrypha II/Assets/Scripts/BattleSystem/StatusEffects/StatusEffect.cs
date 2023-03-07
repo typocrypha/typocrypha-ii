@@ -17,6 +17,8 @@ public abstract class StatusEffect : MonoBehaviour
         Cleanup();
     }
 
+    public abstract string FailMessage(Caster caster);
+
     /// <summary>
     /// Initialize subscriptions to Caster callbacks
     /// </summary>
