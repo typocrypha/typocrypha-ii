@@ -17,6 +17,11 @@ public class BattleDebug : MonoBehaviour
             DialogManager.instance.StopAllCoroutines();
             DialogManager.instance.Hide(true, DialogManager.instance.CleanUp);
         }
+        if (Input.GetKeyDown(KeyCode.F2))
+        {
+            BattleManager.instance.StopAllCoroutines();
+            BattleManager.instance.NextWave();
+        }
     }
 #endif
 }
