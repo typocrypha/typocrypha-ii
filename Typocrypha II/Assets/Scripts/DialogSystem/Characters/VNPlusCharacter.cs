@@ -7,6 +7,7 @@ using DG.Tweening;
 
 public class VNPlusCharacter : MonoBehaviour
 {
+    private const float scale = 0.99999f;
     private static readonly Color highlightColor = Color.white;
     private static readonly Color noHighlightColor = new Color(noHighlightValue, noHighlightValue, noHighlightValue, 1);
     private static readonly Color nameHighlightColor = new Color(0, 0, 0, 0);
@@ -207,7 +208,6 @@ public class VNPlusCharacter : MonoBehaviour
 
     public TweenInfo PlayJoinTween()
     {
-        float scale = mainRect.localScale.y;
         mainRect.localScale = new Vector3(mainRect.localScale.x, 0, mainRect.localScale.z);
         joinTween.Start(mainRect.DOScaleY(scale, joinTween.Time));
         return joinTween;
@@ -269,4 +269,9 @@ public class VNPlusCharacter : MonoBehaviour
 
         return heightDiff > 0f ? poseImage.rectTransform.sizeDelta.y * (1.0f - currentPivot.y) * intensity : 0f;
     }   
+
+    public void Clear()
+    {
+        Data = null;
+    }
 }

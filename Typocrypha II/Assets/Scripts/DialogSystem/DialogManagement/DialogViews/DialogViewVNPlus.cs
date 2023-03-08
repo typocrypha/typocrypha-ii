@@ -123,6 +123,7 @@ public class DialogViewVNPlus : DialogView
         if (character.Column == CharacterColumn.Right)
         {
             rightCharacterList.Remove(character);
+            rightCharacterPool.Enqueue(character);
             if (rightCharacterList.Count > 0)
             {
                 yield return StartCoroutine(AdjustCharacterListPostLeaveCR(rightCharacterContainer, rightCharacterList));
