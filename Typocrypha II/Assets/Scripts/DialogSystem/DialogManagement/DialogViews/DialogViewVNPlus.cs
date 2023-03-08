@@ -53,6 +53,8 @@ public class DialogViewVNPlus : DialogView
     private VNPlusDialogBoxUI lastBoxUI = null;
 
     private readonly List<DialogBox> dialogBoxPool = new List<DialogBox>(maxMessages * (messagePrefabTypes + 1));
+    private readonly Queue<VNPlusCharacter> rightCharacterPool = new Queue<VNPlusCharacter>(maxCharactersPerColumn);
+    private readonly Queue<VNPlusCharacter> leftCharacterPool = new Queue<VNPlusCharacter>(maxCharactersPerColumn);
 
     public override bool ShowImmediately => false;
 
@@ -65,17 +67,16 @@ public class DialogViewVNPlus : DialogView
     {
         StopAllCoroutines();
         ClearLog();
-        foreach (Transform child in leftCharacterContainer)
+        // Add the character boxes back to the pool
+        foreach (var chara in leftCharacterList)
         {
-            Destroy(child.gameObject);
+            chara.gameObject.SetActive(false);
+            leftCharacterPool.Enqueue(chara);
         }
-        foreach (Transform child in rightCharacterContainer)
+        foreach (var chara in rightCharacterList)
         {
-            Destroy(child.gameObject);
-        }
-        foreach (var kvp in characterMap)
-        {
-            Destroy(kvp.Value.gameObject);
+            chara.gameObject.SetActive(false);
+            rightCharacterPool.Enqueue(chara);
         }
         characterMap.Clear();
         rightCharacterList.Clear();
@@ -130,6 +131,7 @@ public class DialogViewVNPlus : DialogView
         else
         {
             leftCharacterList.Remove(character);
+            leftCharacterPool.Enqueue(character);
             if (leftCharacterList.Count > 0)
             {
                 yield return StartCoroutine(AdjustCharacterListPostLeaveCR(leftCharacterContainer, leftCharacterList));
@@ -164,7 +166,7 @@ public class DialogViewVNPlus : DialogView
             {
                 AdjustCharactersPreJoinInstant(rightCharacterContainer, rightCharacterList);
             }
-            newCharacter = InstantiateCharacter(rightCharacterPrefab, rightCharacterContainer, rightCharacterList);
+            newCharacter = InstantiateCharacter(rightCharacterPrefab, rightCharacterContainer, rightCharacterList, rightCharacterPool);
         }
         else
         {
@@ -172,7 +174,7 @@ public class DialogViewVNPlus : DialogView
             {
                 AdjustCharactersPreJoinInstant(leftCharacterContainer, leftCharacterList);
             }
-            newCharacter = InstantiateCharacter(leftCharacterPrefab, leftCharacterContainer, leftCharacterList);
+            newCharacter = InstantiateCharacter(leftCharacterPrefab, leftCharacterContainer, leftCharacterList, leftCharacterPool);
         }
         ProcessNewCharacter(newCharacter, args);
     }
@@ -215,7 +217,7 @@ public class DialogViewVNPlus : DialogView
             {
                 yield return StartCoroutine(AdjustCharacterListPreJoinCR(rightCharacterContainer, rightCharacterList));
             }
-            newCharacter = InstantiateCharacter(rightCharacterPrefab, rightCharacterContainer, rightCharacterList);
+            newCharacter = InstantiateCharacter(rightCharacterPrefab, rightCharacterContainer, rightCharacterList, rightCharacterPool);
         }
         else
         {
@@ -223,16 +225,27 @@ public class DialogViewVNPlus : DialogView
             {
                 yield return StartCoroutine(AdjustCharacterListPreJoinCR(leftCharacterContainer, leftCharacterList));
             }
-            newCharacter = InstantiateCharacter(leftCharacterPrefab, leftCharacterContainer, leftCharacterList);
+            newCharacter = InstantiateCharacter(leftCharacterPrefab, leftCharacterContainer, leftCharacterList, leftCharacterPool);
         }
         ProcessNewCharacter(newCharacter, args);
         yield return newCharacter.PlayJoinTween().WaitForCompletion();
         readyToContinue = true;
     }
 
-    private VNPlusCharacter InstantiateCharacter(GameObject prefab, RectTransform container, List<VNPlusCharacter> characterList)
+    private VNPlusCharacter InstantiateCharacter(GameObject prefab, RectTransform container, List<VNPlusCharacter> characterList, Queue<VNPlusCharacter> pool)
     {
-        var newCharacter = Instantiate(prefab, container).GetComponent<VNPlusCharacter>();
+        VNPlusCharacter newCharacter;
+        if(pool.Count > 0)
+        {
+            newCharacter = pool.Dequeue();
+            newCharacter.transform.SetAsLastSibling();
+            newCharacter.Clear();
+            transform.gameObject.SetActive(true);
+        }
+        else
+        {
+            newCharacter = Instantiate(prefab, container).GetComponent<VNPlusCharacter>();
+        }
         characterList.Add(newCharacter);
         var height = container.rect.height / characterList.Count;
         newCharacter.SetInitialHeight(height);
