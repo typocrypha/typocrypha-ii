@@ -231,6 +231,7 @@ public class DialogViewBubble : DialogView
     {
         if (isEndOfDialog)
         {
+            yield return HideCurrentBox();
             yield break;
         }
         yield return StartCoroutine(RemoveCharacterCR());
