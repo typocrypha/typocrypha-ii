@@ -26,6 +26,7 @@ public class DialogViewVNPlus : DialogView
     [SerializeField] private GameObject narratorDialogBoxPrefab;
     [SerializeField] private GameObject randoDialogBoxPrefab;
     [SerializeField] private RectTransform messageContainer;
+    [SerializeField] private RectTransform offScreenmessageContainer;
     [SerializeField] private VerticalLayoutGroup messageLayout;
     [SerializeField] private GameObject rightCharacterPrefab;
     [SerializeField] private GameObject leftCharacterPrefab;
@@ -52,7 +53,8 @@ public class DialogViewVNPlus : DialogView
     private float originalMessageAnchorPosY = float.MinValue;
     private VNPlusDialogBoxUI lastBoxUI = null;
 
-    private readonly List<DialogBox> dialogBoxPool = new List<DialogBox>(maxMessages * (messagePrefabTypes + 1));
+    private readonly List<DialogBox> activeDialogBoxes = new List<DialogBox>(maxMessages * (messagePrefabTypes + 1));
+    private readonly List<DialogBox> dialogBoxPoolOffScreen = new List<DialogBox>(maxMessages * (messagePrefabTypes + 1));
     private readonly Queue<VNPlusCharacter> rightCharacterPool = new Queue<VNPlusCharacter>(maxCharactersPerColumn);
     private readonly Queue<VNPlusCharacter> leftCharacterPool = new Queue<VNPlusCharacter>(maxCharactersPerColumn);
 
@@ -92,11 +94,12 @@ public class DialogViewVNPlus : DialogView
     {
         StopAllCoroutines();
         CompleteMessageTweens();
-        dialogBoxPool.Clear();
-        foreach (Transform child in messageContainer)
+        foreach (var box in activeDialogBoxes)
         {
-            Destroy(child.gameObject);
+            box.transform.SetParent(offScreenmessageContainer);
+            dialogBoxPoolOffScreen.Add(box);
         }
+        activeDialogBoxes.Clear();
         if (originalMessageAnchorPosY != float.MinValue)
         {
             messageContainer.anchoredPosition = new Vector2(messageContainer.anchoredPosition.x, originalMessageAnchorPosY);
@@ -361,26 +364,7 @@ public class DialogViewVNPlus : DialogView
             HighlightCharacter(dialogItem.CharacterData);
         }
         var prefab = GetMessagePrefab(dialogItem.CharacterData, out bool isNarrator);
-        DialogBox dialogBox = null;
-        if(dialogBoxPool.Count > maxMessages)
-        {
-            var prefabId = prefab.GetComponent<DialogBox>().ID;
-            for(int i = 0; i < dialogBoxPool.Count - maxMessages; ++i)
-            {
-                if(prefabId == dialogBoxPool[i].ID)
-                {
-                    dialogBox = dialogBoxPool[i];
-                    dialogBoxPool.RemoveAt(i);
-                    dialogBoxPool.Add(dialogBox);
-                    break;
-                }
-            }
-        }
-        if (dialogBox == null)
-        {
-            dialogBox = Instantiate(prefab, messageContainer).GetComponent<DialogBox>();
-            dialogBoxPool.Add(dialogBox);
-        }
+        DialogBox dialogBox = CreateDialogBox(prefab);
         dialogBox.transform.SetAsFirstSibling();
         var dialogBoxUI = dialogBox.GetComponent<VNPlusDialogBoxUI>();
         SetCharacterSpecificUI(dialogBoxUI, dialogItem.CharacterData);
@@ -398,6 +382,45 @@ public class DialogViewVNPlus : DialogView
             }
         }
         return dialogBox;
+    }
+
+    private DialogBox CreateDialogBox(GameObject prefab)
+    {
+        // Try Reusing active messages that are past the maximum
+        if (activeDialogBoxes.Count > maxMessages)
+        {
+            var prefabId = prefab.GetComponent<DialogBox>().ID;
+            for (int i = 0; i < activeDialogBoxes.Count - maxMessages; ++i)
+            {
+                if (prefabId == activeDialogBoxes[i].ID)
+                {
+                    var dialogBox = activeDialogBoxes[i];
+                    activeDialogBoxes.RemoveAt(i);
+                    activeDialogBoxes.Add(dialogBox);
+                    return dialogBox;
+                }
+            }
+        }
+        // Try using an offscreen dialog box from the pool
+        if (dialogBoxPoolOffScreen.Count > 0)
+        {
+            var prefabId = prefab.GetComponent<DialogBox>().ID;
+            for (int i = 0; i < dialogBoxPoolOffScreen.Count; ++i)
+            {
+                if (prefabId == dialogBoxPoolOffScreen[i].ID)
+                {
+                    var dialogBox = dialogBoxPoolOffScreen[i];
+                    dialogBoxPoolOffScreen.RemoveAt(i);
+                    dialogBox.transform.SetParent(messageContainer);
+                    activeDialogBoxes.Add(dialogBox);
+                    return dialogBox;
+                }
+            }
+        }
+        // Else, create a new dialog box
+        var newDialogBox = Instantiate(prefab, messageContainer).GetComponent<DialogBox>();
+        activeDialogBoxes.Add(newDialogBox);
+        return newDialogBox;
     }
 
     private void SetCharacterSpecificUI(VNPlusDialogBoxUI vnPlusUI, List<CharacterData> data)
@@ -447,7 +470,12 @@ public class DialogViewVNPlus : DialogView
         var yTemp = messageContainer.anchoredPosition.y;
         messageContainer.anchoredPosition = new Vector2(messageContainer.anchoredPosition.x, messageContainer.anchoredPosition.y + (box.GetBoxHeight() + messageLayout.spacing));
         messageTween.Start(messageContainer.DOAnchorPosY(yTemp, messageTween.Time));
-        if (!isNarrator)
+        // Initialize scale
+        if (isNarrator)
+        {
+            box.transform.localScale = new Vector3(1, 1, box.transform.localScale.z);
+        }
+        else
         {
             box.transform.localScale = new Vector3(0, 0, box.transform.localScale.z);
             messageScaleTween.Start(box.transform.DOScale(new Vector3(1, 1, box.transform.localScale.z), messageScaleTween.Time));
