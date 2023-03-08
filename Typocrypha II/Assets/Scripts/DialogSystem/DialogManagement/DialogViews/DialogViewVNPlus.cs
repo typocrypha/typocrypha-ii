@@ -70,17 +70,17 @@ public class DialogViewVNPlus : DialogView
         // Add the character boxes back to the pool
         foreach (var chara in leftCharacterList)
         {
-            chara.gameObject.SetActive(false);
+            chara.MainRect.localScale = new Vector2(chara.MainRect.localScale.x, 0);
             leftCharacterPool.Enqueue(chara);
         }
         foreach (var chara in rightCharacterList)
         {
-            chara.gameObject.SetActive(false);
+            chara.MainRect.localScale = new Vector2(chara.MainRect.localScale.x, 0);
             rightCharacterPool.Enqueue(chara);
         }
-        characterMap.Clear();
-        rightCharacterList.Clear();
         leftCharacterList.Clear();
+        rightCharacterList.Clear();
+        characterMap.Clear();
     }
 
     public override Coroutine Clear()
@@ -241,7 +241,6 @@ public class DialogViewVNPlus : DialogView
             newCharacter = pool.Dequeue();
             newCharacter.transform.SetAsLastSibling();
             newCharacter.Clear();
-            transform.gameObject.SetActive(true);
         }
         else
         {
