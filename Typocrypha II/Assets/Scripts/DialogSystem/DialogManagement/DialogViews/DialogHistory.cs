@@ -21,9 +21,25 @@ public class DialogHistory : MonoBehaviour, IPausable
 
     public static DialogHistory instance = null;
     public GameObject view; // Gameobject for entire viewable window.
-    public RectTransform content; // Content transform for scroll view.
-    public Scrollbar scrollBar; // Scrollbar for window.
-    public GameObject dialogBoxPrefab; // Prefab for line of dialog.
+    private readonly List<HistoryData> history = new List<HistoryData>(256);
+    [SerializeField] private HistoryDialog[] historyDialogs;
+
+    private int index = 0;
+    private int Index
+    {
+        get => index;
+        set
+        {
+            index = Mathf.Clamp(value, 0, Mathf.Max(0, history.Count - historyDialogs.Length));
+        }
+    }
+
+
+    bool IsShowing
+    {
+        get => view.activeSelf;
+        set => view.SetActive(value);
+    }
 
     void Awake()
     {
@@ -41,11 +57,65 @@ public class DialogHistory : MonoBehaviour, IPausable
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Semicolon))
+        if (IsShowing)
         {
-            view.SetActive(!view.activeSelf);
-            PauseManager.instance.PauseAll(view.activeSelf);
-            if (view.activeSelf) ph.Pause = false;
+            if (Input.GetKeyDown(KeyCode.Semicolon))
+            {
+                Hide();
+            }
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                int oldIndex = Index++;
+                if(oldIndex != Index)
+                {
+                    SetHistoryDialogs(Index);
+                }
+
+            }
+            if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                int oldIndex = Index--;
+                if (oldIndex != Index)
+                {
+                    SetHistoryDialogs(Index);
+                }
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.Semicolon) && !DialogManager.instance.PH.Pause)
+        {
+            Show();
+        }
+    }
+
+    private void Show()
+    {
+        IsShowing = true;
+        // Pause all then unpause self
+        PauseManager.instance.PauseAll(true);
+        ph.Pause = false;
+        Index = 0;
+        SetHistoryDialogs(Index);
+    }
+
+    private void Hide()
+    {
+        IsShowing = false;
+        // Unpause all
+        PauseManager.instance.PauseAll(false);
+    }
+
+    private void SetHistoryDialogs(int atIndex)
+    {
+        for (int i = 0; i < historyDialogs.Length; i++)
+        {
+            int historyIndex = (history.Count - 1) - (atIndex + i);
+            if(historyIndex < 0 || historyIndex >= history.Count)
+            {
+                historyDialogs[i].gameObject.SetActive(false);
+                continue;
+            }
+            historyDialogs[i].SetData(history[historyIndex]);
+            historyDialogs[i].gameObject.SetActive(true);
         }
     }
 
@@ -56,18 +126,18 @@ public class DialogHistory : MonoBehaviour, IPausable
     /// <param name="dialog">Dialog text.</param>
     public void AddHistory(string speaker, string dialog)
     {
-        // Create new dialog box and set its parameters.
-        var go = Instantiate(dialogBoxPrefab, content);
-        var dialogBox = go.GetComponent<DialogBox>();
-        dialogBox.dialogText.text = DialogParser.instance.RemoveTags(dialog);
-        dialogBox.SetBoxHeight(true, false);
-        go.transform.Find("NameText").GetComponent<TextMeshProUGUI>().text = 
-            speaker == "" ? "-" : speaker;
-        // Resize window.
-        content.sizeDelta = new Vector2(content.sizeDelta.x, 
-            content.sizeDelta.y + dialogBox.GetBoxHeight() + 
-            content.GetComponent<VerticalLayoutGroup>().spacing);
-        // Scroll to most recent entry.
-        scrollBar.value = 0f; 
+        history.Add(new HistoryData(speaker, dialog));
+    }
+
+    public class HistoryData
+    {
+        public HistoryData(string speaker, string text)
+        {
+            Speaker = speaker;
+            Text = text;
+        }
+
+        public string Speaker { get; set; }
+        public string Text { get; set; }
     }
 }
