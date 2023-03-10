@@ -21,8 +21,8 @@ public class DialogContinueIndicator : MonoBehaviour
     private Vector3 originalIndicatorScale = Vector3.zero;
 
     private Coroutine activeCoroutine = null;
-    private object activeMoveTween = null;
-    private object activeScaleTween = null;
+    private Tween activeMoveTween = null;
+    private Tween activeScaleTween = null;
 
     public void SetDialogBox(DialogBox box)
     {
@@ -49,6 +49,16 @@ public class DialogContinueIndicator : MonoBehaviour
 
     private void OnDisable()
     {
+        Cleanup();
+    }
+
+    private void OnDestroy()
+    {
+        Cleanup();
+    }
+
+    private void Cleanup()
+    {
         if (activeCoroutine != null)
         {
             StopCoroutine(activeCoroutine);
@@ -68,7 +78,7 @@ public class DialogContinueIndicator : MonoBehaviour
 
         AnimateIndicator();
 
-        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+        yield return new WaitUntil(() => !DialogManager.instance.PH.Pause && Input.GetKeyDown(KeyCode.Space));
         
         StopAnimation();
     }
@@ -79,25 +89,23 @@ public class DialogContinueIndicator : MonoBehaviour
         originalIndicatorPosition = continueIndicator.rectTransform.localPosition;
         activeMoveTween = continueIndicator.rectTransform.DOLocalMoveY(originalIndicatorPosition.y - moveYDistance, animationDuration, false)
             .SetEase(Ease.InOutSine)
-            .SetLoops(-1, LoopType.Yoyo)
-            .id;
+            .SetLoops(-1, LoopType.Yoyo);
         originalIndicatorScale = continueIndicator.rectTransform.localScale;
         activeScaleTween = continueIndicator.rectTransform.DOScaleY(scaleYAmount, animationDuration)
             .SetEase(Ease.InOutSine)
-            .SetLoops(-1, LoopType.Yoyo)
-            .id;
+            .SetLoops(-1, LoopType.Yoyo);
     }
 
     private void StopAnimation()
     {
         if (activeMoveTween != null)
         {
-            DOTween.Kill(activeMoveTween);
+            activeMoveTween.Kill(false);
             activeMoveTween = null;
         }
         if (activeScaleTween != null)
         {
-            DOTween.Kill(activeScaleTween);
+            activeMoveTween.Kill(false);
             activeScaleTween = null;
         }
         continueIndicator.rectTransform.localPosition = originalIndicatorPosition;
