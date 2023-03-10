@@ -31,11 +31,11 @@ public class DialogContinueIndicator : MonoBehaviour
 
     public void Activate()
     {
-        continueIndicator.enabled = false;
+        Cleanup();
         activeCoroutine = StartCoroutine(ActivateContinueIndicator());
     }
 
-    private void Start()
+    private void Awake()
     {
         indicatorDelaySeconds = new WaitForSeconds(indicatorDelay);
         originalIndicatorPosition = continueIndicator.rectTransform.localPosition;
@@ -105,7 +105,7 @@ public class DialogContinueIndicator : MonoBehaviour
         }
         if (activeScaleTween != null)
         {
-            activeMoveTween.Kill(false);
+            activeScaleTween.Kill(false);
             activeScaleTween = null;
         }
         continueIndicator.rectTransform.localPosition = originalIndicatorPosition;
