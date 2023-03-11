@@ -4,19 +4,15 @@ using UnityEngine;
 
 public class TitleBGSlider : MonoBehaviour
 {
-    Rigidbody2D rb;
-    RectTransform rt;
-
-    void Start() {
-        rb = GetComponent<Rigidbody2D>();
-        rb.velocity = new Vector2 (-32, 0);
-        rt = GetComponent<RectTransform>();
-
-    }
+    [SerializeField] float scrollSpeed;
+    [SerializeField] RectTransform rt;
     void FixedUpdate()
     {
+        rt.anchoredPosition -= new Vector2(scrollSpeed, 0);
         //shift by screen width
-        if (rt.anchoredPosition.x < -1366)
-            rt.anchoredPosition = new Vector2 (rt.anchoredPosition.x + 1366*2, 0);
+        if (rt.anchoredPosition.x <= -640)
+        {
+            rt.anchoredPosition = new Vector2(640, 0);
+        }
     }
 }
