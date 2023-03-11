@@ -164,7 +164,8 @@ public class AudioManager : MonoBehaviour, ISavable
     /// <param name="clip">Clip to play.</param>
     public void PlaySFX(AudioClip clip)
     {
-        Debug.Log("play sfx");
+        if (clip == null)
+            return;
         sfx.PlayOneShot(clip);
     }
 }
