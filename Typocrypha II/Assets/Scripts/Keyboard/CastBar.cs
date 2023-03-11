@@ -17,6 +17,7 @@ namespace Typocrypha
         public Transform cursor; // Cursor for keeping track of position.
         public GameObject[] keywords; // Set of all keywords (prefab effects).
         public UnityEvent_string onCast; // Event called when enter is pressed (casting spell).
+        [SerializeField] private AudioClip backspaceSfx;
 
         protected readonly StringBuilder sb = new StringBuilder(); // String builder for text.
         public string Text
@@ -50,6 +51,7 @@ namespace Typocrypha
         {
             letters[--pos].text = "";
             sb.Remove(pos, 1);
+            AudioManager.instance.PlaySFX(backspaceSfx);
         }
 
         private bool CheckBackspace(char inputChar)
@@ -57,13 +59,18 @@ namespace Typocrypha
             if (inputChar == 8) // Backspace. Don't allow backspace on first character.
             {
                 if (pos > 0)
+                {
                     HandleBackSpace();
+                }
                 return true;
             }
             else if(inputChar == 127) // Ctrl + backspace
             {
                 if (pos > 0)
+                {
                     Clear();
+                    AudioManager.instance.PlaySFX(backspaceSfx);
+                }
                 return true;
             }
             return false;
