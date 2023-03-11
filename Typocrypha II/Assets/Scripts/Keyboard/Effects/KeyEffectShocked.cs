@@ -23,6 +23,7 @@ namespace Typocrypha
 
         public override void OnStart()
         {
+            base.OnStart();
             // Pick random, unaffected key.
             swappedWith = Keyboard.instance.GetRandomUnaffectedKey();
             // If there are no other unaffected keys (this should never happen)
@@ -40,6 +41,7 @@ namespace Typocrypha
             Key swappedKey = Keyboard.instance.keyMap[swappedWith];
             swappedKey.output = key.letter.ToString();
             swappedKey.letterText.text = key.letter.ToString().ToUpper();
+            swappedKey.SfxOverride = sfxOverride;
             // Create the visuals for the other key
             swappedKeyEffect = Instantiate(swappedKeyEffectPrefab, swappedKey.transform);
 
@@ -54,14 +56,15 @@ namespace Typocrypha
 
         public override void Reset()
         {
+            base.Reset();
             // Revert own output.
             key.output = key.letter.ToString();
             key.letterText.text = key.letter.ToString().ToUpper();
-            key.onPress -= OnPress;
             // Revert swapped key output
             Key swappedKey = Keyboard.instance.keyMap[swappedWith];
             swappedKey.output = swappedWith.ToString();
             swappedKey.letterText.text = swappedWith.ToString().ToUpper();
+            swappedKey.SfxOverride = null;
             // Destroy Swapped key effect graphics
             Destroy(swappedKeyEffect);
             // Mark swapped key unaffected

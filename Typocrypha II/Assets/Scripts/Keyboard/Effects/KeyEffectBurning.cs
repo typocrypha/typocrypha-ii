@@ -16,6 +16,7 @@ namespace Typocrypha
 
         public override void OnStart()
         {
+            base.OnStart();
             // Multiply output.
             reps = Random.Range(1, 4);
             for (int i = 0; i < reps; i++)
@@ -31,9 +32,9 @@ namespace Typocrypha
 
         public override void Reset()
         {
+            base.Reset();
             // Revert output.
             key.output = key.letter.ToString();
-            key.onPress -= OnPress;
         }
 
         // Remove effect when time runs out.

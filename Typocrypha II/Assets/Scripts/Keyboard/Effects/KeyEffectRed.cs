@@ -8,17 +8,13 @@ namespace Typocrypha
     {
         public override void OnStart()
         {
+            base.OnStart();
             StartCoroutine(DestroyAfterTime(4f));
         }
 
         public override void OnPress()
         {
             transform.Rotate(Vector3.forward, 30f);
-        }
-
-        public override void Reset()
-        {
-            key.onPress -= OnPress;
         }
 
         // Remove effect when time runs out.

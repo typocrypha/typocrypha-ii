@@ -15,8 +15,9 @@ namespace Typocrypha
         public PauseHandle PH { get => ph; }
         public void OnPause(bool b) { }
         #endregion
-        [HideInInspector]
-        public Key key; // Affected keyboard key.
+
+        [SerializeField] protected AudioClip sfxOverride;
+        protected Key key; // Affected keyboard key.
 
         void Awake()
         {
@@ -24,8 +25,9 @@ namespace Typocrypha
             
         }
 
-        public void Register(char key)
+        public void Register(Key keyComponent, char key)
         {
+            this.key = keyComponent;
             Keyboard.instance.allEffects.Add(key, this);
         }
 
@@ -37,7 +39,11 @@ namespace Typocrypha
         /// <summary>
         /// Called when effect is first applied.
         /// </summary>
-        abstract public void OnStart();
+        public virtual void OnStart()
+        {
+            key.OnPress += OnPress;
+            key.SfxOverride = sfxOverride;
+        }
 
         /// <summary>
         /// Called when key is pressed.
@@ -47,7 +53,11 @@ namespace Typocrypha
         /// <summary>
         /// Reset key to normal state after effect ends.
         /// </summary>
-        public abstract void Reset();
+        public virtual void Reset()
+        {
+            key.OnPress -= OnPress;
+            key.SfxOverride = null;
+        }
 
         /// <summary>
         /// Removes the effect.

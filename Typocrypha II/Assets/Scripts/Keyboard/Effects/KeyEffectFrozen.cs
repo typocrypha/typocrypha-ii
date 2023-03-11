@@ -15,29 +15,28 @@ namespace Typocrypha
         const int minHealth = 3;
         const int maxHealth = 5;
 
+        [SerializeField] private AudioClip breakSfx;
+
         public override void OnStart()
         {
+            base.OnStart();
             key.output = ""; // Block output.
             health = Random.Range(minHealth, maxHealth);
-            //StartCoroutine(DestroyAfterTime(4f)); // SHOULD KEY MELT NATURALLY?
         }
 
         public override void OnPress()
         {
             if (--health <= 0) Remove();
+            if(health == 1)
+            {
+                key.SfxOverride = breakSfx;
+            }
         }
 
         public override void Reset()
         {
+            base.Reset();
             key.output = key.letter.ToString(); // Unblock output.
-            key.onPress -= OnPress;
-        }
-
-        // Remove effect when time runs out.
-        IEnumerator DestroyAfterTime(float seconds)
-        {
-            yield return new WaitForSecondsPause(seconds / Settings.GameplaySpeed, PH);
-            Remove();
         }
     }
 }

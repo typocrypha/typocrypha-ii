@@ -14,11 +14,17 @@ namespace Typocrypha
 
         public char letter; // Letter this key represents.
         public string output; // What is typed when this key is pressed.
-        public OnPressDel onPress; // Delegate called when key is pressed.
+
         public SpriteRenderer highlightSR; // Sprite renderer for key highlight.
         public TextMeshPro letterText; // Text for key label.
         float highlight = 0f; // Normalized highlight value.
         Color originalColor;
+
+        public System.Action OnPress { get; set; } // Delegate called when key is pressed.
+
+        [SerializeField] private AudioClip defaultKeySfx;
+
+        public AudioClip SfxOverride { get; set; }
         
         public bool Highlight // Key highlight (when pressed).
         {
@@ -37,11 +43,17 @@ namespace Typocrypha
         private void Start()
         {
             originalColor = new Color(highlightSR.color.r, highlightSR.color.g, highlightSR.color.b, 1.0f);
+            OnPress += PlaySfx;
         }
 
         void Update()
         {
             highlightSR.color = originalColor * highlight;
+        }
+
+        public void PlaySfx()
+        {
+            AudioManager.instance.PlaySFX(SfxOverride ?? defaultKeySfx);
         }
 
         public virtual void SetText(char c)
@@ -57,12 +69,9 @@ namespace Typocrypha
         /// <param name="effectPrefab">Key effect prefab.</param>
         public void ApplyEffect(GameObject effectPrefab)
         {
-            var go = Instantiate(effectPrefab, transform);
-            go.transform.localPosition = Vector3.zero;
-            var effect = go.GetComponent<KeyEffect>();
-            effect.key = this;
-            effect.Register(letter);
-            onPress += effect.OnPress;
+            var effect = Instantiate(effectPrefab, transform).GetComponent<KeyEffect>();
+            effect.transform.localPosition = Vector3.zero;
+            effect.Register(this, letter);
             effect.OnStart();
         }
     }

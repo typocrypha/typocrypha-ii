@@ -70,13 +70,14 @@ namespace Typocrypha
         {
             foreach (var c in keyMap) // Highlight pressed keys.
             {
+                var key = c.Value;
                 if (Input.GetKey(c.Key.ToString()))
                 {
-                    c.Value.Highlight = true;
+                    key.Highlight = true;
                 }
                 else
                 {
-                    c.Value.Highlight = false;
+                    key.Highlight = false;
                 }
             }
             foreach (var c in Input.inputString) // Add letters to cast bar.
@@ -84,7 +85,7 @@ namespace Typocrypha
                 var text = castBar.Text;
                 if (keyMap.ContainsKey(c))
                 {
-                    keyMap[c].onPress?.Invoke();
+                    keyMap[c].OnPress?.Invoke();
                     castBar.CheckInput(keyMap[c].output);
                 }
                 else
