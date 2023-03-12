@@ -65,7 +65,7 @@ public class TIPSManager : MonoBehaviour, IPausable
 
     void Update()
     {
-        if (DialogManager.instance.PH.Pause)
+        if (DialogManager.instance.PH.Pause || DialogManager.instance.isBattle)
             return;
         if (Input.GetKeyDown(KeyCode.Tab))
         {
