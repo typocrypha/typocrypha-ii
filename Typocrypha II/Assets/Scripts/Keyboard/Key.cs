@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 namespace Typocrypha
 {
@@ -15,8 +16,8 @@ namespace Typocrypha
         public char letter; // Letter this key represents.
         public string output; // What is typed when this key is pressed.
 
-        public SpriteRenderer highlightSR; // Sprite renderer for key highlight.
-        public TextMeshPro letterText; // Text for key label.
+        public Image highlightSR; // Sprite renderer for key highlight.
+        public TextMeshProUGUI letterText; // Text for key label.
         float highlight = 0f; // Normalized highlight value.
         Color originalColor;
 

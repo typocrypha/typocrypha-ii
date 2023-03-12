@@ -19,10 +19,8 @@ public class Player : Caster, IPausable
 
     protected override void Awake()
     {
+        ui = Typocrypha.Keyboard.instance.PlayerUI;
         base.Awake();
-        Stats.MaxHP = 100; // DEBUG
-        Health = Stats.MaxHP;
-        DisplayName = "Ayin";
         TargetPos = new Battlefield.Position(0, 1);
         PH = new PauseHandle(OnPause);
     }

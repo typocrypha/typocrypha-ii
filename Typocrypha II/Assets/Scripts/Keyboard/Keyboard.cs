@@ -30,6 +30,8 @@ namespace Typocrypha
         public List<GameObject> allEffectPrefabs;
         public CastBar castBar;
         public Transform keys; // Object that holds all the key objects.
+        public CasterUI PlayerUI => playerUI;
+        [SerializeField] private CasterUI playerUI;
         public readonly Dictionary<char, Key> keyMap = new Dictionary<char, Key>(); // Map from characters to keyboard keys.
         public readonly Dictionary<char, KeyEffect> allEffects = new Dictionary<char, KeyEffect>(); // All active key effects on keyboard (managed by individual effects).
         public readonly HashSet<char> unaffectedKeys = new HashSet<char>(); // All keys not currently affected by a key effect

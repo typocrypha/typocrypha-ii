@@ -13,11 +13,11 @@ namespace Typocrypha
     /// </summary>
     public class CastBar : MonoBehaviour
     {
-        public TextMeshPro[] letters; // Array of single letter rects.
         public Transform cursor; // Cursor for keeping track of position.
         public GameObject[] keywords; // Set of all keywords (prefab effects).
         public UnityEvent_string onCast; // Event called when enter is pressed (casting spell).
-        [SerializeField] private AudioClip backspaceSfx;
+        [SerializeField] protected TextMeshProUGUI[] letters; // Array of single letter rects.
+        [SerializeField] protected AudioClip backspaceSfx;
 
         protected readonly StringBuilder sb = new StringBuilder(); // String builder for text.
         public string Text
@@ -33,7 +33,6 @@ namespace Typocrypha
 
         void Start()
         {
-            letters = GetComponentsInChildren<TextMeshPro>();
             Clear();
             foreach (var pf in keywords)
             {
