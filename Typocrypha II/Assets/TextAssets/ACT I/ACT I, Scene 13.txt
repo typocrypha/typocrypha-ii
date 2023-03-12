@@ -1,13 +1,16 @@
-﻿>start,ACT-I-13
+﻿>start,ACT I-13
 
 
 +vnplus
+>setlocation,Ruins
+>setbg,Sprite,BgObscurianRuins
 
 
->addchar,Ayin,0,0,left
+>addchar,Ayin,0,0,left,nervous
+>addchar,Illyia,0,0,right,serious
 
 
->addchar,Illyia,0,0,right
+>playbgm,BGMAgarthanRuins
 
 
 Illyia(serious): Looks like that’s the last of them.
@@ -34,25 +37,212 @@ Ayin(sheepish): Thanks, Illyia. For, uh, helping me out there.
 Illyia(ashamed): ... Hmph. Yeah, whatever.
 
 
-Illyia: Let’s go. We should be able to get around the cave-in through this hallway.
+Illyia: Let’s go. We should be able to get around the cave-in if we go this way.
+
+
+>setexpr,Ayin,serious
+>stopbgm
+>playbgm,BGMMysterious
 
 
 Narrator: You and Illyia start moving through the Ruins.
 
 
-Narrator: Illyia says nothing more, other than occasionally pointing out rubble in the way.
+
+
+Illyia(concerned): Hey, “Leader”.
+
+
+Illyia: What was up with that demon you were fighting when I found you, anyways?
+
+
+Ayin(ohfuck): Uh, wh-what do you m-mean?
+
+
+Illyia(serious): Thought I heard talking when I approached
+
+
+Ayin: I-I, y-you know, it was just like, uh...
+
+
+Illyia(concerned): ...
+
+
+Illyia: You know that there’s no reasoning with them, right?
+
+
+Illyia(serious): ... With the demons.
+
+
+Ayin(serious): ...
+
+
+Narrator: You’ve always avoided these conversations.
+
+
+Narrator: You’ve always just brushed them off.
+
+
+Narrator: But right now is different for some reason.
+
+
+Narrator: Maybe it’s because you’re in the Ruins.
+
+
+Narrator: ... Or maybe it was your encounter with Niya.
+
+
+Narrator: But you decide to take a step forward.
+
+
+Ayin(nervous): D-Do you not like demons, Illyia? 
+
+
+>stopbgm
+
+
+Narrator: Illyia suddenly stops and turns to face you.
+
+
+Illyia(pissed): You...!
+
+
+Illyia(ashamed): I...
+
+
+Illyia(concerned): ...
+
+
+Narrator: Illyia’s face continues to contort in confusion, flashing back and forth between rage and contemplation.
+
+
+>playbgm,BGMSomber2
+
+
+>setexpr,Illyia,quietlyhappy
+
+
+Narrator: ... And, somehow, ends in a soft smile.
+
+
+Ayin(ohfuck): Uh...
+
+
+Illyia(normal): You really don’t know anything about me, huh?
+
+
+Ayin(surprisedbad): I-I’m sorry, I just-
+
+
+Illyia(laughing): Haha, I’m just messin’ with ya.
+
+
+Illyia(quietlyhappy): You might be the first person I’ve met who didn’t see the “Xiong” in my name before everything else.
+
+
+>setexpr,Ayin,serious
+
+
+Illyia: ...
+
+
+Narrator: Illyia turns around and continues walking down the corridor.
+
+
+Narrator: And then, as if talking to no one in particular, she begins speaking again.
+
+
+Illyia: My mom, Irene[a] Xiong, was the matriarch of the Xiong family.
+
+
+Illyia: We came to Agartha on a security contract with Ostanes.
+
+
+Illyia: My mom...
+
+
+Illyia(concerned): ... She died in the first demon invasion[b]. 
+
+
+Illyia: It was...
+
+
+Illyia(ashamed): -Well, it was so long ago, I don’t remember it so well now.
+
+
+Narrator: You remember - in fact you wish you could forget all about it.
+
+
+Narrator: The first demon attack XX[c] years ago, before Seven Stars.
+
+
+Narrator: The one that put Agartha into lockdown, and the one that...
+
+
+Ayin(uncomfortable): ... 
+
+
+Illyia(ashamed): A-Anyways, now you know.
+
+
+Illyia: ... Hope that answers your question.
+
+
+Ayin(nervous): I-
+
+
+Ayin: ...
+
+
+Ayin(serious): Th-Thank you, Illyia, for, um, telling me.
+
+
+Illyia(concerned): ...
+
+
+Narrator: Illyia doesn’t respond and keeps walking.
+
+
+Narrator: The two of you continue in silence through the Ruins.
+
+
+>stopbgm
 
 
 Narrator: Eventually, you spot a familiar green jacket in the distance
 
 
+>playbgm,BGMExplorer
+
+
 >addchar,Esaias,0,0,right
 
 
-Esaias(normal[a]): Ayin! Illyia! You two are OK.
+Esaias(normal[d]): Ayin! Illyia!
 
 
-Ayin(serious): Esaias! Did you manage to find Dahlia?
+Ayin(happy): Esaias! I’m glad you’re OK.
+
+
+Esaias: The feeling is mutual.
+
+
+Esaias(lookingleft): I see you also found Illyia.
+
+
+Narrator: Without missing a beat, Illyia jumps in-
+
+
+Illyia(ashamed): Hey, I was the one who found them!
+
+
+Illyia(normal): If it weren’t for me, our “Leader” would be demon food!
+
+
+Ayin(nervoussmile): Haha... 
+
+
+Ayin(serious): Esaias, d-did you manage to find Dahlia?
 
 
 Esaias(anxious): No, I could not locate her position. 
@@ -64,22 +254,31 @@ Esaias: Illyia, did you see her? She was headed in your direction.
 Illyia(ashamed): No... I didn’t.
 
 
-Esaias: That is concerning. The only other route she could have taken in that direction leads to a stretch of completely unmapped tunnels...
+Esaias: That is... concerning. 
 
 
-Esaias(lookingleft): ...! 
+Esaias(lookingright): The only other route she could have taken in that direction leads to a stretch of completely unmapped tunnels...
 
 
-Esaias(normal): Ayin, your Typocrypha seems to have several indicator lights on. When was the last time you performed maintenance[b]?
+Esaias: ...! 
 
 
-Ayin: Uh, maintenance?
+Narrator: Esaias turns to look towards you.
+
+
+Esaias(normal): Ayin, your Typocrypha seems to have several indicator lights on. 
+
+
+Esaias: When was the last time you performed maintenance[e]?
+
+
+Ayin(nervous): Uh, maintenance?
 
 
 Illyia(serious): Oh my god, your Typocrypha’s ancient!
 
 
-Illyia(laughing): What, Austin Steiner himself build you that hunk of junk?
+Illyia(laughing): What, did Austin Steiner build you that hunk of junk?
 
 
 Ayin(nervoussmile): It was a hand-me-down from my dad. Not actually sure where he got it, though...
@@ -91,7 +290,7 @@ Esaias: I have some experience working with older models, although mostly learne
 Esaias: I can take a look, if you wish.
 
 
-Ayin: Sure, thanks Esaias.
+Ayin(happy): Sure, thanks Esaias.
 
 
 Esaias: .  .  .
@@ -109,10 +308,13 @@ Ayin(surprised): A... What?
 Esaias: After the Typocrypha design was streamlined with the inclusion of auto-complete and-
 
 
-Illyia(serious): Weren’t we in a hurry, egghead? Finish up and let’s get going.
+Illyia(serious): Weren’t we in a hurry, Egghead? 
 
 
-Esaias(embarrassed): Right, apologies. 
+Illyia: Finish up and let’s get going.
+
+
+Esaias(embarrassed): Right. 
 
 
 Esaias(normal): For now I’ve re-enabled the feature: it may prove useful in combat.
@@ -124,7 +326,10 @@ Ayin(serious): OK, how do I use it?
 Esaias: Once a demon has been reduced to its spiritual form, you can activate-
 
 
-Narrator: A yell rings out from deeper in the Ruins.
+>stopbgm
+
+
+Narrator: A scream rings out from deeper in the Ruins.
 
 
 Ayin(surprisedbad): That yell-
@@ -133,7 +338,13 @@ Ayin(surprisedbad): That yell-
 Esaias(anxious): It’s Dahlia!
 
 
+>endt
 
 
-[a]might need more concerned esaias expression
-[b]might be cool to have an effect playing from the last battle
+
+
+[a]placeholder name
+[b]might need to align terminology
+[c]temp - to formalize
+[d]might need more concerned esaias expression
+[e]might be cool to have an effect playing from the last battle
