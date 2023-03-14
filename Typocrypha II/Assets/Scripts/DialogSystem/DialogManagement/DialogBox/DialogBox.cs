@@ -33,7 +33,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
     #endregion
 
     #region Constants
-    const float defaultScrollDelay = 0.001f; // Default text scrolling speed.
+    const float defaultScrollDelay = 0.03f; // Default text scrolling speed.
     const int defaultScrollBatch = 2; // Default number of characters displayed each scroll.
     const int defaultSpeechInterval = 4; // Default number of characters before speech sfx plays
     const float textPad = 16f; // Padding between text rect and dialog box rect.
@@ -249,7 +249,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
             TextEvent te = dialogItem.TextEventList[0];
             dialogItem.TextEventList.RemoveAt(0);
             TextEvents.instance.PlayEvent(te.evt, te.opt);
-            yield return new WaitWhile(() => ph.Pause); // Wait on pause.
+            yield return new WaitWhile(this.IsPaused); // Wait on pause.
         }
         yield return null;
 	}
