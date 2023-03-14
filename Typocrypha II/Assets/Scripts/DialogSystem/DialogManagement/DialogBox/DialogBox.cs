@@ -248,7 +248,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
         {
             TextEvent te = dialogItem.TextEventList[0];
             dialogItem.TextEventList.RemoveAt(0);
-            TextEvents.instance.PlayEvent(te.evt, te.opt);
+            TextEvents.instance.PlayEvent(te.evt, te.opt, this);
             yield return new WaitWhile(this.IsPaused); // Wait on pause.
         }
         yield return null;

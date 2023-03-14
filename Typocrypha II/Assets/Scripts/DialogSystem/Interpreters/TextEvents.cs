@@ -1,8 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public delegate IEnumerator TextEventDel(string[] opt);
 
 /// <summary>
 /// Struct to contain a text event.
@@ -28,8 +27,7 @@ public struct TextEvent
 public class TextEvents : MonoBehaviour, IPausable
 {
     #region IPausable
-    PauseHandle ph;
-    public PauseHandle PH { get => ph; }
+    public PauseHandle PH { get; private set; }
 
     public void OnPause(bool b)
     {
@@ -38,7 +36,7 @@ public class TextEvents : MonoBehaviour, IPausable
 
     public static TextEvents instance = null;
     // Map of commands to text event handles.
-    public Dictionary<string, TextEventDel> textEventMap;
+    public Dictionary<string, Func<string[], DialogBox, Coroutine>> textEventMap;
 
     void Awake()
     {
@@ -48,19 +46,18 @@ public class TextEvents : MonoBehaviour, IPausable
         }
         else
         {
-            Destroy(this);
+            Destroy(gameObject);
             return;
         }
 
-        ph = new PauseHandle(OnPause);
-        textEventMap = new Dictionary<string, TextEventDel>
+        PH = new PauseHandle(OnPause);
+        textEventMap = new Dictionary<string, Func<string[], DialogBox, Coroutine>>
         {
             {"test", Test },
             {"pause-dialog", PauseDialog},
             {"pause",PauseDialog },
             {"screen-shake",ScreenShake },
             {"shake", ScreenShake},
-            {"fade-screen", FadeScreen},
             {"text-delay", TextDelay},
             {"float-text", FloatText },
             {"tips-entry",SignalEntry },
@@ -75,15 +72,14 @@ public class TextEvents : MonoBehaviour, IPausable
     /// <param name="evt">Name of event.</param>
     /// <param name="opt">Parameters to event.</param>
     /// <returns>Coroutine of event (null if none).</returns>
-    public Coroutine PlayEvent(string evt, string[] opt)
+    public Coroutine PlayEvent(string evt, string[] opt, DialogBox box)
     { 
         Debug.Log("TextEvent:" + evt);
-        if (!textEventMap.TryGetValue(evt, out TextEventDel textEvent))
+        if (!textEventMap.TryGetValue(evt, out var textEvent))
         {
             Debug.LogException(new System.Exception("Bad text event parameters:" + evt));
         }
-        Coroutine cr = StartCoroutine(textEvent(opt));
-        return cr;
+        return textEvent(opt, box);
     }
 
     /**************************** TEXT EVENTS *****************************/
@@ -92,26 +88,27 @@ public class TextEvents : MonoBehaviour, IPausable
     /// Immediately go to next dialog box.
     /// </summary>
     /// <param name="opt">NONE</param>
-    IEnumerator NextDialog(string[] opt)
+    Coroutine NextDialog(string[] opt, DialogBox box)
     {
-        yield return null;
         DialogManager.instance.NextDialog();
+        return null;
     }
 
     /// <summary>
     /// Test text event.
     /// </summary>
     /// <param name="opt">NONE</param>
-    IEnumerator Test(string[] opt)
+    Coroutine Test(string[] opt, DialogBox box)
     {
         Debug.Log("test");
-        yield return null;
+        return null;
     }
 
-    IEnumerator PlaySFX(string[] opt)
+    Coroutine PlaySFX(string[] opt, DialogBox box)
     {
         //AudioManager.instance.PlaySFX(null);
-        yield return null;
+        Debug.LogWarning("playSFX text event unsupported");
+        return null;
     }
 
     /// <summary>
@@ -121,18 +118,23 @@ public class TextEvents : MonoBehaviour, IPausable
     /// <param name="opt">
     /// [0]:float: Length of pause.
     /// </param>
-    IEnumerator PauseDialog(string[] opt)
+    Coroutine PauseDialog(string[] opt, DialogBox box)
     {
-        DialogManager.instance.dialogBox.PH.Pause = true;
+        DialogManager.instance.dialogBox.Pause();
+        return StartCoroutine(PauseDialogCR(opt, box));
+    }
+
+    private IEnumerator PauseDialogCR(string[] opt, DialogBox box)
+    {
         float time = 0f;
         float endTime = float.Parse(opt[0]);
-        while (time < endTime && !DialogManager.instance.dialogBox.IsDone)
+        while (time < endTime && !box.IsDone)
         {
-            yield return new WaitWhile(() => PH.Pause);
+            yield return new WaitWhile(this.IsPaused);
             yield return new WaitForFixedUpdate();
             time += Time.fixedDeltaTime;
         }
-        DialogManager.instance.dialogBox.PH.Pause = false;
+        DialogManager.instance.dialogBox.Unpause();
     }
 
     /// <summary>
@@ -142,38 +144,16 @@ public class TextEvents : MonoBehaviour, IPausable
     /// [0]: float, intensity of shake.
     /// [1]: float, length of shake.
     /// </param>
-    IEnumerator ScreenShake(string[] opt)
+    Coroutine ScreenShake(string[] opt, DialogBox box)
     {
-        Coroutine shake = CameraManager.instance.Shake(float.Parse(opt[0]), float.Parse(opt[1]));
-        yield return new WaitUntil(() => DialogManager.instance.dialogBox.IsDone);
-        CameraManager.instance.ResetCamera();
+        return StartCoroutine(ScreenShakeCR(opt, box));
     }
 
-    /// <summary>
-    /// Fades the screen.
-    /// Automatically finishes fade when dialog line finishes.
-    /// </summary>
-    /// <param name="opt">
-    /// [0]: float, amount of time to get to fade.
-    /// [1]: float, starting amount of fade (0 to 1) (0: No fade).
-    /// [2]: float, ending amount of fade.
-    /// [3-5]: floats, rgb values (normalized) of color.
-    /// </param>
-    IEnumerator FadeScreen(string[] opt)
+    private IEnumerator ScreenShakeCR(string[] opt, DialogBox box)
     {
-        float time = 0f;
-        float endTime = float.Parse(opt[0]);
-        float init = float.Parse(opt[1]);
-        float target = float.Parse(opt[2]);
-        Color color = new Color(float.Parse(opt[3]), float.Parse(opt[4]), float.Parse(opt[5]), 1f);
-        while (time < endTime && !DialogManager.instance.dialogBox.IsDone)
-        {
-            yield return new WaitWhile(() => PH.Pause);
-            FaderManager.instance.FadeAll(Mathf.Lerp(init, target, time / endTime), color);
-            yield return new WaitForFixedUpdate();
-            time += Time.fixedDeltaTime;
-        }
-        FaderManager.instance.FadeAll(target, color);
+        yield return CameraManager.instance.Shake(float.Parse(opt[0]), float.Parse(opt[1]));
+        yield return new WaitUntil(() => box.IsDone);
+        CameraManager.instance.ResetCamera();
     }
 
     /// <summary>
@@ -182,10 +162,10 @@ public class TextEvents : MonoBehaviour, IPausable
     /// <param name="opt">
     /// [0]: float, amount of seconds delay between character reveals.
     /// </param>
-    IEnumerator TextDelay(string[] opt)
+    Coroutine TextDelay(string[] opt, DialogBox box)
     {
-        DialogManager.instance.dialogBox.ScrollDelay = float.Parse(opt[0]);
-        yield return null;
+        box.ScrollDelay = float.Parse(opt[0]);
+        return null;
     }
 
     /// <summary>
@@ -195,11 +175,11 @@ public class TextEvents : MonoBehaviour, IPausable
     /// [0]: string, line to display.
     /// [1-2]: float, x-y coordinate position.
     /// </param>
-    IEnumerator FloatText(string[] opt)
+    Coroutine FloatText(string[] opt, DialogBox box)
     {
         Vector2 pos = new Vector2(float.Parse(opt[1]), float.Parse(opt[2]));
         FloatDialog.instance.SpawnFloatDialog(opt[0], pos);
-        yield return null;
+        return null;
     }
 
     /// <summary>
@@ -207,10 +187,10 @@ public class TextEvents : MonoBehaviour, IPausable
     /// </summary>
     /// <param name="opt">
     /// </param>
-    IEnumerator SignalEntry(string[] opt)
+    Coroutine SignalEntry(string[] opt, DialogBox box)
     {
         TIPSManager.instance.SignalEntry(true);
-        yield return null;
+        return null;
     }
 }
 
