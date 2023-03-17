@@ -120,7 +120,6 @@ public class TextEvents : MonoBehaviour, IPausable
     /// </param>
     Coroutine PauseDialog(string[] opt, DialogBox box)
     {
-        DialogManager.instance.dialogBox.Pause();
         return StartCoroutine(PauseDialogCR(opt, box));
     }
 
@@ -134,7 +133,6 @@ public class TextEvents : MonoBehaviour, IPausable
             yield return new WaitForFixedUpdate();
             time += Time.fixedDeltaTime;
         }
-        DialogManager.instance.dialogBox.Unpause();
     }
 
     /// <summary>
@@ -146,14 +144,8 @@ public class TextEvents : MonoBehaviour, IPausable
     /// </param>
     Coroutine ScreenShake(string[] opt, DialogBox box)
     {
-        return StartCoroutine(ScreenShakeCR(opt, box));
-    }
-
-    private IEnumerator ScreenShakeCR(string[] opt, DialogBox box)
-    {
-        yield return CameraManager.instance.Shake(float.Parse(opt[0]), float.Parse(opt[1]));
-        yield return new WaitUntil(() => box.IsDone);
-        CameraManager.instance.ResetCamera();
+        CameraManager.instance.Shake(float.Parse(opt[0]), float.Parse(opt[1]));
+        return null;
     }
 
     /// <summary>

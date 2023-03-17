@@ -33,8 +33,8 @@ public class DialogBox : MonoBehaviour, IDialogBox
     #endregion
 
     #region Constants
-    const float defaultScrollDelay = 0.03f; // Default text scrolling speed.
-    const int defaultScrollBatch = 2; // Default number of characters displayed each scroll.
+    const float defaultScrollDelay = 0.021f; // Default text scrolling speed.
+    const int defaultTextDisplayInterval = 1; // Default number of characters displayed each scroll.
     const int defaultSpeechInterval = 4; // Default number of characters before speech sfx plays
     const float textPad = 16f; // Padding between text rect and dialog box rect.
     #endregion
@@ -165,10 +165,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
             return;
         }
         // End text scroll and display all text.
-        if (scrollCR != null)
-        {
-            StopCoroutine(scrollCR);
-        }
+        StopAllCoroutines();
 		scrollCR = null;
         hideText.ind[0] = dialogItem.text.Length;
         hideText.done = true;
@@ -215,42 +212,66 @@ public class DialogBox : MonoBehaviour, IDialogBox
 	protected IEnumerator TextScrollCR()
     {
         started = true;
-        //yield return null;
-        int pos = 0;
-        while (pos < dialogItem.text.Length)
+        for(int pos = defaultTextDisplayInterval; pos < dialogItem.text.Length; ++pos)
         {
-            yield return StartCoroutine(CheckEvents (pos));
-            yield return new WaitWhile(() => ph.Pause); // Wait on pause.
-            if (pos % speechInterval == 0)
-                foreach(var v in voiceAS) if (v != null && v.clip != null) v.Play();
-            pos+=defaultScrollBatch; // Advance text position.
-            hideText.ind[0] = pos;
+            // Check text events at every position regardless of batch size
+            if(HasTextEvents() && dialogItem.TextEventList[0].pos <= pos)
+            {
+                yield return StartCoroutine(CheckEvents(pos));
+                if (this.IsPaused())
+                {
+                    yield return new WaitWhile(this.IsPaused); // Wait on pause.
+                }
+            }
+            // Play scroll blips
+            if ((pos + defaultTextDisplayInterval) % speechInterval == 0)
+            {
+                foreach (var v in voiceAS)
+                {
+                    if (v != null && v.clip != null) 
+                        v.Play();
+                }
+            }
+            if(pos % defaultTextDisplayInterval == 0)
+            {
+                hideText.ind[0] = pos;
+            }
+            // Apply scroll delay if necessary
             if (ScrollDelay > 0f)
             {
                 yield return new WaitForSeconds(ScrollDelay);
             }
             else // If scale is at 0, skip to next dialog event
             {
-                if (dialogItem.TextEventList.Count > 0)
-                    pos = dialogItem.TextEventList[0].pos;
-                hideText.ind[0] = pos;
+                DumpText();
+                yield break;
             }
         }
+        hideText.ind[0] = dialogItem.text.Length;
         hideText.done = true;
-        yield return StartCoroutine(CheckEvents (dialogItem.text.Length)); // Play events at end of text.
+        if (HasTextEvents())
+        {
+            yield return StartCoroutine(CheckEvents(dialogItem.text.Length)); // Play events at end of text.
+        }
 		scrollCR = null;
 	}
+    private bool HasTextEvents()
+    {
+        return dialogItem.TextEventList.Count > 0;
+    }
 
 	// Checks for and plays text events
 	IEnumerator CheckEvents(int startPos)
     {
-        while (dialogItem.TextEventList.Count > 0 && dialogItem.TextEventList[0].pos <= startPos)
+        while (HasTextEvents() && dialogItem.TextEventList[0].pos <= startPos)
         {
             TextEvent te = dialogItem.TextEventList[0];
             dialogItem.TextEventList.RemoveAt(0);
-            TextEvents.instance.PlayEvent(te.evt, te.opt, this);
-            yield return new WaitWhile(this.IsPaused); // Wait on pause.
+            var textEventRoutine = TextEvents.instance.PlayEvent(te.evt, te.opt, this);
+            if(textEventRoutine != null)
+            {
+                yield return textEventRoutine;
+            }
         }
-        yield return null;
 	}
 }
