@@ -37,6 +37,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
     const int defaultTextDisplayInterval = 1; // Default number of characters displayed each scroll.
     const int defaultSpeechInterval = 4; // Default number of characters before speech sfx plays
     const bool defaultPlaySpeechOnSpaces = true;
+    const float autoContinueDelay = 0.1f;
     const float textPad = 16f; // Padding between text rect and dialog box rect.
     #endregion
 
@@ -256,11 +257,21 @@ public class DialogBox : MonoBehaviour, IDialogBox
         {
             yield return StartCoroutine(CheckEvents(dialogItem.text.Length)); // Play events at end of text.
         }
-		scrollCR = null;
-	}
+        if (ShouldAutoContiune())
+        {
+            yield return new WaitForSeconds(autoContinueDelay);
+            DialogManager.instance.NextDialog();
+        }
+        scrollCR = null;
+    }
     private bool HasTextEvents()
     {
         return dialogItem.TextEventList.Count > 0;
+    }
+
+    private bool ShouldAutoContiune()
+    {
+        return dialogItem.text.Length > 0 && dialogItem.text[dialogItem.text.Length - 1] == '-';
     }
 
 	// Checks for and plays text events
