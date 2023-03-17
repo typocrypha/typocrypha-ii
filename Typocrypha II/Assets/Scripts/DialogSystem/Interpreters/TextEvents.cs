@@ -59,6 +59,8 @@ public class TextEvents : MonoBehaviour, IPausable
             {"screen-shake",ScreenShake },
             {"shake", ScreenShake},
             {"text-delay", TextDelay},
+            {"scroll-delay", TextDelay},
+            {"speech-interval", SpeechInterval},
             {"float-text", FloatText },
             {"tips-entry",SignalEntry },
             {"play-sfx",PlaySFX },
@@ -157,6 +159,16 @@ public class TextEvents : MonoBehaviour, IPausable
     Coroutine TextDelay(string[] opt, DialogBox box)
     {
         box.ScrollDelay = float.Parse(opt[0]);
+        return null;
+    }
+
+    Coroutine SpeechInterval(string[] opt, DialogBox box)
+    {
+        box.SpeechInterval = int.Parse(opt[0]);
+        if(opt.Length > 1)
+        {
+            box.PlaySpeechOnSpaces = bool.Parse(opt[1]);
+        }
         return null;
     }
 

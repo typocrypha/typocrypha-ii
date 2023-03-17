@@ -36,16 +36,18 @@ public class DialogBox : MonoBehaviour, IDialogBox
     const float defaultScrollDelay = 0.021f; // Default text scrolling speed.
     const int defaultTextDisplayInterval = 1; // Default number of characters displayed each scroll.
     const int defaultSpeechInterval = 4; // Default number of characters before speech sfx plays
+    const bool defaultPlaySpeechOnSpaces = true;
     const float textPad = 16f; // Padding between text rect and dialog box rect.
     #endregion
 
-    float scrollDelay; // Delay in showing characters for text scroll.
+    float scrollDelay = defaultScrollDelay; // Delay in showing characters for text scroll.
     public float ScrollDelay
     {
         get => scrollDelay * PlayerDataManager.instance.Get<float>(PlayerDataManager.textDelayScale);
         set => scrollDelay = value;
     }
-    int speechInterval; // Number of character scrolls before speech sfx plays
+    public int SpeechInterval { get; set; } = defaultSpeechInterval; // Number of character scrolls before speech sfx plays
+    public bool PlaySpeechOnSpaces { get; set; } = defaultPlaySpeechOnSpaces;
 
     public TextMeshProUGUI dialogText; // Text display component
     public AudioSource[] voiceAS; // AudioSources for playing speech sfx
@@ -136,7 +138,8 @@ public class DialogBox : MonoBehaviour, IDialogBox
     {
         // Reset parameters
         ScrollDelay = defaultScrollDelay;
-        speechInterval = defaultSpeechInterval;
+        SpeechInterval = defaultSpeechInterval;
+        PlaySpeechOnSpaces = defaultPlaySpeechOnSpaces;
         // Remove old text
         dialogText.text = "";
         // Remove old text effects.
@@ -212,7 +215,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
 	protected IEnumerator TextScrollCR()
     {
         started = true;
-        for(int pos = defaultTextDisplayInterval; pos < dialogItem.text.Length; ++pos)
+        for(int pos = 0; pos < dialogItem.text.Length; ++pos)
         {
             // Check text events at every position regardless of batch size
             if(HasTextEvents() && dialogItem.TextEventList[0].pos <= pos)
@@ -224,7 +227,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
                 }
             }
             // Play scroll blips
-            if ((pos + defaultTextDisplayInterval) % speechInterval == 0)
+            if (pos % SpeechInterval == 0 && (PlaySpeechOnSpaces || !char.IsWhiteSpace(dialogItem.text[pos])))
             {
                 foreach (var v in voiceAS)
                 {
@@ -234,7 +237,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
             }
             if(pos % defaultTextDisplayInterval == 0)
             {
-                hideText.ind[0] = pos;
+                hideText.ind[0] = pos + defaultTextDisplayInterval;
             }
             // Apply scroll delay if necessary
             if (ScrollDelay > 0f)
