@@ -75,7 +75,6 @@ public class TextEvents : MonoBehaviour, IPausable
     /// <returns>Coroutine of event (null if none).</returns>
     public Coroutine PlayEvent(string evt, string[] opt, DialogBox box)
     { 
-        Debug.Log("TextEvent:" + evt);
         if (!textEventMap.TryGetValue(evt, out var textEvent))
         {
             Debug.LogException(new System.Exception("Bad text event parameters:" + evt));
