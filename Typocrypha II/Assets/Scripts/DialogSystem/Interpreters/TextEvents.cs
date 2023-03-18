@@ -62,7 +62,6 @@ public class TextEvents : MonoBehaviour, IPausable
             {"scroll-delay", TextDelay},
             {"speech-interval", SpeechInterval},
             {"float-text", FloatText },
-            {"tips-entry",SignalEntry },
             {"play-sfx",PlaySFX },
         };
     }
@@ -171,17 +170,6 @@ public class TextEvents : MonoBehaviour, IPausable
     {
         Vector2 pos = new Vector2(float.Parse(opt[1]), float.Parse(opt[2]));
         FloatDialog.instance.SpawnFloatDialog(opt[0], pos);
-        return null;
-    }
-
-    /// <summary>
-    /// Signal TIPS that a new entry has been discovered.
-    /// </summary>
-    /// <param name="opt">
-    /// </param>
-    Coroutine SignalEntry(string[] opt, DialogBox box)
-    {
-        TIPSManager.instance.SignalEntry(true);
         return null;
     }
 }
