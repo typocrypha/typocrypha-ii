@@ -49,7 +49,7 @@ public class CameraManager : MonoBehaviour, IPausable
     /// <param name="intensity">Amount of shaking.</param>
     /// <param name="length">Length of shaking in seconds.</param>
     /// <param name="damp">[>0]: Amount of dampening (0 is no dampening).</param>
-    public Coroutine Shake(float intensity, float length, float damp = 1f)
+    public Coroutine Shake(float intensity, float length, float damp = 3f)
     {
         return StartCoroutine(_Shake(intensity, length, damp));
     }
@@ -69,11 +69,14 @@ public class CameraManager : MonoBehaviour, IPausable
         float time = 0;
         while (time < length)
         {
-            yield return new WaitWhile(() => PH.Pause);
+            if (this.IsPaused())
+            {
+                yield return new WaitWhile(this.IsPaused);
+            }
             float ratio = Mathf.Pow((length - time) / length, damp);
             Shake(intensity * ratio);
-            yield return new WaitForFixedUpdate();
-            time += Time.fixedDeltaTime;
+            yield return new WaitForSeconds(0.01f);
+            time += 0.01f;
         }
         cameraTr.position = basePos;
     }
