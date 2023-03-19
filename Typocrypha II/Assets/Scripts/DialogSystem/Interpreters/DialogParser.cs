@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using TMPro;
 using UnityEngine;
 
 /// <summary>
@@ -44,18 +45,22 @@ public class DialogParser : MonoBehaviour
 		FXTextStack = new Stack<FXText.TMProEffect> ();
 	}
 
+    public void Parse(DialogItem dialogItem, DialogBox dialogBox, bool createEvents = true)
+    {
+        Parse(dialogItem, dialogBox.gameObject, dialogBox.dialogText, createEvents);
+    }
+
 	/// <summary>
     /// Parses dialog in dialog item.
     /// Parses tags and adds FXText components to dialog box.
     /// </summary>
     /// <param name="dialogItem">Dialog item to modify and parse.</param>
     /// <param name="dialogBox">Dialog box that will hold dialog.</param>
-	public void Parse(DialogItem dialogItem, DialogBox dialogBox)
+	public void Parse(DialogItem dialogItem, GameObject fxContainer, TextMeshProUGUI textUI, bool createEvents = true)
     {
-		StringBuilder parsed = new StringBuilder(); 
         string text = dialogItem.text;
-        dialogItem.FXTextList = new List<MonoBehaviour>();
-		dialogItem.TextEventList = new List<TextEvent>();
+        var parsed = new StringBuilder(text.Length);
+        dialogItem.Clear();
 		bool tag = false; // Are we parsing a tag?
 		int i = 0;
 		for (; i < text.Length; ++i)
@@ -64,7 +69,7 @@ public class DialogParser : MonoBehaviour
 			if (c == FXTextDelim[0]) // FXTextEffect start tag
             { 
 				tag = !tag;
-				if (tag) ParseEffectStart (i + 1, text, parsed, dialogBox);
+				if (tag) ParseEffectStart (i + 1, text, parsed, fxContainer, textUI);
 			}
             else if (c == FXTextDelim[1]) // FXTextEffect end tag
             { 
@@ -73,7 +78,7 @@ public class DialogParser : MonoBehaviour
 			}
             else if (c == TextEventDelim[0] || c == TextEventDelim[1]) // Text Event
             { 
-				i = ParseTextEvent (i, text, parsed, dialogItem);
+				i = ParseTextEvent (i, text, parsed, dialogItem, createEvents);
 			}
             else if (!tag)
             {
@@ -101,7 +106,7 @@ public class DialogParser : MonoBehaviour
     /// <param name="text">Total raw text of dialog.</param>
     /// <param name="parsed">Currently parsed dialog.</param>
     /// <param name="dialogBox">Dialogbox component reference.</param>
-    void ParseEffectStart(int startPos, string text, StringBuilder parsed, DialogBox dialogBox)
+    void ParseEffectStart(int startPos, string text, StringBuilder parsed, GameObject fxContainer, TextMeshProUGUI textUI)
     {
         // TEMP: hardcoded color map
         var color_map = new Dictionary<string, Color32> {
@@ -123,8 +128,8 @@ public class DialogParser : MonoBehaviour
         int endPos = text.IndexOf (FXTextDelim[0], startPos) - 1;
         var args = text.Substring(startPos, endPos - startPos + 1).Split(optDelim);
         var fxName = args[0];
-        var fx = dialogBox.gameObject.AddComponent(FXTextMap[fxName]) as FXText.TMProEffect;
-        fx.text = dialogBox.dialogText; // Set text component reference
+        var fx = fxContainer.AddComponent(FXTextMap[fxName]) as FXText.TMProEffect;
+        fx.text = textUI; // Set text component reference
         fx.ind = new List<int> {parsed.Length, -1 }; // Set start position: End position set by ParseEffectEnd
         fx.Priority = -10; // Set to low priority
         FXTextStack.Push(fx); // Add to stack
@@ -152,16 +157,16 @@ public class DialogParser : MonoBehaviour
     }
 
 	// Parses a Text Event
-	int ParseTextEvent(int startPos, string text, StringBuilder parsed, DialogItem dialogItem)
+	int ParseTextEvent(int startPos, string text, StringBuilder parsed, DialogItem dialogItem, bool createEvents)
     {
 		int endPos = text.IndexOf (TextEventDelim[1], startPos);
-		string evt;
-		string[] opt;
-		opt = text.Substring (startPos + 1, endPos - startPos - 1).Split (optDelim, escapeChar);
-        evt = opt[0];
-        opt = opt.Skip<string>(1).ToArray<string>();
-		dialogItem.TextEventList.Add(new TextEvent(evt, opt, parsed.Length));
-		//Debug.Log ("text_event:" + evt + ":" + opt.Aggregate("", (acc, next) => acc + ":" + next));
+        if (createEvents)
+        {
+            var opt = text.Substring(startPos + 1, endPos - startPos - 1).Split(optDelim, escapeChar);
+            string evt = opt[0];
+            opt = opt.Skip(1).ToArray();
+            dialogItem.TextEventList.Add(new TextEvent(evt, opt, parsed.Length));
+        }
 		return endPos;
 	}
 

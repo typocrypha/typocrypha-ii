@@ -189,6 +189,19 @@ namespace FXText
         /// <param name="vertexIndex">Starting vertex index for character</param>
         protected abstract void ApplyDefaultEffect(TMP_MeshInfo meshInfo, int vertexIndex);
 
+        public static void Cleanup(GameObject fxContainer, TMProEffect ignore = null)
+        {
+            // Remove old text effects.
+            var fxTexts = fxContainer.GetComponents<TMProEffect>();
+            foreach (var fxText in fxTexts)
+            {
+                if (fxText != ignore)
+                {
+                    Destroy(fxText);
+                }
+            }
+        }
+
         private class SharedMemory
         {
             // Reusable memory (to prevent continuous allocation)

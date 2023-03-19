@@ -9,8 +9,8 @@ public abstract class DialogItem
 {
     public string text; // Text of dialog.
     public List<AudioClip> voice; // Voice blip audio clips.
-    public List<MonoBehaviour> FXTextList; // List of all FXText effects.
-    public List<TextEvent> TextEventList; // List of all Text events.
+    public List<MonoBehaviour> FXTextList { get; } = new List<MonoBehaviour>(); // List of all FXText effects.
+    public List<TextEvent> TextEventList { get; } = new List<TextEvent>(); // List of all Text events.
     public DialogItem(string text, List<AudioClip> voice)
     {
         this.text = text;
@@ -22,4 +22,10 @@ public abstract class DialogItem
     /// </summary>
     /// <returns>Type of dialog view.</returns>
     public abstract System.Type GetView();
+
+    public virtual void Clear()
+    {
+        FXTextList.Clear();
+        TextEventList.Clear();
+    }
 }

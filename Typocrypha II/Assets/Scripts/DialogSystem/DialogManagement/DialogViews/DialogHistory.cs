@@ -100,6 +100,10 @@ public class DialogHistory : MonoBehaviour, IPausable
     private void Hide()
     {
         IsShowing = false;
+        foreach(var historyDialog in historyDialogs)
+        {
+            historyDialog.Cleanup();
+        }
         // Unpause all
         PauseManager.instance.PauseAll(false);
     }
@@ -137,7 +141,7 @@ public class DialogHistory : MonoBehaviour, IPausable
             Text = text;
         }
 
-        public string Speaker { get; set; }
-        public string Text { get; set; }
+        public string Speaker { get; }
+        public string Text { get; }
     }
 }

@@ -144,14 +144,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
         // Remove old text
         dialogText.text = "";
         // Remove old text effects.
-        var fxTexts = gameObject.GetComponents<FXText.TMProEffect>();
-        foreach (var fxText in fxTexts)
-        {
-            if(fxText != hideText)
-            {
-                Destroy(fxText);
-            }
-        }
+        FXText.TMProEffect.Cleanup(gameObject, hideText);
         // Hide all text.
         hideText.color = Color.clear;
         hideText.ind[0] = 0;
