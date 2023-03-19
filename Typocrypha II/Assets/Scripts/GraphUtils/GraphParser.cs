@@ -45,7 +45,7 @@ public abstract class GraphParser : MonoBehaviour
     private bool CheckTextCase(string pattern, string value)
     {
         //Probably should compress this to regex
-        return value.Trim().ToLower() == DialogParser.instance.SubstituteMacros(pattern).Trim().ToLower().Replace(".", string.Empty).Replace("?", string.Empty).Replace("!", string.Empty);
+        return value.Trim().ToLower() == TextMacros.SubstituteMacros(pattern).Trim().ToLower().Replace(".", string.Empty).Replace("?", string.Empty).Replace("!", string.Empty);
     }
     private bool CheckRegexCase(string pattern, string value)
     {

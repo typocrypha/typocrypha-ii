@@ -195,10 +195,10 @@ public class BattleManager : MonoBehaviour, IPausable
     private IEnumerator WaveTransition(BattleWave waveData)
     { 
         var wT = Instantiate(defaultWaveTransitionPrefab, waveTransitionCanvas.transform).GetComponent<WaveTransitionBanner>();
-        wT.TitleText = DialogParser.instance.SubstituteMacros(waveData.waveTitle);
+        wT.TitleText = TextMacros.SubstituteMacros(waveData.waveTitle);
         if (!string.IsNullOrEmpty(waveData.waveNumberOverride))
         {
-            wT.NumberText = DialogParser.instance.SubstituteMacros(waveData.waveNumberOverride);
+            wT.NumberText = TextMacros.SubstituteMacros(waveData.waveNumberOverride);
         }
         else
         {

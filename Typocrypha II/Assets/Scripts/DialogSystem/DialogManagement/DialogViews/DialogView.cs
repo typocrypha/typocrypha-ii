@@ -64,13 +64,13 @@ public abstract class DialogView : MonoBehaviour
     }
     public void SetLocationText(string location)
     {
-        SetLocation(DialogParser.instance.SubstituteMacros(location));
+        SetLocation(TextMacros.SubstituteMacros(location));
     }
     protected virtual void SetLocation(string location) { }
 
     public void SetDateTimeText(string dateTime)
     {
-        SetDateTime(DialogParser.instance.SubstituteMacros(dateTime));
+        SetDateTime(TextMacros.SubstituteMacros(dateTime));
     }
     protected virtual void SetDateTime(string dateTime) { }
 

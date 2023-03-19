@@ -82,7 +82,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
         // Get dialog.
         this.dialogItem = dialogItem;
         ResetDialogBox();
-        string rtext = DialogParser.instance.SubstituteMacros(dialogItem.text); // Parse macros
+        string rtext = TextMacros.SubstituteMacros(dialogItem.text); // Parse macros
         dialogItem.text = Regex.Replace(rtext, @"<.*?>", ""); // Remove rich text tags
         DialogParser.instance.Parse(dialogItem, this); // Parse w/o rich text tags
         dialogText.text = DialogParser.instance.RemoveTags(rtext); // Set dialog text (doesn't remove rich text tags
