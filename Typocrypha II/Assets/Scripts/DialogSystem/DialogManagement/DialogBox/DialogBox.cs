@@ -82,10 +82,10 @@ public class DialogBox : MonoBehaviour, IDialogBox
         // Get dialog.
         this.dialogItem = dialogItem;
         ResetDialogBox();
-        string rtext = TextMacros.SubstituteMacros(dialogItem.text); // Parse macros
-        dialogItem.text = Regex.Replace(rtext, @"<.*?>", ""); // Remove rich text tags
-        DialogParser.instance.Parse(dialogItem, this); // Parse w/o rich text tags
-        dialogText.text = DialogParser.instance.RemoveTags(rtext); // Set dialog text (doesn't remove rich text tags
+        // Parse dialog and set text
+        DialogParser.instance.Parse(dialogItem, this);
+        dialogText.text = dialogItem.text;
+        // Update all effects manually
         hideText.UpdateAllEffects();
         // Set box size based on text.
         if (resizeTextBox) SetBoxHeight();

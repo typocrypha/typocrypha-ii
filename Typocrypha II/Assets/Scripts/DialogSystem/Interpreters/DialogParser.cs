@@ -62,38 +62,49 @@ public class DialogParser : MonoBehaviour
 
     public void Parse(DialogItem dialogItem, DialogBox dialogBox, bool createEvents = true)
     {
-        Parse(dialogItem, dialogBox.gameObject, dialogBox.dialogText, createEvents);
+        dialogItem.text = Parse(dialogItem.text, dialogBox.gameObject, dialogBox.dialogText, dialogItem.TextEventList, dialogItem.FXTextList, createEvents);
     }
 
-	/// <summary>
-    /// Parses dialog in dialog item.
-    /// Parses tags and adds FXText components to dialog box.
-    /// </summary>
-    /// <param name="dialogItem">Dialog item to modify and parse.</param>
-    /// <param name="dialogBox">Dialog box that will hold dialog.</param>
-	public void Parse(DialogItem dialogItem, GameObject fxContainer, TextMeshProUGUI textUI, bool createEvents = true)
+    // Parse without text events
+    public string Parse(string line, GameObject fxContainer, TextMeshProUGUI textUI, List<MonoBehaviour> textEffects)
     {
-        string text = dialogItem.text;
+        return Parse(line, fxContainer, textUI, null, textEffects, false);
+    }
+
+    // Parses a line of text removing, creating text FX and parsing text events.
+    // Text event creation is optional, in which case false should be passed in the create events arg
+	public string Parse(string line, GameObject fxContainer, TextMeshProUGUI textUI, List<TextEvent> textEvents, List<MonoBehaviour> textEffects, bool createEvents = true)
+    {
+        // Clear output lists
+        textEvents?.Clear();
+        textEffects.Clear();
+        // Initialize text (substitute macros) Regex.Replace(line, @"<.*?>", ""); // Remove rich text tags
+        string text = TextMacros.SubstituteMacros(line);
+        // Initialize parsing vars
         var parsed = new StringBuilder(text.Length);
-        dialogItem.Clear();
 		bool tag = false; // Are we parsing a tag?
-		int i = 0;
-		for (; i < text.Length; ++i)
+		for (int i = 0; i < text.Length; ++i)
         {
 			char c = text [i];
 			if (c == FXTextDelim[0]) // FXTextEffect start tag
             { 
 				tag = !tag;
-				if (tag) ParseEffectStart (i + 1, text, parsed, fxContainer, textUI);
+                if (tag)
+                {
+                    ParseEffectStart(i + 1, text, parsed, fxContainer, textUI);
+                }
 			}
             else if (c == FXTextDelim[1]) // FXTextEffect end tag
             { 
 				tag = !tag;
-				if (tag) ParseEffectEnd (i + 1, text, parsed, dialogItem);
+                if (tag)
+                {
+                    textEffects.Add(ParseEffectEnd(i + 1, text, parsed));
+                }
 			}
             else if (c == textEventDelim[0] || c == textEventDelim[1]) // Text Event
             { 
-				i = ParseTextEvent (i, text, parsed, dialogItem, createEvents);
+				i = ParseTextEvent (i, text, parsed, textEvents, createEvents);
 			}
             else if (!tag)
             {
@@ -111,7 +122,7 @@ public class DialogParser : MonoBehaviour
 				}
 			}
 		}
-        dialogItem.text = parsed.ToString();
+        return parsed.ToString();
 	}
 
     /// <summary>
@@ -138,7 +149,7 @@ public class DialogParser : MonoBehaviour
     }
 
 	// Parses an effect's ending tag, and matches with top of effect stack
-	void ParseEffectEnd(int startPos, string text, StringBuilder parsed, DialogItem dialogItem) 
+	FXText.TMProEffect ParseEffectEnd(int startPos, string text, StringBuilder parsed) 
     {
 		int endPos = text.IndexOf (FXTextDelim[1], startPos) - 1;
 		string fxName = text.Substring (startPos, endPos - startPos + 1);
@@ -149,11 +160,11 @@ public class DialogParser : MonoBehaviour
             throw new System.Exception("Mismatched FXTextEffect tags:" + fxName);
         }
         top.ind[1] = parsed.Length;
-        dialogItem.FXTextList.Add(top);
+        return top;
     }
 
 	// Parses a Text Event
-	int ParseTextEvent(int startPos, string text, StringBuilder parsed, DialogItem dialogItem, bool createEvents)
+	int ParseTextEvent(int startPos, string text, StringBuilder parsed, List<TextEvent> textEventList, bool createEvents)
     {
 		int endPos = text.IndexOf (textEventDelim[1], startPos);
         if (createEvents)
@@ -161,7 +172,7 @@ public class DialogParser : MonoBehaviour
             var opt = text.Substring(startPos + 1, endPos - startPos - 1).Split(optDelim, escapeChar);
             string evt = opt[0];
             opt = opt.Skip(1).ToArray();
-            dialogItem.TextEventList.Add(new TextEvent(evt, opt, parsed.Length));
+            textEventList.Add(new TextEvent(evt, opt, parsed.Length));
         }
 		return endPos;
 	}
@@ -180,6 +191,7 @@ public class DialogParser : MonoBehaviour
     /// <returns>Dialog text w/o tags.</returns>
     public string RemoveTags(string text)
     {
+        //var rText = Regex.Replace(dialogItem.text, @"<.*?>", ""); // Remove rich text tags
         var parsed = new StringBuilder(text.Length);
         int cnt = 0;
         for(int i = 0; i < text.Length;)

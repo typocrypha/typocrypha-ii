@@ -6,23 +6,23 @@ using TMPro;
 public class HistoryDialog : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI text;
-    private readonly DialogItemHistory dialogItem = new DialogItemHistory("", new List<AudioClip>());
+    private readonly List<MonoBehaviour> textEffects = new List<MonoBehaviour>();
 
     public void SetData(DialogHistory.HistoryData data)
     {
-        Cleanup();
-        // Setup dialog item
-        dialogItem.text = $"{data.Speaker}: {data.Text}";
-        // Parse text
-        DialogParser.instance.Parse(dialogItem, gameObject, text, false);
+        Cleanup();        
         // Set text
-        text.text = dialogItem.text;
+        text.text = DialogParser.instance.Parse(data.ToString(), gameObject, text, textEffects);
     }
 
     public void Cleanup()
     {
         // Remove old text effects.
-        FXText.TMProEffect.Cleanup(gameObject);
+        foreach(var effect in textEffects)
+        {
+            Destroy(effect);
+        }
+        textEffects.Clear();
         text.text = string.Empty;
     }
 }

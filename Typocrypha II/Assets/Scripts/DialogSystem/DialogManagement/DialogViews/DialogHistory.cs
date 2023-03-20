@@ -143,5 +143,10 @@ public class DialogHistory : MonoBehaviour, IPausable
 
         public string Speaker { get; }
         public string Text { get; }
+
+        public override string ToString()
+        {
+            return $"{Speaker}: {Text}";
+        }
     }
 }
