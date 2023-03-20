@@ -35,7 +35,15 @@ namespace Typocrypha
         public readonly Dictionary<char, Key> keyMap = new Dictionary<char, Key>(); // Map from characters to keyboard keys.
         public readonly Dictionary<char, KeyEffect> allEffects = new Dictionary<char, KeyEffect>(); // All active key effects on keyboard (managed by individual effects).
         public readonly HashSet<char> unaffectedKeys = new HashSet<char>(); // All keys not currently affected by a key effect
-
+        private static readonly Dictionary<char, KeyCode> keyCodeMap = new Dictionary<char, KeyCode>()
+        {
+            {'a', KeyCode.A }, {'b', KeyCode.B }, {'c', KeyCode.C }, {'d', KeyCode.D }, {'e', KeyCode.E },
+            {'f', KeyCode.F }, {'g', KeyCode.G }, {'h', KeyCode.H }, {'i', KeyCode.I }, {'j', KeyCode.J },
+            {'k', KeyCode.K }, {'l', KeyCode.L }, {'m', KeyCode.M }, {'n', KeyCode.N }, {'o', KeyCode.O },
+            {'p', KeyCode.P }, {'q', KeyCode.Q }, {'r', KeyCode.R }, {'s', KeyCode.S }, {'t', KeyCode.T },
+            {'u', KeyCode.U }, {'v', KeyCode.V }, {'w', KeyCode.W }, {'x', KeyCode.X }, {'y', KeyCode.Y },
+            {'z', KeyCode.Z }, 
+        };
         void Awake()
         {
             if (instance == null)
@@ -72,19 +80,10 @@ namespace Typocrypha
         {
             foreach (var c in keyMap) // Highlight pressed keys.
             {
-                var key = c.Value;
-                if (Input.GetKey(c.Key.ToString()))
-                {
-                    key.Highlight = true;
-                }
-                else
-                {
-                    key.Highlight = false;
-                }
+                c.Value.Highlight = Input.GetKey(keyCodeMap[c.Key]);
             }
             foreach (var c in Input.inputString) // Add letters to cast bar.
             {
-                var text = castBar.Text;
                 if (keyMap.ContainsKey(c))
                 {
                     keyMap[c].OnPress?.Invoke();
