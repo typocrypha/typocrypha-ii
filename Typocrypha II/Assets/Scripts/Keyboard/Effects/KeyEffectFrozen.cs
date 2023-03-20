@@ -20,7 +20,7 @@ namespace Typocrypha
         public override void OnStart()
         {
             base.OnStart();
-            key.output = ""; // Block output.
+            key.ClearOutput();
             health = Random.Range(minHealth, maxHealth);
         }
 
@@ -36,7 +36,7 @@ namespace Typocrypha
         public override void Reset()
         {
             base.Reset();
-            key.output = key.letter.ToString(); // Unblock output.
+            key.SetOutput(key.letter); // Unblock output.
         }
     }
 }

@@ -35,12 +35,12 @@ namespace Typocrypha
             // Mark the other key as being affected
             MarkAffected(swappedWith);
             // Swap self output.
-            key.output = swappedWith.ToString();
-            key.letterText.text = swappedWith.ToString().ToUpper();
+            key.SetOutput(swappedWith);
+            key.SetDisplay(swappedWith);
             // Set the output of the key we swapped with
             Key swappedKey = Keyboard.instance.keyMap[swappedWith];
-            swappedKey.output = key.letter.ToString();
-            swappedKey.letterText.text = key.letter.ToString().ToUpper();
+            swappedKey.SetOutput(key.letter);
+            swappedKey.SetDisplay(key.letter);
             swappedKey.SfxOverride = sfxOverride;
             // Create the visuals for the other key
             swappedKeyEffect = Instantiate(swappedKeyEffectPrefab, swappedKey.transform);
@@ -58,12 +58,10 @@ namespace Typocrypha
         {
             base.Reset();
             // Revert own output.
-            key.output = key.letter.ToString();
-            key.letterText.text = key.letter.ToString().ToUpper();
+            key.SetOutputAndDisplay(key.letter);
             // Revert swapped key output
             Key swappedKey = Keyboard.instance.keyMap[swappedWith];
-            swappedKey.output = swappedWith.ToString();
-            swappedKey.letterText.text = swappedWith.ToString().ToUpper();
+            swappedKey.SetOutputAndDisplay(swappedWith);
             swappedKey.SfxOverride = null;
             // Destroy Swapped key effect graphics
             Destroy(swappedKeyEffect);

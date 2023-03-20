@@ -120,9 +120,9 @@ namespace Typocrypha
             }
         }
 
-        public void CheckInput(string inputString)
+        public void CheckInput(IEnumerable<char> input)
         {
-            foreach (char inputChar in inputString)
+            foreach (char inputChar in input)
                 CheckInput(inputChar);
         }
 

@@ -14,7 +14,7 @@ namespace Typocrypha
         public delegate void OnPressDel(); // Delegate for when key is pressed.
 
         public char letter; // Letter this key represents.
-        public string output; // What is typed when this key is pressed.
+        public readonly List<char> output = new List<char>(4); // What is typed when this key is pressed.
 
         public Image highlightSR; // Sprite renderer for key highlight.
         public TextMeshProUGUI letterText; // Text for key label.
@@ -60,8 +60,46 @@ namespace Typocrypha
         public virtual void SetText(char c)
         {
             letter = c;
-            output = c.ToString();
-            letterText.text = output.ToUpper();
+            SetOutput(c);
+            SetDisplay(c);
+        }
+
+        public void SetDisplay(char c)
+        {
+            SetDisplay(c.ToString());
+        }
+
+        public void SetDisplay(string s)
+        {
+            letterText.text = s.ToUpper();
+        }
+
+        public void ClearOutput()
+        {
+            output.Clear();
+        }
+
+        public void SetOutput(char c)
+        {
+            output.Clear();
+            output.Add(c);
+        }
+
+        public void AddToOutput(char c)
+        {
+            output.Add(c);
+        }
+
+        public void SetOutput(IEnumerable<char> c)
+        {
+            output.Clear();
+            output.AddRange(c);
+        }
+
+        public void SetOutputAndDisplay(char c)
+        {
+            SetOutput(c);
+            SetDisplay(c);
         }
 
         /// <summary>

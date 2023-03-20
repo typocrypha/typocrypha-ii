@@ -20,7 +20,9 @@ namespace Typocrypha
             // Multiply output.
             reps = Random.Range(1, 4);
             for (int i = 0; i < reps; i++)
-                key.output += key.letter.ToString();
+            {
+                key.AddToOutput(key.letter);
+            }
             // Start timer.
             StartCoroutine(DestroyAfterTime(time));
         }
@@ -34,7 +36,7 @@ namespace Typocrypha
         {
             base.Reset();
             // Revert output.
-            key.output = key.letter.ToString();
+            key.SetOutput(key.letter);
         }
 
         // Remove effect when time runs out.
