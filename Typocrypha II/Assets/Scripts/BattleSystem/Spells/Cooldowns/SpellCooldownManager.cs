@@ -40,10 +40,9 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
 
     private void Start()
     {
-        var equipment = PlayerDataManager.instance.equipment.EquippedWords;
-        foreach (var spell in equipment)
+        foreach (var kvp in PlayerDataManager.instance.equipment.EquippedWords)
         {
-            AddWord(spell);
+            AddWord(kvp.Value);
         }
         SortCooldowns();
     }

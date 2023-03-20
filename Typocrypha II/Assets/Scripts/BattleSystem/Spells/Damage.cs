@@ -387,7 +387,7 @@ public static class Damage
                         research.SetDecoded(target.ResearchKey);
                         if (word != null)
                         {
-                            PlayerDataManager.instance.equipment.Unlock(word, true);
+                            PlayerDataManager.instance.equipment.UnlockWord(word, true);
                             SpellCooldownManager.instance.AddWord(word, true);
                         }
                     }

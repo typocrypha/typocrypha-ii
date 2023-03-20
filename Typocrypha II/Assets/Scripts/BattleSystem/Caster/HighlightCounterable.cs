@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -12,6 +13,9 @@ public class HighlightCounterable : MonoBehaviour
     [SerializeField] private TextMeshProUGUI SpellText; // Text displaying charging spell.
     [SerializeField] private FXText.TMProColor CounterableHighlight; // Highlights for counterable spellwords.
     [SerializeField] private FXText.TMProColor CounteredHighlight; // Highlight for currently countered display.
+
+    private string[] spellWords = Array.Empty<string>();
+    private string lastSpellText = "";
 
     void Update()
     {
@@ -27,14 +31,18 @@ public class HighlightCounterable : MonoBehaviour
             CounteredHighlight.ind[0] = 0;
             CounteredHighlight.ind[1] = 0;
         }
-        string[] spellWords = SpellText.text.Split(Spell.separators);
+        if(lastSpellText != SpellText.text)
+        {
+            spellWords = SpellText.text == "" ? Array.Empty<string>() : SpellText.text.Split(Spell.separators);
+            lastSpellText = SpellText.text;
+        }
         int pos = 0; // Text character position in spell words.
         // check for any words that can be countered, and highlight them appropriately if found
         for (int i = 0; i < spellWords.Length; i++)
         {
             string spellWord = spellWords[i];
             int index = i * 2;
-            if (PlayerDataManager.instance.equipment.EquippedWordsDict.ContainsKey(spellWord.ToLower()) && !SpellCooldownManager.instance.IsOnCooldown(spellWord))
+            if (PlayerDataManager.instance.equipment.EquippedWords.ContainsKey(spellWord.ToLower()) && !SpellCooldownManager.instance.IsOnCooldown(spellWord))
             {
                 CounterableHighlight.ind[index] = pos;
                 CounterableHighlight.ind[index + 1] = pos + spellWord.Length;

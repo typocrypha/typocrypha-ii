@@ -336,7 +336,7 @@ public class DialogGraphParser : MonoBehaviour
                 if (cooldowns != null && equipment != null)
                 {
                     cooldowns.ClearWords();
-                    equipment.EquippedWords.Clear();
+                    equipment.ClearEquipment();
                 }
             }
         }
@@ -354,7 +354,7 @@ public class DialogGraphParser : MonoBehaviour
                         if(word != null)
                         {
                             cooldowns.AddWord(word);
-                            equipment.EquippedWords.Add(word);
+                            equipment.EquipWord(word);
                         }
                     }
                     AddWord(addSpellsNode.word1);

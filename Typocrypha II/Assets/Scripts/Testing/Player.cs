@@ -36,8 +36,7 @@ public class Player : Caster, IPausable
     /// </summary>
     public void CastString(string spellString)
     {
-        Spell spell = new Spell();// = new List<SpellWord>();
-        var results = SpellParser.instance?.Parse(spellString.TrimEnd().Split(separator), PlayerDataManager.instance.equipment.EquippedWordsDict, out spell);
+        var results = SpellParser.instance.Parse(spellString.TrimEnd().Split(separator), PlayerDataManager.instance.equipment.EquippedWords, out var spell);
         if (results == SpellParser.ParseResults.Valid) 
         {
             // Check cooldowns
