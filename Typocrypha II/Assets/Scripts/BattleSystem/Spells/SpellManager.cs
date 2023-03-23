@@ -47,15 +47,26 @@ public class SpellManager : MonoBehaviour
         return StartCoroutine(CastAndCounterCR(spell, caster, target, (c) => c == targetCaster));
     }
     /// <summary> Modify the root words by the modifiers and return the modified roots </summary>
-    public RootWord[] Modify(Spell spell)
+    public List<RootWord> Modify(Spell spell)
     {
-        SpellWord[] cloneWords = spell.Select((word) => word.Clone()).ToArray();
-        for (int i = 0; i < cloneWords.Length; ++i)
+        var roots = new List<RootWord>(spell.Count);
+        var cloneWords = new List<SpellWord>(spell.Count);
+        foreach(var word in spell)
         {
-            var mod = cloneWords[i] as ModifierWord;
-            mod?.Modify(cloneWords, i);
+            cloneWords.Add(word.Clone());
         }
-        return (cloneWords.Where((word) => word is RootWord).Select((word) => word as RootWord)).ToArray();
+        for (int i = 0; i < cloneWords.Count; ++i)
+        {
+            if(cloneWords[i] is ModifierWord mod)
+            {
+                mod.Modify(cloneWords, i);
+            }
+            else if(cloneWords[i] is RootWord root)
+            {
+                roots.Add(root);
+            }
+        }
+        return roots;
     }
     /// <summary> Cast the spell effects and play the associated fx</summary>
     private IEnumerator CastCR(Spell spell, Caster caster, Battlefield.Position target, string castMessageOverride = null)
@@ -101,7 +112,7 @@ public class SpellManager : MonoBehaviour
         }
         var casterSpace = Battlefield.instance.GetSpaceScreenSpace(caster.FieldPos);
         List<Coroutine> crList = new List<Coroutine>();
-        for (int rootIndex = 0; rootIndex < roots.Length; rootIndex++)
+        for (int rootIndex = 0; rootIndex < roots.Count; rootIndex++)
         {
             var root = roots[rootIndex];
             var spellData = new RootCastData(spell, roots, rootIndex);
@@ -287,7 +298,7 @@ public class RootCastResults : List<List<CastResults>>
 
 public class RootCastData
 {
-    public RootCastData(Spell spell, RootWord[] roots, int rootIndex)
+    public RootCastData(Spell spell, List<RootWord> roots, int rootIndex)
     {
         Spell = spell;
         Roots = roots;
@@ -295,8 +306,8 @@ public class RootCastData
     }
 
     public Spell Spell { get; }
-    public RootWord[] Roots { get; }
+    public IReadOnlyList<RootWord> Roots { get; }
     public int RootIndex { get; }
 
-    public bool IsLastRoot => RootIndex == Roots.Length - 1;
+    public bool IsLastRoot => RootIndex == Roots.Count - 1;
 }

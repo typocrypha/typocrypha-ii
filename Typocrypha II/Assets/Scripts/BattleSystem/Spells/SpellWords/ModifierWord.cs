@@ -40,26 +40,24 @@ public class ModifierWord : SpellWord
                 effect.tags.Add(tag);
         }       
     }
-    public void Modify(SpellWord[] words, int index)
+    public void Modify(IList<SpellWord> words, int index)
     {
         if(direction == Direction.Left || direction == Direction.Bidirectional)
         {
-            if (index - 1 >= 0 && words[index - 1] is RootWord)
+            if (index - 1 >= 0 && words[index - 1] is RootWord root)
             {
-                var word = words[index - 1] as RootWord;
-                foreach (var effect in word.effects)
+                foreach (var effect in root.effects)
                     Modify(effect);
-                word.rightMod = this;
+                root.rightMod = this;
             }
         }
         if (direction == Direction.Right || direction == Direction.Bidirectional)
         {
-            if (index + 1 < words.Length && words[index + 1] is RootWord)
+            if (index + 1 < words.Count && words[index + 1] is RootWord root)
             {
-                var word = words[index + 1] as RootWord;
-                foreach (var effect in word.effects)
+                foreach (var effect in root.effects)
                     Modify(effect);
-                word.leftMod = this;
+                root.leftMod = this;
             }
         }
     }

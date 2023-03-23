@@ -112,7 +112,12 @@ public class Spell : IList<SpellWord>, IEquatable<Spell>
             {
                 var pattern = effect.pattern.Target(casterPos, targetPos);
                 foreach(var space in pattern)
-                    targets.Add(space);
+                {
+                    if (!targets.Contains(space))
+                    {
+                        targets.Add(space);
+                    }
+                }
             }
         }
         return targets.Select((s) => Battlefield.instance.GetObject(s));

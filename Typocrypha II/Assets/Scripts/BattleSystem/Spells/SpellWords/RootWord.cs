@@ -18,7 +18,11 @@ public class RootWord : SpellWord
     public override SpellWord Clone()
     {
         var clone = Instantiate(this);
-        clone.effects = effects.Select((effect) => (Instantiate(effect))).ToList();
+        clone.effects = new List<RootWordEffect>(effects.Count);
+        foreach(var effect in effects)
+        {
+            clone.effects.Add(Instantiate(effect));
+        }
         return clone;
     }
 }
