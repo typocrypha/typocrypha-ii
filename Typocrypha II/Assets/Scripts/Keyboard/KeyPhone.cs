@@ -7,10 +7,10 @@ namespace Typocrypha
 {
     public class KeyPhone : Key
     {
-        public TextMeshPro tooltip;
-        public override void SetText(char c)
+        [SerializeField] private TextMeshProUGUI tooltip;
+        public override void SetLetter(char c)
         {
-            base.SetText(c);
+            base.SetLetter(c);
             tooltip.text = CastBarPhone.GetToolTipText(c);
         }
     }

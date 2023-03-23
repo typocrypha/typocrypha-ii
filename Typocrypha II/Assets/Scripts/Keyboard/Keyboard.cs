@@ -69,9 +69,9 @@ namespace Typocrypha
             foreach (Key key in keys)
             {
                 // Add keys to map.
-                keyMap[key.letter] = key;
+                keyMap[key.Letter] = key;
                 // Initialize unaffected key set
-                unaffectedKeys.Add(key.letter);
+                unaffectedKeys.Add(key.Letter);
             }
         }
 
@@ -87,7 +87,7 @@ namespace Typocrypha
                 if (keyMap.ContainsKey(c))
                 {
                     keyMap[c].OnPress?.Invoke();
-                    castBar.CheckInput(keyMap[c].output);
+                    castBar.CheckInput(keyMap[c].Output);
                 }
                 else
                 {

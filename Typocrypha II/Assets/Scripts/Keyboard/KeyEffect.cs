@@ -21,8 +21,7 @@ namespace Typocrypha
 
         void Awake()
         {
-            ph = new PauseHandle(OnPause);
-            
+            ph = new PauseHandle(OnPause);     
         }
 
         public void Register(Key keyComponent, char key)
@@ -53,10 +52,11 @@ namespace Typocrypha
         /// <summary>
         /// Reset key to normal state after effect ends.
         /// </summary>
-        public virtual void Reset()
+        public virtual void ResetEffect()
         {
             key.OnPress -= OnPress;
             key.SfxOverride = null;
+            key.ResetOutputAndDisplay();
         }
 
         /// <summary>
@@ -64,9 +64,9 @@ namespace Typocrypha
         /// </summary>
         public void Remove()
         {
-            Reset();
-            Keyboard.instance.allEffects.Remove(key.letter);
-            MarkUnaffected(key.letter);
+            ResetEffect();
+            Keyboard.instance.allEffects.Remove(key.Letter);
+            MarkUnaffected(key.Letter);
             Destroy(gameObject);
         }
 

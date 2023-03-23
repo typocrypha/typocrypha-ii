@@ -88,7 +88,7 @@ namespace Typocrypha
                         GameObject go = Instantiate((colorSwap = !colorSwap) ? keyPrefab : keyPrefabAlt, rows[rowind]);
                         go.name = c.ToString();
                         go.transform.localScale = Vector2.one;
-                        go.GetComponent<Key>()?.SetText(c);
+                        go.GetComponent<Key>()?.SetLetter(c);
                         keyObjects.Add(go);
                         break;
                 }

@@ -21,23 +21,13 @@ namespace Typocrypha
             reps = Random.Range(1, 4);
             for (int i = 0; i < reps; i++)
             {
-                key.AddToOutput(key.letter);
+                key.AddToOutput(key.Letter);
             }
             // Start timer.
             StartCoroutine(DestroyAfterTime(time));
         }
 
-        public override void OnPress()
-        {
-            
-        }
-
-        public override void Reset()
-        {
-            base.Reset();
-            // Revert output.
-            key.SetOutput(key.letter);
-        }
+        public override void OnPress() { }
 
         // Remove effect when time runs out.
         IEnumerator DestroyAfterTime(float seconds)

@@ -32,12 +32,6 @@ namespace Typocrypha
                 key.SfxOverride = breakSfx;
             }
         }
-
-        public override void Reset()
-        {
-            base.Reset();
-            key.SetOutput(key.letter); // Unblock output.
-        }
     }
 }
 
