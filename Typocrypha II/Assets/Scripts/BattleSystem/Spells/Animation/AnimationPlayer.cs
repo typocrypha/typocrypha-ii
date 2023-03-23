@@ -14,7 +14,6 @@ public class AnimationPlayer : MonoBehaviour
 		if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(transform);
         }          
 		else Destroy (gameObject); // avoid multiple copies
 	}
