@@ -131,7 +131,6 @@ namespace Typocrypha
         /// </summary>
         public void Cast()
         {
-            Debug.Log("CastBar:" + Text);
             onCast.Invoke(Text);
             Clear();
         }

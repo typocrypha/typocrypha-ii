@@ -52,7 +52,6 @@ public class Player : Caster, IPausable
                 GetComponent<ATB3.ATBPlayer>().Cast(TargetPos); // Start casting sequence
             }
         }
-        Debug.Log("Spell cast:" + spellString + ":" + results);
     }
     private void Update()
     {
