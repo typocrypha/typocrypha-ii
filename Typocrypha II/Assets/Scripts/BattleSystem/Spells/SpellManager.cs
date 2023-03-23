@@ -99,7 +99,7 @@ public class SpellManager : MonoBehaviour
             LogInteractivePopup(critPopupPrefab, "Critical Chance!", friendly ? "CRITICAL" : "BLOCK", 5, OnCritPopupComplete);
             yield return StartCoroutine(PlayPrompts());
         }
-        var casterSpace = Battlefield.instance.GetSpace(caster.FieldPos);
+        var casterSpace = Battlefield.instance.GetSpaceScreenSpace(caster.FieldPos);
         List<Coroutine> crList = new List<Coroutine>();
         for (int rootIndex = 0; rootIndex < roots.Length; rootIndex++)
         {
@@ -117,7 +117,7 @@ public class SpellManager : MonoBehaviour
                 foreach (var t in targets)
                 {
                     var targetCaster = Battlefield.instance.GetCaster(t);
-                    var targetSpace = Battlefield.instance.GetSpace(t);
+                    var targetSpace = Battlefield.instance.GetSpaceScreenSpace(t);
                     if (targetCaster == null || targetCaster.BStatus == Caster.BattleStatus.Dead || targetCaster.BStatus == Caster.BattleStatus.Fled)
                     {
                         caster.OnNoTargetHit?.Invoke(t);

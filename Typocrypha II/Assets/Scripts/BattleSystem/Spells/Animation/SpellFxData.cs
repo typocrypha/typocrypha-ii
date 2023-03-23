@@ -17,10 +17,14 @@ public class SpellFxData
     public GameObject effectPrefab = null;
     public List<AnimationPacket> effectPackets = new List<AnimationPacket>() { new AnimationPacket() };
 
-    public IEnumerator Play(Vector2 pos)
+    public IEnumerator Play(Vector2 pos, bool isWorldSpace = false)
     {
         if (effectType == EffectType.None)
             yield break;
+        if (isWorldSpace)
+        {
+            pos = Camera.main.WorldToScreenPoint(pos);
+        }
         if (effectType == EffectType.Single)
         {
             AudioManager.instance.PlaySFX(effectPackets[0].sfx);

@@ -7,7 +7,8 @@ using UnityEngine.U2D;
 public class AnimationPlayer : MonoBehaviour
 {
 	public static AnimationPlayer instance = null; // global static ref
-	public GameObject animationHolderPrefab; // object prefab that holds the animations
+	[SerializeField] private GameObject animationHolderPrefab; // object prefab that holds the animations
+    [SerializeField] private Canvas animationCanvas;
 
     void Awake() {
 		
@@ -27,7 +28,7 @@ public class AnimationPlayer : MonoBehaviour
             return new CompletionData();
         }
         //Create animation holder
-        GameObject display = Instantiate(animationHolderPrefab);
+        GameObject display = Instantiate(animationHolderPrefab, animationCanvas.transform);
         display.transform.position = pos;
         //Set animation speed
         var animator = display.GetComponent<Animator>();

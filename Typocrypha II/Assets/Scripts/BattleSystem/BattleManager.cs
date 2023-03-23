@@ -183,7 +183,7 @@ public class BattleManager : MonoBehaviour, IPausable
         // Use the default FX if the prefab doesn't have a SpawnFX componetn
         var fx = e.GetComponent<SpawnFX>()?.fx ?? defualtSpawnFx;
         // Play and wait for spawn effects
-        yield return StartCoroutine(fx.Play(e.transform.position));
+        yield return StartCoroutine(fx.Play(e.transform.position, true));
         if(unPause)
         {
             var actor = e.GetComponent<ATB3.ATBActor>();
