@@ -9,6 +9,6 @@ public class BEConditionAllStatus : BattleEventCondition
     public override bool Check()
     {
         var enemies = Battlefield.instance.Enemies;
-        return enemies.Count() > 0 && enemies.All(e => statuses.Contains(e.BStatus));
+        return enemies.Any() && enemies.All(e => statuses.Contains(e.BStatus));
     }
 }

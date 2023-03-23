@@ -62,7 +62,19 @@ public class Battlefield : MonoBehaviour, IPausable
     public static Battlefield instance;
     public int Columns { get; } = 3;
     public int Rows { get; } = 2;
-    public Caster Player { get => (Casters.FirstOrDefault((obj) => obj.CasterClass == Caster.Class.Player)); }
+    public Caster Player 
+    {
+        get 
+        {
+            foreach(var caster in Casters)
+            {
+                if (caster.CasterClass == Caster.Class.Player)
+                    return caster;
+            }
+            return null;
+        }
+
+    }
 
     #region Row and List Accessor Properties
     public FieldObject[] TopRow { get { return field[0]; } }
@@ -70,7 +82,6 @@ public class Battlefield : MonoBehaviour, IPausable
     public IEnumerable<Caster> Enemies { get => Casters.Where((obj) => obj.CasterState == Caster.State.Hostile); }
     public IEnumerable<Caster> Allies { get => Casters.Where((obj) => obj.CasterState == Caster.State.Ally); }
     public List<ATBActor> Actors { get; } = new List<ATBActor>();
-    public List<Caster> ExternalCasters { get => Casters.Where((obj) => !obj.FieldPos.IsLegal) as List<Caster>; }
     public List<Caster> Casters { get; } = new List<Caster>();
     public IEnumerable<Position> AllPositions => Enumerable.Range(0, Rows).SelectMany((row) => Enumerable.Range(0, Columns).Select((col) => new Position(row, col)));
     public List<Position> ValidReinforcementPositions => AllPositions.Where(IsValidEnemyReinforcementPos).ToList();
