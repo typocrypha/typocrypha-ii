@@ -138,6 +138,10 @@ public class Battlefield : MonoBehaviour, IPausable
     {
         return spaces[pos].position;
     }
+    public Vector2 GetSpaceScreenSpace(Position pos)
+    {
+        return Camera.main.WorldToScreenPoint(GetSpace(pos));
+    }
     /// <summary> Get the caster in a specific space. returns null if the space is empty or the object is not a caster </summary> 
     public Caster GetCaster(Position pos) => GetObject(pos) as Caster;
     /// <summary> Get the field object </summary> 
