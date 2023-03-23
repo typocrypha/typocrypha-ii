@@ -42,8 +42,18 @@ namespace Typocrypha
             {'k', KeyCode.K }, {'l', KeyCode.L }, {'m', KeyCode.M }, {'n', KeyCode.N }, {'o', KeyCode.O },
             {'p', KeyCode.P }, {'q', KeyCode.Q }, {'r', KeyCode.R }, {'s', KeyCode.S }, {'t', KeyCode.T },
             {'u', KeyCode.U }, {'v', KeyCode.V }, {'w', KeyCode.W }, {'x', KeyCode.X }, {'y', KeyCode.Y },
-            {'z', KeyCode.Z }, 
+            {'z', KeyCode.Z },
+            {'0', KeyCode.Alpha0 }, {'1', KeyCode.Alpha1 }, {'2', KeyCode.Alpha2 }, {'3', KeyCode.Alpha3 },
+            {'4', KeyCode.Alpha4 }, {'5', KeyCode.Alpha5 }, {'6', KeyCode.Alpha6 }, {'7', KeyCode.Alpha7 },
+            {'8', KeyCode.Alpha8 }, {'9', KeyCode.Alpha9 },
         };
+        private static readonly Dictionary<char, KeyCode> secondaryKeyCodeMap = new Dictionary<char, KeyCode>()
+        {
+            {'0', KeyCode.Keypad0 }, {'1', KeyCode.Keypad1 }, {'2', KeyCode.Keypad2 }, {'3', KeyCode.Keypad3 },
+            {'4', KeyCode.Keypad4 }, {'5', KeyCode.Keypad5 }, {'6', KeyCode.Keypad6 }, {'7', KeyCode.Keypad7 },
+            {'8', KeyCode.Keypad8 }, {'9', KeyCode.Keypad9 },
+        };
+
         void Awake()
         {
             if (instance == null)
@@ -75,12 +85,17 @@ namespace Typocrypha
             }
         }
 
+        private bool GetKey(char key)
+        {
+            return Input.GetKey(keyCodeMap[key]) || (secondaryKeyCodeMap.TryGetValue(key, out var secondaryCode) && Input.GetKey(secondaryCode));
+        }
+
         // Check user input.
         void Update()
         {
             foreach (var c in keyMap) // Highlight pressed keys.
             {
-                c.Value.Highlight = Input.GetKey(keyCodeMap[c.Key]);
+                c.Value.Highlight = GetKey(c.Key);
             }
             foreach (var c in Input.inputString) // Add letters to cast bar.
             {

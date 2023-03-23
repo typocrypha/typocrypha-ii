@@ -15,7 +15,6 @@ namespace Typocrypha
     {
         public Transform cursor; // Cursor for keeping track of position.
         public GameObject[] keywords; // Set of all keywords (prefab effects).
-        public UnityEvent_string onCast; // Event called when enter is pressed (casting spell).
         [SerializeField] protected TextMeshProUGUI[] letters; // Array of single letter rects.
         [SerializeField] protected AudioClip backspaceSfx;
 
@@ -131,7 +130,14 @@ namespace Typocrypha
         /// </summary>
         public void Cast()
         {
-            onCast.Invoke(Text);
+            if(Battlefield.instance.Player is Player player)
+            {
+                player.CastString(Text);
+            }
+            else
+            {
+                Debug.LogError("Player is not valid. Cannot cast");
+            }
             Clear();
         }
 

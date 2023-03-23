@@ -62,7 +62,6 @@ public class BattleManager : MonoBehaviour, IPausable
         // Initialize Player
         var player = Instantiate(startNode.player, transform).GetComponent<FieldObject>();
         Battlefield.instance.Add(player, new Battlefield.Position(1, 1));
-        Typocrypha.Keyboard.instance?.castBar.onCast.AddListener(player.GetComponent<Player>().CastString);
         // Initialize ally character
         AllyBattleBoxManager.instance.SetBattleAllyData(startNode.initialAllyData, startNode.initialAllyExpr, startNode.initialAllyPose);
         AllyBattleBoxManager.instance.SetBattleAllyCharacterInstant();
