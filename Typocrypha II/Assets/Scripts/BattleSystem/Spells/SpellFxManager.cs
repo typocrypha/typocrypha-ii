@@ -28,9 +28,7 @@ public class SpellFxManager : MonoBehaviour
     [SerializeField] private Sprite repelSprite = null;
     [SerializeField] private Sprite missSprite = null;
     [Header("Log Fields")]
-    [SerializeField] private GameObject battleLogPrefab = null;
-    [SerializeField] private Vector2 logPosition = new Vector2(0.5f, 0.5f);
-    [SerializeField] private Canvas logCanvas;
+    [SerializeField] private BattleLog logger;
     
     private Queue<LogData> logData = new Queue<LogData>();
     /// <summary> Singleton implementation </summary>
@@ -51,10 +49,10 @@ public class SpellFxManager : MonoBehaviour
         while (logData.Count > 0)
         {
             var message = logData.Dequeue();
-            var log = Instantiate(battleLogPrefab, Camera.main.WorldToScreenPoint(logPosition), Quaternion.identity, logCanvas.transform).GetComponent<BattleLog>();
-            log.SetContent(message.text, message.icon, message.time);
-            yield return log.Play();
-            Destroy(log.gameObject);
+            logger.SetContent(message.text, message.icon, message.time);
+            logger.gameObject.SetActive(true);
+            yield return logger.Play();
+            logger.gameObject.SetActive(false);
         }
     }
     public void LogMessage(string message, Sprite icon = null, float? time = null)

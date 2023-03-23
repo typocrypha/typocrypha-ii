@@ -14,7 +14,7 @@ public class BattleLog : MonoBehaviour
     [SerializeField]
     private GameObject iconContainer;
     [SerializeField]
-    private Transform logContainer;
+    private RectTransform logContainer;
     [SerializeField]
     private CanvasGroup logGroup;
     [SerializeField]
@@ -32,6 +32,7 @@ public class BattleLog : MonoBehaviour
 
     public IEnumerator Play()
     {
+        LayoutRebuilder.ForceRebuildLayoutImmediate(logContainer);
         logContainer.transform.localScale = new Vector3(1, 0);
         logGroup.alpha = 0;
         enterExitTweener.Start(logContainer.DOScaleY(1, enterExitTweener.Time));
