@@ -7,7 +7,6 @@ public class CastResults
     public Caster caster;
     public Caster target;
     public RootWordEffect effect;
-    public GameObject popupPrefab = null;
 
     public bool DisplayDamage { get; set; } = true;
     public bool Miss { get; set; } = false;

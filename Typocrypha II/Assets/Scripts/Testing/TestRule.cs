@@ -5,7 +5,6 @@ using System.Linq;
 
 public class TestRule : Rule
 {
-    public GameObject popupPrefab;
     public SpellTag tagToBan;
     // Start is called before the first frame update
     void Start()
@@ -19,8 +18,6 @@ public class TestRule : Rule
         bool ret = modRoots.Any((root) => root.effects.Any((effect) => effect.tags.Contains(tagToBan)));
         if(ret)
         {
-            var popper = Instantiate(popupPrefab).GetComponent<PopupBase>();
-            popper.PopTextAndCleanup(s.ToString() + " is banned.", Battlefield.instance.GetSpace(c.FieldPos), 0.75f, Color.white);
             SpellFxManager.instance.LogMessage(s.ToString() + " is banned.");
         }
         return ret;

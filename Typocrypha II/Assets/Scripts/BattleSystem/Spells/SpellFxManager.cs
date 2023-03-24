@@ -7,19 +7,21 @@ public class SpellFxManager : MonoBehaviour
 {
     private const float popTime = 0.4f;
     public static SpellFxManager instance;
-    private static readonly Vector2 reactionOffset = new Vector2(0, -0.75f);
-    private static readonly Vector2 stunOffset = new Vector2(0, 0.75f);
+    private static readonly Vector2 reactionOffset = new Vector2(0, -80);
+    private static readonly Vector2 stunOffset = new Vector2(0, 80);
     public bool HasMessages { get => logData.Count > 0; }
-    [Header("No Target FX")]
-    [SerializeField] private SpellFxData noTargetFx = new SpellFxData();
+
     [Header("Repel FX")]
     [SerializeField] private SpellFxData repelFx = new SpellFxData();
     [Header("Drain FX")]
     [SerializeField] private SpellFxData drainFx = new SpellFxData();
     [Header("Block FX")]
     [SerializeField] private SpellFxData blockFx = new SpellFxData();
-    [Header("Default Popup Prefab")]
-    [SerializeField] private GameObject popupPrefab = null;
+    [Header("Popup Fields")]
+    [SerializeField] private GameObject textPopupPrefab;
+    [SerializeField] private GameObject damagePopupPrefab;
+    [SerializeField] private GameObject imagePopupPrefab;
+    [SerializeField] private Canvas popupCanvas;
     [Header("Effectiveness Sprites")]
     [SerializeField] private Sprite weakSprite = null;
     [SerializeField] private Sprite resistSprite = null;
@@ -29,15 +31,30 @@ public class SpellFxManager : MonoBehaviour
     [SerializeField] private Sprite missSprite = null;
     [Header("Log Fields")]
     [SerializeField] private BattleLog logger;
-    
+
+    private PrefabPool<TextPopup> textPopupPool;
+    private PrefabPool<TextPopup> damagePopupPool;
+    private PrefabPool<ImagePopup> imagePopupPool;
     private Queue<LogData> logData = new Queue<LogData>();
     /// <summary> Singleton implementation </summary>
     private void Awake()
     {
         if (instance == null)
+        {
             instance = this;
+            Initialize();
+        }
         else
+        {
             Destroy(gameObject);
+        }
+    }
+
+    private void Initialize()
+    {
+        textPopupPool = new PrefabPool<TextPopup>(textPopupPrefab, 10);
+        damagePopupPool = new PrefabPool<TextPopup>(damagePopupPrefab, 10);
+        imagePopupPool = new PrefabPool<ImagePopup>(imagePopupPrefab, 10);
     }
 
     public Coroutine PlayMessages()
@@ -61,7 +78,7 @@ public class SpellFxManager : MonoBehaviour
     }
     public Coroutine NoTargetFx(Vector2 pos)
     {
-        return Instantiate(popupPrefab).GetComponent<PopupBase>().PopTextAndCleanup("No Target!", pos, popTime, Color.red); //StartCoroutine(noTargetFx.Play(pos));
+        return PlayText(pos, true, "No Target", Color.red, popTime);
     }
     public Coroutine Play(SpellFxData[] fxData, CastResults data, Vector2 targetPos, Vector2 casterPos)
     {
@@ -83,8 +100,7 @@ public class SpellFxManager : MonoBehaviour
                 yield return new WaitForSeconds(0.25f);
                 targetAnim.SetTrigger("Idle");
             }
-            var popper = Instantiate(data.popupPrefab ?? popupPrefab).GetComponent<PopupBase>();
-            popper.PopTextAndCleanup("Miss", targetPos, popTime, Color.white);
+            yield return PlayText(targetPos, true, "Miss", Color.white, popTime);
             yield break;
         }
         #endregion
@@ -117,9 +133,12 @@ public class SpellFxManager : MonoBehaviour
         #endregion 
 
         foreach (var fx in fxData)
+        {
             if (fx != null)
+            {
                 yield return StartCoroutine(fx.Play(pos));
-
+            }
+        }
         yield return StartCoroutine(PlayPopupCr(data, pos, casterPos));
     }
 
@@ -133,19 +152,18 @@ public class SpellFxManager : MonoBehaviour
     {
         if (data == null)
             yield break;
-        var popper = Instantiate(data.popupPrefab ?? popupPrefab).GetComponent<PopupBase>();
-        Coroutine damageRoutine = null;
+        Coroutine damageRoutine = null; 
         // If damage should be displayed, display damage
         if(data.DisplayDamage)
         {
-            damageRoutine = PlayDamageNumber(data.Damage, targetPos, popper);
+            damageRoutine = PlayDamageNumber(data.Damage, targetPos);
         }
         // Effectiveness popup
-        Coroutine reactionRoutine = PlayReaction(data.Effectiveness, targetPos, casterPos, popper);
+        Coroutine reactionRoutine = PlayReaction(data.Effectiveness, targetPos, casterPos);
         Coroutine stunRoutine = null;
         if (data.Stun)
         {
-            stunRoutine = popper.PopText("Stun!", data.DisplayDamage ? targetPos + stunOffset : targetPos, popTime, Color.red);
+            stunRoutine = PlayText(data.DisplayDamage ? targetPos + stunOffset : targetPos, true, "Stun!", Color.red, popTime);
         }
         if(stunRoutine != null)
         {
@@ -159,49 +177,71 @@ public class SpellFxManager : MonoBehaviour
         {
             yield return reactionRoutine;
         }
-        popper.Cleanup();
     }
 
-    public Coroutine PlayDamageNumber(float damage, Vector2 targetPos, PopupBase popperOverride = null)
+    public Coroutine PlayDamageNumber(float damage, Vector2 targetPos)
     {
-        var popper = popperOverride ?? Instantiate(popupPrefab).GetComponent<PopupBase>();
         // If damage should be displayed, display damage
         var damageColor = damage < 0 ? Color.green : Color.white;
         var numberText = Mathf.FloorToInt(Mathf.Abs(damage)).ToString();
-        if (popperOverride == null)
-            return popper.PopTextAndCleanup(numberText, targetPos, popTime, damageColor);
-        return popper.PopText(numberText, targetPos, popTime, damageColor);
+        var player = damagePopupPool.Get(popupCanvas.transform);
+        player.transform.position = targetPos;
+        return player.Play(numberText, damageColor, popTime, damagePopupPool);
     }
 
-    public Coroutine PlayReaction(Reaction reaction, Vector2 targetPos, Vector2 casterPos, PopupBase popper = null)
+    public Coroutine PlayReaction(Reaction reaction, Vector2 targetPos, Vector2 casterPos)
     {
         switch (reaction)
         {
             case Reaction.Weak:
-                return PlayReaction(weakSprite, targetPos, popper);
+                return PlayReaction(weakSprite, targetPos);
             case Reaction.Neutral:
                 break;
             case Reaction.Resist:
-                return PlayReaction(resistSprite, targetPos, popper);
+                return PlayReaction(resistSprite, targetPos);
             case Reaction.Block:
-                return PlayReaction(blockSprite, targetPos, popper);
+                return PlayReaction(blockSprite, targetPos);
             case Reaction.Dodge:
-                return PlayReaction(missSprite, targetPos, popper);
+                return PlayReaction(missSprite, targetPos);
             case Reaction.Drain:
-                return PlayReaction(drainSprite, targetPos, popper);
+                return PlayReaction(drainSprite, targetPos);
             case Reaction.Repel:
-                return PlayReaction(repelSprite, targetPos, popper);
+                return PlayReaction(repelSprite, targetPos);
         } 
         return null;
     }
 
-    private Coroutine PlayReaction(Sprite sprite, Vector2 targetPos, PopupBase popper)
+    private Coroutine PlayReaction(Sprite sprite, Vector2 targetPos)
     {
-        if (popper == null)
+        return PlayImage(targetPos + reactionOffset, true, sprite, Color.white, popTime);
+    }
+
+    public Coroutine PlayText(Vector2 position, bool isScreenSpace, string text, Color color, float time)
+    {
+        var player = textPopupPool.Get(popupCanvas.transform);
+        if (isScreenSpace)
         {
-            popper = Instantiate(popupPrefab).GetComponent<PopupBase>();
+            player.transform.position = position;
         }
-        return popper.PopImage(sprite, targetPos + reactionOffset, popTime);
+        else
+        {
+            player.transform.position = Camera.main.WorldToScreenPoint(position);
+        }
+        return player.Play(text, color, time, textPopupPool);
+    }
+
+    public Coroutine PlayImage(Vector2 position, bool isScreenSpace, Sprite image, Color color, float time)
+    {
+        var player = imagePopupPool.Get(popupCanvas.transform);
+        if (isScreenSpace)
+        {
+            player.transform.position = position;
+        }
+        else
+        {
+            player.transform.position = Camera.main.WorldToScreenPoint(position);
+        }
+        return player.Play(image, color, time, imagePopupPool);
     }
 
     #endregion
