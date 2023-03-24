@@ -190,7 +190,7 @@ public class SpellManager : MonoBehaviour
         var cancelTargets = Battlefield.instance.Casters.Where(pred);
         foreach (var cancelTarget in cancelTargets)
         {
-            if (cancelTarget.Spell == null || cancelTarget.Stunned)
+            if (cancelTarget.Spell == null || cancelTarget.Stunned || cancelTarget == caster)
                 continue;
             var remainingWords = cancelTarget.Spell.Where((word) => !spell.Contains(word));
             // No words were countered, continue to next target
