@@ -14,23 +14,24 @@ public class TransitionManager : MonoBehaviour
     private const string dialogSceneName = "Dialog";
     public static TransitionManager instance = null;
     [SerializeField] private LoadingScreen defaultLoadingScreen; // Loading screen prefab
-
+    [SerializeField] private int debugContinueIndex;
     [SerializeField] private List<SceneData> sceneData;
     private int sceneIndex = -1;
 
 
     void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
+        if (instance != null)
         {
             Destroy(gameObject);
             return;
+
         }
+        instance = this;
         DontDestroyOnLoad(gameObject);
+#if DEBUG
+        sceneIndex = debugContinueIndex - 1;
+#endif
     }
 
     public void TransitionToNextScene()
