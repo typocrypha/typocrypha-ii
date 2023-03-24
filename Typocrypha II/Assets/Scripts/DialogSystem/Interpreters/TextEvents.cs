@@ -61,7 +61,6 @@ public class TextEvents : MonoBehaviour, IPausable
             {"text-delay", TextDelay},
             {"scroll-delay", TextDelay},
             {"speech-interval", SpeechInterval},
-            {"float-text", FloatText },
             {"play-sfx",PlaySFX },
         };
     }
@@ -156,20 +155,6 @@ public class TextEvents : MonoBehaviour, IPausable
         {
             box.PlaySpeechOnSpaces = bool.Parse(opt[1]);
         }
-        return null;
-    }
-
-    /// <summary>
-    /// Spawns a single line of floating text.
-    /// </summary>
-    /// <param name="opt">
-    /// [0]: string, line to display.
-    /// [1-2]: float, x-y coordinate position.
-    /// </param>
-    Coroutine FloatText(string[] opt, DialogBox box)
-    {
-        Vector2 pos = new Vector2(float.Parse(opt[1]), float.Parse(opt[2]));
-        FloatDialog.instance.SpawnFloatDialog(opt[0], pos);
         return null;
     }
 }
