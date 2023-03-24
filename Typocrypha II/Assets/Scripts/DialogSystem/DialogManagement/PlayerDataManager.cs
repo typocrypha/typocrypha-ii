@@ -69,11 +69,10 @@ public class PlayerDataManager : MonoBehaviour, ISavable
 
     #region Preset string key constants (faux named map)
     public const string nullKey = "NULL";
-    public const string playerName = "player-name";
+    // Gameplay
     public const string lastInputKey = "prompt";
-
-    public const string textDelayScale = "text-delay-scale";
-    public const string mainCharacterName = "mc-name";
+    // Settings
+    public const string textDelayScale = "textDelayScale";
     #endregion
 
     public PlayerEquipment equipment;
@@ -95,25 +94,21 @@ public class PlayerDataManager : MonoBehaviour, ISavable
         SetDefaults();
     }
 
-    string target = nullKey;
-
     /// <summary>
     /// Set default parameters.
     /// </summary>
     public void SetDefaults()
     {
         data.Clear();
-        Set(playerName, "???");
         Set(lastInputKey, "");
         Set(textDelayScale, 1f);
-        Set(mainCharacterName, "Ayin");
     }
 
     public object GetObj(string key)
     {
         if (!data.ContainsKey(key))
         {
-            Debug.LogWarning("PlayerDialogueInfo: no info with key " + key + ", returning null");
+            Debug.LogWarning($"PlayerData: no data with key {key}, returning null");
             return null;
         }
         return data[key];
@@ -123,7 +118,7 @@ public class PlayerDataManager : MonoBehaviour, ISavable
     {
         if (!data.ContainsKey(key))
         {
-            Debug.LogWarning("PlayerDialogueInfo: no info with key " + key + ", returning default");
+            Debug.LogWarning($"PlayerData: no data with key {key}, returning default");
             return default;
         }
         return (T)data[key];
@@ -137,39 +132,5 @@ public class PlayerDataManager : MonoBehaviour, ISavable
             return;
         }
         data.Add(key, obj);
-    }
-
-    /// <summary>
-    /// Set data target (used mainly for input).
-    /// Should call 'SetTargetValue' immediately after.
-    /// </summary>
-    /// <param name="kvp">Key that will be set.</param>
-    public void SetTargetKey(string key)
-    {
-        if (target == nullKey) target = key;
-        else Debug.LogWarning("PlayerDialogueInfo: Trying to set in use target. Target is untouched.");
-    }
-
-    /// <summary>
-    /// Set data target (used mainly for input).
-    /// Should be called immediately after 'SetTargetKey'.
-    /// </summary>
-    /// <param name="value">Value to set.</param>
-    void SetTargetValueOBJ(object value)
-    {
-        Set(target, value);
-        target = nullKey;
-    }
-    public void SetTargetValue(float value)
-    {
-        SetTargetValueOBJ(value);
-    }
-    public void SetTargetValue(int value)
-    {
-        SetTargetValueOBJ(value);
-    }
-    public void SetTargetValue(string value)
-    {
-        SetTargetValueOBJ(value);
     }
 }

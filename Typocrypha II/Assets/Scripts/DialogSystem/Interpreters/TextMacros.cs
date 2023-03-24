@@ -14,13 +14,11 @@ public static class TextMacros
 	// for substituting macros
 	private static readonly Dictionary<string, MacroSubDel> macroMap = new Dictionary<string, MacroSubDel>
 	{
-		{"temp", MacroTemp},
-		{"last-cast", MacroLastCast},
-		{"time", MacroTime},
+		{"var", MacroVariable},
 		{"c", MacroColor},
 		{"tl", MacroTranslate},
 		{"translate", MacroTranslate},
-		{"languageTL", MacroTranslatedLanguage},
+		{"languageName", MacroTranslatedLanguage},
 	}; 
 	// Translation remap
     private static readonly Dictionary<char, char> translationMap = new Dictionary<char, char> {
@@ -66,23 +64,10 @@ public static class TextMacros
 
     // Substitutes appropriate entry from temporary string-object database
     // input: variable name
-    static string MacroTemp(string[] opt)
+    static string MacroVariable(string[] opt)
     {
-        Debug.Log(opt[0]);
-        return PlayerDataManager.instance.GetObj(opt[0]).ToString();
+        return PlayerDataManager.instance.GetObj(opt[0])?.ToString() ?? string.Empty;
     }
-
-	// substitutes last cast spell's attributes
-	// input: [0]: string, "elem","root","style" : specifies which part of spell to display (or "all" for whole spell)
-	static string MacroLastCast(string[] opt) {
-        throw new NotImplementedException();
-	}
-
-	// substitutes with current time
-	// input: NONE
-	static string MacroTime(string[] opt) {
-		return DateTime.Now.Hour + ":" + DateTime.Now.Minute;
-	}
 
 	// substitutes in appropriate color tag (TMProColor)
 	// input: [0]: string, color name (must be implemented in Unity rich tags)
