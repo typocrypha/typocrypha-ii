@@ -8,7 +8,7 @@ public class PromptPopup : InteractivePopup
 {
     public TextMeshProUGUI headerText;
     public TextMeshProUGUI promptText;
-    public InputField inputField;
+    public TMP_InputField inputField;
 
     public void OnSubmit()
     {
