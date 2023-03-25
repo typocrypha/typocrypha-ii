@@ -26,7 +26,6 @@ public class DialogViewVNPlus : DialogView
     [SerializeField] private GameObject narratorDialogBoxPrefab;
     [SerializeField] private GameObject randoDialogBoxPrefab;
     [SerializeField] private RectTransform messageContainer;
-    [SerializeField] private RectTransform offScreenmessageContainer;
     [SerializeField] private VerticalLayoutGroup messageLayout;
     [SerializeField] private GameObject rightCharacterPrefab;
     [SerializeField] private GameObject leftCharacterPrefab;
@@ -54,7 +53,7 @@ public class DialogViewVNPlus : DialogView
     private VNPlusDialogBoxUI lastBoxUI = null;
 
     private readonly List<DialogBox> activeDialogBoxes = new List<DialogBox>(maxMessages * (messagePrefabTypes + 1));
-    private readonly List<DialogBox> dialogBoxPoolOffScreen = new List<DialogBox>(maxMessages * (messagePrefabTypes + 1));
+    private readonly List<DialogBox> dialogBoxPoolHidden = new List<DialogBox>(maxMessages * (messagePrefabTypes + 1));
     private readonly Queue<VNPlusCharacter> rightCharacterPool = new Queue<VNPlusCharacter>(maxCharactersPerColumn);
     private readonly Queue<VNPlusCharacter> leftCharacterPool = new Queue<VNPlusCharacter>(maxCharactersPerColumn);
 
@@ -96,8 +95,8 @@ public class DialogViewVNPlus : DialogView
         CompleteMessageTweens();
         foreach (var box in activeDialogBoxes)
         {
-            box.transform.SetParent(offScreenmessageContainer);
-            dialogBoxPoolOffScreen.Add(box);
+            box.CanvasGroup.alpha = 0;
+            dialogBoxPoolHidden.Add(box);
         }
         activeDialogBoxes.Clear();
         if (originalMessageAnchorPosY != float.MinValue)
@@ -402,17 +401,17 @@ public class DialogViewVNPlus : DialogView
             }
         }
         // Try using an offscreen dialog box from the pool
-        if (dialogBoxPoolOffScreen.Count > 0)
+        if (dialogBoxPoolHidden.Count > 0)
         {
             var prefabId = prefab.GetComponent<DialogBox>().ID;
-            for (int i = 0; i < dialogBoxPoolOffScreen.Count; ++i)
+            for (int i = 0; i < dialogBoxPoolHidden.Count; ++i)
             {
-                if (prefabId == dialogBoxPoolOffScreen[i].ID)
+                if (prefabId == dialogBoxPoolHidden[i].ID)
                 {
-                    var dialogBox = dialogBoxPoolOffScreen[i];
-                    dialogBoxPoolOffScreen.RemoveAt(i);
-                    dialogBox.transform.SetParent(messageContainer);
+                    var dialogBox = dialogBoxPoolHidden[i];
+                    dialogBoxPoolHidden.RemoveAt(i);
                     activeDialogBoxes.Add(dialogBox);
+                    dialogBox.CanvasGroup.alpha = 1;
                     return dialogBox;
                 }
             }

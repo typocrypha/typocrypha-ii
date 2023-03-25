@@ -50,11 +50,14 @@ public class DialogBox : MonoBehaviour, IDialogBox
     public int SpeechInterval { get; set; } = defaultSpeechInterval; // Number of character scrolls before speech sfx plays
     public bool PlaySpeechOnSpaces { get; set; } = defaultPlaySpeechOnSpaces;
 
+    public CanvasGroup CanvasGroup => canvasGroup;
+
     public TextMeshProUGUI dialogText; // Text display component
     public AudioSource[] voiceAS; // AudioSources for playing speech sfx
     public bool resizeTextBox = true; // Should dialog box resize itself?
     [SerializeField] private RectTransform textHolder;
     [SerializeField] private RectTransform continueIndicator = null;
+    [SerializeField] private CanvasGroup canvasGroup = null;
     [SerializeField] FXText.TMProColor hideText; // Allows for hiding parts of text (for scrolling)
     DialogItem dialogItem; // Dialog line data
     Coroutine scrollCR; // Coroutine that scrolls the text
