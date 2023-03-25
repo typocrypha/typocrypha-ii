@@ -18,6 +18,8 @@ public class CameraManager : MonoBehaviour, IPausable
     public static CameraManager instance = null; // Global static instance.
     public Vector3 basePos = new Vector3(0f, 0f, -10f); // Default camera position.
     public Transform cameraTr; // Transform of the camera.
+    public Camera Camera => camera;
+    [SerializeField] private new Camera camera;
 
     void Awake()
     {

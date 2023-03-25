@@ -23,7 +23,7 @@ public class SpellFxData
             yield break;
         if (isWorldSpace)
         {
-            pos = Camera.main.WorldToScreenPoint(pos);
+            pos = CameraManager.instance.Camera.WorldToScreenPoint(pos);
         }
         if (effectType == EffectType.Single)
         {

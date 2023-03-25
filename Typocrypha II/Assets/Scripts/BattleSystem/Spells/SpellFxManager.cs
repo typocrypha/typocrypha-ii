@@ -225,7 +225,7 @@ public class SpellFxManager : MonoBehaviour
         }
         else
         {
-            player.transform.position = Camera.main.WorldToScreenPoint(position);
+            player.transform.position = CameraManager.instance.Camera.WorldToScreenPoint(position);
         }
         return player.Play(text, color, time, textPopupPool);
     }
@@ -239,7 +239,7 @@ public class SpellFxManager : MonoBehaviour
         }
         else
         {
-            player.transform.position = Camera.main.WorldToScreenPoint(position);
+            player.transform.position = CameraManager.instance.Camera.WorldToScreenPoint(position);
         }
         return player.Play(image, color, time, imagePopupPool);
     }
