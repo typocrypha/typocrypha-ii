@@ -466,7 +466,7 @@ public class DialogViewVNPlus : DialogView
     {
         box.SetupDialogBox(item);
         CompleteMessageTweens();
-        LayoutRebuilder.ForceRebuildLayoutImmediate(messageContainer);
+        messageLayout.CalculateLayoutInputVertical();
         var yTemp = messageContainer.anchoredPosition.y;
         messageContainer.anchoredPosition = new Vector2(messageContainer.anchoredPosition.x, messageContainer.anchoredPosition.y + (box.GetBoxHeight() + messageLayout.spacing));
         messageTween.Start(messageContainer.DOAnchorPosY(yTemp, messageTween.Time));
