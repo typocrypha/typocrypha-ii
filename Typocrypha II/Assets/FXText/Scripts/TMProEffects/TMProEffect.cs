@@ -91,7 +91,7 @@ namespace FXText
                 var currEffects = GetApplicableEffects(charIndex, allEffects, sharedMemory.CurrEffects);
                 if (currEffects.Count == 0) continue;
                 // Split list of effects based on priority groups, and get highest priority for each group
-                var splitEffects = SplitByPriorityGroup(currEffects, sharedMemory.SplitEffects, sharedMemory.HighestPriorityEffects);                
+                var splitEffects = SplitByPriorityGroup(currEffects, sharedMemory.HighestPriorityEffects);                
                 // Apply effects
                 foreach (var effect in splitEffects)
                 {
@@ -144,33 +144,41 @@ namespace FXText
         /// </summary>
         /// <param name="effects">List of effects to split</param>
         /// <returns>Nested list of effects by priority group</returns>
-        static List<TMProEffect> SplitByPriorityGroup(List<TMProEffect> effects, Dictionary<PriorityGroupEnum, List<TMProEffect>> split, List<TMProEffect> highestPriorityEffects)
+        static List<TMProEffect> SplitByPriorityGroup(List<TMProEffect> effects, List<TMProEffect> highestPriorityEffects)
         {
-            // Clear shared memory
-            foreach (var kvp in split)
-            {
-                kvp.Value.Clear();
-            }
+            TMProEffect highestPriorityColor = null;
+            TMProEffect highestPriorityPos = null;
+            int colorPriority = int.MinValue;
+            int posPriority = int.MinValue;
             // Go through all effects and split by priority group
             foreach (var effect in effects)
             {
-                // If group is not in split, add it to the split
-                if (!split.ContainsKey(effect.PriorityGroup))
+                if(effect.PriorityGroup == PriorityGroupEnum.COLOR)
                 {
-                    split.Add(effect.PriorityGroup, new List<TMProEffect>(effects.Count));
+                    if (effect.Priority > colorPriority)
+                    {
+                        highestPriorityColor = effect;
+                        colorPriority = effect.Priority;
+                    }
                 }
-                // Add effect to group
-                split[effect.PriorityGroup].Add(effect);            
+                else if(effect.PriorityGroup == PriorityGroupEnum.POSITION)
+                {
+                    if(effect.Priority > posPriority)
+                    {
+                        highestPriorityPos = effect;
+                        posPriority = effect.Priority;
+                    }
+                }
             }
             // Only retain highest priority
             highestPriorityEffects.Clear();
-            foreach (var kvp in split)
+            if(colorPriority != int.MinValue)
             {
-                var group = kvp.Value;
-                if (group.Count <= 0)
-                    continue;
-                group.Sort((a, b) => a.Priority.CompareTo(b.Priority));
-                highestPriorityEffects.Add(group[group.Count - 1]);
+                highestPriorityEffects.Add(highestPriorityColor);
+            }
+            if(posPriority != int.MinValue)
+            {
+                highestPriorityEffects.Add(highestPriorityPos);
             }
             return highestPriorityEffects;
         }
@@ -207,7 +215,6 @@ namespace FXText
             // Reusable memory (to prevent continuous allocation)
             public List<TMProEffect> CurrEffects { get; } = new List<TMProEffect>(0);
             public List<TMProEffect> HighestPriorityEffects { get; } = new List<TMProEffect>(0);
-            public Dictionary<PriorityGroupEnum, List<TMProEffect>> SplitEffects { get; } = new Dictionary<PriorityGroupEnum, List<TMProEffect>>(3);
 
             public void EnsureCapacity(int capacity)
             {
@@ -225,10 +232,6 @@ namespace FXText
             {
                 CurrEffects.Clear();
                 HighestPriorityEffects.Clear();
-                foreach(var kvp in SplitEffects)
-                {
-                    kvp.Value.Clear();
-                }
             }
         }
     }
