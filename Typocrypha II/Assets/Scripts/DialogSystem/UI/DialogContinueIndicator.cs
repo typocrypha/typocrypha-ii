@@ -14,20 +14,12 @@ public class DialogContinueIndicator : MonoBehaviour
     [SerializeField] private float indicatorDelay = 0.0f;
     private WaitForSeconds indicatorDelaySeconds;
 
-    [SerializeField] private DialogBox dialogBox;
-
-
     private Vector3 originalIndicatorPosition = Vector3.zero;
     private Vector3 originalIndicatorScale = Vector3.zero;
 
     private Coroutine activeCoroutine = null;
     private Tween activeMoveTween = null;
     private Tween activeScaleTween = null;
-
-    public void SetDialogBox(DialogBox box)
-    {
-        dialogBox = box;
-    }
 
     public void Activate()
     {
@@ -42,22 +34,12 @@ public class DialogContinueIndicator : MonoBehaviour
         originalIndicatorScale = continueIndicator.rectTransform.localScale;
     }
 
-    private void OnEnable()
-    {
-        Activate();
-    }
-
-    private void OnDisable()
-    {
-        Cleanup();
-    }
-
     private void OnDestroy()
     {
         Cleanup();
     }
 
-    private void Cleanup()
+    public void Cleanup()
     {
         if (activeCoroutine != null)
         {
@@ -69,11 +51,6 @@ public class DialogContinueIndicator : MonoBehaviour
 
     IEnumerator ActivateContinueIndicator()
     {
-        yield return null;
-
-        continueIndicator.enabled = false;
-
-        yield return new WaitUntil(() => dialogBox.IsDone);
         yield return indicatorDelaySeconds;
 
         AnimateIndicator();
@@ -85,7 +62,7 @@ public class DialogContinueIndicator : MonoBehaviour
 
     private void AnimateIndicator()
     {
-        continueIndicator.enabled = true;
+        TurnIndicatorOn();
         originalIndicatorPosition = continueIndicator.rectTransform.localPosition;
         activeMoveTween = continueIndicator.rectTransform.DOLocalMoveY(originalIndicatorPosition.y - moveYDistance, animationDuration, false)
             .SetEase(Ease.InOutSine)
@@ -110,6 +87,16 @@ public class DialogContinueIndicator : MonoBehaviour
         }
         continueIndicator.rectTransform.localPosition = originalIndicatorPosition;
         continueIndicator.rectTransform.localScale = originalIndicatorScale;
-        continueIndicator.enabled = false;
+        TurnIndicatorOff();
+    }
+
+    private void TurnIndicatorOff()
+    {
+        continueIndicator.color = Color.clear;
+    }
+
+    private void TurnIndicatorOn()
+    {
+        continueIndicator.color = Color.white;
     }
 }

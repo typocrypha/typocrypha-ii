@@ -7,7 +7,6 @@ public class BubbleDialogBoxUI : MonoBehaviour
 {
     [SerializeField] private Image iconImage;
     [SerializeField] private Image[] frameImages;
-    [SerializeField] private DialogContinueIndicator continueIndicator;
     [SerializeField] private Sprite genericIconSprite;
 
     private Color initialColor = Color.clear;
@@ -22,7 +21,6 @@ public class BubbleDialogBoxUI : MonoBehaviour
         {
             iconImage.color = Color.white;
         }
-        continueIndicator.StopAllCoroutines();
     }
 
     public void Bind(CharacterData character)

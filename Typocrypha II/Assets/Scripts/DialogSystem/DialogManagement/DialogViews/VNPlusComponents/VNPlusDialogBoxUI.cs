@@ -20,7 +20,6 @@ public class VNPlusDialogBoxUI : MonoBehaviour
     {
         iconImage.color = Color.white;
         canvasGroup.alpha = 1;
-        continueIndicator.enabled = true;
         // Generic Character functionality
         if (character == null)
         {
@@ -57,6 +56,6 @@ public class VNPlusDialogBoxUI : MonoBehaviour
             tweenInfo.Start(image.DOColor(image.color * dimColor, tweenInfo.Time), false);
         }
         arrowImage.enabled = false;
-        continueIndicator.enabled = false;
+        continueIndicator.Cleanup();
     }
 }

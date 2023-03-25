@@ -51,12 +51,19 @@ public class DialogBox : MonoBehaviour, IDialogBox
     public bool PlaySpeechOnSpaces { get; set; } = defaultPlaySpeechOnSpaces;
 
     public CanvasGroup CanvasGroup => canvasGroup;
+    public DialogContinueIndicator ContinueIndicator 
+    {
+        get => continueIndicator;
+        set => continueIndicator = value;
+    }
 
     public TextMeshProUGUI dialogText; // Text display component
     public AudioSource[] voiceAS; // AudioSources for playing speech sfx
     public bool resizeTextBox = true; // Should dialog box resize itself?
+    [SerializeField] private bool resolveContinueIndicatorConflicts = false;
     [SerializeField] private RectTransform textHolder;
-    [SerializeField] private RectTransform continueIndicator = null;
+    [SerializeField] private RectTransform continueIndicatorTR = null;
+    [SerializeField] private DialogContinueIndicator continueIndicator;
     [SerializeField] private CanvasGroup canvasGroup = null;
     [SerializeField] FXText.TMProColor hideText; // Allows for hiding parts of text (for scrolling)
     DialogItem dialogItem; // Dialog line data
@@ -169,6 +176,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
 		scrollCR = null;
         hideText.ind[0] = dialogItem.text.Length;
         hideText.done = true;
+        continueIndicator.Activate();
         DialogManager.instance.onSkip.Invoke();
     }
 
@@ -177,7 +185,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
     /// </summary>
     /// <param name="add">Add on size rather than reset size.</param>
     /// <param name="hasContinueIndicator">Whether the dialog box has a continue indicator.<param>
-    public void SetBoxHeight(bool add = false, bool hasContinueIndicator = true)
+    public void SetBoxHeight(bool add = false)
     {
         if (textHolder != null)
         {
@@ -185,8 +193,8 @@ public class DialogBox : MonoBehaviour, IDialogBox
         }
         RectTransform rectTr = GetComponent<RectTransform>();
         
-        if (hasContinueIndicator && continueIndicator != null &&
-            dialogText.preferredWidth % dialogText.rectTransform.sizeDelta.x > continueIndicator.localPosition.x - 20f)
+        if (resolveContinueIndicatorConflicts && continueIndicatorTR != null 
+            && dialogText.preferredWidth % dialogText.rectTransform.sizeDelta.x > continueIndicatorTR.localPosition.x - 20f)
         {
             dialogText.text += "\n\n";
             LayoutRebuilder.ForceRebuildLayoutImmediate(textHolder);
@@ -257,6 +265,10 @@ public class DialogBox : MonoBehaviour, IDialogBox
         {
             yield return new WaitForSeconds(autoContinueDelay);
             DialogManager.instance.NextDialog();
+        }
+        else
+        {
+            continueIndicator.Activate();
         }
         scrollCR = null;
     }

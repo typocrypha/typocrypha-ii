@@ -44,14 +44,13 @@ public class DialogViewAN : DialogView
             dialogBox = Instantiate(dialogBoxPrefab, ANContent).GetComponent<DialogBox>();
         }
         activeDialogBoxes.Add(dialogBox);
-        continueIndicator.SetDialogBox(dialogBox);
+        dialogBox.ContinueIndicator = continueIndicator;
         dialogBox.dialogText.alignment = dialogItem.AlignmentOptions;
         if(ANLayout.childAlignment != dialogItem.LayoutSetting)
         {
             ANLayout.childAlignment = dialogItem.LayoutSetting;
         }
         dialogBox.SetupAndStartDialogBox(dialogItem);
-        continueIndicator.Activate();
         return dialogBox;
     }
 
