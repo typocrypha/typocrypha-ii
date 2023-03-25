@@ -24,6 +24,7 @@ public class FaderManager : MonoBehaviour, IPausable
     public static FaderManager instance = null;
     public List<Fader> allFaders; // List of all faders. Fader instances add themselves.
     [SerializeField] private Image ScreenFader; // Image for fading entire screen.
+    [SerializeField] private Canvas canvas;
 
     void Awake()
     {
@@ -115,6 +116,11 @@ public class FaderManager : MonoBehaviour, IPausable
     public void FadeScreen(float fadeAmount, Color fadeColor)
     {
         ScreenFader.color = new Color(fadeColor.r, fadeColor.g, fadeColor.b, fadeAmount);
+        bool canvasOn = fadeAmount > 0;
+        if (canvas.enabled != canvasOn)
+        {
+            canvas.enabled = canvasOn;
+        }
     }
 
     public Coroutine FadeScreenOverTime(float fadeTime, float fadeStart, float fadeEnd, Color fadeColor)

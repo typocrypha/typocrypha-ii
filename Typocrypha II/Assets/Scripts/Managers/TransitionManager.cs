@@ -14,6 +14,7 @@ public class TransitionManager : MonoBehaviour
     private const string dialogSceneName = "Dialog";
     public static TransitionManager instance = null;
     [SerializeField] private LoadingScreen defaultLoadingScreen; // Loading screen prefab
+    [SerializeField] private Canvas loadingScreenCanvas;
     [SerializeField] private int debugContinueIndex;
     [SerializeField] private List<SceneData> sceneData;
     private int sceneIndex = -1;
@@ -61,6 +62,7 @@ public class TransitionManager : MonoBehaviour
 
     private IEnumerator PlayLoadingScreen(LoadingScreen loadingScreenOverride, SceneData data, string sceneName)
     {
+        loadingScreenCanvas.enabled = true;
         // Play loading screen ON
         LoadingScreen loadingScreen = loadingScreenOverride ?? defaultLoadingScreen;
         loadingScreen.Progress = 0;
@@ -114,6 +116,7 @@ public class TransitionManager : MonoBehaviour
         {
             BattleManager.instance.StartBattle();
         }
+        loadingScreenCanvas.enabled = false;
     }
 
     [System.Serializable]
