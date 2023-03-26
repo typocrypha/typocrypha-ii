@@ -110,20 +110,19 @@ public class DialogViewVNPlus : DialogView
     public override bool RemoveCharacter(CharacterData data)
     {
         // If the character isn't in the scene, simply return
-        if (!characterMap.ContainsKey(data.name))
+        if (!characterMap.TryGetValue(data.name, out var character))
         {
             return false; // don't wait for completion
         }
         readyToContinue = false;
-        StartCoroutine(RmCharacterCR(characterMap[data.name], data.name));
+        GetColumnData(character.Column, out var container, out var characterList, out var pool);
+        PrepareToRemoveCharacter(character, data.name, characterList, pool);
+        StartCoroutine(RmCharacterCR(character, container, characterList));
         return true; // Wait for completion
     }
 
-    private IEnumerator RmCharacterCR(VNPlusCharacter character, string name)
+    private IEnumerator RmCharacterCR(VNPlusCharacter character, RectTransform container, List<VNPlusCharacter> characterList)
     {
-        GetColumnData(character.Column, out var container, out var characterList, out var pool);
-        characterList.Remove(character);
-        pool.Enqueue(character);
         if (characterList.Count > 0)
         {
             yield return new WaitForSeconds(character.PlayLeaveTween().Time / 2);
@@ -133,8 +132,14 @@ public class DialogViewVNPlus : DialogView
         {
             yield return character.PlayLeaveTween().WaitForCompletion();
         }
-        characterMap.Remove(name);
         readyToContinue = true;
+    }
+
+    private void PrepareToRemoveCharacter(VNPlusCharacter character, string name, List<VNPlusCharacter> characterList, Queue<VNPlusCharacter> pool)
+    {
+        characterList.Remove(character);
+        pool.Enqueue(character);
+        characterMap.Remove(name);
     }
 
     public override bool AddCharacter(AddCharacterArgs args)
@@ -311,6 +316,39 @@ public class DialogViewVNPlus : DialogView
             var chara = characterList[i]; 
             tweenInfo.Start(chara.MainRect.DOAnchorPosY(posStart - (i * newHeight), tweenInfo.Time), false);
         }
+    }
+
+    public bool MoveCharacter(CharacterData data, CharacterColumn targetColumn, bool top)
+    {
+        // If the character isn't in the scene, simply return
+        if (!characterMap.TryGetValue(data.name, out var character))
+        {
+            return false; // don't wait for completion
+        }
+        if (character.Column != targetColumn)
+        {
+            readyToContinue = false;
+            StartCoroutine(MoveCharacterColumn(character, targetColumn, top));
+            return true;
+        }
+        return false; // Temp, move character to top/bottom and return true later
+    }
+
+    private IEnumerator MoveCharacterColumn(VNPlusCharacter character, CharacterColumn targetColumn, bool top)
+    {
+        // Cache the data + pose / expression to add back to the target column
+        var addArgs = new AddCharacterArgs(character.Data, targetColumn, Vector2.zero, character.Pose, character.Expression);
+
+        // Remove character from current column
+        GetColumnData(OtherColumn(targetColumn), out var fromContainer, out var fromList, out var fromPool);
+        PrepareToRemoveCharacter(character, character.Data.name, fromList, fromPool);
+        StartCoroutine(RmCharacterCR(character, fromContainer, fromList));
+
+        // Wait for half of the leave animation to play (but not any necessary list adjusments)
+        yield return new WaitForSeconds(character.JoinTweenTime / 2);
+
+        // Add the character to the target column
+        yield return StartCoroutine(AddCharacterCR(addArgs, top));
     }
 
     private void GetColumnData(CharacterColumn column, out RectTransform container, out List<VNPlusCharacter> characterList)

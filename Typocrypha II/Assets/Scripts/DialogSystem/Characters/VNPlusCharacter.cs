@@ -17,6 +17,9 @@ public class VNPlusCharacter : MonoBehaviour
 
     private float nameplateRatio = 0.1f;
 
+    public float JoinTweenTime => joinTween.Time;
+    public string Expression { get; private set; }
+    public string Pose { get; private set; }
     public RectTransform MainRect => mainRect;
     public RectTransform CharacterRect => poseImage.rectTransform;
 
@@ -164,6 +167,7 @@ public class VNPlusCharacter : MonoBehaviour
             UpdateSpritePivot(expressionImage.sprite);
             UpdateSpritePosition();
         }
+        Expression = expr;
         // Set Save data
     }
 
@@ -193,6 +197,7 @@ public class VNPlusCharacter : MonoBehaviour
         {
             poseImage.enabled = false;
         }
+        Pose = pose;
         // Set save data
     }
 
