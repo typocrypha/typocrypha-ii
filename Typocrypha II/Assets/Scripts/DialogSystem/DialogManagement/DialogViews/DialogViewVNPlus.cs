@@ -120,15 +120,18 @@ public class DialogViewVNPlus : DialogView
     }
     private IEnumerator RmCharacterCR(VNPlusCharacter character, string name)
     {
-
-        yield return character.PlayLeaveTween().WaitForCompletion();
         if (character.Column == CharacterColumn.Right)
         {
             rightCharacterList.Remove(character);
             rightCharacterPool.Enqueue(character);
             if (rightCharacterList.Count > 0)
             {
+                yield return new WaitForSeconds(character.PlayLeaveTween().Time / 2);
                 yield return StartCoroutine(AdjustCharacterListPostLeaveCR(rightCharacterContainer, rightCharacterList));
+            }
+            else
+            {
+                yield return character.PlayLeaveTween().WaitForCompletion();
             }
         }
         else
@@ -137,7 +140,12 @@ public class DialogViewVNPlus : DialogView
             leftCharacterPool.Enqueue(character);
             if (leftCharacterList.Count > 0)
             {
+                yield return new WaitForSeconds(character.PlayLeaveTween().Time / 2);
                 yield return StartCoroutine(AdjustCharacterListPostLeaveCR(leftCharacterContainer, leftCharacterList));
+            }
+            else
+            {
+                yield return character.PlayLeaveTween().WaitForCompletion();
             }
         }
         characterMap.Remove(name);
@@ -262,7 +270,7 @@ public class DialogViewVNPlus : DialogView
         AdjustCharacterHeights(characterJoinLeaveTween, characterList, newHeight);
         yield return new WaitForSeconds(characterJoinLeaveTween.Time / 2);
         AdjustCharacterPositions(characterJoinLeaveTween, characterList, posStart, newHeight);
-        yield return characterJoinLeaveTween.WaitForCompletion();
+        yield return new WaitForSeconds(characterJoinLeaveTween.Time / 2);
     }
 
     private IEnumerator AdjustCharacterListPostLeaveCR(RectTransform container, List<VNPlusCharacter> characterList)
