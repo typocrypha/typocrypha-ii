@@ -118,35 +118,20 @@ public class DialogViewVNPlus : DialogView
         StartCoroutine(RmCharacterCR(characterMap[data.name], data.name));
         return true; // Wait for completion
     }
+
     private IEnumerator RmCharacterCR(VNPlusCharacter character, string name)
     {
-        if (character.Column == CharacterColumn.Right)
+        GetColumnData(character.Column, out var container, out var characterList, out var pool);
+        characterList.Remove(character);
+        pool.Enqueue(character);
+        if (characterList.Count > 0)
         {
-            rightCharacterList.Remove(character);
-            rightCharacterPool.Enqueue(character);
-            if (rightCharacterList.Count > 0)
-            {
-                yield return new WaitForSeconds(character.PlayLeaveTween().Time / 2);
-                yield return StartCoroutine(AdjustCharacterListPostLeaveCR(rightCharacterContainer, rightCharacterList));
-            }
-            else
-            {
-                yield return character.PlayLeaveTween().WaitForCompletion();
-            }
+            yield return new WaitForSeconds(character.PlayLeaveTween().Time / 2);
+            yield return StartCoroutine(AdjustCharacterListPostLeaveCR(container, characterList));
         }
         else
         {
-            leftCharacterList.Remove(character);
-            leftCharacterPool.Enqueue(character);
-            if (leftCharacterList.Count > 0)
-            {
-                yield return new WaitForSeconds(character.PlayLeaveTween().Time / 2);
-                yield return StartCoroutine(AdjustCharacterListPostLeaveCR(leftCharacterContainer, leftCharacterList));
-            }
-            else
-            {
-                yield return character.PlayLeaveTween().WaitForCompletion();
-            }
+            yield return character.PlayLeaveTween().WaitForCompletion();
         }
         characterMap.Remove(name);
         readyToContinue = true;
@@ -170,23 +155,12 @@ public class DialogViewVNPlus : DialogView
     }
     private void AddCharacterInstant(AddCharacterArgs args)
     {
-        VNPlusCharacter newCharacter;
-        if (args.Column == CharacterColumn.Right)
+        GetColumnData(args.Column, out var container, out var characterList, out var pool, out var prefab);
+        if (characterList.Count > 0)
         {
-            if (rightCharacterList.Count > 0)
-            {
-                AdjustCharactersPreJoinInstant(rightCharacterContainer, rightCharacterList);
-            }
-            newCharacter = InstantiateCharacter(rightCharacterPrefab, rightCharacterContainer, rightCharacterList, rightCharacterPool);
+            AdjustCharactersPreJoinInstant(container, characterList);
         }
-        else
-        {
-            if (leftCharacterList.Count > 0)
-            {
-                AdjustCharactersPreJoinInstant(leftCharacterContainer, leftCharacterList);
-            }
-            newCharacter = InstantiateCharacter(leftCharacterPrefab, leftCharacterContainer, leftCharacterList, leftCharacterPool);
-        }
+        var newCharacter = InstantiateCharacter(prefab, container, characterList, pool);
         ProcessNewCharacter(newCharacter, args);
     }
 
@@ -219,25 +193,14 @@ public class DialogViewVNPlus : DialogView
         newCharacter.UpdateSpritePosition();
     }
 
-    private IEnumerator AddCharacterCR(AddCharacterArgs args)
+    private IEnumerator AddCharacterCR(AddCharacterArgs args, bool top = true)
     {
-        VNPlusCharacter newCharacter;
-        if (args.Column == CharacterColumn.Right)
+        GetColumnData(args.Column, out var container, out var characterList, out var pool, out var prefab);
+        if (characterList.Count > 0)
         {
-            if(rightCharacterList.Count > 0)
-            {
-                yield return StartCoroutine(AdjustCharacterListPreJoinCR(rightCharacterContainer, rightCharacterList));
-            }
-            newCharacter = InstantiateCharacter(rightCharacterPrefab, rightCharacterContainer, rightCharacterList, rightCharacterPool);
+            yield return StartCoroutine(AdjustCharacterListPreJoinCR(container, characterList, top));
         }
-        else
-        {
-            if (leftCharacterList.Count > 0)
-            {
-                yield return StartCoroutine(AdjustCharacterListPreJoinCR(leftCharacterContainer, leftCharacterList));
-            }
-            newCharacter = InstantiateCharacter(leftCharacterPrefab, leftCharacterContainer, leftCharacterList, leftCharacterPool);
-        }
+        var newCharacter = InstantiateCharacter(prefab, container, characterList, pool, top);
         ProcessNewCharacter(newCharacter, args);
         yield return newCharacter.PlayJoinTween().WaitForCompletion();
         readyToContinue = true;
@@ -286,10 +249,10 @@ public class DialogViewVNPlus : DialogView
         return newCharacter;
     }
 
-    private IEnumerator AdjustCharacterListPreJoinCR(RectTransform container, List<VNPlusCharacter> characterList)
+    private IEnumerator AdjustCharacterListPreJoinCR(RectTransform container, List<VNPlusCharacter> characterList, bool top)
     {
         characterJoinLeaveTween.Complete();
-        GetCharacterAdjustmentValues(container, characterList, 1, out float newHeight, out float posStart);
+        GetCharacterAdjustmentValues(container, characterList, 1, out float newHeight, out float posStart, top);
         AdjustCharacterHeights(characterJoinLeaveTween, characterList, newHeight);
         yield return new WaitForSeconds(characterJoinLeaveTween.Time / 2);
         AdjustCharacterPositions(characterJoinLeaveTween, characterList, posStart, newHeight);
@@ -349,6 +312,46 @@ public class DialogViewVNPlus : DialogView
             tweenInfo.Start(chara.MainRect.DOAnchorPosY(posStart - (i * newHeight), tweenInfo.Time), false);
         }
     }
+
+    private void GetColumnData(CharacterColumn column, out RectTransform container, out List<VNPlusCharacter> characterList)
+    {
+        if (column == CharacterColumn.Right)
+        {
+            container = rightCharacterContainer;
+            characterList = rightCharacterList;
+        }
+        else // Left column
+        {
+            container = leftCharacterContainer;
+            characterList = leftCharacterList;
+        }
+    }
+    private void GetColumnData(CharacterColumn column, out RectTransform container, out List<VNPlusCharacter> characterList, out Queue<VNPlusCharacter> pool)
+    {
+        if (column == CharacterColumn.Right)
+        {
+            pool = rightCharacterPool;
+        }
+        else // Left column
+        {
+            pool = leftCharacterPool;
+        }
+        GetColumnData(column, out container, out characterList);
+    }
+    private void GetColumnData(CharacterColumn column, out RectTransform container, out List<VNPlusCharacter> characterList, out Queue<VNPlusCharacter> pool, out GameObject prefab)
+    {
+        if (column == CharacterColumn.Right)
+        {
+            prefab = rightCharacterPrefab;
+        }
+        else // Left column
+        {
+            prefab = leftCharacterPrefab;
+        }
+        GetColumnData(column, out container, out characterList, out pool);
+    }
+
+    private CharacterColumn OtherColumn(CharacterColumn column) => column == CharacterColumn.Right ? CharacterColumn.Left : CharacterColumn.Right;
 
     public override void SetExpression(CharacterData data, string expression)
     {
