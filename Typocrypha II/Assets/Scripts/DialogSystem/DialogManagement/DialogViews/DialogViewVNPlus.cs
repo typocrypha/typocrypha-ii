@@ -243,23 +243,46 @@ public class DialogViewVNPlus : DialogView
         readyToContinue = true;
     }
 
-    private VNPlusCharacter InstantiateCharacter(GameObject prefab, RectTransform container, List<VNPlusCharacter> characterList, Queue<VNPlusCharacter> pool)
+    private VNPlusCharacter InstantiateCharacter(GameObject prefab, RectTransform container, List<VNPlusCharacter> characterList, Queue<VNPlusCharacter> pool, bool top = true)
     {
         VNPlusCharacter newCharacter;
         if(pool.Count > 0)
         {
             newCharacter = pool.Dequeue();
-            newCharacter.transform.SetAsLastSibling();
+            if (top)
+            {
+                newCharacter.transform.SetAsFirstSibling();
+            }
+            else
+            {
+                newCharacter.transform.SetAsLastSibling();
+            }
             newCharacter.Clear();
         }
         else
         {
             newCharacter = Instantiate(prefab, container).GetComponent<VNPlusCharacter>();
         }
-        characterList.Add(newCharacter);
+        // Add character to list
+        if (top)
+        {
+            characterList.Insert(0, newCharacter);
+        }
+        else
+        {
+            characterList.Add(newCharacter);
+        }
         var height = container.rect.height / characterList.Count;
         newCharacter.SetInitialHeight(height);
-        newCharacter.SetInitialPos((-height / 2) - ((characterList.Count - 1) * height));
+        // Set Initial Position
+        if (top)
+        {
+            newCharacter.SetInitialPos(-height / 2); // Top of list
+        }
+        else
+        {
+            newCharacter.SetInitialPos((-height / 2) - ((characterList.Count - 1) * height)); // Bottom of list
+        }
         return newCharacter;
     }
 
@@ -283,12 +306,19 @@ public class DialogViewVNPlus : DialogView
         yield return characterJoinLeaveTween.WaitForCompletion();
     }
 
-    private void GetCharacterAdjustmentValues(RectTransform container, List<VNPlusCharacter> characterList, int extraCharacters, out float newHeight, out float posStart)
+    private void GetCharacterAdjustmentValues(RectTransform container, List<VNPlusCharacter> characterList, int extraCharacters, out float newHeight, out float posStart, bool top = true)
     {
         // Extra characters determines the space to leave for additional chracters that are not currently present
         // For example, use 1 extra character when a character is about to join to leave space for the joining character
         newHeight = container.rect.height / (characterList.Count + extraCharacters);
-        posStart = -newHeight / 2;
+        if (top)
+        {
+            posStart = (-newHeight / 2) - (newHeight * extraCharacters);
+        }
+        else
+        {
+            posStart = (-newHeight / 2);
+        }
     }
 
     private IEnumerator MoveSpeakingCharacterToTop(RectTransform container, List<VNPlusCharacter> characterList, VNPlusCharacter character)
