@@ -266,7 +266,7 @@ public class DialogViewVNPlus : DialogView
 
     private IEnumerator AdjustCharacterListPostLeaveCR(RectTransform container, List<VNPlusCharacter> characterList)
     {
-        characterJoinLeaveTween.Complete();
+        //characterJoinLeaveTween.Complete();
         GetCharacterAdjustmentValues(container, characterList, 0, out float newHeight, out float posStart);
         AdjustCharacterPositions(characterJoinLeaveTween, characterList, posStart, newHeight);
         yield return new WaitForSeconds(characterJoinLeaveTween.Time / 2);
@@ -318,20 +318,19 @@ public class DialogViewVNPlus : DialogView
         }
     }
 
-    public bool MoveCharacter(CharacterData data, CharacterColumn targetColumn, bool top)
+    public Coroutine MoveCharacter(CharacterData data, CharacterColumn targetColumn, bool top)
     {
         // If the character isn't in the scene, simply return
         if (!characterMap.TryGetValue(data.name, out var character))
         {
-            return false; // don't wait for completion
+            return null; // don't wait for completion
         }
         if (character.Column != targetColumn)
         {
             readyToContinue = false;
-            StartCoroutine(MoveCharacterColumn(character, targetColumn, top));
-            return true;
+            return StartCoroutine(MoveCharacterColumn(character, targetColumn, top));
         }
-        return false; // Temp, move character to top/bottom and return true later
+        return null; // Temp, move character to top/bottom
     }
 
     private IEnumerator MoveCharacterColumn(VNPlusCharacter character, CharacterColumn targetColumn, bool top)

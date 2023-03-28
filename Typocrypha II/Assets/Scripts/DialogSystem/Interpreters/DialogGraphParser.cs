@@ -206,20 +206,16 @@ public class DialogGraphParser : MonoBehaviour
             {
                 currView.SetExpression(setExpressionNode.characterData, setExpressionNode.expr);
             }
-            else if (currNode is MoveCharacter) // Deprecated
+            else if (currNode is MoveCharacter moveNode)
             {
-                var cNode = currNode as MoveCharacter;
-                if (cNode.movementType == CharacterMovementType.Teleport)
+                if(currView is DialogViewVNPlus vnPlusView)
                 {
-                    DialogCharacterManager.instance.TeleportCharacter(cNode.characterData, cNode.targetPos);
-                }
-                else if (cNode.movementType == CharacterMovementType.Lerp)
-                {
-                    DialogCharacterManager.instance.LerpCharacter(cNode.characterData, cNode.targetPos, cNode.time);
-                }
-                else if (cNode.movementType == CharacterMovementType.SmoothDamp)
-                {
-                    DialogCharacterManager.instance.SmoothDampCharacter(cNode.characterData, cNode.targetPos, cNode.time);
+                    var moveRoutine = vnPlusView.MoveCharacter(moveNode.characterData, moveNode.targetColumn, moveNode.top);
+                    if(moveRoutine != null)
+                    {
+                        StartCoroutine(WaitOnRoutine(moveRoutine));
+                        return null;
+                    }
                 }
             }
             else if (currNode is SetBCH) // Deprecated
