@@ -198,12 +198,12 @@ public class DialogViewVNPlus : DialogView
         newCharacter.UpdateSpritePosition();
     }
 
-    private IEnumerator AddCharacterCR(AddCharacterArgs args, bool top = true)
+    private IEnumerator AddCharacterCR(AddCharacterArgs args, bool top = true, bool completePrevious = true)
     {
         GetColumnData(args.Column, out var container, out var characterList, out var pool, out var prefab);
         if (characterList.Count > 0)
         {
-            yield return StartCoroutine(AdjustCharacterListPreJoinCR(container, characterList, top));
+            yield return StartCoroutine(AdjustCharacterListPreJoinCR(container, characterList, top, completePrevious));
         }
         var newCharacter = InstantiateCharacter(prefab, container, characterList, pool, top);
         ProcessNewCharacter(newCharacter, args);
@@ -254,9 +254,12 @@ public class DialogViewVNPlus : DialogView
         return newCharacter;
     }
 
-    private IEnumerator AdjustCharacterListPreJoinCR(RectTransform container, List<VNPlusCharacter> characterList, bool top)
+    private IEnumerator AdjustCharacterListPreJoinCR(RectTransform container, List<VNPlusCharacter> characterList, bool top, bool completePrevious)
     {
-        characterJoinLeaveTween.Complete();
+        if (completePrevious)
+        {
+            characterJoinLeaveTween.Complete();
+        }
         GetCharacterAdjustmentValues(container, characterList, 1, out float newHeight, out float posStart, top);
         AdjustCharacterHeights(characterJoinLeaveTween, characterList, newHeight);
         yield return new WaitForSeconds(characterJoinLeaveTween.Time / 2);
@@ -347,7 +350,7 @@ public class DialogViewVNPlus : DialogView
         yield return new WaitForSeconds(character.JoinTweenTime / 2);
 
         // Add the character to the target column
-        yield return StartCoroutine(AddCharacterCR(addArgs, top));
+        yield return StartCoroutine(AddCharacterCR(addArgs, top, false));
     }
 
     private void GetColumnData(CharacterColumn column, out RectTransform container, out List<VNPlusCharacter> characterList)
