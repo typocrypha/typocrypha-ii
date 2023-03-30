@@ -114,11 +114,16 @@ public class DialogViewVNPlus : DialogView
         {
             return false; // don't wait for completion
         }
-        readyToContinue = false;
         GetColumnData(character.Column, out var container, out var characterList, out var pool);
         PrepareToRemoveCharacter(character, data.name, characterList, pool);
-        StartCoroutine(RmCharacterCR(character, container, characterList));
-        return true; // Wait for completion
+        if (isActiveAndEnabled)
+        {
+            readyToContinue = false;
+            StartCoroutine(RmCharacterCR(character, container, characterList));
+            return true; // Wait for completion
+        }
+        RemoveCharacterInstant(character, container, characterList);
+        return false;
     }
 
     private IEnumerator RmCharacterCR(VNPlusCharacter character, RectTransform container, List<VNPlusCharacter> characterList)
@@ -133,6 +138,26 @@ public class DialogViewVNPlus : DialogView
             yield return character.PlayLeaveTween().WaitForCompletion();
         }
         readyToContinue = true;
+    }
+
+    private void RemoveCharacterInstant(VNPlusCharacter character, RectTransform container, List<VNPlusCharacter> characterList)
+    {
+        // Set scale to 0
+        var xScale = character.MainRect.localScale.x;
+        character.MainRect.localScale = new Vector2(xScale, 0);
+        // Adjust remaining characters
+        AdjustCharactersPostLeaveInstant(container, characterList);
+    }
+
+    private void AdjustCharactersPostLeaveInstant(RectTransform container, List<VNPlusCharacter> characterList)
+    {
+        GetCharacterAdjustmentValues(container, characterList, 0, out float newHeight, out float posStart);
+        for (int i = 0; i < characterList.Count; i++)
+        {
+            var chara = characterList[i];
+            chara.MainRect.sizeDelta = new Vector2(chara.MainRect.sizeDelta.x, newHeight);
+            chara.MainRect.anchoredPosition = new Vector2(chara.MainRect.anchoredPosition.x, posStart - (i * newHeight));
+        }
     }
 
     private void PrepareToRemoveCharacter(VNPlusCharacter character, string name, List<VNPlusCharacter> characterList, Queue<VNPlusCharacter> pool)
