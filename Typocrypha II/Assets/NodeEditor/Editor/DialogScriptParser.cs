@@ -53,6 +53,7 @@ public class DialogScriptParser : EditorWindow
     {
         {"addchar", typeof(AddCharacter) },
         {"removechar", typeof(RemoveCharacter) },
+        {"movechar", typeof(MoveCharacter) },
         {"playbgm", typeof(PlayBgm) },
         {"stopbgm", typeof(StopBgm) },
         {"pausebgm", typeof(PauseBgm) },
@@ -306,6 +307,14 @@ public class DialogScriptParser : EditorWindow
         {
             var gnode = CreateNode(RemoveCharacter.ID) as RemoveCharacter;
             gnode.characterData = GetCharacterData(args[1]);
+            nodes.Add(gnode);
+        }
+        else if (nodeType == typeof(MoveCharacter))
+        {
+            var gnode = CreateNode(MoveCharacter.ID) as MoveCharacter;
+            gnode.characterData = GetCharacterData(args[1]);
+            gnode.targetColumn = args[2].Trim().ToLower() == "right" ? DialogViewVNPlus.CharacterColumn.Right : DialogViewVNPlus.CharacterColumn.Left;
+            gnode.top = args[3].Trim().ToLower() == "top";
             nodes.Add(gnode);
         }
         else if (nodeType == typeof(SetExpression))
