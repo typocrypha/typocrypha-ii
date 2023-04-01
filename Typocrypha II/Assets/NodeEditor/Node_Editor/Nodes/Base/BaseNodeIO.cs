@@ -5,8 +5,6 @@ using NodeEditorFramework;
 
 namespace Gameflow
 {
-
-    [Node(true, "Gameflow/Standard IO Base", new System.Type[] { typeof(GameflowCanvas) })]
     public abstract class BaseNodeIO : BaseNodeOUT
     {
         //Connection from previous node (INPUT)

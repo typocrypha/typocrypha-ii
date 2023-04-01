@@ -6,7 +6,7 @@ using NodeEditorFramework.Utilities;
 
 namespace Gameflow
 {
-    [Node(false, "Misc/SubCanvas", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas), typeof(BattleCanvas) })]
+    [Node(false, "Misc/SubCanvas", new System.Type[] { typeof(DialogCanvas), typeof(BattleCanvas) })]
     public class SubCanvasNode : BaseNodeIO
     {
         public const string ID = "SubCanvas Node";

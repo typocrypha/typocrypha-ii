@@ -4,7 +4,7 @@ using NodeEditorFramework.Utilities;
 
 namespace Gameflow
 {
-    [Node(false, "Event/Character/Add Character", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
+    [Node(false, "Event/Character/Add Character", new System.Type[] { typeof(DialogCanvas) })]
     public class AddCharacter : CharacterControlNode
     {
         public const string ID = "Add Character Node";

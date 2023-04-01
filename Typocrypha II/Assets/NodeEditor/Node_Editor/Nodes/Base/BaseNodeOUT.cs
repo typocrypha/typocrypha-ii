@@ -5,8 +5,6 @@ using NodeEditorFramework;
 
 namespace Gameflow
 {
-
-    [Node(true, "Gameflow/Standard Output Base", new System.Type[] { typeof(GameflowCanvas) })]
     public abstract class BaseNodeOUT : BaseNode
     {
         //Next Node to go to (OUTPUT)

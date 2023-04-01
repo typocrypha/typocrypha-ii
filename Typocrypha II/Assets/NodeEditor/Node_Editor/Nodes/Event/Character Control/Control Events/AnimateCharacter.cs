@@ -9,7 +9,7 @@ namespace Gameflow
     /// <summary>
     /// Applies a single animation clip to a character.
     /// </summary>
-    [Node(false, "Event/Character/AnimateCharacter", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
+    [Node(false, "Event/Character/AnimateCharacter", new System.Type[] { typeof(DialogCanvas) })]
     public class AnimateCharacter : CharacterControlNode
     {
         public const string ID = "Animate Character Node";

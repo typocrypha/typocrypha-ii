@@ -2,7 +2,7 @@
 
 namespace Gameflow
 {
-    [Node(true, "Event/Audio Control", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
+    [Node(true, "Event/Audio Control", new System.Type[] { typeof(DialogCanvas) })]
     public abstract class AudioControlNode : BaseNodeIO
     {
         //public const string ID = "Audio Control Node";

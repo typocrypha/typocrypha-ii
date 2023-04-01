@@ -6,7 +6,7 @@ using NodeEditorFramework.Utilities;
 
 namespace Gameflow
 {
-    [Node(false, "Event/Character/Move Character", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
+    [Node(false, "Event/Character/Move Character", new System.Type[] { typeof(DialogCanvas) })]
     public class MoveCharacter : CharacterControlNode
     {
         public const string ID = "Move Character Node";

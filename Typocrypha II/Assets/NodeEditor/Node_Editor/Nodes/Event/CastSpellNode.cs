@@ -6,7 +6,7 @@ using NodeEditorFramework.Utilities;
 
 namespace Gameflow
 {
-    [Node(false, "Event/Cast Spell", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
+    [Node(false, "Event/Cast Spell", new System.Type[] { typeof(DialogCanvas) })]
     public class CastSpellNode : BaseNodeIO
     {
         #region Editor

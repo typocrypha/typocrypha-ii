@@ -8,7 +8,7 @@ namespace Gameflow
     /// <summary>
     /// Hide the dialog canvas when dialog ends.
     /// </summary>
-    [Node(false, "Gameflow/EndAndHide", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
+    [Node(false, "Gameflow/EndAndHide", new System.Type[] { typeof(DialogCanvas) })]
     public class EndAndHide : GameflowEndNode
     {
         new public const string ID = "End And Hide Node";

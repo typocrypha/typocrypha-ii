@@ -5,7 +5,7 @@ using NodeEditorFramework;
 
 namespace Gameflow
 {
-    [Node(false, "Event/Character/Set Body-Clothes-Hair", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
+    [Node(false, "Event/Character/Set Body-Clothes-Hair", new System.Type[] { typeof(DialogCanvas) })]
     public class SetBCH : CharacterControlNode
     {
         public const string ID = "Set Body-Clothes-Hair Node";

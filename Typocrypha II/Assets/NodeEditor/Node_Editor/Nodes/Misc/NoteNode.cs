@@ -9,7 +9,7 @@ using UnityEditor;
 
 namespace Gameflow
 {
-    [Node(false, "Misc/Note", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas), typeof(BattleCanvas) })]
+    [Node(false, "Misc/Note", new System.Type[] { typeof(DialogCanvas), typeof(BattleCanvas) })]
     public class NoteNode : BaseNode
     {
         public const string ID = "Note Node";

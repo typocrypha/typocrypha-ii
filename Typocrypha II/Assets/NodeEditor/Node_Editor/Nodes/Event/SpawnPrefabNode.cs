@@ -9,7 +9,7 @@ namespace Gameflow
     /// <summary>
     /// Spawns a prefab at location. 
     /// </summary>
-    [Node(false, "Event/Spawn Prefab", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
+    [Node(false, "Event/Spawn Prefab", new System.Type[] { typeof(DialogCanvas) })]
     public class SpawnPrefabNode : BaseNodeIO
     {
         public override string Title { get { return "Spawn Prefab"; } }

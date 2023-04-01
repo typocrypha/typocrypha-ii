@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Gameflow
 {
 
-    [Node(false, "Dialog/Set Dialog View", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
+    [Node(false, "Dialog/Set Dialog View", new System.Type[] { typeof(DialogCanvas) })]
     public class SetDialogViewNode : BaseNodeIO
     {
         public override string Title { get { return "Set Dialog View"; } }

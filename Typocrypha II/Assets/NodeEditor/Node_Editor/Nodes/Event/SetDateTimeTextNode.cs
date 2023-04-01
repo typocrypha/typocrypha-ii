@@ -4,7 +4,7 @@ using NodeEditorFramework;
 namespace Gameflow
 {
 
-    [Node(false, "Event/Set DateTime Text", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
+    [Node(false, "Event/Set DateTime Text", new System.Type[] { typeof(DialogCanvas) })]
     public class SetDateTimeTextNode : BaseNodeIO
     {
         public override string Title { get { return "Set Date/Time Text"; } }

@@ -6,7 +6,7 @@ namespace Gameflow
     /// <summary>
     /// Transition to a new scene when dialog ends.
     /// </summary>
-    [Node(false, "Gameflow/EndAndTransition", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas), typeof(BattleCanvas)})]
+    [Node(false, "Gameflow/EndAndTransition", new System.Type[] { typeof(DialogCanvas), typeof(BattleCanvas)})]
     public class EndAndTransition : GameflowEndNode
     {
         new public const string ID = "End And Transition Node";

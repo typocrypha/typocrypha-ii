@@ -7,7 +7,7 @@ using Gameflow.GUIUtilities;
 
 namespace Gameflow
 {
-    [Node(false, "Battle/Wave", new System.Type[] { typeof(GameflowCanvas), typeof(BattleCanvas) })]
+    [Node(false, "Battle/Wave", new System.Type[] { typeof(BattleCanvas) })]
     public class BattleNodeWave : BaseNodeIO
     {
         public const string ID = "Battle Wave Node";

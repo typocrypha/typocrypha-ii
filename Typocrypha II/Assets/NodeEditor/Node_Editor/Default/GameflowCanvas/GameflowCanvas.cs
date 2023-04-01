@@ -5,17 +5,18 @@ using NodeEditorFramework;
 
 namespace Gameflow
 {
-
-    [NodeCanvasType("Gameflow Canvas")]
-    [CreateAssetMenu(fileName ="newGameFlowCanvas", menuName ="Gameflow Canvas")]
-    public class GameflowCanvas : NodeCanvas
+    public abstract class GameflowCanvas : NodeCanvas
     {
-        public override string canvasName { get { return "Gameflow"; } }
-
-        public GameflowStartNode getStartNode()
+        public virtual GameflowStartNode GetStartNode()
         {
-            return nodes.Find((node) => { return node is GameflowStartNode; }) as GameflowStartNode;
+            foreach (var node in nodes)
+            {
+                if (node is GameflowStartNode startNode)
+                {
+                    return startNode;
+                }
+            }
+            return null;
         }
-
     }
 }

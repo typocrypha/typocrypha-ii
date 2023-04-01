@@ -6,7 +6,7 @@ using NodeEditorFramework.Utilities;
 
 namespace Gameflow
 {
-    [Node(false, "Event/Add Spell(s)", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
+    [Node(false, "Event/Add Spell(s)", new System.Type[] { typeof(DialogCanvas), typeof(BattleCanvas) })]
     public class AddEquippedSpellsNode : BaseNodeIO
     {
         #region Editor

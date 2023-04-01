@@ -5,7 +5,7 @@ using NodeEditorFramework;
 
 namespace Gameflow
 {
-    [Node(false, "Event/Character/Remove Character", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
+    [Node(false, "Event/Character/Remove Character", new System.Type[] { typeof(DialogCanvas) })]
     public class RemoveCharacter : CharacterControlNode
     {
         public const string ID = "Remove Character Node";

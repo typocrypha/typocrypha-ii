@@ -3,7 +3,7 @@ using NodeEditorFramework;
 
 namespace Gameflow
 {
-    [Node(false, "Event/Character/Set Expression", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
+    [Node(false, "Event/Character/Set Expression", new System.Type[] { typeof(DialogCanvas) })]
     public class SetExpression : CharacterControlNode
     {
         public const string ID = "Set Expression Node";

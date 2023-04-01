@@ -5,7 +5,6 @@ using NodeEditorFramework;
 
 namespace Gameflow
 {
-    [Node(true, "Gameflow/GameflowBase", new System.Type[] { typeof(GameflowCanvas) })]
     public abstract class BaseNode : Node
     {
         public override bool AutoLayout { get { return true; } }

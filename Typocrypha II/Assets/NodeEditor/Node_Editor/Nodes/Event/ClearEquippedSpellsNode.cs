@@ -3,7 +3,7 @@ using NodeEditorFramework;
 
 namespace Gameflow
 {
-    [Node(false, "Event/Clear Spells", new System.Type[] { typeof(DialogCanvas) })]
+    [Node(false, "Event/Clear Spells", new System.Type[] { typeof(DialogCanvas), typeof(BattleCanvas) })]
     public class ClearEquippedSpellsNode : BaseNodeIO
     {
         #region Editor

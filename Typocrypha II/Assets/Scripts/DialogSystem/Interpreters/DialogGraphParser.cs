@@ -3,61 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DialogGraphParser : MonoBehaviour
+public class DialogGraphParser : GraphParser
 {
     [SerializeField] private DialogCanvas graph = null;
     public DialogCanvas Graph { set => graph = value; }
-    private BaseNode currNode = null;
     private Stack<BaseNode> recStack = new Stack<BaseNode>();
     /// <summary> Initialized the root node (for if next dialogue is called in DialogManager's awake function </summary>
     public void Init()
     {
-        currNode = graph.getStartNode();
-    }
-    private BaseNode Next()
-    {
-        if (currNode is BaseNodeOUT)
-            return (currNode as BaseNodeOUT).Next;
-        else if (currNode is GameflowBranchNode)
-            return Branch(currNode as GameflowBranchNode);
-        else
-            //throw new System.NotImplementedException("Error");
-            return null;
-    }
-    private BaseNode Branch(GameflowBranchNode b)
-    {
-        string value = string.Empty;
-        if (b.exprType == GameflowBranchNode.controlExpressionType.Last_Input)
-        {
-            value = PlayerDataManager.instance.GetObj(PlayerDataManager.lastInputKey).ToString();
-        }
-        else
-        {
-            value = PlayerDataManager.instance.GetObj(b.variableName).ToString();
-        }
-        foreach (var brCase in b.cases)
-        {
-            if (brCase.type == GameflowBranchNode.BranchCase.CaseType.Regex)
-            {
-                if (CheckRegexCase(brCase.pattern, value))
-                    return brCase.connection.connections[0].body as BaseNode;
-            }
-            else if (CheckTextCase(brCase.pattern, value))//brCase.type == BranchCaseData.CaseType.Text
-            {
-                return brCase.connection.connections[0].body as BaseNode;
-            }
-        }
-        return b.toDefaultBranch.connection(0).body as BaseNode;
-    }
-
-    private bool CheckTextCase(string pattern, string value)
-    {
-        //Probably should compress this to regex
-        return value.Trim().ToLower() == TextMacros.SubstituteMacros(pattern).Trim().ToLower().Replace(".", string.Empty).Replace("?", string.Empty).Replace("!", string.Empty);
-    }
-    private bool CheckRegexCase(string pattern, string value)
-    {
-        throw new System.NotImplementedException();
+        currNode = graph.GetStartNode();
     }
 
     /// <summary> Go through the graph, porcessing nodes until a dialog node is reached
@@ -72,7 +26,7 @@ public class DialogGraphParser : MonoBehaviour
         {
             var node = currNode as SubCanvasNode;
             recStack.Push(Next()); // Remember exit node.
-            currNode = (node.subCanvas as DialogCanvas).getStartNode();
+            currNode = (node.subCanvas as DialogCanvas).GetStartNode();
             return NextDialog(true);
         }
         if (currNode is GameflowEndNode)

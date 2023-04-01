@@ -4,7 +4,7 @@ using NodeEditorFramework.Utilities;
 
 namespace Gameflow
 {
-    [Node(false, "Event/Audio/Stop BGM", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
+    [Node(false, "Event/Audio/Stop BGM", new System.Type[] { typeof(DialogCanvas) })]
     public class StopBgm : AudioControlNode
     {
         public const string ID = "Stop BGM Node";

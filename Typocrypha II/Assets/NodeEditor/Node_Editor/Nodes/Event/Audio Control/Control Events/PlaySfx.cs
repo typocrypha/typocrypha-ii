@@ -4,7 +4,7 @@ using NodeEditorFramework.Utilities;
 
 namespace Gameflow
 {
-    [Node(false, "Event/Audio/Play SFX", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
+    [Node(false, "Event/Audio/Play SFX", new System.Type[] { typeof(DialogCanvas) })]
     public class PlaySfx : AudioControlNode
     {
         public const string ID = "Play SFX Node";

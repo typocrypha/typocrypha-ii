@@ -4,7 +4,7 @@ using NodeEditorFramework.Utilities;
 
 namespace Gameflow
 {
-    [Node(false, "Dialog/Dialog Input", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
+    [Node(false, "Dialog/Dialog Input", new System.Type[] { typeof(DialogCanvas) })]
     public class DialogNodeInput : DialogNodeVN
     {
         #region Editor

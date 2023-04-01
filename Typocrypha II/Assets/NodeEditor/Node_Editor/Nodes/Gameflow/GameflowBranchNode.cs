@@ -8,7 +8,7 @@ using Gameflow.GUIUtilities;
 
 namespace Gameflow
 {
-    [Node(false, "Gameflow/Branch", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas), typeof(BattleCanvas) })]
+    [Node(false, "Gameflow/Branch", new System.Type[] { typeof(DialogCanvas), typeof(BattleCanvas) })]
     public class GameflowBranchNode : BaseNode
     {
         public enum controlExpressionType

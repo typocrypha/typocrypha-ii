@@ -8,7 +8,7 @@ namespace Gameflow
     /// Clamps Visual novel UI. 
     /// Moves screen frame up on/off screen and dialog box down on/off screen.
     /// </summary>
-    [Node(false, "Event/Misc/Clamp Dialog UI", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
+    [Node(false, "Event/Misc/Clamp Dialog UI", new System.Type[] { typeof(DialogCanvas) })]
     public class ClampDialogUINode : BaseNodeIO
     {
         public const string ID = "Clamp Dialog UI Node";

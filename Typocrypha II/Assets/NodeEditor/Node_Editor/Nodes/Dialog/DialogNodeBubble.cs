@@ -4,7 +4,7 @@ using NodeEditorFramework.Utilities;
 
 namespace Gameflow
 {
-    [Node(false, "Dialog/Bubble Dialog", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
+    [Node(false, "Dialog/Bubble Dialog", new System.Type[] { typeof(DialogCanvas) })]
     public class DialogNodeBubble : DialogNode
     {
         #region Editor

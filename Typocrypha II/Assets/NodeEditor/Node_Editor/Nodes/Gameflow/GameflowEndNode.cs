@@ -3,8 +3,8 @@ using NodeEditorFramework;
 
 namespace Gameflow
 {
-    [Node(true, "Gameflow/End", new System.Type[] { typeof(GameflowCanvas) })]
-    public class GameflowEndNode : BaseNode
+    [Node(true, "Gameflow/End")]
+    public abstract class GameflowEndNode : BaseNode
     {
         public const string ID = "Gameflow End Node";
         public override string GetID { get { return ID; } }

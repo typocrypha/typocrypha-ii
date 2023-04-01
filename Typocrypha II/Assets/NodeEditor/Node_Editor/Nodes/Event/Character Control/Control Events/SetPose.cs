@@ -3,7 +3,7 @@ using NodeEditorFramework;
 
 namespace Gameflow
 {
-    [Node(false, "Event/Character/Set Pose", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
+    [Node(false, "Event/Character/Set Pose", new System.Type[] { typeof(DialogCanvas) })]
     public class SetPose : CharacterControlNode
     {
         public const string ID = "Set Pose Node";

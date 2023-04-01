@@ -4,7 +4,7 @@ using NodeEditorFramework.Utilities;
 
 namespace Gameflow
 {
-    [Node(false, "Gameflow/EndAndGoto", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
+    [Node(false, "Gameflow/EndAndGoto", new System.Type[] { typeof(DialogCanvas) })]
     public class EndAndGoto : GameflowEndNode
     {
         new public const string ID = "End And Goto Node";

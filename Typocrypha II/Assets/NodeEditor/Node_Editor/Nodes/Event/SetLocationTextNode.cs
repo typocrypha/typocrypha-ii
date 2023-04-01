@@ -4,7 +4,7 @@ using NodeEditorFramework;
 namespace Gameflow
 {
 
-    [Node(false, "Event/Set Location Text", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
+    [Node(false, "Event/Set Location Text", new System.Type[] { typeof(DialogCanvas) })]
     public class SetLocationTextNode : BaseNodeIO
     {
         public override string Title { get { return "Set Location Text"; } }

@@ -10,7 +10,7 @@ public class BattleGraphParser : GraphParser
     /// <summary> Initialized the root node (for if next dialogue is called in BattleManager's awake function </summary>
     public BattleStartNode Init()
     {
-        currNode = graph.getStartNode();
+        currNode = graph.GetStartNode();
         return currNode as BattleStartNode;
     }
     /// <summary> Go through the graph, porcessing nodes until a dialog node is reached

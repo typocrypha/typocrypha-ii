@@ -6,7 +6,7 @@ using NodeEditorFramework.Utilities;
 
 namespace Gameflow
 {
-    [Node(true, "Dialog/DialogBase", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas)})]
+    [Node(true, "Dialog/DialogBase", new System.Type[] { typeof(DialogCanvas)})]
     public abstract class DialogNode : BaseNodeIO
     {
         public override bool AllowRecursion { get { return true; } }

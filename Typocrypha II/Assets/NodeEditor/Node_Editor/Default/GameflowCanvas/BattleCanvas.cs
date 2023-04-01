@@ -7,15 +7,21 @@ namespace Gameflow
 {
     [NodeCanvasType("Battle Canvas")]
     [CreateAssetMenu(fileName = "newBattle", menuName = "Battle")]
-    public class BattleCanvas : NodeCanvas
+    public class BattleCanvas : GameflowCanvas
     {
-        public override string canvasName { get { return "Battle"; } }
+        public override string canvasName => "Battle";
 
-        public GameflowStartNode getStartNode()
+        public override GameflowStartNode GetStartNode()
         {
-            return nodes.Find((node) => node is BattleStartNode) as GameflowStartNode;
+            foreach (var node in nodes)
+            {
+                if (node is BattleStartNode startNode)
+                {
+                    return startNode;
+                }
+            }
+            return null;
         }
-
     }
 
 }

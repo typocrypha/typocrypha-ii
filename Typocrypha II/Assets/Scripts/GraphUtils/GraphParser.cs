@@ -10,13 +10,15 @@ public abstract class GraphParser : MonoBehaviour
 
     protected virtual BaseNode Next()
     {
-        if (currNode is BaseNodeOUT)
-            return (currNode as BaseNodeOUT).Next;
-        else if (currNode is GameflowBranchNode)
-            return Branch(currNode as GameflowBranchNode);
-        else
-            return null;
-            //throw new System.NotImplementedException("Reached end of gameflow");
+        if (currNode is BaseNodeOUT outNode)
+        {
+            return outNode.Next;
+        }
+        else if (currNode is GameflowBranchNode branchNode)
+        {
+            return Branch(branchNode);
+        }
+        return null;
     }
     protected virtual BaseNode Branch(GameflowBranchNode b)
     {
@@ -37,7 +39,9 @@ public abstract class GraphParser : MonoBehaviour
                     return brCase.connection.connections[0].body as BaseNode;
             }
             else if (CheckTextCase(brCase.pattern, value))//brCase.type == BranchCaseData.CaseType.Text
+            {
                 return brCase.connection.connections[0].body as BaseNode;
+            }
         }
         return b.toDefaultBranch.connection(0).body as BaseNode;
     }

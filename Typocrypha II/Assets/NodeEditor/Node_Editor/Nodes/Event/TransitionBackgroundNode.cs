@@ -10,7 +10,7 @@ namespace Gameflow
     /// Transitions background with effect.
     /// Currently unimplemented
     /// </summary>
-    [Node(false, "Event/Transition Background", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
+    [Node(false, "Event/Transition Background", new System.Type[] { typeof(DialogCanvas) })]
     public class TransitionBackgroundNode : BaseNodeIO
     {
         #region Editor

@@ -4,7 +4,7 @@ using NodeEditorFramework.Utilities;
 
 namespace Gameflow
 {
-    [Node(false, "Dialog/Chat Dialog", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
+    [Node(false, "Dialog/Chat Dialog", new System.Type[] { typeof(DialogCanvas) })]
     public class DialogNodeChat : DialogNode
     {
         #region Editor

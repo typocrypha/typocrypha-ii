@@ -6,7 +6,7 @@ using NodeEditorFramework.Utilities;
 
 namespace Gameflow
 {
-    [Node(false, "Battle/Start", new System.Type[] { typeof(GameflowCanvas), typeof(BattleCanvas) })]
+    [Node(false, "Battle/Start", new System.Type[] { typeof(BattleCanvas) })]
     public class BattleStartNode : GameflowStartNode
     {
         public enum TransitionType

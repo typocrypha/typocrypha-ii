@@ -4,7 +4,6 @@ using NodeEditorFramework.Utilities;
 
 namespace Gameflow
 {
-    [Node(true, "Event/Character/Character Control Base", new System.Type[] { typeof(GameflowCanvas), typeof(DialogCanvas) })]
     public abstract class CharacterControlNode : BaseNodeIO
     {
         public override bool AllowRecursion { get { return true; } }
