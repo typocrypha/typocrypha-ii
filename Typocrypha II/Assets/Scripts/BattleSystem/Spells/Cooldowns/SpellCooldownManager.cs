@@ -40,6 +40,11 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
 
     private void Start()
     {
+        InitializeEquippedWords();
+    }
+
+    public void InitializeEquippedWords()
+    {
         foreach (var kvp in PlayerDataManager.instance.equipment.EquippedWords)
         {
             AddWord(kvp.Value);
@@ -48,7 +53,9 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
     }
 
     public void SortCooldowns()
-    {       
+    {
+        if (cooldowns.Count <= 0)
+            return;
         cooldownTr.SortHiearchy(CompareCooldowns);
     }
 
@@ -82,7 +89,8 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
 
     public void AddWord(SpellWord word, bool sort = false)
     {
-        if (IsOnCooldown(word))
+        // If cooldown for this word already exists, return
+        if (TryGetCooldown(word, out _))
             return;
         var cd = Instantiate(cooldownPrefab, cooldownTr).GetComponent<SpellCooldown>();
         cd.SpellText = word.internalName.ToUpper();

@@ -15,13 +15,20 @@ public class PlayerEquipment : MonoBehaviour
 
     private void Awake()
     {
-        Initialize();
+        UnlockDebugWords();
+        EquipDebugWords();
     }
 
     [Conditional("DEBUG")]
-    private void Initialize()
+    private void UnlockDebugWords()
     {
-        UnlockWords(debugWords, true);
+        UnlockWords(debugWords);
+    }
+
+    [Conditional("DEBUG")]
+    private void EquipDebugWords()
+    {
+        EquipWords(debugWords);
     }
 
     public void UnlockWord(SpellWord word, bool equip = false)
@@ -63,5 +70,6 @@ public class PlayerEquipment : MonoBehaviour
     public void ClearEquipment()
     {
         equippedWords.Clear();
+        EquipDebugWords();
     }
 }

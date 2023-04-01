@@ -102,8 +102,9 @@ public abstract class GraphParser : MonoBehaviour
                 var equipment = playerData.equipment;
                 if (cooldowns != null && equipment != null)
                 {
-                    cooldowns.ClearWords();
                     equipment.ClearEquipment();
+                    cooldowns.ClearWords();
+                    cooldowns.InitializeEquippedWords();
                 }
             }
             return true;
