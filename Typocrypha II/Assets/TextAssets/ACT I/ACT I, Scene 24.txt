@@ -56,10 +56,16 @@ Narrator: The hospital room door slams open.
 Adelai: AYIN!
 
 
-Ayin(surprised): Adela-!?
+Ayin(surprised): Adela-
 
 
 Narrator: The wind is knocked out of you as Adelai crashes into you with a hug.
+
+
+Ayin(surprisedbad): OOF!
+
+
+Adelai: Ayin...
 
 
 Narrator: You hear soft, muffled sobs, but Adelai doesn’t say anything.
@@ -113,6 +119,7 @@ Adelai(caring): Well, why don’t you ask them yourself?
 Adelai(default): In fact, I think your nurse should be here any second...
 
 
+>movechar,Adelai,left,bottom
 >addchar,Illyia,0,0,right,laughing
 
 
@@ -128,8 +135,18 @@ Narrator: You shudder at the thought of Illyia being your nurse.
 Ayin(surprisedbad): I-Illyia!?
 
 
->removechar,Adelai
->addchar,Adelai,0,0,left
+Illyia: Good to see you up and at ‘em Leader!
+
+
+Illyia(normal): For a while it looked like you might not get up!
+
+
+Ayin(ohfuck): (What.)
+
+
+Narrator: You hear rushed footsteps, as another familiar face arrives.
+
+
 >addchar,Dahlia,0,0,right,perish
 
 
@@ -145,16 +162,10 @@ Dahlia(eyeroll): Sigh, anyways...
 Dahlia(happy): Ayin! How are you feeling?
 
 
-Ayin(nervoussmile): Dahlia! I-I’m OK, I think?
+Ayin(nervoussmile): Dahlia! I-I’m OK.
 
 
-Dahlia(laughing): Good! For a while we weren’t sure if you were going to get up at all!
-
-
-Ayin(ohfuck): (What.)
-
-
-Ayin(sheepish): Uh, w-well I’m just glad to see you’re all OK.
+Ayin(happy): It’s good to see you two!
 
 
 Illyia(laughing): Ha! It’ll take more than that to take me out!
@@ -172,7 +183,7 @@ Illyia: I don’t want to hear that from the person who reset their broken leg o
 Narrator: You watch Illyia and Dahlia bicker for a moment.
 
 
-Narrator: Jeez, when did they get so chummy?
+Narrator: When did they get so chummy?
 
 
 >setexpr,Dahlia,normal
@@ -190,7 +201,7 @@ Adelai(serious): Illyia Xiong.
 Narrator: The two stare each other down for a moment, seeming like they could break out into a duel at any moment.
 
 
-Narrator: But instead, Illyia turns the other cheek.
+Narrator: But instead...
 
 
 Illyia(ashamed): ... thanks, for the, uh, backup n’ all...
@@ -229,7 +240,7 @@ Dahlia(normal): You two worked together?
 Adelai(normal): Same unit, actually, under General Kaia.
 
 
-Adelai(interested): I shouldn’t say too much, but there was a... little accident, and she got transferred to her sister Iris’s unit.
+Adelai(interested): There was a... little accident, and she got transferred to a different unit.
 
 
 Adelai(teasing): She’s still as prickly as always but, I don’t know, she’s softened a little bit.
@@ -262,7 +273,7 @@ Dahlia(happy): Aah, so that was the friend you were talking about.
 Dahlia: I saw her peeking into your room from time to time.
 
 
-Dahlia: I think she was really worried.
+Dahlia(normal): I think she was really worried.
 
 
 Ayin(embarrassed): Haha, is that so...
@@ -280,7 +291,7 @@ Narrator: Dahlia pauses
 Dahlia: He’s OK and conscious now but, I think he’s still pretty shaken.
 
 
-Dahlia(normal): Taking a look at your vitals - everything seems OK.
+Dahlia(normal): Taking a look at your vitals, everything seems OK.
 
 
 Dahlia(happy): Once you rest up a bit, why don’t you go say hi to him?
@@ -293,7 +304,7 @@ Ayin(serious): Yeah...
 
 
 >removechar,Ayin
->removechar,Dahlia
+>removechar,Dahlia[b]
 
 
 +an
@@ -302,12 +313,13 @@ Ayin(serious): Yeah...
 >stopbgm
 
 
-Narrator[middle](center): The following day...
+Narrator[middle](center): The following day…
 
 
-+vn
++vnplus
 
 
+>clear
 >playbgm,BGMSuave
 >addchar,Ayin,0,0,left,serious
 
@@ -318,10 +330,10 @@ Narrator: You arrive at Esaias’s room - near identical to yours.
 >addchar,Esaias,0,0,right,lookingright
 
 
-Narrator: His leg is propped up in a cast, but otherwise seems OK physically.
+Narrator: You see Esaias lying in bed - his leg is propped up in a cast.
 
 
-Narrator: Esaias sees you come in, and immediately averts his gaze.
+Narrator: Esaias sees you come in, but immediately averts his gaze.
 
 
 Ayin(sheepish): H-Hey Esaias. How are you doing?
@@ -489,3 +501,4 @@ Narrator[middle](center): First Barrier - Destroyed
 
 
 [a]need hospital bg
+[b]would be nice to have quick transition (like when exiting scene). Right now have to remove each char individually
