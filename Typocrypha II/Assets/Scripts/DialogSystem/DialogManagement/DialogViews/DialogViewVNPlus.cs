@@ -191,7 +191,7 @@ public class DialogViewVNPlus : DialogView
             AdjustCharactersPreJoinInstant(container, characterList);
         }
         var newCharacter = InstantiateCharacter(prefab, container, characterList, pool);
-        ProcessNewCharacter(newCharacter, args);
+        ProcessNewCharacter(newCharacter, args, true);
     }
 
     private void AdjustCharactersPreJoinInstant(RectTransform container, List<VNPlusCharacter> characterList)
@@ -205,10 +205,17 @@ public class DialogViewVNPlus : DialogView
         }
     }
 
-    private void ProcessNewCharacter(VNPlusCharacter newCharacter, AddCharacterArgs args)
+    private void ProcessNewCharacter(VNPlusCharacter newCharacter, AddCharacterArgs args, bool highlight)
     {
         var data = args.CharacterData;
-        HighlightCharacter(data);
+        if (highlight)
+        {
+            HighlightCharacter(data);
+        }
+        else
+        {
+            newCharacter.Highlighted = false;
+        }
         newCharacter.Data = data;
         newCharacter.NameText = data.mainAlias;
         if (!string.IsNullOrEmpty(args.InitialPose))
@@ -231,7 +238,7 @@ public class DialogViewVNPlus : DialogView
             yield return StartCoroutine(AdjustCharacterListPreJoinCR(container, characterList, top, completePrevious));
         }
         var newCharacter = InstantiateCharacter(prefab, container, characterList, pool, top);
-        ProcessNewCharacter(newCharacter, args);
+        ProcessNewCharacter(newCharacter, args, top);
         yield return newCharacter.PlayJoinTween().WaitForCompletion();
         readyToContinue = true;
     }
