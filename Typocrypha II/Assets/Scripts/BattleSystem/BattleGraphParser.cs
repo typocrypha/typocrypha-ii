@@ -19,6 +19,12 @@ public class BattleGraphParser : GraphParser
     {
         currNode = Next();
         if (currNode == null) return null;
+        // If shared node, go to next
+        if (ProcessSharedNode(currNode))
+        {
+            return NextWave();
+        }
+        // Battle graph-specific functionality
         if (currNode is GameflowEndNode)
         {
             // Transition to next scene regardless of which end node is used
@@ -39,53 +45,6 @@ public class BattleGraphParser : GraphParser
                 reinforcementPrefabs = new List<GameObject>(node.reinforcements),
             };
         }
-        else if (currNode is SetVariableNode)
-        {
-            var node = currNode as SetVariableNode;
-            PlayerDataManager.instance.Set(node.variableName, node.value);
-        }
-        else if (currNode is SetBackgroundNode)
-        {
-            var node = currNode as SetBackgroundNode;
-            if (node.bgType == SetBackgroundNode.BgType.Sprite)
-            {
-                BackgroundManager.instance.SetBackground(node.bgSprite);
-            }
-            else
-            {
-                BackgroundManager.instance.SetBackground(node.bgPrefab);
-            }
-        }
-        else if (currNode is SpawnPrefabNode)
-        {
-            var node = currNode as SpawnPrefabNode;
-            var go = Instantiate(node.prefab);
-            go.transform.position = node.pos;
-        }
-        else if (currNode is AudioControlNode)
-        {
-            if (currNode is PlayBgm)
-            {
-                var node = currNode as PlayBgm;
-                AudioManager.instance.PlayBGM(node.bgm, node.fadeCurve);
-            }
-            else if (currNode is StopBgm)
-            {
-                var node = currNode as StopBgm;
-                AudioManager.instance.StopBGM(node.fadeCurve);
-            }
-            else if (currNode is PauseBgm)
-            {
-                var node = currNode as PauseBgm;
-                AudioManager.instance.PauseBGM(node.pause);
-            }
-            else if (currNode is PlaySfx)
-            {
-                var node = currNode as PlaySfx;
-                AudioManager.instance.PlaySFX(node.sfx);
-            }
-        }
-        //Process other node types
         //Recursively move to next
         return NextWave();
     }

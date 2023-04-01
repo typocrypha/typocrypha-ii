@@ -22,295 +22,217 @@ public class DialogGraphParser : GraphParser
     {
         if (next) currNode = Next();
         if (currNode == null) return null;
-        if (currNode is SubCanvasNode)
+        // Use shared functionality if currNode is a shared node
+        bool isSharedNode = ProcessSharedNode(currNode);
+        // If not a shared node, use dialog functionality
+        if (!isSharedNode)
         {
-            var node = currNode as SubCanvasNode;
-            recStack.Push(Next()); // Remember exit node.
-            currNode = (node.subCanvas as DialogCanvas).GetStartNode();
-            return NextDialog(true);
-        }
-        if (currNode is GameflowEndNode)
-        {
-            if (recStack.Count != 0)
+            if (currNode is SubCanvasNode)
             {
-                currNode = recStack.Pop();
-                return NextDialog(false);
+                var node = currNode as SubCanvasNode;
+                recStack.Push(Next()); // Remember exit node.
+                currNode = (node.subCanvas as DialogCanvas).GetStartNode();
+                return NextDialog(true);
             }
-            else if (currNode is EndAndHide)
-            {         
-                DialogCharacterManager.instance?.RemoveAllCharacters();
-                DialogManager.instance.Hide(true, DialogManager.instance.CleanUp);
-                return null;
-            }
-            else if (currNode is EndAndGoto) // Immediately start new dialog graph.
+            if (currNode is GameflowEndNode)
             {
-                var node = currNode as EndAndGoto;
-                Graph = node.nextDialog;
-                Init();
-                return NextDialog();
-            }
-            else if (currNode is EndAndTransition) // Transitions scenes.
-            {
-                DialogManager.instance.Hide(true, TransitionManager.instance.TransitionToNextScene);
-                return null;
-            }
-        }
-        if (currNode is DialogNodeInput) // If input, set up input manager
-        {
-            var iNode = currNode as DialogNodeInput;
-            DialogInputManager.instance.EnableInput(new DialogInputItem(iNode.variableName));
-        }
-        if (currNode is DialogNode)
-        {
-            var cNode = currNode as DialogNode;
-            List<CharacterData> cds = new List<CharacterData>();
-            var charNames = cNode.characterName.Split(new char[] { '|' }, new char[] { '\\' });
-            List<AudioClip> voice = new List<AudioClip>();
-            foreach (var charName in charNames)
-            {
-                // Get speaking SFX if valid name.
-                var cd = DialogCharacterManager.instance.CharacterDataByName(charName.Trim());
-                cds.Add(cd);
-                if (cd != null)
+                if (recStack.Count != 0)
                 {
-                    voice.Add(cd.talk_sfx);
+                    currNode = recStack.Pop();
+                    return NextDialog(false);
                 }
-            } 
-            // Set TIPS search.
-            TIPSManager.instance.CurrSearchable = cNode.tipsData;
-            // Get proper display name.
-            string displayName = (cNode.displayName.Trim().Length == 0)
-                               ? cNode.characterName 
-                               : cNode.displayName;
-            // Add to history.
-            DialogHistory.instance.AddHistory(displayName, cNode.text);
-            if (currNode is DialogNodeVN)
-            {
-                var dNode = currNode as DialogNodeVN;
-                // Highlight speaking characters.
-                DialogCharacterManager.instance.HighlightAllCharacters(false);
-                for (int i = 0; i < cds.Count; i++)
-                    if (cds[i] != null) DialogCharacterManager.instance.HighlightCharacter(cds[i], true);
-                return new DialogItemVN(dNode.text, voice, displayName, dNode.mcSprite, dNode.codecSprite);
-            }
-            else if(currNode is DialogNodeVNPlus)
-            {
-                var dNode = currNode as DialogNodeVNPlus;
-                return new DialogItemVNPlus(dNode.text, voice, cds, charNames);
-            }
-            else if(currNode is DialogNodeChat)
-            {
-                var dNode = currNode as DialogNodeChat;
-                #region Determine Icon Side
-                IconSide iconSide = IconSide.NONE;
-                if (dNode.leftIcon != null)
-                    iconSide = dNode.rightIcon != null ? IconSide.BOTH : IconSide.LEFT;
-                else if (dNode.rightIcon != null)
-                    iconSide = IconSide.RIGHT;
-                #endregion
-                return new DialogItemChat(dNode.text, voice, displayName, iconSide, dNode.leftIcon, dNode.rightIcon);
-            }
-            else if (currNode is DialogNodeAN)
-            {
-                var dNode = currNode as DialogNodeAN;
-                return new DialogItemAN(dNode.text, voice, dNode.alignmentOptions, dNode.layoutSetting);
-            }
-            else if (currNode is DialogNodeBubble)
-            {
-                var dNode = currNode as DialogNodeBubble;
-                var ditem = new DialogItemBubble(dNode.text, voice, cds, dNode.gridPosition, dNode.absolutePosition);
-                return ditem;
-            }    
-        }
-        else if (currNode is SetDialogViewNode)
-        {
-            var dialogViewNode = currNode as SetDialogViewNode;
-            StartCoroutine(WaitOnRoutine(DialogManager.instance.SetView(dialogViewNode.ViewType)));
-            return null;
-        }
-        else if (currNode is SetVariableNode)
-        {
-            var node = currNode as SetVariableNode;
-            PlayerDataManager.instance.Set(node.variableName, node.value);
-        }
-        else if (currNode is CharacterControlNode)
-        {
-            var currView = DialogManager.instance.DialogView;
-            if (currNode is AddCharacter addNode)
-            {
-                if(currView.AddCharacter(new DialogView.AddCharacterArgs(addNode.characterData, addNode.column, addNode.targetPos, addNode.initialPose, addNode.initialExpr)))
+                else if (currNode is EndAndHide)
                 {
-                    StartCoroutine(WaitOnFunc(currView.IsReadyToContinue));
+                    DialogCharacterManager.instance?.RemoveAllCharacters();
+                    DialogManager.instance.Hide(true, DialogManager.instance.CleanUp);
+                    return null;
+                }
+                else if (currNode is EndAndGoto) // Immediately start new dialog graph.
+                {
+                    var node = currNode as EndAndGoto;
+                    Graph = node.nextDialog;
+                    Init();
+                    return NextDialog();
+                }
+                else if (currNode is EndAndTransition) // Transitions scenes.
+                {
+                    DialogManager.instance.Hide(true, TransitionManager.instance.TransitionToNextScene);
                     return null;
                 }
             }
-            else if(currNode is RemoveCharacter removeNode)
+            if (currNode is DialogNodeInput) // If input, set up input manager
             {
-                if (currView.RemoveCharacter(removeNode.characterData))
+                var iNode = currNode as DialogNodeInput;
+                DialogInputManager.instance.EnableInput(new DialogInputItem(iNode.variableName));
+            }
+            if (currNode is DialogNode)
+            {
+                var cNode = currNode as DialogNode;
+                List<CharacterData> cds = new List<CharacterData>();
+                var charNames = cNode.characterName.Split(new char[] { '|' }, new char[] { '\\' });
+                List<AudioClip> voice = new List<AudioClip>();
+                foreach (var charName in charNames)
                 {
-                    StartCoroutine(WaitOnFunc(currView.IsReadyToContinue));
-                    return null;
-                }
-            }
-            else if (currNode is SetPose setPoseNode)
-            {
-                currView.SetPose(setPoseNode.characterData, setPoseNode.pose);
-            }
-            else if (currNode is SetExpression setExpressionNode)
-            {
-                currView.SetExpression(setExpressionNode.characterData, setExpressionNode.expr);
-            }
-            else if (currNode is MoveCharacter moveNode)
-            {
-                if(currView is DialogViewVNPlus vnPlusView)
-                {
-                    var moveRoutine = vnPlusView.MoveCharacter(moveNode.characterData, moveNode.targetColumn, moveNode.top);
-                    if(moveRoutine != null)
+                    // Get speaking SFX if valid name.
+                    var cd = DialogCharacterManager.instance.CharacterDataByName(charName.Trim());
+                    cds.Add(cd);
+                    if (cd != null)
                     {
-                        StartCoroutine(WaitOnRoutine(moveRoutine));
+                        voice.Add(cd.talk_sfx);
+                    }
+                }
+                // Set TIPS search.
+                TIPSManager.instance.CurrSearchable = cNode.tipsData;
+                // Get proper display name.
+                string displayName = (cNode.displayName.Trim().Length == 0)
+                                   ? cNode.characterName
+                                   : cNode.displayName;
+                // Add to history.
+                DialogHistory.instance.AddHistory(displayName, cNode.text);
+                if (currNode is DialogNodeVN)
+                {
+                    var dNode = currNode as DialogNodeVN;
+                    // Highlight speaking characters.
+                    DialogCharacterManager.instance.HighlightAllCharacters(false);
+                    for (int i = 0; i < cds.Count; i++)
+                        if (cds[i] != null) DialogCharacterManager.instance.HighlightCharacter(cds[i], true);
+                    return new DialogItemVN(dNode.text, voice, displayName, dNode.mcSprite, dNode.codecSprite);
+                }
+                else if (currNode is DialogNodeVNPlus)
+                {
+                    var dNode = currNode as DialogNodeVNPlus;
+                    return new DialogItemVNPlus(dNode.text, voice, cds, charNames);
+                }
+                else if (currNode is DialogNodeChat)
+                {
+                    var dNode = currNode as DialogNodeChat;
+                    #region Determine Icon Side
+                    IconSide iconSide = IconSide.NONE;
+                    if (dNode.leftIcon != null)
+                        iconSide = dNode.rightIcon != null ? IconSide.BOTH : IconSide.LEFT;
+                    else if (dNode.rightIcon != null)
+                        iconSide = IconSide.RIGHT;
+                    #endregion
+                    return new DialogItemChat(dNode.text, voice, displayName, iconSide, dNode.leftIcon, dNode.rightIcon);
+                }
+                else if (currNode is DialogNodeAN)
+                {
+                    var dNode = currNode as DialogNodeAN;
+                    return new DialogItemAN(dNode.text, voice, dNode.alignmentOptions, dNode.layoutSetting);
+                }
+                else if (currNode is DialogNodeBubble)
+                {
+                    var dNode = currNode as DialogNodeBubble;
+                    var ditem = new DialogItemBubble(dNode.text, voice, cds, dNode.gridPosition, dNode.absolutePosition);
+                    return ditem;
+                }
+            }
+            else if (currNode is SetDialogViewNode)
+            {
+                var dialogViewNode = currNode as SetDialogViewNode;
+                StartCoroutine(WaitOnRoutine(DialogManager.instance.SetView(dialogViewNode.ViewType)));
+                return null;
+            }
+            else if (currNode is CharacterControlNode)
+            {
+                var currView = DialogManager.instance.DialogView;
+                if (currNode is AddCharacter addNode)
+                {
+                    if (currView.AddCharacter(new DialogView.AddCharacterArgs(addNode.characterData, addNode.column, addNode.targetPos, addNode.initialPose, addNode.initialExpr)))
+                    {
+                        StartCoroutine(WaitOnFunc(currView.IsReadyToContinue));
                         return null;
                     }
                 }
-            }
-            else if (currNode is SetBCH) // Deprecated
-            {
-                var cNode = currNode as SetBCH;
-                DialogCharacterManager.instance.ChangeBCH(cNode.characterData, cNode.body, cNode.clothes, cNode.hair);
-
-            }
-            else if (currNode is AnimateCharacter) // Deprecated
-            {
-                var cNode = currNode as AnimateCharacter;
-                DialogCharacterManager.instance.AnimateCharacter(cNode.characterData, cNode.clip);
-            }
-        }
-        else if (currNode is SetBackgroundNode)
-        {
-            var node = currNode as SetBackgroundNode;
-            if (node.bgType == SetBackgroundNode.BgType.Sprite)
-            {
-                BackgroundManager.instance.SetBackground(node.bgSprite);
-            }
-            else
-            {
-                BackgroundManager.instance.SetBackground(node.bgPrefab);
-            }
-        }
-        else if (currNode is SpawnPrefabNode)
-        {
-            var node = currNode as SpawnPrefabNode;
-            var go = Instantiate(node.prefab);
-            go.transform.position = node.pos;
-        }
-        else if (currNode is AudioControlNode)
-        {
-            if (currNode is PlayBgm)
-            {
-                var node = currNode as PlayBgm;
-                AudioManager.instance?.PlayBGM(node.bgm, node.fadeCurve);
-            }
-            else if (currNode is StopBgm)
-            {
-                var node = currNode as StopBgm;
-                AudioManager.instance?.StopBGM(node.fadeCurve);
-            }
-            else if (currNode is PauseBgm)
-            {
-                var node = currNode as PauseBgm;
-                AudioManager.instance?.PauseBGM(node.pause);
-            }
-            else if (currNode is PlaySfx)
-            {
-                var node = currNode as PlaySfx;
-                AudioManager.instance?.PlaySFX(node.sfx);
-            }
-        }
-        else if (currNode is ClampDialogUINode)
-        {
-            var node = currNode as ClampDialogUINode;
-            if (node.inOut)
-                DialogManager.instance.GetComponent<Animator>().SetTrigger("ClampOut");
-            else
-                DialogManager.instance.GetComponent<Animator>().SetTrigger("ClampIn");
-        }
-        else if (currNode is FadeNode)
-        {
-            var node = currNode as FadeNode;
-            float fadeStart = node.fadeType == FadeNode.FadeType.Fade_In ? 1f : 0f;
-            float fadeEnd = 1f - fadeStart;
-            StartCoroutine(FadeNode.FadeScreenOverTime(node.fadeTime, fadeStart, fadeEnd, node.fadeColor));
-        }
-        else if (currNode is SetLocationTextNode setLocationTextNode)
-        {
-            DialogManager.instance.DialogView.SetLocationText(setLocationTextNode.text);
-        }
-        else if (currNode is SetDateTimeTextNode setDateTimeTextNode)
-        {
-            DialogManager.instance.DialogView.SetDateTimeText(setDateTimeTextNode.text);
-        }
-        else if (currNode is ClearNode clearNode)
-        {
-            var clearRoutine = DialogManager.instance.DialogView.Clear();
-            if(clearRoutine != null)
-            {
-                StartCoroutine(WaitOnRoutine(clearRoutine));
-                return null;
-            }
-        }
-        else if (currNode is CastSpellNode castNode)
-        {
-            var spellManager = SpellManager.instance;
-            var battleField = Battlefield.instance;
-            if(spellManager != null && battleField != null)
-            {
-                var caster = battleField.GetCaster(new Battlefield.Position(castNode.casterPos));
-                if (caster != null)
+                else if (currNode is RemoveCharacter removeNode)
                 {
-                    var msgOverride = string.IsNullOrEmpty(castNode.messageOverride) ? null : castNode.messageOverride;
-                    StartCoroutine(WaitOnRoutine(spellManager.Cast(castNode.GetSpell(), caster, new Battlefield.Position(castNode.targetPos), msgOverride)));
-                    return null;
-                }
-                else
-                {
-                    Debug.LogError($"Caster found at (row {castNode.casterPos.y}, col {castNode.casterPos.x}). Cast will be skipped");
-                }
-            }
-        }
-        else if (currNode is ClearEquippedSpellsNode)
-        {
-            var playerData = PlayerDataManager.instance;
-            if(playerData != null)
-            {
-                var cooldowns = SpellCooldownManager.instance;
-                var equipment = playerData.equipment;
-                if (cooldowns != null && equipment != null)
-                {
-                    cooldowns.ClearWords();
-                    equipment.ClearEquipment();
-                }
-            }
-        }
-        else if(currNode is AddEquippedSpellsNode addSpellsNode)
-        {
-            var playerData = PlayerDataManager.instance;
-            if (playerData != null)
-            {
-                var cooldowns = SpellCooldownManager.instance;
-                var equipment = playerData.equipment;
-                if (cooldowns != null && equipment != null)
-                {
-                    void AddWord(SpellWord word)
+                    if (currView.RemoveCharacter(removeNode.characterData))
                     {
-                        if(word != null)
+                        StartCoroutine(WaitOnFunc(currView.IsReadyToContinue));
+                        return null;
+                    }
+                }
+                else if (currNode is SetPose setPoseNode)
+                {
+                    currView.SetPose(setPoseNode.characterData, setPoseNode.pose);
+                }
+                else if (currNode is SetExpression setExpressionNode)
+                {
+                    currView.SetExpression(setExpressionNode.characterData, setExpressionNode.expr);
+                }
+                else if (currNode is MoveCharacter moveNode)
+                {
+                    if (currView is DialogViewVNPlus vnPlusView)
+                    {
+                        var moveRoutine = vnPlusView.MoveCharacter(moveNode.characterData, moveNode.targetColumn, moveNode.top);
+                        if (moveRoutine != null)
                         {
-                            cooldowns.AddWord(word);
-                            equipment.EquipWord(word);
+                            StartCoroutine(WaitOnRoutine(moveRoutine));
+                            return null;
                         }
                     }
-                    AddWord(addSpellsNode.word1);
-                    AddWord(addSpellsNode.word2);
-                    AddWord(addSpellsNode.word3);
-                    cooldowns.SortCooldowns();
+                }
+                else if (currNode is SetBCH) // Deprecated
+                {
+                    var cNode = currNode as SetBCH;
+                    DialogCharacterManager.instance.ChangeBCH(cNode.characterData, cNode.body, cNode.clothes, cNode.hair);
+
+                }
+                else if (currNode is AnimateCharacter) // Deprecated
+                {
+                    var cNode = currNode as AnimateCharacter;
+                    DialogCharacterManager.instance.AnimateCharacter(cNode.characterData, cNode.clip);
+                }
+            }
+            else if (currNode is ClampDialogUINode)
+            {
+                var node = currNode as ClampDialogUINode;
+                if (node.inOut)
+                    DialogManager.instance.GetComponent<Animator>().SetTrigger("ClampOut");
+                else
+                    DialogManager.instance.GetComponent<Animator>().SetTrigger("ClampIn");
+            }
+            else if (currNode is FadeNode)
+            {
+                var node = currNode as FadeNode;
+                float fadeStart = node.fadeType == FadeNode.FadeType.Fade_In ? 1f : 0f;
+                float fadeEnd = 1f - fadeStart;
+                StartCoroutine(FadeNode.FadeScreenOverTime(node.fadeTime, fadeStart, fadeEnd, node.fadeColor));
+            }
+            else if (currNode is SetLocationTextNode setLocationTextNode)
+            {
+                DialogManager.instance.DialogView.SetLocationText(setLocationTextNode.text);
+            }
+            else if (currNode is SetDateTimeTextNode setDateTimeTextNode)
+            {
+                DialogManager.instance.DialogView.SetDateTimeText(setDateTimeTextNode.text);
+            }
+            else if (currNode is ClearNode clearNode)
+            {
+                var clearRoutine = DialogManager.instance.DialogView.Clear();
+                if (clearRoutine != null)
+                {
+                    StartCoroutine(WaitOnRoutine(clearRoutine));
+                    return null;
+                }
+            }
+            else if (currNode is CastSpellNode castNode)
+            {
+                var spellManager = SpellManager.instance;
+                var battleField = Battlefield.instance;
+                if (spellManager != null && battleField != null)
+                {
+                    var caster = battleField.GetCaster(new Battlefield.Position(castNode.casterPos));
+                    if (caster != null)
+                    {
+                        var msgOverride = string.IsNullOrEmpty(castNode.messageOverride) ? null : castNode.messageOverride;
+                        StartCoroutine(WaitOnRoutine(spellManager.Cast(castNode.GetSpell(), caster, new Battlefield.Position(castNode.targetPos), msgOverride)));
+                        return null;
+                    }
+                    else
+                    {
+                        Debug.LogError($"Caster found at (row {castNode.casterPos.y}, col {castNode.casterPos.x}). Cast will be skipped");
+                    }
                 }
             }
         }
