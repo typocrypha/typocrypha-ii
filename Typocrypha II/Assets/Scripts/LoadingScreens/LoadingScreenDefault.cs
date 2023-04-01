@@ -20,7 +20,7 @@ public class LoadingScreenDefault : LoadingScreen
     {
         set
         {
-            loadingPercent.text = (value * 100).ToString() + "%";
+            loadingPercent.text = Mathf.RoundToInt(value * 100).ToString() + "%";
         }
     }
 
