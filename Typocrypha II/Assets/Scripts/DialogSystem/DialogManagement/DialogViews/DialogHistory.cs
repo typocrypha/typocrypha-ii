@@ -89,12 +89,11 @@ public class DialogHistory : MonoBehaviour, IPausable
 
     private void Show()
     {
-        IsShowing = true;
         // Pause all then unpause self
         PauseManager.instance.PauseAll(true);
         ph.Pause = false;
-        Index = 0;
-        SetHistoryDialogs(Index);
+        SetHistoryDialogs(Index = 0);
+        IsShowing = true;
     }
 
     private void Hide()
