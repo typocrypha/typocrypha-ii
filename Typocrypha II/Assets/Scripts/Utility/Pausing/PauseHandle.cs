@@ -61,13 +61,20 @@ public class PauseHandle
     public PauseHandle(OnPauseDel opd)
     {
         onPause = opd;
-        PauseManager.instance?.allPausable.Add(this);
+        if(PauseManager.instance != null)
+        {
+            PauseManager.instance.AllPausable.Add(this);
+        }
+
     }
 
     // Remove self from list of all pause handles on destruction.
     ~PauseHandle()
     {
-        PauseManager.instance?.allPausable.Remove(this);
+        if (PauseManager.instance != null)
+        {
+            PauseManager.instance.AllPausable.Remove(this);
+        }
         FreeFromParent();
     }
 }

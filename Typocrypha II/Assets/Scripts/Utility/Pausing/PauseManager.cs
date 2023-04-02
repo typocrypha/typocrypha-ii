@@ -9,10 +9,10 @@ using UnityEngine;
 public class PauseManager : MonoBehaviour
 {
     public static PauseManager instance = null;
-    public GameObject pauseMenu; // Pause menu Canvas.
+    [SerializeField] private GameObject pauseMenu; // Pause menu Canvas.
     bool pause = false; // Global pause state.
 
-    public List<PauseHandle> allPausable; // All pausable scripts' pause handles.
+    public List<PauseHandle> AllPausable { get; } = new List<PauseHandle>(); // All pausable scripts' pause handles.
 
     void Awake()
     {
@@ -25,9 +25,6 @@ public class PauseManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        DontDestroyOnLoad(gameObject);
-
-        allPausable = new List<PauseHandle>();
     }
 
     void Update()
@@ -44,7 +41,7 @@ public class PauseManager : MonoBehaviour
     public void PauseAll(bool value)
     {
         List<PauseHandle> destroyed = new List<PauseHandle>(); // Destroyed pausables.
-        foreach(var ph in allPausable)
+        foreach(var ph in AllPausable)
         {
             try
             {
@@ -55,7 +52,7 @@ public class PauseManager : MonoBehaviour
                 destroyed.Add(ph);
             }
         }
-        foreach(var ph in destroyed) allPausable.Remove(ph);
+        foreach(var ph in destroyed) AllPausable.Remove(ph);
     }
 
     // Open/Close pause menu
