@@ -7,16 +7,16 @@
 
 
 
->addchar,Esaias,0,0,right,normal
->addchar,Ayin,0,0,left,nervous
 >addchar,Dahlia,0,0,left,stressed
+>addchar,Ayin,0,0,left,nervous
 >addchar,Illyia,0,0,right,serious
+>addchar,Esaias,0,0,right,normal
 
 
 Esaias: We are not too far now. We should arrive at the First Barrier in-
 
 
-Dahlia: Nngh-!
+Dahlia: Nngh!
 
 
 Ayin(surprisedbad): Dahlia! A-are you OK?
@@ -31,7 +31,7 @@ Dahlia(concerned): I’ll be fine- Ow...
 Ayin(nervoussmile): Uh, w-we should rest, I think...
 
 
-Esaias(normal): We are making good pace. 
+Esaias(normal): ... We are making good pace. 
 
 
 Esaias(lookingright): I do not think a short break will set us back.
@@ -41,6 +41,9 @@ Illyia(ashamed): ...
 
 
 Dahlia(concerned): Well... Fine.
+
+
+>setexpr,Ayin,serious
 
 
 Narrator: You all huddle around the lantern in a small sideroom.
@@ -55,7 +58,7 @@ Narrator: In the distance, you think you hear sounds of battle... Or perhaps, it
 Narrator: So close to your goal, yet already so beaten, you wonder if you’ll be able to complete your mission.
 
 
-Narrator: ... And it was at that moment-
+Narrator: ... And it was at that moment...
 
 
 >addchar,Clarke,0,0,right
@@ -80,16 +83,37 @@ Narrator: Static interference only adds to the foreboding atmosphere.
 >playbgm,BGMMilitary
 
 
-Clarke (Kaia): This ** general Kaia.
+Clarke (Kaia): This is general Kaia with the main Attack Teams.
 
 
-Clarke (Kaia): We have met ******** resistance **** many casualties.
+Clarke (Kaia): We have met significant resistance-
 
 
-Clarke (Kaia): To ensure ****** enacting operation WATER DAMAGE ****.
+>stopbgm[a]
 
 
-Clarke (Kaia): May ******** Agartha ***.
+Narrator: A large explosion in the background of the stream cuts the connection.
+
+
+Narrator: ...
+
+
+Narrator: The connection is restored after a few tense seconds.
+
+
+>playbgm,BGMMilitary
+
+
+Clarke (Kaia): ... The Attack Teams have suffered unexpected casualties en route to the First Barrier.
+
+
+Clarke (Kaia): Once we break through to the First Barrier, we will require all teams to assist holding position while we take down the barrier.
+
+
+Clarke (Kaia): As such, all agents are to enact operation WATER DAMAGE immediately.
+
+
+Clarke (Kaia): ...
 
 
 Clarke: END OF MESSAGE.
@@ -107,25 +131,22 @@ Narrator: The mission briefing simultaneously pops up on everyone’s Typocrypha
 Narrator: Operation codename WATER DAMAGE - It’s a very simple order, really.
 
 
-Narrator: We are to go all the way to the First Barrier and hold out against any and all demons to make a path for the assault teams.
+Narrator: We are to go all the way to the First Barrier and hold out against any and all demons to make a path for the Attack Teams.
 
 
-Narrator: A virtual direct assault on the First Barrier.
+Illyia(serious): Shit...
 
 
-Narrator: ... but without the backup.
+Esaias(anxious): This- There must be a mistake.
 
 
-Esaias(anxious): This... There must be a mistake.
+Ayin(surprisedbad): W-wait, what does this mean?
 
 
-Illyia(serious): ... Hmph, classic AEIOU executive bullshit if you ask me.
+Illyia(pissed): Don’t you get it, “Leader”? It means we’re screwed!
 
 
-Illyia: Doesn’t matter to them if they end up creating more “noble sacrifices” as long as the Barrier is taken down.
-
-
-Dahlia(serious): What are you complaining about? I thought you wanted a fight...
+Dahlia(serious): What are you complaining about? I thought you wanted a fight.
 
 
 Illyia(pissed): If we just go marching up onto the First Barrier with no backup, it won’t be a fight!
@@ -137,7 +158,7 @@ Illyia(pissed): If we just go marching up onto the First Barrier with no backup,
 Illyia(ashamed): It’ll be a massacre.
 
 
-Esaias(lookingleft): ... I...
+Esaias(lookingleft): ...I...
 
 
 >playbgm,BGMTension
@@ -188,7 +209,7 @@ Ayin(surprisedbad): I-I have something to say!!!
 Narrator: Everyone stops to look at you.
 
 
-Ayin(uncomfortable): ... Um...
+Ayin(uncomfortable): ...Um...
 
 
 Narrator: Panic starts to set in, but you remember what to do.
@@ -200,13 +221,10 @@ Narrator: Panic starts to set in, but you remember what to do.
 Narrator: “Deep breaths, Ayin.”
 
 
-Ayin(serious): I think... We should go to the First Barrier.
+Ayin(serious): I think... We should follow the mission and go to the First Barrier.
 
 
-Illyia(serious): ... What?
-
-
-Ayin: I know that I’m not strong like Illyia, or smart like Esaias, or can heal like Dahlia.
+Ayin: I know that I’m not strong like all of you.
 
 
 Ayin: But Adelai...
@@ -215,13 +233,13 @@ Ayin: But Adelai...
 >setexpr,Illyia,ashamed
 
 
-Ayin(sheepish): ... Ah- Adelai, s-she’s my friend.
+Ayin(sheepish): ...Ah- Adelai, s-she’s my friend.
 
 
 Ayin(normal): Since we were kids, she’s always helped me out, helped protect me.
 
 
-Ayin: And now she’s fighting on the front lines with the assault teams, to help protect all of Agartha.
+Ayin: And now she’s fighting on the front lines with the Attack Teams, to help protect all of Agartha.
 
 
 Dahlia(concerned): Ayin...
@@ -230,7 +248,7 @@ Dahlia(concerned): Ayin...
 Ayin(serious): I want to be the one to help her this time.
 
 
-Ayin(nervoussmile): When she first told me she was volunteering to join the assault teams, I didn’t have the courage to join her.
+Ayin(nervoussmile): When she first told me she was joining the Attack Teams, I didn’t have the courage to join her.
 
 
 Ayin: I just let myself get drafted into recon, since it was safer.
@@ -260,10 +278,10 @@ Narrator: Still a coward as always, I see.
 Narrator: But thankfully for you, something magical is about to happen.
 
 
-Dahlia(serious): ... I’m in.
+Dahlia(serious): ...I’m in.
 
 
-Ayin: Wh-what?
+Ayin(surprised): Wh-what?
 
 
 >playbgm,BGMBattleSecondHand
@@ -275,37 +293,34 @@ Dahlia(happy): I mean, I can’t let you go alone, you know?
 Dahlia: Plus I bet we’ll get a bonus for this extra mission.
 
 
-Illyia(concerned): ...
+Ayin(normal): Thank you, Dahlia.
 
 
-Narrator: Illyia has her arms crossed and is tapping her foot furiously.
+Illyia(normal): Well well, look at who’s finally acting like a Leader!
 
 
-Narrator: She must be thinking really hard.
+Illyia(laughing): Guess I’ll have to stick around to see how this ends up.
 
 
-Illyia(ashamed): Fuck it, I’ll come too I guess.
+Ayin(normal): Thanks Illyia, I-
 
 
-Ayin: Thank you, Illyia, I-
+Illyia(serious): But just so we’re clear - I’m doing this for the mission.
 
 
-Illyia(pissed): But, just so we’re clear, “Leader.”
+Illyia: I am NOT doing this for Adelai Steiner.
 
 
-Illyia: I ain’t doing this for you, and I’m ESPECIALLY not doing this for Adelai Steiner.
+Illyia: Got it?
 
 
-Illyia(serious): Got it?
+Ayin(ohfuck): H-Huh? Uh, for sure, y-yeah...
 
 
-Ayin(ohfuck): Y-yeah, for sure, thanks Illyia...
+Narrator: You wonder if Illyia and Adelai know each other[b]...
 
 
-Narrator: You wonder if Illyia and Adelai know each other[a].
-
-
-Ayin(serious): ... Esaias?
+Ayin(serious): ...Esaias?
 
 
 Dahlia: Esaias, if you don’t think you can do it...
@@ -323,10 +338,13 @@ Esaias(normal): When I volunteered, I had thought that this would be the best wa
 Esaias(anxious): But I was naive.
 
 
-Esaias: ... Ayin. 
+Esaias: ...Ayin. 
 
 
-Esaias(normal): I also want to help protect my friends.
+Esaias(lookingleft): I may have been able to see the Ruins, which was my original goal, but...
+
+
+Esaias(normal): ...I also want to help protect my friends.
 
 
 Esaias: So, while I am still scared, I will go with you.
@@ -348,10 +366,10 @@ Ayin: (Oh god I didn’t think I’d get this far what do I do-)
 >setexpr,Dahlia,laughing
 
 
-Everyone: Hahahaha[b]!
+Everyone: Hahahaha[c]!
 
 
-Ayin(sheepish): Sorry, I’m still not-
+Ayin(sheepish): Sorry, I’m still not great at this..
 
 
 Dahlia: Don’t worry Ayin! You may be the leader, but that doesn’t mean you have to do everything yourself!
@@ -363,7 +381,7 @@ Esaias: I agree completely.
 Esaias: I already have the fastest route to the First Barrier mapped out. 
 
 
-Esaias: Ready to head out whenever you are, leader.[c]
+Esaias: Ready to head out whenever you are, leader.
 
 
 Ayin(evillaugh): Alright, team, let’s go!
@@ -372,6 +390,6 @@ Ayin(evillaugh): Alright, team, let’s go!
 >endt
 
 
-[a]Illyia was put on probation because it was on a mission with Adelai, and Illyia' rashness cause Adelai to get mildly injured
-[b]might be nice to have a multi-talk feature
-[c]might be good to have a happy esaias (or at least a smirk) expr
+[a]would be nice to have volume cut out to static rather than stopping starting
+[b]Illyia was put on probation because it was on a mission with Adelai, and Illyia' rashness cause Adelai to get mildly injured
+[c]might be nice to have a multi-talk feature
