@@ -17,6 +17,7 @@ public class TransitionManager : MonoBehaviour
     [SerializeField] private Canvas loadingScreenCanvas;
     [SerializeField] private int debugContinueIndex;
     [SerializeField] private List<SceneData> sceneData;
+
     private int sceneIndex = -1;
 
 
@@ -30,9 +31,6 @@ public class TransitionManager : MonoBehaviour
         }
         instance = this;
         DontDestroyOnLoad(gameObject);
-#if DEBUG
-        sceneIndex = debugContinueIndex - 1;
-#endif
     }
 
     public void TransitionToNextScene()
@@ -58,6 +56,19 @@ public class TransitionManager : MonoBehaviour
         }
         sceneIndex = newIndex;
         StartCoroutine(PlayLoadingScreen(nextSceneData.loadingScreenOverride, nextSceneData, nextScene));
+    }
+
+    public void Continue()
+    {
+#if DEBUG
+        if(debugContinueIndex > 0)
+        {
+            TransitionToScene(debugContinueIndex);
+            return;
+        }
+#endif
+        // TODO: get scene number from saving
+        TransitionToScene(0);
     }
 
     private IEnumerator PlayLoadingScreen(LoadingScreen loadingScreenOverride, SceneData data, string sceneName)

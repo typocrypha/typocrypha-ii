@@ -7,7 +7,7 @@ public class TitleMenu : MonoBehaviour
 {
     public void Continue()
     {
-        TransitionManager.instance.TransitionToNextScene();
+        TransitionManager.instance.Continue();
     }
     public void NewGame()
     {
