@@ -38,10 +38,19 @@ namespace RandomUtils
         {
             return items[rand.Next(0, items.Length)];
         }
+        public T Choice<T>(IList<T> items)
+        {
+            return items[rand.Next(0, items.Count)];
+        }
+        public T Choice<T>(IList<T> items, out int index)
+        {
+            index = rand.Next(0, items.Count);
+            return items[index];
+        }
         /// <summary> Returns an unweighted random choice from the given IEnumerable </summary> 
         public T Choice<T>(IEnumerable<T> items)
         {
-            if (items.Count() <= 0)
+            if (!items.Any())
                 return default;
             return Choice(items.ToArray());
         }

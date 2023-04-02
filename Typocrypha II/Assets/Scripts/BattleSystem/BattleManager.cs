@@ -133,6 +133,7 @@ public class BattleManager : MonoBehaviour, IPausable
         Battlefield.instance.ClearAndDestroy(CurrWave.fieldOptions);
         // Clear player cooldowns
         SpellCooldownManager.instance.ResetAllCooldowns();
+        Typocrypha.Keyboard.instance.Clear();
         StartCoroutine(StartWaveCR(CurrWave));
     }
 

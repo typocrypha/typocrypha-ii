@@ -30,6 +30,7 @@ namespace Typocrypha
         public List<GameObject> allEffectPrefabs;
         public CastBar castBar;
         public Transform keys; // Object that holds all the key objects.
+        [SerializeField] private OverheatManager overheatManager;
         public CasterUI PlayerUI => playerUI;
         [SerializeField] private CasterUI playerUI;
         public readonly Dictionary<char, Key> keyMap = new Dictionary<char, Key>(); // Map from characters to keyboard keys.
@@ -93,6 +94,8 @@ namespace Typocrypha
         // Check user input.
         void Update()
         {
+            if (overheatManager.IsOverheating)
+                return;
             foreach (var c in keyMap) // Highlight pressed keys.
             {
                 c.Value.Highlight = GetKey(c.Key);
@@ -195,14 +198,26 @@ namespace Typocrypha
         }
 
         /// <summary>
-        /// Removes all key effects
+        /// Removes all key effects and stops overheat
         /// </summary>
-        public void Clear()
+        public void ClearKeyEffects()
         {
             foreach(var key in allEffects.Keys.ToArray())
             {
                 allEffects[key].Remove();
             }
+
+        }
+
+        public void Clear()
+        {
+            ClearKeyEffects();
+            overheatManager.StopOverheat();
+        }
+
+        public void DoOverheat()
+        {
+            overheatManager.DoOverheat();
         }
     }
 }

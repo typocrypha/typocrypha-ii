@@ -182,6 +182,10 @@ public class SpellManager : MonoBehaviour
         }
         // Apply callbacks after the whole cast is finished
         caster.OnAfterCastResolved?.Invoke(spell, caster);
+        if (SpellCooldownManager.instance.Overheated)
+        {
+            Typocrypha.Keyboard.instance.DoOverheat();
+        }
     }
 
     private IEnumerator CastAndCounterCR(Spell spell, Caster caster, Battlefield.Position target, Func<Caster, bool> pred)

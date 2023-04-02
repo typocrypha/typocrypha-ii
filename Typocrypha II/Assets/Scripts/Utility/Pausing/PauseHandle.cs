@@ -46,6 +46,11 @@ public class PauseHandle
         parent = newParent;
     }
 
+    public void SetParent(IPausable newParent)
+    {
+        SetParent(newParent.PH);
+    }
+
     private void FreeFromParent()
     {
         if(parent != null)

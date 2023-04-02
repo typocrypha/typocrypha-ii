@@ -20,7 +20,7 @@ namespace Typocrypha
 
         public void Switch()
         {
-            keyboard.Clear();
+            keyboard.ClearKeyEffects();
             if(inAltMode = !inAltMode)
             {
                 mainBuilder.ClearKeyboard();

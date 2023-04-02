@@ -18,6 +18,20 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
     }
     #endregion
     public static SpellCooldownManager instance = null;
+
+    public bool Overheated
+    {
+        get
+        {
+            foreach(var kvp in cooldowns)
+            {
+                if (kvp.Value.Cooldown <= 0)
+                    return false;
+            }
+            return true;
+        }
+    }
+
     // Map of spell rootwords to remaining cooldown time.
     //private readonly Dictionary<string, int> cooldowns = new Dictionary<string, int>();
     private readonly Dictionary<string, SpellCooldown> cooldowns = new Dictionary<string, SpellCooldown>();
@@ -131,10 +145,9 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
     public void DoCooldowns(Spell spell)
     {
         var rootCounts = spell.RootCounts;
-        foreach (var kvp in cooldowns)
-        {
-            kvp.Value.Cooldown -= rootCounts.Count; // Unique roots
-        }
+        // Lower all cooldowns by num unique roots
+        LowerAllCooldowns(rootCounts.Count); 
+        // Add new cooldowns
         foreach (var kvp in rootCounts)
         {
             if (TryGetCooldown(kvp.Key, out var cooldown))
@@ -143,6 +156,14 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
             }
         }
         SortCooldowns();
+    }
+
+    public void LowerAllCooldowns(int amount)
+    {
+        foreach (var kvp in cooldowns)
+        {
+            kvp.Value.Cooldown -= amount; 
+        }
     }
 
     private bool TryGetCooldown(string word, out SpellCooldown cooldown)
