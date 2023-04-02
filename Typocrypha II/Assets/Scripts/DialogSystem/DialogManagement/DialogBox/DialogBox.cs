@@ -176,7 +176,10 @@ public class DialogBox : MonoBehaviour, IDialogBox
 		scrollCR = null;
         hideText.ind[0] = dialogItem.text.Length;
         hideText.done = true;
-        continueIndicator.Activate();
+        if(ContinueIndicator != null)
+        {
+            ContinueIndicator.Activate();
+        }
         DialogManager.instance.onSkip.Invoke();
     }
 
@@ -266,7 +269,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
             yield return new WaitForSeconds(autoContinueDelay);
             DialogManager.instance.NextDialog();
         }
-        else
+        else if (ContinueIndicator != null)
         {
             continueIndicator.Activate();
         }

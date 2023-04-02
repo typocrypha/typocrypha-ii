@@ -42,10 +42,15 @@ public class Scouter : MonoBehaviour, IPausable
     void Update()
     {
         // Toggle scouter
-        if (Input.GetKeyDown(KeyCode.LeftShift) && (!Battlefield.instance.PH.Pause || ScouterActive))
+        if (CheckInput() && (!Battlefield.instance.PH.Pause || ScouterActive))
         {
             ToggleScouter();
         }
+    }
+
+    private bool CheckInput()
+    {
+        return Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift);
     }
     private void ToggleScouter()
     {
