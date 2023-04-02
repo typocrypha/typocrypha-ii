@@ -10,32 +10,37 @@ using UnityEngine.UI;
 /// </summary>
 public class HighlightCounterable : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI SpellText; // Text displaying charging spell.
+    [SerializeField] private TextMeshProUGUI spellText; // Text displaying charging spell.
+    [SerializeField] private TextMeshProUGUI counteredText; // Text that shows when countered
     [SerializeField] private FXText.TMProColor CounterableHighlight; // Highlights for counterable spellwords.
-    [SerializeField] private FXText.TMProColor CounteredHighlight; // Highlight for currently countered display.
 
+    private bool countered = false;
     private string[] spellWords = Array.Empty<string>();
-    private string lastSpellText = "";
+
+    public void UpdateCounteredState(bool state)
+    {
+        if (countered == state)
+            return;
+        countered = state;
+        spellText.gameObject.SetActive(!countered);
+        counteredText.gameObject.SetActive(countered);
+    }
+
+    public void UpdateSpellWords(string spell)
+    {
+        spellWords = spell == "" ? Array.Empty<string>() : spell.Split(Spell.separators);
+        // Reset counterable indices when spell changes
+        for (int i = 0; i < CounterableHighlight.ind.Count; ++i)
+        {
+            CounterableHighlight.ind[i] = 0;
+        }
+    }
 
     void Update()
     {
-        // check to see if we are currently countered
-        if (SpellText.text == SpellManager.instance.counterWord.internalName.ToUpper())
-        {
-            CounteredHighlight.ind[0] = 0;
-            CounteredHighlight.ind[1] = SpellManager.instance.counterWord.internalName.Length;
+        // Don't update if countered
+        if (countered)
             return;
-        }
-        else
-        {
-            CounteredHighlight.ind[0] = 0;
-            CounteredHighlight.ind[1] = 0;
-        }
-        if(lastSpellText != SpellText.text)
-        {
-            spellWords = SpellText.text == "" ? Array.Empty<string>() : SpellText.text.Split(Spell.separators);
-            lastSpellText = SpellText.text;
-        }
         int pos = 0; // Text character position in spell words.
         // check for any words that can be countered, and highlight them appropriately if found
         for (int i = 0; i < spellWords.Length; i++)

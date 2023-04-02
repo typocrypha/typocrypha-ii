@@ -189,12 +189,14 @@ public class Caster : FieldObject
         set
         {
             spell = value;
-            if (value == null)
+            if (spell == null || ui == null)
                 return;
-            // Set spell word (DEBUG)
-            ui?.onSpellChanged.Invoke(spell.ToDisplayString());
+            // Set spell word
+            ui.onSpellChanged.Invoke(spell.ToDisplayString());
             // Set spell icon (gets first rootword)
-            ui?.onSpellIconChanged.Invoke(spell.Icon);            
+            ui.onSpellIconChanged.Invoke(spell.Icon);
+            // Set countered
+            ui.onCounterStateChanged.Invoke(Countered);
         }
     }
     Spell spell;
@@ -345,16 +347,22 @@ public class Caster : FieldObject
 
     protected virtual void Awake()
     {
-        if (ui == null) ui = GetComponentInChildren<CasterUI>();
+        if (ui == null) 
+        {
+            ui = GetComponentInChildren<CasterUI>();
+        }
         tags.RecalculateAggregate();
         foreach (var tag in tags)
         {
             AddAbilities(tag);
         }
         sp = Stats.MaxSP;
-        Health = Stats.MaxHP;       
+        Health = Stats.MaxHP;
         Stagger = Stats.MaxStagger;
-        ui?.onNameChanged.Invoke(DisplayName);
+        if (ui != null)
+        {
+            ui.onNameChanged.Invoke(DisplayName);
+        }
     }
 
     [System.Serializable] private class StatusEffectDict : SerializableDictionary<CasterTag, StatusEffect> { }
