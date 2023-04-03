@@ -46,7 +46,6 @@ namespace ATB3
                 if(time >= mpChargeTime)
                 {
                     ++Mp;
-                    Debug.Log(Caster.DisplayName + " gains MP!");
                     time = 0;
                 }
             }
