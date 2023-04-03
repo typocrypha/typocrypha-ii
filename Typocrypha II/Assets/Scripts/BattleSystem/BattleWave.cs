@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Gameflow;
 
 /// <summary>
 /// A class containing the data for a wave made to be passed to the battle manager
@@ -15,4 +16,5 @@ public class BattleWave
     public GOMatrix2D battleField;
     public List<GameObject> battleEvents;
     public List<GameObject> reinforcementPrefabs;
+    public DialogCanvas openingScene;
 }

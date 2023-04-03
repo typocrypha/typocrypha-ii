@@ -21,6 +21,7 @@ namespace Gameflow
         public string waveNumberOverride;
         public AudioClip music;
         public GOMatrix2D battleField;
+        public DialogCanvas openingScene;
 
         private RListGUI<GameObject> eventGUI;
         public List<GameObject> battleEvents;
@@ -57,7 +58,11 @@ namespace Gameflow
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             GUILayout.Label(new GUIContent("Music", tooltip_music), GUI.skin.label, GUILayout.Width(50));
-            music = RTEditorGUI.ObjectField(music, false) as AudioClip;
+            music = RTEditorGUI.ObjectField(music, false);
+            GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(new GUIContent("Opening Scene"), GUI.skin.label, GUILayout.Width(90));
+            openingScene = RTEditorGUI.ObjectField(openingScene, false, GUILayout.Width(190));
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
             #endregion

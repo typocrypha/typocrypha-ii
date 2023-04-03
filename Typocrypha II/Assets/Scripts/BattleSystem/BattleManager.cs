@@ -120,7 +120,7 @@ public class BattleManager : MonoBehaviour, IPausable
 
     public void NextWave()
     {
-        Battlefield.instance.PH.Pause = true;
+        ph.Pause = true;
         ++waveNum;
         CurrWave = graphParser.NextWave();
         if (CurrWave == null) return;
@@ -163,15 +163,17 @@ public class BattleManager : MonoBehaviour, IPausable
         yield return StartCoroutine(WaveTransition(waveData));
         // Set and pause the battle events
         SetBattleEvents(waveData.battleEvents);
-        //DEBUG, actually sequence after transition later
-        PH.Pause = false; // Unpause battle events
-        Battlefield.instance.PH.Pause = false;
-        if(waveData.music != null)
+        if (waveData.music != null)
         {
             AudioManager.instance.PlayBGM(waveData.music);
             AudioManager.instance.BGMVolume = 0.6f;
         }
-          
+        if (waveData.openingScene != null)
+        {
+            // Play opening scene
+            DialogManager.instance.StartDialog(waveData.openingScene);
+        }
+        PH.Pause = false; // Unpause if no dialog scene, else remove extra pause
     }
 
     public IEnumerator AddFieldObject(GameObject fieldObjectPrefab, int row, int col, bool unPause = false)

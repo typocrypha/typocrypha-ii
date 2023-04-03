@@ -31,18 +31,18 @@ public class BattleGraphParser : GraphParser
             TransitionManager.instance.TransitionToNextScene();
             return null;
         }
-        else if (currNode is BattleNodeWave)
+        else if (currNode is BattleNodeWave waveNode)
         {
-            var node = currNode as BattleNodeWave;
             return new BattleWave()
             {
-                waveTitle = node.waveTitle,
-                waveNumberOverride = node.waveNumberOverride,
-                music = node.music,
-                battleField = new GOMatrix2D(node.battleField),
-                battleEvents = new List<GameObject>(node.battleEvents),
-                fieldOptions = node.clearFieldOptions,
-                reinforcementPrefabs = new List<GameObject>(node.reinforcements),
+                waveTitle = waveNode.waveTitle,
+                waveNumberOverride = waveNode.waveNumberOverride,
+                music = waveNode.music,
+                battleField = new GOMatrix2D(waveNode.battleField),
+                battleEvents = new List<GameObject>(waveNode.battleEvents),
+                fieldOptions = waveNode.clearFieldOptions,
+                reinforcementPrefabs = new List<GameObject>(waveNode.reinforcements),
+                openingScene = waveNode.openingScene,
             };
         }
         //Recursively move to next
