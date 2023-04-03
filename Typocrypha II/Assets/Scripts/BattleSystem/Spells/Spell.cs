@@ -18,23 +18,77 @@ public class Spell : IList<SpellWord>, IEquatable<Spell>
     [SerializeField]
     private List<SpellWord> items = new List<SpellWord>();
 
-    public float Cost { get => items.Select((item) => item.cost).Sum(); }
+    public float Cost
+    {
+        get
+        {
+            float cost = 0;
+            foreach (var item in items)
+            {
+                cost += item.cost;
+            }
+            return cost;
+        }
+    }
 
-    public Sprite Icon => Roots.FirstOrDefault().icon;
+    public Sprite Icon 
+    {
+        get
+        {
+            foreach(var item in items)
+            {
+                if(item is RootWord root)
+                {
+                    return root.icon;
+                }
+            }
+            return null;
+        }
+    }
 
     public bool Countered => items.Count == 1 && SpellWord.CompareKeys(items[0], SpellManager.instance.counterWord);
 
-    public IEnumerable<RootWord> Roots => items.Where((w) => w is RootWord).Select((w) => w as RootWord);
+    public int RootCount
+    {
+        get
+        {
+            int count = 0;
+            foreach (var item in items)
+            {
+                if (item is RootWord)
+                {
+                    ++count;
+                }
+            }
+            return count;
+        }
+    }
 
-    public int UniqueRoots => Roots.Select(word => word.name).Distinct().Count();
+    public List<RootWord> Roots
+    {
+        get
+        {
+            var list = new List<RootWord>(Count);
+            foreach(var item in items)
+            {
+                if(item is RootWord root)
+                {
+                    list.Add(root);
+                }
+            }
+            return list;
+        }
+    }
 
     public Dictionary<SpellWord, int> RootCounts
     {
         get
         {
             var dict = new Dictionary<SpellWord, int>(Count);
-            foreach(var root in Roots)
+            foreach(var item in items)
             {
+                if (!(item is RootWord root))
+                    continue;
                 var word = root.synonymOf ?? root;
                 if (!dict.ContainsKey(word))
                 {
