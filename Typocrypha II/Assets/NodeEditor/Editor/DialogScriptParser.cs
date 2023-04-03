@@ -667,8 +667,8 @@ public class DialogScriptParser : EditorWindow
                         if (!string.IsNullOrWhiteSpace(exprData[1]))
                         {
                             var setExprNote = CreateNode(SetExpression.ID) as SetExpression;
-                            setExprNote.characterData = cds[1];
-                            setExprNote.expr = exprs[1];
+                            setExprNote.characterData = cds[0];
+                            setExprNote.expr = exprData[1];
                             nodes.Add(setExprNote);
                         }
                     }
