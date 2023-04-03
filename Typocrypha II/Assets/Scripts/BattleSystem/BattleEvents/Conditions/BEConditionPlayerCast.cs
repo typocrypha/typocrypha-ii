@@ -22,11 +22,18 @@ public class BEConditionPlayerCast : BattleEventCondition
 
     public void CheckCast(Spell s, Caster caster)
     {
+        if (!IsValidCast(s, caster))
+            return;
         currCasts++;
         if (Check())
         {
             RemoveEventHandlers();
         }
+    }
+
+    protected virtual bool IsValidCast(Spell s, Caster caster)
+    {
+        return true;
     }
 
     public override bool Check()

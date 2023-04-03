@@ -15,17 +15,21 @@ public abstract class BEConditionNumberComparison : BattleEventCondition
         GreaterThanOrEqual = GreaterThan | EqualTo,
     }
 
+    public static bool EvalComparison(int number, int currentValue, Operator op)
+    {
+        if (op.HasFlag(Operator.EqualTo) && currentValue == number)
+            return true;
+        if (op.HasFlag(Operator.GreaterThan) && currentValue > number)
+            return true;
+        return op.HasFlag(Operator.LessThan) && currentValue < number;
+    }
+
     [SerializeField] private int num;
     [SerializeField] private Operator op;
 
     public override bool Check()
     {
-        int count = Number;
-        if (op.HasFlag(Operator.EqualTo) && count == num)
-            return true;
-        if (op.HasFlag(Operator.GreaterThan) && count > num)
-            return true;
-        return op.HasFlag(Operator.LessThan) && count < num;
+        return EvalComparison(num, Number, op);
     }
 
     protected abstract int Number { get; }
