@@ -1,0 +1,100 @@
+﻿//Round ?: Hold The Line!
+//Opening Dialog:
+>start,ACT-I-18-1-Opening
+
+
++vnplus
+
+
+>addchar,Ayin,0,0,left
+>setexpr,Ayin,ohfuck
+
+
+>addchar,Illyia,0,0,left
+>setexpr,Illyia,concerned
+
+
+>addchar,Esaias,0,0,left
+>setexpr,Esaias,anxious
+
+
+>addchar,Dahlia,0,0,right
+>setexpr,Dahlia,stressed
+
+
+Illyia: ...OK, this is actually a lot of demons.
+
+
+Ayin: Esaias! H-How long until the assault teams arrive?
+
+
+Esaias: They are not far now. Approximately 60 seconds until arrival.
+
+
+Esaias (lookingleft): I have put out a distress beacon, so they should be on their way...
+
+
+Dahlia: Everyone stay close! We can do this!
+
+
+>end
+//Ayin gets to low health for the first time (<20%):
+>start,ACT-I-18-1-AyinWeak
++bubble
+
+
+Dahlia[2,1]: SUTURE!
+
+
+//TODO: Ayin goes back to full health
+
+
+Narrator[1,1]: Your wounds have been healed!
+
+
+Ayin[0,1]: Thanks, Dahlia!
+
+
+Dahlia[2,1]: Don’t thank me just yet: SUTURE has a ridiculously long cooldown. 
+
+
+Dahlia[2,1]: Try not to get too beaten up!
+
+
+>end
+//After getting halfway (30 seconds):
+>start,ACT-I-18-1-Halfway
++bubble
+
+
+>addchar,Illyia,0,0,right,action,yell
+
+
+Illyia[2,1]: Out of the way!!!
+
+
+//TODO: All current enemies on screen are defeated.
+
+
+Illyia[2,1](base,laughing): Phew! You OK, Leader?
+
+
+Ayin[0,1]: Uh, y-yeah. Thanks, Illyia!
+
+
+>end
+//After reaching end (60 seconds):
+>start,ACT-I-18-1-End
++bubble
+
+
+>addchar,esaias,0,0
+
+
+Esaias[1,1]: Incoming fire support from the assault team!
+
+
+//TODO:Magic spells from afar destroy all demons on screen.
+
+
+>endt
