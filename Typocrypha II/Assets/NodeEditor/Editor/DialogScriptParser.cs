@@ -40,7 +40,7 @@ public class DialogScriptParser : EditorWindow
     readonly string choicePat = @"\<([^\)]*)\>"; // Input choice prompt marker pattern.
     readonly char[] escape = new char[] { '\\' }; // Escape character.
     readonly char[] displayNameChars = new char[] { '"', '“', '”' }; // Characters that could delimit a display name.
-    readonly string googleCommentPat = @"(\w)(?:\[\w\])+";
+    readonly string googleCommentPat = @"(.)(?:\[\w\])+";
 
     private const string spriteBgPath = "Assets/Graphics/Sprites/Backgrounds";
     private const string prefabBgPath = "Assets/Prefabs/Backgrounds";
