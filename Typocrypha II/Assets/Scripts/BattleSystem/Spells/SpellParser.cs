@@ -6,6 +6,8 @@ using RandomUtils;
 
 public class SpellParser : MonoBehaviour
 {
+    public const int maxWords = 5;
+    public const int maxRoots = 3;
     public enum ParseResults
     {
         Valid,
@@ -34,8 +36,6 @@ public class SpellParser : MonoBehaviour
     {
         { TypoResult.CastFailure, 100 },
     };
-    public int MaxWords { get; } = 5;
-    public int MaxRoots { get; } = 3;
     /// <summary> Singleton Implementation </summary>
     private void Awake()
     {
@@ -108,14 +108,14 @@ public class SpellParser : MonoBehaviour
         #region Keyword Number Checks
         if (s.Count <= 0)
             return ParseResults.EmptySpell;
-        if (s.Count > MaxWords)
+        if (s.Count > maxWords)
             return ParseResults.TooManyWords;
         #endregion
 
         #region Root Number Checks
         if (roots <= 0)
             return ParseResults.NoRoot;
-        if (roots > MaxRoots)
+        if (roots > maxRoots)
             return ParseResults.TooManyRoots;
         #endregion
 
