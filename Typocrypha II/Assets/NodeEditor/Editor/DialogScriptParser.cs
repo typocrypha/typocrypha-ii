@@ -76,6 +76,7 @@ public class DialogScriptParser : EditorWindow
         {"settime", typeof(SetDateTimeTextNode) },
         {"cast", typeof(CastSpellNode) },
         {"castSpell", typeof(CastSpellNode) },
+        {"castSpellProxy", typeof(CastSpellNode) },
         {"clear", typeof(ClearNode) },
         {"clearSpells", typeof(ClearEquippedSpellsNode) },
         {"addSpell", typeof(AddEquippedSpellsNode) },
@@ -437,9 +438,9 @@ public class DialogScriptParser : EditorWindow
         else if (nodeType == typeof(CastSpellNode))
         {
             var castNode = CreateNode(CastSpellNode.Id) as CastSpellNode;
-            if(args.Length < 6)
+            if(args.Length < 5)
             {
-                throw new System.Exception($"Incorrect number of args for cast spell node ({args.Length - 1}). Expected at least 5");
+                throw new System.Exception($"Incorrect number of args for cast spell node ({args.Length - 1}). Expected at least 4");
             }
             // Parse spell
             var spellWordStrings = args[1].Split(Player.separator);
@@ -449,10 +450,21 @@ public class DialogScriptParser : EditorWindow
 
             // Parse other data
             castNode.targetPos = new Vector2Int(int.Parse(args[3]), int.Parse(args[2]));
-            castNode.casterPos = new Vector2Int(int.Parse(args[5]), int.Parse(args[4]));
-            if(args.Length >= 7)
+            if(args[0] == "castSpellProxy")
             {
-                castNode.messageOverride = args[6];
+                castNode.proxyCasterName = args[4];
+                if (args.Length >= 6)
+                {
+                    castNode.messageOverride = args[6];
+                }
+            }
+            else
+            {
+                castNode.casterPos = new Vector2Int(int.Parse(args[5]), int.Parse(args[4]));
+                if (args.Length >= 7)
+                {
+                    castNode.messageOverride = args[6];
+                }
             }
             nodes.Add(castNode);
         }

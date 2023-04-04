@@ -65,6 +65,19 @@ public class BattleManager : MonoBehaviour, IPausable
         // Initialize ally character
         AllyBattleBoxManager.instance.SetBattleAllyData(startNode.initialAllyData, startNode.initialAllyExpr, startNode.initialAllyPose);
         AllyBattleBoxManager.instance.SetBattleAllyCharacterInstant();
+        // Initialize proxy casters
+        AddProxyCaster(startNode.proxyCaster1);
+        AddProxyCaster(startNode.proxyCaster2);
+        AddProxyCaster(startNode.proxyCaster3);
+
+    }
+
+    private void AddProxyCaster(GameObject prefab)
+    {
+        if (prefab == null)
+            return;
+        var proxyCaster = Instantiate(prefab, transform).GetComponent<Caster>();
+        Battlefield.instance.AddProxyCaster(proxyCaster);
     }
 
     public void LoadBattle(BattleCanvas graph)

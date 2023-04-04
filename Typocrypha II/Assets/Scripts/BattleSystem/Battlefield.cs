@@ -90,7 +90,10 @@ public class Battlefield : MonoBehaviour, IPausable
     #region Data and Representative Lists
     private SpaceMatrix spaces;
     private FieldMatrix field;
+    [SerializeField] private Transform illegalPosition;
     #endregion
+
+    private Dictionary<string, Caster> proxyCasters = new Dictionary<string, Caster>(3);
 
     private void Awake()
     {
@@ -128,26 +131,19 @@ public class Battlefield : MonoBehaviour, IPausable
         var caster = toAdd.GetComponent<Caster>();
         if (caster != null) Casters.Add(caster);
     }
-    /// <summary> Add a actor that is not necessarily a FieldObject and is not in a field position </summary> 
-    public void AddActor(ATBActor a)
+    public void AddProxyCaster(Caster caster)
     {
-        Actors.Add(a);
-    }
-    /// <summary> Add a caster in an illegal field position </summary>
-    public void AddExternalCaster(Caster c, Position pos)
-    {
-        if(pos.IsLegal)
-        {
-            Debug.LogWarning("Attempting to put an external caster in a legal position");
+        if (proxyCasters.ContainsKey(caster.DisplayName))
             return;
-        }
-        c.FieldPos = pos;
-        Casters.Add(c);
+        caster.FieldPos = new Position(-1, -1);
+        caster.transform.position = GetSpace(caster.FieldPos);
+        proxyCasters.Add(caster.DisplayName.ToLower(), caster);
+
     }
     /// <summary> Get the position of a battlefield space. The space may be empty </summary> 
     public Vector2 GetSpace(Position pos)
     {
-        return spaces[pos].position;
+        return pos.IsLegal ? spaces[pos].position : illegalPosition.position;
     }
     public Vector2 GetSpaceScreenSpace(Position pos)
     {
@@ -155,6 +151,11 @@ public class Battlefield : MonoBehaviour, IPausable
     }
     /// <summary> Get the caster in a specific space. returns null if the space is empty or the object is not a caster </summary> 
     public Caster GetCaster(Position pos) => GetObject(pos) as Caster;
+    public Caster GetProxyCaster(string proxyName)
+    {
+        proxyCasters.TryGetValue(proxyName.ToLower(), out Caster caster);
+        return caster;
+    }
     /// <summary> Get the field object </summary> 
     public FieldObject GetObject(Position pos) => field[pos];
     /// <summary> Destroy an object on the field </summary>

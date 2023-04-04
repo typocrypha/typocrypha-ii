@@ -22,6 +22,7 @@ namespace Gameflow
         public Vector2Int targetPos;
         public Vector2Int casterPos;
         public string messageOverride;
+        public string proxyCasterName;
 
         public Spell GetSpell()
         {
@@ -63,6 +64,10 @@ namespace Gameflow
             GUILayout.BeginHorizontal();
             GUILayout.Label(new GUIContent("Caster Pos"), GUI.skin.label, GUILayout.Width(70));
             casterPos = RTEditorGUI.Vector2IntField("", casterPos);
+            GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(new GUIContent("Proxy Caster"), GUI.skin.label, GUILayout.Width(80));
+            proxyCasterName = GUILayout.TextField(proxyCasterName);
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             GUILayout.Label(new GUIContent("Msg Override"), GUI.skin.label, GUILayout.Width(80));

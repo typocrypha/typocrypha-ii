@@ -222,7 +222,15 @@ public class DialogGraphParser : GraphParser
                 var battleField = Battlefield.instance;
                 if (spellManager != null && battleField != null)
                 {
-                    var caster = battleField.GetCaster(new Battlefield.Position(castNode.casterPos));
+                    Caster caster;
+                    if (!string.IsNullOrEmpty(castNode.proxyCasterName))
+                    {
+                        caster = battleField.GetProxyCaster(castNode.proxyCasterName);
+                    }
+                    else
+                    {
+                        caster = battleField.GetCaster(new Battlefield.Position(castNode.casterPos));
+                    }         
                     if (caster != null)
                     {
                         var msgOverride = string.IsNullOrEmpty(castNode.messageOverride) ? null : castNode.messageOverride;
