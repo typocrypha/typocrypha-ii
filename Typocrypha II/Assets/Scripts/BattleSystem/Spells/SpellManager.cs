@@ -10,8 +10,10 @@ public class SpellManager : MonoBehaviour
 {
     private const float delayBetweenTargets = 0.1f;
     private const float delayBeforeLog = 0.25f;
+    private const float runLogTime = 0.5f;
     public static SpellManager instance;
     public SpellWord counterWord;
+    [SerializeField] private SpellWord runWord;
 
     [Header("Interactive Popups")]
     [SerializeField] private InteractivePopup critPopup;
@@ -83,7 +85,15 @@ public class SpellManager : MonoBehaviour
         }
         if(caster.CasterClass != Caster.Class.Player)
         {
-            SpellFxManager.instance.LogMessage(castMessageOverride ?? caster.DisplayName + " casts " + spell.ToDisplayString(), spell.Icon);
+            if(spell.Count == 1 && SpellWord.CompareKeys(spell[0], runWord))
+            {
+                SpellFxManager.instance.LogMessage(castMessageOverride ?? $"{caster.DisplayName} ran away!", spell.Icon, runLogTime);
+            }
+            else
+            {
+                SpellFxManager.instance.LogMessage(castMessageOverride ?? $"{caster.DisplayName} casts {spell.ToDisplayString()}", spell.Icon);
+            }
+
             yield return SpellFxManager.instance.PlayMessages();
         }
         var roots = Modify(spell);
