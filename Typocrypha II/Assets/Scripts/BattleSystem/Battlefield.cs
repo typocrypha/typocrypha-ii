@@ -133,11 +133,12 @@ public class Battlefield : MonoBehaviour, IPausable
     }
     public void AddProxyCaster(Caster caster)
     {
-        if (proxyCasters.ContainsKey(caster.DisplayName))
+        string casterName = caster.DisplayName.ToLower();
+        if (proxyCasters.ContainsKey(casterName))
             return;
         caster.FieldPos = new Position(-1, -1);
         caster.transform.position = GetSpace(caster.FieldPos);
-        proxyCasters.Add(caster.DisplayName.ToLower(), caster);
+        proxyCasters.Add(casterName, caster);
 
     }
     /// <summary> Get the position of a battlefield space. The space may be empty </summary> 
