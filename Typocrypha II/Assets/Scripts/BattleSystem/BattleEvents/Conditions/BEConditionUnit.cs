@@ -9,6 +9,7 @@ public abstract class BEConditionUnit : BattleEventCondition
         Any,
         All,
         SpecificName,
+        Player,
     }
 
     [SerializeField] Operator op;
@@ -17,6 +18,10 @@ public abstract class BEConditionUnit : BattleEventCondition
 
     public override bool Check()
     {
+        if(op == Operator.Player)
+        {
+            return CheckCaster(Battlefield.instance.Player);
+        }
         foreach(var caster in Battlefield.instance.Casters)
         {
             if (caster.CasterState != casterState)
