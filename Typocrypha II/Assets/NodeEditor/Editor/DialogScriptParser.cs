@@ -455,7 +455,7 @@ public class DialogScriptParser : EditorWindow
                 castNode.proxyCasterName = args[4];
                 if (args.Length >= 6)
                 {
-                    castNode.messageOverride = args[6];
+                    castNode.messageOverride = args[5];
                 }
             }
             else
