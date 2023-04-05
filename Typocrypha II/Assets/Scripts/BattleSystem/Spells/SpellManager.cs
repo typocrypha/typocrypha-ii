@@ -14,6 +14,7 @@ public class SpellManager : MonoBehaviour
     public static SpellManager instance;
     public SpellWord counterWord;
     [SerializeField] private SpellWord runWord;
+    [SerializeField] private SpellWord runAllWord;
 
     [Header("Interactive Popups")]
     [SerializeField] private InteractivePopup critPopup;
@@ -88,6 +89,10 @@ public class SpellManager : MonoBehaviour
             if(spell.Count == 1 && SpellWord.CompareKeys(spell[0], runWord))
             {
                 SpellFxManager.instance.LogMessage(castMessageOverride ?? $"{caster.DisplayName} ran away!", spell.Icon, runLogTime);
+            }
+            else if(spell.Count == 1 && SpellWord.CompareKeys(spell[0], runAllWord))
+            {
+                SpellFxManager.instance.LogMessage(castMessageOverride ?? $"{caster.DisplayName} and crew ran away!", spell.Icon);
             }
             else
             {
