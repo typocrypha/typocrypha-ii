@@ -78,16 +78,18 @@ public class DialogScriptParser : EditorWindow
         {"castSpell", typeof(CastSpellNode) },
         {"castSpellProxy", typeof(CastSpellNode) },
         {"clear", typeof(ClearNode) },
+        {"clearReinforcements", typeof(ClearReinforcementsNode) },
         {"clearSpells", typeof(ClearEquippedSpellsNode) },
         {"addSpell", typeof(AddEquippedSpellsNode) },
         {"addSpells", typeof(AddEquippedSpellsNode) },
     };
 
-    // Generic node ID map. types that have entries in this map and the nodeMap can be created without additional partsing code
+    // Generic node ID map. types that have entries in this map and the nodeMap can be created without additional parsing code
     // This should only be done with nodes that have no arguments
     readonly Dictionary<System.Type, string> nodeIDMap = new Dictionary<System.Type, string>
     {
         {typeof(ClearNode), ClearNode.ID },
+        {typeof(ClearReinforcementsNode), ClearReinforcementsNode.ID },
         {typeof(ClearEquippedSpellsNode), ClearEquippedSpellsNode.ID },
         {typeof(EndAndTransition), EndAndTransition.ID },
         {typeof(EndAndHide), EndAndHide.ID },

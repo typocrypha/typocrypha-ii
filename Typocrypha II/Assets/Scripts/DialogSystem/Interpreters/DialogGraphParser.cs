@@ -243,6 +243,10 @@ public class DialogGraphParser : GraphParser
                     }
                 }
             }
+            else if (currNode is ClearReinforcementsNode clearReinforcementsNode)
+            {
+                BattleManager.instance.ClearReinforcements();
+            }
         }
         // Check if need to wait on node to complete.
         if (currNode is ITimedNode)

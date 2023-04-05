@@ -131,6 +131,11 @@ public class BattleManager : MonoBehaviour, IPausable
             e.PH.Pause = pause;
     }
 
+    public void ClearReinforcements()
+    {
+        CurrWave.reinforcementPrefabs.Clear();
+    }
+
     public void NextWave()
     {
         ph.Pause = true;
