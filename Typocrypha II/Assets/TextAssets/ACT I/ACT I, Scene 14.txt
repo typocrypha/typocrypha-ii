@@ -1,0 +1,384 @@
+﻿//Round 1: A Distant Scream[a]
+//Opening Dialog:
+>start,ACT-I-14-1-Opening
+
+
++vnplus
+
+
+>addchar,Ayin,0,0,left,nervous
+>addchar,Illyia,0,0,left,serious
+>addchar,Esaias,0,0,left,anxious
+>addchar,Dahlia,0,0,right,stressed
+
+
+Dahlia: Shit...
+
+
+Narrator: You find Dahlia injured and surrounded by demons.
+
+
+Esaias: Dahlia! Dahlia are you OK?
+
+
+Demon: More humans!? Stop them!
+
+
+Illyia(yell)[action]: Engaging!
+
+
+>end
+//After a tanuki is defeated and turned into spirit form (first time):
+>start,ACT-I-14-1-FirstSpirit
+
+
++bubble
+
+
+Clarke[1,1]: Demon Spirit form detected.
+
+
+Clarke[1,1]: Initiating I-10 Decoder module bootstrap...
+
+
+Clarke[1,1]: Bootstrap complete.
+
+
++bubble
+
+
+Clarke[1,1]: To proceed with the decoding process, please {c,ui-terms}target a demon in spirit form and use the “DECODE” spell.[b]{c}
+
+
+>end
+//After player uses DECODE on tanuki (first time):
+>start,ACT-I-14-1-FirstDecode
+
+
++bubble
+
+
+Clarke[1,1]: Analyzing... Analyzing...
+
+
+Clarke[1,1]: Spellword 25% decoded. Additional data required to complete analysis.
+
+
+Ayin[0,1]: I guess I have to decode more tanukis...
+
+
+>end
+//After Tanuki completely decoded[c]:
+>start,ACT-I-14-1-FullDecode
+
+
++vnplus
+
+
+>addchar,Ayin,0,0,left
+>setexpr,Ayin,serious
+
+
+>addchar,Clarke,0,0,right
+
+
+Clarke: Spellword magical signature decoded: entering spellword translation mode.
+
+
+//TODO: Translation window pops up
+
+
+Clarke: ERROR CODE 11002 - SPELL DATA CORRUPTED.
+
+
+Clarke: MANUAL INTERVENTION REQUIRED.
+
+
+Clarke: PLEASE FOLLOW TYPING PROMPT.
+
+
+Ayin: Um, uh, I-I don’t know!
+
+
+Ayin: Looks like I can {c,ui-terms}type in the word letter by letter{c}...?
+
+
+Ayin: But what do I type for the missing ones?
+
+
+>end
+//After decoding process is completed:
+>start,ACT-I-14-1-FullDecode
+
+
++vnplus
+
+
+>addchar,Ayin,0,0,left
+>setexpr,Ayin,serious
+
+
+>addchar,Clarke,0,0,right
+
+
+Clarke: Translation complete!
+
+
+Clarke: Spellword {c,ui-terms}GREATSWORD{c} is now available for use.
+
+
+Ayin: A new spell[d]? I guess I could try it out.
+
+
+>clearReinforcements
+
+
+>end
+//If attempting to decode demon after 100% decoded:
+>start,ACT-I-12-1-OverDecode
+
+
++bubble
+
+
+Clarke[1,2]: ERROR: STACK OVERFLOW
+
+
+Clarke[1,2]: Demon already decoded - Please decode a different demon.
+
+
+>end
+//If several Tanuki defeated without decoding
+>start,ACT-I-14-1-NoDecode
+
+
++bubble
+
+
+Clarke[1,1]: Ayin! Why aren’t you decoding the Tanuki?
+
+
+Ayin[0,1]: S-Sorry, uh, how do I do that again?
+
+
+Clarke[1,1]: After reducing a Tanuki to its Spirit Form, use any attack Spell against it!
+
+
+>end
+//Round 2: Let’s Get Decoding!
+//Opening Dialog:
+>start,ACT-I-14-2-Opening
+
+
++vnplus
+
+
+>addchar,Ayin,0,0,left
+>setexpr,Ayin,serious
+
+
+>addchar,Clarke,0,0,right
+
+
+Ayin: I-I think I get it now.
+
+
+Ayin: By decoding demons in spirit form using DECODE, I can unlock new spells.
+
+
+Ayin: I wonder what other spells I can unlock…
+
+
+>end
+//Round 3: Flaming Justice Bunbuku
+//Opening Dialog:
+>start,ACT-I-14-3-Opening
+
+
++vnplus
+
+
+>addchar,Ayin,0,0,left
+>setexpr,Ayin,nervous
+
+
+>addchar,Illyia,0,0,left
+>setpose,Illyia,base
+>setexpr,Illyia,serious
+
+
+>addchar,Esaias,0,0,left
+>setexpr,Esaias,anxious
+
+
+>addchar,Dahlia,0,0,right
+>setexpr,Dahlia,stressed
+
+
+Illyia: Huh, those guys weren’t too strong.
+
+
+Dahlia: N-No, it’s not just them. There are two other strong demons...
+
+
+Narrator: You feel the air temperature suddenly increase from behind.
+
+
+Narrator: Just as you turn around, you’re forced to shield your eyes from a blinding, fiery glow.
+
+
+>addchar,Bunbuku,0,0,right
+
+
+Bunbuku: Hmph! Arrogant humans!
+
+
+Bunbuku: You think you’re hot stuff don’t ya? Beating on my disciples!
+
+
+Bunbuku: But we’re not done yet, right boys?
+
+
+Narrator: Suddenly, as if inheriting this demon’s fiery spirit, the other demons become reinvigorated.
+
+
+Narrator: And then, they begin chanting a name.
+
+
+Demons: BUNBUKU! BUNBUKU!
+
+
+Ayin: W-What’s happening??
+
+
+Bunbuku: HAHA! Now, prepare to meet flaming justice!
+
+
+>end
+//When Bunbuku enters spirit mode
+>start,ACT-I-14-3-BunbukuDefeated
+
+
++vnplus
+
+
+>addchar,Ayin,0,0,left
+>setexpr,Ayin,serious
+
+
+>addchar,Illyia,0,0,left
+>setpose,Illyia,base
+>setexpr,Illyia,serious
+
+
+>addchar,Esaias,0,0,left
+>setexpr,Esaias,anxious
+
+
+>addchar,Bunbuku,0,0,right
+
+
+Bunbuku: Kh-! Not bad, evildoers!
+
+
+Bunbuku: But I won’t let you put out my fiery passion!
+
+
+???: Bunbuku, wait!
+
+
+Narrator: A voice calls out from behind Bunbuku.
+
+
+Narrator: Accompanying the ambient heat, the humidity starts to rise as if you were in a sauna.
+
+
+Narrator: You sense a dire fight approaching.
+
+
+//TODO: Bunbuku and any other demons run away, ending wave
+
+
+>end
+//Round 4: Revolutionary Frog Ogama
+//Opening
+
+
+>start,ACT-I-14-4-Opening
+
+
++vnplus
+
+
+>addchar,Ayin,0,0,left
+>setexpr,Ayin,serious
+
+
+>addchar,Illyia,0,0,left
+>setpose,Illyia,base
+>setexpr,Illyia,serious
+
+
+>addchar,Esaias,0,0,left
+>setexpr,Esaias,anxious
+
+
+>addchar,Bunbuku,0,0,right
+
+
+Bunbuku: Captain? What are you-
+
+
+>addchar,Ogama,0,0,right
+
+
+Ogama: You’re hurt, Bunbuku - step back.
+
+
+Narrator: You watch in surprise as the fiery demon steps aside - could this be the true leader?
+
+
+Ogama: Cursed humans... You have invaded our home and attacked our people.
+
+
+Ogama: I, Ogama, Leader of the Tanuki Frog Revolution, can no longer watch as you hurt my compatriots like this!
+
+
+Ogama: EN GARDE!
+
+
+>end
+//When Ogama enters spirit mode
+>start,ACT-I-14-4-OgamaDefeated
+
+
++vnplus
+
+
+>addchar,Ayin,0,0,left
+>setexpr,Ayin,serious
+
+
+>addchar,Ogama,0,0,right
+
+
+Ogama: How are you so powerful??
+
+
+Ogama: Those spells you’re using, it’s as if...
+
+
+Ogama: ...
+
+
+Ogama: Tanuki Frog Revolution, retreat!!
+
+
+//TODO: Ogama and any other demons run away, ending wave
+
+
+>end
+[a]Should probably add a timed event for if the player goes a long time just fighting tanukis without actually decoding (like a reminder)
+[b]game doesnt proceed until they do this.
+[c]horde wave goes on forever until decoding tutorial (basically the whole wave) is complete
+[d]from here, there are only a few tanuki left (no more horde spawns)
