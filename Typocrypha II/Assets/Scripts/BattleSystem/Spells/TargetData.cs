@@ -64,32 +64,51 @@ public class TargetData
         #region Class and State based targeting
 
         if (type == Type.Self)
+        {
             ret.Add(casterPos);
+        }
         else if (type == Type.Target)
+        {
             ret.Add(targetPos);
+        }
         else if (type == Type.Allies || type == Type.AlliesAndSelf)
         {
             var caster = Battlefield.instance.GetCaster(casterPos);
             if(caster != null)
             {
-                if (caster.CasterClass == Caster.Class.Player)
+                // Logic for player, allies, and enemies. Other states have no defined allies
+                if (caster.CasterState == Caster.State.Player)
                 {
-                    ret.AddRange(Battlefield.instance.Allies.Select((a) => a.FieldPos));
-                    if (type == Type.AlliesAndSelf)
-                        ret.Add(casterPos);
+                    foreach (var ally in Battlefield.instance.Allies)
+                    {
+                        if (ally.IsDeadOrFled)
+                            continue;
+                        ret.Add(ally.FieldPos);
+                    }
                 }
-                else if (caster.CasterClass == Caster.Class.PartyMember)
+                else if (caster.CasterState == Caster.State.Ally)
                 {
-                    ret.AddRange(Battlefield.instance.Allies.Select((a) => a.FieldPos));
                     ret.Add(Battlefield.instance.Player.FieldPos);
-                    if (type != Type.AlliesAndSelf)
-                        ret.Remove(casterPos);
+                    foreach (var ally in Battlefield.instance.Allies)
+                    {
+                        if (ally.IsDeadOrFled || ally.FieldPos == casterPos)
+                            continue;
+                        ret.Add(ally.FieldPos);
+                    }
                 }
-                else if (caster.CasterClass == Caster.Class.Other)
+                else if (caster.CasterState == Caster.State.Hostile)
                 {
-                    ret.AddRange(Battlefield.instance.Casters.Where((c) => caster.CasterState == c.CasterState).Select((c) => c.FieldPos));
-                    if (type != Type.AlliesAndSelf)
-                        ret.Remove(casterPos);
+                    foreach (var enemy in Battlefield.instance.Enemies)
+                    {
+                        if (enemy.IsDeadOrFled)
+                            continue;
+                        ret.Add(enemy.FieldPos);
+                    }
+                }
+                // Add self if appropriate
+                if (type == Type.AlliesAndSelf)
+                {
+                    ret.Add(casterPos);
                 }
             }
         }
