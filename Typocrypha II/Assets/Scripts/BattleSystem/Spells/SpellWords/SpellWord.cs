@@ -20,6 +20,7 @@ public abstract class SpellWord : ScriptableObject
     public int cooldown = 3;
     public Category category;
     public SpellWord synonymOf;
+    public bool IsDebug => Key == "debug";
 
     public static bool CompareKeys(SpellWord w1, SpellWord w2) => w1.Key == w2.Key;
 

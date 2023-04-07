@@ -25,6 +25,10 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
         {
             foreach(var kvp in cooldowns)
             {
+#if DEBUG
+                if (kvp.Value.SpellWord.IsDebug)
+                    continue;
+#endif
                 if (kvp.Value.Cooldown <= 0)
                     return false;
             }
