@@ -21,7 +21,7 @@ public class StatusGuard : StatusRemoveAfterHitOrCast
     {
         resistTags.Add(effect.tags);
         resistReaction = data.IsCrit ? Reaction.Block : Reaction.Resist;
-        if(caster.CasterClass != Caster.Class.Player)
+        if(!caster.IsPlayer)
         {
             SpellFxManager.instance.LogMessage($"{target.DisplayName} put their shield up!");
         }

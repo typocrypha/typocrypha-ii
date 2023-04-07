@@ -68,7 +68,7 @@ public class Battlefield : MonoBehaviour, IPausable
         {
             foreach(var caster in Casters)
             {
-                if (caster.CasterClass == Caster.Class.Player)
+                if (caster.IsPlayer)
                     return caster;
             }
             return null;
@@ -196,32 +196,34 @@ public class Battlefield : MonoBehaviour, IPausable
         while (row < field.Rows)
         {
             var obj = field[row, col];
-            if (obj == null)
+            if (obj != null)
             {
-                if (++col >= field.Columns)
+                if (obj is Caster caster)
                 {
-                    col = 0;
-                    ++row;
+                    if(caster.CasterState == Caster.State.Hostile)
+                    {
+                        if (options.HasFlag(ClearOptions.ClearEnemies))
+                        {
+                            ClearObject(obj, row, col);
+                        }
+                    }
+                    else if (caster.CasterState == Caster.State.Ally)
+                    {
+                        if (options.HasFlag(ClearOptions.ClearAllies))
+                        {
+                            ClearObject(obj, row, col);
+                        }
+                    }
+                    else if (!caster.IsPlayer && options.HasFlag(ClearOptions.ClearObjects))
+                    {
+                        ClearObject(obj, row, col);
+                    }
                 }
-                continue;
-            }
-
-            var caster = obj as Caster;
-            if (caster != null)
-            {
-                if ((caster.CasterClass == Caster.Class.Other && options.HasFlag(ClearOptions.ClearEnemies))
-                    || (caster.CasterClass == Caster.Class.PartyMember && options.HasFlag(ClearOptions.ClearAllies)))
+                else if (options.HasFlag(ClearOptions.ClearObjects))
                 {
-                    Destroy(obj.gameObject);
-                    field[row, col] = null;
+                    ClearObject(obj, row, col);
                 }
-            }
-            else if (options.HasFlag(ClearOptions.ClearObjects))
-            {
-                Destroy(obj.gameObject);
-                field[row, col] = null;
-            }    
-            
+            }        
             if (++col >= field.Columns)
             {
                 col = 0;
@@ -229,6 +231,11 @@ public class Battlefield : MonoBehaviour, IPausable
             }
         }
         RecalculateCasters();
+    }
+    private void ClearObject(FieldObject obj, int row, int col)
+    {
+        Destroy(obj.gameObject);
+        field[row, col] = null;
     }
     /// Reset the caster array after clearing objects
     private void RecalculateCasters()

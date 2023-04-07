@@ -67,10 +67,9 @@ public class Caster : FieldObject
 
     #region State, Status, and Class
 
+    public bool IsPlayer => CasterState == State.Player;
     public State CasterState { get => _type; set => _type = value; }
     [SerializeField] private State _type;
-    public Class CasterClass { get => _casterClass; set => _casterClass = value; }
-    [SerializeField] private Class _casterClass;
     public BattleStatus BStatus
     {
         get => status;

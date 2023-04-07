@@ -84,7 +84,7 @@ public class SpellManager : MonoBehaviour
             }
             yield break;
         }
-        if(caster.CasterClass != Caster.Class.Player)
+        if(!caster.IsPlayer)
         {
             if(spell.Count == 1 && SpellWord.CompareKeys(spell[0], runWord))
             {
@@ -106,7 +106,7 @@ public class SpellManager : MonoBehaviour
         Damage.SpecialModifier mod = Damage.SpecialModifier.None;
         if (roots.Any((r) => r.effects.Any((e) => e.CanCrit)) && UnityEngine.Random.Range(0, 1f) <= Damage.baseCritChance)
         {
-            bool friendly = caster.CasterClass == Caster.Class.Player || caster.CasterClass == Caster.Class.PartyMember;
+            bool friendly = caster.IsPlayer || caster.CasterState == Caster.State.Ally;
             IEnumerator OnCritPopupComplete(bool popupSuccess)
             {
                 if (friendly)

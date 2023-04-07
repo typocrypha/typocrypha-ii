@@ -77,7 +77,7 @@ public class TargetData
             if(caster != null)
             {
                 // Logic for player, allies, and enemies. Other states have no defined allies
-                if (caster.CasterState == Caster.State.Player)
+                if (caster.IsPlayer)
                 {
                     foreach (var ally in Battlefield.instance.Allies)
                     {

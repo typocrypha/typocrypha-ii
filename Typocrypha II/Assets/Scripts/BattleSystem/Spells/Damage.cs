@@ -370,7 +370,7 @@ public static class Damage
             return;
         if (string.IsNullOrWhiteSpace(target.ResearchKey))
             return;
-        if (caster.CasterClass == Caster.Class.Player && target.BStatus == Caster.BattleStatus.SpiritMode)
+        if (caster.IsPlayer && target.BStatus == Caster.BattleStatus.SpiritMode)
         {
             var research = PlayerDataManager.instance.researchData;
             research.Add(target.ResearchKey, target.ResearchAmount);
@@ -410,7 +410,7 @@ public static class Damage
     public static void ApplyKeyboardEffects(CastResults results, RootWordEffect effect, Caster caster, Caster target)
     {
         //Inflict keyboard effects if the target is the player
-        if(target.CasterClass == Caster.Class.Player)
+        if(target.IsPlayer)
         {
             if (effect.tags.Contains("Fire"))
             {
