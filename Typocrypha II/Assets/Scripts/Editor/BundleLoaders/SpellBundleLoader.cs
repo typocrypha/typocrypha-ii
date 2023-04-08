@@ -4,11 +4,11 @@ using System.IO;
 
 // ensure class initializer is called whenever scripts recompile
 [InitializeOnLoad]
-public static class LoadSpellBundlesOnPlayMode
+public static class SpellBundleLoader
 {
     public static string path = "Assets/ScriptableObjects/Bundles";
     // register an event handler when the class is initialized
-    static LoadSpellBundlesOnPlayMode()
+    static SpellBundleLoader()
     {
         EditorApplication.playModeStateChanged += LoadSpellBundles;
         LoadSpellBundles(PlayModeStateChange.ExitingPlayMode);
@@ -18,6 +18,11 @@ public static class LoadSpellBundlesOnPlayMode
     {
         if (state != PlayModeStateChange.ExitingEditMode)
             return;
+        LoadSpellBundles();
+    }
+
+    public static void LoadSpellBundles()
+    {
         var spellBundles = AssetUtils.LoadAllAssetsInDirectory<SpellWordBundle>(path);
         foreach (var bundle in spellBundles)
         {
@@ -25,10 +30,10 @@ public static class LoadSpellBundlesOnPlayMode
             var words = AssetUtils.LoadAllAssetsInDirectoryRecursive<SpellWord>(bundle.assetPath);
             foreach (var word in words)
             {
-                if(!bundle.words.ContainsKey(word.Key))
+                if (!bundle.words.ContainsKey(word.Key))
                     bundle.words.Add(word.Key, word);
             }
-            if(bundle != null)
+            if (bundle != null)
                 EditorUtility.SetDirty(bundle);
         }
         AssetDatabase.SaveAssets();
