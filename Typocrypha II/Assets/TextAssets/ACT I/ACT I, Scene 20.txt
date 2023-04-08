@@ -1,0 +1,278 @@
+﻿//Round (EYE SYMBOL): Mari Urraca, Pillar of the Storm
+//Opening Dialog:
+>start,ACT-I-20-1-Opening
+
+
++bubble
+
+
+Mari[1,1]: I, Mari Urraca, Pillar of Obscurai, shall ensure the spread of your corruption stops here and now!
+
+
+>end
+//When Mari or Ayin reaches 50% health:
+>start,ACT-I-20-1-Backup
+
+
++vnplus
+
+
+>addchar,Ayin,0,0,left
+>setexpr,Ayin,serious
+
+
+Ayin: Haa... I don’t know if I can keep this up...
+
+
+>addchar,Dahlia,0,0,right
+>setexpr,Dahlia,stressed
+
+
+>addchar,Esaias,0,0,right
+>setexpr,Esaias,anxious
+
+
+Dahlia: Ayin!
+
+
+Narrator: Dahlia joins your side, with Esaias over her shoulder.
+
+
+Ayin(surprised): Dahlia! Esaias! Are you two OK?
+
+
+Esaias: No, but...
+
+
+Esaias(normal): We’re here to help.
+
+
+Dahlia: SUTURE!
+
+
+>castSpellProxy,SUTURE,0,1,Dahlia
+
+
+Ayin: Thanks!
+
+
+>addchar,Illyia,0,0,right
+>setexpr,Illyia,normal
+
+
+Illyia: I hope you haven’t forgotten about me!
+
+
+Dahlia: Illyia! You’re hurt!
+
+
+Illyia(quietlyhappy): Ah, I’ve been worse.
+
+
+Illyia(pissed): But anyways, now it’s time to pay back this demon for that love tap!
+
+
+>end
+//When Mari’s HP reaches 0:
+>start,ACT-I-20-1-MariFirstPhaseDone
+
+
++bubble
+
+
+Mari[1,1]: H-How could this happen...
+
+
+Mari[1,1]: O-OooOohHhHHh... hUMaNssss... I CURSE YOU...
+
+
+Mari[1,1]: MAY YOU DROWN IN YOUR GREED AND AVARICE!!!
+
+
+//TODO:Mari turns into her spirit form.
+
+
++vnplus
+
+
+>addchar,Ayin,0,0,left
+>setexpr,Ayin,serious
+
+
+>addchar,Illyia,0,0,left
+>setexpr,Illyia,concerned
+
+
+>addchar,Esaias,0,0,left
+>setexpr,Esaias,anxious
+
+
+>addchar,Dahlia,0,0,right
+>setexpr,Dahlia,stressed
+
+
+Ayin: Did... Did we do it?
+
+
+Dahlia: I think so...?
+
+
+Narrator: For a moment, everything is still. You start to relax your shoulders.
+
+
+Narrator: But then, you take a look at the spirit orb left behind by the demon...
+
+
+Narrator: ...And a phrase suddenly pops into your head. 
+
+
+Narrator: “The Eye of the Storm”
+
+
+//TODO: >screen-shake[a] 
+
+
+
+
+Narrator: A raging hurricane forms around the party, ripping off stones from the Ruins walls and sending them crashing into each other.
+
+
+Illyia(pissed): W-What the hell is happening? Esaias!
+
+
+Esaias(lookingright): I... don’t know. 
+
+
+Esaias(anxious): We reduced the demon to its spirit form but its magic levels keep increasing.
+
+
+Dahlia(concerned): At this rate, the storm will cause a tunnel collapse and trap everyone inside...
+
+
+Ayin(nervous): We need to stop it... But how?
+
+
+Narrator: Your mind begins to race, your breathing quickens.
+
+
+Narrator: You can’t calm yourself down, but perhaps thanks to that, you come up with an idea.
+
+
+Ayin(serious): Clarke!
+
+
+>addchar,Clarke,0,0,right
+
+
+Clarke: Yes?
+
+
+Ayin: Can you run the DECODE protocol on Mari[b]?
+
+
+Clarke: Calculating... Calculating...
+
+
+Clarke: ERROR: Not enough memory. 
+
+
+Clarke: Attempting to run sequential batch processes...
+
+
+Clarke: Time remaining to complete process: Approx 33 seconds.
+
+
+Ayin: Everyone... I have a plan, but it’ll take some time.
+
+
+Ayin: Can you help me cover me?
+
+
+Dahlia(happy): You got it, Ayin!
+
+
+Esaias(normal): Yes, we can do that.
+
+
+Illyia(normal): Alright, let’s get to work!
+
+
+>end
+//Spirit round
+//Not actually new wave: section begins when Mari is in spirit form.
+//First time piece of rubble spawns:
+>start,ACT-I-20-1-Rubble
++bubble
+
+
+Clarke[1,1]: WARNING! Incoming projectiles!
+
+
+Clarke[1,1]: Magic Missile Interceptor (MMI) protocol activated!
+
+
+Clarke[1,1]: Type in the displayed prompts to destroy incoming projectiles!
+>end
+
+
+//When second phase timer finishes:
+>start,ACT-I-20-1-MariSecondPhaseDone
+
+
++bubble
+
+
+Clarke[1,1]: Decode complete!
+
+
+Clarke[1,1]: Unlocked spell STRATOSPEAR.
+
+
+Clarke[1,1]: WARNING!! Magic Overload Risk.
+
+
+Clarke[1,1]: Your Typocrypha will experience a Cataclysmic Failure after using the spell STRATOSPEAR.
+
+
+Ayin[0,1]: Wh-What?
+
+
+Clarke[1,1]: Translation: You only get one shot!
+
+
+Clarke[1,1]: Do you wish to continue?
+
+
+Ayin[0,1]: (That means... If I mess up...)
+
+
+Illyia[2,1]: Hey leader! What’s the hold up!?
+
+
+Clarke[1,1]: Do you wish to continue?
+
+
+Dahlia[2,1]: Ayin! We can’t hold them off for much longer!
+
+
+Clarke[1,1]: Do you wish to continue?
+
+
+Esaias[2,1]: It’s too much... I-I can’t fight anymore...
+
+
+>stopbgm
+
+
+Ayin[0,1]: I...
+
+
+//TODO: Prompt comes up to use STRATOSPEAR.
+
+
+//TODO: After typing, super cool spell effect cut in showing STRATOSPEAR piercing Mari’s spirit form displays, and then the screen fades to white.
+
+
+>end
+[a]to fix screen shake
+[b]maybe change to just stalling for Kaia to snipe?
