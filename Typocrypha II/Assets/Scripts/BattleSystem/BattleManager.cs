@@ -145,7 +145,7 @@ public class BattleManager : MonoBehaviour, IPausable
             Destroy(e.gameObject);
         currEvents.Clear();
         // Clear the battlefield according to the clear options in the new wave
-        Battlefield.instance.ClearAndDestroy(CurrWave.fieldOptions);
+        Battlefield.instance.Clear(CurrWave.fieldOptions);
         // Clear player cooldowns
         SpellCooldownManager.instance.ResetAllCooldowns();
         Typocrypha.Keyboard.instance.Clear();

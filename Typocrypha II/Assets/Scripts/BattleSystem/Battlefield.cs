@@ -123,6 +123,7 @@ public class Battlefield : MonoBehaviour, IPausable
     /// Implicitly add toAdd to the actor list if applicable </summary> 
     public void Add(FieldObject toAdd, Position pos)
     {
+        Remove(pos);
         toAdd.FieldPos = pos;
         toAdd.transform.position = spaces[pos].transform.position;
         field[pos] = toAdd;
@@ -159,36 +160,33 @@ public class Battlefield : MonoBehaviour, IPausable
     }
     /// <summary> Get the field object </summary> 
     public FieldObject GetObject(Position pos) => field[pos];
-    /// <summary> Destroy an object on the field </summary>
-    public void Destroy(Position pos)
+
+    public void Remove(int row, int col, bool destroy = false)
+    {
+        Remove(new Position(row, col), destroy);
+    }
+    public void Remove(Position pos, bool destroy = false)
     {
         var obj = field[pos];
-        if (obj != null)
-            Destroy(obj);
-    }
-    /// <summary> Clear the data and destroy all of the game objects </summary>
-    public void DestroyAllAndClear()
-    {
-        foreach (var obj in field)
-            if(obj != null)
-                Destroy(obj.gameObject);
-        foreach (var obj in Actors)
-            if (obj != null)
-                Destroy(obj.gameObject);
-        foreach (var obj in Casters)
-            if (obj != null)
-                Destroy(obj.gameObject);
-        Clear();
-    }
-    /// <summary> Clear the data and representative lists </summary> 
-    public void Clear()
-    {
-        field = new FieldMatrix(2, 3);
-        Actors.Clear();
-        Casters.Clear();
+        if (obj == null)
+            return;
+        field[pos] = null;
+        if(obj is Caster caster)
+        {
+            Casters.Remove(caster);
+        }
+        var actor = obj.GetComponent<ATBActor>();
+        if (actor != null)
+        {
+            Actors.Remove(actor);
+        }
+        if (destroy)
+        {
+            Destroy(obj.gameObject);
+        }
     }
     /// <summary> Clear according to options </summary>
-    public void ClearAndDestroy(ClearOptions options)
+    public void Clear(ClearOptions options)
     {
         if (options == ClearOptions.Nothing)
             return;
@@ -204,24 +202,24 @@ public class Battlefield : MonoBehaviour, IPausable
                     {
                         if (options.HasFlag(ClearOptions.ClearEnemies))
                         {
-                            ClearObject(obj, row, col);
+                            Remove(row, col, true);
                         }
                     }
                     else if (caster.CasterState == Caster.State.Ally)
                     {
                         if (options.HasFlag(ClearOptions.ClearAllies))
                         {
-                            ClearObject(obj, row, col);
+                            Remove(row, col, true);
                         }
                     }
                     else if (!caster.IsPlayer && options.HasFlag(ClearOptions.ClearObjects))
                     {
-                        ClearObject(obj, row, col);
+                        Remove(row, col, true);
                     }
                 }
                 else if (options.HasFlag(ClearOptions.ClearObjects))
                 {
-                    ClearObject(obj, row, col);
+                    Remove(row, col, true);
                 }
             }        
             if (++col >= field.Columns)
@@ -231,11 +229,7 @@ public class Battlefield : MonoBehaviour, IPausable
             }
         }
         RecalculateCasters();
-    }
-    private void ClearObject(FieldObject obj, int row, int col)
-    {
-        Destroy(obj.gameObject);
-        field[row, col] = null;
+        RecalculateActors();
     }
     /// Reset the caster array after clearing objects
     private void RecalculateCasters()
@@ -243,9 +237,24 @@ public class Battlefield : MonoBehaviour, IPausable
         Casters.Clear();
         foreach(var obj in field)
         {
-            var caster = obj?.GetComponent<Caster>();
-            if (caster != null)
+            if(obj is Caster caster)
+            {
                 Casters.Add(caster);
+            }
+        }
+    }
+    private void RecalculateActors()
+    {
+        Actors.Clear();
+        foreach(var obj in field)
+        {
+            if (obj == null)
+                continue;
+            var actor = obj.GetComponent<ATBActor>();
+            if(actor != null)
+            {
+                Actors.Add(actor);
+            }
         }
     }
     #endregion
@@ -282,13 +291,13 @@ public class Battlefield : MonoBehaviour, IPausable
                 SetPosition(other, position, false);
                 return true;
             case MoveOption.DeleteOther:
-                Destroy(other.FieldPos);
+                Remove(other.FieldPos, true);
                 SetPosition(self, target);
                 return true;
             case MoveOption.DeleteOtherOnlyIfSpaceIsOccupied:
                 if (other == null)
                     return false;
-                Destroy(other.FieldPos);
+                Remove(other.FieldPos, true);
                 SetPosition(self, target);
                 return true;
             default:
