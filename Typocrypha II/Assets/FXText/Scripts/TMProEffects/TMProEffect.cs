@@ -126,7 +126,7 @@ namespace FXText
             for (int priority = 0; priority < effects.Count; priority++)
             {
                 var effect = effects[priority];
-                for (int pairIndex = 0; pairIndex < effect.ind.Count / 2; pairIndex += 2)
+                for (int pairIndex = 0; (pairIndex + 1) < effect.ind.Count; pairIndex += 2)
                 {
                     // If effect includes current character, apply effect
                     if (charIndex >= effect.ind[pairIndex] && charIndex < effect.ind[pairIndex + 1])
