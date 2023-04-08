@@ -95,11 +95,6 @@ public class BattleManager : MonoBehaviour, IPausable
         NextWave();
     }
 
-    /// <summary>
-    /// Delete the currently active battle events and add a new collection
-    /// if pause is true, pause all the events immediately after they are added
-    /// if addStd is true, add the standard battle events to the collection
-    /// </summary>
     public void SetBattleEvents(IEnumerable<GameObject> eventObjects, bool addStd)
     {
         // Add the standard battle events for this battle to the list
@@ -107,13 +102,13 @@ public class BattleManager : MonoBehaviour, IPausable
         {
             foreach (var e in stdBattleEvents)
             {
-                currEvents.Add(Instantiate(e).GetComponent<BattleEvent>());
+                AddBattleEvent(Instantiate(e).GetComponent<BattleEvent>());
             }
         }
         // Add the new battle events
         foreach (var e in eventObjects)
         {
-            currEvents.Add(Instantiate(e).GetComponent<BattleEvent>());
+            AddBattleEvent(Instantiate(e).GetComponent<BattleEvent>());
         }
     }
 
@@ -121,6 +116,10 @@ public class BattleManager : MonoBehaviour, IPausable
     {
         currEvents.Add(battleEvent);
         // Start it paused if the battleManager is in a paused state
+        if (PH.Pause)
+        {
+            battleEvent.PH.Pause = true;
+        }
     }
 
     public void SetBattleEventPause(bool pause)
