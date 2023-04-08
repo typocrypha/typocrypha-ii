@@ -237,9 +237,13 @@ public class DialogGraphParser : GraphParser
                         StartCoroutine(WaitOnRoutine(spellManager.Cast(castNode.GetSpell(), caster, new Battlefield.Position(castNode.targetPos), msgOverride)));
                         return null;
                     }
+                    else if (!string.IsNullOrEmpty(castNode.proxyCasterName))
+                    {
+                        Debug.LogError($"Proxy caster {castNode.proxyCasterName} not found.Cast will be skipped");
+                    }
                     else
                     {
-                        Debug.LogError($"Caster found at (row {castNode.casterPos.y}, col {castNode.casterPos.x}). Cast will be skipped");
+                        Debug.LogError($"Caster not found at (row {castNode.casterPos.y}, col {castNode.casterPos.x}). Cast will be skipped");
                     }
                 }
             }
