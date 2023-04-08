@@ -25,6 +25,7 @@ namespace Gameflow
 
         private RListGUI<GameObject> eventGUI;
         public List<GameObject> battleEvents;
+        public bool useStandardEvents;
 
         private RListGUI<GameObject> reinforcementsGUI;
         public List<GameObject> reinforcements;
@@ -39,6 +40,7 @@ namespace Gameflow
             battleEvents = new List<GameObject>();
             reinforcements = new List<GameObject>();
             clearFieldOptions = Battlefield.ClearOptions.ClearEnemies | Battlefield.ClearOptions.ClearObjects;
+            useStandardEvents = true;
         }
 
         public override void NodeGUI()
@@ -92,7 +94,8 @@ namespace Gameflow
             #endregion
 
             #region Battle Events GUI
-            if(eventGUI == null)
+            useStandardEvents = GUILayout.Toggle(useStandardEvents, new GUIContent("Use Standard Events"));
+            if (eventGUI == null)
             {
                 void EltGUI(GameObject element, int ind, Rect rect)
                 {

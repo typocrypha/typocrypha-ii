@@ -42,6 +42,7 @@ public class BattleGraphParser : GraphParser
                 battleEvents = new List<GameObject>(waveNode.battleEvents),
                 fieldOptions = waveNode.clearFieldOptions,
                 reinforcementPrefabs = new List<GameObject>(waveNode.reinforcements),
+                useStdEvents = waveNode.useStandardEvents,
                 openingScene = waveNode.openingScene,
             };
         }

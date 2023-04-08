@@ -15,6 +15,7 @@ public class BattleWave
     public AudioClip music;
     public GOMatrix2D battleField;
     public List<GameObject> battleEvents;
+    public bool useStdEvents;
     public List<GameObject> reinforcementPrefabs;
     public DialogCanvas openingScene;
 }

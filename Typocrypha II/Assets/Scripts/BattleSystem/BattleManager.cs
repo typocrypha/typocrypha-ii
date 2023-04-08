@@ -100,7 +100,7 @@ public class BattleManager : MonoBehaviour, IPausable
     /// if pause is true, pause all the events immediately after they are added
     /// if addStd is true, add the standard battle events to the collection
     /// </summary>
-    public void SetBattleEvents(IEnumerable<GameObject> eventObjects, bool pause = true, bool addStd = true)
+    public void SetBattleEvents(IEnumerable<GameObject> eventObjects, bool addStd)
     {
         // Add the standard battle events for this battle to the list
         if (addStd)
@@ -115,8 +115,6 @@ public class BattleManager : MonoBehaviour, IPausable
         {
             currEvents.Add(Instantiate(e).GetComponent<BattleEvent>());
         }
-        // Pause all of the new battle events so they don't activate during the tarnsition
-        //PH.Pause = pause;
     }
 
     public void AddBattleEvent(BattleEvent battleEvent)
@@ -180,7 +178,7 @@ public class BattleManager : MonoBehaviour, IPausable
         }
         yield return StartCoroutine(WaveTransition(waveData));
         // Set and pause the battle events
-        SetBattleEvents(waveData.battleEvents);
+        SetBattleEvents(waveData.battleEvents, waveData.useStdEvents);
         if (waveData.music != null)
         {
             AudioManager.instance.PlayBGM(waveData.music);
