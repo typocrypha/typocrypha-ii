@@ -79,7 +79,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
 
     void Start()
     {
-        if (startOnStart) StartDialog();
+        if (startOnStart) StartDialog(false);
     }
 
     void Update()
@@ -87,7 +87,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
 #if DEBUG
         if (!isBattle && Input.GetKeyDown(KeyCode.S))
         {
-            StartDialog();
+            StartDialog(false);
         }
 #endif
         // Check if submit key is pressed
@@ -109,7 +109,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     /// May load save if applicable.
     /// </summary>
     /// <param name="graph">Graph object to start.</param>
-    public void StartDialog(DialogCanvas graph, bool reset = false)
+    public void StartDialog(DialogCanvas graph, bool reset)
     {
         graphParser.Graph = graph;
         StartDialog(reset);
@@ -118,7 +118,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     /// <summary>
     /// Start new dialog graph. Implicitly uses graph already in parser.
     /// </summary>
-    private void StartDialog(bool reset = false)
+    private void StartDialog(bool reset)
     {
         PH.Pause = false;
         if (isBattle)
