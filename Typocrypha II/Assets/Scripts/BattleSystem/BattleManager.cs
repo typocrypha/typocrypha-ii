@@ -63,7 +63,16 @@ public class BattleManager : MonoBehaviour, IPausable
         var player = Instantiate(startNode.player, transform).GetComponent<FieldObject>();
         Battlefield.instance.Add(player, new Battlefield.Position(1, 1));
         // Initialize ally character
-        AllyBattleBoxManager.instance.SetBattleAllyData(startNode.initialAllyData, startNode.initialAllyExpr, startNode.initialAllyPose);
+        if(startNode.initialAllyData != null)
+        {
+            var expr = string.IsNullOrEmpty(startNode.initialAllyExpr) ? CharacterData.defaultExpr : startNode.initialAllyExpr;
+            var pose = string.IsNullOrEmpty(startNode.initialAllyPose) ? CharacterData.defaultPose : startNode.initialAllyPose;
+            AllyBattleBoxManager.instance.SetBattleAllyData(startNode.initialAllyData, expr, pose);
+        }
+        else
+        {
+            AllyBattleBoxManager.instance.SetBattleAllyData(null, "", "");
+        }
         AllyBattleBoxManager.instance.SetBattleAllyCharacterInstant();
         // Initialize proxy casters
         AddProxyCaster(startNode.proxyCaster1);

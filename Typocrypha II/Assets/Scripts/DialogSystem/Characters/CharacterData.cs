@@ -5,6 +5,8 @@
 [System.Serializable]
 public class CharacterData : ScriptableObject
 {
+    public const string defaultPose = "base";
+    public const string defaultExpr = "normal";
     public enum FacingDirection
     {
         Left,
