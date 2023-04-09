@@ -134,6 +134,26 @@ public abstract class GraphParser : MonoBehaviour
             }
             return true;
         }
+        if (node is SetAllyNode setAllyNode)
+        {
+            var allyManager = AllyBattleBoxManager.instance;
+            if (allyManager != null)
+            {
+                allyManager.SetBattleAllyData(setAllyNode.allyData, setAllyNode.expr, setAllyNode.pose);
+                if (setAllyNode.show)
+                {
+                    // show ally
+                    allyManager.ShowBattleAlly();
+                }
+            }
+            var battlefield = Battlefield.instance;
+            if (battlefield != null && setAllyNode.prefab != null)
+            {
+                var newAlly = Instantiate(setAllyNode.prefab).GetComponent<Caster>();
+                battlefield.Add(newAlly, new Battlefield.Position(1, 2));
+            }
+            return true;
+        }
         return false;
     }
 
