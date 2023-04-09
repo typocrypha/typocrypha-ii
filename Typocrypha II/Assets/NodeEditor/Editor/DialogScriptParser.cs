@@ -15,6 +15,7 @@ public class DialogScriptParser : EditorWindow
 {
     public const string assetPath = "Assets/ScriptableObjects/DialogScenes/";
     public const string spellWordBundlePath = "Assets/ScriptableObjects/Bundles/AllWordsBundle.asset";
+    public const string allyBundlePath = "Assets/ScriptableObjects/Bundles/AllyBundle.asset";
     TextAsset textScript; // Text script asset
     NodeCanvas canvas; // Generated canvas
     bool endAndTransition = true;
@@ -24,6 +25,7 @@ public class DialogScriptParser : EditorWindow
 
     AssetBundle characterDataBundle; // Character data bundle
     SpellWordBundle spellWords; // All spell words
+    PrefabBundle allyBundle; // Ally indexable allies
     CharacterData[] allCharacterData; // All loaded character data
 
     readonly char[] lineDelim = new char[] { '\n' }; // Line delimiter.
@@ -79,6 +81,7 @@ public class DialogScriptParser : EditorWindow
         {"castSpellProxy", typeof(CastSpellNode) },
         {"castSpellName", typeof(CastSpellNode) },
         {"castSpellAlly", typeof(CastSpellNode) },
+        {"setAlly", typeof(SetAllyNode) },
         {"clear", typeof(ClearNode) },
         {"clearReinforcements", typeof(ClearReinforcementsNode) },
         {"clearSpells", typeof(ClearEquippedSpellsNode) },
@@ -141,6 +144,7 @@ public class DialogScriptParser : EditorWindow
         AssetBundle.UnloadAllAssetBundles(true);
         characterDataBundle = AssetBundle.LoadFromFile(System.IO.Path.Combine(Application.streamingAssetsPath, "characterdata"));
         spellWords = AssetDatabase.LoadAssetAtPath<SpellWordBundle>(spellWordBundlePath);
+        allyBundle = AssetDatabase.LoadAssetAtPath<PrefabBundle>(allyBundlePath);
         allCharacterData = characterDataBundle.LoadAllAssets<CharacterData>();
         canvas = null;
         Parse();
@@ -489,6 +493,23 @@ public class DialogScriptParser : EditorWindow
                 }
             }
             nodes.Add(castNode);
+        }
+        else if (nodeType == typeof(SetAllyNode))
+        {
+            var setAllyNode = CreateNode(SetAllyNode.ID) as SetAllyNode;
+            allyBundle.prefabs.TryGetValue(args[1], out setAllyNode.prefab);
+            setAllyNode.allyData = GetCharacterData(args[2]);
+            setAllyNode.show = args[3] == "true";
+            if(args.Length == 5)
+            {
+                setAllyNode.expr = args[4];
+            }
+            else if(args.Length >= 6)
+            {
+                setAllyNode.pose = args[4];
+                setAllyNode.expr = args[5];
+            }
+            nodes.Add(setAllyNode);
         }
         else if(nodeType == typeof(AddEquippedSpellsNode))
         {
