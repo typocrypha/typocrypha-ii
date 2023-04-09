@@ -123,7 +123,7 @@ public class Battlefield : MonoBehaviour, IPausable
     /// Implicitly add toAdd to the actor list if applicable </summary> 
     public void Add(FieldObject toAdd, Position pos)
     {
-        Remove(pos);
+        Remove(pos,true);
         toAdd.FieldPos = pos;
         toAdd.transform.position = spaces[pos].transform.position;
         field[pos] = toAdd;
