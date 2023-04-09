@@ -100,7 +100,7 @@ public class TargetData
                 {
                     foreach (var enemy in Battlefield.instance.Enemies)
                     {
-                        if (enemy.IsDeadOrFled)
+                        if (enemy.IsDeadOrFled || enemy.FieldPos == casterPos)
                             continue;
                         ret.Add(enemy.FieldPos);
                     }
