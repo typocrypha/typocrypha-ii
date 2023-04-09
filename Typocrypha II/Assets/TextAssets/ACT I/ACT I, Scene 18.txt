@@ -3,38 +3,24 @@
 >start,ACT-I-18-1-Opening
 
 
-+vnplus
++bubble
 
 
->addchar,Ayin,0,0,left
->setexpr,Ayin,ohfuck
+>addchar,Illyia,0,0,right,concerned
+Illyia[0,2]: ...OK, this is actually a lot of demons.
 
 
->addchar,Illyia,0,0,left
->setexpr,Illyia,concerned
+Ayin[0,1]: Esaias! H-How long until the assault teams arrive?
 
 
->addchar,Esaias,0,0,left
->setexpr,Esaias,anxious
+Esaias[0,1]: They are not far now. Approximately 60 seconds until arrival.
 
 
->addchar,Dahlia,0,0,right
->setexpr,Dahlia,stressed
+Esaias[0,1]: I have put out a distress beacon, so they should be on their way...
 
 
-Illyia: ...OK, this is actually a lot of demons.
-
-
-Ayin: Esaias! H-How long until the assault teams arrive?
-
-
-Esaias: They are not far now. Approximately 60 seconds until arrival.
-
-
-Esaias (lookingleft): I have put out a distress beacon, so they should be on their way...
-
-
-Dahlia: Everyone stay close! We can do this!
+>addchar,Dahlia,0,0,right,base,stressed
+Dahlia[0,2]: Everyone stay close! We can do this!
 
 
 >end
@@ -43,10 +29,16 @@ Dahlia: Everyone stay close! We can do this!
 +bubble
 
 
+>addchar,Dahlia,0,0,right,action,yell
+
+
 Dahlia[0,2]: SUTURE!
 
+
 >clear
->castSpell,SUTURE,1,1,1,2
+
+
+>castSpellName,SUTURE,1,1,Dahlia
 
 
 Ayin[0,1]: Thanks, Dahlia!
@@ -60,7 +52,12 @@ Dahlia[0,2]: Try not to get too beaten up!
 
 >end
 //After getting halfway (30 seconds):
+
+
 >start,ACT-I-18-1-Halfway
+>setAlly,AllyIllyiaActI-18,Illyia,false,action,yell
+
+
 +bubble
 
 
@@ -69,9 +66,11 @@ Dahlia[0,2]: Try not to get too beaten up!
 
 Illyia[0,2]: Out of the way!!!
 
+
 // Spell being cast is placeholder
 >clear
->castSpellProxy,PERISH,0,1,Illyia
+>castSpellAlly,PERISH,0,1
+
 
 Illyia[0,2](base,laughing): Phew! You OK, Leader?
 
@@ -87,7 +86,10 @@ Ayin[0,1]: Uh, y-yeah. Thanks, Illyia!
 
 Esaias[0,1]: Support fire from the assault team incoming!
 
->castSpellProxy,ARTILLERY,0,1,AssaultTeam,ARTILLERY fire rains down!
+
+>castSpellProxy,ARTILLERY,0,1,AssaultTeam,ARTILLERY fire rains down[a]!
 >clearReinforcements
 
+
 >end
+[a]consider maybe having demon souls destroyed as well
