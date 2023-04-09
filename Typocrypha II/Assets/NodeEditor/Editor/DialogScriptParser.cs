@@ -77,6 +77,8 @@ public class DialogScriptParser : EditorWindow
         {"cast", typeof(CastSpellNode) },
         {"castSpell", typeof(CastSpellNode) },
         {"castSpellProxy", typeof(CastSpellNode) },
+        {"castSpellName", typeof(CastSpellNode) },
+        {"castSpellAlly", typeof(CastSpellNode) },
         {"clear", typeof(ClearNode) },
         {"clearReinforcements", typeof(ClearReinforcementsNode) },
         {"clearSpells", typeof(ClearEquippedSpellsNode) },
@@ -440,9 +442,9 @@ public class DialogScriptParser : EditorWindow
         else if (nodeType == typeof(CastSpellNode))
         {
             var castNode = CreateNode(CastSpellNode.Id) as CastSpellNode;
-            if(args.Length < 5)
+            if(args.Length < 4)
             {
-                throw new System.Exception($"Incorrect number of args for cast spell node ({args.Length - 1}). Expected at least 4");
+                throw new System.Exception($"Incorrect number of args for cast spell node ({args.Length - 1}). Expected at least 3");
             }
             // Parse spell
             var spellWordStrings = args[1].Split(Player.separator);
@@ -455,9 +457,27 @@ public class DialogScriptParser : EditorWindow
             if(args[0] == "castSpellProxy")
             {
                 castNode.proxyCasterName = args[4];
+                castNode.searchField = false;
                 if (args.Length >= 6)
                 {
                     castNode.messageOverride = args[5];
+                }
+            }
+            else if(args[0] == "castSpellName")
+            {
+                castNode.proxyCasterName = args[4];
+                castNode.searchField = true;
+                if (args.Length >= 6)
+                {
+                    castNode.messageOverride = args[5];
+                }
+            }
+            else if(args[0] == "castSpellAlly")
+            {
+                castNode.casterPos = new Vector2Int(2, 1);
+                if (args.Length >= 5)
+                {
+                    castNode.messageOverride = args[4];
                 }
             }
             else

@@ -23,6 +23,7 @@ namespace Gameflow
         public Vector2Int casterPos;
         public string messageOverride;
         public string proxyCasterName;
+        public bool searchField;
 
         public Spell GetSpell()
         {
@@ -69,6 +70,7 @@ namespace Gameflow
             GUILayout.Label(new GUIContent("Proxy Caster"), GUI.skin.label, GUILayout.Width(80));
             proxyCasterName = GUILayout.TextField(proxyCasterName);
             GUILayout.EndHorizontal();
+            searchField = GUILayout.Toggle(searchField, new GUIContent("Search Field"));
             GUILayout.BeginHorizontal();
             GUILayout.Label(new GUIContent("Msg Override"), GUI.skin.label, GUILayout.Width(80));
             messageOverride = GUILayout.TextField(messageOverride);

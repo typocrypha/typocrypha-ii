@@ -225,7 +225,14 @@ public class DialogGraphParser : GraphParser
                     Caster caster;
                     if (!string.IsNullOrEmpty(castNode.proxyCasterName))
                     {
-                        caster = battleField.GetProxyCaster(castNode.proxyCasterName);
+                        if (castNode.searchField)
+                        {
+                            caster = battleField.GetCaster(castNode.proxyCasterName, true);
+                        }
+                        else
+                        {
+                            caster = battleField.GetProxyCaster(castNode.proxyCasterName);
+                        }
                     }
                     else
                     {

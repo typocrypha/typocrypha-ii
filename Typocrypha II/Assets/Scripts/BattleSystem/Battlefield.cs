@@ -153,6 +153,16 @@ public class Battlefield : MonoBehaviour, IPausable
     }
     /// <summary> Get the caster in a specific space. returns null if the space is empty or the object is not a caster </summary> 
     public Caster GetCaster(Position pos) => GetObject(pos) as Caster;
+    public Caster GetCaster(string name, bool allowProxies)
+    {
+        var nameProcessed = name.ToLower();
+        foreach(var caster in Casters)
+        {
+            if (caster.DisplayName.ToLower() == nameProcessed)
+                return caster;
+        }
+        return allowProxies ? GetProxyCaster(name) : null;
+    }
     public Caster GetProxyCaster(string proxyName)
     {
         proxyCasters.TryGetValue(proxyName.ToLower(), out Caster caster);
