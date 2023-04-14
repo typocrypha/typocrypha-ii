@@ -14,62 +14,64 @@ Mari[1,1]: I, Mari Urraca, Pillar of Obscurai, shall ensure the spread of your c
 >start,ACT-I-20-1-Backup
 
 
-+vnplus
++bubble
 
 
->addchar,Ayin,0,0,left
->setexpr,Ayin,serious
+Ayin[0,1]: Haa... I don’t know if I can keep this up...
 
 
-Ayin: Haa... I don’t know if I can keep this up...
+>addchar,Dahlia,0,0,right,stressed
+>setAlly,AllyDahliaActI-20,Dahlia,false,action,yell
 
 
->addchar,Dahlia,0,0,right
->setexpr,Dahlia,stressed
+Dahlia[0,2]: Ayin!
 
 
->addchar,Esaias,0,0,right
->setexpr,Esaias,anxious
+//Narrator[0,1]: Dahlia joins your side, with Esaias over her shoulder.
 
 
-Dahlia: Ayin!
+Ayin[0,1]: Dahlia! Esaias! Are you two OK?
 
 
-Narrator: Dahlia joins your side, with Esaias over her shoulder.
+>addchar,Esaias,0,0,right,anxious
 
 
-Ayin(surprised): Dahlia! Esaias! Are you two OK?
+Esaias[0,2]: No, but...
 
 
-Esaias: No, but...
+Esaias(normal)[0,2]: We’re here to help.
 
 
-Esaias(normal): We’re here to help.
+>addchar,Dahlia,0,0,right,stressed
 
 
-Dahlia: SUTURE!
+Dahlia[0,2]: SUTURE!
+>clear
+>castSpellAlly,SUTURE,1,1
 
 
->castSpellProxy,SUTURE,1,1,Dahlia
+Ayin[0,1]: Thanks!
 
 
-Ayin: Thanks!
+>addchar,Illyia,0,0,right,normal
 
 
->addchar,Illyia,0,0,right
->setexpr,Illyia,normal
+Illyia[0,2]: I hope you haven’t forgotten about me!
 
 
-Illyia: I hope you haven’t forgotten about me!
+>addchar,Dahlia,0,0,right,stressed
 
 
-Dahlia: Illyia! You’re hurt!
+Dahlia[0,2]: Illyia! You’re hurt!
 
 
-Illyia(quietlyhappy): Ah, I’ve been worse.
+>addchar,Illyia,0,0,right,quietlyhappy
 
 
-Illyia(pissed): But anyways, now it’s time to pay back this demon for that love tap!
+Illyia[0,2]: Ah, I’ve been worse.
+
+
+Illyia(pissed)[0,2]: But anyways, now it’s time to pay back this demon for that love tap!
 
 
 >end
@@ -92,109 +94,106 @@ Mari[1,1]: MAY YOU DROWN IN YOUR GREED AND AVARICE!!!
 //TODO:Mari turns into her spirit form.
 
 
-+vnplus
+Ayin[0,1]: Did... Did we do it?
 
 
->addchar,Ayin,0,0,left
->setexpr,Ayin,serious
+>addchar,Dahlia,0,0,right,stressed
 
 
->addchar,Illyia,0,0,left
->setexpr,Illyia,concerned
+Dahlia[0,2]: I think so...?
 
 
->addchar,Esaias,0,0,left
->setexpr,Esaias,anxious
+//Narrator: For a moment, everything is still. You start to relax your shoulders.
 
 
->addchar,Dahlia,0,0,right
->setexpr,Dahlia,stressed
+//Narrator: But then, you take a look at the spirit orb left behind by the demon...
 
 
-Ayin: Did... Did we do it?
+//Narrator: ...And a phrase suddenly pops into your head. 
 
 
-Dahlia: I think so...?
-
-
-Narrator: For a moment, everything is still. You start to relax your shoulders.
-
-
-Narrator: But then, you take a look at the spirit orb left behind by the demon...
-
-
-Narrator: ...And a phrase suddenly pops into your head. 
-
-
-Narrator: “The Eye of the Storm”
+//Narrator: “The Eye of the Storm”
 
 
 //TODO: >screen-shake[a] 
 
 
+//Narrator[0,1]: A raging hurricane forms around the party, ripping off stones from the Ruins walls and sending them crashing into each other.
 
 
-Narrator: A raging hurricane forms around the party, ripping off stones from the Ruins walls and sending them crashing into each other.
+>addchar,Illyia,0,0,right,pissed
 
 
-Illyia(pissed): W-What the hell is happening? Esaias!
+Illyia[0,2]: W-What the hell is happening? Esaias!
 
 
-Esaias(lookingright): I... don’t know. 
+>addchar,Esaias,0,0,lookingright
 
 
-Esaias(anxious): We reduced the demon to its spirit form but its magic levels keep increasing.
+Esaias[0,2]: I... don’t know. 
 
 
-Dahlia(concerned): At this rate, the storm will cause a tunnel collapse and trap everyone inside...
+Esaias(anxious)[0,2]: We reduced the demon to its spirit form but its magic levels keep increasing.
 
 
-Ayin(nervous): We need to stop it... But how?
+>addchar,Dahlia,0,0,right,concerned
 
 
-Narrator: Your mind begins to race, your breathing quickens.
+Dahlia[0,2]: At this rate, the storm will cause a tunnel collapse and trap everyone inside...
 
 
-Narrator: You can’t calm yourself down, but perhaps thanks to that, you come up with an idea.
+Ayin[0,1]: We need to stop it... But how?
 
 
-Ayin(serious): Clarke!
+//Narrator[0,1]: Your mind begins to race, your breathing quickens.
 
 
->addchar,Clarke,0,0,right
+//Narrator[0,1]: You can’t calm yourself down, but perhaps thanks to that, you come up with an idea.
 
 
-Clarke: Yes?
+Ayin[0,1]: Clarke!
 
 
-Ayin: Can you run the DECODE protocol on Mari[b]?
+Clarke[0,1]: Yes?
 
 
-Clarke: Calculating... Calculating...
+Ayin[0,1]: Can you run the DECODE protocol on Mari[b]?
 
 
-Clarke: ERROR: Not enough memory. 
+Clarke[0,1]: Calculating... Calculating...
 
 
-Clarke: Attempting to run sequential batch processes...
+Clarke[0,1]: ERROR: Not enough memory. 
 
 
-Clarke: Time remaining to complete process: Approx 33 seconds.
+Clarke[0,1]: Attempting to run sequential batch processes...
 
 
-Ayin: Everyone... I have a plan, but it’ll take some time.
+Clarke[0,1]: Time remaining to complete process: Approx 33 seconds.
 
 
-Ayin: Can you help me cover me?
+Ayin[0,1]: Everyone... I have a plan, but it’ll take some time.
 
 
-Dahlia(happy): You got it, Ayin!
+Ayin[0,1]: Can you help me cover me?
 
 
-Esaias(normal): Yes, we can do that.
+>addchar,Dahlia,0,0,right,happy
 
 
-Illyia(normal): Alright, let’s get to work!
+Dahlia[0,2]: You got it, Ayin!
+
+
+>addchar,Esaias,0,0,right,normal
+
+
+Esaias[0,2]: Yes, we can do that.
+
+
+>addchar,Illyia,0,0,right,normal
+
+
+Illyia[0,2]: Alright, let’s get to work!
 
 
 >end
@@ -231,7 +230,7 @@ Clarke[0,1]: Unlocked spell STRATOSPEAR.
 Clarke[0,1]: WARNING!! Magic Overload Risk.
 
 
-Clarke[0,1]: Your Typocrypha will experience a Cataclysmic Failure after using the spell STRATOSPEAR.
+Clarke[0,1]: Your Typocrypha will experience a Cataclysmic Failure after using the spell STRATOSPEAR.[c]
 
 
 Ayin[0,1]: Wh-What?
@@ -282,3 +281,4 @@ Ayin[0,1]: I...
 >endt
 [a]to fix screen shake
 [b]maybe change to just stalling for Kaia to snipe?
+[c]maybe instead of separate offensive spell, get 'HURRICANE' spell, which is theconstant spell Mari is casting, allowing Ayin to counter
