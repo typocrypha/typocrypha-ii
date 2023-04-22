@@ -206,13 +206,16 @@ namespace Typocrypha
             {
                 allEffects[key].Remove();
             }
-
         }
 
         public void Clear()
         {
             ClearKeyEffects();
             overheatManager.StopOverheat();
+            foreach (var c in keyMap) // Turn all highlights off
+            {
+                c.Value.Highlight = false;
+            }
         }
 
         public void DoOverheat()
