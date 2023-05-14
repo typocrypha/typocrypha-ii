@@ -13,7 +13,6 @@ namespace Typocrypha
     public class CastBar : MonoBehaviour
     {
         public CastBarCursor cursor; // Cursor for keeping track of position.
-        public GameObject[] keywords; // Set of all keywords (prefab effects).
         [SerializeField] protected TextMeshProUGUI[] letters; // Array of single letter rects.
         [SerializeField] protected AudioClip backspaceSfx;
 
@@ -24,18 +23,13 @@ namespace Typocrypha
         }
 
         protected int pos = 0; // Cursor position.
-        readonly Dictionary<string, GameObject> keywordMap = new Dictionary<string, GameObject>();
         readonly Regex alpha = new Regex("^[A-Za-z]"); // Matches alphabetic strings.
-        readonly char[] keywordDelim = new char[1] { ' ' };
+        public static char[] KeywordDelimiters { get; } = new char[] { '–', ' ', '-' };
         protected virtual char SpaceChar => ' ';
 
         void Start()
         {
             Clear(false);
-            foreach (var pf in keywords)
-            {
-                keywordMap[pf.name] = pf;
-            }
         }
 
         protected virtual void HandleBackSpace()
@@ -85,10 +79,10 @@ namespace Typocrypha
         {
             if (inputChar == SpaceChar) // Space. Don't allow space on first character.
             {
-                if (pos > 0 && sb[pos - 1] != keywordDelim[0]) // Ignore multiple spaces.
+                if (pos > 0 && sb[pos - 1] != KeywordDelimiters[0]) // Ignore multiple spaces.
                 {
-                    sb.Append(keywordDelim[0]);
-                    pos++;
+                    sb.Append(KeywordDelimiters[0]);
+                    letters[pos++].text = KeywordDelimiters[0].ToString();
                 }
                 return true;
             }
@@ -124,7 +118,6 @@ namespace Typocrypha
             }
             if(CheckSpace(inputChar) || CheckStandardCharacter(inputChar))
             {
-                MatchKeywords(); // Find keywords and combos
                 UpdateCursor(true);
             }
         }
@@ -151,75 +144,12 @@ namespace Typocrypha
             Clear(false);
         }
 
-        // Match keywords and apply effects.
-        // Effects are attached as children to first letter in keyword.
-        void MatchKeywords()
-        {
-            if (Text.Length <= 0)
-                return;
-            var keywords = sb.ToString().Split(keywordDelim);
-            int pos = 0; // Character position.
-            Keyword curr = null; // Current keyword.
-            Keyword prev = null; // Previous keyword.
-            for (int i = 0; i < keywords.Length; i++) // Word position.
-            {
-                if (i > 0) prev = curr;
-                curr = keywordMap.ContainsKey(keywords[i])
-                     ? keywordMap[keywords[i]].GetComponent<Keyword>()
-                     : null;
-                // Check if keyword matches. Don't re-add effects.
-                if (keywordMap.ContainsKey(keywords[i]) && letters[pos].transform.childCount == 0)
-                {
-                    // Initial effect application.
-                    Instantiate(keywordMap[keywords[i]], letters[pos].transform);
-                    if (curr.type == Keyword.Type.root) // Root.
-                    {
-                        if (prev != null) // Check previous.
-                        {
-                            if (prev.type == Keyword.Type.left)
-                            {
-                                letters[pos - 1].text = Spell.separatorModRight.ToString();
-                            }
-                            else if (prev.type == Keyword.Type.root)
-                            {
-                                letters[pos - 1].text = Spell.separator.ToString();
-                            }
-                        }
-                    }
-                    else if (curr.type == Keyword.Type.right) // Right modifier.
-                    {
-                        if (prev != null) // Check previous.
-                        {
-                            if (prev.type == Keyword.Type.root)
-                            {
-                                letters[pos - 1].text = Spell.separatorModLeft.ToString();
-                            }
-                        }
-                    }
-                }
-                else if (!keywordMap.ContainsKey(keywords[i])) // Invalid word
-                {
-                    // Remove broken effects.
-                    if (letters[pos].transform.childCount > 0)
-                    {
-                        Destroy(letters[pos].transform.GetChild(0).gameObject);
-                        if (pos > 0) letters[pos - 1].text = "";
-                    }
-                }
-                pos += keywords[i].Length + 1;
-            }
-        }
-
         void Clear(bool showCursor = true)
         {
             pos = 0;
             foreach (var letter in letters)
             {
                 letter.text = "";
-                foreach (Transform child in letter.transform)
-                {
-                    Destroy(child.gameObject);
-                }
             }
             sb.Clear();
             UpdateCursor(showCursor);

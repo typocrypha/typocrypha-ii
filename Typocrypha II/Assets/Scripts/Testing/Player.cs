@@ -1,12 +1,11 @@
 ﻿using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
+using Typocrypha;
 
 [RequireComponent(typeof(ATB3.ATBPlayer))]
 public class Player : Caster, IPausable
 {
-    public static readonly char[] separator = { ' ', '-' };
-
     #region IPausable
     public PauseHandle PH { get; private set; }
 
@@ -36,7 +35,7 @@ public class Player : Caster, IPausable
     /// </summary>
     public void CastString(string spellString)
     {
-        var results = SpellParser.instance.Parse(spellString.TrimEnd().Split(separator), PlayerDataManager.instance.equipment.EquippedWords, out var spell);
+        var results = SpellParser.instance.Parse(spellString.TrimEnd(CastBar.KeywordDelimiters).Split(CastBar.KeywordDelimiters), PlayerDataManager.instance.equipment.EquippedWords, out var spell);
         if (results == SpellParser.ParseResults.Valid) 
         {
             // Check cooldowns

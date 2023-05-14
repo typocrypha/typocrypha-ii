@@ -3,6 +3,7 @@ using NodeEditorFramework;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Typocrypha;
 using UnityEditor;
 using UnityEngine;
 
@@ -451,7 +452,7 @@ public class DialogScriptParser : EditorWindow
                 throw new System.Exception($"Incorrect number of args for cast spell node ({args.Length - 1}). Expected at least 3");
             }
             // Parse spell
-            var spellWordStrings = args[1].Split(Player.separator);
+            var spellWordStrings = args[1].Split(CastBar.KeywordDelimiters);
             TryParseSpellWord(spellWordStrings, 0, out castNode.word1, CastSpellNode.Id);
             TryParseSpellWord(spellWordStrings, 1, out castNode.word2, CastSpellNode.Id);
             TryParseSpellWord(spellWordStrings, 2, out castNode.word3, CastSpellNode.Id);
