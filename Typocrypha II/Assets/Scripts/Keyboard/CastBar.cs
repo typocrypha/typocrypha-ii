@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Linq;
 using UnityEngine;
 using TMPro;
 
@@ -13,7 +12,7 @@ namespace Typocrypha
     /// </summary>
     public class CastBar : MonoBehaviour
     {
-        public Transform cursor; // Cursor for keeping track of position.
+        public CastBarCursor cursor; // Cursor for keeping track of position.
         public GameObject[] keywords; // Set of all keywords (prefab effects).
         [SerializeField] protected TextMeshProUGUI[] letters; // Array of single letter rects.
         [SerializeField] protected AudioClip backspaceSfx;
@@ -32,17 +31,11 @@ namespace Typocrypha
 
         void Start()
         {
-            Clear();
+            Clear(false);
             foreach (var pf in keywords)
             {
                 keywordMap[pf.name] = pf;
             }
-        }
-
-        void Update()
-        {
-            cursor.GetComponent<RectTransform>().offsetMin = // Set cursor position.
-                letters[pos].GetComponent<RectTransform>().offsetMin;
         }
 
         protected virtual void HandleBackSpace()
@@ -50,6 +43,21 @@ namespace Typocrypha
             letters[--pos].text = "";
             sb.Remove(pos, 1);
             AudioManager.instance.PlaySFX(backspaceSfx);
+        }
+
+        private void UpdateCursor(bool show)
+        {
+            if (pos >= letters.Length)
+            {
+                cursor.gameObject.SetActive(false);
+                return;
+            }
+            if (!cursor.gameObject.activeInHierarchy)
+            {
+                cursor.gameObject.SetActive(true);
+            }
+            cursor.transform.position = letters[pos].transform.position;
+            cursor.SetDelay(0.2f, show);
         }
 
         private bool CheckBackspace(char inputChar)
@@ -106,9 +114,10 @@ namespace Typocrypha
         {
             if (CheckBackspace(inputChar))
             {
+                UpdateCursor(true);
                 return;
             }
-            if (pos >= letters.Length - 1) // No more room.
+            if (pos >= letters.Length) // No more room.
             {
                 Debug.Log("CastBar full");
                 return;
@@ -116,6 +125,7 @@ namespace Typocrypha
             if(CheckSpace(inputChar) || CheckStandardCharacter(inputChar))
             {
                 MatchKeywords(); // Find keywords and combos
+                UpdateCursor(true);
             }
         }
 
@@ -138,7 +148,7 @@ namespace Typocrypha
             {
                 Debug.LogError("Player is not valid. Cannot cast");
             }
-            Clear();
+            Clear(false);
         }
 
         // Match keywords and apply effects.
@@ -200,7 +210,7 @@ namespace Typocrypha
             }
         }
 
-        void Clear()
+        void Clear(bool showCursor = true)
         {
             pos = 0;
             foreach (var letter in letters)
@@ -212,6 +222,7 @@ namespace Typocrypha
                 }
             }
             sb.Clear();
+            UpdateCursor(showCursor);
         }
     }
 }

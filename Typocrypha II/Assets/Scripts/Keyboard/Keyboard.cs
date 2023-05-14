@@ -14,14 +14,14 @@ namespace Typocrypha
     { 
 
         #region IPausable
-        PauseHandle ph;
-        public PauseHandle PH { get => ph; }
+        public PauseHandle PH { get; private set; }
         // Stops input and pauses keyboard effects.
         public void OnPause(bool b)
         {
             enabled = !b;
             foreach (var kvp in allEffects)
                 kvp.Value.PH.Pause = b;
+            castBar.cursor.PH.Pause = b;
         }
         #endregion
 
@@ -66,11 +66,11 @@ namespace Typocrypha
                 Destroy(gameObject);
                 return;
             }
-            ph = new PauseHandle(OnPause);
-
             var builder = GetComponent<KeyboardBuilder>(); // Construct keyboard.
             builder.BuildKeyboard();
             Initialize(builder.Keys);
+
+            PH = new PauseHandle(OnPause);
         }
 
         public void Initialize(IEnumerable<Key> keys)
@@ -89,6 +89,11 @@ namespace Typocrypha
         private bool GetKey(char key)
         {
             return Input.GetKey(keyCodeMap[key]) || (secondaryKeyCodeMap.TryGetValue(key, out var secondaryCode) && Input.GetKey(secondaryCode));
+        }
+
+        void Start()
+        {
+            PH.Pause = true;
         }
 
         // Check user input.
