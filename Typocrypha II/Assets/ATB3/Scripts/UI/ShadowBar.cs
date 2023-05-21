@@ -7,56 +7,53 @@ using UnityEngine.UI;
 /// </summary>
 public class ShadowBar : MonoBehaviour
 {
-    public Slider shadow; // Slider for bar
-    float _curr; // Normalized current amount
+    public Image shadow; // Slider for bar
+    float curr; // Normalized current amount
     public float Curr
     {
-        get
-        {
-            return _curr;
-        }
+        get => curr;
         set
         {
-            if (value == _curr)
+            if (value == curr)
                 return;
-            if(value > _curr || !gameObject.activeInHierarchy)
+            if(value > curr || !gameObject.activeInHierarchy)
             {
                 StopAllCoroutines();
-                shadow.value = value;
+                shadow.fillAmount = value;
             }
             else
             {
                 StartCoroutine(Transition(shadow, shadowDelay, shadowTime, value));
             }
-            _curr = value;
+            curr = value;
         }
     }
     public float shadowDelay = 0.5f; // Delay before shadow changes
     public float shadowTime = 0.5f; // Time it takes for shadow to reach target amount
 
-    IEnumerator Transition(Slider bar, float delay, float time, float target)
+    IEnumerator Transition(Image bar, float delay, float time, float target)
     {
         if (delay != 0f)
             yield return new WaitForSeconds(delay);
         float steps = Mathf.Floor(time / Time.fixedDeltaTime);
-        float start = bar.value;
+        float start = bar.fillAmount;
         if (time != 0f)
         {
             for (float step = 0; step < steps; step++)
             {
                 float scale = Mathf.Lerp(start, target, step / steps);
-                bar.value = scale;
+                bar.fillAmount = scale;
                 yield return new WaitForFixedUpdate();
             }
         }
-        bar.value = target;
+        bar.fillAmount = target;
     }
     /// <summary>
     /// Reset shadow to 0 without transitions (immediate)
     /// </summary>
     public void Reset()
     {
-        shadow.value = 0;
+        shadow.fillAmount = 0;
     }
 }
 
