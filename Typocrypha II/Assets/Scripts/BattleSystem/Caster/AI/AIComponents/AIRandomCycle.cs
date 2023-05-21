@@ -12,10 +12,10 @@ public class AIRandomCycle : AIComponent
     bool onSpell1 = false;
 
     // Start is called before the first frame update
-    void Awake()
+    protected override void Awake()
     {
         // Initialize the standard refs (caster and AI)
-        InitializeBase();
+        base.Awake();
         ind1 = RandomUtils.RandomU.instance.RandomInt(0, spells1.Count);
         caster.Spell = spells1[ind1];
         onSpell1 = spells2.Count <= 0;

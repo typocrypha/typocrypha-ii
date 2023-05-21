@@ -61,9 +61,9 @@ namespace NodeEditorFramework
             nodeSkin = Object.Instantiate(GUI.skin);
 			GUI.skin = nodeSkin;
 
-            // Set Custom Styles dark color only if on pro skin
-            // Color textColor = EditorGUIUtility.isProSkin ? NE_TextColor : new Color(0.1f, 0.1f, 0.1f);
-            Color textColor = new Color(0.1f, 0.1f, 0.1f);
+			// Set Custom Styles dark color only if on pro skin
+			// Color textColor = EditorGUIUtility.isProSkin ? NE_TextColor : new Color(0.1f, 0.1f, 0.1f);
+			Color textColor = NE_TextColor;//new Color(0.1f, 0.1f, 0.1f);
 
             foreach (GUIStyle style in GUI.skin)
 			{
@@ -88,15 +88,23 @@ namespace NodeEditorFramework
             nodeSkin.box.normal.background = GUIBox;
             nodeSkin.box.normal.textColor = textColor;
             nodeSkin.box.active.textColor = textColor;
-			nodeBox = nodeSkin.box;
+#if UNITY_EDITOR && UNITY_2019_3_OR_NEWER
+            nodeSkin.box.normal.scaledBackgrounds = null;
+#endif
+            nodeBox = nodeSkin.box;
 			nodeBoxBold = new GUIStyle (nodeBox) { fontStyle = FontStyle.Bold };
 
             // Button
             nodeSkin.button.normal.textColor = textColor;
 			nodeSkin.button.normal.background = GUIButton;
+#if UNITY_EDITOR && UNITY_2019_3_OR_NEWER
+            nodeSkin.button.normal.scaledBackgrounds = null;
+            nodeSkin.button.hover.scaledBackgrounds = null;
+            nodeSkin.button.active.scaledBackgrounds = null;
+#endif
 
-			// Toolbar
-			toolbar = GUI.skin.FindStyle("toolbar");
+            // Toolbar
+            toolbar = GUI.skin.FindStyle("toolbar");
 			toolbarButton = GUI.skin.FindStyle("toolbarButton");
 			toolbarLabel = GUI.skin.FindStyle("toolbarButton");
 			toolbarDropdown = GUI.skin.FindStyle("toolbarDropdown");
@@ -108,14 +116,21 @@ namespace NodeEditorFramework
 				toolbar.border = new RectOffset(0, 0, 1, 1);
 				toolbar.margin = new RectOffset(0, 0, 0, 0);
 				toolbar.padding = new RectOffset(10, 10, 1, 1);
+#if UNITY_EDITOR && UNITY_2019_3_OR_NEWER
+                toolbar.normal.scaledBackgrounds = null;
+                toolbar.active.scaledBackgrounds = null;
+#endif
 
-				toolbarLabel = new GUIStyle(nodeSkin.box);
+                toolbarLabel = new GUIStyle(nodeSkin.box);
 				toolbarLabel.normal.background = GUIToolbarButton;
 				toolbarLabel.border = new RectOffset(2, 2, 0, 0);
 				toolbarLabel.margin = new RectOffset(-2, -2, 0, 0);
 				toolbarLabel.padding = new RectOffset(6, 6, 4, 4);
+#if UNITY_EDITOR && UNITY_2019_3_OR_NEWER
+                toolbarLabel.normal.scaledBackgrounds = null;
+#endif
 
-				toolbarButton = new GUIStyle(toolbarLabel);
+                toolbarButton = new GUIStyle(toolbarLabel);
 				toolbarButton.active.background = RTEditorGUI.ColorToTex(1, NE_LightColor);
 
 				toolbarDropdown = new GUIStyle(toolbarButton);
