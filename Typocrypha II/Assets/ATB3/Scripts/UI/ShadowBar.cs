@@ -16,7 +16,7 @@ public class ShadowBar : MonoBehaviour
         {
             if (value == curr)
                 return;
-            if(value > curr || !gameObject.activeInHierarchy)
+            if (value > curr || !gameObject.activeInHierarchy)
             {
                 StopAllCoroutines();
                 shadow.fillAmount = value;
@@ -47,13 +47,6 @@ public class ShadowBar : MonoBehaviour
             }
         }
         bar.fillAmount = target;
-    }
-    /// <summary>
-    /// Reset shadow to 0 without transitions (immediate)
-    /// </summary>
-    public void Reset()
-    {
-        shadow.fillAmount = 0;
     }
 }
 
