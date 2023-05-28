@@ -172,7 +172,6 @@ public class AudioManager : MonoBehaviour, ISavable
 
     public void PlayTextScrollSfx(AudioClip clip)
     {
-        Debug.Log($"Text Scroll Play: {clip.name}");
         foreach(var source in textBlips)
         {
             if (!source.isPlaying)
