@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class OverheatManager : MonoBehaviour, IPausable
+public class OverheatManager : MonoBehaviour, IPausable, IInputHandler
 {
     #region IPausable
     public PauseHandle PH { get; private set; }
@@ -52,6 +52,7 @@ public class OverheatManager : MonoBehaviour, IPausable
         ui.enabled = true;
         inputField.interactable = true;
         DoOverheatInternal();
+        InputManager.Instance.StartInput(this);
     }
 
     public void StopOverheat()
@@ -61,6 +62,7 @@ public class OverheatManager : MonoBehaviour, IPausable
         inputField.interactable = false;
         inputField.DeactivateInputField(true);
         ui.enabled = false;
+        InputManager.Instance.CompleteInput();
     }
 
     public void OnSubmit(string input)
@@ -96,5 +98,15 @@ public class OverheatManager : MonoBehaviour, IPausable
         inputField.text = string.Empty;
         inputField.Select();
         inputField.ActivateInputField();
+    }
+
+    public void Focus()
+    {
+        PH.Pause = false;
+    }
+
+    public void Unfocus()
+    {
+        PH.Pause = true;
     }
 }

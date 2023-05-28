@@ -58,7 +58,6 @@ public class DialogBox : MonoBehaviour, IDialogBox
     }
 
     public TextMeshProUGUI dialogText; // Text display component
-    public AudioSource[] voiceAS; // AudioSources for playing speech sfx
     public bool resizeTextBox = true; // Should dialog box resize itself?
     [SerializeField] private bool resolveContinueIndicatorConflicts = false;
     [SerializeField] private RectTransform textHolder;
@@ -68,6 +67,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
     [SerializeField] FXText.TMProColor hideText; // Allows for hiding parts of text (for scrolling)
     DialogItem dialogItem; // Dialog line data
     Coroutine scrollCR; // Coroutine that scrolls the text
+    private AudioClip[] textBlips = new AudioClip[2];
     private bool started = false;
 
     /// <summary>
@@ -84,7 +84,6 @@ public class DialogBox : MonoBehaviour, IDialogBox
     void Awake()
     {
         ph = new PauseHandle(OnPause);
-        voiceAS = GetComponents<AudioSource>();
     }
 
     public void SetupDialogBox(DialogItem dialogItem)
@@ -100,17 +99,25 @@ public class DialogBox : MonoBehaviour, IDialogBox
         // Set box size based on text.
         if (resizeTextBox) SetBoxHeight();
         // Set voice sfx.
-        if (dialogItem.voice != null)
+        if (dialogItem.voice == null || dialogItem.voice.Count == 0)
         {
-            if (dialogItem.voice.Count == 0)
+            for (int i = 0; i < textBlips.Length; i++)
             {
-                for (int i = 0; i < voiceAS.Length; i++)
-                    voiceAS[i].clip = null;
+                textBlips[i] = null;
             }
-            else
+        }
+        else
+        {
+            for (int i = 0; i < textBlips.Length; i++)
             {
-                for (int i = 0; i < dialogItem.voice.Count; i++)
-                    voiceAS[i].clip = dialogItem.voice[i];
+                if(i < dialogItem.voice.Count)
+                {
+                    textBlips[i] = dialogItem.voice[i];
+                }
+                else
+                {
+                    textBlips[i] = null;
+                }
             }
         }
         started = false;
@@ -237,10 +244,12 @@ public class DialogBox : MonoBehaviour, IDialogBox
             // Play scroll blips
             if (pos % SpeechInterval == 0 && (PlaySpeechOnSpaces || !char.IsWhiteSpace(dialogItem.text[pos])))
             {
-                foreach (var v in voiceAS)
+                for (int i = 0; i < textBlips.Length; i++)
                 {
-                    if (v != null && v.clip != null) 
-                        v.Play();
+                    if(textBlips[i] != null)
+                    {
+                        AudioManager.instance.PlayTextScrollSfx(textBlips[i]);
+                    }
                 }
             }
             if(pos % defaultTextDisplayInterval == 0)

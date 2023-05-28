@@ -27,10 +27,11 @@ public class AudioManager : MonoBehaviour, ISavable
         PlayBGM(this[SaveManager.instance.loaded.bgm]);
     }
     #endregion
-
+    
     public static AudioManager instance = null; // Global static instance.
     public AudioSource[] bgm; // Audio sources for playing bgms. Should have 2 audio sources (for crossfading).
     public AudioSource sfx; // Audio source for playing simple sfx.
+    [SerializeField] private AudioSource[] textBlips; // Audio sources for playing text blip sfx. Number or sources should be divisible by 2
 
     AssetBundle audioBundle; // Asset bundle containing all clips.
     int bgmInd; // Index of in use bgm audio source.
@@ -167,5 +168,18 @@ public class AudioManager : MonoBehaviour, ISavable
         if (clip == null)
             return;
         sfx.PlayOneShot(clip);
+    }
+
+    public void PlayTextScrollSfx(AudioClip clip)
+    {
+        foreach(var source in textBlips)
+        {
+            if (!source.isPlaying)
+            {
+                source.PlayOneShot(clip);
+                return;
+            }
+        }
+        textBlips[0].PlayOneShot(clip);
     }
 }

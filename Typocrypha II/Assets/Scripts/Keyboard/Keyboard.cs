@@ -10,7 +10,7 @@ namespace Typocrypha
     /// Manages keyboard interface for battle.
     /// </summary>
     [RequireComponent(typeof(KeyboardBuilder))]
-    public class Keyboard : MonoBehaviour, IPausable
+    public class Keyboard : MonoBehaviour, IPausable, IInputHandler
     { 
 
         #region IPausable
@@ -19,9 +19,7 @@ namespace Typocrypha
         public void OnPause(bool b)
         {
             enabled = !b;
-            foreach (var kvp in allEffects)
-                kvp.Value.PH.Pause = b;
-            castBar.cursor.PH.Pause = b;
+            PauseSubUI(b);
         }
         #endregion
 
@@ -30,6 +28,7 @@ namespace Typocrypha
         public List<GameObject> allEffectPrefabs;
         public CastBar castBar;
         public Transform keys; // Object that holds all the key objects.
+        public bool CastingEnabled { get; set; } = true;
         [SerializeField] private OverheatManager overheatManager;
         public CasterUI PlayerUI => playerUI;
         [SerializeField] private CasterUI playerUI;
@@ -55,6 +54,8 @@ namespace Typocrypha
             {'8', KeyCode.Keypad8 }, {'9', KeyCode.Keypad9 },
         };
 
+        private bool focused = true;
+
         void Awake()
         {
             if (instance == null)
@@ -69,8 +70,14 @@ namespace Typocrypha
             var builder = GetComponent<KeyboardBuilder>(); // Construct keyboard.
             builder.BuildKeyboard();
             Initialize(builder.Keys);
-
             PH = new PauseHandle(OnPause);
+        }
+
+        private void PauseSubUI(bool b)
+        {
+            foreach (var kvp in allEffects)
+                kvp.Value.PH.Pause = b;
+            castBar.cursor.PH.Pause = b;
         }
 
         public void Initialize(IEnumerable<Key> keys)
@@ -93,13 +100,14 @@ namespace Typocrypha
 
         void Start()
         {
+            InputManager.Instance.StartInput(this);
             PH.Pause = true;
         }
 
         // Check user input.
         void Update()
         {
-            if (overheatManager.IsOverheating)
+            if (!focused)
                 return;
             foreach (var c in keyMap) // Highlight pressed keys.
             {
@@ -117,7 +125,7 @@ namespace Typocrypha
                     castBar.CheckInput(c);
                 }
             }
-            if (Input.GetKeyDown(KeyCode.Return)) // Cast if enter is pressed.
+            if (CastingEnabled && Input.GetKeyDown(KeyCode.Return)) // Cast if enter is pressed.
             {
                 castBar.Cast();
             }
@@ -226,6 +234,18 @@ namespace Typocrypha
         public void DoOverheat()
         {
             overheatManager.DoOverheat();
+        }
+
+        public void Focus()
+        {
+            focused = true;
+            PauseSubUI(false);
+        }
+
+        public void Unfocus()
+        {
+            focused = false;
+            PauseSubUI(true);
         }
     }
 }
