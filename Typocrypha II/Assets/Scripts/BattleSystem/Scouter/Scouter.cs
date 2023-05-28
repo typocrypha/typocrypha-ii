@@ -59,6 +59,7 @@ public class Scouter : MonoBehaviour, IPausable
             ScouterActive = false;
             targetReticle.PH.Pause = false;
             Battlefield.instance.PH.Pause = false;
+            Typocrypha.Keyboard.instance.PH.Pause = false;
             return;
         }
         var obj = Battlefield.instance.GetObject(Battlefield.instance.Player.TargetPos);
@@ -69,6 +70,7 @@ public class Scouter : MonoBehaviour, IPausable
 
         targetReticle.PH.Pause = true;
         Battlefield.instance.PH.Pause = true;
+        Typocrypha.Keyboard.instance.PH.Pause = true;
         ScouterActive = true;
         scouterDialog.StartDialogBox(obj.ScouterData.Description);
         scouterImage.sprite = obj.ScouterData.Image;

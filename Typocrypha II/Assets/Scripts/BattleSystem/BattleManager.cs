@@ -14,6 +14,7 @@ public class BattleManager : MonoBehaviour, IPausable
     {
         SetBattleEventPause(pauseState);
         Battlefield.instance.PH.Pause = pauseState;
+        Keyboard.instance.PH.Pause = pauseState;
     }
     #endregion
 
