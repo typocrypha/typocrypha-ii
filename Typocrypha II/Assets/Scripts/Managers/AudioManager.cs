@@ -1,10 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-using UnityEngine.Audio;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine;
+using System;
 using System.IO;
+using System.Collections;
+// using System.Collections.Generic;
+// using System.Linq;
+// using UnityEngine.Audio;
+// using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Management of audio assets by filename.
@@ -18,13 +19,13 @@ public class AudioManager : MonoBehaviour, ISavable
     #region ISavable
     public void Save()
     {
-        if (bgm[bgmInd].isPlaying)
-            SaveManager.instance.loaded.bgm = bgm[bgmInd].clip.name;
+        // if (bgm[bgmInd].isPlaying)
+        //     SaveManager.instance.loaded.bgm = bgm[bgmInd].clip.name;
     }
 
     public void Load()
     {
-        PlayBGM(this[SaveManager.instance.loaded.bgm]);
+        // PlayBGM(this[SaveManager.instance.loaded.bgm]);
     }
     #endregion
     
@@ -33,17 +34,9 @@ public class AudioManager : MonoBehaviour, ISavable
     public AudioSource sfx; // Audio source for playing simple sfx.
     [SerializeField] private AudioSource[] textBlips; // Audio sources for playing text blip sfx. Number or sources should be divisible by 2
 
-    AssetBundle audioBundle; // Asset bundle containing all clips.
+    AssetBundle sfxBundle; // Asset bundle containing sfx clips.
     int bgmInd; // Index of in use bgm audio source.
     private Coroutine fadeRoutine;
-
-    public AudioClip this[string clipName] // Allows access to audio clips by name.
-    {
-        get
-        {
-            return audioBundle.LoadAsset<AudioClip>(clipName);
-        }
-    }
 
     public float BGMVolume
     {
@@ -64,7 +57,7 @@ public class AudioManager : MonoBehaviour, ISavable
         }
         DontDestroyOnLoad(gameObject);
 
-        audioBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, "audio"));
+        sfxBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, "sfx"));
         bgmInd = 0;
     }
 
@@ -168,6 +161,20 @@ public class AudioManager : MonoBehaviour, ISavable
         if (clip == null)
             return;
         sfx.PlayOneShot(clip);
+    }
+
+    /// <summary>
+    /// Plays an sfx once.
+    /// </summary>
+    /// <param name="clipName">Name of clip in sfx asset bundle to play.</param>
+    public void PlaySFX(String clipName)
+    {
+        if (String.IsNullOrEmpty(clipName)) return;
+
+        var clip = sfxBundle.LoadAsset<AudioClip>(clipName);
+
+        if (clip != null) sfx.PlayOneShot(clip);
+        else Debug.LogWarning($"Clip named \"{clipName}\" not found.");
     }
 
     public void PlayTextScrollSfx(AudioClip clip)
