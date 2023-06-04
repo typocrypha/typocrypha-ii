@@ -61,7 +61,7 @@ public class TextEvents : MonoBehaviour, IPausable
             {"text-delay", TextDelay},
             {"scroll-delay", TextDelay},
             {"speech-interval", SpeechInterval},
-            {"play-sfx",PlaySFX },
+            {"play-sfx", PlaySFX },
         };
     }
 
@@ -92,10 +92,15 @@ public class TextEvents : MonoBehaviour, IPausable
         return null;
     }
 
+    /// <summary>
+    /// Play a sfx clip.
+    /// </summary>
+    /// <param name="opt">
+    /// [0]:string: Name of sound clip.
+    /// </param>
     Coroutine PlaySFX(string[] opt, DialogBox box)
     {
-        //AudioManager.instance.PlaySFX(null);
-        Debug.LogWarning("playSFX text event unsupported");
+        AudioManager.instance.PlaySFX(opt[0]);
         return null;
     }
 
