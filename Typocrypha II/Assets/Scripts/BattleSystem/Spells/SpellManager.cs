@@ -33,21 +33,21 @@ public class SpellManager : MonoBehaviour
     /// Cast the spell's effect with a given caster at a given target position 
     /// Returns the cast coroutine (in case the end of casting must be waited on)
     /// </summary>
-    public Coroutine Cast(Spell spell, Caster caster, Battlefield.Position target, string castMessageOverride = null)
+    public Coroutine Cast(Spell spell, Caster caster, Battlefield.Position target, string castMessageOverride = null, bool isTopLevel = true)
     {
-        return StartCoroutine(CastCR(spell, caster, target, castMessageOverride));
+        return StartCoroutine(CastCR(spell, caster, target, castMessageOverride, isTopLevel));
     }
 
     /// <summary> 
     /// Cast the spell's effect with a given caster at a given target position, and then Cancels 
     /// Returns the case coroutine (in case the end of casting must be waited on)
     /// </summary>
-    public Coroutine CastAndCounter(Spell spell, Caster caster, Battlefield.Position target)
+    public Coroutine CastAndCounter(Spell spell, Caster caster, Battlefield.Position target, string castMessageOverride = null, bool isTopLevel = true)
     {
         var targetCaster = Battlefield.instance.GetCaster(target);
         if (targetCaster == null)
-            return StartCoroutine(CastCR(spell, caster, target));
-        return StartCoroutine(CastAndCounterCR(spell, caster, target, (c) => c == targetCaster));
+            return StartCoroutine(CastCR(spell, caster, target, castMessageOverride, isTopLevel));
+        return StartCoroutine(CastAndCounterCR(spell, caster, target, (c) => c == targetCaster, castMessageOverride, isTopLevel));
     }
     /// <summary> Modify the root words by the modifiers and return the modified roots </summary>
     public List<RootWord> Modify(Spell spell)
@@ -72,7 +72,7 @@ public class SpellManager : MonoBehaviour
         return roots;
     }
     /// <summary> Cast the spell effects and play the associated fx</summary>
-    private IEnumerator CastCR(Spell spell, Caster caster, Battlefield.Position target, string castMessageOverride = null)
+    private IEnumerator CastCR(Spell spell, Caster caster, Battlefield.Position target, string castMessageOverride, bool isTopLevel)
     {
         // If the spell is restricted, break and do not cast
         if (SpellRestrictions.instance.IsRestricted(spell, caster, target, true))
@@ -84,7 +84,7 @@ public class SpellManager : MonoBehaviour
             }
             yield break;
         }
-        if(!caster.IsPlayer)
+        if(!caster.IsPlayer || !isTopLevel)
         {
             if(spell.Count == 1 && SpellWord.CompareKeys(spell[0], runWord))
             {
@@ -201,11 +201,15 @@ public class SpellManager : MonoBehaviour
         {
             Typocrypha.Keyboard.instance.DoOverheat();
         }
+        if (HasQueuedCasts)
+        {
+            yield return StartCoroutine(ProcessQueuedCasts());
+        }
     }
 
-    private IEnumerator CastAndCounterCR(Spell spell, Caster caster, Battlefield.Position target, Func<Caster, bool> pred)
+    private IEnumerator CastAndCounterCR(Spell spell, Caster caster, Battlefield.Position target, Func<Caster, bool> pred, string castMessageOverride, bool isTopLevel)
     {
-        yield return StartCoroutine(CastCR(spell, caster, target));
+        yield return StartCoroutine(CastCR(spell, caster, target, castMessageOverride, isTopLevel));
         var cancelTargets = Battlefield.instance.Casters.Where(pred);
         foreach (var cancelTarget in cancelTargets)
         {
@@ -232,7 +236,7 @@ public class SpellManager : MonoBehaviour
 
     public void LogInterruptCast(Spell spell, Caster caster, Battlefield.Position target, string messageOverride = null)
     {
-        interrupts.Enqueue(new InterruptData(spell, caster, target, messageOverride));
+        interrupts.Enqueue(new InterruptData(spell, caster, target, messageOverride, false));
     }
 
     private IEnumerator ProcessInterrupts()
@@ -242,13 +246,42 @@ public class SpellManager : MonoBehaviour
             var interrupt = interrupts.Dequeue();
             if (interrupt.caster == null || interrupt.caster.IsDeadOrFled)
                 continue;
-            yield return Cast(interrupt.spell, interrupt.caster, interrupt.target, interrupt.msgOverride);
-            //yield return Cast(interrupt.spell, interrupt.caster, interrupt.target);
+            if (interrupt.canCounter)
+            {
+                yield return CastAndCounter(interrupt.spell, interrupt.caster, interrupt.target, interrupt.msgOverride, false);
+            }
+            else
+            {
+                yield return Cast(interrupt.spell, interrupt.caster, interrupt.target, interrupt.msgOverride, false);
+            }
         }
     }
 
     public bool HasInterrupts => interrupts.Count > 0;
 
+    public void QueueCast(Spell spell, Caster caster, Battlefield.Position target, bool counter, string messageOverride = null)
+    {
+        queuedCasts.Enqueue(new InterruptData(spell, caster, target, messageOverride, counter));
+    }
+
+    public bool HasQueuedCasts => queuedCasts.Count > 0;
+    private IEnumerator ProcessQueuedCasts()
+    {
+        while (HasQueuedCasts)
+        {
+            var cast = queuedCasts.Dequeue();
+            if (cast.caster == null || cast.caster.IsDeadOrFled)
+                continue;
+            if (cast.canCounter)
+            {
+                yield return CastAndCounter(cast.spell, cast.caster, cast.target, cast.msgOverride, false);
+            }
+            else
+            {
+                yield return Cast(cast.spell, cast.caster, cast.target, cast.msgOverride, false);
+            }
+        }
+    }
     public void LogInteractivePopup(InteractivePopup popup, string title, string prompt, float time, Func<bool, IEnumerator> onComplete = null)
     {
         popupRequests.Enqueue(new PopupData() { popup = popup, title = title, prompt = prompt, time = time, onComplete = onComplete });
@@ -289,19 +322,22 @@ public class SpellManager : MonoBehaviour
     }
 
     private readonly Queue<InterruptData> interrupts = new Queue<InterruptData>();
+    private readonly Queue<InterruptData> queuedCasts = new Queue<InterruptData>();
     private class InterruptData
     {
         public Spell spell;
         public Caster caster;
         public Battlefield.Position target;
         public string msgOverride;
+        public bool canCounter;
 
-        public InterruptData(Spell spell, Caster caster, Battlefield.Position target, string msgOverride)
+        public InterruptData(Spell spell, Caster caster, Battlefield.Position target, string msgOverride, bool canCounter)
         {
             this.spell = spell;
             this.caster = caster;
             this.target = target;
             this.msgOverride = msgOverride;
+            this.canCounter = canCounter;
         }
     }
 }

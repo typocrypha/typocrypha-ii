@@ -11,8 +11,16 @@ namespace ATB3
         // Call upon entering given state
         public override void OnEnter()
         {
-            ATBManager.instance.EnterSolo(Owner);
             var caster = Owner.GetComponent<Caster>();
+            if (ATBManager.instance.InSolo)
+            {
+                ATBManager.instance.QueueSolo(Owner);
+                SpellManager.instance.QueueCast(caster.Spell, caster, Owner.SavedTargetPos, true);
+                Typocrypha.Keyboard.instance.PH.Pause = true;
+                Source.PerformTransition(ATBStateID.AfterCast); // skip casting sequence
+                return;
+            }
+            ATBManager.instance.EnterSolo(Owner);
             FaderManager.instance.FadeTargets(caster.Spell, caster.FieldPos, caster.TargetPos);
             Owner.isCast = true;
             timer = 0f;
