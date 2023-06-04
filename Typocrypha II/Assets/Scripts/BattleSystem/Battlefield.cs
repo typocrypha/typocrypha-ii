@@ -21,7 +21,7 @@ public class Battlefield : MonoBehaviour, IPausable
     /// <param name="b">Whether to pause or not.</param>
     public void OnPause(bool b)
     {
-        Typocrypha.Keyboard.instance.CastingEnabled = !b;
+        //Typocrypha.Keyboard.instance.CastingEnabled = !b;
         //SpellCooldownManager.instance.PH.Pause = b;
         if (b)
         {
@@ -41,6 +41,7 @@ public class Battlefield : MonoBehaviour, IPausable
             }
         }
     }
+
     #endregion
 
     public enum MoveOption

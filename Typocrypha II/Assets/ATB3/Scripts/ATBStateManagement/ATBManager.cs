@@ -93,6 +93,10 @@ namespace ATB3
             {
                 BattleManager.instance.SetBattleEventPause(true); // Pause Battle events.
                 Battlefield.instance.PH.Pause = true; // Pause battle field
+                if (soloActor is ATBPlayer)
+                {
+                    Typocrypha.Keyboard.instance.PH.Pause = true;
+                }
             }
             else
             {
@@ -113,6 +117,10 @@ namespace ATB3
             //Debug.Log("exit:" + soloActor.gameObject.name);
             if (soloActor != soloStack.Pop())
                 Debug.LogError("StateManager: Solo Stack Mismatch");
+            if (soloActor is ATBPlayer)
+            {
+                Typocrypha.Keyboard.instance.PH.Pause = false;
+            }
             // If stack is now empty, unpause all actors
             if (soloStack.Count == 0)
             {
