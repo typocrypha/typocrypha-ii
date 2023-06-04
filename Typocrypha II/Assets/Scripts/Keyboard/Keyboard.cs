@@ -20,6 +20,7 @@ namespace Typocrypha
         {
             enabled = !b;
             PauseSubUI(b);
+
         }
         #endregion
 
@@ -53,6 +54,8 @@ namespace Typocrypha
             {'4', KeyCode.Keypad4 }, {'5', KeyCode.Keypad5 }, {'6', KeyCode.Keypad6 }, {'7', KeyCode.Keypad7 },
             {'8', KeyCode.Keypad8 }, {'9', KeyCode.Keypad9 },
         };
+        [SerializeField] private Transform pauseUI;
+
 
         private bool focused = true;
 
@@ -78,6 +81,7 @@ namespace Typocrypha
             foreach (var kvp in allEffects)
                 kvp.Value.PH.Pause = b;
             castBar.cursor.PH.Pause = b;
+            pauseUI.gameObject.SetActive(b);
         }
 
         public void Initialize(IEnumerable<Key> keys)
