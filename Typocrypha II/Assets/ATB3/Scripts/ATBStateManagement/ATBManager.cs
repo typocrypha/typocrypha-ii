@@ -93,7 +93,7 @@ namespace ATB3
             {
                 BattleManager.instance.SetBattleEventPause(true); // Pause Battle events.
                 Battlefield.instance.PH.Pause = true; // Pause battle field
-                if (soloActor is ATBPlayer)
+                if (soloActor is ATBPlayer && !Typocrypha.Keyboard.instance.PH.Pause)
                 {
                     Typocrypha.Keyboard.instance.PH.Pause = true;
                 }
@@ -104,6 +104,18 @@ namespace ATB3
             }
             soloActor.Pause = false;
             soloStack.Push(soloActor);
+        }
+
+        public void QueueSolo(ATBActor actor)
+        {
+            if (soloStack.Count == 0)
+            {
+                EnterSolo(actor);
+                return;
+            }
+            var temp = soloStack.Pop();
+            soloStack.Push(actor);
+            soloStack.Push(temp);
         }
 
         // Exit solo mode for this actor (should be at top of stack)
