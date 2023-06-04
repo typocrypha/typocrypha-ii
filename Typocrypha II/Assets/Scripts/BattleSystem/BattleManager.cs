@@ -234,9 +234,5 @@ public class BattleManager : MonoBehaviour, IPausable
         }
         yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
         yield return new WaitForSeconds(0.5f);
-        if (Keyboard.instance.PH.Pause)
-        {
-            Keyboard.instance.PH.Pause = false;
-        }
     }
 }

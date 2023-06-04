@@ -105,7 +105,6 @@ namespace Typocrypha
         void Start()
         {
             InputManager.Instance.StartInput(this);
-            PH.Pause = true;
         }
 
         // Check user input.
