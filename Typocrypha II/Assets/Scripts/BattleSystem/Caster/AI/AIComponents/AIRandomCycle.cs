@@ -17,7 +17,7 @@ public class AIRandomCycle : AIComponent
         // Initialize the standard refs (caster and AI)
         InitializeBase();
         ind1 = RandomUtils.RandomU.instance.RandomInt(0, spells1.Count);
-        caster.Spell = spells1[ind1];
+        ChangeSpell(spells1[ind1]);
         onSpell1 = spells2.Count <= 0;
     }
 
@@ -48,6 +48,6 @@ public class AIRandomCycle : AIComponent
     {
         if (++index >= list.Count)
             index = 0;
-        caster.Spell = list[index];
+        ChangeSpell(list[index]);
     }
 }
