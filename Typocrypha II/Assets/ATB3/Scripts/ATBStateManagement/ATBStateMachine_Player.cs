@@ -24,7 +24,6 @@ namespace ATB3
         protected override void InitializeStates()
         {
             AddState(new ATBStatePlayer_Idle() { Owner = Owner, Source = this }, ATBStateID.Idle);
-            AddState(new ATBStatePlayer_BeforeCast() { Owner = Owner, Source = this }, ATBStateID.BeforeCast);
             AddState(new ATBStatePlayer_Cast() { Owner = Owner, Source = this }, ATBStateID.Cast);
             AddState(new ATBStatePlayer_AfterCast() { Owner = Owner, Source = this }, ATBStateID.AfterCast);
         }

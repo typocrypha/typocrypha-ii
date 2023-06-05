@@ -26,7 +26,6 @@ namespace ATB3
         {
             AddState(new ATBStateEnemy_Charge() { Owner = Owner, Source = this }, ATBStateID.Charge);
             AddState(new ATBStateEnemy_PreCast() { Owner = Owner, Source = this }, ATBStateID.PreCast);
-            AddState(new ATBStateEnemy_BeforeCast() { Owner = Owner, Source = this }, ATBStateID.BeforeCast);
             AddState(new ATBStateEnemy_Cast() { Owner = Owner, Source = this }, ATBStateID.Cast);
             AddState(new ATBStateEnemy_AfterCast() { Owner = Owner, Source = this }, ATBStateID.AfterCast);
             AddState(new ATBStateEnemy_Stunned() { Owner = Owner, Source = this }, ATBStateID.Stunned);

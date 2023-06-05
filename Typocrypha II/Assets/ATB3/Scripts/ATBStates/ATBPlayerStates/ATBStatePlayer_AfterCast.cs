@@ -25,9 +25,6 @@ namespace ATB3
         // Call upon exiting given state
         public override void OnExit()
         {
-            //Debug.Log("PLAYER " + this.Owner.actorName + " has EXITED the BEFORECAST state!");
-            FaderManager.instance.FadeAll(0f, Color.black);
-            ATBManager.instance.ExitSolo(Owner);
         }
     }
 }

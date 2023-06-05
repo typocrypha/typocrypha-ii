@@ -30,7 +30,7 @@ public class Battlefield : MonoBehaviour, IPausable
         }
         else
         {
-            if (!ATBManager.instance.InSolo)
+            if (!ATBManager.instance.ProcessingActions)
             {
                 foreach (var actor in Actors)
                     if (actor != null) actor.Pause = false;

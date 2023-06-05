@@ -26,7 +26,7 @@ namespace ATB3
         public void Cast(Battlefield.Position targetPos)
         {
             SavedTargetPos = new Battlefield.Position(targetPos);
-            StateMachine.PerformTransition(ATBStateID.BeforeCast);
+            StateMachine.PerformTransition(ATBStateID.Cast);
         }
 
     }

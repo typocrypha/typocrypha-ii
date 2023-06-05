@@ -20,7 +20,7 @@ public class StatusRegenAccelerating : StatusRemoveAfterHitOrCast
 
     void FixedUpdate()
     {
-        if (ATB3.ATBManager.instance.InSolo)
+        if (ATB3.ATBManager.instance.ProcessingActions)
             return;
         time += Time.fixedDeltaTime;
         if (time >= tickTime)

@@ -37,7 +37,6 @@ namespace ATB3
             {
                 FaderManager.instance.Solo(Owner.GetComponent<FaderGroup>(), 0.0f, Color.black);
                 Owner.Caster.Charge = 0.0f;
-                ATBManager.instance.ExitSolo(Owner);
             }
             else // No pause for run spell
             {

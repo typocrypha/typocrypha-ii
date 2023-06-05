@@ -47,9 +47,9 @@ namespace ATB3
             {
                 Source.PerformTransition(ATBStateID.Charge);
             }
-            else if (timer >= time && !ATBManager.instance.InSolo)
+            else if (timer >= time && !ATBManager.instance.ProcessingActions)
             {
-                Source.PerformTransition(ATBStateID.BeforeCast);
+                Source.PerformTransition(ATBStateID.Cast);
             }
         }
 

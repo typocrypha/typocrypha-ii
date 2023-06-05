@@ -9,27 +9,32 @@ namespace ATB3
         // Call upon entering given state
         public override void OnEnter()
         {
-            Owner.StartCoroutine(CastAndExit());
-            Owner.GetComponent<Animator>().SetTrigger("Cast");
+            var caster = Owner.Caster;
+            if (caster.Spell == null)
+            {
+                Source.PerformTransition(ATBStateID.Charge);
+                return;
+            }
+            var spell = caster.Spell;
+            var targetPos = caster.TargetPos;
+            bool topLevel = !ATBManager.instance.ProcessingActions;
+            Coroutine Cast()
+            {
+                Owner.GetComponent<Animator>().SetTrigger("Cast");
+                return SpellManager.instance.Cast(spell, caster, targetPos);
+            }
+            ATBManager.instance.QueueSolo(new ATBManager.ATBAction() { Actor = Owner, Action = Cast, OnComplete = CastComplete });
         }
 
-        // Call on fixed update while in given state
-        public override void OnUpdate()
+        private void CastComplete()
         {
-
-        }
-
-        // Call upon exiting given state
-        public override void OnExit()
-        {
-            //Debug.Log("ENEMY " + this.Owner.actorName + " has EXITED the CAST state!");
-        }
-
-        private IEnumerator CastAndExit()
-        {
-            yield return SpellManager.instance.Cast(Owner.Caster.Spell, Owner.Caster, Owner.Caster.TargetPos);
             Source.PerformTransition(ATBStateID.AfterCast);
         }
 
+        // Call on fixed update while in given state
+        public override void OnUpdate() { }
+
+        // Call upon exiting given state
+        public override void OnExit() { }
     }
 }
