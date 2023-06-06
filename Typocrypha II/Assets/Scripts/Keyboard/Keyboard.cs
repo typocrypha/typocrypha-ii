@@ -82,6 +82,14 @@ namespace Typocrypha
                 kvp.Value.PH.Pause = b;
             castBar.cursor.PH.Pause = b;
             pauseUI.gameObject.SetActive(b);
+            if (b)
+            {
+                // Clear highlights
+                foreach (var c in keyMap)
+                {
+                    c.Value.ClearHighlight();
+                }
+            }
         }
 
         public void Initialize(IEnumerable<Key> keys)
