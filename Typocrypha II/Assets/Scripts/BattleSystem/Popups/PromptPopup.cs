@@ -4,16 +4,21 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class PromptPopup : InteractivePopup, IInputHandler
+public class PromptPopup : InteractivePopup
 {
     public TextMeshProUGUI headerText;
     public TextMeshProUGUI promptText;
     public TMP_InputField inputField;
 
-    public void Focus()
+    public override void Focus()
     {
         inputField.Select();
         inputField.ActivateInputField();
+    }
+
+    public override void Unfocus()
+    {
+        inputField.DeactivateInputField();
     }
 
     public void OnSubmit()
@@ -21,11 +26,6 @@ public class PromptPopup : InteractivePopup, IInputHandler
         LastPromptSuccess = inputField.text.ToUpper() == promptText.text.ToUpper();
         Completed = true;
         InputManager.Instance.CompleteInput();
-    }
-
-    public void Unfocus()
-    {
-        inputField.DeactivateInputField();
     }
 
     protected override void Setup(string header, string prompt, float time)
