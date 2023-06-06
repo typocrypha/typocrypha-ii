@@ -28,7 +28,18 @@ namespace ATB3
 
         private void CastComplete()
         {
-            Source.PerformTransition(ATBStateID.AfterCast);
+            if (Owner.Caster.BStatus == Caster.BattleStatus.Dead)
+            {
+                Source.PerformTransition(ATBStateID.Dead);
+            }
+            else if (Owner.Caster.BStatus == Caster.BattleStatus.Fled)
+            {
+                Source.PerformTransition(ATBStateID.Fled);
+            }
+            else
+            {
+                Source.PerformTransition(ATBStateID.Charge);
+            }
         }
 
         // Call on fixed update while in given state

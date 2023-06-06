@@ -25,7 +25,6 @@ namespace ATB3
         {
             AddState(new ATBStatePlayer_Idle() { Owner = Owner, Source = this }, ATBStateID.Idle);
             AddState(new ATBStatePlayer_Cast() { Owner = Owner, Source = this }, ATBStateID.Cast);
-            AddState(new ATBStatePlayer_AfterCast() { Owner = Owner, Source = this }, ATBStateID.AfterCast);
         }
     }
 }

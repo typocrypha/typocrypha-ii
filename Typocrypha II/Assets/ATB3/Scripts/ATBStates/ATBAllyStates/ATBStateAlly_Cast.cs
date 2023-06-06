@@ -27,7 +27,7 @@ namespace ATB3
         private IEnumerator CastAndExit()
         {
             yield return SpellManager.instance.Cast(Owner.Caster.Spell, Owner.Caster, Owner.Caster.TargetPos);
-            Source.PerformTransition(ATBStateID.AfterCast);
+            Source.PerformTransition(ATBStateID.Idle);
         }
     }
 }

@@ -36,7 +36,7 @@ namespace ATB3
 
         private void CastComplete()
         {
-            Source.PerformTransition(ATBStateID.AfterCast);
+            Source.PerformTransition(ATBStateID.Idle);
         }
     }
 }
