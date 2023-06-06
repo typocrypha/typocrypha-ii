@@ -242,7 +242,10 @@ namespace Typocrypha
         public void Focus()
         {
             focused = true;
-            PauseSubUI(false);
+            if (!PH.Pause)
+            {
+                PauseSubUI(false);
+            }
         }
 
         public void Unfocus()
