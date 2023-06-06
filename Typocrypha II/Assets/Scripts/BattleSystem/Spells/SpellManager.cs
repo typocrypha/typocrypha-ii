@@ -88,7 +88,14 @@ public class SpellManager : MonoBehaviour
         {
             if(spell.Count == 1 && SpellWord.CompareKeys(spell[0], runWord))
             {
-                SpellFxManager.instance.LogMessage(castMessageOverride ?? $"{caster.DisplayName} ran away!", spell.Icon, runLogTime);
+                if(spell[0] is RootWord root && root.effects.Count > 0 && root.effects[0].pattern.Target(caster.FieldPos, target).Count > 1)
+                {
+                    SpellFxManager.instance.LogMessage(castMessageOverride ?? $"{caster.DisplayName} and crew ran away!", spell.Icon);
+                }
+                else
+                {
+                    SpellFxManager.instance.LogMessage(castMessageOverride ?? $"{caster.DisplayName} ran away!", spell.Icon, runLogTime);
+                }
             }
             else if(spell.Count == 1 && SpellWord.CompareKeys(spell[0], runAllWord))
             {
