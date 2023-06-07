@@ -36,7 +36,8 @@ public class AudioManager : MonoBehaviour, ISavable
 
     AssetBundle sfxBundle; // Asset bundle containing sfx clips.
     int bgmInd; // Index of in use bgm audio source.
-    private Coroutine fadeRoutine;
+    private Coroutine routineFadeIn;
+    private Coroutine routineFadeOut;
 
     public float BGMVolume
     {
@@ -70,13 +71,13 @@ public class AudioManager : MonoBehaviour, ISavable
     {
         bgm[bgmInd].clip = clip;
         bgm[bgmInd].loop = true;
-        if (fadeCurve != null)
+        if (fadeCurve != null && fadeCurve.keys.Length > 0)
         {
-            if(fadeRoutine != null)
+            if(routineFadeIn != null)
             {
-                StopCoroutine(fadeRoutine);
+                StopCoroutine(routineFadeIn);
             }
-            fadeRoutine = StartCoroutine(FadeIn(fadeCurve));
+            routineFadeIn = StartCoroutine(FadeIn(fadeCurve, bgmInd));
         }
         else
         {
@@ -88,20 +89,21 @@ public class AudioManager : MonoBehaviour, ISavable
     /// Fade in currently loaded BGM.
     /// </summary>
     /// <param name="fadeCurve">Volume curve.</param>
-    IEnumerator FadeIn(AnimationCurve fadeCurve)
+    /// <param name="incoming">Index of bgm to fade in.</param>
+    IEnumerator FadeIn(AnimationCurve fadeCurve, int incoming)
     {
-        bgm[bgmInd].volume = 0f;
-        bgm[bgmInd].Play();
+        bgm[incoming].volume = 0f;
+        bgm[incoming].Play();
         float time = 0f;
         float length = fadeCurve.keys[fadeCurve.length - 1].time;
         while (time < length)
         {
-            bgm[bgmInd].volume = fadeCurve.Evaluate(time);
+            bgm[incoming].volume = fadeCurve.Evaluate(time);
             yield return new WaitForFixedUpdate();
             time += Time.fixedDeltaTime;
         }
-        bgm[bgmInd].volume = 1f;
-        fadeRoutine = null;
+        bgm[incoming].volume = 1f;
+        routineFadeIn = null;
     }
 
     /// <summary>
@@ -110,13 +112,13 @@ public class AudioManager : MonoBehaviour, ISavable
     /// <param name="fadeCurve">Volume curve.</param>
     public void StopBGM(AnimationCurve fadeCurve = null)
     {
-        if (fadeCurve != null)
+        if (fadeCurve != null && fadeCurve.keys.Length > 0)
         {
-            if (fadeRoutine != null)
+            if (routineFadeOut != null)
             {
-                StopCoroutine(fadeRoutine);
+                StopCoroutine(routineFadeOut);
             }
-            fadeRoutine = StartCoroutine(FadeOut(fadeCurve));
+            routineFadeOut = StartCoroutine(FadeOut(fadeCurve, bgmInd));
         }
         else
         {
@@ -128,18 +130,19 @@ public class AudioManager : MonoBehaviour, ISavable
     /// Fade out currently playing BGM.
     /// </summary>
     /// <param name="fadeCurve">Volume curve.</param>
-    IEnumerator FadeOut(AnimationCurve fadeCurve)
+    /// <param name="outgoing">Index of bgm to fade out.</param>
+    IEnumerator FadeOut(AnimationCurve fadeCurve, int outgoing)
     {
         float time = 0f;
         float length = fadeCurve.keys[fadeCurve.length - 1].time;
         while (time < length)
         {
-            bgm[bgmInd].volume = fadeCurve.Evaluate(time);
+            bgm[outgoing].volume = fadeCurve.Evaluate(time);
             yield return new WaitForFixedUpdate();
             time += Time.fixedDeltaTime;
         }
-        bgm[bgmInd].Stop();
-        fadeRoutine = null;
+        bgm[outgoing].Stop();
+        routineFadeOut = null;
     }
 
     /// <summary>
@@ -150,6 +153,19 @@ public class AudioManager : MonoBehaviour, ISavable
     {
         if (pause) bgm[bgmInd].Pause();
         else bgm[bgmInd].UnPause();
+    }
+
+    /// <summary>
+    /// Starts playing audio clip, crossfading over previous one.
+    /// </summary>
+    /// <param name="clip">Clip to play as bgm.</param>
+    /// <param name="fadeCurveIn">Volume curve to fade in with.</param>
+    /// <param name="fadeCurveOut">Volume curve to fade out with.</param>
+    public void CrossfadeBGM(AudioClip clip, AnimationCurve fadeCurveIn = null, AnimationCurve fadeCurveOut = null)
+    {
+        StopBGM(fadeCurveOut);
+        bgmInd = 1 - bgmInd; //switch active track
+        PlayBGM(clip, fadeCurveIn);
     }
 
     /// <summary>

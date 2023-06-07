@@ -86,6 +86,10 @@ public abstract class GraphParser : MonoBehaviour
             {
                 AudioManager.instance.PauseBGM(pauseBgmNode.pause);
             }
+            else if (node is CrossfadeBgm crossfadeNode)
+            {
+                AudioManager.instance.CrossfadeBGM(crossfadeNode.bgm, crossfadeNode.fadeCurveIn, crossfadeNode.fadeCurveOut);
+            }
             else if (node is PlaySfx playSfxNode)
             {
                 AudioManager.instance.PlaySFX(playSfxNode.sfx);

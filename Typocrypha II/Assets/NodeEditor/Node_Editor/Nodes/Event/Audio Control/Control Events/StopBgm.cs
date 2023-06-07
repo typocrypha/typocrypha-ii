@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using NodeEditorFramework;
-using NodeEditorFramework.Utilities;
+using UnityEditor;
 
 namespace Gameflow
 {
@@ -13,24 +13,29 @@ namespace Gameflow
         public override string Title { get { return "Stop BGM"; } }
         public override Vector2 MinSize { get { return new Vector2(250, 60); } }
         
-        public AnimationCurve fadeCurve;
+        public AnimationCurve fadeCurve = AnimationCurve.Linear(0,1,1,0);
 
         #region Tooltip Strings
         const string tooltipFade = "Volume curve over which audio clip fades out.";
         #endregion
 
+        private const float CURVE_HEIGHT = 75f;
+
         public override void NodeGUI()
         {
+            GUILayout.BeginVertical(new GUIStyle());
+
             #region FadeIn
             if(fadeCurve != null)
             {
-                GUILayout.Label(new GUIContent("Fade Out Curve", tooltipFade), NodeEditorGUI.nodeLabelBoldCentered);
                 GUILayout.BeginVertical();
-                GUILayout.Space(100);
-                fadeCurve = RTEditorGUI.CurveField(new Rect(4, 15, MinSize.x - 10, 100), fadeCurve);
+                GUILayout.Label(new GUIContent("Fade Curve", tooltipFade), NodeEditorGUI.nodeLabelBoldCentered);
+                fadeCurve = EditorGUILayout.CurveField(fadeCurve, GUILayout.Height(CURVE_HEIGHT));
                 GUILayout.EndVertical();
             }
             #endregion
+
+            GUILayout.EndVertical();
         }
     }
 }
