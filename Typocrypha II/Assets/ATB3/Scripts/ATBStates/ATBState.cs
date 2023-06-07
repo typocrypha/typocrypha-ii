@@ -48,7 +48,6 @@ namespace ATB3
         private T owner; 
         public T Owner { get { return owner; } set { owner = value; } }
         public ATBStateMachine<T> Source { get; set; }
-        public float timePassed = 0.0f;    // Amount of time spent in the state
 
         // Constructor for ATBState
         // (assigns an ATBActor as an owner for the State to run functions)

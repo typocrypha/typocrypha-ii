@@ -9,8 +9,17 @@ namespace ATB3
         // Call upon entering given state
         public override void OnEnter()
         {
-            //Debug.Log("PLAYER " + this.Owner.actorName + " has ENTERED the CAST state!");
-            Owner.StartCoroutine(CastAndExit());
+            var caster = Owner.GetComponent<Caster>();
+            var spell = caster.Spell;
+            var targetPos = Owner.SavedTargetPos;
+            bool topLevel = !ATBManager.instance.ProcessingActions;
+            Coroutine CastFn()
+            {
+                Owner.isCast = true;
+                FaderManager.instance.FadeTargets(spell, caster.FieldPos, targetPos);
+                return SpellManager.instance.CastAndCounter(spell, caster, targetPos, null, topLevel);
+            }
+            ATBManager.instance.QueueSolo(new ATBManager.ATBAction() { Actor = Owner, Action = CastFn, OnComplete = CastComplete });
         }
 
         // Call on fixed update while in given state
@@ -25,11 +34,9 @@ namespace ATB3
             //Debug.Log("PLAYER " + this.Owner.actorName + " has EXITED the CAST state!");
         }
 
-        private IEnumerator CastAndExit()
+        private void CastComplete()
         {
-            var caster = Owner.GetComponent<Caster>();
-            yield return SpellManager.instance.CastAndCounter(caster.Spell, caster, Owner.SavedTargetPos);
-            Source.PerformTransition(ATBStateID.AfterCast);
+            Source.PerformTransition(ATBStateID.Idle);
         }
     }
 }

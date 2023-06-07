@@ -38,8 +38,6 @@ namespace ATB3
         // Incrementally charges next spell
         IEnumerator ChargeCR()
         {
-            Caster.Charge = 0f;
-            Caster.ChargeTime = Caster.Spell.Cost;
             do
             {
                 // Charge while in charge state
@@ -49,8 +47,6 @@ namespace ATB3
             }
             while (Caster.Charge < Caster.ChargeTime);
             Caster.Charge = Caster.ChargeTime;
-            //Debug.Log("DONE CHARGING");
-            //sendEvent("enemyPreCast");
             chargeCRObj = null;
         }
 

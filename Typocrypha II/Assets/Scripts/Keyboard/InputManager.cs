@@ -22,6 +22,7 @@ public class InputManager : MonoBehaviour
         {
             inputStack.Peek().Unfocus();
         }
+        StopAllCoroutines();
         handler.Focus();
         inputStack.Push(handler);
     }
@@ -32,7 +33,14 @@ public class InputManager : MonoBehaviour
         handler.Unfocus();
         if(inputStack.Count > 0)
         {
-            inputStack.Peek().Focus();
+            //inputStack.Peek().Focus();
+            StartCoroutine(FocusAtEndOfFrame());
         }
+    }
+
+    private IEnumerator FocusAtEndOfFrame()
+    {
+        yield return null;
+        inputStack.Peek().Focus();
     }
 }

@@ -88,7 +88,14 @@ public class SpellManager : MonoBehaviour
         {
             if(spell.Count == 1 && SpellWord.CompareKeys(spell[0], runWord))
             {
-                SpellFxManager.instance.LogMessage(castMessageOverride ?? $"{caster.DisplayName} ran away!", spell.Icon, runLogTime);
+                if(spell[0] is RootWord root && root.effects.Count > 0 && root.effects[0].pattern.Target(caster.FieldPos, target).Count > 1)
+                {
+                    SpellFxManager.instance.LogMessage(castMessageOverride ?? $"{caster.DisplayName} and crew ran away!", spell.Icon);
+                }
+                else
+                {
+                    SpellFxManager.instance.LogMessage(castMessageOverride ?? $"{caster.DisplayName} ran away!", spell.Icon, runLogTime);
+                }
             }
             else if(spell.Count == 1 && SpellWord.CompareKeys(spell[0], runAllWord))
             {
@@ -201,10 +208,6 @@ public class SpellManager : MonoBehaviour
         {
             Typocrypha.Keyboard.instance.DoOverheat();
         }
-        if (HasQueuedCasts)
-        {
-            yield return StartCoroutine(ProcessQueuedCasts());
-        }
     }
 
     private IEnumerator CastAndCounterCR(Spell spell, Caster caster, Battlefield.Position target, Func<Caster, bool> pred, string castMessageOverride, bool isTopLevel)
@@ -259,29 +262,6 @@ public class SpellManager : MonoBehaviour
 
     public bool HasInterrupts => interrupts.Count > 0;
 
-    public void QueueCast(Spell spell, Caster caster, Battlefield.Position target, bool counter, string messageOverride = null)
-    {
-        queuedCasts.Enqueue(new InterruptData(spell, caster, target, messageOverride, counter));
-    }
-
-    public bool HasQueuedCasts => queuedCasts.Count > 0;
-    private IEnumerator ProcessQueuedCasts()
-    {
-        while (HasQueuedCasts)
-        {
-            var cast = queuedCasts.Dequeue();
-            if (cast.caster == null || cast.caster.IsDeadOrFled)
-                continue;
-            if (cast.canCounter)
-            {
-                yield return CastAndCounter(cast.spell, cast.caster, cast.target, cast.msgOverride, false);
-            }
-            else
-            {
-                yield return Cast(cast.spell, cast.caster, cast.target, cast.msgOverride, false);
-            }
-        }
-    }
     public void LogInteractivePopup(InteractivePopup popup, string title, string prompt, float time, Func<bool, IEnumerator> onComplete = null)
     {
         popupRequests.Enqueue(new PopupData() { popup = popup, title = title, prompt = prompt, time = time, onComplete = onComplete });

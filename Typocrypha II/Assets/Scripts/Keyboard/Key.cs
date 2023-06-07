@@ -36,14 +36,29 @@ namespace Typocrypha
             {
                 float curr = highlight;
                 // Modify highlight
-                if (value) highlight = 1f;
-                else if (highlight >= 0f) highlight -= 0.15f;
+                if (value)
+                {
+                    highlight = 1f;
+                }
+                else if (highlight >= 0f)
+                {
+                    
+                    highlight = Mathf.Max(highlight - 0.15f, 0);
+                }
                 // Set color if necessary
                 if(highlight != curr)
                 {
                     highlightImage.color = originalColor * highlight;
                 }
             }
+        }
+
+        public void ClearHighlight()
+        {
+            if (highlight == 0)
+                return;
+            highlight = 0;
+            highlightImage.color = originalColor * highlight;
         }
 
         void Awake()

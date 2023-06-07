@@ -6,8 +6,8 @@ using RandomUtils;
 
 public class SpellParser : MonoBehaviour
 {
-    public const int maxWords = 5;
-    public const int maxRoots = 3;
+    public const int maxWords = int.MaxValue;
+    public const int maxRoots = int.MaxValue;
     public enum ParseResults
     {
         Valid,

@@ -29,12 +29,10 @@ public class AISpiritModeAction : AIComponent
                 continue;
             ai.enabled = false;
         }
-        caster.Spell = action;
-        caster.Charge = 0;
+        ChangeSpell(action);
         caster.Stats.MaxStagger = spiritStagger;
         caster.Stagger = spiritStagger;
         caster.Stunned = false;
-        caster.ChargeTime = action.Cost * caster.Stats.CastingSpeedMod;
         caster.TargetPos = Battlefield.instance.Player.FieldPos;
     }
 
@@ -42,7 +40,7 @@ public class AISpiritModeAction : AIComponent
     {
         if (caster.BStatus == Caster.BattleStatus.SpiritMode && resetToRunAfterCast)
         {
-            caster.Spell = action;
+            ChangeSpell(action);
         }
     }
 }
