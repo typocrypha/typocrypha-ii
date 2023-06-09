@@ -8,6 +8,6 @@ public class BEFunctionSpawnFieldObject : BattleEventFunction
     public GameObject fieldObjectPrefab;
     public override void Run()
     {
-        StartCoroutine(BattleManager.instance.AddFieldObject(fieldObjectPrefab, pos.Row, pos.Col, true));
+        StartCoroutine(BattleManager.instance.AddCaster(fieldObjectPrefab, pos.Row, pos.Col, true));
     }
 }

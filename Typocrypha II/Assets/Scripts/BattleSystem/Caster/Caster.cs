@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Caster : FieldObject
+public class Caster : MonoBehaviour
 {
     public enum Class
     {
@@ -64,6 +64,16 @@ public class Caster : FieldObject
     public HitFn OnAfterHitResolved { get; set; }
     public System.Action OnSpiritMode { get; set; }
     public System.Action<Battlefield.Position> OnNoTargetHit { get; set; }
+
+    #region Field Object Properties
+
+    [SerializeField] private string _displayName;
+    public string DisplayName { get => _displayName; set => _displayName = value; }
+    public Battlefield.Position FieldPos { get; set; } = new Battlefield.Position(0, 0);
+    [SerializeField] private bool _moveable = true;
+    public bool IsMoveable { get => _moveable; set => _moveable = value; }
+
+    #endregion
 
     #region State, Status, and Class
 
@@ -213,13 +223,16 @@ public class Caster : FieldObject
     float charge; // Charge amount (seconds) for enemies
     #endregion
 
-    #region Research
+    #region Research + Scouter
 
     public string ResearchKey => string.IsNullOrWhiteSpace(researchKeyOverride) ? DisplayName : researchKeyOverride;
     [SerializeField] private string researchKeyOverride;
 
     public float ResearchAmount => researchAmount;
     [SerializeField] private float researchAmount = 0.1f;
+
+    private ScouterData scouterData;
+    public ScouterData ScouterData => scouterData ?? (scouterData = GetComponent<ScouterData>());
 
     #endregion
 

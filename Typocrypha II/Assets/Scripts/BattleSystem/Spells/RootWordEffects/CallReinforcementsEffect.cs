@@ -28,7 +28,7 @@ public class CallReinforcementsEffect : RootWordEffect
             var pos = RandomUtils.RandomU.instance.Choice(validPositions);
             validPositions.Remove(pos);
             // Spawn reinforcement
-            BattleManager.instance.StartCoroutine(BattleManager.instance.AddFieldObject(reinforcementPrefab, pos.Row, pos.Col));
+            BattleManager.instance.StartCoroutine(BattleManager.instance.AddCaster(reinforcementPrefab, pos.Row, pos.Col));
         }
         return results;
     }

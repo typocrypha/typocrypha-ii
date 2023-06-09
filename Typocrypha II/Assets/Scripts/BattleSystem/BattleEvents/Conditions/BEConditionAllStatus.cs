@@ -8,7 +8,15 @@ public class BEConditionAllStatus : BattleEventCondition
     [SerializeField] private List<Caster.BattleStatus> statuses = new List<Caster.BattleStatus>();
     public override bool Check()
     {
-        var enemies = Battlefield.instance.Enemies;
-        return enemies.Any() && enemies.All(e => statuses.Contains(e.BStatus));
+        bool foundEnemy = false;
+        foreach(var caster in Battlefield.instance.Casters)
+        {
+            if (caster.CasterState != Caster.State.Hostile)
+                continue;
+            foundEnemy = true;
+            if (!statuses.Contains(caster.BStatus))
+                return false;
+        }
+        return foundEnemy;
     }
 }

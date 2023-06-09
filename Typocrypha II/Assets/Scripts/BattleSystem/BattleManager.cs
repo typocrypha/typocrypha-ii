@@ -62,7 +62,7 @@ public class BattleManager : MonoBehaviour, IPausable
         var startNode = graphParser.Init();
         totalWaves = startNode.totalWaves;
         // Initialize Player
-        var player = Instantiate(startNode.player, transform).GetComponent<FieldObject>();
+        var player = Instantiate(startNode.player, transform).GetComponent<Caster>();
         Battlefield.instance.Add(player, new Battlefield.Position(1, 1));
         // Initialize ally character
         if(startNode.initialAllyData != null)
@@ -179,7 +179,7 @@ public class BattleManager : MonoBehaviour, IPausable
                 }
                 continue;
             }
-            yield return StartCoroutine(AddFieldObject(fieldData[row, col], row, col));
+            yield return StartCoroutine(AddCaster(fieldData[row, col], row, col));
             if (++col >= fieldData.Columns)
             {
                 col = 0;
@@ -202,19 +202,19 @@ public class BattleManager : MonoBehaviour, IPausable
         PH.Pause = false; // Unpause if no dialog scene, else remove extra pause
     }
 
-    public IEnumerator AddFieldObject(GameObject fieldObjectPrefab, int row, int col, bool unPause = false)
+    public IEnumerator AddCaster(GameObject casterPrefab, int row, int col, bool unPause = false)
     {
-        FieldObject e = Instantiate(fieldObjectPrefab).GetComponent<FieldObject>();
-        if (e == null)
+        var caster = Instantiate(casterPrefab).GetComponent<Caster>();
+        if (caster == null)
             yield break;
-        Battlefield.instance.Add(e, new Battlefield.Position(row, col));
+        Battlefield.instance.Add(caster, new Battlefield.Position(row, col));
         // Use the default FX if the prefab doesn't have a SpawnFX componetn
-        var fx = e.GetComponent<SpawnFX>()?.fx ?? defualtSpawnFx;
+        var fx = caster.GetComponent<SpawnFX>()?.fx ?? defualtSpawnFx;
         // Play and wait for spawn effects
-        yield return StartCoroutine(fx.Play(e.transform.position, true));
+        yield return StartCoroutine(fx.Play(caster.transform.position, true));
         if(unPause)
         {
-            var actor = e.GetComponent<ATB3.ATBActor>();
+            var actor = caster.GetComponent<ATB3.ATBActor>();
             if (actor != null)
                 actor.Pause = false;
         }

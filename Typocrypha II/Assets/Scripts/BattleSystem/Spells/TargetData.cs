@@ -107,8 +107,10 @@ public class TargetData
         // Logic for player, allies, and enemies. Other states have no defined allies
         if (caster.IsPlayer)
         {
-            foreach (var ally in Battlefield.instance.Allies)
+            foreach (var ally in Battlefield.instance.Casters)
             {
+                if (ally.CasterState != Caster.State.Ally)
+                    continue;
                 if (ally.IsDeadOrFled || (filter != null && !filter(ally)))
                     continue;
                 ret.Add(ally.FieldPos);
@@ -117,8 +119,10 @@ public class TargetData
         else if (caster.CasterState == Caster.State.Ally)
         {
             ret.Add(Battlefield.instance.Player.FieldPos);
-            foreach (var ally in Battlefield.instance.Allies)
+            foreach (var ally in Battlefield.instance.Casters)
             {
+                if (ally.CasterState != Caster.State.Ally)
+                    continue;
                 if (ally.IsDeadOrFled || ally.FieldPos == casterPos || (filter != null && !filter(ally)))
                     continue;
                 ret.Add(ally.FieldPos);
@@ -126,8 +130,10 @@ public class TargetData
         }
         else if (caster.CasterState == Caster.State.Hostile)
         {
-            foreach (var enemy in Battlefield.instance.Enemies)
+            foreach (var enemy in Battlefield.instance.Casters)
             {
+                if (enemy.CasterState != Caster.State.Hostile)
+                    continue;
                 if (enemy.IsDeadOrFled || enemy.FieldPos == casterPos || (filter != null && !filter(enemy)))
                     continue;
                 ret.Add(enemy.FieldPos);

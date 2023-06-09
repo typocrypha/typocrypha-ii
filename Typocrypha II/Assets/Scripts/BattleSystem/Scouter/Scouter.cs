@@ -62,8 +62,8 @@ public class Scouter : MonoBehaviour, IPausable
             Typocrypha.Keyboard.instance.PH.Pause = false;
             return;
         }
-        var obj = Battlefield.instance.GetObject(Battlefield.instance.Player.TargetPos);
-        if(obj == null || obj.ScouterData == null)
+        var target = Battlefield.instance.GetCaster(Battlefield.instance.Player.TargetPos);
+        if(target == null || target.ScouterData == null)
         {
             return;
         }
@@ -72,7 +72,7 @@ public class Scouter : MonoBehaviour, IPausable
         Battlefield.instance.PH.Pause = true;
         Typocrypha.Keyboard.instance.PH.Pause = true;
         ScouterActive = true;
-        scouterDialog.StartDialogBox(obj.ScouterData.Description);
-        scouterImage.sprite = obj.ScouterData.Image;
+        scouterDialog.StartDialogBox(target.ScouterData.Description);
+        scouterImage.sprite = target.ScouterData.Image;
     }
 }
