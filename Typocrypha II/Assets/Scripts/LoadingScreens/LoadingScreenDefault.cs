@@ -39,7 +39,7 @@ public class LoadingScreenDefault : LoadingScreen
 
     private IEnumerator StartLoadingCr()
     {
-        yield return FaderManager.instance.FadeScreenOverTime(fadeTime, FaderManager.instance.ScreenFadeColor.a, 1, Color.black);
+        yield return FaderManager.instance.FadeScreenOverTime(fadeTime, FaderManager.instance.ScreenFadeColor.a, 1, Color.black, false);
         loadingPercent.gameObject.SetActive(true);
     }
 
@@ -50,7 +50,7 @@ public class LoadingScreenDefault : LoadingScreen
         {
             return StartCoroutine(WaitUntilScreenFadeIsComplete());
         }
-        return FaderManager.instance.FadeScreenOverTime(fadeTime, 1, 0, Color.black);
+        return FaderManager.instance.FadeScreenOverTime(fadeTime, 1, 0, Color.black, false);
     }
 
     private IEnumerator WaitUntilScreenFadeIsComplete()
