@@ -8,8 +8,7 @@ using Typocrypha;
 public class BattleManager : MonoBehaviour, IPausable
 {
     #region IPausable
-    PauseHandle ph;
-    public PauseHandle PH { get => ph; }
+    public PauseHandle PH { get; private set; }
     public void OnPause(bool pauseState) // Pauses battle events and battlefield
     {
         SetBattleEventPause(pauseState);
@@ -43,7 +42,7 @@ public class BattleManager : MonoBehaviour, IPausable
             return;
         }
         graphParser = GetComponent<BattleGraphParser>();
-        ph = new PauseHandle(OnPause);
+        PH = new PauseHandle(OnPause);
     }
 
     public bool startOnStart = true; // Should battle start when scene starts?
@@ -62,7 +61,7 @@ public class BattleManager : MonoBehaviour, IPausable
         var startNode = graphParser.Init();
         totalWaves = startNode.totalWaves;
         // Initialize Player
-        var player = Instantiate(startNode.player, transform).GetComponent<FieldObject>();
+        var player = Instantiate(startNode.player, transform).GetComponent<Caster>();
         Battlefield.instance.Add(player, new Battlefield.Position(1, 1));
         // Initialize ally character
         if(startNode.initialAllyData != null)
@@ -80,7 +79,6 @@ public class BattleManager : MonoBehaviour, IPausable
         AddProxyCaster(startNode.proxyCaster1);
         AddProxyCaster(startNode.proxyCaster2);
         AddProxyCaster(startNode.proxyCaster3);
-
     }
 
     private void AddProxyCaster(GameObject prefab)
@@ -146,7 +144,7 @@ public class BattleManager : MonoBehaviour, IPausable
 
     public void NextWave()
     {
-        ph.Pause = true;
+        PH.Pause = true;
         ++waveNum;
         CurrWave = graphParser.NextWave();
         if (CurrWave == null) return;
@@ -179,7 +177,7 @@ public class BattleManager : MonoBehaviour, IPausable
                 }
                 continue;
             }
-            yield return StartCoroutine(AddFieldObject(fieldData[row, col], row, col));
+            yield return StartCoroutine(AddCaster(fieldData[row, col], row, col));
             if (++col >= fieldData.Columns)
             {
                 col = 0;
@@ -202,19 +200,19 @@ public class BattleManager : MonoBehaviour, IPausable
         PH.Pause = false; // Unpause if no dialog scene, else remove extra pause
     }
 
-    public IEnumerator AddFieldObject(GameObject fieldObjectPrefab, int row, int col, bool unPause = false)
+    public IEnumerator AddCaster(GameObject casterPrefab, int row, int col, bool unPause = false)
     {
-        FieldObject e = Instantiate(fieldObjectPrefab).GetComponent<FieldObject>();
-        if (e == null)
+        var caster = Instantiate(casterPrefab).GetComponent<Caster>();
+        if (caster == null)
             yield break;
-        Battlefield.instance.Add(e, new Battlefield.Position(row, col));
+        Battlefield.instance.Add(caster, new Battlefield.Position(row, col));
         // Use the default FX if the prefab doesn't have a SpawnFX componetn
-        var fx = e.GetComponent<SpawnFX>()?.fx ?? defualtSpawnFx;
+        var fx = caster.GetComponent<SpawnFX>()?.fx ?? defualtSpawnFx;
         // Play and wait for spawn effects
-        yield return StartCoroutine(fx.Play(e.transform.position, true));
+        yield return StartCoroutine(fx.Play(caster.transform.position, true));
         if(unPause)
         {
-            var actor = e.GetComponent<ATB3.ATBActor>();
+            var actor = caster.GetComponent<ATB3.ATBActor>();
             if (actor != null)
                 actor.Pause = false;
         }

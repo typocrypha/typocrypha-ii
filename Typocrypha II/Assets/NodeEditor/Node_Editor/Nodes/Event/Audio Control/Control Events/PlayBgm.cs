@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using NodeEditorFramework;
-using NodeEditorFramework.Utilities;
+using UnityEditor;
 
 namespace Gameflow
 {
@@ -14,35 +14,37 @@ namespace Gameflow
         public override Vector2 MinSize { get { return new Vector2(250, 60); } }
 
         public AudioClip bgm;
-        public AnimationCurve fadeCurve;
+        public AnimationCurve fadeCurve = AnimationCurve.Linear(0,0,1,1);
 
         #region Tooltip Strings
         const string tooltipBgm = "AudioClip to play as bgm.";
         const string tooltipFade = "Volume curve over which audio clip fades in.";
         #endregion
 
+        private const float CURVE_HEIGHT = 75f;
+
         public override void NodeGUI()
         {
+            GUILayout.BeginVertical(new GUIStyle());
+
             #region BGM
-            GUILayout.Space(5);
             GUILayout.BeginVertical("Box");
-            GUILayout.BeginHorizontal();
-            GUILayout.Label(new GUIContent("BGM", tooltipBgm), NodeEditorGUI.nodeLabel, GUILayout.Width(65f));
-            bgm = RTEditorGUI.ObjectField(bgm, false, GUILayout.Width(MinSize.x - 100f));
-            GUILayout.EndHorizontal();
+            EditorGUIUtility.labelWidth = 65f;
+            bgm = EditorGUILayout.ObjectField(new GUIContent("BGM", tooltipBgm), bgm, typeof(AudioClip), false) as AudioClip;
             GUILayout.EndVertical();
             #endregion
 
             #region FadeIn
             if(fadeCurve != null)
             {
-                GUILayout.Label(new GUIContent("Fade In Curve", tooltipFade), NodeEditorGUI.nodeLabelBoldCentered);
                 GUILayout.BeginVertical();
-                GUILayout.Space(100);
-                fadeCurve = RTEditorGUI.CurveField(new Rect(4, 50, MinSize.x - 10, 100), fadeCurve);
+                GUILayout.Label(new GUIContent("Fade Curve", tooltipFade), NodeEditorGUI.nodeLabelBoldCentered);
+                fadeCurve = EditorGUILayout.CurveField(fadeCurve, GUILayout.Height(CURVE_HEIGHT));
                 GUILayout.EndVertical();
             }
             #endregion
+
+            GUILayout.EndVertical();
         }
     }
 }

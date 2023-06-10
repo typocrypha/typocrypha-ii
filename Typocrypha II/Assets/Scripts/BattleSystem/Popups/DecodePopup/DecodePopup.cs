@@ -21,11 +21,22 @@ public class DecodePopup : InteractivePopup
     private StringBuilder obscuredText;
     private int currIndex;
     private int obscureIndex;
+    private bool focus;
 
+
+    public override void Focus()
+    {
+        focus = true;
+    }
+
+    public override void Unfocus()
+    {
+        focus = false;
+    }
 
     private void Update()
     {
-        if (Completed || currIndex >= realText.Length)
+        if (!focus || Completed || currIndex >= realText.Length)
             return;
         if (Input.GetKeyDown(realText[currIndex].ToString().ToLower()))
         {
@@ -46,6 +57,7 @@ public class DecodePopup : InteractivePopup
         SetPrompt(obscuredText.ToString());
         ResetBubbles();
         gameObject.SetActive(true);
+        InputManager.Instance.StartInput(this);
     }
 
     private void ResetBubbles()
@@ -113,6 +125,7 @@ public class DecodePopup : InteractivePopup
         {
             promptText.text = realText;
             Completed = true;
+            InputManager.Instance.CompleteInput();
         }
         else
         {

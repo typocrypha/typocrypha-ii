@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
+using UnityEngine.UI;
 
 public class TargetReticle : MonoBehaviour, IPausable
 {
@@ -10,17 +12,36 @@ public class TargetReticle : MonoBehaviour, IPausable
     public void OnPause(bool pause)
     {
         enabled = !pause;
-        GetComponent<Animator>().speed = pause ? 0f : 1f;
+        if (Battlefield.instance.Player is Player player)
+        {
+            player.PH.Pause = pause;
+        }
+        //gameObject.SetActive(!pause);
+        if (pause)
+        {
+            enableDisableTween.Start(rectTr.DOSizeDelta(new Vector2(0, 0), enableDisableTween.Time));
+            //enableDisableTween.Start(reticleImage.DOFade(0, enableDisableTween.Time), false);
+        }
+        else
+        {
+            enableDisableTween.Start(rectTr.DOSizeDelta(new Vector2(500, 500), enableDisableTween.Time));
+            //enableDisableTween.Start(reticleImage.DOFade(1, enableDisableTween.Time), false);
+        }
     }
     #endregion
+
+    [SerializeField] private RectTransform rectTr;
+    [SerializeField] private Image reticleImage;
+    [SerializeField] private TweenInfo enableDisableTween;
+
     void Awake()
     {
         PH = new PauseHandle(OnPause);
+        PH.SetParent(BattleManager.instance.PH);
     }
 
     void Start()
     {
-        PH.SetParent(BattleManager.instance.PH);
         // Initialize position
         lastTargetPos = new Battlefield.Position(0, 1);
         targetPosScreenspace = Battlefield.instance.GetSpaceScreenSpace(lastTargetPos);

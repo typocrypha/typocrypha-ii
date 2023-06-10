@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class InteractivePopup : MonoBehaviour
+public abstract class InteractivePopup : MonoBehaviour, IInputHandler
 {
     public bool LastPromptSuccess { get; protected set; } = false;
     public bool Completed { get; protected set; } = false;
+
+    public abstract void Focus();
+    public abstract void Unfocus();
     public virtual Coroutine Show(string header, string data, float time)
     {
         Setup(header, data, time);

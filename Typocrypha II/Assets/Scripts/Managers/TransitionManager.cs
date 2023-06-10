@@ -17,6 +17,7 @@ public class TransitionManager : MonoBehaviour
     [SerializeField] private Canvas loadingScreenCanvas;
     [SerializeField] private int debugContinueIndex;
     [SerializeField] private List<SceneData> sceneData;
+    [SerializeField] private SceneData titleSceneData;
 
     private int sceneIndex = -1;
 
@@ -31,6 +32,16 @@ public class TransitionManager : MonoBehaviour
         }
         instance = this;
         DontDestroyOnLoad(gameObject);
+    }
+
+    public void TransitionToMainMenu()
+    {
+        sceneIndex = -1;
+        if(PlayerDataManager.instance != null)
+        {
+            Destroy(PlayerDataManager.instance.gameObject);
+        }
+        StartCoroutine(PlayLoadingScreen(titleSceneData.loadingScreenOverride, titleSceneData, titleSceneData.SceneName));
     }
 
     public void TransitionToNextScene()

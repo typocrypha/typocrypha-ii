@@ -58,7 +58,7 @@ namespace ATB3
             // return if we are not currently an ally, if we are currently casting, have an open ally menu,
             // We are not currently in solo, or if we don't have enough MP to cast anything
             if (Caster.CasterState != Caster.State.Ally || isCast 
-                || allyMenu.gameObject.activeSelf || !ATBManager.instance.InSolo || !allyMenu.CanCast)
+                || allyMenu.gameObject.activeSelf || !ATBManager.instance.ProcessingActions || !allyMenu.CanCast)
             {
                 menuPrompt.SetActive(false);
                 return;
@@ -111,7 +111,7 @@ namespace ATB3
         /// </summary>
         public void Menu(ATBStateID state)
         {
-            ATBManager.instance.EnterSolo(this);
+            //ATBManager.instance.QueueSolo(this);
             allyMenu.gameObject.SetActive(true);
             allyMenu.Activate(state);
         }
@@ -124,7 +124,7 @@ namespace ATB3
             Mp -= spell.Cost;
             Caster.Spell = spell;
             Caster.TargetPos = Battlefield.instance.Player.TargetPos;
-            StateMachine.PerformTransition(ATBStateID.BeforeCast);
+            StateMachine.PerformTransition(ATBStateID.Cast);
         }
         public override void OnPause(bool b)
         {

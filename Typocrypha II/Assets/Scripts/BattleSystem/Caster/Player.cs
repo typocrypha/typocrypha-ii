@@ -6,6 +6,7 @@ using Typocrypha;
 [RequireComponent(typeof(ATB3.ATBPlayer))]
 public class Player : Caster, IPausable
 {
+    private const float castFailTextTime = 0.6f;
     #region IPausable
     public PauseHandle PH { get; private set; }
 
@@ -16,39 +17,56 @@ public class Player : Caster, IPausable
     }
     #endregion
 
+    [SerializeField] private AudioClip castFailureSfx;
+    [SerializeField] private AudioClip castSuccessSfx;
+
+    private ATB3.ATBPlayer atbPlayer;
+
     protected override void Awake()
     {
         ui = Typocrypha.Keyboard.instance.PlayerUI;
         base.Awake();
         TargetPos = new Battlefield.Position(0, 1);
         PH = new PauseHandle(OnPause);
-    }
-
-    private void Start()
-    {
         PH.SetParent(BattleManager.instance.PH);
+        atbPlayer = GetComponent<ATB3.ATBPlayer>();
     }
 
     /// <summary>
     /// Cast a spell from the keyboard. Called when enter is pressed by player.
     /// Parses spell and, if spell is valid, casts it.
     /// </summary>
-    public void CastString(string spellString)
+    public void CastString(string[] spellWords)
     {
-        var results = SpellParser.instance.Parse(spellString.TrimEnd(CastBar.KeywordDelimiters).Split(CastBar.KeywordDelimiters), PlayerDataManager.instance.equipment.EquippedWords, out var spell);
+        var results = SpellParser.instance.Parse(spellWords, PlayerDataManager.instance.equipment.EquippedWords, out var spell);
         if (results == SpellParser.ParseResults.Valid) 
         {
             // Check cooldowns
             var cooldowns = SpellCooldownManager.instance;
-            if(cooldowns.IsOnCooldown(spell, out _))
+            if(cooldowns.IsOnCooldown(spell, out var wordOnCooldown))
             {
                 results = SpellParser.ParseResults.OnCooldown;
+                AudioManager.instance.PlaySFX(castFailureSfx);
+                SpellFxManager.instance.PlayText(new Vector2(0f, -2f), false, $"{wordOnCooldown.DisplayName} on Cooldown", Color.red, castFailTextTime);
             }
             if (results != SpellParser.ParseResults.OnCooldown)
             {
                 cooldowns.DoCooldowns(spell);
-                GetComponent<Caster>().Spell = spell;
-                GetComponent<ATB3.ATBPlayer>().Cast(TargetPos); // Start casting sequence
+                Spell = spell;
+                atbPlayer.Cast(TargetPos); // Start casting sequence
+                //AudioManager.instance.PlaySFX(castSuccessSfx);
+            }
+        }
+        else
+        {
+            AudioManager.instance.PlaySFX(castFailureSfx);
+            if(results == SpellParser.ParseResults.EmptySpell)
+            {
+                SpellFxManager.instance.PlayText(new Vector2(0f, -2f), false, $"Empty Spell", Color.red, castFailTextTime);
+            }
+            else
+            {
+                SpellFxManager.instance.PlayText(new Vector2(0f, -2f), false, $"Invalid Spell", Color.red, castFailTextTime);
             }
         }
     }
@@ -72,7 +90,7 @@ public class Player : Caster, IPausable
                 if (newPos.Col >= field.Columns)
                     newPos.Col = 0;
                 var caster = field.GetCaster(newPos);
-                if (caster != null && caster.BStatus != BattleStatus.Dead && caster.BStatus != BattleStatus.Fled)
+                if (caster != null && !caster.IsDeadOrFled)
                     break;
             }
             while (newPos.Col != TargetPos.Col);

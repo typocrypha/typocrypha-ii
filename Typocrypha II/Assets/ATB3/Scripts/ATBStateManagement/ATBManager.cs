@@ -29,155 +29,104 @@ namespace ATB3
             }
         }
 
-        //----------------------------------------------------------------//
-        // EVENT DATA                                                     //
-        //----------------------------------------------------------------//
 
         // Is the ATB system currently in Solo mode?
-        public bool InSolo => soloStack.Count != 0;
+        public bool ProcessingActions => actionQueue.Count != 0;
         /// <summary>
         /// The current SoloActor. If the ATB system is not in solo, returns null
         /// </summary>
-        public ATBActor SoloActor => InSolo ? soloStack.Peek() : null;
-        // Events sent
-        // static List<StateEventObj> eventQueue = new List<StateEventObj>(); 
-        static List<string> eventQueue = new List<string>();
+        public ATBActor SoloActor => ProcessingActions ? actionQueue.Peek().Actor : null;
         // Stack for managing when actors have solo activity (casting)
-        private readonly Stack<ATBActor> soloStack = new Stack<ATBActor>();
-
-        //----------------------------------------------------------------//
-        // STATE MANAGEMENT                                               //
-        //----------------------------------------------------------------//
-
-        // Check queue for new messages
-        void Update()
-        {
-            //processQueue();
-        }
-
-        // Process queue (FIFO: one event per update frame)
-        void ProcessQueue()
-        {
-            //if (eventQueue.Count == 0) return;
-            //StateEventObj obj = eventQueue[0];
-            //this.SendMessage(obj.stateEvent, obj.args);
-            //eventQueue.Remove(obj);
-        }
-
-        // Send an event to the manager to put in the queue
-        //public static void sendEvent(string stateEvent, StateEventArgs args)
-        //{
-        //    eventQueue.Add(new StateEventObj(stateEvent, args));
-        //}
-
-        // Send an event to the manager to put in the queue
-        //public static void sendEvent(string stateEvent, Actor actor, int hashID)
-        //{
-        //    //Debug.Log("Send event:" + actor.gameObject.name + ":" + stateEvent);
-        //    sendEvent(stateEvent, new StateEventArgs(actor, hashID));
-        //}
-
-        // Set the pause value of all actors
-        void SetPauseAll(bool value)
-        {
-            foreach (ATBActor actor in Battlefield.instance.Actors)
-                actor.Pause = value;
-        }
+        private readonly Queue<ATBAction> actionQueue = new Queue<ATBAction>();
 
         // Enter solo mode for this actor
-        public void EnterSolo(ATBActor soloActor)
+        public void QueueSolo(ATBAction action)
         {
-            //Debug.Log("enter:" + soloActor.gameObject.name);
-
-            if (soloStack.Count == 0)
+            actionQueue.Enqueue(action);
+            if (action.Actor is ATBPlayer && !Typocrypha.Keyboard.instance.PH.Pause)
+            {
+                Typocrypha.Keyboard.instance.PH.Pause = true;
+            }
+            if (actionQueue.Count == 1)
             {
                 BattleManager.instance.SetBattleEventPause(true); // Pause Battle events.
                 Battlefield.instance.PH.Pause = true; // Pause battle field
-                if (soloActor is ATBPlayer)
-                {
-                    Typocrypha.Keyboard.instance.PH.Pause = true;
-                }
+                DoSolo(action);
+            }
+        }
+
+        private void DoSolo(ATBAction action)
+        {
+            if (action.IsValid)
+            {
+                action.Actor.Pause = false; // TODO: is this needed?
+                StartCoroutine(DoSoloCR(action));
             }
             else
             {
-                soloStack.Peek().Pause = true;
+                ExitSolo(action);
             }
-            soloActor.Pause = false;
-            soloStack.Push(soloActor);
+        }
+
+        private IEnumerator DoSoloCR(ATBAction action)
+        {
+            var routine = action.Action.Invoke();
+            if(routine != null)
+            {
+                yield return routine;
+            }
+            ExitSolo(action);
         }
 
         // Exit solo mode for this actor (should be at top of stack)
-        public void ExitSolo(ATBActor soloActor)
+        private void ExitSolo(ATBAction action)
         {
-            if (soloStack.Count == 0)
+            if (actionQueue.Count == 0)
             {
-                Debug.LogWarning($"ExitSolo with empty solostack:{soloActor}");
+                Debug.LogWarning($"ExitSolo with empty solo queue:{action}");
                 return;
             }
             //Debug.Log("exit:" + soloActor.gameObject.name);
-            if (soloActor != soloStack.Pop())
-                Debug.LogError("StateManager: Solo Stack Mismatch");
-            if (soloActor is ATBPlayer)
+            if (action != actionQueue.Dequeue())
+                Debug.LogError("StateManager: solo queue Mismatch");
+            if (action.Actor is ATBPlayer)
             {
                 Typocrypha.Keyboard.instance.PH.Pause = false;
             }
-            // If stack is now empty, unpause all actors
-            if (soloStack.Count == 0)
+            action.OnComplete?.Invoke();
+            // If queue is now empty, unpause all actors
+            if (actionQueue.Count == 0)
             {
-                //CastBar.MainBar.focus = true;
                 foreach (ATBActor actor in Battlefield.instance.Actors)
                     actor.isCast = false;
                 BattleManager.instance.SetBattleEventPause(false);
-                Battlefield.instance.PH.Pause = false; // Pause battle field
+                Battlefield.instance.PH.Pause = false; // unpause battle field
             }
-            // Otherwise, give solo to next in stack
+            // Otherwise, give solo to next in queue
             else
             {
-                soloActor.Pause = true;
-                soloStack.Peek().Pause = false;
+                action.Actor.Pause = true;
+                DoSolo(actionQueue.Peek());
             }
         }
 
-        //----------------------------------------------------------------//
-        // EVENTS TO BE SENT                                              //
-        //----------------------------------------------------------------//
-
-        // Print a debug message
-        //public void ping(StateEventArgs args)
-        //{
-        //    Debug.Log("Ping:" + args);
-        //}
-
-        // Allow the state to continue
-        // Sent when a state is ready to exit
-        //public void stateContinue(StateEventArgs args)
-        //{
-        //    args.actor.stateMachine.SetTrigger("Continue");
-        //}
-
-        // Save the progress of the current state (will resume from that point next time)
-        //public void saveProgress(StateEventArgs args)
-        //{
-        //    args.actor.stateMachine.SetBool("SaveProgress", true);
-        //}
-
-        // Pause the actor who sent this event
-        //public void pause(StateEventArgs args)
-        //{
-        //    args.actor.pause = true;
-        //}
-
-        // Unpause the actor who sent this event
-        //public void unpause(StateEventArgs args)
-        //{
-        //    args.actor.pause = false;
-        //}
-
-        // Stun the actor who sent this event
-        //public void stun(StateEventArgs args)
-        //{
-        //    args.actor.stateMachine.Play("Stunned");
-        //}
+        public class ATBAction
+        {
+            public System.Func<Coroutine> Action { get; set; }
+            public System.Action OnComplete { get; set; }
+            public ATBActor Actor { get; set; }
+            public bool IsValid
+            {
+                get
+                {
+                    if (Action == null)
+                        return false;
+                    //if (Actor is Caster caster && caster.IsDeadOrFled) // TODO, unify systems
+                    //    return false;
+                    return true;
+                }
+            }
+        }
     }
 }
 

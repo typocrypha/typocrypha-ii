@@ -33,7 +33,15 @@ namespace ATB3
         {
             var caster = Owner.Caster;
             timer += Time.fixedDeltaTime * Settings.GameplaySpeed;
-            if (caster.Stunned)
+            if(caster.BStatus == Caster.BattleStatus.Dead)
+            {
+                Source.PerformTransition(ATBStateID.Dead);
+            }
+            else if(caster.BStatus == Caster.BattleStatus.Fled)
+            {
+                Source.PerformTransition(ATBStateID.Fled);
+            }
+            else if (caster.Stunned)
             {
                 Source.PerformTransition(ATBStateID.Stunned);
             }
@@ -47,9 +55,9 @@ namespace ATB3
             {
                 Source.PerformTransition(ATBStateID.Charge);
             }
-            else if (timer >= time && !ATBManager.instance.InSolo)
+            else if (timer >= time && !ATBManager.instance.ProcessingActions)
             {
-                Source.PerformTransition(ATBStateID.BeforeCast);
+                Source.PerformTransition(ATBStateID.Cast);
             }
         }
 

@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8465534306204299937}
-  - component: {fileID: 9180589571218445674}
   - component: {fileID: 2842560210139615701}
   m_Layer: 5
   m_Name: ReticleContainer
@@ -36,27 +35,8 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 100}
-  m_SizeDelta: {x: 200, y: 200}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!95 &9180589571218445674
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1101060417153247204}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 941353c6be8ba7c4fbeeb6e1ee388101, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &2842560210139615701
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -69,6 +49,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3356de3778b78c44b3ce8a31b9b0236, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rectTr: {fileID: 8465534306204299937}
+  reticleImage: {fileID: 4653083894398426503}
+  enableDisableTween:
+    time: 0.5
+    applyUISpeed: 0
+    useCustomEase: 0
+    ease: 10
+    customEase:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
   MoveSpeed: 0.5
 --- !u!1 &4172234205391662929
 GameObject:
@@ -362,10 +355,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogText: {fileID: 8775521556133254659}
-  voiceAS: []
   resizeTextBox: 0
+  resolveContinueIndicatorConflicts: 0
   textHolder: {fileID: 4190840378971609225}
+  continueIndicatorTR: {fileID: 0}
   continueIndicator: {fileID: 0}
+  canvasGroup: {fileID: 0}
   hideText: {fileID: 2549898121293454798}
   boxID: scouterBox
 --- !u!114 &2549898121293454798

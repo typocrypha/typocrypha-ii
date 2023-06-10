@@ -16,6 +16,13 @@ public abstract class AIComponent : MonoBehaviour
         InitializeBase();
     }
 
+    protected void ChangeSpell(Spell spell)
+    {
+        caster.Spell = spell;
+        caster.ChargeTime = spell.Cost;
+        caster.Charge = 0;
+    }
+
     /// <summary>
     /// Initializes the caster and AI refs, and sets the targeting position to the player
     /// </summary>

@@ -123,18 +123,21 @@ public class FaderManager : MonoBehaviour, IPausable
         }
     }
 
-    public Coroutine FadeScreenOverTime(float fadeTime, float fadeStart, float fadeEnd, Color fadeColor)
+    public Coroutine FadeScreenOverTime(float fadeTime, float fadeStart, float fadeEnd, Color fadeColor, bool allowPause = true)
     {
-        return StartCoroutine(FadeScreenCr(fadeTime, fadeStart, fadeEnd, fadeColor));
+        return StartCoroutine(FadeScreenCr(fadeTime, fadeStart, fadeEnd, fadeColor, allowPause));
     }
 
-    private IEnumerator FadeScreenCr(float fadeTime, float fadeStart, float fadeEnd, Color fadeColor)
+    private IEnumerator FadeScreenCr(float fadeTime, float fadeStart, float fadeEnd, Color fadeColor, bool allowPause)
     {
         IsFadingScreen = true;
         float time = 0f;
         while (time < fadeTime)
         {
-            yield return new WaitWhile(() => PH.Pause);
+            if (allowPause)
+            {
+                yield return new WaitWhile(() => PH.Pause);
+            }
             FadeScreen(Mathf.Lerp(fadeStart, fadeEnd, time / fadeTime), fadeColor);
             yield return new WaitForFixedUpdate();
             time += Time.fixedDeltaTime;

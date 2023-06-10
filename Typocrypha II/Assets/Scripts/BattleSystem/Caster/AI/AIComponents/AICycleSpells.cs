@@ -16,7 +16,7 @@ public class AICycleSpells : AIComponent
         // Initialize the standard refs (caster and AI)
         InitializeBase();
         curr = startIndex;
-        caster.Spell = spells[curr];
+        ChangeSpell(spells[curr]);
     }
 
     private void OnEnable()
@@ -33,6 +33,6 @@ public class AICycleSpells : AIComponent
     {
         if (++curr >= spells.Count)
             curr = loopIndex;
-        caster.Spell = spells[curr];
+        ChangeSpell(spells[curr]);
     }
 }

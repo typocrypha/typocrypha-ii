@@ -12,8 +12,7 @@ public class Battlefield : MonoBehaviour, IPausable
     /// <summary>
     /// Pauses battle.
     /// </summary>
-    PauseHandle ph;
-    public PauseHandle PH { get => ph; }
+    public PauseHandle PH { get; private set; }
 
     /// <summary>
     /// Pauses all actors and keyboard.
@@ -22,7 +21,7 @@ public class Battlefield : MonoBehaviour, IPausable
     public void OnPause(bool b)
     {
         //Typocrypha.Keyboard.instance.CastingEnabled = !b;
-        //SpellCooldownManager.instance.PH.Pause = b;
+        //SpellCooldownManager.instance.PH.Pause = b
         if (b)
         {
             foreach (var actor in Actors)
@@ -30,7 +29,7 @@ public class Battlefield : MonoBehaviour, IPausable
         }
         else
         {
-            if (!ATBManager.instance.InSolo)
+            if (!ATBManager.instance.ProcessingActions)
             {
                 foreach (var actor in Actors)
                     if (actor != null) actor.Pause = false;
@@ -77,15 +76,25 @@ public class Battlefield : MonoBehaviour, IPausable
 
     }
 
-    #region Row and List Accessor Properties
-    public FieldObject[] TopRow { get { return field[0]; } }
-    public FieldObject[] BottomRow { get { return field[1]; } }
-    public IEnumerable<Caster> Enemies { get => Casters.Where((obj) => obj.CasterState == Caster.State.Hostile); }
-    public IEnumerable<Caster> Allies { get => Casters.Where((obj) => obj.CasterState == Caster.State.Ally); }
-    public List<ATBActor> Actors { get; } = new List<ATBActor>();
-    public List<Caster> Casters { get; } = new List<Caster>();
-    public IEnumerable<Position> AllPositions => Enumerable.Range(0, Rows).SelectMany((row) => Enumerable.Range(0, Columns).Select((col) => new Position(row, col)));
-    public List<Position> ValidReinforcementPositions => AllPositions.Where(IsValidEnemyReinforcementPos).ToList();
+    #region List Accessor Properties
+    public List<ATBActor> Actors { get; } = new List<ATBActor>(6);
+    public List<Caster> Casters { get; } = new List<Caster>(6);
+    public List<Position> ValidReinforcementPositions
+    {
+        get
+        {
+            var ret = new List<Position>(3);
+            for (int col = 0; col < field.Columns; col++)
+            {
+                var pos = new Position(0, col);
+                if (IsEmpty(pos))
+                {
+                    ret.Add(pos);
+                }
+            }
+            return ret;
+        }
+    }
     #endregion
 
     #region Data and Representative Lists
@@ -107,7 +116,7 @@ public class Battlefield : MonoBehaviour, IPausable
             Destroy(gameObject);
             return;
         }
-        ph = new PauseHandle(OnPause);
+        PH = new PauseHandle(OnPause);
         spaces = new SpaceMatrix(Rows, Columns);
         field = new FieldMatrix(Rows, Columns);
         var spaceTransforms = GetComponentsInChildren<Transform>();
@@ -122,16 +131,15 @@ public class Battlefield : MonoBehaviour, IPausable
     #region Interface Functions
     /// <summary> Add am object to the battlefield at given field position
     /// Implicitly add toAdd to the actor list if applicable </summary> 
-    public void Add(FieldObject toAdd, Position pos)
+    public void Add(Caster caster, Position pos)
     {
         Remove(pos,true);
-        toAdd.FieldPos = pos;
-        toAdd.transform.position = spaces[pos].transform.position;
-        field[pos] = toAdd;
-        var actor = toAdd.GetComponent<ATBActor>();
+        caster.FieldPos = pos;
+        caster.transform.position = spaces[pos].transform.position;
+        field[pos] = caster;
+        var actor = caster.GetComponent<ATBActor>();
         if (actor != null) Actors.Add(actor);
-        var caster = toAdd.GetComponent<Caster>();
-        if (caster != null) Casters.Add(caster);
+        Casters.Add(caster);
     }
     public void AddProxyCaster(Caster caster)
     {
@@ -141,7 +149,6 @@ public class Battlefield : MonoBehaviour, IPausable
         caster.FieldPos = new Position(-1, -1);
         caster.transform.position = GetSpace(caster.FieldPos);
         proxyCasters.Add(casterName, caster);
-
     }
     /// <summary> Get the position of a battlefield space. The space may be empty </summary> 
     public Vector2 GetSpace(Position pos)
@@ -153,7 +160,7 @@ public class Battlefield : MonoBehaviour, IPausable
         return CameraManager.instance.Camera.WorldToScreenPoint(GetSpace(pos));
     }
     /// <summary> Get the caster in a specific space. returns null if the space is empty or the object is not a caster </summary> 
-    public Caster GetCaster(Position pos) => GetObject(pos) as Caster;
+    public Caster GetCaster(Position pos) => field[pos];
     public Caster GetCaster(string name, bool allowProxies)
     {
         var nameProcessed = name.ToLower();
@@ -169,8 +176,6 @@ public class Battlefield : MonoBehaviour, IPausable
         proxyCasters.TryGetValue(proxyName.ToLower(), out Caster caster);
         return caster;
     }
-    /// <summary> Get the field object </summary> 
-    public FieldObject GetObject(Position pos) => field[pos];
 
     public void Remove(int row, int col, bool destroy = false)
     {
@@ -178,22 +183,19 @@ public class Battlefield : MonoBehaviour, IPausable
     }
     public void Remove(Position pos, bool destroy = false)
     {
-        var obj = field[pos];
-        if (obj == null)
+        var caster = field[pos];
+        if (caster == null)
             return;
         field[pos] = null;
-        if(obj is Caster caster)
-        {
-            Casters.Remove(caster);
-        }
-        var actor = obj.GetComponent<ATBActor>();
+        Casters.Remove(caster);
+        var actor = caster.GetComponent<ATBActor>();
         if (actor != null)
         {
             Actors.Remove(actor);
         }
         if (destroy)
         {
-            Destroy(obj.gameObject);
+            Destroy(caster.gameObject);
         }
     }
     /// <summary> Clear according to options </summary>
@@ -204,31 +206,24 @@ public class Battlefield : MonoBehaviour, IPausable
         int row = 0, col = 0;
         while (row < field.Rows)
         {
-            var obj = field[row, col];
-            if (obj != null)
+            var caster = field[row, col];
+            if (caster != null)
             {
-                if (obj is Caster caster)
+                if (caster.CasterState == Caster.State.Hostile)
                 {
-                    if(caster.CasterState == Caster.State.Hostile)
-                    {
-                        if (options.HasFlag(ClearOptions.ClearEnemies))
-                        {
-                            Remove(row, col, true);
-                        }
-                    }
-                    else if (caster.CasterState == Caster.State.Ally)
-                    {
-                        if (options.HasFlag(ClearOptions.ClearAllies))
-                        {
-                            Remove(row, col, true);
-                        }
-                    }
-                    else if (!caster.IsPlayer && options.HasFlag(ClearOptions.ClearObjects))
+                    if (options.HasFlag(ClearOptions.ClearEnemies))
                     {
                         Remove(row, col, true);
                     }
                 }
-                else if (options.HasFlag(ClearOptions.ClearObjects))
+                else if (caster.CasterState == Caster.State.Ally)
+                {
+                    if (options.HasFlag(ClearOptions.ClearAllies))
+                    {
+                        Remove(row, col, true);
+                    }
+                }
+                else if (!caster.IsPlayer && options.HasFlag(ClearOptions.ClearObjects))
                 {
                     Remove(row, col, true);
                 }
@@ -246,9 +241,9 @@ public class Battlefield : MonoBehaviour, IPausable
     private void RecalculateCasters()
     {
         Casters.Clear();
-        foreach(var obj in field)
+        foreach(var caster in field)
         {
-            if(obj is Caster caster)
+            if(caster != null)
             {
                 Casters.Add(caster);
             }
@@ -315,33 +310,26 @@ public class Battlefield : MonoBehaviour, IPausable
                 throw new System.Exception("Should not have reached default movement case");
         }
     }
-    /// <summary> helper method for setting a FieldObject's position. Will overwrite other objects, and does not check for errors </summary>
-    private void SetPosition(FieldObject obj, Position destination, bool clearOldPos = true)
+    /// <summary> helper method for setting a casters's position. Will overwrite other casters, and does not check for errors </summary>
+    private void SetPosition(Caster caster, Position destination, bool clearOldPos = true)
     {
         if(clearOldPos)
-            field[obj.FieldPos] = null;
-        obj.FieldPos = destination;
-        obj.transform.position = spaces[destination].position;        
-        field[destination] = obj;      
-    }
-
-    public bool IsValidEnemyReinforcementPos(Position position)
-    {
-        return position.Row == 0 && IsEmpty(position);
+            field[caster.FieldPos] = null;
+        caster.FieldPos = destination;
+        caster.transform.position = spaces[destination].position;        
+        field[destination] = caster;      
     }
 
     public bool IsEmpty(Position position)
     {
-        if (GetObject(position) == null)
-            return true;
         var caster = GetCaster(position);
-        return caster != null && caster.IsDeadOrFled;
+        return caster == null || caster.IsDeadOrFled;
     }
 
-    private class FieldMatrix : Serializable2DMatrix<FieldObject>
+    private class FieldMatrix : Serializable2DMatrix<Caster>
     {
         public FieldMatrix(int rows, int columns) : base(rows, columns) { }
-        public FieldObject this[Position pos]
+        public Caster this[Position pos]
         {
             get
             {
@@ -409,7 +397,7 @@ public class Battlefield : MonoBehaviour, IPausable
         }
         public override bool Equals(object other)
         {
-            return other is Position ? Equals(other as Position) : false;
+            return other is Position pos && Equals(pos);
         }
 
         public static bool operator ==(Position a, Position b) => a.Equals(b);

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using NodeEditorFramework;
-using NodeEditorFramework.Utilities;
+using UnityEditor;
 
 namespace Gameflow
 {
@@ -22,12 +22,8 @@ namespace Gameflow
         public override void NodeGUI()
         {
             #region Pause
-            GUILayout.Space(5);
             GUILayout.BeginVertical("Box");
-            GUILayout.BeginHorizontal();
-            GUILayout.Label(new GUIContent("Pause", tooltipPause), NodeEditorGUI.nodeLabel, GUILayout.Width(65f));
-            pause = RTEditorGUI.Toggle(pause, new GUIContent());
-            GUILayout.EndHorizontal();
+            pause = EditorGUILayout.Toggle(new GUIContent("Pause", tooltipPause), pause);
             GUILayout.EndVertical();
             #endregion
         }

@@ -12,13 +12,13 @@ public class MoveEffect : RootWordEffect
 
     public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.SpecialModifier mod, RootCastResults prevResults = null)
     {
-        CastResults results = new CastResults(caster, target);
+        var results = new CastResults(caster, target);
         results.Miss = false;
         results.DisplayDamage = false;
         var viablePositions = new List<Battlefield.Position>(positions);
         viablePositions.RemoveAll((p) => !p.IsLegal || p == target.FieldPos);
         if(onlyMoveToUnoccupied)
-            viablePositions.RemoveAll((p) => Battlefield.instance.GetObject(p) != null);
+            viablePositions.RemoveAll((p) => !Battlefield.instance.IsEmpty(p));
         if (viablePositions.Count > 0)
         {
             var pos = RandomU.instance.Choice(viablePositions);

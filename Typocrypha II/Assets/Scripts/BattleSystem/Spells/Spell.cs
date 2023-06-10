@@ -156,7 +156,7 @@ public class Spell : IList<SpellWord>, IEquatable<Spell>
         return ret;
     }
 
-    public IEnumerable<FieldObject> AllTargets(Battlefield.Position casterPos, Battlefield.Position targetPos)
+    public IEnumerable<Caster> AllTargets(Battlefield.Position casterPos, Battlefield.Position targetPos)
     {
         var roots = SpellManager.instance.Modify(this);
         var targets = new HashSet<Battlefield.Position>();
@@ -174,7 +174,7 @@ public class Spell : IList<SpellWord>, IEquatable<Spell>
                 }
             }
         }
-        return targets.Select((s) => Battlefield.instance.GetObject(s));
+        return targets.Select(Battlefield.instance.GetCaster);
     }
 
     #region IList implementation
