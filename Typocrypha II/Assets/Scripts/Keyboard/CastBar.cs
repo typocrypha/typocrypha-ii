@@ -113,7 +113,6 @@ namespace Typocrypha
             }
             if (pos >= letters.Length) // No more room.
             {
-                Debug.Log("CastBar full");
                 return;
             }
             if(CheckSpace(inputChar) || CheckStandardCharacter(inputChar))
@@ -135,7 +134,7 @@ namespace Typocrypha
         {
             if(Battlefield.instance.Player is Player player)
             {
-                player.CastString(Text);
+                player.CastString(Text.TrimEnd(KeywordDelimiters).Split(KeywordDelimiters));
             }
             else
             {

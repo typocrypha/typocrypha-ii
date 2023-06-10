@@ -13,6 +13,7 @@ public abstract class SpellWord : ScriptableObject
         Modifier,
         Special,
     }
+    public string DisplayName => internalName.ToUpper();
     public string Key => internalName.ToLower();
     public string internalName;
     public string description;

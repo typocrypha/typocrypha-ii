@@ -66,6 +66,8 @@ public class SpellParser : MonoBehaviour
         int roots = 0;
         foreach (string word in spellwords)
         {
+            if (string.IsNullOrWhiteSpace(word))
+                continue;
             if (words.ContainsKey(word)) // Spell is in the words availible for this cast
             {
                 s.Add(words[word]);

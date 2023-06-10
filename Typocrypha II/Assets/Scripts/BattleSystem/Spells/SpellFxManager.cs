@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(SpellManager))]
 public class SpellFxManager : MonoBehaviour
 {
-    private const float popTime = 0.4f;
+    public const float popTime = 0.4f;
     public static SpellFxManager instance;
     private static readonly Vector2 reactionOffset = new Vector2(0, -80);
     private static readonly Vector2 stunOffset = new Vector2(0, 80);
