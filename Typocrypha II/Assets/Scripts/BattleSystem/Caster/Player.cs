@@ -28,12 +28,8 @@ public class Player : Caster, IPausable
         base.Awake();
         TargetPos = new Battlefield.Position(0, 1);
         PH = new PauseHandle(OnPause);
-        atbPlayer = GetComponent<ATB3.ATBPlayer>(); // Start casting sequence
-    }
-
-    private void Start()
-    {
         PH.SetParent(BattleManager.instance.PH);
+        atbPlayer = GetComponent<ATB3.ATBPlayer>();
     }
 
     /// <summary>
