@@ -12,8 +12,7 @@ public class Battlefield : MonoBehaviour, IPausable
     /// <summary>
     /// Pauses battle.
     /// </summary>
-    PauseHandle ph;
-    public PauseHandle PH { get => ph; }
+    public PauseHandle PH { get; private set; }
 
     /// <summary>
     /// Pauses all actors and keyboard.
@@ -22,7 +21,7 @@ public class Battlefield : MonoBehaviour, IPausable
     public void OnPause(bool b)
     {
         //Typocrypha.Keyboard.instance.CastingEnabled = !b;
-        //SpellCooldownManager.instance.PH.Pause = b;
+        //SpellCooldownManager.instance.PH.Pause = b
         if (b)
         {
             foreach (var actor in Actors)
@@ -117,7 +116,7 @@ public class Battlefield : MonoBehaviour, IPausable
             Destroy(gameObject);
             return;
         }
-        ph = new PauseHandle(OnPause);
+        PH = new PauseHandle(OnPause);
         spaces = new SpaceMatrix(Rows, Columns);
         field = new FieldMatrix(Rows, Columns);
         var spaceTransforms = GetComponentsInChildren<Transform>();

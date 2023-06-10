@@ -8,8 +8,7 @@ using Typocrypha;
 public class BattleManager : MonoBehaviour, IPausable
 {
     #region IPausable
-    PauseHandle ph;
-    public PauseHandle PH { get => ph; }
+    public PauseHandle PH { get; private set; }
     public void OnPause(bool pauseState) // Pauses battle events and battlefield
     {
         SetBattleEventPause(pauseState);
@@ -43,7 +42,7 @@ public class BattleManager : MonoBehaviour, IPausable
             return;
         }
         graphParser = GetComponent<BattleGraphParser>();
-        ph = new PauseHandle(OnPause);
+        PH = new PauseHandle(OnPause);
     }
 
     public bool startOnStart = true; // Should battle start when scene starts?
@@ -80,7 +79,6 @@ public class BattleManager : MonoBehaviour, IPausable
         AddProxyCaster(startNode.proxyCaster1);
         AddProxyCaster(startNode.proxyCaster2);
         AddProxyCaster(startNode.proxyCaster3);
-
     }
 
     private void AddProxyCaster(GameObject prefab)
@@ -146,7 +144,7 @@ public class BattleManager : MonoBehaviour, IPausable
 
     public void NextWave()
     {
-        ph.Pause = true;
+        PH.Pause = true;
         ++waveNum;
         CurrWave = graphParser.NextWave();
         if (CurrWave == null) return;
