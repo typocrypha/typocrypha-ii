@@ -27,6 +27,7 @@ namespace Typocrypha
         public System.Action OnPress { get; set; } // Delegate called when key is pressed.
 
         [SerializeField] private AudioClip defaultKeySfx;
+        [SerializeField] private AudioClip noInputSfx;
 
         public AudioClip SfxOverride { get; set; }
         
@@ -67,14 +68,14 @@ namespace Typocrypha
             Highlight = false;
         }
 
-        private void Start()
-        {
-            OnPress += PlaySfx;
-        }
-
         public void PlaySfx()
         {
             AudioManager.instance.PlaySFX(SfxOverride ?? defaultKeySfx);
+        }
+
+        public void PlayNoInputSfx()
+        {
+            AudioManager.instance.PlaySFX(noInputSfx);
         }
 
         public virtual void SetLetter(char c)

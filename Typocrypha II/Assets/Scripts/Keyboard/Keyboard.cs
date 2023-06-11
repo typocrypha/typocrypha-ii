@@ -18,9 +18,8 @@ namespace Typocrypha
         // Stops input and pauses keyboard effects.
         public void OnPause(bool b)
         {
-            enabled = !b;
+            //enabled = !b;
             PauseSubUI(b);
-
         }
         #endregion
 
@@ -55,6 +54,7 @@ namespace Typocrypha
             {'8', KeyCode.Keypad8 }, {'9', KeyCode.Keypad9 },
         };
         [SerializeField] private Transform pauseUI;
+        [SerializeField] private AudioClip pausedCastSfx;
 
 
         private bool focused = true;
@@ -119,7 +119,24 @@ namespace Typocrypha
         void Update()
         {
             if (!focused)
+            {
                 return;
+            }
+            if (PH.Pause)
+            {
+                foreach (var c in Input.inputString) // Play no input sfx
+                {
+                    if (keyMap.ContainsKey(c))
+                    {
+                        keyMap[c].PlayNoInputSfx();
+                    }
+                }
+                if (CastingEnabled && Input.GetKeyDown(KeyCode.Return)) // Cast if enter is pressed.
+                {
+                    AudioManager.instance.PlaySFX(pausedCastSfx);
+                }
+                return;
+            }
             foreach (var c in keyMap) // Highlight pressed keys.
             {
                 c.Value.Highlight = GetKey(c.Key);
@@ -128,8 +145,20 @@ namespace Typocrypha
             {
                 if (keyMap.ContainsKey(c))
                 {
-                    keyMap[c].OnPress?.Invoke();
-                    castBar.CheckInput(keyMap[c].Output);
+                    var key = keyMap[c];
+                    key.OnPress?.Invoke();
+                    var keySfx = castBar.CheckInput(keyMap[c].Output);
+                    if (keySfx.HasValue)
+                    {
+                        if (keySfx.Value)
+                        {
+                            key.PlaySfx();
+                        }
+                        else
+                        {
+                            key.PlayNoInputSfx();
+                        }
+                    }
                 }
                 else
                 {
