@@ -61,6 +61,7 @@ public class DialogScriptParser : EditorWindow
         {"stopbgm", typeof(StopBgm) },
         {"pausebgm", typeof(PauseBgm) },
         {"unpausebgm", typeof(PauseBgm) },
+        {"crossfadebgm", typeof(CrossfadeBgm) },
         {"playsfx", typeof(PlaySfx) },
         {"setbg", typeof(SetBackgroundNode) },
         {"fade", typeof(FadeNode) },
@@ -395,6 +396,50 @@ public class DialogScriptParser : EditorWindow
             var pauseBgmNode = CreateNode(PauseBgm.ID) as PauseBgm;
             pauseBgmNode.pause = args[0] != "unpausebgm";
             nodes.Add(pauseBgmNode);
+        }
+        else if (nodeType == typeof(CrossfadeBgm))
+        { 
+            var node = CreateNode(CrossfadeBgm.ID) as CrossfadeBgm;
+            node.bgm = LoadAsset<AudioClip>(args[1], "Assets/Audio/Clips/BGM");
+            switch (args.Length)
+            {
+                case 3:
+                    if (float.TryParse(args[2], out float time))
+                    {
+                        node.fadeCurveIn = AnimationCurve.Linear(0,0,time,1);
+                        node.fadeCurveOut = AnimationCurve.Linear(0,1,time,0);
+                    }
+                    else
+                    {
+                        TryParseFadeCurve(args[2], defaultBgmFadeLength, true, out node.fadeCurveIn);
+                        TryParseFadeCurve(args[2], defaultBgmFadeLength, false, out node.fadeCurveOut);
+                    }
+                    break;
+                case 4:
+                    var arg2IsTime = float.TryParse(args[2], out float time1);
+                    var arg3IsTime = float.TryParse(args[3], out float time2);
+                    if (arg2IsTime && arg3IsTime)
+                    {
+                        node.fadeCurveIn = AnimationCurve.Linear(0,0,time1,1);
+                        node.fadeCurveOut = AnimationCurve.Linear(0,1,time2,0);
+                    }
+                    else if (!arg2IsTime && arg3IsTime)
+                    {
+                        TryParseFadeCurve(args[2], time2, true, out node.fadeCurveIn);
+                        TryParseFadeCurve(args[2], time2, false, out node.fadeCurveOut);
+                    }
+                    else if (!arg2IsTime && !arg3IsTime)
+                    {
+                        TryParseFadeCurve(args[2], defaultBgmFadeLength, true, out node.fadeCurveIn);
+                        TryParseFadeCurve(args[3], defaultBgmFadeLength, false, out node.fadeCurveOut);
+                    }
+                    break;
+                case 6:
+                    TryParseFadeCurve(args[2], float.TryParse(args[4], out time1) ? time1 : defaultBgmFadeLength, true, out node.fadeCurveIn);
+                    TryParseFadeCurve(args[3], float.TryParse(args[5], out time2) ? time2 : defaultBgmFadeLength, false, out node.fadeCurveOut);
+                    break;
+            }
+            nodes.Add(node);
         }
         else if (nodeType == typeof(PlaySfx))
         {
