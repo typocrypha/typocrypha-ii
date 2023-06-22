@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using NodeEditorFramework;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 namespace Gameflow
 {
@@ -24,7 +26,7 @@ namespace Gameflow
         #endregion
 
         private const float CURVE_HEIGHT = 75f;
-
+#if UNITY_EDITOR
         public override void NodeGUI()
         {
             GUILayout.BeginVertical(new GUIStyle()); //BEGIN INSPECTOR
@@ -62,5 +64,6 @@ namespace Gameflow
 
             GUILayout.EndVertical(); //END INSPECTOR
         }
+#endif
     }
 }

@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using NodeEditorFramework;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 namespace Gameflow
 {
@@ -18,7 +20,7 @@ namespace Gameflow
         #region Tooltip Strings
         const string tooltipPause = "Toggle on to pause, toggle off to unpause.";
         #endregion
-
+#if UNITY_EDITOR
         public override void NodeGUI()
         {
             #region Pause
@@ -27,6 +29,6 @@ namespace Gameflow
             GUILayout.EndVertical();
             #endregion
         }
-
+#endif
     }
 }

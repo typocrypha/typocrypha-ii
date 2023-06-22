@@ -100,31 +100,46 @@ namespace Typocrypha
             return false;
         }
 
-        /// <summary>
-        /// Receive input to castbar (from Keyboard.cs).
-        /// </summary>
-        /// <param name="inputChar">Input character</param>
-        public void CheckInput(char inputChar)
+        // Return null for no sfx, false for no input (fail) sfx, and true for key sfx
+        public bool? CheckInput(char inputChar)
         {
             if (CheckBackspace(inputChar))
             {
                 UpdateCursor(true);
-                return;
+                return null;
             }
             if (pos >= letters.Length) // No more room.
             {
-                return;
+                return false;
             }
             if(CheckSpace(inputChar) || CheckStandardCharacter(inputChar))
             {
                 UpdateCursor(true);
+                return true;
             }
+            return false;
         }
 
-        public void CheckInput(IEnumerable<char> input)
+        // Return null for no sfx, false for no input (fail) sfx, and true for key sfx
+        public bool? CheckInput(IEnumerable<char> input)
         {
+            bool? playKeySfx = null;
             foreach (char inputChar in input)
-                CheckInput(inputChar);
+            {
+                var latestInput = CheckInput(inputChar);
+                if(latestInput.HasValue)
+                {
+                    if (playKeySfx.HasValue)
+                    {
+                        playKeySfx = playKeySfx.Value || latestInput.Value;
+                    }
+                    else
+                    {
+                        playKeySfx = latestInput;
+                    }
+                }
+            }
+            return playKeySfx;
         }
 
         /// <summary>
