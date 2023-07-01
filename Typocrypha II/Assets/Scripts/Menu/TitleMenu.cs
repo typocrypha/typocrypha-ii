@@ -6,9 +6,12 @@ using UnityEngine.EventSystems;
 public class TitleMenu : MonoBehaviour
 {
     [SerializeField] private AudioClip titleBGM;
+    [SerializeField] private MenuButton firstButton;
+
     private void Start()
     {
         AudioManager.instance.PlayBGM(titleBGM);
+        firstButton.InitializeSelection();
     }
     public void Continue()
     {
