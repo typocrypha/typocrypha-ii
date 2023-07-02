@@ -13,6 +13,7 @@ public class PauseManager : MonoBehaviour
     public static PauseManager instance = null;
     [SerializeField] private GameObject pauseMenu; // Pause menu Canvas.
     [SerializeField] private MenuButton firstButton;
+    [SerializeField] private SettingsMenu settings;
     bool pause = false; // Global pause state.
     private bool interactable = true;
 
@@ -29,6 +30,16 @@ public class PauseManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+    }
+    private void Start()
+    {
+        settings.OnClose += Initialize;
+    }
+
+    private void Initialize()
+    {
+        firstButton.InitializeSelection();
+        interactable = true;
     }
 
     void Update()
@@ -73,7 +84,7 @@ public class PauseManager : MonoBehaviour
         if (value)
         {
             FaderManager.instance.FadeAll(0.5f, Color.black);
-            firstButton.InitializeSelection();
+            Initialize();
         }
         else
         {
@@ -97,6 +108,7 @@ public class PauseManager : MonoBehaviour
 
     public void OpenSettingsMenu()
     {
-
+        interactable = false;
+        settings.Open();
     }
 }

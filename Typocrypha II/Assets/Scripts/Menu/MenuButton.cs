@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class MenuButton : MonoBehaviour, ISelectHandler, IDeselectHandler, ISubmitHandler
 {
     private static readonly char[] trim = new char[] { '>', ' ', ' ', '<' };
+    public static readonly Color selectedColor = new Color(219f / 255f, 56f / 255f, 202f / 255f);
     [SerializeField] private AudioClip selectSFX;
     [SerializeField] private AudioClip enterSFX;
     [SerializeField] private TextMeshProUGUI text;
@@ -25,7 +26,7 @@ public class MenuButton : MonoBehaviour, ISelectHandler, IDeselectHandler, ISubm
     public void OnSelect(BaseEventData eventData)
     {
         //Do this on highlight
-        text.color = new Color(219f / 255f, 56f / 255f, 202f / 255f); //magenta
+        text.color = selectedColor;
         text.text = "> " + text.text + " <";
         buttonImage.sprite = selectedSprite;
         if (SkipSelectSfx)
