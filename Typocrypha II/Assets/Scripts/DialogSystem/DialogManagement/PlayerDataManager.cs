@@ -71,8 +71,6 @@ public class PlayerDataManager : MonoBehaviour, ISavable
     public const string nullKey = "NULL";
     // Gameplay
     public const string lastInputKey = "prompt";
-    // Settings
-    public const string textDelayScale = "textDelayScale";
     #endregion
 
     public PlayerEquipment equipment;
@@ -101,7 +99,6 @@ public class PlayerDataManager : MonoBehaviour, ISavable
     {
         data.Clear();
         Set(lastInputKey, "");
-        Set(textDelayScale, 1f);
     }
 
     public object GetObj(string key)

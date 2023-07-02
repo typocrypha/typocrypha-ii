@@ -17,6 +17,8 @@ public class MenuSlider : Selectable
     [SerializeField] private Sprite deselectedSprite;
     [SerializeField] private Slider slider;
     [SerializeField] private TextMeshProUGUI numberText;
+    [SerializeField] private int adjustamount = 5;
+    [SerializeField] private bool percent = true;
     private bool selected = false;
     public bool SkipSelectSfx { get; set; }
     public void InitializeSelection()
@@ -37,7 +39,7 @@ public class MenuSlider : Selectable
             }
             else
             {
-                AdjustValue(5);
+                AdjustValue(adjustamount);
             }
         }
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
@@ -48,7 +50,7 @@ public class MenuSlider : Selectable
             }
             else
             {
-                AdjustValue(-5);
+                AdjustValue(-adjustamount);
             }
         }
     }
@@ -77,10 +79,14 @@ public class MenuSlider : Selectable
         SetValue((int)slider.value + delta);
     }
 
-    private void SetValue(int value)
+    public void SetValue(int value)
     {
         slider.value = value;
         numberText.text = slider.value.ToString();
+        if(percent)
+        {
+            numberText.text += "%";
+        }
     }
 
     public override void OnSelect(BaseEventData eventData)
