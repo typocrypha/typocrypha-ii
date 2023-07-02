@@ -9,6 +9,8 @@ public static class Settings
     private const float gameSpeedDefault = 1;
     private const string uiSpeedKey = "uiSpeed";
     private const float uiSpeedDefault = 1;
+    private const string textScrollSpeedKey = "textScrollSpeed";
+    private const float textScrollSpeedDefault = 1;
     private const string keyLayoutKey = "keyLayout";
     private const KeyLayoutType keyLayoutDefault = KeyLayoutType.QWERTY;
     private const string customKeyLayoutKey = "customKeyLayout";
@@ -78,6 +80,21 @@ public static class Settings
     }
     private static float uiSpeed = uiSpeedDefault;
 
+    public static float TextScrollSpeed
+    {
+        get
+        {
+            SafeIntialize();
+            return textScrollSpeed;
+        }
+        set
+        {
+            textScrollSpeed = value;
+            PlayerPrefs.SetFloat(textScrollSpeedKey, value);
+        }
+    }
+    private static float textScrollSpeed = textScrollSpeedDefault;
+
     private static bool initialized = false;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void SafeIntialize()
@@ -99,7 +116,23 @@ public static class Settings
         {
             gameSpeed = PlayerPrefs.GetFloat(gameSpeedKey);
         }
-        if(!PlayerPrefs.HasKey(keyLayoutKey))
+        if (!PlayerPrefs.HasKey(uiSpeedKey))
+        {
+            UISpeed = uiSpeedDefault;
+        }
+        else
+        {
+            uiSpeed = PlayerPrefs.GetFloat(uiSpeedKey);
+        }
+        if (!PlayerPrefs.HasKey(textScrollSpeedKey))
+        {
+            TextScrollSpeed = textScrollSpeedDefault;
+        }
+        else
+        {
+            textScrollSpeed = PlayerPrefs.GetFloat(textScrollSpeedKey);
+        }
+        if (!PlayerPrefs.HasKey(keyLayoutKey))
         {
             KeyLayout = keyLayoutDefault;
         }
