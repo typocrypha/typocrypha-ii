@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 /// <summary>
 /// Manages the background and background effects.
@@ -25,6 +23,8 @@ public class BackgroundManager : MonoBehaviour, ISavable
     public GameObject bggo; // Gameobject background (for more complicated backgrounds).
 
     static AssetBundle bgBundle; // Background sprite assets.
+
+    public Bounds GetBounds() => bggo ? bggo.GetComponentInChildren<SpriteRenderer>().bounds : bgsr.bounds;
 
     void Awake()
     {
