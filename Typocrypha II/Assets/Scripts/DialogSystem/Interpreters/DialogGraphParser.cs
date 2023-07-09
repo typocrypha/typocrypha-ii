@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class DialogGraphParser : GraphParser
 {
@@ -192,6 +193,13 @@ public class DialogGraphParser : GraphParser
                 else
                     DialogManager.instance.GetComponent<Animator>().SetTrigger("ClampIn");
             }
+            else if (currNode is MoveCameraNode camNode)
+            {
+                var bounds = BackgroundManager.instance.GetBounds();
+                var tween = CameraManager.instance.MoveToPivot(bounds, camNode.StartPivot, camNode.FinalPivot, camNode.Duration, camNode.EasingCurve);
+                StartCoroutine(WaitOnTween(tween));
+                return null;
+            }
             else if (currNode is FadeNode)
             {
                 var node = currNode as FadeNode;
@@ -296,6 +304,14 @@ public class DialogGraphParser : GraphParser
     {
         DialogManager.instance.ReadyToContinue = false;
         yield return routine;
+        DialogManager.instance.ReadyToContinue = true;
+        DialogManager.instance.NextDialog(true);
+    }
+
+    IEnumerator WaitOnTween(Tween tween)
+    {
+        DialogManager.instance.ReadyToContinue = false;
+        yield return tween.WaitForCompletion();
         DialogManager.instance.ReadyToContinue = true;
         DialogManager.instance.NextDialog(true);
     }

@@ -24,7 +24,7 @@ public class DialogBox_Multi : DialogBox, IDialogBox
 
     public new float ScrollDelay
     {
-        get => boxes[0].ScrollDelay * PlayerDataManager.instance.Get<float>(PlayerDataManager.textDelayScale);
+        get => boxes[0].ScrollDelay;
         set => boxes[0].ScrollDelay = value;
     }
 

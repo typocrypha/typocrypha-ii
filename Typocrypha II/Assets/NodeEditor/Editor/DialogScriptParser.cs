@@ -64,6 +64,7 @@ public class DialogScriptParser : EditorWindow
         {"crossfadebgm", typeof(CrossfadeBgm) },
         {"playsfx", typeof(PlaySfx) },
         {"setbg", typeof(SetBackgroundNode) },
+        {"movecam", typeof(MoveCameraNode) },
         {"fade", typeof(FadeNode) },
         {"start" , typeof(GameflowStartNode) },
         {"end", typeof(EndAndHide) },
@@ -461,6 +462,15 @@ public class DialogScriptParser : EditorWindow
             if (isSprite) gnode.bgSprite = AssetDatabase.LoadAssetAtPath<Sprite>(path);
             else          gnode.bgPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
             nodes.Add(gnode);
+        }
+        else if (nodeType == typeof(MoveCameraNode))
+        {
+            var camNode = CreateNode(MoveCameraNode.ID) as MoveCameraNode;
+            camNode.StartPivot = new Vector2(float.Parse(args[1]), float.Parse(args[2]));
+            camNode.FinalPivot = new Vector2(float.Parse(args[3]), float.Parse(args[4]));
+            camNode.Duration = float.Parse(args[5]);
+            TryParseFadeCurve(args[6], 1f, true, out camNode.EasingCurve);
+            nodes.Add(camNode);
         }
         else if (nodeType == typeof(FadeNode))
         {
