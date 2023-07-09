@@ -10,7 +10,8 @@ public class BackgroundElementAnimator : MonoBehaviour
     {
         Position,
         Rotation,
-        Scale
+        Scale,
+        Alpha
     }
 
     // axis of movement
@@ -82,19 +83,44 @@ public class BackgroundElementAnimator : MonoBehaviour
             case AnimationType.Scale:
 
                 Vector3 scale = Vector3.zero;
-                if (anim.movementOrScaleAxis == MovementAxis.X) scale.x = anim.targetPositionOffset;
-                else scale.y = anim.targetPositionOffset;
+                if (anim.movementOrScaleAxis == MovementAxis.X) scale.x = anim.targetScale;
+                else scale.y = anim.targetScale;
 
                 if (!anim.useCustomCurve)
                 {
-                    anim.transformToAnimate.DOBlendableMoveBy(scale, anim.animationSpeed, false)
+                    anim.transformToAnimate.DOBlendableScaleBy(scale, anim.animationSpeed)
                         .SetEase(anim.animationCurve)
                         .SetLoops(-1, anim.loopBehavior)
                         .SetDelay(anim.animationStartOffset);
                 }
                 else
                 {
-                    anim.transformToAnimate.DOBlendableMoveBy(scale, anim.animationSpeed, false)
+                    anim.transformToAnimate.DOBlendableScaleBy(scale, anim.animationSpeed)
+                        .SetEase(anim.customCurve)
+                        .SetLoops(-1, anim.loopBehavior)
+                        .SetDelay(anim.animationStartOffset);
+                }
+
+                break;
+
+            case AnimationType.Alpha:
+
+                SpriteRenderer objSprite = anim.transformToAnimate.GetComponent<SpriteRenderer>();
+                if(objSprite == null)
+                {
+                    break;
+                }
+
+                if (!anim.useCustomCurve)
+                {
+                    objSprite.DOFade(Mathf.Clamp(anim.targetScale, 0, 1), anim.animationSpeed)
+                        .SetEase(anim.animationCurve)
+                        .SetLoops(-1, anim.loopBehavior)
+                        .SetDelay(anim.animationStartOffset);
+                }
+                else
+                {
+                    objSprite.DOFade(Mathf.Clamp(anim.targetScale, 0, 1), anim.animationSpeed)
                         .SetEase(anim.customCurve)
                         .SetLoops(-1, anim.loopBehavior)
                         .SetDelay(anim.animationStartOffset);
@@ -113,7 +139,8 @@ public class BackgroundElementAnimator : MonoBehaviour
         public Transform transformToAnimate;
         public AnimationType animationType;
         public MovementAxis movementOrScaleAxis;
-        [Range(0.1f, 1000.0f)] public float targetScale;
+        [Tooltip("Also used for the target fade value")]
+        [Range(0.0f, 1000.0f)] public float targetScale;
         [Range(-10f, 10f)] public float targetPositionOffset;
         [Range(0f, 360f)] public float targetRotation;
 
