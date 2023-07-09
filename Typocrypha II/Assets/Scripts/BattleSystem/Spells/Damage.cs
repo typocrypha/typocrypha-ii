@@ -7,7 +7,7 @@ public static class Damage
 {
     public const float stunBonusDamageMod = 1.25f;
     public const float critDamageMod = 2f;
-    public const float baseCritChance = 1;//0.075f;
+    public const float baseCritChance = 0.075f;
 
     public enum FormulaType
     {
