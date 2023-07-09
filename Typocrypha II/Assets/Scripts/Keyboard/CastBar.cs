@@ -10,9 +10,15 @@ namespace Typocrypha
     /// <summary>
     /// Manages Cast Bar interface for battle.
     /// </summary>
-    public class CastBar : MonoBehaviour
+    public abstract class CastBar : MonoBehaviour, IInputHandler
     {
-        public CastBarCursor cursor; // Cursor for keeping track of position.
+        public PauseHandle PH { get; private set; }
+        public void OnPause(bool b)
+        {
+            cursor.PH.Pause = b;
+        }
+
+        [SerializeField] private CastBarCursor cursor; // Cursor for keeping track of position.
         [SerializeField] protected TextMeshProUGUI[] letters; // Array of single letter rects.
         [SerializeField] protected AudioClip backspaceSfx;
 
@@ -27,7 +33,12 @@ namespace Typocrypha
         public static char[] KeywordDelimiters { get; } = new char[] { '–', ' ', '-' };
         protected virtual char SpaceChar => ' ';
 
-        void Start()
+        protected virtual void Awake()
+        {
+            PH = new PauseHandle(OnPause);
+        }
+
+        protected virtual void Start()
         {
             Clear(false);
         }
@@ -39,7 +50,7 @@ namespace Typocrypha
             AudioManager.instance.PlaySFX(backspaceSfx);
         }
 
-        private void UpdateCursor(bool show)
+        protected void UpdateCursor(bool show)
         {
             if (pos >= letters.Length)
             {
@@ -54,7 +65,7 @@ namespace Typocrypha
             cursor.SetDelay(0.2f, show);
         }
 
-        private bool CheckBackspace(char inputChar)
+        protected bool CheckBackspace(char inputChar)
         {
             if (inputChar == 8) // Backspace. Don't allow backspace on first character.
             {
@@ -75,7 +86,7 @@ namespace Typocrypha
             }
             return false;
         }
-        private bool CheckSpace(char inputChar)
+        protected bool CheckSpace(char inputChar)
         {
             if (inputChar == SpaceChar) // Space. Don't allow space on first character.
             {
@@ -145,20 +156,9 @@ namespace Typocrypha
         /// <summary>
         /// Submit current string in cast bar.
         /// </summary>
-        public void Cast()
-        {
-            if(Battlefield.instance.Player is Player player)
-            {
-                player.CastString(Text.TrimEnd(KeywordDelimiters).Split(KeywordDelimiters));
-            }
-            else
-            {
-                Debug.LogError("Player is not valid. Cannot cast");
-            }
-            Clear(false);
-        }
+        public abstract void Submit();
 
-        void Clear(bool showCursor = true)
+        protected void Clear(bool showCursor = true)
         {
             pos = 0;
             foreach (var letter in letters)
@@ -167,6 +167,17 @@ namespace Typocrypha
             }
             sb.Clear();
             UpdateCursor(showCursor);
+        }
+
+        public virtual void Focus()
+        {
+            cursor.PH.Pause = false;
+            UpdateCursor(true);
+        }
+
+        public virtual void Unfocus()
+        {
+            cursor.PH.Pause = true;
         }
     }
 }

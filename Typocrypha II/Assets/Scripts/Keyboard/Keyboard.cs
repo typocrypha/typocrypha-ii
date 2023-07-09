@@ -10,7 +10,7 @@ namespace Typocrypha
     /// Manages keyboard interface for battle.
     /// </summary>
     [RequireComponent(typeof(KeyboardBuilder))]
-    public class Keyboard : MonoBehaviour, IPausable, IInputHandler
+    public class Keyboard : MonoBehaviour, IPausable
     { 
 
         #region IPausable
@@ -18,8 +18,21 @@ namespace Typocrypha
         // Stops input and pauses keyboard effects.
         public void OnPause(bool b)
         {
-            //enabled = !b;
-            PauseSubUI(b);
+            foreach (var kvp in allEffects)
+                kvp.Value.PH.Pause = b;
+            if(InputManager.Instance.PH != null)
+            {
+                InputManager.Instance.PH.Pause = b;
+            }
+            pauseUI.gameObject.SetActive(b);
+            if (b)
+            {
+                // Clear highlights
+                foreach (var c in keyMap)
+                {
+                    c.Value.ClearHighlight();
+                }
+            }
         }
         #endregion
 
@@ -56,9 +69,6 @@ namespace Typocrypha
         [SerializeField] private Transform pauseUI;
         [SerializeField] private AudioClip pausedCastSfx;
 
-
-        private bool focused = true;
-
         void Awake()
         {
             if (instance == null)
@@ -74,22 +84,6 @@ namespace Typocrypha
             builder.BuildKeyboard();
             Initialize(builder.Keys);
             PH = new PauseHandle(OnPause);
-        }
-
-        private void PauseSubUI(bool b)
-        {
-            foreach (var kvp in allEffects)
-                kvp.Value.PH.Pause = b;
-            castBar.cursor.PH.Pause = b;
-            pauseUI.gameObject.SetActive(b);
-            if (b)
-            {
-                // Clear highlights
-                foreach (var c in keyMap)
-                {
-                    c.Value.ClearHighlight();
-                }
-            }
         }
 
         public void Initialize(IEnumerable<Key> keys)
@@ -112,16 +106,16 @@ namespace Typocrypha
 
         void Start()
         {
-            InputManager.Instance.StartInput(this);
+            InputManager.Instance.StartInput(castBar);
+            if(PH.Pause)
+            {
+                castBar.PH.Pause = true;
+            }
         }
 
         // Check user input.
         void Update()
         {
-            if (!focused)
-            {
-                return;
-            }
             if (PH.Pause)
             {
                 foreach (var c in Input.inputString) // Play no input sfx
@@ -147,7 +141,7 @@ namespace Typocrypha
                 {
                     var key = keyMap[c];
                     key.OnPress?.Invoke();
-                    var keySfx = castBar.CheckInput(keyMap[c].Output);
+                    var keySfx = InputManager.Instance.CheckInput(keyMap[c].Output);
                     if (keySfx.HasValue)
                     {
                         if (keySfx.Value)
@@ -162,12 +156,12 @@ namespace Typocrypha
                 }
                 else
                 {
-                    castBar.CheckInput(c);
+                    InputManager.Instance.CheckInput(c);
                 }
             }
-            if (CastingEnabled && Input.GetKeyDown(KeyCode.Return)) // Cast if enter is pressed.
+            if (CastingEnabled && (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))) // Cast if enter is pressed.
             {
-                castBar.Cast();
+                InputManager.Instance.Submit();
             }
         }
 
@@ -274,21 +268,6 @@ namespace Typocrypha
         public void DoOverheat()
         {
             overheatManager.DoOverheat();
-        }
-
-        public void Focus()
-        {
-            focused = true;
-            if (!PH.Pause)
-            {
-                PauseSubUI(false);
-            }
-        }
-
-        public void Unfocus()
-        {
-            focused = false;
-            PauseSubUI(true);
         }
     }
 }

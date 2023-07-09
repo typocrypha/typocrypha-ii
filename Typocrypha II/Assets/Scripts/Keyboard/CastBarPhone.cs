@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Typocrypha
 {
-    public class CastBarPhone : CastBar
+    public class CastBarPhone : SpellCastBar
     {
         public const float waitTime = 0.5f;
         private const char nullChar = '?';

@@ -12,7 +12,7 @@ public class DecodePopup : InteractivePopup
     [SerializeField] private Transform bubbleContainer; 
     private const char obscureChar = '?';
     private const int maxBubbleLetters = 6;
-    private static readonly char[] letters = "qwertyuiopasdfghjklzxcvbn".ToArray();
+    private static readonly char[] allLetters = "qwertyuiopasdfghjklzxcvbn".ToArray();
     private static readonly string highlightTag = "<color=red>"; 
     private static readonly string highlightCloseTag = "</color>"; 
     public TextMeshProUGUI headerText;
@@ -26,11 +26,13 @@ public class DecodePopup : InteractivePopup
 
     public override void Focus()
     {
+        base.Focus();
         focus = true;
     }
 
     public override void Unfocus()
     {
+        base.Unfocus();
         focus = false;
     }
 
@@ -92,7 +94,7 @@ public class DecodePopup : InteractivePopup
     private void ShowBubbles(char correctLetter, int num)
     {
         int correctBubble = RandomU.instance.RandomInt(0, num);
-        var availibleLetters = new List<char>(letters);
+        var availibleLetters = new List<char>(allLetters);
         availibleLetters.Remove(correctLetter);
         var bubbleLetters = new List<char>(maxBubbleLetters);
         for (int i = 0; i < num; ++i)
@@ -172,5 +174,10 @@ public class DecodePopup : InteractivePopup
         promptBuilder.Insert(currIndex + 1, highlightCloseTag);
         promptBuilder.Insert(currIndex, highlightTag);
         promptText.text = promptBuilder.ToString();
+    }
+
+    public override void Submit()
+    {
+        return;
     }
 }

@@ -8,22 +8,10 @@ public class PromptPopup : InteractivePopup
 {
     public TextMeshProUGUI headerText;
     public TextMeshProUGUI promptText;
-    public TMP_InputField inputField;
 
-    public override void Focus()
+    public override void Submit()
     {
-        inputField.Select();
-        inputField.ActivateInputField();
-    }
-
-    public override void Unfocus()
-    {
-        inputField.DeactivateInputField();
-    }
-
-    public void OnSubmit()
-    {
-        LastPromptSuccess = inputField.text.ToUpper() == promptText.text.ToUpper();
+        LastPromptSuccess = sb.ToString().ToUpper() == promptText.text.ToUpper();
         Completed = true;
         InputManager.Instance.CompleteInput();
     }
@@ -34,8 +22,8 @@ public class PromptPopup : InteractivePopup
         LastPromptSuccess = false;
         headerText.text = header;
         promptText.text = prompt;
-        inputField.text = string.Empty;
         gameObject.SetActive(true);
+        Clear();
         InputManager.Instance.StartInput(this);
     }
 }

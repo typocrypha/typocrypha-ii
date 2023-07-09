@@ -30,11 +30,6 @@ public interface IPausable
     /// Usage: [object].PH.Pause = true/false
     /// </summary>
     PauseHandle PH { get; }
-
-    /// <summary>
-    /// This is called by 'PauseHandle' when object is paused(true)/unpaused(false).
-    /// </summary>
-    void OnPause(bool b);
 }
 
 /// <summary>
