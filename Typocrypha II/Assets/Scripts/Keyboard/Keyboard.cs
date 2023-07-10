@@ -68,6 +68,7 @@ namespace Typocrypha
         };
         [SerializeField] private Transform pauseUI;
         [SerializeField] private AudioClip pausedCastSfx;
+        [SerializeField] private AudioClip noInputSfx;
 
         void Awake()
         {
@@ -123,7 +124,7 @@ namespace Typocrypha
                     char input = char.ToLower(c);
                     if (keyMap.ContainsKey(input))
                     {
-                        keyMap[input].PlayNoInputSfx();
+                        AudioManager.instance.PlaySFX(noInputSfx);
                     }
                 }
                 if (CastingEnabled && Input.GetKeyDown(KeyCode.Return)) // Cast if enter is pressed.
@@ -139,6 +140,8 @@ namespace Typocrypha
             foreach (var c in Input.inputString) // Add letters to cast bar.
             {
                 char input = char.ToLower(c);
+                if (input == '\r')
+                    continue;
                 if (keyMap.ContainsKey(input))
                 {
                     var key = keyMap[input];
@@ -152,13 +155,17 @@ namespace Typocrypha
                         }
                         else
                         {
-                            key.PlayNoInputSfx();
+                            AudioManager.instance.PlaySFX(noInputSfx);
                         }
                     }
                 }
                 else
                 {
-                    InputManager.Instance.CheckInput(input);
+                    var keySfx = InputManager.Instance.CheckInput(input);
+                    if (keySfx.HasValue && !keySfx.Value)
+                    {
+                        AudioManager.instance.PlaySFX(noInputSfx);
+                    }
                 }
             }
             if (CastingEnabled && (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))) // Cast if enter is pressed.

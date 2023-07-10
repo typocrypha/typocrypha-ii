@@ -69,13 +69,18 @@ namespace Typocrypha
             cursor.SetDelay(0.2f, show);
         }
 
-        protected bool CheckBackspace(char inputChar)
+        protected bool CheckBackspace(char inputChar, out bool? sfx)
         {
             if (inputChar == 8) // Backspace. Don't allow backspace on first character.
             {
                 if (pos > 0)
                 {
                     HandleBackSpace();
+                    sfx = null;
+                }
+                else
+                {
+                    sfx = false;
                 }
                 return true;
             }
@@ -85,9 +90,15 @@ namespace Typocrypha
                 {
                     Clear();
                     AudioManager.instance.PlaySFX(backspaceSfx);
+                    sfx = null;
+                }
+                else
+                {
+                    sfx = false;
                 }
                 return true;
             }
+            sfx = null;
             return false;
         }
         protected bool CheckSpace(char inputChar)
@@ -121,7 +132,7 @@ namespace Typocrypha
             if (CheckBackspace(inputChar, out var sfx))
             {
                 UpdateCursor(true);
-                return null;
+                return sfx;
             }
             if (pos >= letters.Length) // No more room.
             {
