@@ -137,7 +137,7 @@ namespace Typocrypha
             }
             foreach (var c in Input.inputString) // Add letters to cast bar.
             {
-                if (keyMap.ContainsKey(c))
+                if (keyMap.ContainsKey(char.ToLower(c)))
                 {
                     var key = keyMap[c];
                     key.OnPress?.Invoke();
