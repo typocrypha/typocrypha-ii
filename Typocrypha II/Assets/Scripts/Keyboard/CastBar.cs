@@ -12,6 +12,8 @@ namespace Typocrypha
     /// </summary>
     public abstract class CastBar : MonoBehaviour, IInputHandler
     {
+        protected static readonly Color promptColor = Color.gray;
+        protected static readonly Color normalColor = Color.white;
         public PauseHandle PH { get; private set; }
         public void OnPause(bool b)
         {
@@ -27,6 +29,8 @@ namespace Typocrypha
         {
             get => sb.ToString();
         }
+
+        protected string Prompt { get; set; } = string.Empty;
 
         protected int pos = 0; // Cursor position.
         readonly Regex alpha = new Regex("^[A-Za-z]"); // Matches alphabetic strings.
@@ -45,7 +49,7 @@ namespace Typocrypha
 
         protected virtual void HandleBackSpace()
         {
-            letters[--pos].text = "";
+            ClearLetter(--pos);
             sb.Remove(pos, 1);
             AudioManager.instance.PlaySFX(backspaceSfx);
         }
@@ -93,7 +97,7 @@ namespace Typocrypha
                 if (pos > 0 && sb[pos - 1] != KeywordDelimiters[0]) // Ignore multiple spaces.
                 {
                     sb.Append(KeywordDelimiters[0]);
-                    letters[pos++].text = KeywordDelimiters[0].ToString();
+                    SetLetter(pos++, KeywordDelimiters[0].ToString());
                 }
                 return true;
             }
@@ -105,16 +109,16 @@ namespace Typocrypha
             if (alpha.IsMatch(inputChar.ToString())) // Normal character.
             {
                 sb.Append(inputChar.ToString().ToLower());
-                letters[pos++].text = inputChar.ToString();
+                SetLetter(pos++, inputChar.ToString());
                 return true;
             }
             return false;
         }
 
         // Return null for no sfx, false for no input (fail) sfx, and true for key sfx
-        public bool? CheckInput(char inputChar)
+        public virtual bool? CheckInput(char inputChar)
         {
-            if (CheckBackspace(inputChar))
+            if (CheckBackspace(inputChar, out var sfx))
             {
                 UpdateCursor(true);
                 return null;
@@ -161,12 +165,31 @@ namespace Typocrypha
         protected void Clear(bool showCursor = true)
         {
             pos = 0;
-            foreach (var letter in letters)
+            for (int i = 0; i < letters.Length; i++)
             {
-                letter.text = "";
+                ClearLetter(i);
             }
             sb.Clear();
             UpdateCursor(showCursor);
+        }
+
+        protected void SetLetter(int index, string letter)
+        {
+            letters[index].text = letter;
+            letters[index].color = normalColor;
+        }
+
+        protected void ClearLetter(int index)
+        {
+            if(index < Prompt.Length)
+            {
+                letters[index].text = Prompt[index].ToString();
+                letters[index].color = promptColor;
+            }
+            else
+            {
+                letters[index].text = string.Empty;
+            }
         }
 
         public virtual void Focus()

@@ -36,7 +36,7 @@ public class Player : Caster, IPausable
     /// Cast a spell from the keyboard. Called when enter is pressed by player.
     /// Parses spell and, if spell is valid, casts it.
     /// </summary>
-    public void CastString(string[] spellWords)
+    public SpellParser.ParseResults CastString(string[] spellWords)
     {
         var results = SpellParser.instance.Parse(spellWords, PlayerDataManager.instance.equipment.EquippedWords, out var spell);
         if (results == SpellParser.ParseResults.Valid) 
@@ -69,6 +69,7 @@ public class Player : Caster, IPausable
                 SpellFxManager.instance.PlayText(new Vector2(0f, -2f), false, $"Invalid Spell", Color.red, castFailTextTime);
             }
         }
+        return results;
     }
     private void Update()
     {

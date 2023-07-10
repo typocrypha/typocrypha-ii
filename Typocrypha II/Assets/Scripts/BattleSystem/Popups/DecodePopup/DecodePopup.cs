@@ -13,37 +13,35 @@ public class DecodePopup : InteractivePopup
     private const char obscureChar = '?';
     private const int maxBubbleLetters = 6;
     private static readonly char[] allLetters = "qwertyuiopasdfghjklzxcvbn".ToArray();
-    private static readonly string highlightTag = "<color=red>"; 
-    private static readonly string highlightCloseTag = "</color>"; 
     public TextMeshProUGUI headerText;
-    public TextMeshProUGUI promptText;
     private string realText = string.Empty;
-    private StringBuilder obscuredText;
-    private int currIndex;
     private int obscureIndex;
-    private bool focus;
 
-
-    public override void Focus()
+    public override bool? CheckInput(char inputChar)
     {
-        base.Focus();
-        focus = true;
-    }
-
-    public override void Unfocus()
-    {
-        base.Unfocus();
-        focus = false;
-    }
-
-    private void Update()
-    {
-        if (!focus || Completed || currIndex >= realText.Length)
-            return;
-        if (Input.GetKeyDown(realText[currIndex].ToString().ToLower()))
+        if (Completed || pos >= realText.Length)
+            return null;
+        if (char.ToLower(inputChar) == char.ToLower(realText[pos]))
         {
-            RevealCurrent();
+            SetLetter(pos, realText[pos].ToString());
+            if (++pos >= realText.Length)
+            {
+                Completed = true;
+                InputManager.Instance.CompleteInput();
+            }
+            else
+            {
+                ResetBubbles();
+                UpdateCursor(true);
+            }
+            return true;
         }
+        return false;
+    }
+
+    public override void Submit()
+    {
+        return;
     }
 
     protected override void Setup(string header, string dataKey, float time)
@@ -53,10 +51,9 @@ public class DecodePopup : InteractivePopup
         headerText.text = header;
         var data = PlayerDataManager.instance.researchData.GetData(dataKey);
         realText = data.unlockedWord.internalName;
-        currIndex = 0;
+        Prompt = ObscureWord(data).ToString();
+        Clear(false);
         obscureIndex = 0;
-        obscuredText = ObscureWord(data);
-        SetPrompt(obscuredText.ToString());
         ResetBubbles();
         gameObject.SetActive(true);
         InputManager.Instance.StartInput(this);
@@ -65,9 +62,9 @@ public class DecodePopup : InteractivePopup
     private void ResetBubbles()
     {
         CleanupBubbles();
-        if (obscuredText[currIndex] == obscureChar)
+        if (Prompt[pos] == obscureChar)
         {
-            ShowBubbles(char.ToLower(realText[currIndex]), GetNumBubbles(++obscureIndex));
+            ShowBubbles(char.ToLower(realText[pos]), GetNumBubbles(++obscureIndex));
         }
     }
 
@@ -120,22 +117,6 @@ public class DecodePopup : InteractivePopup
         }
     }
 
-    private void RevealCurrent()
-    {
-        obscuredText[currIndex] = realText[currIndex];
-        if(++currIndex >= realText.Length)
-        {
-            promptText.text = realText;
-            Completed = true;
-            InputManager.Instance.CompleteInput();
-        }
-        else
-        {
-            SetPrompt(obscuredText.ToString());
-            ResetBubbles();
-        }
-    }
-
     private StringBuilder ObscureWord(DecodeData data)
     {
         string word = data.unlockedWord.internalName;
@@ -166,18 +147,5 @@ public class DecodePopup : InteractivePopup
             }
         }
         return builder;
-    }
-
-    private void SetPrompt(string text)
-    {
-        var promptBuilder = new StringBuilder(text);
-        promptBuilder.Insert(currIndex + 1, highlightCloseTag);
-        promptBuilder.Insert(currIndex, highlightTag);
-        promptText.text = promptBuilder.ToString();
-    }
-
-    public override void Submit()
-    {
-        return;
     }
 }
