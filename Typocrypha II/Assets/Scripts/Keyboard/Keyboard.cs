@@ -120,9 +120,10 @@ namespace Typocrypha
             {
                 foreach (var c in Input.inputString) // Play no input sfx
                 {
-                    if (keyMap.ContainsKey(c))
+                    char input = char.ToLower(c);
+                    if (keyMap.ContainsKey(input))
                     {
-                        keyMap[c].PlayNoInputSfx();
+                        keyMap[input].PlayNoInputSfx();
                     }
                 }
                 if (CastingEnabled && Input.GetKeyDown(KeyCode.Return)) // Cast if enter is pressed.
@@ -137,11 +138,12 @@ namespace Typocrypha
             }
             foreach (var c in Input.inputString) // Add letters to cast bar.
             {
-                if (keyMap.ContainsKey(char.ToLower(c)))
+                char input = char.ToLower(c);
+                if (keyMap.ContainsKey(input))
                 {
-                    var key = keyMap[c];
+                    var key = keyMap[input];
                     key.OnPress?.Invoke();
-                    var keySfx = InputManager.Instance.CheckInput(keyMap[c].Output);
+                    var keySfx = InputManager.Instance.CheckInput(keyMap[input].Output);
                     if (keySfx.HasValue)
                     {
                         if (keySfx.Value)
@@ -156,7 +158,7 @@ namespace Typocrypha
                 }
                 else
                 {
-                    InputManager.Instance.CheckInput(c);
+                    InputManager.Instance.CheckInput(input);
                 }
             }
             if (CastingEnabled && (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))) // Cast if enter is pressed.
