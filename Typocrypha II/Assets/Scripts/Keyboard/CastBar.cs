@@ -88,7 +88,7 @@ namespace Typocrypha
             {
                 if (pos > 0)
                 {
-                    Clear();
+                    Clear(true);
                     AudioManager.instance.PlaySFX(backspaceSfx);
                     sfx = null;
                 }
@@ -173,7 +173,7 @@ namespace Typocrypha
         /// </summary>
         public abstract void Submit();
 
-        protected void Clear(bool showCursor = true)
+        protected void Clear(bool showCursor)
         {
             pos = 0;
             for (int i = 0; i < letters.Length; i++)

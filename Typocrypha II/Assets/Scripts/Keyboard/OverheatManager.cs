@@ -48,7 +48,7 @@ public class OverheatManager : Typocrypha.CastBar
         {
             // Failure
             AudioManager.instance.PlaySFX(failSFX);
-            Clear();
+            Clear(true);
             return;
         }
         // Success!
@@ -70,6 +70,6 @@ public class OverheatManager : Typocrypha.CastBar
     private void DoOverheatInternal()
     {
         promptText.text = wordSelector.Get().ToUpper();
-        Clear();
+        Clear(true);
     }
 }

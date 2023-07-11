@@ -23,7 +23,7 @@ public class PromptPopup : InteractivePopup
         headerText.text = header;
         promptText.text = prompt;
         gameObject.SetActive(true);
-        Clear();
+        Clear(true);
         InputManager.Instance.StartInput(this);
     }
 }
