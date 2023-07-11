@@ -6,13 +6,22 @@ using TMPro;
 
 public class PromptPopup : InteractivePopup
 {
-    public TextMeshProUGUI headerText;
+    [SerializeField] private TextMeshProUGUI headerText;
+    [SerializeField] private AudioClip successSfx;
+    [SerializeField] private AudioClip failSfx;
 
     public override void Submit()
     {
         LastPromptSuccess = Text.ToUpper() == Prompt.ToUpper();
+        AudioManager.instance.PlaySFX(LastPromptSuccess ? successSfx : failSfx);
         Completed = true;
         InputManager.Instance.CompleteInput();
+    }
+
+    protected override void OnTimeout()
+    {
+        base.OnTimeout();
+        AudioManager.instance.PlaySFX(failSfx);
     }
 
     protected override void Setup(string header, string prompt, float time)

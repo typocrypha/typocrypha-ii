@@ -40,12 +40,18 @@ public abstract class InteractivePopup : CastBar
                 }
                 if (currTime >= time)
                 {
+                    OnTimeout();
                     InputManager.Instance.CompleteInput();
                     break;
                 }
             }
         }
         gameObject.SetActive(false);
+    }
+
+    protected virtual void OnTimeout()
+    {
+
     }
 
     public override void Focus()
