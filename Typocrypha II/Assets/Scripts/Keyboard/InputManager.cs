@@ -77,16 +77,17 @@ public class InputManager : MonoBehaviour, IPausable
         }
         var handler = inputStack.Pop();
         handler.Unfocus();
-        if(inputStack.Count > 0)
-        {
-            //inputStack.Peek().Focus();
-            StartCoroutine(FocusAtEndOfFrame());
-        }
+        StartCoroutine(FocusAtEndOfFrame());
     }
 
     private IEnumerator FocusAtEndOfFrame()
     {
         yield return null;
+        if(inputStack.Count <= 0)
+        {
+            Debug.LogError("Attempting to focus an empty input stack!");
+            yield break;
+        }
         inputStack.Peek().Focus();
     }
 }
