@@ -23,7 +23,7 @@ public class DecodePopup : InteractivePopup
             return null;
         if (char.ToLower(inputChar) == char.ToLower(realText[pos]))
         {
-            SetLetter(pos, realText[pos].ToString());
+            SetLetter(pos, realText[pos]);
             if (++pos >= realText.Length)
             {
                 Completed = true;
@@ -36,6 +36,11 @@ public class DecodePopup : InteractivePopup
             }
             return true;
         }
+        return false;
+    }
+
+    protected override bool IsLetterWrong(int index, char letter)
+    {
         return false;
     }
 

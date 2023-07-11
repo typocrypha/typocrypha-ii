@@ -14,6 +14,7 @@ namespace Typocrypha
     {
         protected static readonly Color promptColor = Color.gray;
         protected static readonly Color normalColor = Color.white;
+        protected static readonly Color wrongColor = Color.red;
         public PauseHandle PH { get; private set; }
         public void OnPause(bool b)
         {
@@ -108,7 +109,7 @@ namespace Typocrypha
                 if (pos > 0 && sb[pos - 1] != KeywordDelimiters[0]) // Ignore multiple spaces.
                 {
                     sb.Append(KeywordDelimiters[0]);
-                    SetLetter(pos++, KeywordDelimiters[0].ToString());
+                    SetLetter(pos++, KeywordDelimiters[0]);
                 }
                 return true;
             }
@@ -120,7 +121,7 @@ namespace Typocrypha
             if (alpha.IsMatch(inputChar.ToString())) // Normal character.
             {
                 sb.Append(inputChar.ToString().ToLower());
-                SetLetter(pos++, inputChar.ToString());
+                SetLetter(pos++, inputChar);
                 return true;
             }
             return false;
@@ -184,10 +185,22 @@ namespace Typocrypha
             UpdateCursor(showCursor);
         }
 
-        protected void SetLetter(int index, string letter)
+        protected void SetLetter(int index, char letter)
         {
-            letters[index].text = letter;
-            letters[index].color = normalColor;
+            letters[index].text = letter.ToString();
+            if(IsLetterWrong(index, letter))
+            {
+                letters[index].color = wrongColor;
+            }
+            else
+            {
+                letters[index].color = normalColor;
+            }
+        }
+
+        protected virtual bool IsLetterWrong(int index, char letter)
+        {
+            return index < Prompt.Length && char.ToLower(letter) != char.ToLower(Prompt[index]);
         }
 
         protected void ClearLetter(int index)

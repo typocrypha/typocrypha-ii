@@ -7,11 +7,10 @@ using TMPro;
 public class PromptPopup : InteractivePopup
 {
     public TextMeshProUGUI headerText;
-    public TextMeshProUGUI promptText;
 
     public override void Submit()
     {
-        LastPromptSuccess = sb.ToString().ToUpper() == promptText.text.ToUpper();
+        LastPromptSuccess = Text.ToUpper() == Prompt.ToUpper();
         Completed = true;
         InputManager.Instance.CompleteInput();
     }
@@ -21,7 +20,7 @@ public class PromptPopup : InteractivePopup
         Completed = false;
         LastPromptSuccess = false;
         headerText.text = header;
-        promptText.text = prompt;
+        Prompt = prompt;
         gameObject.SetActive(true);
         Clear(true);
         InputManager.Instance.StartInput(this);

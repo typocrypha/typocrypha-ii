@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Typocrypha;
 using UnityEngine;
+using UnityEngine.UI;
 
 public abstract class InteractivePopup : CastBar
 {
@@ -9,6 +10,8 @@ public abstract class InteractivePopup : CastBar
     public bool Completed { get; protected set; } = false;
 
     private bool wasPaused = false;
+
+    [SerializeField] private Image timerBar; 
 
     public virtual Coroutine Show(string header, string data, float time)
     {
@@ -21,12 +24,20 @@ public abstract class InteractivePopup : CastBar
     protected virtual IEnumerator PromptCr(float time)
     {
         float currTime = 0;
+        if(timerBar != null)
+        {
+            timerBar.fillAmount = 1;
+        }
         while (!Completed)
         {
             yield return new WaitForEndOfFrame();
             if (time > 0)
             {
                 currTime += Time.deltaTime * Settings.GameplaySpeed;
+                if(timerBar != null)
+                {
+                    timerBar.fillAmount = Mathf.Max(0, 1 - (currTime / time));
+                }
                 if (currTime >= time)
                 {
                     InputManager.Instance.CompleteInput();
