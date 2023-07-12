@@ -11,7 +11,6 @@ public class OverheatManager : Typocrypha.CastBar
     [SerializeField] private WordList overheatWords;
     [Header("UI References")]
     [SerializeField] private Canvas ui;
-    [SerializeField] private TextMeshProUGUI promptText;
     [Header("SFX")]
     [SerializeField] private AudioClip successSFX;
     [SerializeField] private AudioClip failSFX;
@@ -44,7 +43,7 @@ public class OverheatManager : Typocrypha.CastBar
 
     public override void Submit()
     {
-        if (sb.ToString().ToUpper() != promptText.text)
+        if (Text.ToUpper() != Prompt)
         {
             // Failure
             AudioManager.instance.PlaySFX(failSFX);
@@ -69,7 +68,7 @@ public class OverheatManager : Typocrypha.CastBar
 
     private void DoOverheatInternal()
     {
-        promptText.text = wordSelector.Get().ToUpper();
+        Prompt = wordSelector.Get().ToUpper();
         Clear(true);
     }
 }
