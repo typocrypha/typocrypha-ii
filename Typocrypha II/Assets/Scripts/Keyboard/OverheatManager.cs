@@ -69,6 +69,7 @@ public class OverheatManager : Typocrypha.CastBar
     private void DoOverheatInternal()
     {
         Prompt = wordSelector.Get().ToUpper();
+        Resize(Prompt.Length);
         Clear(true);
     }
 }

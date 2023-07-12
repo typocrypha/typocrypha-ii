@@ -12,6 +12,7 @@ namespace Typocrypha
     /// </summary>
     public abstract class CastBar : MonoBehaviour, IInputHandler
     {
+        protected const int maxLetters = 30;
         protected static readonly Color promptColor = Color.gray;
         protected static readonly Color normalColor = Color.white;
         protected static readonly Color wrongColor = Color.red;
@@ -22,10 +23,12 @@ namespace Typocrypha
         }
 
         [SerializeField] private CastBarCursor cursor; // Cursor for keeping track of position.
-        [SerializeField] protected TextMeshProUGUI[] letters; // Array of single letter rects.
+        [SerializeField] private TextMeshProUGUI[] letters; // Array of single letter rects.
         [SerializeField] protected AudioClip backspaceSfx;
 
-        protected readonly StringBuilder sb = new StringBuilder(); // String builder for text.
+
+        protected List<TextMeshProUGUI> ActiveLetters { get; } = new List<TextMeshProUGUI>(maxLetters);
+        protected readonly StringBuilder sb = new StringBuilder(maxLetters); // String builder for text.
         public string Text
         {
             get => sb.ToString();
@@ -45,7 +48,33 @@ namespace Typocrypha
 
         protected virtual void Start()
         {
+            if(ActiveLetters.Count <= 0)
+            {
+                Resize(letters.Length);
+            }
             Clear(false);
+        }
+
+        public void Resize(int size)
+        {
+            ActiveLetters.Clear();
+            int newSize = Mathf.Min(size, letters.Length);
+            for (int i = 0; i < letters.Length; i++)
+            {
+                if (i < newSize)
+                {
+                    ActiveLetters.Add(letters[i]);
+                    letters[i].gameObject.SetActive(true);
+                }
+                else
+                {
+                    letters[i].gameObject.SetActive(false);
+                }
+            }
+            if(pos >= newSize)
+            {
+                pos = newSize - 1;
+            }
         }
 
         protected virtual void HandleBackSpace()
@@ -57,7 +86,7 @@ namespace Typocrypha
 
         protected void UpdateCursor(bool show)
         {
-            if (pos >= letters.Length)
+            if (pos >= ActiveLetters.Count)
             {
                 cursor.gameObject.SetActive(false);
                 return;
@@ -66,7 +95,7 @@ namespace Typocrypha
             {
                 cursor.gameObject.SetActive(true);
             }
-            cursor.transform.position = letters[pos].transform.position;
+            cursor.transform.position = ActiveLetters[pos].transform.position;
             cursor.SetDelay(0.2f, show);
         }
 
@@ -135,7 +164,7 @@ namespace Typocrypha
                 UpdateCursor(true);
                 return sfx;
             }
-            if (pos >= letters.Length) // No more room.
+            if (pos >= ActiveLetters.Count) // No more room.
             {
                 return false;
             }
@@ -177,7 +206,7 @@ namespace Typocrypha
         protected void Clear(bool showCursor)
         {
             pos = 0;
-            for (int i = 0; i < letters.Length; i++)
+            for (int i = 0; i < ActiveLetters.Count; i++)
             {
                 ClearLetter(i);
             }
@@ -187,14 +216,14 @@ namespace Typocrypha
 
         protected void SetLetter(int index, char letter)
         {
-            letters[index].text = letter.ToString();
+            ActiveLetters[index].text = letter.ToString();
             if(IsLetterWrong(index, letter))
             {
-                letters[index].color = wrongColor;
+                ActiveLetters[index].color = wrongColor;
             }
             else
             {
-                letters[index].color = normalColor;
+                ActiveLetters[index].color = normalColor;
             }
         }
 
@@ -207,12 +236,12 @@ namespace Typocrypha
         {
             if(index < Prompt.Length)
             {
-                letters[index].text = Prompt[index].ToString();
-                letters[index].color = promptColor;
+                ActiveLetters[index].text = Prompt[index].ToString();
+                ActiveLetters[index].color = promptColor;
             }
             else
             {
-                letters[index].text = string.Empty;
+                ActiveLetters[index].text = string.Empty;
             }
         }
 

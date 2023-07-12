@@ -60,7 +60,7 @@ namespace Typocrypha
                 index = 0;
                 lastKey = inputChar;
                 string newLetter = mapping[lastKey][index].ToString();
-                letters[pos++].text = newLetter;
+                ActiveLetters[pos++].text = newLetter;
                 sb.Append(newLetter);
             }
             else // repeat key
@@ -69,7 +69,7 @@ namespace Typocrypha
                 if (++index >= mappedLetters.Length)
                     index = 0;
                 char newChar = mappedLetters[index];
-                letters[pos - 1].text = newChar.ToString();
+                ActiveLetters[pos - 1].text = newChar.ToString();
                 sb[pos - 1] = newChar;
             }
 

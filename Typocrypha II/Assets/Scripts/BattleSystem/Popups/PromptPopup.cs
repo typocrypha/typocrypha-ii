@@ -31,6 +31,7 @@ public class PromptPopup : InteractivePopup
         headerText.text = header;
         Prompt = prompt;
         gameObject.SetActive(true);
+        Resize(Prompt.Length);
         Clear(true);
         InputManager.Instance.StartInput(this);
     }

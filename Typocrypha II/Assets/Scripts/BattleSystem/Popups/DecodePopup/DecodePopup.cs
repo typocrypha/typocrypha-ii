@@ -57,7 +57,8 @@ public class DecodePopup : InteractivePopup
         var data = PlayerDataManager.instance.researchData.GetData(dataKey);
         realText = data.unlockedWord.internalName;
         Prompt = ObscureWord(data).ToString();
-        Clear(false);
+        Resize(Prompt.Length);
+        Clear(true);
         obscureIndex = 0;
         ResetBubbles();
         gameObject.SetActive(true);
