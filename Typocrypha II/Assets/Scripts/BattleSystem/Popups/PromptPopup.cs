@@ -9,6 +9,7 @@ public class PromptPopup : InteractivePopup
     [SerializeField] private TextMeshProUGUI headerText;
     [SerializeField] private AudioClip successSfx;
     [SerializeField] private AudioClip failSfx;
+    [SerializeField] CastBarResizer resizer;
 
     public override void Submit()
     {
@@ -31,6 +32,7 @@ public class PromptPopup : InteractivePopup
         headerText.text = header;
         Prompt = prompt;
         gameObject.SetActive(true);
+        resizer.Resize(Prompt.Length);
         Resize(Prompt.Length);
         Clear(true);
         InputManager.Instance.StartInput(this);

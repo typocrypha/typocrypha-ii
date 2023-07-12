@@ -16,6 +16,7 @@ public class DecodePopup : InteractivePopup
     public TextMeshProUGUI headerText;
     private string realText = string.Empty;
     private int obscureIndex;
+    [SerializeField] private CastBarResizer resizer;
 
     public override bool? CheckInput(char inputChar)
     {
@@ -58,6 +59,7 @@ public class DecodePopup : InteractivePopup
         realText = data.unlockedWord.internalName;
         Prompt = ObscureWord(data).ToString();
         Resize(Prompt.Length);
+        resizer.Resize(Prompt.Length);
         Clear(true);
         obscureIndex = 0;
         ResetBubbles();

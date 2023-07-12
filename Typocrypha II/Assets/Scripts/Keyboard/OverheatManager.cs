@@ -11,6 +11,7 @@ public class OverheatManager : Typocrypha.CastBar
     [SerializeField] private WordList overheatWords;
     [Header("UI References")]
     [SerializeField] private Canvas ui;
+    [SerializeField] private CastBarResizer resizer;
     [Header("SFX")]
     [SerializeField] private AudioClip successSFX;
     [SerializeField] private AudioClip failSFX;
@@ -69,6 +70,7 @@ public class OverheatManager : Typocrypha.CastBar
     private void DoOverheatInternal()
     {
         Prompt = wordSelector.Get().ToUpper();
+        resizer.Resize(Prompt.Length);
         Resize(Prompt.Length);
         Clear(true);
     }
