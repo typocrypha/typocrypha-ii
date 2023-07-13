@@ -16,14 +16,10 @@ namespace Typocrypha
         #region IPausable
         public PauseHandle PH { get; private set; }
         // Stops input and pauses keyboard effects.
-        public void OnPause(bool b)
+        private void OnPause(bool b)
         {
             foreach (var kvp in allEffects)
                 kvp.Value.PH.Pause = b;
-            if(InputManager.Instance.PH != null)
-            {
-                InputManager.Instance.PH.Pause = b;
-            }
             pauseUI.gameObject.SetActive(b);
             if (b)
             {

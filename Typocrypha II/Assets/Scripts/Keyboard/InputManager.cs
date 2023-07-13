@@ -5,7 +5,14 @@ using UnityEngine;
 public class InputManager : MonoBehaviour, IPausable
 {
     public static InputManager Instance { get; private set; }
-    public PauseHandle PH => inputStack.Count > 0 ? inputStack.Peek().PH : null;
+    public PauseHandle PH { get; private set; }
+    private void OnPause(bool pause)
+    {
+        foreach(var input in inputStack)
+        {
+            input.PH.Pause = pause;
+        }
+    }
     private void Awake()
     {
         if(Instance != null)
@@ -14,7 +21,14 @@ public class InputManager : MonoBehaviour, IPausable
             return;
         }
         Instance = this;
+        PH = new PauseHandle(OnPause);
     }
+
+    private void Start()
+    {
+        PH.SetParent(Typocrypha.Keyboard.instance);
+    }
+
     private readonly Stack<IInputHandler> inputStack = new Stack<IInputHandler>();
 
     public void StartInput(IInputHandler handler)
@@ -77,17 +91,9 @@ public class InputManager : MonoBehaviour, IPausable
         }
         var handler = inputStack.Pop();
         handler.Unfocus();
-        StartCoroutine(FocusAtEndOfFrame());
-    }
-
-    private IEnumerator FocusAtEndOfFrame()
-    {
-        yield return null;
-        if(inputStack.Count <= 0)
+        if(inputStack.Count > 0)
         {
-            Debug.LogError("Attempting to focus an empty input stack!");
-            yield break;
+            inputStack.Peek().Focus();
         }
-        inputStack.Peek().Focus();
     }
 }

@@ -17,10 +17,7 @@ namespace Typocrypha
         protected static readonly Color normalColor = Color.white;
         protected static readonly Color wrongColor = Color.red;
         public PauseHandle PH { get; private set; }
-        public void OnPause(bool b)
-        {
-            cursor.PH.Pause = b;
-        }
+        public void OnPause(bool b) { }
 
         [SerializeField] private CastBarCursor cursor; // Cursor for keeping track of position.
         [SerializeField] private TextMeshProUGUI[] letters; // Array of single letter rects.
@@ -44,11 +41,12 @@ namespace Typocrypha
         protected virtual void Awake()
         {
             PH = new PauseHandle(OnPause);
+            cursor.PH.SetParent(this);
         }
 
         protected virtual void Start()
         {
-            if(ActiveLetters.Count <= 0)
+            if (ActiveLetters.Count <= 0)
             {
                 Resize(letters.Length);
             }
@@ -247,13 +245,13 @@ namespace Typocrypha
 
         public virtual void Focus()
         {
-            cursor.PH.Pause = false;
+            PH.Pause = false;
             UpdateCursor(!PH.Pause);
         }
 
         public virtual void Unfocus()
         {
-            cursor.PH.Pause = true;
+            PH.Pause = true;
         }
     }
 }

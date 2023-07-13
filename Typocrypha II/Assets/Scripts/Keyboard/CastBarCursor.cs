@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class CastBarCursor : MonoBehaviour, IPausable
 {
-    public PauseHandle PH { get; private set; }
+    public PauseHandle PH { get; } = new PauseHandle();
     [SerializeField] private TextMeshProUGUI cursorText;
 
     private int index = 0;
@@ -27,7 +27,7 @@ public class CastBarCursor : MonoBehaviour, IPausable
 
     private void Awake()
     {
-        PH = new PauseHandle(OnPause);
+        PH.SetPauseFunction(OnPause);
     }
 
     private void FixedUpdate()
