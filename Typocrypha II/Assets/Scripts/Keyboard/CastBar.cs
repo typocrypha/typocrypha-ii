@@ -52,7 +52,7 @@ namespace Typocrypha
             {
                 Resize(letters.Length);
             }
-            Clear(false);
+            Clear(!PH.Pause);
         }
 
         public void Resize(int size)
