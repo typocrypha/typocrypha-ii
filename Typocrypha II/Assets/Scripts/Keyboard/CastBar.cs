@@ -248,7 +248,7 @@ namespace Typocrypha
         public virtual void Focus()
         {
             cursor.PH.Pause = false;
-            UpdateCursor(true);
+            UpdateCursor(!PH.Pause);
         }
 
         public virtual void Unfocus()
