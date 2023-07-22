@@ -11,7 +11,7 @@ public abstract class InteractivePopup : CastBar
 
     private bool wasPaused = false;
 
-    [SerializeField] private Image timerBar; 
+    [SerializeField] private FilledSlicedImage timerBar; 
 
     public virtual Coroutine Show(string header, string data, float time)
     {
@@ -26,7 +26,7 @@ public abstract class InteractivePopup : CastBar
         float currTime = 0;
         if(timerBar != null)
         {
-            timerBar.fillAmount = 1;
+            timerBar.FillAmount = 1;
         }
         while (!Completed)
         {
@@ -36,7 +36,7 @@ public abstract class InteractivePopup : CastBar
                 currTime += Time.deltaTime * Settings.GameplaySpeed;
                 if(timerBar != null)
                 {
-                    timerBar.fillAmount = Mathf.Max(0, 1 - (currTime / time));
+                    timerBar.FillAmount = Mathf.Max(0, 1 - (currTime / time));
                 }
                 if (currTime >= time)
                 {
