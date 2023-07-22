@@ -104,7 +104,7 @@ namespace Typocrypha
         void Start()
         {
             InputManager.Instance.StartInput(castBar);
-            if(PH.Pause)
+            if (PH.Pause)
             {
                 castBar.PH.Pause = true;
             }
