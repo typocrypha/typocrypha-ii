@@ -3,45 +3,25 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class OverheatManager : MonoBehaviour, IPausable, IInputHandler
+public class OverheatManager : Typocrypha.CastBar
 {
-    #region IPausable
-    public PauseHandle PH { get; private set; }
-    // Stops input and pauses keyboard effects.
-    public void OnPause(bool b)
-    {
-        if (!IsOverheating)
-            return;
-        if (b)
-        {
-            inputField.interactable = false;
-        }
-        else
-        {
-            inputField.interactable = true;
-            inputField.Select();
-        }
-    }
-    #endregion
-
     public bool IsOverheating => ui.enabled;
 
     [SerializeField] Typocrypha.Keyboard keyboard;
     [SerializeField] private WordList overheatWords;
     [Header("UI References")]
     [SerializeField] private Canvas ui;
-    [SerializeField] private TextMeshProUGUI promptText;
-    [SerializeField] private TMP_InputField inputField;
+    [SerializeField] private CastBarResizer resizer;
     [Header("SFX")]
     [SerializeField] private AudioClip successSFX;
     [SerializeField] private AudioClip failSFX;
 
     private WordListSelector wordSelector;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         wordSelector = new WordListSelector(overheatWords.Words);
-        PH = new PauseHandle(OnPause);
         PH.SetParent(keyboard);
     }
 
@@ -50,7 +30,6 @@ public class OverheatManager : MonoBehaviour, IPausable, IInputHandler
         if (IsOverheating)
             return;
         ui.enabled = true;
-        inputField.interactable = true;
         DoOverheatInternal();
         InputManager.Instance.StartInput(this);
     }
@@ -59,21 +38,17 @@ public class OverheatManager : MonoBehaviour, IPausable, IInputHandler
     {
         if (!IsOverheating)
             return;
-        inputField.interactable = false;
-        inputField.DeactivateInputField(true);
         ui.enabled = false;
         InputManager.Instance.CompleteInput();
     }
 
-    public void OnSubmit(string input)
+    public override void Submit()
     {
-        if(input.ToUpper() != promptText.text)
+        if (Text.ToUpper() != Prompt)
         {
             // Failure
             AudioManager.instance.PlaySFX(failSFX);
-            inputField.text = string.Empty;
-            inputField.Select();
-            inputField.ActivateInputField();
+            Clear(true);
             return;
         }
         // Success!
@@ -94,19 +69,9 @@ public class OverheatManager : MonoBehaviour, IPausable, IInputHandler
 
     private void DoOverheatInternal()
     {
-        promptText.text = wordSelector.Get().ToUpper();
-        inputField.text = string.Empty;
-        inputField.Select();
-        inputField.ActivateInputField();
-    }
-
-    public void Focus()
-    {
-        PH.Pause = false;
-    }
-
-    public void Unfocus()
-    {
-        PH.Pause = true;
+        Prompt = wordSelector.Get().ToUpper();
+        resizer.Resize(Prompt.Length);
+        Resize(Prompt.Length);
+        Clear(true);
     }
 }
