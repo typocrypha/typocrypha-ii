@@ -6,7 +6,7 @@ using NodeEditorFramework.Utilities;
 
 namespace Gameflow
 {
-    [Node(false, "Event/Set Background", new System.Type[] { typeof(DialogCanvas) })]
+    [Node(false, "Event/Set Background", new System.Type[] { typeof(DialogCanvas), typeof(BattleCanvas) })]
     public class SetBackgroundNode : BaseNodeIO
     {
         #region Editor

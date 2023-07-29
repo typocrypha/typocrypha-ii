@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 /// <summary>
 /// Manages camera effects.
@@ -81,5 +82,34 @@ public class CameraManager : MonoBehaviour, IPausable
             time += 0.01f;
         }
         cameraTr.position = basePos;
+    }
+
+    private Bounds ReduceBoundsByCameraSize(Bounds bounds)
+    {
+        bounds.extents = new Vector3(
+            Mathf.Max(0, bounds.extents.x - Camera.orthographicSize * Camera.aspect),
+            Mathf.Max(0, bounds.extents.y - Camera.orthographicSize),
+            bounds.extents.z);
+        return bounds;
+    }
+
+    private Vector3 GetPositionWithinBounds(Bounds bounds, Vector2 pivot)
+    {
+        //constrain x and y between 0 and 1
+        Bounds pivotBounds = new Bounds(Vector2.one/2, Vector2.one);
+        pivot = pivotBounds.ClosestPoint(pivot);
+
+        var cameraBounds = ReduceBoundsByCameraSize(bounds);
+        var xPos = Mathf.Lerp(cameraBounds.min.x, cameraBounds.max.x, pivot.x);
+        var yPos = Mathf.Lerp(cameraBounds.min.y, cameraBounds.max.y, pivot.y);
+        return new Vector3(xPos, yPos, cameraTr.position.z);
+    }
+
+    public Tween MoveToPivot(Bounds bounds, Vector2 pivotStart, Vector2 pivotFinal, float duration, AnimationCurve ease)
+    {
+        var start = GetPositionWithinBounds(bounds, pivotStart);
+        var final = GetPositionWithinBounds(bounds, pivotFinal);
+        Debug.LogFormat("Start: {0}, Final: {1}", start, final);
+        return cameraTr.DOMove(final, duration).From(start).SetEase(ease);
     }
 }
