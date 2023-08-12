@@ -90,6 +90,7 @@ public class DialogScriptParser : EditorWindow
         {"clearSpells", typeof(ClearEquippedSpellsNode) },
         {"addSpell", typeof(AddEquippedSpellsNode) },
         {"addSpells", typeof(AddEquippedSpellsNode) },
+        {"wait", typeof(PauseNode) }
     };
 
     // Generic node ID map. types that have entries in this map and the nodeMap can be created without additional parsing code
@@ -300,15 +301,15 @@ public class DialogScriptParser : EditorWindow
             var gnode = CreateNode(AddCharacter.ID) as AddCharacter;
             gnode.characterData = GetCharacterData(args[1]);
             gnode.targetPos = new Vector2(float.Parse(args[2]) * 8.8888f, float.Parse(args[3]) * 5f); // Normalized coordinates (hardcoded 16/9 res with camera size 5).
-            if(args.Length > 4)
+            if (args.Length > 4)
             {
                 gnode.column = args[4].Trim().ToLower() == "left" ? DialogViewVNPlus.CharacterColumn.Left : DialogViewVNPlus.CharacterColumn.Right;
             }
-            if(args.Length == 6)
+            if (args.Length == 6)
             {
                 gnode.initialExpr = args[5];
             }
-            else if(args.Length >= 7)
+            else if (args.Length >= 7)
             {
                 gnode.initialPose = args[5];
                 gnode.initialExpr = args[6];
@@ -350,12 +351,12 @@ public class DialogScriptParser : EditorWindow
             // If there aren't enough args to contain a fade curve or the curve parse fails, use the default
             if (args.Length == 3)
             {
-                if(!TryParseFadeCurve(args[2], defaultBgmFadeLength, true, out gnode.fadeCurve))
+                if (!TryParseFadeCurve(args[2], defaultBgmFadeLength, true, out gnode.fadeCurve))
                 {
                     gnode.fadeCurve = bgmFadeInDefault;
                 }
             }
-            else if(args.Length >= 4)
+            else if (args.Length >= 4)
             {
                 if (!TryParseFadeCurve(args[2], args[3], true, out gnode.fadeCurve))
                 {
@@ -399,7 +400,7 @@ public class DialogScriptParser : EditorWindow
             nodes.Add(pauseBgmNode);
         }
         else if (nodeType == typeof(CrossfadeBgm))
-        { 
+        {
             var node = CreateNode(CrossfadeBgm.ID) as CrossfadeBgm;
             node.bgm = LoadAsset<AudioClip>(args[1], "Assets/Audio/Clips/BGM");
             switch (args.Length)
@@ -407,8 +408,8 @@ public class DialogScriptParser : EditorWindow
                 case 3:
                     if (float.TryParse(args[2], out float time))
                     {
-                        node.fadeCurveIn = AnimationCurve.Linear(0,0,time,1);
-                        node.fadeCurveOut = AnimationCurve.Linear(0,1,time,0);
+                        node.fadeCurveIn = AnimationCurve.Linear(0, 0, time, 1);
+                        node.fadeCurveOut = AnimationCurve.Linear(0, 1, time, 0);
                     }
                     else
                     {
@@ -421,8 +422,8 @@ public class DialogScriptParser : EditorWindow
                     var arg3IsTime = float.TryParse(args[3], out float time2);
                     if (arg2IsTime && arg3IsTime)
                     {
-                        node.fadeCurveIn = AnimationCurve.Linear(0,0,time1,1);
-                        node.fadeCurveOut = AnimationCurve.Linear(0,1,time2,0);
+                        node.fadeCurveIn = AnimationCurve.Linear(0, 0, time1, 1);
+                        node.fadeCurveOut = AnimationCurve.Linear(0, 1, time2, 0);
                     }
                     else if (!arg2IsTime && arg3IsTime)
                     {
@@ -460,7 +461,7 @@ public class DialogScriptParser : EditorWindow
             Debug.Log("bg:" + path);
             // Load actual asset
             if (isSprite) gnode.bgSprite = AssetDatabase.LoadAssetAtPath<Sprite>(path);
-            else          gnode.bgPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            else gnode.bgPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
             nodes.Add(gnode);
         }
         else if (nodeType == typeof(MoveCameraNode))
@@ -480,20 +481,20 @@ public class DialogScriptParser : EditorWindow
             gnode.fadeColor = new Color(float.Parse(args[3]), float.Parse(args[4]), float.Parse(args[5]), 1f);
             nodes.Add(gnode);
         }
-        else if(nodeType == typeof(SetVariableNode))
+        else if (nodeType == typeof(SetVariableNode))
         {
             var gnode = CreateNode(SetVariableNode.Id) as SetVariableNode;
             gnode.variableName = args[1];
             gnode.value = args[2];
             nodes.Add(gnode);
         }
-        else if(nodeType == typeof(SetLocationTextNode))
+        else if (nodeType == typeof(SetLocationTextNode))
         {
             var gnode = CreateNode(SetLocationTextNode.Id) as SetLocationTextNode;
             gnode.text = args[1];
             nodes.Add(gnode);
         }
-        else if(nodeType == typeof(SetDateTimeTextNode))
+        else if (nodeType == typeof(SetDateTimeTextNode))
         {
             var gnode = CreateNode(SetDateTimeTextNode.Id) as SetDateTimeTextNode;
             gnode.text = args[1];
@@ -502,7 +503,7 @@ public class DialogScriptParser : EditorWindow
         else if (nodeType == typeof(CastSpellNode))
         {
             var castNode = CreateNode(CastSpellNode.Id) as CastSpellNode;
-            if(args.Length < 4)
+            if (args.Length < 4)
             {
                 throw new System.Exception($"Incorrect number of args for cast spell node ({args.Length - 1}). Expected at least 3");
             }
@@ -514,7 +515,7 @@ public class DialogScriptParser : EditorWindow
 
             // Parse other data
             castNode.targetPos = new Vector2Int(int.Parse(args[3]), int.Parse(args[2]));
-            if(args[0] == "castSpellProxy")
+            if (args[0] == "castSpellProxy")
             {
                 castNode.proxyCasterName = args[4];
                 castNode.searchField = false;
@@ -523,7 +524,7 @@ public class DialogScriptParser : EditorWindow
                     castNode.messageOverride = args[5];
                 }
             }
-            else if(args[0] == "castSpellName")
+            else if (args[0] == "castSpellName")
             {
                 castNode.proxyCasterName = args[4];
                 castNode.searchField = true;
@@ -532,7 +533,7 @@ public class DialogScriptParser : EditorWindow
                     castNode.messageOverride = args[5];
                 }
             }
-            else if(args[0] == "castSpellAlly")
+            else if (args[0] == "castSpellAlly")
             {
                 castNode.casterPos = new Vector2Int(2, 1);
                 if (args.Length >= 5)
@@ -556,26 +557,26 @@ public class DialogScriptParser : EditorWindow
             allyBundle.prefabs.TryGetValue(args[1], out setAllyNode.prefab);
             setAllyNode.allyData = GetCharacterData(args[2]);
             setAllyNode.show = args[3] == "true";
-            if(args.Length == 5)
+            if (args.Length == 5)
             {
                 setAllyNode.expr = args[4];
             }
-            else if(args.Length >= 6)
+            else if (args.Length >= 6)
             {
                 setAllyNode.pose = args[4];
                 setAllyNode.expr = args[5];
             }
             nodes.Add(setAllyNode);
         }
-        else if(nodeType == typeof(AddEquippedSpellsNode))
+        else if (nodeType == typeof(AddEquippedSpellsNode))
         {
             var addSpellsNode = CreateNode(AddEquippedSpellsNode.Id) as AddEquippedSpellsNode;
-            if(args.Length < 2)
+            if (args.Length < 2)
             {
                 throw new System.Exception($"Incorrect number of args for add spell node ({args.Length - 1}). Expected at least 2");
             }
             TryParseSpellWord(args[1], out addSpellsNode.word1, AddEquippedSpellsNode.Id);
-            if(args.Length >= 3)
+            if (args.Length >= 3)
             {
                 TryParseSpellWord(args[2], out addSpellsNode.word2, AddEquippedSpellsNode.Id);
             }
@@ -585,14 +586,24 @@ public class DialogScriptParser : EditorWindow
             }
             nodes.Add(addSpellsNode);
         }
-        else
+        else if (nodeType == typeof(PauseNode))
         {
-            var gnode = CreateNodeGeneric(nodeType);
-            if(gnode != null)
+            var waitNode = CreateNode(PauseNode.ID) as PauseNode;
+            if (args.Length < 2)
             {
-                nodes.Add(gnode);
+                throw new System.Exception($"Incorrect number of args for wait node ({args.Length - 1}). Expected at least 1");
             }
+            waitNode.duration = float.Parse(args[1]);
+            nodes.Add(waitNode);
         }
+        else
+                {
+                    var gnode = CreateNodeGeneric(nodeType);
+                    if (gnode != null)
+                    {
+                        nodes.Add(gnode);
+                    }
+                }
         return nodes;
     }
 
