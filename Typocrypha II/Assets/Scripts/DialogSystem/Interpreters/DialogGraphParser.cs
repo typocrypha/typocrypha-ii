@@ -224,6 +224,11 @@ public class DialogGraphParser : GraphParser
                     return null;
                 }
             }
+            else if (currNode is PauseNode pauseNode)
+            {
+                StartCoroutine(WaitOnSeconds(pauseNode.duration));
+                return null;
+            }
             else if (currNode is CastSpellNode castNode)
             {
                 var spellManager = SpellManager.instance;
@@ -312,6 +317,14 @@ public class DialogGraphParser : GraphParser
     {
         DialogManager.instance.ReadyToContinue = false;
         yield return tween.WaitForCompletion();
+        DialogManager.instance.ReadyToContinue = true;
+        DialogManager.instance.NextDialog(true);
+    }
+
+    IEnumerator WaitOnSeconds(float seconds)
+    {
+        DialogManager.instance.ReadyToContinue = false;
+        yield return new WaitForSeconds(seconds);
         DialogManager.instance.ReadyToContinue = true;
         DialogManager.instance.NextDialog(true);
     }
