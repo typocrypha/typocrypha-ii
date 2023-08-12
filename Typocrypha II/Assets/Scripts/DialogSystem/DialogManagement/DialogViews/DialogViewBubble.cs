@@ -227,9 +227,9 @@ public class DialogViewBubble : DialogView
         CharacterManager.SetPose(pose);
     }
 
-    public override IEnumerator PlayExitAnimation(bool isEndOfDialog)
+    public override IEnumerator PlayExitAnimation(DialogManager.EndType endType)
     {
-        if (isEndOfDialog)
+        if (endType != DialogManager.EndType.None)
         {
             yield return HideCurrentBox();
             yield break;

@@ -37,6 +37,13 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     }
     #endregion
 
+    public enum EndType
+    {
+        None,
+        DialogEnd,
+        SceneEnd,
+    }
+
     public static DialogManager instance = null;
     public bool startOnStart = true; // Should dialog start when scene starts up? (should generally only be true for debugging)
     public bool isBattle = false; // Is this a battle scene?
@@ -235,7 +242,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
         StartCoroutine(ShowView(onComplete));
     }
 
-    public void Hide(bool isEndOfDialog, System.Action onComplete)
+    public void Hide(EndType endType, System.Action onComplete)
     {
         if (DialogView == null || DialogView.IsHidden)
         {
@@ -243,7 +250,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
             onComplete?.Invoke();
             return;
         }
-        StartCoroutine(HideView(isEndOfDialog, onComplete));
+        StartCoroutine(HideView(endType, onComplete));
     }
 
     private IEnumerator ShowView(System.Action onComplete)
@@ -258,12 +265,15 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
         ReadyToContinue = true;
         onComplete?.Invoke();
     }
-    private IEnumerator HideView(bool isEndOfDialog, System.Action onComplete)
+    private IEnumerator HideView(EndType endType, System.Action onComplete)
     {
         ReadyToContinue = false;
-        yield return DialogView.PlayExitAnimation(isEndOfDialog);
-        DialogView.gameObject.SetActive(false);
-        if(isEndOfDialog && isBattle)
+        yield return DialogView.PlayExitAnimation(endType);
+        if(endType != EndType.SceneEnd || DialogView.DeactivateOnEndSceneHide)
+        {
+            DialogView.gameObject.SetActive(false);
+        }
+        if (endType != EndType.None && isBattle)
         {
             if(AllyBattleBoxManager.instance != null && AllyBattleBoxManager.instance.ShowBattleAlly() != null)
             {
@@ -319,7 +329,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
         ReadyToContinue = false;
         if (lastView != null && !lastView.IsHidden)
         {
-            yield return lastView.PlayExitAnimation(false);
+            yield return lastView.PlayExitAnimation(EndType.None);
             lastView.gameObject.SetActive(false);
         }
         yield return ShowView(callback); // callback will get called at the end of here

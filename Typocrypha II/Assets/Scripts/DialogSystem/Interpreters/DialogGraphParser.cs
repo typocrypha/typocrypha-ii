@@ -45,7 +45,7 @@ public class DialogGraphParser : GraphParser
                 else if (currNode is EndAndHide)
                 {
                     DialogCharacterManager.instance?.RemoveAllCharacters();
-                    DialogManager.instance.Hide(true, DialogManager.instance.CleanUp);
+                    DialogManager.instance.Hide(DialogManager.EndType.DialogEnd, DialogManager.instance.CleanUp);
                     return null;
                 }
                 else if (currNode is EndAndGoto) // Immediately start new dialog graph.
@@ -57,7 +57,7 @@ public class DialogGraphParser : GraphParser
                 }
                 else if (currNode is EndAndTransition) // Transitions scenes.
                 {
-                    DialogManager.instance.Hide(true, TransitionManager.instance.TransitionToNextScene);
+                    DialogManager.instance.Hide(DialogManager.EndType.SceneEnd, TransitionManager.instance.TransitionToNextScene);
                     return null;
                 }
             }
