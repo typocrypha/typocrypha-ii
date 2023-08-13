@@ -50,7 +50,8 @@ public class LoadingScreenDefault : LoadingScreen
         {
             return StartCoroutine(WaitUntilScreenFadeIsComplete());
         }
-        return FaderManager.instance.FadeScreenOverTime(fadeTime, 1, 0, Color.black, false);
+        FaderManager.instance.FadeScreenOverTime(fadeTime, 1, 0, Color.black, false);
+        return null;
     }
 
     private IEnumerator WaitUntilScreenFadeIsComplete()
