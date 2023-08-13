@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Gameflow
 {
-    [Node(false, "Event/Pause", new System.Type[] { typeof(DialogCanvas), typeof(BattleCanvas) })]
+    [Node(false, "Event/Wait", new System.Type[] { typeof(DialogCanvas), typeof(BattleCanvas) })]
     public class PauseNode : BaseNodeIO
     {
         public override string Title => "Wait";
