@@ -122,6 +122,9 @@ public class TransitionManager : MonoBehaviour
         }
         loadingScreen.Progress = 1.0f;
         yield return null;
+
+        // Reset Camera
+        CameraManager.instance.ResetCamera();
         if (data.sceneData is BattleCanvas battleCanvas)
         {
             // Initialize Battle
