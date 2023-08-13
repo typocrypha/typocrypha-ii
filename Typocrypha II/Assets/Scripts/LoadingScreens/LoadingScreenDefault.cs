@@ -8,7 +8,7 @@ using TMPro;
 /// </summary>
 public class LoadingScreenDefault : LoadingScreen
 {
-    private const float fadeTime = 2f;
+    public const float fadeTime = 2f;
     [SerializeField] private TextMeshProUGUI loadingPercent; // Text display of loading percentage
 
     void Awake()

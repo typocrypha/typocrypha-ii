@@ -600,7 +600,19 @@ public class DialogScriptParser : EditorWindow
             {
                 throw new System.Exception($"Incorrect number of args for wait node ({args.Length - 1}). Expected at least 1");
             }
-            waitNode.duration = float.Parse(args[1]);
+            if(float.TryParse(args[1], out float fixedDuration))
+            {
+                waitNode.duration = fixedDuration;
+            }
+            else if(PauseNode.variables.ContainsKey(args[1]))
+            {
+                waitNode.variableName = args[1];
+            }
+            else
+            {
+                throw new System.Exception($"Invalid wait node args. {args[1]} is not a number or a valid variable");
+            }
+
             nodes.Add(waitNode);
         }
         else

@@ -232,7 +232,7 @@ public class DialogGraphParser : GraphParser
             }
             else if (currNode is PauseNode pauseNode)
             {
-                StartCoroutine(WaitOnSeconds(pauseNode.duration, loading));
+                StartCoroutine(WaitOnSeconds(pauseNode.WaitTime, loading));
                 return null;
             }
             else if (currNode is CastSpellNode castNode)
