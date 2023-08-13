@@ -276,7 +276,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
         if (ShouldAutoContiune())
         {
             yield return new WaitForSeconds(autoContinueDelay);
-            DialogManager.instance.NextDialog();
+            DialogManager.instance.NextDialog(true, false);
         }
         else if (ContinueIndicator != null)
         {

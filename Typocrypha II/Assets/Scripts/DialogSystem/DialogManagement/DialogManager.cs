@@ -80,6 +80,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     }
     private string location = "";
     private DialogGraphParser graphParser; // Dialog graph currently playing.
+    public bool Loading { get; set; } = false;
 
     void Awake()
     {
@@ -99,7 +100,10 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
 
     void Start()
     {
-        if (startOnStart) StartDialog(false);
+        if (startOnStart)
+        {
+            StartDialog(false, false);
+        }
     }
 
     void Update()
@@ -107,21 +111,29 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
 #if DEBUG
         if (!isBattle && Input.GetKeyDown(KeyCode.S))
         {
-            StartDialog(false);
+            StartDialog(false, false);
         }
 #endif
         // Check if submit key is pressed
-        if (ReadyToContinue && dialogBox != null && DialogView.ReadyToContinue && Input.GetKeyDown(KeyCode.Space))
+        if (!Loading && ReadyToContinue && dialogBox != null && DialogView.ReadyToContinue && Input.GetKeyDown(KeyCode.Space))
         {
             if (dialogBox.IsDone) // If dialog is done, go to next dialog
             {
-                NextDialog();
+                NextDialog(true, false);
             }
             else // Otherwise, skip text scroll and dump current text
             {
                 dialogBox.DumpText();
             }
         }
+    }
+
+    // Starts the dialog, but only allows nodes to execute if they have executeduringloading set to true
+    public void LoadDialog(DialogCanvas graph, bool reset)
+    {
+        Loading = true;
+        graphParser.Graph = graph;
+        StartDialog(reset, true);
     }
 
     /// <summary>
@@ -132,13 +144,13 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     public void StartDialog(DialogCanvas graph, bool reset)
     {
         graphParser.Graph = graph;
-        StartDialog(reset);
+        StartDialog(reset, false);
     }
 
     /// <summary>
     /// Start new dialog graph. Implicitly uses graph already in parser.
     /// </summary>
-    private void StartDialog(bool reset)
+    private void StartDialog(bool reset, bool loading)
     {
         PH.Pause = false;
         if (isBattle)
@@ -153,12 +165,12 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
         if (isBattle || dialogCounter <= 0) // Start from beginning of scene if no save file load (can't save in middle of battle).
         {
             dialogCounter = -1;
-            NextDialog(true);
+            NextDialog(true, loading);
         }
         else // Otherwise, go to saved position.
         {
             graphParser.SkipTo(dialogCounter);
-            NextDialog(false);
+            NextDialog(false, loading);
         }
     }
 
@@ -174,9 +186,9 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     /// </summary>
     /// <param name="next">Should we immediately go to next line?
     /// i.e. if false, use current value of 'currNode' in 'DialogGraphParser'.</param>
-    public void NextDialog(bool next = true)
+    public void NextDialog(bool next, bool loading)
     {
-        DialogItem dialogItem = graphParser.NextDialog(next);
+        DialogItem dialogItem = graphParser.NextDialog(next, loading);
         if (dialogItem == null) return;
         // Remove certain old text effects from previous box
         if ((dialogBox as DialogBox) != null) DisableOldTextEffects(dialogBox); 

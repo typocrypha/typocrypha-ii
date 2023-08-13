@@ -122,21 +122,28 @@ public class TransitionManager : MonoBehaviour
         }
         loadingScreen.Progress = 1.0f;
         yield return null;
-        // Initialize Scene
-        if (data.sceneData is DialogCanvas dialogCanvas)
-        {
-            DialogManager.instance.StartDialog(dialogCanvas, true);
-            yield return null;
-        }
-        // Initialize Battle
         if (data.sceneData is BattleCanvas battleCanvas)
         {
+            // Initialize Battle
             BattleManager.instance.LoadBattle(battleCanvas);
         }
+        else if(data.sceneData is DialogCanvas dialogCanvas)
+        {
+            // Initialize Dialog
+            DialogManager.instance.LoadDialog(dialogCanvas, true);
+        }
+        // Finish loading
         yield return loadingScreen.FinishLoading();
+        // Start the scene
         if (data.sceneData is BattleCanvas)
         {
             BattleManager.instance.StartBattle();
+        }
+        else if (data.sceneData is DialogCanvas dialogCanvas)
+        {
+            DialogManager.instance.Loading = false;
+            DialogManager.instance.NextDialog(false, false);
+            //yield return null;
         }
         loadingScreenCanvas.enabled = false;
     }

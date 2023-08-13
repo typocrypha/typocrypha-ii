@@ -7,7 +7,8 @@ namespace Gameflow
 {
     public abstract class BaseNode : Node
     {
-        public override bool AutoLayout { get { return true; } }
+        public override bool AutoLayout => true;
+        public virtual bool ExecuteDuringLoading => false;
         public enum ProcessFlag
         {
             Continue,

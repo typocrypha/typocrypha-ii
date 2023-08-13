@@ -15,11 +15,12 @@ namespace Gameflow
             Sprite,
             Prefab,
         }
-        public override string Title { get { return "Set Background"; } }
-        public override Vector2 MinSize { get { return new Vector2(150, 40); } }
+        public override string Title => "Set Background";
+        public override Vector2 MinSize => new Vector2(150, 40);
 
         public const string ID = "setBackground";
-        public override string GetID { get { return ID; } }
+        public override string GetID => ID;
+        public override bool ExecuteDuringLoading => true;
 
         public BgType bgType;
         public Sprite bgSprite;
