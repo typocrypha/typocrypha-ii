@@ -26,7 +26,8 @@ namespace Gameflow
             {"an", typeof(DialogViewAN) },
             {"bubble", typeof(DialogViewBubble) },
             {"input", typeof(DialogNodeInput) },
-            {"vnplus", typeof(DialogViewVNPlus) }
+            {"vnplus", typeof(DialogViewVNPlus) },
+            {"showlocation", typeof(DialogViewLocation) },
         };
 
         public override void NodeGUI()

@@ -209,7 +209,7 @@ public class DialogGraphParser : GraphParser
             }
             else if (currNode is SetLocationTextNode setLocationTextNode)
             {
-                DialogManager.instance.DialogView.SetLocationText(setLocationTextNode.text);
+                DialogManager.instance.LocationText = setLocationTextNode.text;
             }
             else if (currNode is SetDateTimeTextNode setDateTimeTextNode)
             {

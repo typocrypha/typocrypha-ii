@@ -66,6 +66,19 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
     [HideInInspector] public int dialogCounter = 0; // Number of dialog lines passed.
 
     public bool ReadyToContinue { get; set; } = true;
+    public string LocationText
+    {
+        get => location;
+        set
+        {
+            location = value;
+            if(DialogView != null)
+            {
+                DialogView.SetLocationText(value);
+            }
+        }
+    }
+    private string location = "";
     private DialogGraphParser graphParser; // Dialog graph currently playing.
 
     void Awake()
@@ -260,6 +273,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
         {
             yield return StartCoroutine(HideAllyBoxCr());
         }
+        DialogView.SetLocationText(LocationText);
         DialogView.gameObject.SetActive(true);
         yield return DialogView.PlayEnterAnimation();
         ReadyToContinue = true;
