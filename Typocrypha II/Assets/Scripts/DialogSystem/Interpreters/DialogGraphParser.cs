@@ -128,6 +128,10 @@ public class DialogGraphParser : GraphParser
                     var ditem = new DialogItemBubble(dNode.text, voice, cds, dNode.gridPosition, dNode.absolutePosition);
                     return ditem;
                 }
+                else if(currNode is DialogNodeLocation locationNode)
+                {
+                    return new DialogItemLocation(locationNode.text, voice);
+                }
             }
             else if (currNode is SetDialogViewNode)
             {

@@ -839,6 +839,10 @@ public class DialogScriptParser : EditorWindow
                 throw new System.Exception($"Incorrect number of arguments ({coords.Length}) for bubble dialog");
             }
         }
+        else if (currView == typeof(DialogViewLocation))
+        {
+            dnode = CreateNode(DialogNodeLocation.ID) as DialogNodeLocation;
+        }
         dnode.characterName = cname.Substring(0, cname.Length-1);
         dnode.displayName = displayName;
         dnode.text = dialogLine[1].Trim().Replace("…", "...").Replace('’', '\'');

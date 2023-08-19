@@ -13,19 +13,19 @@ public class DialogViewLocation : DialogView
     [SerializeField] private Image background;
     [SerializeField] private CanvasGroup textGroup;
     [SerializeField] private DialogContinueIndicator continueIndicator;
-    [SerializeField] private List<AudioClip> scrollSfx;
     [SerializeField] private float targetBgAlpha = 1;
-
-    public override bool DeactivateOnEndSceneHide => false;
 
     private void Awake()
     {
-        background.color = Color.clear;    
+        background.color = Color.clear;
+        dialogBox.ContinueIndicator = continueIndicator;
     }
 
     public override DialogBox PlayDialog(DialogItem data)
     {
-        dialogBox.SetupAndStartDialogBox(data);
+        if (!IsDialogItemCorrectType(data, out DialogItemLocation dialogItem))
+            return null;
+        dialogBox.SetupAndStartDialogBox(dialogItem);
         return dialogBox;
     }
 
@@ -43,14 +43,7 @@ public class DialogViewLocation : DialogView
         textGroup.alpha = 1;
         var fadeIn = background.DOFade(targetBgAlpha, 1);
         yield return fadeIn.WaitForCompletion();
-        PlayDialog(new DialogItemLocation(DialogManager.instance.LocationText, scrollSfx));
-        yield return new WaitUntil(DialogBoxDone);
-        continueIndicator.Activate();
-        yield return new WaitUntil(GotoNext);
     }
-
-    private bool DialogBoxDone() => dialogBox.IsDone;
-    private bool GotoNext() => Input.GetKeyDown(KeyCode.Space);
 
     public override IEnumerator PlayExitAnimation(DialogManager.EndType endType)
     {
