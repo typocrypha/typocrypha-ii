@@ -237,7 +237,7 @@ public class DialogScriptParser : EditorWindow
         if (line.Length < 2) return false; // Empty line.
         if (line.StartsWith("["))
             return true;
-        List<Node> nodes = null; // Constructed nodes.
+        List<Node> nodes; // Constructed nodes.
         if (viewSwitchMarker.Contains(line[0])) // View switch.
         {
             string[] dialogLine = line.Split(viewSwitchMarker, escape);
@@ -256,14 +256,15 @@ public class DialogScriptParser : EditorWindow
         {
             foreach(var node in nodes)
             {
+                var prevOut = prev as BaseNodeOUT;
                 // Connect to previous
-                if (node is BaseNodeIO)
+                if (node is BaseNodeIO ioNode)
                 {
-                    (prev as BaseNodeOUT).toNextOUT.TryApplyConnection((node as BaseNodeIO).fromPreviousIN, true);
+                    prevOut.toNextOUT.TryApplyConnection(ioNode.fromPreviousIN, true);
                 }
-                else
+                else if(node is GameflowEndNode gameflowEndNode)
                 {
-                    (prev as BaseNodeOUT).toNextOUT.TryApplyConnection((node as GameflowEndNode).fromPreviousIN, true);
+                    prevOut.toNextOUT.TryApplyConnection(gameflowEndNode.fromPreviousIN, true);
                 }
                 prev = node;
             }
