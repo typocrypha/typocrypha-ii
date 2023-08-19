@@ -22,14 +22,15 @@ public class DialogParser : MonoBehaviour
         {"evil-eye", new Color32(255, 0, 66, 255) },
         {"whisper", new Color32(200, 200, 200, 220) },
         {"highlight", new Color32(255, 132, 12, 255) },
+        {"ayin", new Color32(176, 167, 255, 255) },
+        {"illyia", new Color32(199, 1, 38, 255) },
+        {"dahlia", new Color32(128, 151, 224, 255) },
+        {"esaias", new Color32(74, 209, 150, 255) },
         //{ "spell",      "#ff6eff" },
         //{ "enemy-talk", "#974dfe" },
         //{ "enemy-name", "#16e00c" },
         //{ "tips",       "#ffdb16" },
         //{ "highlight",  "#ff840c" },
-        //{ "mc",         "#d043e2" },
-        //{ "illyia",     "#c70126" },
-        //{ "dahlia",     "#8097e0" },
         //{ "doppel",     "#E0015A" }
     };
 
