@@ -15,6 +15,8 @@ public class DialogViewAN : DialogView
     [SerializeField] private Image background;
     [SerializeField] private DialogContinueIndicator continueIndicator;
 
+    public override bool DeactivateOnEndSceneHide => false;
+
     private readonly List<DialogBox> dialogBoxPool = new List<DialogBox>(maxMessages);
     private readonly List<DialogBox> activeDialogBoxes = new List<DialogBox>(maxMessages);
 
@@ -59,6 +61,7 @@ public class DialogViewAN : DialogView
         gameObject.SetActive(e);
         if (!e)
         {
+            ClearLog();
             background.color = Color.clear;
         }
     }
@@ -69,8 +72,10 @@ public class DialogViewAN : DialogView
         yield return fadeIn.WaitForCompletion();
     }
 
-    public override IEnumerator PlayExitAnimation(bool isEndOfDialog)
+    public override IEnumerator PlayExitAnimation(DialogManager.EndType endType)
     {
+        if (endType == DialogManager.EndType.SceneEnd)
+            yield break;
         ClearLog();
         var fadeOut = background.DOFade(0, 2);
         yield return fadeOut.WaitForCompletion();

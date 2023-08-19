@@ -112,4 +112,10 @@ public class CameraManager : MonoBehaviour, IPausable
         Debug.LogFormat("Start: {0}, Final: {1}", start, final);
         return cameraTr.DOMove(final, duration).From(start).SetEase(ease);
     }
+
+    public void SetPivot(Bounds bounds, Vector2 pivot)
+    {
+        var position = GetPositionWithinBounds(bounds, pivot);
+        cameraTr.position = position;
+    }
 }

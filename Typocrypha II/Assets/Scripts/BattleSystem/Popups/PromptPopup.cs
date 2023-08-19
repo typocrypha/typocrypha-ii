@@ -6,26 +6,23 @@ using TMPro;
 
 public class PromptPopup : InteractivePopup
 {
-    public TextMeshProUGUI headerText;
-    public TextMeshProUGUI promptText;
-    public TMP_InputField inputField;
+    [SerializeField] private TextMeshProUGUI headerText;
+    [SerializeField] private AudioClip successSfx;
+    [SerializeField] private AudioClip failSfx;
+    [SerializeField] CastBarResizer resizer;
 
-    public override void Focus()
+    public override void Submit()
     {
-        inputField.Select();
-        inputField.ActivateInputField();
-    }
-
-    public override void Unfocus()
-    {
-        inputField.DeactivateInputField();
-    }
-
-    public void OnSubmit()
-    {
-        LastPromptSuccess = inputField.text.ToUpper() == promptText.text.ToUpper();
+        LastPromptSuccess = Text.ToUpper() == Prompt.ToUpper();
+        AudioManager.instance.PlaySFX(LastPromptSuccess ? successSfx : failSfx);
         Completed = true;
         InputManager.Instance.CompleteInput();
+    }
+
+    protected override void OnTimeout()
+    {
+        base.OnTimeout();
+        AudioManager.instance.PlaySFX(failSfx);
     }
 
     protected override void Setup(string header, string prompt, float time)
@@ -33,9 +30,11 @@ public class PromptPopup : InteractivePopup
         Completed = false;
         LastPromptSuccess = false;
         headerText.text = header;
-        promptText.text = prompt;
-        inputField.text = string.Empty;
+        Prompt = prompt;
         gameObject.SetActive(true);
+        resizer.Resize(Prompt.Length);
+        Resize(Prompt.Length);
+        Clear(true);
         InputManager.Instance.StartInput(this);
     }
 }

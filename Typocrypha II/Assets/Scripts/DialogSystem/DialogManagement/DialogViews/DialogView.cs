@@ -16,6 +16,7 @@ public abstract class DialogView : MonoBehaviour
     public bool IsReadyToContinue() => ReadyToContinue;
 
     public virtual bool ShowImmediately => true;
+    public virtual bool DeactivateOnEndSceneHide => true;
 
     /// <summary>
     /// Enable/Disable this dialog view. Does not disable others.
@@ -79,7 +80,7 @@ public abstract class DialogView : MonoBehaviour
         yield break;
     }
 
-    public virtual IEnumerator PlayExitAnimation(bool isEndOfDialog)
+    public virtual IEnumerator PlayExitAnimation(DialogManager.EndType endType)
     {
         yield break;
     }

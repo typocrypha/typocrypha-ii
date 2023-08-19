@@ -19,10 +19,11 @@ public class DialogGraphParser : GraphParser
     /// When reached, translate into a dialog item and return </summary>
     /// <param name="next">Should we immediately go to next line?
     /// i.e. if false, use current value of 'currNode'.</param>
-    public DialogItem NextDialog(bool next = true)
+    public DialogItem NextDialog(bool next, bool loading)
     {
         if (next) currNode = Next();
-        if (currNode == null) return null;
+        if (currNode == null || (loading && !currNode.ExecuteDuringLoading)) 
+            return null;
         // Use shared functionality if currNode is a shared node
         bool isSharedNode = ProcessSharedNode(currNode);
         // If not a shared node, use dialog functionality
@@ -33,19 +34,19 @@ public class DialogGraphParser : GraphParser
                 var node = currNode as SubCanvasNode;
                 recStack.Push(Next()); // Remember exit node.
                 currNode = (node.subCanvas as DialogCanvas).GetStartNode();
-                return NextDialog(true);
+                return NextDialog(true, loading);
             }
             if (currNode is GameflowEndNode)
             {
                 if (recStack.Count != 0)
                 {
                     currNode = recStack.Pop();
-                    return NextDialog(false);
+                    return NextDialog(false, loading);
                 }
                 else if (currNode is EndAndHide)
                 {
                     DialogCharacterManager.instance?.RemoveAllCharacters();
-                    DialogManager.instance.Hide(true, DialogManager.instance.CleanUp);
+                    DialogManager.instance.Hide(DialogManager.EndType.DialogEnd, DialogManager.instance.CleanUp);
                     return null;
                 }
                 else if (currNode is EndAndGoto) // Immediately start new dialog graph.
@@ -53,11 +54,11 @@ public class DialogGraphParser : GraphParser
                     var node = currNode as EndAndGoto;
                     Graph = node.nextDialog;
                     Init();
-                    return NextDialog();
+                    return NextDialog(true, loading);
                 }
                 else if (currNode is EndAndTransition) // Transitions scenes.
                 {
-                    DialogManager.instance.Hide(true, TransitionManager.instance.TransitionToNextScene);
+                    DialogManager.instance.Hide(DialogManager.EndType.SceneEnd, TransitionManager.instance.TransitionToNextScene);
                     return null;
                 }
             }
@@ -131,7 +132,7 @@ public class DialogGraphParser : GraphParser
             else if (currNode is SetDialogViewNode)
             {
                 var dialogViewNode = currNode as SetDialogViewNode;
-                StartCoroutine(WaitOnRoutine(DialogManager.instance.SetView(dialogViewNode.ViewType)));
+                StartCoroutine(WaitOnRoutine(DialogManager.instance.SetView(dialogViewNode.ViewType), loading));
                 return null;
             }
             else if (currNode is CharacterControlNode)
@@ -141,7 +142,7 @@ public class DialogGraphParser : GraphParser
                 {
                     if (currView.AddCharacter(new DialogView.AddCharacterArgs(addNode.characterData, addNode.column, addNode.targetPos, addNode.initialPose, addNode.initialExpr)))
                     {
-                        StartCoroutine(WaitOnFunc(currView.IsReadyToContinue));
+                        StartCoroutine(WaitOnFunc(currView.IsReadyToContinue, loading));
                         return null;
                     }
                 }
@@ -149,7 +150,7 @@ public class DialogGraphParser : GraphParser
                 {
                     if (currView.RemoveCharacter(removeNode.characterData))
                     {
-                        StartCoroutine(WaitOnFunc(currView.IsReadyToContinue));
+                        StartCoroutine(WaitOnFunc(currView.IsReadyToContinue, loading));
                         return null;
                     }
                 }
@@ -168,7 +169,7 @@ public class DialogGraphParser : GraphParser
                         var moveRoutine = vnPlusView.MoveCharacter(moveNode.characterData, moveNode.targetColumn, moveNode.top);
                         if (moveRoutine != null)
                         {
-                            StartCoroutine(WaitOnRoutine(moveRoutine));
+                            StartCoroutine(WaitOnRoutine(moveRoutine, loading));
                             return null;
                         }
                     }
@@ -197,8 +198,13 @@ public class DialogGraphParser : GraphParser
             {
                 var bounds = BackgroundManager.instance.GetBounds();
                 var tween = CameraManager.instance.MoveToPivot(bounds, camNode.StartPivot, camNode.FinalPivot, camNode.Duration, camNode.EasingCurve);
-                StartCoroutine(WaitOnTween(tween));
+                StartCoroutine(WaitOnTween(tween, loading));
                 return null;
+            }
+            else if (currNode is SetCameraNode setCamNode)
+            {
+                var bounds = BackgroundManager.instance.GetBounds();
+                CameraManager.instance.SetPivot(bounds, setCamNode.Pivot);
             }
             else if (currNode is FadeNode)
             {
@@ -209,7 +215,7 @@ public class DialogGraphParser : GraphParser
             }
             else if (currNode is SetLocationTextNode setLocationTextNode)
             {
-                DialogManager.instance.DialogView.SetLocationText(setLocationTextNode.text);
+                DialogManager.instance.LocationText = setLocationTextNode.text;
             }
             else if (currNode is SetDateTimeTextNode setDateTimeTextNode)
             {
@@ -220,9 +226,14 @@ public class DialogGraphParser : GraphParser
                 var clearRoutine = DialogManager.instance.DialogView.Clear();
                 if (clearRoutine != null)
                 {
-                    StartCoroutine(WaitOnRoutine(clearRoutine));
+                    StartCoroutine(WaitOnRoutine(clearRoutine, loading));
                     return null;
                 }
+            }
+            else if (currNode is PauseNode pauseNode)
+            {
+                StartCoroutine(WaitOnSeconds(pauseNode.WaitTime, loading));
+                return null;
             }
             else if (currNode is CastSpellNode castNode)
             {
@@ -249,7 +260,7 @@ public class DialogGraphParser : GraphParser
                     if (caster != null)
                     {
                         var msgOverride = string.IsNullOrEmpty(castNode.messageOverride) ? null : castNode.messageOverride;
-                        StartCoroutine(WaitOnRoutine(spellManager.Cast(castNode.GetSpell(), caster, new Battlefield.Position(castNode.targetPos), msgOverride)));
+                        StartCoroutine(WaitOnRoutine(spellManager.Cast(castNode.GetSpell(), caster, new Battlefield.Position(castNode.targetPos), msgOverride), loading));
                         return null;
                     }
                     else if (!string.IsNullOrEmpty(castNode.proxyCasterName))
@@ -270,13 +281,13 @@ public class DialogGraphParser : GraphParser
         // Check if need to wait on node to complete.
         if (currNode is ITimedNode)
         {
-            StartCoroutine(WaitOnNode(currNode as ITimedNode));
+            StartCoroutine(WaitOnNode(currNode as ITimedNode, loading));
             return null;
         }
         else
         {
             //Recursively move to next
-            return NextDialog();
+            return NextDialog(true, loading);
         }
     }
 
@@ -284,36 +295,44 @@ public class DialogGraphParser : GraphParser
     /// Waits for a node to complete before allowing dialog to proceed (coroutine).
     /// </summary>
     /// <param name="node">Node to wait on.</param>
-    IEnumerator WaitOnNode(ITimedNode node)
+    IEnumerator WaitOnNode(ITimedNode node, bool loading)
     {
         DialogManager.instance.ReadyToContinue = false;
         yield return new WaitUntil(() => node.IsCompleted);
         DialogManager.instance.ReadyToContinue = true;
-        DialogManager.instance.NextDialog(true);
+        DialogManager.instance.NextDialog(true, loading);
     }
 
-    IEnumerator WaitOnFunc(System.Func<bool> isComplete)
+    IEnumerator WaitOnFunc(System.Func<bool> isComplete, bool loading)
     {
         DialogManager.instance.ReadyToContinue = false;
         yield return new WaitUntil(isComplete);
         DialogManager.instance.ReadyToContinue = true;
-        DialogManager.instance.NextDialog(true);
+        DialogManager.instance.NextDialog(true, loading);
     }
 
-    IEnumerator WaitOnRoutine(Coroutine routine)
+    IEnumerator WaitOnRoutine(Coroutine routine, bool loading)
     {
         DialogManager.instance.ReadyToContinue = false;
         yield return routine;
         DialogManager.instance.ReadyToContinue = true;
-        DialogManager.instance.NextDialog(true);
+        DialogManager.instance.NextDialog(true, loading);
     }
 
-    IEnumerator WaitOnTween(Tween tween)
+    IEnumerator WaitOnTween(Tween tween, bool loading)
     {
         DialogManager.instance.ReadyToContinue = false;
         yield return tween.WaitForCompletion();
         DialogManager.instance.ReadyToContinue = true;
-        DialogManager.instance.NextDialog(true);
+        DialogManager.instance.NextDialog(true, loading);
+    }
+
+    IEnumerator WaitOnSeconds(float seconds, bool loading)
+    {
+        DialogManager.instance.ReadyToContinue = false;
+        yield return new WaitForSeconds(seconds);
+        DialogManager.instance.ReadyToContinue = true;
+        DialogManager.instance.NextDialog(true, loading);
     }
 
     /// <summary>

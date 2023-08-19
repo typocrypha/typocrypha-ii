@@ -23,7 +23,7 @@ public class PauseHandle
                 pauseCount++;
                 if(pauseCount == 1)
                 {
-                    onPause(true);
+                    onPause?.Invoke(true);
                 }
             }
             else if (pauseCount > 0)
@@ -31,10 +31,16 @@ public class PauseHandle
                 pauseCount--;
                 if(pauseCount == 0)
                 {
-                    onPause(false);
+                    onPause?.Invoke(false);
                 }
             }
         }
+    }
+
+    public void SetPauseFunction(OnPauseDel function)
+    {
+        onPause = function;
+        onPause?.Invoke(Pause);
     }
 
     public void SetParent(PauseHandle newParent)
@@ -60,17 +66,20 @@ public class PauseHandle
         }
     }
 
-    /// <summary>
-    /// Initialize pause handle.
-    /// </summary>
-    public PauseHandle(OnPauseDel opd)
+    public PauseHandle()
     {
-        onPause = opd;
-        if(PauseManager.instance != null)
+        if (PauseManager.instance != null)
         {
             PauseManager.instance.AllPausable.Add(this);
         }
+    }
 
+    /// <summary>
+    /// Initialize pause handle.
+    /// </summary>
+    public PauseHandle(OnPauseDel opd) : this()
+    {
+        onPause = opd;
     }
 
     // Remove self from list of all pause handles on destruction.

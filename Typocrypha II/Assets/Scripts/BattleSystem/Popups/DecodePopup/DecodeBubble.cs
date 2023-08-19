@@ -24,14 +24,15 @@ public class DecodeBubble : MonoBehaviour
         isCorrect = false;
         foreach (char key in keys)
         {
-            var keyText = Instantiate(keyPrefab, keyContainer).GetComponentInChildren<TextMeshProUGUI>();
+            var keyObj = Instantiate(keyPrefab, keyContainer);
+            var keyText = keyObj.GetComponentInChildren<TextMeshProUGUI>();
             keyText.text = key.ToString();
             if(key == correctChar)
             {
                 isCorrect = true;
                 continue;
             }
-            keyDict.Add(key.ToString(), keyText.gameObject);
+            keyDict.Add(key.ToString(), keyObj);
         }
     }
 

@@ -8,12 +8,13 @@ namespace Gameflow
     [Node(false, "Dialog/Set Dialog View", new System.Type[] { typeof(DialogCanvas) })]
     public class SetDialogViewNode : BaseNodeIO
     {
-        public override string Title { get { return "Set Dialog View"; } }
-        public override Vector2 MinSize { get { return new Vector2(150, 50); } }
-        public override bool AutoLayout { get { return true; } }
+        public override string Title => "Set Dialog View";
+        public override Vector2 MinSize => new Vector2(150, 50);
+        public override bool AutoLayout => true;
 
         public const string Id = "Set Dialog View Node";
-        public override string GetID { get { return Id; } }
+        public override string GetID => Id;
+        public override bool ExecuteDuringLoading => ViewType == typeof(DialogViewVNPlus);
 
         public System.Type ViewType => viewMap.ContainsKey(viewName) ? viewMap[viewName] : null;
         public string viewName;
@@ -26,7 +27,8 @@ namespace Gameflow
             {"an", typeof(DialogViewAN) },
             {"bubble", typeof(DialogViewBubble) },
             {"input", typeof(DialogNodeInput) },
-            {"vnplus", typeof(DialogViewVNPlus) }
+            {"vnplus", typeof(DialogViewVNPlus) },
+            {"showlocation", typeof(DialogViewLocation) },
         };
 
         public override void NodeGUI()

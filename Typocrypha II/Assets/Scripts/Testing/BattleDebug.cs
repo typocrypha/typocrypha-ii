@@ -15,7 +15,7 @@ public class BattleDebug : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F1) && !DialogManager.instance.PH.Pause)
         {
             DialogManager.instance.StopAllCoroutines();
-            DialogManager.instance.Hide(true, DialogManager.instance.CleanUp);
+            DialogManager.instance.Hide(DialogManager.EndType.DialogEnd, DialogManager.instance.CleanUp);
         }
     }
 #endif

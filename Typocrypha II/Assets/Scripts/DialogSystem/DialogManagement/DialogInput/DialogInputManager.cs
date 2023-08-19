@@ -55,7 +55,7 @@ public class DialogInputManager : MonoBehaviour
     public void SubmitInput(string value)
     {
         PlayerDataManager.instance.Set(target, value); // Set input value.
-        DialogManager.instance.NextDialog(); // Start next dialog.
+        DialogManager.instance.NextDialog(true, false); // Start next dialog.
         DialogManager.instance.PH.Pause = false; // Re-enable dialog skipping.
     }
 }

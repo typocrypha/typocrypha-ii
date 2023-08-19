@@ -10,16 +10,25 @@ namespace Typocrypha
     /// Manages keyboard interface for battle.
     /// </summary>
     [RequireComponent(typeof(KeyboardBuilder))]
-    public class Keyboard : MonoBehaviour, IPausable, IInputHandler
+    public class Keyboard : MonoBehaviour, IPausable
     { 
 
         #region IPausable
         public PauseHandle PH { get; private set; }
         // Stops input and pauses keyboard effects.
-        public void OnPause(bool b)
+        private void OnPause(bool b)
         {
-            //enabled = !b;
-            PauseSubUI(b);
+            foreach (var kvp in allEffects)
+                kvp.Value.PH.Pause = b;
+            pauseUI.gameObject.SetActive(b);
+            if (b)
+            {
+                // Clear highlights
+                foreach (var c in keyMap)
+                {
+                    c.Value.ClearHighlight();
+                }
+            }
         }
         #endregion
 
@@ -55,9 +64,7 @@ namespace Typocrypha
         };
         [SerializeField] private Transform pauseUI;
         [SerializeField] private AudioClip pausedCastSfx;
-
-
-        private bool focused = true;
+        [SerializeField] private AudioClip noInputSfx;
 
         void Awake()
         {
@@ -74,22 +81,6 @@ namespace Typocrypha
             builder.BuildKeyboard();
             Initialize(builder.Keys);
             PH = new PauseHandle(OnPause);
-        }
-
-        private void PauseSubUI(bool b)
-        {
-            foreach (var kvp in allEffects)
-                kvp.Value.PH.Pause = b;
-            castBar.cursor.PH.Pause = b;
-            pauseUI.gameObject.SetActive(b);
-            if (b)
-            {
-                // Clear highlights
-                foreach (var c in keyMap)
-                {
-                    c.Value.ClearHighlight();
-                }
-            }
         }
 
         public void Initialize(IEnumerable<Key> keys)
@@ -112,23 +103,24 @@ namespace Typocrypha
 
         void Start()
         {
-            InputManager.Instance.StartInput(this);
+            InputManager.Instance.StartInput(castBar);
+            if (PH.Pause)
+            {
+                castBar.PH.Pause = true;
+            }
         }
 
         // Check user input.
         void Update()
         {
-            if (!focused)
-            {
-                return;
-            }
             if (PH.Pause)
             {
                 foreach (var c in Input.inputString) // Play no input sfx
                 {
-                    if (keyMap.ContainsKey(c))
+                    char input = char.ToLower(c);
+                    if (keyMap.ContainsKey(input))
                     {
-                        keyMap[c].PlayNoInputSfx();
+                        AudioManager.instance.PlaySFX(noInputSfx);
                     }
                 }
                 if (CastingEnabled && Input.GetKeyDown(KeyCode.Return)) // Cast if enter is pressed.
@@ -143,11 +135,14 @@ namespace Typocrypha
             }
             foreach (var c in Input.inputString) // Add letters to cast bar.
             {
-                if (keyMap.ContainsKey(c))
+                char input = char.ToLower(c);
+                if (input == '\r')
+                    continue;
+                if (keyMap.ContainsKey(input))
                 {
-                    var key = keyMap[c];
+                    var key = keyMap[input];
                     key.OnPress?.Invoke();
-                    var keySfx = castBar.CheckInput(keyMap[c].Output);
+                    var keySfx = InputManager.Instance.CheckInput(keyMap[input].Output);
                     if (keySfx.HasValue)
                     {
                         if (keySfx.Value)
@@ -156,18 +151,22 @@ namespace Typocrypha
                         }
                         else
                         {
-                            key.PlayNoInputSfx();
+                            AudioManager.instance.PlaySFX(noInputSfx);
                         }
                     }
                 }
                 else
                 {
-                    castBar.CheckInput(c);
+                    var keySfx = InputManager.Instance.CheckInput(input);
+                    if (keySfx.HasValue && !keySfx.Value)
+                    {
+                        AudioManager.instance.PlaySFX(noInputSfx);
+                    }
                 }
             }
-            if (CastingEnabled && Input.GetKeyDown(KeyCode.Return)) // Cast if enter is pressed.
+            if (CastingEnabled && (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))) // Cast if enter is pressed.
             {
-                castBar.Cast();
+                InputManager.Instance.Submit();
             }
         }
 
@@ -274,21 +273,6 @@ namespace Typocrypha
         public void DoOverheat()
         {
             overheatManager.DoOverheat();
-        }
-
-        public void Focus()
-        {
-            focused = true;
-            if (!PH.Pause)
-            {
-                PauseSubUI(false);
-            }
-        }
-
-        public void Unfocus()
-        {
-            focused = false;
-            PauseSubUI(true);
         }
     }
 }

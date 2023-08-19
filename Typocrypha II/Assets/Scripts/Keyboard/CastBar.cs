@@ -10,38 +10,81 @@ namespace Typocrypha
     /// <summary>
     /// Manages Cast Bar interface for battle.
     /// </summary>
-    public class CastBar : MonoBehaviour
+    public abstract class CastBar : MonoBehaviour, IInputHandler
     {
-        public CastBarCursor cursor; // Cursor for keeping track of position.
-        [SerializeField] protected TextMeshProUGUI[] letters; // Array of single letter rects.
+        protected const int maxLetters = 30;
+        protected static readonly Color promptColor = Color.gray;
+        protected static readonly Color normalColor = Color.white;
+        protected static readonly Color wrongColor = Color.red;
+        public PauseHandle PH { get; private set; }
+        public void OnPause(bool b) { }
+
+        [SerializeField] private CastBarCursor cursor; // Cursor for keeping track of position.
+        [SerializeField] private TextMeshProUGUI[] letters; // Array of single letter rects.
         [SerializeField] protected AudioClip backspaceSfx;
 
-        protected readonly StringBuilder sb = new StringBuilder(); // String builder for text.
+
+        protected List<TextMeshProUGUI> ActiveLetters { get; } = new List<TextMeshProUGUI>(maxLetters);
+        protected readonly StringBuilder sb = new StringBuilder(maxLetters); // String builder for text.
         public string Text
         {
             get => sb.ToString();
         }
+
+        protected string Prompt { get; set; } = string.Empty;
 
         protected int pos = 0; // Cursor position.
         readonly Regex alpha = new Regex("^[A-Za-z]"); // Matches alphabetic strings.
         public static char[] KeywordDelimiters { get; } = new char[] { '–', ' ', '-' };
         protected virtual char SpaceChar => ' ';
 
-        void Start()
+        protected virtual void Awake()
         {
-            Clear(false);
+            PH = new PauseHandle(OnPause);
+            cursor.PH.SetParent(this);
+        }
+
+        protected virtual void Start()
+        {
+            if (ActiveLetters.Count <= 0)
+            {
+                Resize(letters.Length);
+            }
+            Clear(!PH.Pause);
+        }
+
+        public void Resize(int size)
+        {
+            ActiveLetters.Clear();
+            int newSize = Mathf.Min(size, letters.Length);
+            for (int i = 0; i < letters.Length; i++)
+            {
+                if (i < newSize)
+                {
+                    ActiveLetters.Add(letters[i]);
+                    letters[i].gameObject.SetActive(true);
+                }
+                else
+                {
+                    letters[i].gameObject.SetActive(false);
+                }
+            }
+            if(pos >= newSize)
+            {
+                pos = newSize - 1;
+            }
         }
 
         protected virtual void HandleBackSpace()
         {
-            letters[--pos].text = "";
+            ClearLetter(--pos);
             sb.Remove(pos, 1);
             AudioManager.instance.PlaySFX(backspaceSfx);
         }
 
-        private void UpdateCursor(bool show)
+        protected void UpdateCursor(bool show)
         {
-            if (pos >= letters.Length)
+            if (pos >= ActiveLetters.Count)
             {
                 cursor.gameObject.SetActive(false);
                 return;
@@ -50,17 +93,22 @@ namespace Typocrypha
             {
                 cursor.gameObject.SetActive(true);
             }
-            cursor.transform.position = letters[pos].transform.position;
+            cursor.transform.position = ActiveLetters[pos].transform.position;
             cursor.SetDelay(0.2f, show);
         }
 
-        private bool CheckBackspace(char inputChar)
+        protected bool CheckBackspace(char inputChar, out bool? sfx)
         {
             if (inputChar == 8) // Backspace. Don't allow backspace on first character.
             {
                 if (pos > 0)
                 {
                     HandleBackSpace();
+                    sfx = null;
+                }
+                else
+                {
+                    sfx = false;
                 }
                 return true;
             }
@@ -68,21 +116,27 @@ namespace Typocrypha
             {
                 if (pos > 0)
                 {
-                    Clear();
+                    Clear(true);
                     AudioManager.instance.PlaySFX(backspaceSfx);
+                    sfx = null;
+                }
+                else
+                {
+                    sfx = false;
                 }
                 return true;
             }
+            sfx = null;
             return false;
         }
-        private bool CheckSpace(char inputChar)
+        protected bool CheckSpace(char inputChar)
         {
             if (inputChar == SpaceChar) // Space. Don't allow space on first character.
             {
                 if (pos > 0 && sb[pos - 1] != KeywordDelimiters[0]) // Ignore multiple spaces.
                 {
                     sb.Append(KeywordDelimiters[0]);
-                    letters[pos++].text = KeywordDelimiters[0].ToString();
+                    SetLetter(pos++, KeywordDelimiters[0]);
                 }
                 return true;
             }
@@ -94,21 +148,21 @@ namespace Typocrypha
             if (alpha.IsMatch(inputChar.ToString())) // Normal character.
             {
                 sb.Append(inputChar.ToString().ToLower());
-                letters[pos++].text = inputChar.ToString();
+                SetLetter(pos++, inputChar);
                 return true;
             }
             return false;
         }
 
         // Return null for no sfx, false for no input (fail) sfx, and true for key sfx
-        public bool? CheckInput(char inputChar)
+        public virtual bool? CheckInput(char inputChar)
         {
-            if (CheckBackspace(inputChar))
+            if (CheckBackspace(inputChar, out var sfx))
             {
                 UpdateCursor(true);
-                return null;
+                return sfx;
             }
-            if (pos >= letters.Length) // No more room.
+            if (pos >= ActiveLetters.Count) // No more room.
             {
                 return false;
             }
@@ -145,28 +199,59 @@ namespace Typocrypha
         /// <summary>
         /// Submit current string in cast bar.
         /// </summary>
-        public void Cast()
-        {
-            if(Battlefield.instance.Player is Player player)
-            {
-                player.CastString(Text.TrimEnd(KeywordDelimiters).Split(KeywordDelimiters));
-            }
-            else
-            {
-                Debug.LogError("Player is not valid. Cannot cast");
-            }
-            Clear(false);
-        }
+        public abstract void Submit();
 
-        void Clear(bool showCursor = true)
+        protected void Clear(bool showCursor)
         {
             pos = 0;
-            foreach (var letter in letters)
+            for (int i = 0; i < ActiveLetters.Count; i++)
             {
-                letter.text = "";
+                ClearLetter(i);
             }
             sb.Clear();
             UpdateCursor(showCursor);
+        }
+
+        protected void SetLetter(int index, char letter)
+        {
+            ActiveLetters[index].text = letter.ToString();
+            if(IsLetterWrong(index, letter))
+            {
+                ActiveLetters[index].color = wrongColor;
+            }
+            else
+            {
+                ActiveLetters[index].color = normalColor;
+            }
+        }
+
+        protected virtual bool IsLetterWrong(int index, char letter)
+        {
+            return index < Prompt.Length && char.ToLower(letter) != char.ToLower(Prompt[index]);
+        }
+
+        protected void ClearLetter(int index)
+        {
+            if(index < Prompt.Length)
+            {
+                ActiveLetters[index].text = Prompt[index].ToString();
+                ActiveLetters[index].color = promptColor;
+            }
+            else
+            {
+                ActiveLetters[index].text = string.Empty;
+            }
+        }
+
+        public virtual void Focus()
+        {
+            PH.Pause = false;
+            UpdateCursor(!PH.Pause);
+        }
+
+        public virtual void Unfocus()
+        {
+            PH.Pause = true;
         }
     }
 }
