@@ -207,9 +207,10 @@ public class DialogGraphParser : GraphParser
             else if (currNode is FadeNode)
             {
                 var node = currNode as FadeNode;
-                float fadeStart = node.fadeType == FadeNode.FadeType.Fade_In ? 1f : 0f;
+                float fadeStart = node.fadeType == FadeNode.FadeType.FadeIn ? 1f : 0f;
                 float fadeEnd = 1f - fadeStart;
-                StartCoroutine(FadeNode.FadeScreenOverTime(node.fadeTime, fadeStart, fadeEnd, node.fadeColor));
+                StartCoroutine(WaitOnRoutine(FaderManager.instance.FadeScreenOverTime(node.fadeTime, fadeStart, fadeEnd, node.fadeColor), loading));
+                return null;
             }
             else if (currNode is SetLocationTextNode setLocationTextNode)
             {
@@ -276,29 +277,8 @@ public class DialogGraphParser : GraphParser
                 BattleManager.instance.ClearReinforcements();
             }
         }
-        // Check if need to wait on node to complete.
-        if (currNode is ITimedNode)
-        {
-            StartCoroutine(WaitOnNode(currNode as ITimedNode, loading));
-            return null;
-        }
-        else
-        {
-            //Recursively move to next
-            return NextDialog(true, loading);
-        }
-    }
-
-    /// <summary>
-    /// Waits for a node to complete before allowing dialog to proceed (coroutine).
-    /// </summary>
-    /// <param name="node">Node to wait on.</param>
-    IEnumerator WaitOnNode(ITimedNode node, bool loading)
-    {
-        DialogManager.instance.ReadyToContinue = false;
-        yield return new WaitUntil(() => node.IsCompleted);
-        DialogManager.instance.ReadyToContinue = true;
-        DialogManager.instance.NextDialog(true, loading);
+        //Recursively move to next
+        return NextDialog(true, loading);
     }
 
     IEnumerator WaitOnFunc(System.Func<bool> isComplete, bool loading)

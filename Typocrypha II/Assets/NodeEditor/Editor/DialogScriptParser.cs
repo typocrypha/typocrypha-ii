@@ -484,7 +484,7 @@ public class DialogScriptParser : EditorWindow
         else if (nodeType == typeof(FadeNode))
         {
             var gnode = CreateNode(FadeNode.ID) as FadeNode;
-            gnode.fadeType = args[1] == "in" ? FadeNode.FadeType.Fade_In : FadeNode.FadeType.Fade_Out;
+            gnode.fadeType = args[1] == "in" ? FadeNode.FadeType.FadeIn : FadeNode.FadeType.FadeOut;
             gnode.fadeTime = float.Parse(args[2]);
             gnode.fadeColor = new Color(float.Parse(args[3]), float.Parse(args[4]), float.Parse(args[5]), 1f);
             nodes.Add(gnode);
