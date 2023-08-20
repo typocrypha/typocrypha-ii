@@ -75,11 +75,8 @@ Ayin(uncomfortable): {c,ayin}”H-Huh?”{c}
 >setbg,Sprite,BgObscurianRuins
 
 
-+vn
++vnplus
 >setlocation,Ruins
-
-
-Narrator: You look up from your Typocrypha to see the team stopped at a four-way fork in the tunnel.
 
 
 >addchar,Ayin,0,0,left,serious
@@ -88,7 +85,10 @@ Narrator: You look up from your Typocrypha to see the team stopped at a four-way
 >addchar,Esaias,0,0,left,normal
 
 
-Narrator: You turn to Esaias, who is staring at his map equally perplexed.
+Narrator: You look up from your Typocrypha to see the team stopped at a four-way fork in the tunnel.
+
+
+Narrator: Esaias is staring at his map equally perplexed.
 
 
 >setexpr,Ayin,serious
@@ -157,22 +157,19 @@ Ayin: ...
 Ayin(nervous): I-I think we should split up too.
 
 
-Dahlia: !
-
-
 Dahlia(serious): Are you sure, Ayin? I could go with you-
 
 
-Illyia(seriously): Ah, our “brave leader” can handle themselves, right?
+Illyia(serious): Ah, our “brave leader” can handle themselves, right?
 
 
-Ayin(nervoussmile): Y-yeah.
+Ayin(nervoussmile): Um, y-yeah.
 
 
 Ayin(normal): Thanks Dahlia, but it’s just a short scouting trip, right?
 
 
-Ayin(nervous): A-And if something happens, I can always just run back here, right?
+Ayin(nervous): A-And if something happens, I can always just run back here...
 
 
 Esaias(normal): Actually, for the purposes of data collection, it would be better if you could fight the demons to continue...
@@ -220,8 +217,6 @@ Narrator: As each of your party members leave, you start to feel the initial pin
 Narrator: Taking deep breaths, you head into your own tunnel.[a]
 
 
-
-
 >playbgm,BGMMenacing
 
 
@@ -231,7 +226,7 @@ Narrator: Taking deep breaths, you head into your own tunnel.[a]
 Narrator: You carefully head down the tunnel, noting the direction and shape of the space.
 
 
-Narrator: Soon after entering, the path curves left and slightly downwards into a small room.
+Narrator: Soon after entering, the path curves left into a small room.
 
 
 Narrator: The room is dark - only your Typocrypha illuminates the area.
@@ -273,13 +268,19 @@ Narrator: How long were you running for?
 Narrator: You check your clock - 13:55.
 
 
-Ayin: (Oh no, I have to get back, where is-)
+Ayin: (I have to get back, where is-)
 
 
-Narrator: And in your panic, you fail to sense the figure behind you before they’re right next to you.
+>stopbgm
 
 
-Narrator: You instinctively fall forward and fumble with your Typocrypha and manage to turn on the dim light on it.
+Narrator: *rustle[b]*
+
+
+Narrator: ...someone is in the room with you.
+
+
+Narrator: You instinctively fall forward and fumble with your Typocrypha and manage to turn on its dim light.
 
 
 Narrator: The shadowy figure comes into view
@@ -297,22 +298,25 @@ Niya: ...! Ayin?
 Ayin(surprisedbad): N-Niya?
 
 
-Narrator: Oh fuck.
-
-
 >playbgm,BGMMysterious
+
+
+Narrator: Standing before you is Niya, your twin.
+
+
+Narrator: By appearance your spitting image, but truth be told they couldn’t be any more different from you.
+
+
+Narrator: They glare at you menacingly.
 
 
 Niya: ... 
 
 
-Narrator: Niya puts away their weapon, a strange looking Typocrypha.
-
-
 Ayin(nervous): ...
 
 
-Niya: What? Not even going to greet your own family?
+Niya: What? No hello?
 
 
 Ayin(uncomfortable): Th-that’s not... I...
@@ -330,194 +334,39 @@ Niya: ...How’s Ivan?
 Ayin(serious): He-Uh, he’s fine.
 
 
-Ayin: W-What are you doing here anyways, Niya?
+Ayin(serious): ...
+
+
+Ayin(ohfuck): H-How’re you, Niya?
+
+
+Niya: ...
+
+
+Narrator: Niya squints at you, and lets out a sigh.
+
+
+Niya: I’m fine.
+
+
+Niya: Anyways, are we going to do this?
+
+
+Ayin(surprisedbad): W-What?
 
 
 >stopbgm
 
 
-Niya: !?
+Narrator: Niya pulls down their mask over their [c]face...
 
 
-Niya(bitter): “What are you doing here?”
-
-
-Niya: This is my home, Ayin, not that fake life you live back on the surface.
-
-
-Niya: I’m here to defend my home.
-
-
-Niya: The question is, why are you here?
-
-
-Niya: You’re here to kill me, right? To kill all demons?
-
-
-Ayin(surprisedbad): N-no! I don’t... I-I-
-
-
-Niya: Please, save me the sob story.
-
-
-Niya(normal): ...
-
-
-Narrator: Niya pulls their mask over their face.[b]
-
-
-Niya: Ready your Typocrypha, Ayin.
-
-
->playbgm,BGMCurse
-
-
-//TODO: Fake battle UI comes up, but with no keyboard, with Niya in the center.[c]
-
-
-Ayin(nervous): Niya, please, we don’t have to do this...
-
-
-Niya: Yes we do. You chose your side and I chose mine.
-
-
-Niya: And now that you’re here, there can only be one outcome...
-
-
-Niya(bitter): Fight me, Ayin!
-
-
-Ayin(concerned): I... I can’t...
-
-
-Niya(normal): ...Coward.
-
-
-Niya: Fine. I’m done holding back.
-
-
-Narrator: Niya readies a spell, pointed right at you.
-
-
-Narrator: You close your eyes: You deserve this.
-
-
->addchar,Illyia,0,0,left,action,yell
-
-
-Illyia: SWORD!
-
-
-//TODO: A magical blast hits Niya.
-
-
-Narrator: ...Looks like Illyia thinks otherwise.
-
-
-Niya: Tch... I guess we’ll settle this another time.
-
-
-//TODO: Niya runs away. Battle UI goes away.
->stopbgm
-
-
->removechar,Niya
-
-
->removechar,Illyia
-
-
->addchar,Illyia,0,0,right,base,serious
-
-
-Illyia(serious): Damn demon...
-
-
-Illyia(concerned): Hey “Leader”, you OK?
-
-
-Ayin(ohfuck): I-Illyia? I... 
-
-
-Narrator: Your breathing quickens. It’s happening again.
-
-
-Ayin: I, I can’t-
-
-
-Illyia(pissed): Woah, don’t go losing it on me.
-
-
-Ayin(uncomfortable): I’m sorry, I can’t anymore. I-
-
-
-Narrator: Illyia lifts you up by the shoulders (quite easily) and starts shaking you.
-
-
-Illyia: Hey. HEY! Look at me.
-
-
-Illyia(serious): Breathe!
-
-
-Narrator: Illyia stares right at you, but behind her fierce visage, you sense a surprising warmth.
-
-
-Ayin(serious): (Breathe in... Breathe out...)
-
-
-Ayin: ...
-
-
->playbgm,BGMAgarthanRuins
-
-
-Ayin(sheepish): S-Sorry, Illyia... I feel a little better now.
-
-
-Illyia(normal): Good! [d]
-
-
-Illyia(serious): Cause we’re not wasting anymore time. Let’s go.
-
-
-Illyia(ashamed): I don’t want to end up with another team member casualty on my record...
-
-
-Illyia: Understand?
-
-
-Ayin(nervous): Uh, yeah...
-
-
-Illyia(pissed): I SAID, DO YOU UNDERSTAND?
-
-
-Ayin(surprised): Y-yes ma’am!
-
-
-Narrator: You instinctively give a tight salute.
-
-
->stopbgm
-
-
->addchar,Clarke,0,0,left
-
-
-Clarke: WARNING! WARNING!
-
-
-Ayin(surprisedbad): ...!
-
-
-Illyia(laughing): Alright! Here comes the perfect wake-up call!
+Narrator: ...and takes out their weapon, a strange-looking Typocrypha, aiming it directly at you.
 
 
 >endt
 
 
-[a]note - add new bg here?
-[b]add pose with niyas mask on
-[c]to just make this a battle scene with battle dialog
-[d]to add more explanation as to why illyia is here
+[a]add new bg here?
+[b]rustle sound effect
+[c]need niya mask pose face
