@@ -6,12 +6,10 @@ using UnityEngine.UI;
 using System.Linq;
 using TMPro;
 
-public class DialogViewVNPlus : DialogView
+public class DialogViewVNPlus : DialogViewMessage
 {
     public const string narratorName = "narrator";
     private const int maxCharactersPerColumn = 5;
-    private const int maxMessages = 7;
-    private const int messagePrefabTypes = 3;
     private const float enterExitStaggerTime = 0.5f;
     private const float enterExitIndividualStaggerTime = 0.05f;
 
@@ -25,17 +23,13 @@ public class DialogViewVNPlus : DialogView
     [SerializeField] private GameObject leftDialogBoxPrefab;
     [SerializeField] private GameObject narratorDialogBoxPrefab;
     [SerializeField] private GameObject randoDialogBoxPrefab;
-    [SerializeField] private RectTransform messageContainer;
-    [SerializeField] private VerticalLayoutGroup messageLayout;
     [SerializeField] private GameObject rightCharacterPrefab;
     [SerializeField] private GameObject leftCharacterPrefab;
     [SerializeField] private RectTransform rightCharacterContainer;
     [SerializeField] private RectTransform leftCharacterContainer;
     [SerializeField] private RectTransform contentRoot;
 
-    [SerializeField] private TweenInfo messageTween;
-    [SerializeField] private TweenInfo messageScaleTween;
-    [SerializeField] private TweenInfo messageFadeTween;
+
     [SerializeField] private TweenInfo moveCharaToTopTween;
     [SerializeField] private TweenInfo characterJoinLeaveTween;
     [SerializeField] private TweenInfo enterExitViewTween;
@@ -49,25 +43,16 @@ public class DialogViewVNPlus : DialogView
     private readonly Dictionary<string, VNPlusCharacter> characterMap = new Dictionary<string, VNPlusCharacter>(maxCharactersPerColumn * 2);
     private readonly List<VNPlusCharacter> rightCharacterList = new List<VNPlusCharacter>(maxCharactersPerColumn);
     private readonly List<VNPlusCharacter> leftCharacterList = new List<VNPlusCharacter>(maxCharactersPerColumn);
-    private float originalMessageAnchorPosY = float.MinValue;
-    private VNPlusDialogBoxUI lastBoxUI = null;
 
-    private readonly List<DialogBox> activeDialogBoxes = new List<DialogBox>(maxMessages * (messagePrefabTypes + 1));
-    private readonly List<DialogBox> dialogBoxPoolHidden = new List<DialogBox>(maxMessages * (messagePrefabTypes + 1));
+
     private readonly Queue<VNPlusCharacter> rightCharacterPool = new Queue<VNPlusCharacter>(maxCharactersPerColumn);
     private readonly Queue<VNPlusCharacter> leftCharacterPool = new Queue<VNPlusCharacter>(maxCharactersPerColumn);
 
     public override bool ShowImmediately => false;
 
-    private void Awake()
-    {
-        originalMessageAnchorPosY = messageContainer.anchoredPosition.y;
-    }
-
     public override void CleanUp()
     {
-        StopAllCoroutines();
-        ClearLog();
+        base.CleanUp();
         // Add the character boxes back to the pool
         foreach (var chara in leftCharacterList)
         {
@@ -82,27 +67,6 @@ public class DialogViewVNPlus : DialogView
         leftCharacterList.Clear();
         rightCharacterList.Clear();
         characterMap.Clear();
-    }
-
-    public override Coroutine Clear()
-    {
-        ClearLog();
-        return null;
-    }
-    private void ClearLog()
-    {
-        StopAllCoroutines();
-        CompleteMessageTweens();
-        foreach (var box in activeDialogBoxes)
-        {
-            box.CanvasGroup.alpha = 0;
-            dialogBoxPoolHidden.Add(box);
-        }
-        activeDialogBoxes.Clear();
-        if (originalMessageAnchorPosY != float.MinValue)
-        {
-            messageContainer.anchoredPosition = new Vector2(messageContainer.anchoredPosition.x, originalMessageAnchorPosY);
-        }
     }
 
     #region Character Control
@@ -475,12 +439,8 @@ public class DialogViewVNPlus : DialogView
         {
             HighlightCharacter(dialogItem.CharacterData);
         }
-        var prefab = GetMessagePrefab(dialogItem.CharacterData, out bool isNarrator);
-        DialogBox dialogBox = CreateDialogBox(prefab);
-        dialogBox.transform.SetAsFirstSibling();
-        var dialogBoxUI = dialogBox.GetComponent<VNPlusDialogBoxUI>();
-        SetCharacterSpecificUI(dialogBoxUI, dialogItem.CharacterData);
-        AnimateNewMessageIn(dialogBox, dialogBoxUI, dialogItem, isNarrator);
+        // Create new message and animate in
+        var dialogBox = CreateNewMessage(dialogItem);
         // Move speaking character to top if necessary
         var character = dialogItem.CharacterData.Count > 0 ? dialogItem.CharacterData[0] : null;
         if(character != null && characterMap.ContainsKey(character.name))
@@ -496,68 +456,14 @@ public class DialogViewVNPlus : DialogView
         return dialogBox;
     }
 
-    private DialogBox CreateDialogBox(GameObject prefab)
+    protected override GameObject GetMessagePrefab(List<CharacterData> data, out bool isNarrator)
     {
-        // Try Reusing active messages that are past the maximum
-        if (activeDialogBoxes.Count > maxMessages)
-        {
-            var prefabId = prefab.GetComponent<DialogBox>().ID;
-            for (int i = 0; i < activeDialogBoxes.Count - maxMessages; ++i)
-            {
-                if (prefabId == activeDialogBoxes[i].ID)
-                {
-                    var dialogBox = activeDialogBoxes[i];
-                    activeDialogBoxes.RemoveAt(i);
-                    activeDialogBoxes.Add(dialogBox);
-                    return dialogBox;
-                }
-            }
-        }
-        // Try using an offscreen dialog box from the pool
-        if (dialogBoxPoolHidden.Count > 0)
-        {
-            var prefabId = prefab.GetComponent<DialogBox>().ID;
-            for (int i = 0; i < dialogBoxPoolHidden.Count; ++i)
-            {
-                if (prefabId == dialogBoxPoolHidden[i].ID)
-                {
-                    var dialogBox = dialogBoxPoolHidden[i];
-                    dialogBoxPoolHidden.RemoveAt(i);
-                    activeDialogBoxes.Add(dialogBox);
-                    dialogBox.CanvasGroup.alpha = 1;
-                    return dialogBox;
-                }
-            }
-        }
-        // Else, create a new dialog box
-        var newDialogBox = Instantiate(prefab, messageContainer).GetComponent<DialogBox>();
-        activeDialogBoxes.Add(newDialogBox);
-        return newDialogBox;
-    }
-
-    private void SetCharacterSpecificUI(VNPlusDialogBoxUI vnPlusUI, List<CharacterData> data)
-    {
-        if (vnPlusUI == null)
-            return;
+        isNarrator = false;
         if (data.Count > 1)
         {
             throw new System.NotImplementedException("VNPlus mode doesn't currently support multi-character dialog lines");
         }
-        if(data.Count <= 0)
-        {
-            throw new System.NotImplementedException("VNPlus mode doesn't currently support system dialog lines");
-        }
-        vnPlusUI.Bind(data[0]);
-    }
-
-    private GameObject GetMessagePrefab(List<CharacterData> data, out bool isNarrator)
-    {
-        isNarrator = false;
-        if(data.Count > 1)
-        {
-            throw new System.NotImplementedException("VNPlus mode doesn't currently support multi-character dialog lines");
-        }
-        if(data.Count <= 0)
+        if (data.Count <= 0)
         {
             throw new System.NotImplementedException("VNPlus mode doesn't currently support dialog lines with no character data");
         }
@@ -572,39 +478,6 @@ public class DialogViewVNPlus : DialogView
         }
         isNarrator = true;
         return narratorDialogBoxPrefab;
-    }
-
-    private void AnimateNewMessageIn(DialogBox box, VNPlusDialogBoxUI vNPlusDialogUI, DialogItem item, bool isNarrator)
-    {
-        box.SetupDialogBox(item);
-        CompleteMessageTweens();
-        messageLayout.CalculateLayoutInputVertical();
-        var yTemp = messageContainer.anchoredPosition.y;
-        messageContainer.anchoredPosition = new Vector2(messageContainer.anchoredPosition.x, messageContainer.anchoredPosition.y + (box.GetBoxHeight() + messageLayout.spacing));
-        messageTween.Start(messageContainer.DOAnchorPosY(yTemp, messageTween.Time));
-        // Initialize scale
-        if (isNarrator)
-        {
-            box.transform.localScale = new Vector3(1, 1, box.transform.localScale.z);
-        }
-        else
-        {
-            box.transform.localScale = new Vector3(0, 0, box.transform.localScale.z);
-            messageScaleTween.Start(box.transform.DOScale(new Vector3(1, 1, box.transform.localScale.z), messageScaleTween.Time));
-        }
-        if(lastBoxUI != null)
-        {
-            lastBoxUI.DoDim(messageFadeTween);
-        }
-        lastBoxUI = vNPlusDialogUI;
-        box.StartDialogScroll();
-    }
-
-    private void CompleteMessageTweens()
-    {
-        messageTween.Complete();
-        messageScaleTween.Complete();
-        messageFadeTween.Complete();
     }
 
     public override void SetEnabled(bool e)
