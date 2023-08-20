@@ -215,7 +215,7 @@ public class DialogScriptParser : EditorWindow
             }
             catch (System.Exception e)
             {
-                Debug.LogError($"Line Error{(i + 1)}: {lines[i]}: {e}");
+                Debug.LogError($"Line Error {(i + 1)}: {lines[i]}: {e} {e.StackTrace}");
             }
         }
         // Create end node (if not already there)
