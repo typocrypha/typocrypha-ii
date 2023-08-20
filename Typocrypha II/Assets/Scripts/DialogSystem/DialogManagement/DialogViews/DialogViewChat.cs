@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +15,8 @@ public class DialogViewChat : DialogViewMessage<DialogItemChat>
     [SerializeField] private GameObject leftDialogBoxPrefab;
     [SerializeField] private GameObject narratorDialogBoxPrefab;
     [SerializeField] private GameObject randoDialogBoxPrefab;
+    [SerializeField] private RectTransform contentRoot;
+    [SerializeField] private TweenInfo enterExitViewTween;
 
     public override DialogBox PlayDialog(DialogItem data)
     {
@@ -53,5 +56,19 @@ public class DialogViewChat : DialogViewMessage<DialogItemChat>
         }
         isNarrator = true;
         return narratorDialogBoxPrefab;
+    }
+
+    public override IEnumerator PlayEnterAnimation()
+    {
+        contentRoot.localScale = new Vector3(contentRoot.localScale.x, 0, contentRoot.localScale.z);
+        enterExitViewTween.Start(contentRoot.DOScaleY(1, enterExitViewTween.Time));
+        yield return enterExitViewTween.WaitForCompletion();
+    }
+    public override IEnumerator PlayExitAnimation(DialogManager.EndType endType)
+    {
+        contentRoot.localScale = new Vector3(contentRoot.localScale.x, 1, contentRoot.localScale.z);
+        enterExitViewTween.Complete();
+        enterExitViewTween.Start(contentRoot.DOScaleY(0, enterExitViewTween.Time), false);
+        yield return enterExitViewTween.WaitForCompletion();
     }
 }
