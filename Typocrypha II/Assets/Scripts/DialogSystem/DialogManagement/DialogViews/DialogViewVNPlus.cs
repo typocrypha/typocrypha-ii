@@ -39,8 +39,6 @@ public class DialogViewVNPlus : DialogViewMessage<DialogItemVNPlus>
     private readonly Queue<VNPlusCharacter> rightCharacterPool = new Queue<VNPlusCharacter>(maxCharactersPerColumn);
     private readonly Queue<VNPlusCharacter> leftCharacterPool = new Queue<VNPlusCharacter>(maxCharactersPerColumn);
 
-    public override bool ShowImmediately => false;
-
     public override void CleanUp()
     {
         base.CleanUp();

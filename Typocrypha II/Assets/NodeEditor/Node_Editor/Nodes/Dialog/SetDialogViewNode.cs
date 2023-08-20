@@ -14,7 +14,7 @@ namespace Gameflow
 
         public const string Id = "Set Dialog View Node";
         public override string GetID => Id;
-        public override bool ExecuteDuringLoading => ViewType == typeof(DialogViewVNPlus);
+        public override bool ExecuteDuringLoading => ViewType == typeof(DialogViewVNPlus) || ViewType == typeof(DialogViewChat);
 
         public System.Type ViewType => viewMap.ContainsKey(viewName) ? viewMap[viewName] : null;
         public string viewName;

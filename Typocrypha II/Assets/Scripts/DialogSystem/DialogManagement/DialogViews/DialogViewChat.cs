@@ -11,12 +11,20 @@ public enum IconSide { LEFT, RIGHT, NONE }; // Side which icon displays
 /// </summary>
 public class DialogViewChat : DialogViewMessage<DialogItemChat>
 {
+    private const int maxCharacters = 7;
+    [Header("Dialog Box Prefabs")]
     [SerializeField] private GameObject rightDialogBoxPrefab;
     [SerializeField] private GameObject leftDialogBoxPrefab;
     [SerializeField] private GameObject narratorDialogBoxPrefab;
     [SerializeField] private GameObject randoDialogBoxPrefab;
+    [Header("Enter / Exit Anim Parameters")]
     [SerializeField] private RectTransform contentRoot;
     [SerializeField] private TweenInfo enterExitViewTween;
+    [Header("Character Panel")]
+    [SerializeField] private List<ChatCharacter> onlineCharacterList;
+    [SerializeField] private List<ChatCharacter> offlineCharacterList;
+    private int onlineCharacters = 0;
+    private int offlineCharacters = 0;
 
     public override DialogBox PlayDialog(DialogItem data)
     {
@@ -70,5 +78,84 @@ public class DialogViewChat : DialogViewMessage<DialogItemChat>
         enterExitViewTween.Complete();
         enterExitViewTween.Start(contentRoot.DOScaleY(0, enterExitViewTween.Time), false);
         yield return enterExitViewTween.WaitForCompletion();
+    }
+
+    #region Character Control
+
+    public override bool AddCharacter(AddCharacterArgs args)
+    {
+        if (onlineCharacters + offlineCharacters >= maxCharacters)
+        {
+            Debug.LogError("Too many chat characters, character will not be added");
+            return false;
+        }
+        SetCharacterOnlineStatus(args.CharacterData, args.Column == CharacterColumn.Right);
+        return false;
+    }
+
+    public override bool RemoveCharacter(CharacterData data)
+    {
+        SetCharacterOnlineStatus(data, false);
+        return false;
+    }
+
+    private void SetCharacterOnlineStatus(CharacterData data, bool online)
+    {
+        if (online)
+        {
+            SetCharacter(data, onlineCharacterList, ref onlineCharacters, offlineCharacterList, ref offlineCharacters);
+        }
+        else
+        {
+            SetCharacter(data, offlineCharacterList, ref offlineCharacters, onlineCharacterList, ref onlineCharacters);
+        }
+    }
+
+    private void SetCharacter(CharacterData data, List<ChatCharacter> list, ref int num, List<ChatCharacter> otherList, ref int otherNum)
+    {
+        if (FindCharacter(data, list, num, out int _))
+        {
+            return;
+        }
+        if (FindCharacter(data, otherList, otherNum, out int characterIndex))
+        {
+            otherList[characterIndex].gameObject.SetActive(false);
+            otherNum--;
+            otherList.Sort();
+        }
+        var character = list[num++];
+        character.gameObject.SetActive(true);
+        character.Data = data;
+    }
+
+    private bool FindCharacter(CharacterData data, List<ChatCharacter> list, int num, out int characterIndex)
+    {
+        for (int i = 0; i < num; i++)
+        {
+            if (list[i].Data == data)
+            {
+                characterIndex = i;
+                return true;
+            }
+        }
+        characterIndex = -1;
+        return false;
+    }
+
+    #endregion
+
+    public override void CleanUp()
+    {
+        base.CleanUp();
+        foreach(var character in onlineCharacterList)
+        {
+            character.gameObject.SetActive(false);
+        }
+        onlineCharacters = 0;
+        foreach (var character in offlineCharacterList)
+        {
+            character.gameObject.SetActive(false);
+        }
+        offlineCharacters = 0;
     }
 }

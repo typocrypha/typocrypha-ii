@@ -17,11 +17,10 @@ Niya: Ayin...!
 +chat
 >setlocation,Residential Block A, Agartha
 
+>addchar,Ayin,0,0,left   // Add ayin, offline
+>addchar,Adelai,0,0,left // Add adelai, offline (does nothing until animation)
 
-//>addchar,Adelai,0,0,right
-//>addchar,Ayin,0,0,left
-
-
+>addchar,Adelai,0,0 // Set adelai to online
 Narrator: “Adelai[a] is online”
 
 
@@ -33,6 +32,7 @@ Adelai[right]: 3:43pm - Ayin?
 
 Adelai[right]: 3:52pm - Hello????
 
+>addchar,Ayin,0,0 // Set ayin to online
 
 Narrator: “Ayin[b] is online”
 
@@ -111,9 +111,11 @@ Adelai[right]: 4:15pm - Probably won’t run into any demons, but you know, just
 
 Adelai[right]: 4:16pm - Anyways, don’t be late!
 
+>removechar,Adelai
 
 Narrator: “Adelai is offline”
 
+>removechar,Ayin
 
 Narrator: “Ayin is offline”
 

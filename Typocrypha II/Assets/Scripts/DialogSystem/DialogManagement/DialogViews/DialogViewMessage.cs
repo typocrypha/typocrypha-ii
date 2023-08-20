@@ -24,6 +24,8 @@ public abstract class DialogViewMessage<T> : DialogView where T : DialogItemMess
     private VNPlusDialogBoxUI lastBoxUI = null;
     private float originalMessageAnchorPosY = float.MinValue;
 
+    public override bool ShowImmediately => false;
+
     private void Awake()
     {
         originalMessageAnchorPosY = messageContainer.anchoredPosition.y;
