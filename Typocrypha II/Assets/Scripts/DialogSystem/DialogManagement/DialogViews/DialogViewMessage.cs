@@ -4,10 +4,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
-public abstract class DialogViewMessage : DialogView
+public abstract class DialogViewMessage<T> : DialogView where T : DialogItemMessage
 {
     private const int maxMessages = 7;
     private const int messagePrefabTypes = 3;
+
     [SerializeField] private RectTransform messageContainer;
     [SerializeField] private VerticalLayoutGroup messageLayout;
     [SerializeField] private TweenInfo messageTween;
@@ -24,9 +25,9 @@ public abstract class DialogViewMessage : DialogView
         originalMessageAnchorPosY = messageContainer.anchoredPosition.y;
     }
 
-    protected DialogBox CreateNewMessage(DialogItemMessage dialogItem)
+    protected DialogBox CreateNewMessage(T dialogItem)
     {
-        var prefab = GetMessagePrefab(dialogItem.CharacterData, out bool isNarrator);
+        var prefab = GetMessagePrefab(dialogItem, dialogItem.CharacterData, out bool isNarrator);
         var dialogBox = CreateDialogBox(prefab);
         dialogBox.transform.SetAsFirstSibling();
         var dialogBoxUI = dialogBox.GetComponent<VNPlusDialogBoxUI>();
@@ -50,7 +51,7 @@ public abstract class DialogViewMessage : DialogView
         vnPlusUI.Bind(data[0]);
     }
 
-    protected abstract GameObject GetMessagePrefab(List<CharacterData> data, out bool isNarrator);
+    protected abstract GameObject GetMessagePrefab(T dialogItem, List<CharacterData> data, out bool isNarrator);
 
     private DialogBox CreateDialogBox(GameObject prefab)
     {
@@ -91,7 +92,7 @@ public abstract class DialogViewMessage : DialogView
         return newDialogBox;
     }
 
-    private void AnimateNewMessageIn(DialogBox box, VNPlusDialogBoxUI vNPlusDialogUI, DialogItem item, bool isNarrator)
+    private void AnimateNewMessageIn(DialogBox box, VNPlusDialogBoxUI vNPlusDialogUI, T item, bool isNarrator)
     {
         box.SetupDialogBox(item);
         CompleteMessageTweens();

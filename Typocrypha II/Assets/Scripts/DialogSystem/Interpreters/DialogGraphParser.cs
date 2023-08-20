@@ -105,14 +105,7 @@ public class DialogGraphParser : GraphParser
                 }
                 else if (currNode is DialogNodeChat chatNode)
                 {
-                    #region Determine Icon Side
-                    IconSide iconSide = IconSide.NONE;
-                    if (chatNode.leftIcon != null)
-                        iconSide = chatNode.rightIcon != null ? IconSide.BOTH : IconSide.LEFT;
-                    else if (chatNode.rightIcon != null)
-                        iconSide = IconSide.RIGHT;
-                    #endregion
-                    return new DialogItemChat(chatNode.text, voice, displayName, iconSide, chatNode.leftIcon, chatNode.rightIcon);
+                    return new DialogItemChat(chatNode.text, voice, cds, charNames, chatNode.iconSide);
                 }
                 else if (currNode is DialogNodeAN anNode)
                 {

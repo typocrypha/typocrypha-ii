@@ -6,18 +6,12 @@ using UnityEngine.UI;
 using System.Linq;
 using TMPro;
 
-public class DialogViewVNPlus : DialogViewMessage
+public class DialogViewVNPlus : DialogViewMessage<DialogItemVNPlus>
 {
     public const string narratorName = "narrator";
     private const int maxCharactersPerColumn = 5;
     private const float enterExitStaggerTime = 0.5f;
     private const float enterExitIndividualStaggerTime = 0.05f;
-
-    public enum CharacterColumn
-    {
-        Right,
-        Left,
-    }
 
     [SerializeField] private GameObject rightDialogBoxPrefab;
     [SerializeField] private GameObject leftDialogBoxPrefab;
@@ -456,7 +450,7 @@ public class DialogViewVNPlus : DialogViewMessage
         return dialogBox;
     }
 
-    protected override GameObject GetMessagePrefab(List<CharacterData> data, out bool isNarrator)
+    protected override GameObject GetMessagePrefab(DialogItemVNPlus dialogItem, List<CharacterData> data, out bool isNarrator)
     {
         isNarrator = false;
         if (data.Count > 1)

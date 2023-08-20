@@ -3,36 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum IconSide { LEFT, RIGHT, BOTH, NONE }; // Side which icon displays
+public enum IconSide { LEFT, RIGHT, NONE }; // Side which icon displays
 
 /// <summary>
 /// Chat style dialog. i.e. chatboxes on scrollable feed.
 /// </summary>
-public class DialogViewChat : DialogViewMessage
+public class DialogViewChat : DialogViewMessage<DialogItemChat>
 {
+    [SerializeField] private GameObject rightDialogBoxPrefab;
+    [SerializeField] private GameObject leftDialogBoxPrefab;
+    [SerializeField] private GameObject narratorDialogBoxPrefab;
+    [SerializeField] private GameObject randoDialogBoxPrefab;
 
     public override DialogBox PlayDialog(DialogItem data)
     {
-        if (!IsDialogItemCorrectType(data, out DialogItemChat item))
+        if (!IsDialogItemCorrectType(data, out DialogItemChat dialogItem))
             return null;
-
-        //#region Instantiate and initialize new Dialog boxDialogueRightIcon
-        //GameObject obj = GameObject.Instantiate(dialogBoxPrefab, ChatContent);
-        //Image leftIcon = obj.transform.Find("DialogueLeftIcon").GetComponent<Image>();
-        //Image rightIcon = obj.transform.Find("DialogueRightIcon").GetComponent<Image>();
-        //if (item.iconSide == IconSide.LEFT || item.iconSide == IconSide.BOTH)
-        //{
-        //    leftIcon.sprite = item.leftIcon;
-        //    leftIcon.enabled = true;
-        //}
-        //if (item.iconSide == IconSide.RIGHT || item.iconSide == IconSide.BOTH)
-        //{
-        //    rightIcon.sprite = item.rightIcon;
-        //    rightIcon.enabled = true;
-        //}
-        //DialogBox dialogBox = obj.GetComponent<DialogBox>();
-        //#endregion
-        return null;
+        return CreateNewMessage(dialogItem);
     }
 
     public override void SetEnabled(bool e)
@@ -40,8 +27,31 @@ public class DialogViewChat : DialogViewMessage
         gameObject.SetActive(e);
     }
 
-    protected override GameObject GetMessagePrefab(List<CharacterData> data, out bool isNarrator)
+    protected override GameObject GetMessagePrefab(DialogItemChat dialogItem, List<CharacterData> data, out bool isNarrator)
     {
-        throw new System.NotImplementedException();
+        isNarrator = false;
+        if (data.Count > 1)
+        {
+            throw new System.NotImplementedException("Chat mode doesn't currently support multi-character dialog lines");
+        }
+        if (data.Count <= 0)
+        {
+            throw new System.NotImplementedException("Chat mode doesn't currently support dialog lines with no character data");
+        }
+        var chara = data[0];
+        if (chara == null)
+        {
+            return randoDialogBoxPrefab;
+        }
+        if(dialogItem.iconSide == IconSide.LEFT)
+        {
+            return leftDialogBoxPrefab;
+        }
+        else if (dialogItem.iconSide == IconSide.RIGHT)
+        {
+            return rightDialogBoxPrefab;
+        }
+        isNarrator = true;
+        return narratorDialogBoxPrefab;
     }
 }

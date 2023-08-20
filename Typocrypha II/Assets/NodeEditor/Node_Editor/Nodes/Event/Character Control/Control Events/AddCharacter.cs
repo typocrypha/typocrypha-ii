@@ -15,7 +15,7 @@ namespace Gameflow
 
         public Vector2 targetPos = new Vector2(0, 0);
 
-        public DialogViewVNPlus.CharacterColumn column;
+        public DialogView.CharacterColumn column;
 
         public string initialPose;
         public string initialExpr;
