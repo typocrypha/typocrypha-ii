@@ -1,48 +1,24 @@
-﻿using System.Collections;
-using UnityEngine;
-using NodeEditorFramework;
+﻿using NodeEditorFramework;
 using NodeEditorFramework.Utilities;
+using UnityEngine;
 
 namespace Gameflow
 {
-    [Node(false, "Event/Transition/Fade", new System.Type[] { typeof(DialogCanvas) })]
-    public class FadeNode : BaseNodeIO, ITimedNode {
+    [Node(false, "Event/Fade Screen", new System.Type[] { typeof(DialogCanvas) })]
+    public class FadeNode : BaseNodeIO
+    {
         public enum FadeType
         {
-            Fade_In,
-            Fade_Out,
-        }
-
-        #region ITimedNode
-        static bool isCompleted;
-        public bool IsCompleted // Wait for fade to complete.
-        {
-            get => isCompleted;
-        }
-        #endregion
-
-        /// <summary>
-        /// Fade the entire screen (coroutine).
-        /// </summary>
-        /// <param name="fadeTime">Amount of time to complete fade.</param>
-        /// <param name="fadeStart">Starting amount of normlized fade.</param>
-        /// <param name="fadeEnd">End amount of normalized fade</param>
-        /// <param name="fadeColor">Color of fade.</param>
-        public static IEnumerator FadeScreenOverTime(float fadeTime, float fadeStart, float fadeEnd, Color fadeColor)
-        {
-            isCompleted = false;
-            yield return FaderManager.instance.FadeScreenOverTime(fadeTime, fadeStart, fadeEnd, fadeColor);
-            isCompleted = true;
+            FadeIn,
+            FadeOut,
         }
 
         #region Editor
         public const string ID = "Fade Transition Node";
-        public override string GetID { get { return ID; } }
-
-        string _title;
-        public override string Title { get { return _title; } }
-        public override Vector2 MinSize { get { return new Vector2(150, 60); } }
-        public override bool AutoLayout { get { return true; } }
+        public override string GetID => ID;
+        public override string Title => fadeType == FadeType.FadeIn ? "Fade In" : "Fade Out";
+        public override Vector2 MinSize => new Vector2(150, 60);
+        public override bool AutoLayout => true;
 
         public FadeType fadeType;
         public float fadeTime;
@@ -52,8 +28,7 @@ namespace Gameflow
 
         protected override void OnCreate()
         {
-            _title = "Fade";
-            fadeType = FadeType.Fade_In;
+            fadeType = FadeType.FadeIn;
             fadeTime = 3f;
             fadeColor = Color.black;
         }
@@ -71,10 +46,6 @@ namespace Gameflow
             GUILayout.Space(3);
             fadeColor = RTEditorGUI.ColorField(fadeColor);
             GUILayout.EndVertical();
-            if (fadeType == FadeType.Fade_In)
-                _title = "Fade In";
-            else
-                _title = "Fade Out";
         }
         #endregion
     }

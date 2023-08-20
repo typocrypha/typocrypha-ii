@@ -91,42 +91,40 @@ public class DialogGraphParser : GraphParser
                                    : cNode.displayName;
                 // Add to history.
                 DialogHistory.instance.AddHistory(displayName, cNode.text);
-                if (currNode is DialogNodeVN)
+                if (currNode is DialogNodeVN vnNode)
                 {
-                    var dNode = currNode as DialogNodeVN;
                     // Highlight speaking characters.
                     DialogCharacterManager.instance.HighlightAllCharacters(false);
                     for (int i = 0; i < cds.Count; i++)
                         if (cds[i] != null) DialogCharacterManager.instance.HighlightCharacter(cds[i], true);
-                    return new DialogItemVN(dNode.text, voice, displayName, dNode.mcSprite, dNode.codecSprite);
+                    return new DialogItemVN(vnNode.text, voice, displayName, vnNode.mcSprite, vnNode.codecSprite);
                 }
-                else if (currNode is DialogNodeVNPlus)
+                else if (currNode is DialogNodeVNPlus vnPlusNode)
                 {
-                    var dNode = currNode as DialogNodeVNPlus;
-                    return new DialogItemVNPlus(dNode.text, voice, cds, charNames);
+                    return new DialogItemVNPlus(vnPlusNode.text, voice, cds, charNames);
                 }
-                else if (currNode is DialogNodeChat)
+                else if (currNode is DialogNodeChat chatNode)
                 {
-                    var dNode = currNode as DialogNodeChat;
                     #region Determine Icon Side
                     IconSide iconSide = IconSide.NONE;
-                    if (dNode.leftIcon != null)
-                        iconSide = dNode.rightIcon != null ? IconSide.BOTH : IconSide.LEFT;
-                    else if (dNode.rightIcon != null)
+                    if (chatNode.leftIcon != null)
+                        iconSide = chatNode.rightIcon != null ? IconSide.BOTH : IconSide.LEFT;
+                    else if (chatNode.rightIcon != null)
                         iconSide = IconSide.RIGHT;
                     #endregion
-                    return new DialogItemChat(dNode.text, voice, displayName, iconSide, dNode.leftIcon, dNode.rightIcon);
+                    return new DialogItemChat(chatNode.text, voice, displayName, iconSide, chatNode.leftIcon, chatNode.rightIcon);
                 }
-                else if (currNode is DialogNodeAN)
+                else if (currNode is DialogNodeAN anNode)
                 {
-                    var dNode = currNode as DialogNodeAN;
-                    return new DialogItemAN(dNode.text, voice, dNode.alignmentOptions, dNode.layoutSetting);
+                    return new DialogItemAN(anNode.text, voice, anNode.alignmentOptions, anNode.layoutSetting);
                 }
-                else if (currNode is DialogNodeBubble)
+                else if (currNode is DialogNodeBubble bubbleNode)
                 {
-                    var dNode = currNode as DialogNodeBubble;
-                    var ditem = new DialogItemBubble(dNode.text, voice, cds, dNode.gridPosition, dNode.absolutePosition);
-                    return ditem;
+                    return new DialogItemBubble(bubbleNode.text, voice, cds, bubbleNode.gridPosition, bubbleNode.absolutePosition);
+                }
+                else if(currNode is DialogNodeLocation locationNode)
+                {
+                    return new DialogItemLocation(locationNode.text, voice);
                 }
             }
             else if (currNode is SetDialogViewNode)
@@ -209,9 +207,10 @@ public class DialogGraphParser : GraphParser
             else if (currNode is FadeNode)
             {
                 var node = currNode as FadeNode;
-                float fadeStart = node.fadeType == FadeNode.FadeType.Fade_In ? 1f : 0f;
+                float fadeStart = node.fadeType == FadeNode.FadeType.FadeIn ? 1f : 0f;
                 float fadeEnd = 1f - fadeStart;
-                StartCoroutine(FadeNode.FadeScreenOverTime(node.fadeTime, fadeStart, fadeEnd, node.fadeColor));
+                StartCoroutine(WaitOnRoutine(FaderManager.instance.FadeScreenOverTime(node.fadeTime, fadeStart, fadeEnd, node.fadeColor), loading));
+                return null;
             }
             else if (currNode is SetLocationTextNode setLocationTextNode)
             {
@@ -278,29 +277,8 @@ public class DialogGraphParser : GraphParser
                 BattleManager.instance.ClearReinforcements();
             }
         }
-        // Check if need to wait on node to complete.
-        if (currNode is ITimedNode)
-        {
-            StartCoroutine(WaitOnNode(currNode as ITimedNode, loading));
-            return null;
-        }
-        else
-        {
-            //Recursively move to next
-            return NextDialog(true, loading);
-        }
-    }
-
-    /// <summary>
-    /// Waits for a node to complete before allowing dialog to proceed (coroutine).
-    /// </summary>
-    /// <param name="node">Node to wait on.</param>
-    IEnumerator WaitOnNode(ITimedNode node, bool loading)
-    {
-        DialogManager.instance.ReadyToContinue = false;
-        yield return new WaitUntil(() => node.IsCompleted);
-        DialogManager.instance.ReadyToContinue = true;
-        DialogManager.instance.NextDialog(true, loading);
+        //Recursively move to next
+        return NextDialog(true, loading);
     }
 
     IEnumerator WaitOnFunc(System.Func<bool> isComplete, bool loading)

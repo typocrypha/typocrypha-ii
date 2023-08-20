@@ -237,7 +237,7 @@ public class DialogScriptParser : EditorWindow
         if (line.Length < 2) return false; // Empty line.
         if (line.StartsWith("["))
             return true;
-        List<Node> nodes = null; // Constructed nodes.
+        List<Node> nodes; // Constructed nodes.
         if (viewSwitchMarker.Contains(line[0])) // View switch.
         {
             string[] dialogLine = line.Split(viewSwitchMarker, escape);
@@ -256,14 +256,15 @@ public class DialogScriptParser : EditorWindow
         {
             foreach(var node in nodes)
             {
+                var prevOut = prev as BaseNodeOUT;
                 // Connect to previous
-                if (node is BaseNodeIO)
+                if (node is BaseNodeIO ioNode)
                 {
-                    (prev as BaseNodeOUT).toNextOUT.TryApplyConnection((node as BaseNodeIO).fromPreviousIN, true);
+                    prevOut.toNextOUT.TryApplyConnection(ioNode.fromPreviousIN, true);
                 }
-                else
+                else if(node is GameflowEndNode gameflowEndNode)
                 {
-                    (prev as BaseNodeOUT).toNextOUT.TryApplyConnection((node as GameflowEndNode).fromPreviousIN, true);
+                    prevOut.toNextOUT.TryApplyConnection(gameflowEndNode.fromPreviousIN, true);
                 }
                 prev = node;
             }
@@ -483,7 +484,7 @@ public class DialogScriptParser : EditorWindow
         else if (nodeType == typeof(FadeNode))
         {
             var gnode = CreateNode(FadeNode.ID) as FadeNode;
-            gnode.fadeType = args[1] == "in" ? FadeNode.FadeType.Fade_In : FadeNode.FadeType.Fade_Out;
+            gnode.fadeType = args[1] == "in" ? FadeNode.FadeType.FadeIn : FadeNode.FadeType.FadeOut;
             gnode.fadeTime = float.Parse(args[2]);
             gnode.fadeColor = new Color(float.Parse(args[3]), float.Parse(args[4]), float.Parse(args[5]), 1f);
             nodes.Add(gnode);
@@ -838,6 +839,10 @@ public class DialogScriptParser : EditorWindow
             {
                 throw new System.Exception($"Incorrect number of arguments ({coords.Length}) for bubble dialog");
             }
+        }
+        else if (currView == typeof(DialogViewLocation))
+        {
+            dnode = CreateNode(DialogNodeLocation.ID) as DialogNodeLocation;
         }
         dnode.characterName = cname.Substring(0, cname.Length-1);
         dnode.displayName = displayName;
