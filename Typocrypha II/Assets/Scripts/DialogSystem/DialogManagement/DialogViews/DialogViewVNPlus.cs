@@ -23,12 +23,9 @@ public class DialogViewVNPlus : DialogViewMessage<DialogItemVNPlus>
     [SerializeField] private RectTransform leftCharacterContainer;
     [SerializeField] private RectTransform contentRoot;
 
-
     [SerializeField] private TweenInfo moveCharaToTopTween;
     [SerializeField] private TweenInfo characterJoinLeaveTween;
     [SerializeField] private TweenInfo enterExitViewTween;
-    [SerializeField] private TextMeshProUGUI locationText;
-    [SerializeField] private TextMeshProUGUI dateTimeText;
 
 
     public override bool ReadyToContinue => readyToContinue;
@@ -517,8 +514,6 @@ public class DialogViewVNPlus : DialogViewMessage<DialogItemVNPlus>
         yield return enterExitViewTween.WaitForCompletion();
     }
 
-
-
     private IEnumerator JoinLeaveAll(bool join, List<VNPlusCharacter> characterList, bool staggerLast = false)
     {
         float targetScale = join ? 1 : 0;
@@ -531,17 +526,5 @@ public class DialogViewVNPlus : DialogViewMessage<DialogItemVNPlus>
                 yield return new WaitForSeconds(enterExitIndividualStaggerTime);
             }
         }
-    }
-
-    protected override void SetLocation(string location)
-    {
-        base.SetLocation(location);
-        locationText.text = location;
-    }
-
-    protected override void SetDateTime(string dateTime)
-    {
-        base.SetDateTime(dateTime);
-        dateTimeText.text = dateTime;
     }
 }

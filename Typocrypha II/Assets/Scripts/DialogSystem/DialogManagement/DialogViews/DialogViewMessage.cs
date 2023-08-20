@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using TMPro;
 
+// A dialog view with a message box like VN+ or Chat
 public abstract class DialogViewMessage<T> : DialogView where T : DialogItemMessage
 {
     private const int maxMessages = 7;
@@ -14,6 +16,8 @@ public abstract class DialogViewMessage<T> : DialogView where T : DialogItemMess
     [SerializeField] private TweenInfo messageTween;
     [SerializeField] private TweenInfo messageScaleTween;
     [SerializeField] private TweenInfo messageFadeTween;
+    [SerializeField] private TextMeshProUGUI locationText;
+    [SerializeField] private TextMeshProUGUI dateTimeText;
 
     private readonly List<DialogBox> activeDialogBoxes = new List<DialogBox>(maxMessages * (messagePrefabTypes + 1));
     private readonly List<DialogBox> dialogBoxPoolHidden = new List<DialogBox>(maxMessages * (messagePrefabTypes + 1));
@@ -151,5 +155,17 @@ public abstract class DialogViewMessage<T> : DialogView where T : DialogItemMess
         {
             messageContainer.anchoredPosition = new Vector2(messageContainer.anchoredPosition.x, originalMessageAnchorPosY);
         }
+    }
+
+    protected override void SetLocation(string location)
+    {
+        base.SetLocation(location);
+        locationText.text = location;
+    }
+
+    protected override void SetDateTime(string dateTime)
+    {
+        base.SetDateTime(dateTime);
+        dateTimeText.text = dateTime;
     }
 }
