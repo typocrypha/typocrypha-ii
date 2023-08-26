@@ -725,20 +725,20 @@ public class DialogScriptParser : EditorWindow
         else if (currView == typeof(DialogViewChat))
         {
             // USE EXPRESSION TO CHANGE ICON (currently only 1 icon)
-            dnode = CreateNode(DialogNodeChat.ID) as DialogNodeChat;
+            var chatNode = CreateNode(DialogNodeChat.ID) as DialogNodeChat; ;
             if (poses[0] == "left")
             {
-                (dnode as DialogNodeChat).leftIcon = cds[0].chat_icon;
+                chatNode.iconSide = IconSide.LEFT;
             }
-            else if (poses[0] == "right")
+            else if(poses[0] == "right")
             {
-                (dnode as DialogNodeChat).rightIcon = cds[0].chat_icon;
+                chatNode.iconSide = IconSide.RIGHT;
             }
-            else if (poses[0] == "both")
+            else
             {
-                (dnode as DialogNodeChat).leftIcon = cds[0].chat_icon;
-                (dnode as DialogNodeChat).rightIcon = cds[0].chat_icon;
+                chatNode.iconSide = IconSide.NONE;
             }
+            dnode = chatNode;
         }
         else if (currView == typeof(DialogViewAN))
         {

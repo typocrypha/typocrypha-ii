@@ -9,13 +9,12 @@ namespace Gameflow
     {
         #region Editor
         public const string ID = "Chat Dialog Node";
-        public override string GetID { get { return ID; } }
+        public override string GetID => ID;
 
-        public override string Title { get { return "Chat Dialog"; } }
-        public override Vector2 MinSize { get { return new Vector2(250, 60); } }
+        public override string Title => "Chat Dialog";
+        public override Vector2 MinSize => new Vector2(250, 60);
 
-        public Sprite leftIcon;
-        public Sprite rightIcon;
+        public IconSide iconSide;
 
         #region Tooltip Strings
         private const string tooltipSprite = "Sprites on the left and right side of the chat box.";
@@ -39,16 +38,7 @@ namespace Gameflow
 
             #region Icon Sprites
             GUILayout.BeginVertical("Box");
-            GUILayout.Space(3);
-            GUILayout.Label(new GUIContent("left       || Icons ||       right", tooltipSprite), NodeEditorGUI.nodeLabelBoldCentered);
-            GUILayout.BeginHorizontal();
-            GUILayout.Space(10);
-            leftIcon = RTEditorGUI.ObjectField(leftIcon, false, GUILayout.Width(65f), GUILayout.Height(65f));
-            GUILayout.Space(MinSize.x - 170);
-            rightIcon = RTEditorGUI.ObjectField(rightIcon, false, GUILayout.Width(65f), GUILayout.Height(65f));
-            GUILayout.Space(10);
-            GUILayout.EndHorizontal();
-            GUILayout.Space(3);
+            iconSide = (IconSide)RTEditorGUI.EnumPopup(iconSide);
             GUILayout.EndVertical();
             #endregion
         }

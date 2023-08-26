@@ -6,18 +6,12 @@ using UnityEngine.UI;
 using System.Linq;
 using TMPro;
 
-public class DialogViewVNPlus : DialogViewMessage
+public class DialogViewVNPlus : DialogViewMessage<DialogItemVNPlus>
 {
     public const string narratorName = "narrator";
     private const int maxCharactersPerColumn = 5;
     private const float enterExitStaggerTime = 0.5f;
     private const float enterExitIndividualStaggerTime = 0.05f;
-
-    public enum CharacterColumn
-    {
-        Right,
-        Left,
-    }
 
     [SerializeField] private GameObject rightDialogBoxPrefab;
     [SerializeField] private GameObject leftDialogBoxPrefab;
@@ -29,12 +23,9 @@ public class DialogViewVNPlus : DialogViewMessage
     [SerializeField] private RectTransform leftCharacterContainer;
     [SerializeField] private RectTransform contentRoot;
 
-
     [SerializeField] private TweenInfo moveCharaToTopTween;
     [SerializeField] private TweenInfo characterJoinLeaveTween;
     [SerializeField] private TweenInfo enterExitViewTween;
-    [SerializeField] private TextMeshProUGUI locationText;
-    [SerializeField] private TextMeshProUGUI dateTimeText;
 
 
     public override bool ReadyToContinue => readyToContinue;
@@ -47,8 +38,6 @@ public class DialogViewVNPlus : DialogViewMessage
 
     private readonly Queue<VNPlusCharacter> rightCharacterPool = new Queue<VNPlusCharacter>(maxCharactersPerColumn);
     private readonly Queue<VNPlusCharacter> leftCharacterPool = new Queue<VNPlusCharacter>(maxCharactersPerColumn);
-
-    public override bool ShowImmediately => false;
 
     public override void CleanUp()
     {
@@ -456,7 +445,7 @@ public class DialogViewVNPlus : DialogViewMessage
         return dialogBox;
     }
 
-    protected override GameObject GetMessagePrefab(List<CharacterData> data, out bool isNarrator)
+    protected override GameObject GetMessagePrefab(DialogItemVNPlus dialogItem, List<CharacterData> data, out bool isNarrator)
     {
         isNarrator = false;
         if (data.Count > 1)
@@ -523,8 +512,6 @@ public class DialogViewVNPlus : DialogViewMessage
         yield return enterExitViewTween.WaitForCompletion();
     }
 
-
-
     private IEnumerator JoinLeaveAll(bool join, List<VNPlusCharacter> characterList, bool staggerLast = false)
     {
         float targetScale = join ? 1 : 0;
@@ -537,17 +524,5 @@ public class DialogViewVNPlus : DialogViewMessage
                 yield return new WaitForSeconds(enterExitIndividualStaggerTime);
             }
         }
-    }
-
-    protected override void SetLocation(string location)
-    {
-        base.SetLocation(location);
-        locationText.text = location;
-    }
-
-    protected override void SetDateTime(string dateTime)
-    {
-        base.SetDateTime(dateTime);
-        dateTimeText.text = dateTime;
     }
 }

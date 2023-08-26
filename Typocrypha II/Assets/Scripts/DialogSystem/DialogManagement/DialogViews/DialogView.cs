@@ -8,6 +8,11 @@ using UnityEngine.UI;
 /// </summary>
 public abstract class DialogView : MonoBehaviour
 {
+    public enum CharacterColumn
+    {
+        Right,
+        Left,
+    }
     public GameObject dialogBoxPrefab; // Dialog box prefab specific to view
     public GameObject dialogInputPrefab; // Dialog input prefab specific to view
 
@@ -110,11 +115,11 @@ public abstract class DialogView : MonoBehaviour
     public class AddCharacterArgs
     {
         public CharacterData CharacterData { get; }
-        public DialogViewVNPlus.CharacterColumn Column { get; }
+        public CharacterColumn Column { get; }
         public Vector2 AbsolutePosition { get; }
         public string InitialPose { get; }
         public string InitialExpression { get; }
-        public AddCharacterArgs(CharacterData data, DialogViewVNPlus.CharacterColumn column, Vector2 pos, string pose, string expr)
+        public AddCharacterArgs(CharacterData data, CharacterColumn column, Vector2 pos, string pose, string expr)
         {
             CharacterData = data;
             Column = column;

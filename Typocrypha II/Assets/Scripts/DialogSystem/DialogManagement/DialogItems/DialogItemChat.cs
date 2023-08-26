@@ -2,19 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DialogItemChat : DialogItem
+public class DialogItemChat : DialogItemMessage
 {
-    public string speakerName; // Name of speaker (CHAT MODE)
-    public Sprite leftIcon; // Icon for left speaker icon (CHAT MODE) 
-    public Sprite rightIcon; // Icon for right speaker icon (CHAT MODE)
-    public IconSide iconSide; // Side where icon shows (CHAT MODE)
-    public DialogItemChat(string text, List<AudioClip> voice, string speakerName, IconSide iconSide, 
-                          Sprite leftIcon = null, Sprite rightIcon = null) : base(text, voice)
+    public IconSide iconSide;
+    public DialogItemChat(string text, List<AudioClip> voice, List<CharacterData> characterData, string[] characterNames, IconSide iconSide) 
+        : base(text, voice, characterData, characterNames)
     {
-        this.speakerName = speakerName;
         this.iconSide = iconSide;
-        this.leftIcon = leftIcon;
-        this.rightIcon = rightIcon;
     }
 
     public override System.Type GetView()

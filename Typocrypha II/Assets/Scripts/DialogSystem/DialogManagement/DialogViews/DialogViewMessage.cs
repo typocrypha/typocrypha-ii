@@ -3,30 +3,37 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using TMPro;
 
-public abstract class DialogViewMessage : DialogView
+// A dialog view with a message box like VN+ or Chat
+public abstract class DialogViewMessage<T> : DialogView where T : DialogItemMessage
 {
     private const int maxMessages = 7;
     private const int messagePrefabTypes = 3;
+
     [SerializeField] private RectTransform messageContainer;
     [SerializeField] private VerticalLayoutGroup messageLayout;
     [SerializeField] private TweenInfo messageTween;
     [SerializeField] private TweenInfo messageScaleTween;
     [SerializeField] private TweenInfo messageFadeTween;
+    [SerializeField] private TextMeshProUGUI locationText;
+    [SerializeField] private TextMeshProUGUI dateTimeText;
 
     private readonly List<DialogBox> activeDialogBoxes = new List<DialogBox>(maxMessages * (messagePrefabTypes + 1));
     private readonly List<DialogBox> dialogBoxPoolHidden = new List<DialogBox>(maxMessages * (messagePrefabTypes + 1));
     private VNPlusDialogBoxUI lastBoxUI = null;
     private float originalMessageAnchorPosY = float.MinValue;
 
+    public override bool ShowImmediately => false;
+
     private void Awake()
     {
         originalMessageAnchorPosY = messageContainer.anchoredPosition.y;
     }
 
-    protected DialogBox CreateNewMessage(DialogItemMessage dialogItem)
+    protected DialogBox CreateNewMessage(T dialogItem)
     {
-        var prefab = GetMessagePrefab(dialogItem.CharacterData, out bool isNarrator);
+        var prefab = GetMessagePrefab(dialogItem, dialogItem.CharacterData, out bool isNarrator);
         var dialogBox = CreateDialogBox(prefab);
         dialogBox.transform.SetAsFirstSibling();
         var dialogBoxUI = dialogBox.GetComponent<VNPlusDialogBoxUI>();
@@ -50,7 +57,7 @@ public abstract class DialogViewMessage : DialogView
         vnPlusUI.Bind(data[0]);
     }
 
-    protected abstract GameObject GetMessagePrefab(List<CharacterData> data, out bool isNarrator);
+    protected abstract GameObject GetMessagePrefab(T dialogItem, List<CharacterData> data, out bool isNarrator);
 
     private DialogBox CreateDialogBox(GameObject prefab)
     {
@@ -91,7 +98,7 @@ public abstract class DialogViewMessage : DialogView
         return newDialogBox;
     }
 
-    private void AnimateNewMessageIn(DialogBox box, VNPlusDialogBoxUI vNPlusDialogUI, DialogItem item, bool isNarrator)
+    private void AnimateNewMessageIn(DialogBox box, VNPlusDialogBoxUI vNPlusDialogUI, T item, bool isNarrator)
     {
         box.SetupDialogBox(item);
         CompleteMessageTweens();
@@ -150,5 +157,17 @@ public abstract class DialogViewMessage : DialogView
         {
             messageContainer.anchoredPosition = new Vector2(messageContainer.anchoredPosition.x, originalMessageAnchorPosY);
         }
+    }
+
+    protected override void SetLocation(string location)
+    {
+        base.SetLocation(location);
+        locationText.text = location;
+    }
+
+    protected override void SetDateTime(string dateTime)
+    {
+        base.SetDateTime(dateTime);
+        dateTimeText.text = dateTime;
     }
 }

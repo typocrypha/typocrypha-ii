@@ -184,8 +184,8 @@ public class VNPlusCharacter : MonoBehaviour
         poseImage.sprite = poseData.pose;
         // Set flipped
         CharacterData.FacingDirection facing = data.defaultFacingDirection;
-        Flipped = facing == CharacterData.FacingDirection.Right && Column == DialogViewVNPlus.CharacterColumn.Right
-            || facing == CharacterData.FacingDirection.Left && Column == DialogViewVNPlus.CharacterColumn.Left;
+        Flipped = facing == CharacterData.FacingDirection.Right && Column == DialogView.CharacterColumn.Right
+            || facing == CharacterData.FacingDirection.Left && Column == DialogView.CharacterColumn.Left;
         // Set sprite pivot and position
         if (poseImage.sprite != null)
         {
