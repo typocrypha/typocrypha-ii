@@ -22,6 +22,8 @@ public class CameraManager : MonoBehaviour, IPausable
     public Camera Camera => camera;
     [SerializeField] private new Camera camera;
 
+    private float defaultCameraSize;
+
     void Awake()
     {
         if (instance == null)
@@ -37,6 +39,11 @@ public class CameraManager : MonoBehaviour, IPausable
         ph = new PauseHandle(OnPause);
     }
 
+    void Start()
+    {
+        defaultCameraSize = Camera.orthographicSize;
+    }
+
     /// <summary>
     /// Reset camera properties.
     /// </summary>
@@ -44,6 +51,7 @@ public class CameraManager : MonoBehaviour, IPausable
     {
         StopAllCoroutines();
         cameraTr.position = basePos;
+        Camera.orthographicSize = defaultCameraSize;
     }
 
     /// <summary>
@@ -64,6 +72,7 @@ public class CameraManager : MonoBehaviour, IPausable
     public void Shake(float intensity)
     {
         cameraTr.position = basePos + (Vector3)(Random.insideUnitCircle * intensity);
+        Camera.orthographicSize = defaultCameraSize - intensity;
     }
 
     // Coroutine for shaking
@@ -82,6 +91,7 @@ public class CameraManager : MonoBehaviour, IPausable
             time += 0.01f;
         }
         cameraTr.position = basePos;
+        Camera.orthographicSize = defaultCameraSize;
     }
 
     private Bounds ReduceBoundsByCameraSize(Bounds bounds)
