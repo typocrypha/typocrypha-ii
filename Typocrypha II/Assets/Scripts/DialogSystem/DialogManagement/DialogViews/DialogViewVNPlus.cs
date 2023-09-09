@@ -525,4 +525,9 @@ public class DialogViewVNPlus : DialogViewMessage<DialogItemVNPlus>
             }
         }
     }
+
+    public void Shake(float intensity, float duration)
+    {
+        contentRoot.DOShakeAnchorPos(duration, intensity, 64); //TODO: fix magic number
+    }
 }

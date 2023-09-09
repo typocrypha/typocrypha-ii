@@ -15,6 +15,7 @@ namespace Gameflow
         public override Vector2 MinSize => new Vector2(250, 60);
 
         public IconSide iconSide;
+        public string timeText;
 
         #region Tooltip Strings
         private const string tooltipSprite = "Sprites on the left and right side of the chat box.";
@@ -30,6 +31,10 @@ namespace Gameflow
         {
             NameGUI();
             TextGUI();
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(new GUIContent("Time Text", tooltipName), NodeEditorGUI.nodeLabel, GUILayout.Width(45f));
+            timeText = GUILayout.TextField(timeText, GUILayout.Width(MinSize.x - 65));
+            GUILayout.EndHorizontal();
 
             //Don't know why this code needs to be here exactly, but it makes everything nicer? maybe add to some static stuff?
             GUILayout.BeginHorizontal();

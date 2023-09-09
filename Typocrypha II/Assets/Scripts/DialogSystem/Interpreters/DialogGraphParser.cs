@@ -105,7 +105,7 @@ public class DialogGraphParser : GraphParser
                 }
                 else if (currNode is DialogNodeChat chatNode)
                 {
-                    return new DialogItemChat(chatNode.text, voice, cds, charNames, chatNode.iconSide);
+                    return new DialogItemChat(chatNode.text, voice, cds, charNames, chatNode.iconSide, chatNode.timeText);
                 }
                 else if (currNode is DialogNodeAN anNode)
                 {

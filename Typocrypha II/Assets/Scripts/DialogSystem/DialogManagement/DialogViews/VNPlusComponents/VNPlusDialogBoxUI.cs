@@ -11,7 +11,7 @@ public class VNPlusDialogBoxUI : MonoBehaviour
     [SerializeField] private Image iconImage;
     [SerializeField] private Image[] borderImages;
     [SerializeField] private Image arrowImage;
-    [SerializeField] private CanvasGroup canvasGroup;
+    [SerializeField] private CanvasGroup[] dimmingCanvasGroups;
     [SerializeField] private DialogContinueIndicator continueIndicator;
 
     private Color initialColor = Color.clear;
@@ -19,7 +19,10 @@ public class VNPlusDialogBoxUI : MonoBehaviour
     public void Bind(CharacterData character)
     {
         iconImage.color = Color.white;
-        canvasGroup.alpha = 1;
+        foreach(var canvasGroup in dimmingCanvasGroups)
+        {
+            canvasGroup.alpha = 1;
+        }
         // Generic Character functionality
         if (character == null)
         {
@@ -48,7 +51,11 @@ public class VNPlusDialogBoxUI : MonoBehaviour
 
     public void DoDim(TweenInfo tweenInfo)
     {
-        tweenInfo.Start(canvasGroup.DOFade(dimAmount, tweenInfo.Time));
+        tweenInfo.Complete();
+        foreach (var canvasGroup in dimmingCanvasGroups)
+        {
+            tweenInfo.Start(canvasGroup.DOFade(dimAmount, tweenInfo.Time), false);
+        }
         tweenInfo.Start(iconImage.DOColor(iconImage.color * dimColor, tweenInfo.Time), false);
         for(int i = 0; i < borderImages.Length; ++i)
         {

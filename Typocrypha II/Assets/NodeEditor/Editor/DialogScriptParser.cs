@@ -632,7 +632,7 @@ public class DialogScriptParser : EditorWindow
     // Parses a single dialog line. Returns constructed nodes.
     List<Node> ParseDialogNode(string line)
     {
-        int nameMarkerIndex = line.IndexOf(nameMarker);
+        int nameMarkerIndex = FindNameSeparatorIndex(line);
         int dialogStartIndex = nameMarkerIndex + 1;
         string[] dialogLine = new string[] { nameMarkerIndex == -1 ? "" : line.Substring(0, nameMarkerIndex), line.Substring(dialogStartIndex, line.Length - dialogStartIndex)};
         List<Node> nodes = new List<Node>();
@@ -725,8 +725,12 @@ public class DialogScriptParser : EditorWindow
         else if (currView == typeof(DialogViewChat))
         {
             // USE EXPRESSION TO CHANGE ICON (currently only 1 icon)
-            var chatNode = CreateNode(DialogNodeChat.ID) as DialogNodeChat; ;
-            if (poses[0] == "left")
+            var chatNode = CreateNode(DialogNodeChat.ID) as DialogNodeChat;
+            if (poses.Count <= 0)
+            {
+                chatNode.iconSide = IconSide.NONE;
+            }
+            else if (poses[0] == "left")
             {
                 chatNode.iconSide = IconSide.LEFT;
             }
@@ -737,6 +741,14 @@ public class DialogScriptParser : EditorWindow
             else
             {
                 chatNode.iconSide = IconSide.NONE;
+            }
+            if(exprs.Count > 0)
+            {
+                chatNode.timeText = exprs[0];
+            }
+            else
+            {
+                chatNode.timeText = string.Empty;
             }
             dnode = chatNode;
         }
@@ -849,6 +861,30 @@ public class DialogScriptParser : EditorWindow
         dnode.text = dialogLine[1].Trim().Replace("…", "...").Replace('’', '\'');
         nodes.Add(dnode);
         return nodes;
+    }
+
+    private int FindNameSeparatorIndex(string line)
+    {
+        bool inExpr = false;
+        for (int i = 0; i < line.Length; ++i)
+        {
+            if (line[i] == '(')
+            {
+                inExpr = true;
+            }
+            else if (inExpr)
+            {
+                if (line[i] == ')')
+                {
+                    inExpr = false;
+                }
+            }
+            else if (line[i] == ':')
+            {
+                return i;
+            }
+        }
+        return -1;
     }
 
     // Get character data asset from alias (null if character doesn't exist).

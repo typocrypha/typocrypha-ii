@@ -22,7 +22,7 @@ public class CameraManager : MonoBehaviour, IPausable
     public Camera Camera => camera;
     [SerializeField] private new Camera camera;
 
-    private float defaultCameraSize;
+    public float defaultCameraSize;
 
     void Awake()
     {

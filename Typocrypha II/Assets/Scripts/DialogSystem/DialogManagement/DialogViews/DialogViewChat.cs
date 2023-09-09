@@ -30,7 +30,13 @@ public class DialogViewChat : DialogViewMessage<DialogItemChat>
     {
         if (!IsDialogItemCorrectType(data, out DialogItemChat dialogItem))
             return null;
-        return CreateNewMessage(dialogItem);
+        var dialogBox = CreateNewMessage(dialogItem);
+        var chatUI = dialogBox.GetComponent<ChatDialogBoxUI>();
+        if(chatUI != null)
+        {
+            chatUI.Bind(dialogItem);
+        }
+        return dialogBox;
     }
 
     public override void SetEnabled(bool e)
