@@ -8,32 +8,29 @@
 
 
 >addchar,Ayin,0,0,left,nervous
->addchar,Illyia,0,0,right,base,laughing
+>addchar,Illyia,0,0,right,base,serious
 
 
 Ayin(nervous): M-More demons?
 
 
-Illyia: Alright, I hope you’re done moping around “Leader!”
+Illyia: No more time for moping around, “Leader!”
 
 
-Illyia(normal): You know how to use your scanner, right?
+Illyia: You know how to use your scanner, right?
 
 
-Ayin(cheerful): Y-yes! I just have to hold SHIFT.
+Ayin(cheerful): Y-yes! I just have to press SHIFT...
 
 
-Illyia: Good! You’ll need it.
-
-
-Illyia(serious): These demons look like they have tough defenses.
+Illyia: Good - These demons look like they have tough defenses.
 
 
 //Unlock multicasting
 
 
 >end
-//When Ayin uses a single spell on Adderstone
+//When Ayin uses a single or double spell on Adderstone
 >start,ACT I-12-1-SingleSpell
 
 
@@ -52,63 +49,41 @@ Ayin[0,1]: I, uh, what else am I supposed to do!?
 Illyia[0,2](serious): Alright “leader”, {c,ui-terms}Multicasting{c} 101.
 
 
-Illyia[0,2](normal): Type in multiple words before you cast!
+Illyia[0,2](normal): Type in multiple words before you cast! The more the better!
 
 
-Illyia[0,2](normal): Like “SWORD HAMMER”, or something!
+Illyia[0,2](normal): Like “SWORD SWORD SWORD”, or something!
 
 
-Ayin[0,1]: ... That’s it?
+Ayin[0,1]: ...That’s it?
 
 
 Illyia[0,2](serious): That’s it!
 
 
-Illyia[0,2]: These Adderstone demons are particularly weak to multicast spells.
+Illyia[0,2]: These Adderstone demons are particularly weak to multicast spells with 3 words.
 
 
 >end
-//When Ayin uses a multi spell on Adderstone
+//When Ayin uses a 3-word multi spell on Adderstone
 >start,ACT I-12-1-MultiSpell
 
 
 +bubble
 
 
-Illyia[0,2](laughing): See, now you got it!
+Illyia[0,2](ashamed): Well, I guess you’re not totally hopeless...
 
 
-Illyia[0,2](normal): Using multiple words in a spell at once increases the effect of the spell words.
+Ayin[0,1]: Th-Thanks?
 
 
-Ayin[0,1](surprised): Wow!
+Illyia[0,2](serious): Just remember: while your spells {c,ui-terms}do more damage in combos...{c}
 
 
-Ayin[0,1](squint): Are there any downsides?
+Illyia[0,2]: ...if you use the same spell word multiple times, it goes on an {c,highlight}extended cooldown{c}.
 
 
-Illyia[0,2](laughing): No, not really! It’s basically free damage!
-
-
-Illyia[0,2](concerned): ...
-
-
-Illyia[0,2](ashamed): Weeell, your spells do still go on cooldown.
-
-
-Illyia[0,2]: ... and if you use the same spell word multiple times it goes on longer cooldown.
-
-
-Illyia[0,2](laughing): But, I never really run into issues with that, so you should be fine!
-
-
-Ayin[0,1]: ...
-
-
-Narrator[0,0]: When you Multicast, the extra cooldown time can be seen in {c,highlight}orange{c}.
-
-
-Narrator[0,0]: Make sure to Multicast responsibly, or you might run out of spells to use![a]
 
 
 >end
@@ -136,7 +111,7 @@ Ayin(nervoussmile): Y-yeah, somehow.
 Ayin(normal): How about you-
 
 
-Narrator: You see a large pile of incapacitated demon souls behind Illyia.[b]
+Narrator: You see a large pile of incapacitated demon souls behind Illyia.
 
 
 Illyia(ashamed): There weren’t too many who came my way, to be honest.
@@ -162,19 +137,8 @@ Illyia(serious): But enough chatting. Here come some more!
 +vnplus
 
 
->addchar,Ayin,0,0,left
-
-
->addchar,Illyia,0,0,right,quietlyhappy
-
-
-Ayin(normal): OK, I think I’m getting the hang of it.
-
-
-Illyia(quietlyhappy): Hey, maybe you’re worth more than a distraction after all.
-
-
-Ayin(sheepish): Th-Thanks?
+>addchar,Ayin,0,0,left,serious
+>addchar,Illyia,0,0,right,serious
 
 
 Illyia(serious): Little tip: these next demons are tough.
@@ -191,11 +155,3 @@ Ayin(ohfuck): The... The what?
 
 >end
 //Round 4: Rock n' Roll
-
-
-
-
-
-
-[a]May want to reword to "or your Typocrypha might {c,ui-terms}overheat{c}!" to introduce the terminology and to make the player not worry that they are going to softlock or anything
-[b]May not make sense with how the demon wisps normally run away
