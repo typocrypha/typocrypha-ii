@@ -17,7 +17,7 @@ public class ChatCharacter : MonoBehaviour, IComparable<ChatCharacter>
         {
             characterData = value;
             icon.sprite = characterData.chat_icon;
-            displayNameText.text = characterData.chatDisplayName;
+            displayNameText.text = characterData.mainAlias;
             usernameText.text = characterData.chatUsername;
         }
     }

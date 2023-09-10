@@ -14,7 +14,6 @@ public class CharacterData : ScriptableObject
         None,
     }
     public string mainAlias;
-    public string chatDisplayName; // Displayed in place of the main alias in chat. Should be first name, last name like Esaias W.
     public string chatUsername; // Chat username, "handle"
     public NameSet aliases; // Different aliases/names for this character
     public PoseMap poses; // Different body poses

@@ -16,7 +16,6 @@ public class CharacterDataInspector : Editor
 
         EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
         data.mainAlias = EditorGUILayout.TextField("Main Alias", data.mainAlias);
-        data.chatDisplayName = EditorGUILayout.TextField("Chat Display Name", data.chatDisplayName);
         data.chatUsername = EditorGUILayout.TextField("Chat Username", data.chatUsername);
         if (data.aliases == null)
         {
