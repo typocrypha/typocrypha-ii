@@ -112,7 +112,7 @@ public class DialogScriptParser : EditorWindow
 
     const float nodeSpacing = 40f;
 
-    [MenuItem("Window/DialogScriptParser")]
+    [MenuItem("Window/DialogScript/Parser")]
     public static void ShowWindow()
     {
         GetWindow(typeof(DialogScriptParser));
