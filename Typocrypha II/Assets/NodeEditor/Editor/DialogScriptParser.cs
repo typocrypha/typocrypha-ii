@@ -17,7 +17,7 @@ public class DialogScriptParser : EditorWindow
     public const string assetPath = "Assets/ScriptableObjects/DialogScenes/";
     public const string spellWordBundlePath = "Assets/ScriptableObjects/Bundles/AllWordsBundle.asset";
     public const string allyBundlePath = "Assets/ScriptableObjects/Bundles/AllyBundle.asset";
-    TextAsset textScript; // Text script asset
+    public TextAsset textScript; // Text script asset
     NodeCanvas canvas; // Generated canvas
     bool endAndTransition = true;
     System.Type currView = typeof(DialogViewVNPlus); // Current dialog view
@@ -144,7 +144,7 @@ public class DialogScriptParser : EditorWindow
     }
 
     // Generates node canvases from script
-    void GenerateCanvas()
+    public void GenerateCanvas()
     {
         AssetBundle.UnloadAllAssetBundles(true);
         characterDataBundle = AssetBundle.LoadFromFile(System.IO.Path.Combine(Application.streamingAssetsPath, "characterdata"));
