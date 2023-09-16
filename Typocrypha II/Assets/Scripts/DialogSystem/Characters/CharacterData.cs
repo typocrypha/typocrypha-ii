@@ -14,6 +14,7 @@ public class CharacterData : ScriptableObject
         None,
     }
     public string mainAlias;
+    public string chatUsername; // Chat username, "handle"
     public NameSet aliases; // Different aliases/names for this character
     public PoseMap poses; // Different body poses
     public NameMap expressions; // Different facial expressions
