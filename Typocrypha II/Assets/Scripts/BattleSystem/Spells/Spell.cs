@@ -189,7 +189,7 @@ public class Spell : IList<SpellWord>, IEquatable<Spell>
 
     public void Clear() => items.Clear();
 
-    public bool Contains(SpellWord item) => items.Exists(word => word == item || (word.synonymOf != null && word.synonymOf == item));
+    public bool Contains(SpellWord item) => items.Exists(word => word == item);
 
     public void CopyTo(SpellWord[] array, int arrayIndex) => items.CopyTo(array, arrayIndex);
 
