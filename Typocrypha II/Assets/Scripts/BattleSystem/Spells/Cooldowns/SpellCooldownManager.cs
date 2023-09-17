@@ -127,11 +127,6 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
         return TryGetCooldown(word, out var cooldown) && cooldown.Cooldown > 0;
     }
 
-    public bool IsOnCooldown(string word)
-    {
-        return TryGetCooldown(word, out var cooldown) && cooldown.Cooldown > 0;
-    }
-
     public bool IsOnCooldown(Spell spell, out SpellWord word)
     {
         foreach (var item in spell)
@@ -168,11 +163,6 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
         {
             kvp.Value.Cooldown -= amount; 
         }
-    }
-
-    private bool TryGetCooldown(string word, out SpellCooldown cooldown)
-    {
-        return cooldowns.TryGetValue(word, out cooldown);
     }
 
     private bool TryGetCooldown(SpellWord word, out SpellCooldown cooldown)

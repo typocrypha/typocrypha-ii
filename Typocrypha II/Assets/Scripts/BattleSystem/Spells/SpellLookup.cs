@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TagLookup : MonoBehaviour
+public class SpellLookup : MonoBehaviour
 {
-    public static TagLookup instance = null;
-    public SpellTagBundle spellTagBundle;
-    public CasterTagBundle casterTagBundle;
+    public static SpellLookup instance = null;
+    [SerializeField] private SpellTagBundle spellTagBundle;
+    [SerializeField] private CasterTagBundle casterTagBundle;
+    [SerializeField] private SpellWordBundle allWordsBundle;
     private void Awake()
     {
         if (instance == null)
@@ -31,5 +32,10 @@ public class TagLookup : MonoBehaviour
         if (casterTagBundle.tags.ContainsKey(name))
             return casterTagBundle.tags[name];
         return null;
+    }
+
+    public SpellWord GetSpellWord(string name)
+    {
+        return allWordsBundle.words.TryGetValue(name.ToLower(), out var word) ? word : null;
     }
 }
