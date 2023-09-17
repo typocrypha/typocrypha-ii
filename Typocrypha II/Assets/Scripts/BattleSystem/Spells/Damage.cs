@@ -226,7 +226,11 @@ public static class Damage
     {
         results.Effectiveness = GetReaction(effect, caster, target, out float effectMagnitude);
         results.EffectivenessMagnitude = effectMagnitude;
-        results.Damage *= GetReactionDmgMod(effect, caster, target, results.Effectiveness, effectMagnitude);
+        ApplyReaction(results, effect, caster, target);
+    }
+    public static void ApplyReaction(CastResults results, RootWordEffect effect, Caster caster, Caster target)
+    {
+        results.Damage *= GetReactionDmgMod(effect, caster, target, results.Effectiveness, results.EffectivenessMagnitude);
         if (results.Effectiveness == Reaction.Weak)
             results.StaggerDamage = 1;
     }
