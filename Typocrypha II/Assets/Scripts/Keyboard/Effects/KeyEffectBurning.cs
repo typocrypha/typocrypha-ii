@@ -18,7 +18,7 @@ namespace Typocrypha
         {
             base.OnStart();
             // Multiply output.
-            reps = Random.Range(1, 4);
+            reps = 2;
             for (int i = 0; i < reps; i++)
             {
                 key.AddToOutput(key.Letter);
