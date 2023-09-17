@@ -29,7 +29,6 @@ public class SpellParser : MonoBehaviour
     // Words that are availible even if not equipped
     [SerializeField] private SpellWordBundle freeWordBundle;
     [SerializeField] private SpellWordBundle synonymBundle;
-    private readonly Dictionary<string, SpellWord> freeWords = new Dictionary<string, SpellWord>();
     //public SpellWordBundle roots;
     //public SpellWordBundle modifiers;
 
@@ -43,18 +42,9 @@ public class SpellParser : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            BuildDictionary();
         }
         else
             Destroy(gameObject);
-    }
-
-    /// <summary> Build the free word dictionary from the free word assetbundle </summary>
-    private void BuildDictionary()
-    {
-        freeWords.Clear();
-        foreach (var word in freeWordBundle.words)
-            freeWords.Add(word.Key.ToLower(), word.Value);
     }
 
     /// <summary> Returns Valid if the string array represents a valid spell that exists in the given spell dictionary
@@ -78,15 +68,15 @@ public class SpellParser : MonoBehaviour
                     return ParseResults.DuplicateWord;
                 }
             }
-            else if(freeWords.ContainsKey(word)) // Spell is in the always availible words
+            else if(freeWordBundle.words.TryGetValue(word, out var freeWord)) // Spell is in the always availible words
             {
-                if (!TryAddWord(s, freeWords[word], ref roots))
+                if (!TryAddWord(s, freeWord, ref roots))
                 {
                     problemWord = word;
                     return ParseResults.DuplicateWord;
                 }
             }
-            else if (synonymBundle.words.TryGetValue(word, out var synonym) && (words.ContainsKey(synonym.synonymOf.Key) || freeWords.ContainsKey(synonym.synonymOf.Key)))
+            else if (synonymBundle.words.TryGetValue(word, out var synonym) && (words.ContainsKey(synonym.synonymOf.Key) || freeWordBundle.words.ContainsKey(synonym.synonymOf.Key)))
             {
                 if (!TryAddWord(s, synonym, ref roots))
                 {
