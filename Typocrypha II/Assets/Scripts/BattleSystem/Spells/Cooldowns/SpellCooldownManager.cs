@@ -143,15 +143,14 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
 
     public void DoCooldowns(Spell spell)
     {
-        var rootCounts = spell.RootCounts;
-        // Lower all cooldowns by num unique roots
-        LowerAllCooldowns(rootCounts.Count); 
+        // Lower all cooldowns by num roots
+        LowerAllCooldowns(spell.RootCount); 
         // Add new cooldowns
-        foreach (var kvp in rootCounts)
+        foreach (var word in spell)
         {
-            if (TryGetCooldown(kvp.Key, out var cooldown))
+            if (TryGetCooldown(word, out var cooldown))
             {
-                cooldown.Cooldown = kvp.Key.cooldown + (kvp.Value - 1);
+                cooldown.Cooldown += word.cooldown;
             }
         }
         SortCooldowns();
