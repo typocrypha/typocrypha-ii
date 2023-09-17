@@ -47,7 +47,7 @@ public class Player : Caster, IPausable
             {
                 results = SpellParser.ParseResults.OnCooldown;
                 AudioManager.instance.PlaySFX(castFailureSfx);
-                SpellFxManager.instance.PlayText(new Vector2(0f, -2f), false, $"{wordOnCooldown.DisplayName} on Cooldown", Color.red, castFailTextTime);
+                SpellFxManager.instance.PlayText(new Vector2(0f, -2f), false, $"{wordOnCooldown.BaseName} on Cooldown", Color.red, castFailTextTime);
             }
             if (results != SpellParser.ParseResults.OnCooldown)
             {
