@@ -17,6 +17,7 @@ public class TargetData
         Allies,
         AlliesAndSelf,
         SpiritModeAlliesAndSelf,
+        EveryoneExceptSelf,
     }
 
     public BoolMatrix2D pattern = new BoolMatrix2D(2, 3);
@@ -92,6 +93,18 @@ public class TargetData
             {
                 GetAllies(caster, casterPos, ref ret, IsSpiritMode);
                 ret.Add(casterPos);
+            }
+        }
+        else if(type == Type.EveryoneExceptSelf)
+        {
+            for (int row = 0; row < Battlefield.instance.Rows; ++row)
+            {
+                for (int col = 0; col < Battlefield.instance.Columns; ++col)
+                {
+                    if (row == casterPos.Row && col == casterPos.Col)
+                        continue;
+                    ret.Add(new Battlefield.Position(row, col));
+                }
             }
         }
 
