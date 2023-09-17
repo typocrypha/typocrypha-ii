@@ -392,7 +392,6 @@ public static class Damage
                         if (word != null)
                         {
                             PlayerDataManager.instance.equipment.UnlockWord(word, true);
-                            SpellCooldownManager.instance.AddWord(word, true);
                         }
                     }
                     else
