@@ -266,13 +266,13 @@ public static class Damage
             multiplier = reactions.Freq(Reaction.Repel);
             return Reaction.Repel;
         }
-        #region  Drain and Dodge (currently deprecated)
-        //// Else if any drain, drain
-        //else if (reactions.Contains(Reaction.Drain))
-        //{
-        //    multiplier = reactions.Freq(Reaction.Drain);
-        //    return Reaction.Drain;
-        //}
+        // Else if any drain, drain
+        if (reactions.Contains(Reaction.Drain))
+        {
+            multiplier = reactions.Freq(Reaction.Drain);
+            return Reaction.Block; // Temp, while drain is being reimplemented
+        }
+        #region  Dodge (currently deprecated)
         //// If any dodge, dodge
         //else if (reactions.Contains(Reaction.Dodge))
         //{
