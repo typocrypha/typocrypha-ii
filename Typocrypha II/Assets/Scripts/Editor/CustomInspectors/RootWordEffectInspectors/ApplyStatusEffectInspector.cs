@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using SerializableCollections.GUIUtils;
-using GUIUtils;
 
 [CustomEditor(typeof(ApplyStatusEffect), true)]
 public class ApplyStatusEffectInspector : RootWordEffectInspector

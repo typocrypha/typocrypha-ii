@@ -175,13 +175,13 @@ namespace Typocrypha
         /// </summary>
         /// <param name="affected">List of characters effect.</param>
         /// <param name="effectPrefab">Prefab of effect (contains functionality and visual/audio effects.</param>
-        public void ApplyEffect(string affected, GameObject effectPrefab) 
+        public void ApplyEffect(string affected, GameObject effectPrefab, Caster caster) 
         {
             foreach(char c in affected)
             {
                 if (!unaffectedKeys.Contains(c))
                     continue;
-                keyMap[c].ApplyEffect(effectPrefab);
+                keyMap[c].ApplyEffect(effectPrefab, caster);
                 unaffectedKeys.Remove(c);
             }
         }
@@ -190,9 +190,9 @@ namespace Typocrypha
         /// </summary>
         /// <param name="affected">List of characters effect.</param>
         /// <param name="effectName">Name of prefab of effect.</param>
-        public void ApplyEffect(string affected, string effectName)
+        public void ApplyEffect(string affected, string effectName, Caster caster)
         {
-            ApplyEffect(affected, allEffectPrefabs.Find(c => c.name == effectName));
+            ApplyEffect(affected, allEffectPrefabs.Find(c => c.name == effectName), caster);
         }
         /// <summary>
         /// Apply an effect to a random key x times.
@@ -200,7 +200,7 @@ namespace Typocrypha
         /// <param name="effectPrefab">Prefab of effect (contains functionality and visual/audio effects.</param>
         /// <param name="times">Number of times to attempt application.</param>
         /// <returns>The number of times the effect was sucessfully applied</returns>
-        public string ApplyEffectRandom(GameObject effectPrefab, int times = 1)
+        public string ApplyEffectRandom(GameObject effectPrefab, Caster caster, int times = 1)
         {
             int numKeysPerEffect = effectPrefab.GetComponent<KeyEffect>().NumAffectedKeys;
             string affected = string.Empty;
@@ -209,7 +209,7 @@ namespace Typocrypha
                 if (numKeysPerEffect > unaffectedKeys.Count)
                     return affected;
                 char key = GetRandomUnaffectedKey();
-                ApplyEffect(key.ToString(), effectPrefab);
+                ApplyEffect(key.ToString(), effectPrefab, caster);
                 affected += key;
             }
             return affected;
@@ -220,9 +220,9 @@ namespace Typocrypha
         /// <param name="effectName">Name of prefab of effect.</param>
         /// <param name="times">Number of times to attempt application.</param>
         /// <returns></returns>
-        public string ApplyEffectRandom(string effectName, int times = 1)
+        public string ApplyEffectRandom(string effectName, Caster caster, int times = 1)
         {
-            return ApplyEffectRandom(allEffectPrefabs.Find(c => c.name == effectName), times);
+            return ApplyEffectRandom(allEffectPrefabs.Find(c => c.name == effectName), caster, times);
         }
         /// <summary>
         /// Returns a random, unaffected key.
