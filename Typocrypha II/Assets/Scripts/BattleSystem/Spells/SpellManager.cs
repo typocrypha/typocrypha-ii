@@ -235,8 +235,8 @@ public class SpellManager : MonoBehaviour
             {
                 cancelTarget.Spell = new Spell(remainingWords);
             }
+            SpellFxManager.instance.CounterFx(cancelTarget.FieldPos);
             cancelTarget.OnCounter?.Invoke(cancelTarget);
-            yield return SpellFxManager.instance.CounterFx(cancelTarget.FieldPos);
         }
     }
 
