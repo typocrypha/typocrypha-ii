@@ -80,6 +80,10 @@ public class SpellFxManager : MonoBehaviour
     {
         return PlayText(pos, true, "No Target", Color.red, popTime);
     }
+    public Coroutine CounterFx(Battlefield.Position pos)
+    {
+        return PlayText(Battlefield.instance.GetSpaceScreenSpace(pos), true, "Countered!", Color.green, popTime);
+    }
     public Coroutine Play(SpellFxData[] fxData, CastResults data, Vector2 targetPos, Vector2 casterPos)
     {
         // For some unknown reason, getting the animator within the coroutine instead of passing it in always gets null

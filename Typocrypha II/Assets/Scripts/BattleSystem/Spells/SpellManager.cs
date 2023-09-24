@@ -236,9 +236,8 @@ public class SpellManager : MonoBehaviour
                 cancelTarget.Spell = new Spell(remainingWords);
             }
             cancelTarget.OnCounter?.Invoke(cancelTarget);
-            SpellFxManager.instance.LogMessage(cancelTarget.DisplayName + " has been countered!");
+            yield return SpellFxManager.instance.CounterFx(cancelTarget.FieldPos);
         }
-        yield return SpellFxManager.instance.PlayMessages();
     }
 
     public void LogInterruptCast(Spell spell, Caster caster, Battlefield.Position target, string messageOverride = null)
