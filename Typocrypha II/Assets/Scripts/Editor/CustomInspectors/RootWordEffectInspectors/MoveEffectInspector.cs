@@ -14,7 +14,7 @@ public class MoveEffectInspector : RootWordEffectInspector
         base.OnInspectorGUI();
         EditorUtils.Separator();
         var effect = target as MoveEffect;
-        effect.onlyMoveToUnoccupied = EditorGUILayout.ToggleLeft(new GUIContent("Only move to unoccupied"), effect.onlyMoveToUnoccupied);
+        effect.validSpaceFilter = EditorUtils.EnumPopup(new GUIContent("Valid Space Filter"), effect.validSpaceFilter);
         EditorGUILayout.PropertyField(serializedObject.FindProperty("positions"), true);
         serializedObject.ApplyModifiedProperties();
         if (GUI.changed)
