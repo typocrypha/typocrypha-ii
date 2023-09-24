@@ -158,6 +158,7 @@ public class BattleManager : MonoBehaviour, IPausable
         // Clear player cooldowns
         SpellCooldownManager.instance.ResetAllCooldowns();
         Typocrypha.Keyboard.instance.Clear();
+        Battlefield.instance.Player.TargetPos = new Battlefield.Position(0, 1);
         StartCoroutine(StartWaveCR(CurrWave));
     }
 
