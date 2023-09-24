@@ -31,8 +31,22 @@ public class CasterTagDictionary : IEnumerable<CasterTag>
     {
         if (allTags.Contains(tag))
         {
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+            {
+                allTags.Remove(tag);
+                if (tags.Contains(tag))
+                    tags.Remove(tag);
+            }
+            else
+            {
+                Debug.LogWarning("Cannot Add Duplicate caster tag: " + tag.name);
+                return;
+            }
+#else
             Debug.LogWarning("Cannot Add Duplicate caster tag: " + tag.name);
             return;
+#endif
         }
         tags.Add(tag);
         AddWithSubTags(tag);
