@@ -11,7 +11,7 @@ public abstract class DialogViewMessage<T> : DialogView where T : DialogItemMess
     private const int maxMessages = 7;
     private const int messagePrefabTypes = 3;
 
-    [SerializeField] private RectTransform messageContainer;
+    [SerializeField] protected RectTransform messageContainer;
     [SerializeField] private VerticalLayoutGroup messageLayout;
     [SerializeField] private TweenInfo messageTween;
     [SerializeField] private TweenInfo messageScaleTween;
@@ -122,6 +122,18 @@ public abstract class DialogViewMessage<T> : DialogView where T : DialogItemMess
         }
         lastBoxUI = vNPlusDialogUI;
         box.StartDialogScroll();
+    }
+    //TODO: Refactor with AnimateNewMessageIn
+    protected void AnimateNewImageIn(RectTransform imageTransform)
+    {
+        CompleteMessageTweens();
+        messageLayout.CalculateLayoutInputVertical();
+        var yTemp = messageContainer.anchoredPosition.y;
+        messageContainer.anchoredPosition = new Vector2(messageContainer.anchoredPosition.x, messageContainer.anchoredPosition.y + (imageTransform.sizeDelta.y + messageLayout.spacing));
+        messageTween.Start(messageContainer.DOAnchorPosY(yTemp, messageTween.Time));
+        // Initialize scale
+        imageTransform.localScale = new Vector3(0, 0, imageTransform.localScale.z);
+        messageScaleTween.Start(imageTransform.DOScale(new Vector3(1, 1, imageTransform.localScale.z), messageScaleTween.Time));
     }
 
     protected void CompleteMessageTweens()

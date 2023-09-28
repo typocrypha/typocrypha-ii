@@ -19,6 +19,7 @@ public class DialogViewVNPlus : DialogViewMessage<DialogItemVNPlus>
     [SerializeField] private GameObject randoDialogBoxPrefab;
     [SerializeField] private GameObject rightCharacterPrefab;
     [SerializeField] private GameObject leftCharacterPrefab;
+    [SerializeField] private GameObject embeddedImagePrefab;
     [SerializeField] private RectTransform rightCharacterContainer;
     [SerializeField] private RectTransform leftCharacterContainer;
     [SerializeField] private RectTransform contentRoot;
@@ -530,4 +531,21 @@ public class DialogViewVNPlus : DialogViewMessage<DialogItemVNPlus>
     {
         contentRoot.DOShakeAnchorPos(duration, intensity, 64); //TODO: fix magic number
     }
+
+    public void CreateEmbeddedImage(Sprite sprite)
+    {
+        var prefab = Instantiate(embeddedImagePrefab, messageContainer);
+        prefab.transform.SetAsFirstSibling();
+        var image = prefab.GetComponentInChildren<Image>();
+        image.sprite = sprite;
+        var fitter = prefab.GetComponentInChildren<AspectRatioFitter>();
+        fitter.aspectRatio = (float)image.sprite.texture.width / image.sprite.texture.height;
+        var prefabRect = (prefab.transform as RectTransform);
+        var layout = prefab.GetComponent<VerticalLayoutGroup>();
+        var newImageHeight = (float)(prefabRect.sizeDelta.x - layout.padding.left - layout.padding.right) / fitter.aspectRatio;
+        image.rectTransform.sizeDelta = new Vector2(image.rectTransform.sizeDelta.x, newImageHeight);
+        prefabRect.sizeDelta = new Vector2(prefabRect.sizeDelta.x, newImageHeight + layout.spacing);
+        AnimateNewImageIn(prefabRect);
+    }
+
 }
