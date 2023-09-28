@@ -541,10 +541,6 @@ public class DialogViewVNPlus : DialogViewMessage<DialogItemVNPlus>
         var fitter = prefab.GetComponentInChildren<AspectRatioFitter>();
         fitter.aspectRatio = (float)image.sprite.texture.width / image.sprite.texture.height;
         var prefabRect = (prefab.transform as RectTransform);
-        var layout = prefab.GetComponent<VerticalLayoutGroup>();
-        var newImageHeight = (float)(prefabRect.sizeDelta.x - layout.padding.left - layout.padding.right) / fitter.aspectRatio;
-        image.rectTransform.sizeDelta = new Vector2(image.rectTransform.sizeDelta.x, newImageHeight);
-        prefabRect.sizeDelta = new Vector2(prefabRect.sizeDelta.x, newImageHeight + layout.spacing);
         AnimateNewImageIn(prefabRect);
     }
 

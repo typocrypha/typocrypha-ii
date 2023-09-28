@@ -57,6 +57,7 @@ public class DialogScriptParser : EditorWindow
         {"addchar", typeof(AddCharacter) },
         {"removechar", typeof(RemoveCharacter) },
         {"movechar", typeof(MoveCharacter) },
+        {"embedimage", typeof(EmbedImage) },
         {"playbgm", typeof(PlayBgm) },
         {"stopbgm", typeof(StopBgm) },
         {"pausebgm", typeof(PauseBgm) },
@@ -330,6 +331,12 @@ public class DialogScriptParser : EditorWindow
             gnode.characterData = GetCharacterData(args[1]);
             gnode.targetColumn = args[2].Trim().ToLower() == "right" ? DialogViewVNPlus.CharacterColumn.Right : DialogViewVNPlus.CharacterColumn.Left;
             gnode.top = args[3].Trim().ToLower() == "top";
+            nodes.Add(gnode);
+        }
+        else if (nodeType == typeof(EmbedImage))
+        {
+            var gnode = CreateNode(EmbedImage.ID) as EmbedImage;
+            gnode.sprite = LoadAsset<Sprite>(args[1], "Assets/Graphics/Sprites/Dialog");
             nodes.Add(gnode);
         }
         else if (nodeType == typeof(SetExpression))
