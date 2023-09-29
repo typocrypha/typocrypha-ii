@@ -142,7 +142,11 @@ namespace Typocrypha
                     var key = keyMap[input];
                     key.OnPress?.Invoke();
                     var keySfx = InputManager.Instance.CheckInput(keyMap[input].Output);
-                    if (keySfx.HasValue)
+                    if (key.ForceSfx)
+                    {
+                        key.PlaySfx();
+                    }
+                    else if (keySfx.HasValue)
                     {
                         if (keySfx.Value)
                         {

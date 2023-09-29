@@ -16,6 +16,8 @@ namespace Typocrypha
         public Transform KeyEffectContainer => keyEffectContainer;
         [SerializeField] Transform keyEffectContainer;
 
+        public bool ForceSfx { get; set; } = false;
+
         public char Letter => letter;
         private char letter; // Letter this key represents.
         public IReadOnlyList<char> Output => output;

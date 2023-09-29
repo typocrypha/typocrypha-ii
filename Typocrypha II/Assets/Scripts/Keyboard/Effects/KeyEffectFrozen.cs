@@ -13,23 +13,32 @@ namespace Typocrypha
         int health = 0;
 
         const int minHealth = 3;
-        const int maxHealth = 5;
+        const int maxHealth = 3;
 
         [SerializeField] private AudioClip breakSfx;
+
 
         public override void OnStart()
         {
             base.OnStart();
             key.ClearOutput();
+            key.ForceSfx = true;
             health = Random.Range(minHealth, maxHealth);
+        }
+
+        public override void ResetEffect()
+        {
+            base.ResetEffect();
+            key.ForceSfx = false;
         }
 
         public override void OnPress()
         {
-            if (--health <= 0) Remove();
-            if(health == 1)
+            if (--health <= 0)
             {
-                key.SfxOverride = breakSfx;
+                AudioManager.instance.PlaySFX(breakSfx);
+                Remove();
+                return;
             }
         }
     }
