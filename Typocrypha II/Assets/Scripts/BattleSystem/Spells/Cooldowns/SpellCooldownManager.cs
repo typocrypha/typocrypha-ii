@@ -151,7 +151,12 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
         {
             if (TryGetCooldown(word, out var cooldown))
             {
-                cooldown.Cooldown += word.cooldown;
+                int totalCooldown = word.cooldown;
+                if(Rule.ActiveRule != null)
+                {
+                    totalCooldown += Rule.ActiveRule.CooldownModifier(word);
+                }
+                cooldown.Cooldown += totalCooldown;
             }
         }
         SortCooldowns();

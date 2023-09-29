@@ -159,7 +159,7 @@ public class SpellManager : MonoBehaviour
                     else
                     {
                         // Apply the rule effect if necessary
-                        Rule.ActiveRule?.Apply?.Invoke(effect, caster, targetCaster);
+                        Rule.ActiveRule?.ApplyToEffect(effect, caster, targetCaster);
                         // Apply OnCast Callbacks
                         caster.OnBeforeSpellEffectResolved?.Invoke(effect, caster, targetCaster);
                         // Cast the effect

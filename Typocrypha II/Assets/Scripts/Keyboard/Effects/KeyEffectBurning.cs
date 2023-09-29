@@ -10,7 +10,7 @@ namespace Typocrypha
     /// </summary>
     public class KeyEffectBurning : KeyEffect
     {
-        const float time = 20f; // Duration of fire.
+        const float time = 12f; // Duration of fire.
 
         int reps = 0; // Number of additional times key is repeated.
 
