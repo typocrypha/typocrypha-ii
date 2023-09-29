@@ -7,7 +7,6 @@ public class OverheatManager : Typocrypha.CastBar
 {
     public bool IsOverheating => ui.enabled;
 
-    [SerializeField] Typocrypha.Keyboard keyboard;
     [SerializeField] private WordList overheatWords;
     [Header("UI References")]
     [SerializeField] private Canvas ui;
@@ -22,7 +21,7 @@ public class OverheatManager : Typocrypha.CastBar
     {
         base.Awake();
         wordSelector = new WordListSelector(overheatWords.Words);
-        PH.SetParent(keyboard);
+        PH.SetParent(Typocrypha.Keyboard.instance);
     }
 
     public void DoOverheat()
