@@ -38,7 +38,6 @@ namespace Typocrypha
         public CastBar castBar;
         public Transform keys; // Object that holds all the key objects.
         public bool CastingEnabled { get; set; } = true;
-        [SerializeField] private OverheatManager overheatManager;
         public CasterUI PlayerUI => playerUI;
         [SerializeField] private CasterUI playerUI;
         public readonly Dictionary<char, Key> keyMap = new Dictionary<char, Key>(); // Map from characters to keyboard keys.
@@ -263,16 +262,11 @@ namespace Typocrypha
         public void Clear()
         {
             ClearKeyEffects();
-            overheatManager.StopOverheat();
+            SpellCooldownManager.instance.StopOverheat();
             foreach (var c in keyMap) // Turn all highlights off
             {
                 c.Value.Highlight = false;
             }
-        }
-
-        public void DoOverheat()
-        {
-            overheatManager.DoOverheat();
         }
     }
 }

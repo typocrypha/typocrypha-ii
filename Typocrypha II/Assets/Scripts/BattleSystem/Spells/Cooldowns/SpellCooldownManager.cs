@@ -41,6 +41,7 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
     private readonly Dictionary<string, SpellCooldown> cooldowns = new Dictionary<string, SpellCooldown>();
     public GameObject cooldownPrefab; // Prefab for single cooldown UI object.
     public Transform cooldownTr; // Object that contains all cooldown UI.
+    [SerializeField] private OverheatManager overheatManager;
 
     public void Awake()
     {
@@ -180,5 +181,15 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
             kvp.Value.Cooldown = 0;
         }
         SortCooldowns();
+    }
+
+    public void DoOverheat()
+    {
+        overheatManager.DoOverheat();
+    }
+
+    public void StopOverheat()
+    {
+        overheatManager.StopOverheat();
     }
 }

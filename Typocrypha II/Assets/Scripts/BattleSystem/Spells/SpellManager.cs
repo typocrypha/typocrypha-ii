@@ -210,7 +210,7 @@ public class SpellManager : MonoBehaviour
         caster.OnAfterCastResolved?.Invoke(spell, caster);
         if (SpellCooldownManager.instance.Overheated)
         {
-            Typocrypha.Keyboard.instance.DoOverheat();
+            SpellCooldownManager.instance.DoOverheat();
         }
     }
 
