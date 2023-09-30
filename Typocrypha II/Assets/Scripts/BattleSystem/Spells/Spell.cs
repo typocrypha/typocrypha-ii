@@ -69,35 +69,14 @@ public class Spell : IList<SpellWord>, IEquatable<Spell>
         get
         {
             var list = new List<RootWord>(Count);
-            foreach(var item in items)
+            foreach (var item in items)
             {
-                if(item is RootWord root)
+                if (item is RootWord root)
                 {
                     list.Add(root);
                 }
             }
             return list;
-        }
-    }
-
-    public Dictionary<SpellWord, int> RootCounts
-    {
-        get
-        {
-            var dict = new Dictionary<SpellWord, int>(Count);
-            foreach(var item in items)
-            {
-                if (!(item is RootWord root))
-                    continue;
-                var word = root.synonymOf ?? root;
-                if (!dict.ContainsKey(word))
-                {
-                    dict.Add(word, 1);
-                    continue;
-                }
-                dict[word]++;
-            }
-            return dict;
         }
     }
 
@@ -189,7 +168,7 @@ public class Spell : IList<SpellWord>, IEquatable<Spell>
 
     public void Clear() => items.Clear();
 
-    public bool Contains(SpellWord item) => items.Exists(word => word == item || (word.synonymOf != null && word.synonymOf == item));
+    public bool Contains(SpellWord item) => items.Exists(word => word == item);
 
     public void CopyTo(SpellWord[] array, int arrayIndex) => items.CopyTo(array, arrayIndex);
 

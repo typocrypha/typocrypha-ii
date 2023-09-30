@@ -38,7 +38,7 @@ public class Player : Caster, IPausable
     /// </summary>
     public SpellParser.ParseResults CastString(string[] spellWords)
     {
-        var results = SpellParser.instance.Parse(spellWords, PlayerDataManager.instance.equipment.EquippedWords, out var spell);
+        var results = SpellParser.instance.Parse(spellWords, PlayerDataManager.instance.equipment.EquippedWords, out var spell, out string problemWord);
         if (results == SpellParser.ParseResults.Valid) 
         {
             // Check cooldowns
@@ -47,7 +47,7 @@ public class Player : Caster, IPausable
             {
                 results = SpellParser.ParseResults.OnCooldown;
                 AudioManager.instance.PlaySFX(castFailureSfx);
-                SpellFxManager.instance.PlayText(new Vector2(0f, -2f), false, $"{wordOnCooldown.DisplayName} on Cooldown", Color.red, castFailTextTime);
+                SpellFxManager.instance.PlayText(new Vector2(0f, -2f), false, $"{wordOnCooldown.BaseName} on Cooldown", Color.red, castFailTextTime);
             }
             if (results != SpellParser.ParseResults.OnCooldown)
             {
@@ -63,6 +63,14 @@ public class Player : Caster, IPausable
             if(results == SpellParser.ParseResults.EmptySpell)
             {
                 SpellFxManager.instance.PlayText(new Vector2(0f, -2f), false, $"Empty Spell", Color.red, castFailTextTime);
+            }
+            else if(results == SpellParser.ParseResults.DuplicateWord)
+            {
+                SpellFxManager.instance.PlayText(new Vector2(0f, -2f), false, $"Duplicate Word: {problemWord.ToUpper()}", Color.red, castFailTextTime);
+            }
+            else if(results == SpellParser.ParseResults.TypoFailure)
+            {
+                SpellFxManager.instance.PlayText(new Vector2(0f, -2f), false, $"Invalid Word: {problemWord.ToUpper()}", Color.red, castFailTextTime);
             }
             else
             {

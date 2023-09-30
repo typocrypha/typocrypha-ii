@@ -10,7 +10,7 @@ namespace Typocrypha
     /// </summary>
     public class KeyEffectBurning : KeyEffect
     {
-        const float time = 5f; // Duration of fire.
+        const float time = 20f; // Duration of fire.
 
         int reps = 0; // Number of additional times key is repeated.
 
@@ -18,7 +18,7 @@ namespace Typocrypha
         {
             base.OnStart();
             // Multiply output.
-            reps = Random.Range(1, 4);
+            reps = 1;
             for (int i = 0; i < reps; i++)
             {
                 key.AddToOutput(key.Letter);

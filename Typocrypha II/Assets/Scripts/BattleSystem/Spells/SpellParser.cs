@@ -17,6 +17,7 @@ public class SpellParser : MonoBehaviour
         TooManyRoots,
         TypoFailure,
         OnCooldown,
+        DuplicateWord,
     }
     private enum TypoResult
     {
@@ -28,7 +29,6 @@ public class SpellParser : MonoBehaviour
     // Words that are availible even if not equipped
     [SerializeField] private SpellWordBundle freeWordBundle;
     [SerializeField] private SpellWordBundle synonymBundle;
-    private readonly Dictionary<string, SpellWord> freeWords = new Dictionary<string, SpellWord>();
     //public SpellWordBundle roots;
     //public SpellWordBundle modifiers;
 
@@ -42,26 +42,18 @@ public class SpellParser : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            BuildDictionary();
         }
         else
             Destroy(gameObject);
-    }
-
-    /// <summary> Build the free word dictionary from the free word assetbundle </summary>
-    private void BuildDictionary()
-    {
-        freeWords.Clear();
-        foreach (var word in freeWordBundle.words)
-            freeWords.Add(word.Key.ToLower(), word.Value);
     }
 
     /// <summary> Returns Valid if the string array represents a valid spell that exists in the given spell dictionary
     /// Returns other ParseResults to indicate different failure conditions 
     /// Returns the parsed spell in out list s.
     /// Also Checks and starts spell cooldowns. </summary>
-    public ParseResults Parse(string[] spellwords, IReadOnlyDictionary<string, SpellWord> words, out Spell s)
+    public ParseResults Parse(string[] spellwords, IReadOnlyDictionary<string, SpellWord> words, out Spell s, out string problemWord)
     {
+        problemWord = null;
         s = new Spell();
         int roots = 0;
         foreach (string word in spellwords)
@@ -70,26 +62,26 @@ public class SpellParser : MonoBehaviour
                 continue;
             if (words.ContainsKey(word)) // Spell is in the words availible for this cast
             {
-                s.Add(words[word]);
-                if (words[word] is RootWord)
+                if(!TryAddWord(s, words[word], ref roots))
                 {
-                    ++roots;
+                    problemWord = word;
+                    return ParseResults.DuplicateWord;
                 }
             }
-            else if(freeWords.ContainsKey(word)) // Spell is in the always availible words
+            else if(freeWordBundle.words.TryGetValue(word, out var freeWord)) // Spell is in the always availible words
             {
-                s.Add(freeWords[word]);
-                if (freeWords[word] is RootWord)
+                if (!TryAddWord(s, freeWord, ref roots))
                 {
-                    ++roots;
+                    problemWord = word;
+                    return ParseResults.DuplicateWord;
                 }
             }
-            else if (synonymBundle.words.TryGetValue(word, out var synonym) && (words.ContainsKey(synonym.synonymOf.Key) || freeWords.ContainsKey(synonym.synonymOf.Key)))
+            else if (synonymBundle.words.TryGetValue(word, out var synonym) && (words.ContainsKey(synonym.synonymOf.Key) || freeWordBundle.words.ContainsKey(synonym.synonymOf.Key)))
             {
-                s.Add(synonym);
-                if(synonym is RootWord)
+                if (!TryAddWord(s, synonym, ref roots))
                 {
-                    ++roots;
+                    problemWord = word;
+                    return ParseResults.DuplicateWord;
                 }
             }
             else
@@ -99,6 +91,7 @@ public class SpellParser : MonoBehaviour
                 switch (result)
                 {
                     case TypoResult.CastFailure:
+                        problemWord = word;
                         return ParseResults.TypoFailure;
                     default:
                         continue;
@@ -107,20 +100,32 @@ public class SpellParser : MonoBehaviour
             }
         }
 
-        #region Keyword Number Checks
+        // Keyword count checks
         if (s.Count <= 0)
             return ParseResults.EmptySpell;
         if (s.Count > maxWords)
             return ParseResults.TooManyWords;
-        #endregion
 
-        #region Root Number Checks
+        // Root count checks
         if (roots <= 0)
             return ParseResults.NoRoot;
         if (roots > maxRoots)
             return ParseResults.TooManyRoots;
-        #endregion
 
         return ParseResults.Valid;
+    }
+
+    private bool TryAddWord(Spell s, SpellWord word, ref int roots)
+    {
+        if (s.Contains(word))
+        {
+            return false;
+        }
+        s.Add(word);
+        if (word is RootWord)
+        {
+            ++roots;
+        }
+        return true;
     }
 }

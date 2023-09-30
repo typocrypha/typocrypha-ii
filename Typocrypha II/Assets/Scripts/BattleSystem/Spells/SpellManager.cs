@@ -192,6 +192,10 @@ public class SpellManager : MonoBehaviour
                 // Log the effects of this effect
                 rootResults.Add(effectResults);
             }
+            if (caster.IsPlayer && PlayerDataManager.instance != null)
+            {
+                PlayerDataManager.instance.equipment.UnlockWord(root);
+            }
         }
         if (mod == Damage.SpecialModifier.Critical)
         {

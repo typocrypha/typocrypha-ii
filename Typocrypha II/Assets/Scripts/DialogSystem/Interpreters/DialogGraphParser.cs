@@ -269,6 +269,14 @@ public class DialogGraphParser : GraphParser
             {
                 BattleManager.instance.ClearReinforcements();
             }
+            else if (currNode is EmbedImage embedImageNode)
+            {
+                if (DialogManager.instance.DialogView is DialogViewVNPlus vnplusView)
+                {
+                    vnplusView.CreateEmbeddedImage(embedImageNode.sprite);
+                }
+                return null;
+            }
         }
         //Recursively move to next
         return NextDialog(true, loading);

@@ -14,6 +14,7 @@ public abstract class SpellWord : ScriptableObject
         Special,
     }
     public string DisplayName => internalName.ToUpper();
+    public string BaseName => IsSynonym ? synonymOf.DisplayName : DisplayName;
     public string Key => internalName.ToLower();
     public string internalName;
     public string description;
@@ -21,6 +22,8 @@ public abstract class SpellWord : ScriptableObject
     public int cooldown = 3;
     public Category category;
     public SpellWord synonymOf;
+
+    public bool IsSynonym => synonymOf != null;
     public bool IsDebug => Key == "debug";
 
     public static bool CompareKeys(SpellWord w1, SpellWord w2) => w1.Key == w2.Key;

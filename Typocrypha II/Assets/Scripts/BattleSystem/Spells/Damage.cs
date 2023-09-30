@@ -226,7 +226,11 @@ public static class Damage
     {
         results.Effectiveness = GetReaction(effect, caster, target, out float effectMagnitude);
         results.EffectivenessMagnitude = effectMagnitude;
-        results.Damage *= GetReactionDmgMod(effect, caster, target, results.Effectiveness, effectMagnitude);
+        ApplyReaction(results, effect, caster, target);
+    }
+    public static void ApplyReaction(CastResults results, RootWordEffect effect, Caster caster, Caster target)
+    {
+        results.Damage *= GetReactionDmgMod(effect, caster, target, results.Effectiveness, results.EffectivenessMagnitude);
         if (results.Effectiveness == Reaction.Weak)
             results.StaggerDamage = 1;
     }
@@ -266,13 +270,13 @@ public static class Damage
             multiplier = reactions.Freq(Reaction.Repel);
             return Reaction.Repel;
         }
-        #region  Drain and Dodge (currently deprecated)
-        //// Else if any drain, drain
-        //else if (reactions.Contains(Reaction.Drain))
-        //{
-        //    multiplier = reactions.Freq(Reaction.Drain);
-        //    return Reaction.Drain;
-        //}
+        // Else if any drain, drain
+        if (reactions.Contains(Reaction.Drain))
+        {
+            multiplier = reactions.Freq(Reaction.Drain);
+            return Reaction.Block; // Temp, while drain is being reimplemented
+        }
+        #region  Dodge (currently deprecated)
         //// If any dodge, dodge
         //else if (reactions.Contains(Reaction.Dodge))
         //{
@@ -388,7 +392,6 @@ public static class Damage
                         if (word != null)
                         {
                             PlayerDataManager.instance.equipment.UnlockWord(word, true);
-                            SpellCooldownManager.instance.AddWord(word, true);
                         }
                     }
                     else

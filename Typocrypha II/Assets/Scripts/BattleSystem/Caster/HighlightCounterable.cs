@@ -47,7 +47,12 @@ public class HighlightCounterable : MonoBehaviour
         {
             string spellWord = spellWords[i];
             int index = i * 2;
-            if (PlayerDataManager.instance.equipment.EquippedWords.ContainsKey(spellWord.ToLower()) && !SpellCooldownManager.instance.IsOnCooldown(spellWord))
+            var wordData = SpellLookup.instance.GetSpellWord(spellWord.ToLower());
+            if(wordData == null)
+            {
+                continue;
+            }
+            if (PlayerDataManager.instance.CanCastSpell(wordData) && !SpellCooldownManager.instance.IsOnCooldown(wordData))
             {
                 CounterableHighlight.ind[index] = pos;
                 CounterableHighlight.ind[index + 1] = pos + spellWord.Length;

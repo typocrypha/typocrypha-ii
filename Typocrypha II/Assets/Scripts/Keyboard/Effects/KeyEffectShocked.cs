@@ -14,7 +14,7 @@ namespace Typocrypha
     {
         public override int NumAffectedKeys => 2;
 
-        const float time = 5f; // Duration of shock.
+        const float time = 15f; // Duration of shock.
 
         public GameObject swappedKeyEffectPrefab;
 

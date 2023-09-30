@@ -127,11 +127,6 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
         return TryGetCooldown(word, out var cooldown) && cooldown.Cooldown > 0;
     }
 
-    public bool IsOnCooldown(string word)
-    {
-        return TryGetCooldown(word, out var cooldown) && cooldown.Cooldown > 0;
-    }
-
     public bool IsOnCooldown(Spell spell, out SpellWord word)
     {
         foreach (var item in spell)
@@ -148,15 +143,14 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
 
     public void DoCooldowns(Spell spell)
     {
-        var rootCounts = spell.RootCounts;
-        // Lower all cooldowns by num unique roots
-        LowerAllCooldowns(rootCounts.Count); 
+        // Lower all cooldowns by num roots
+        LowerAllCooldowns(spell.RootCount); 
         // Add new cooldowns
-        foreach (var kvp in rootCounts)
+        foreach (var word in spell)
         {
-            if (TryGetCooldown(kvp.Key, out var cooldown))
+            if (TryGetCooldown(word, out var cooldown))
             {
-                cooldown.Cooldown = kvp.Key.cooldown + (kvp.Value - 1);
+                cooldown.Cooldown += word.cooldown;
             }
         }
         SortCooldowns();
@@ -168,11 +162,6 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
         {
             kvp.Value.Cooldown -= amount; 
         }
-    }
-
-    private bool TryGetCooldown(string word, out SpellCooldown cooldown)
-    {
-        return cooldowns.TryGetValue(word, out cooldown);
     }
 
     private bool TryGetCooldown(SpellWord word, out SpellCooldown cooldown)

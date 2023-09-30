@@ -19,6 +19,7 @@ public class DialogViewVNPlus : DialogViewMessage<DialogItemVNPlus>
     [SerializeField] private GameObject randoDialogBoxPrefab;
     [SerializeField] private GameObject rightCharacterPrefab;
     [SerializeField] private GameObject leftCharacterPrefab;
+    [SerializeField] private GameObject embeddedImagePrefab;
     [SerializeField] private RectTransform rightCharacterContainer;
     [SerializeField] private RectTransform leftCharacterContainer;
     [SerializeField] private RectTransform contentRoot;
@@ -530,4 +531,17 @@ public class DialogViewVNPlus : DialogViewMessage<DialogItemVNPlus>
     {
         contentRoot.DOShakeAnchorPos(duration, intensity, 64); //TODO: fix magic number
     }
+
+    public void CreateEmbeddedImage(Sprite sprite)
+    {
+        var prefab = Instantiate(embeddedImagePrefab, messageContainer);
+        prefab.transform.SetAsFirstSibling();
+        var image = prefab.GetComponentInChildren<Image>();
+        image.sprite = sprite;
+        var fitter = prefab.GetComponentInChildren<AspectRatioFitter>();
+        fitter.aspectRatio = (float)image.sprite.texture.width / image.sprite.texture.height;
+        var prefabRect = (prefab.transform as RectTransform);
+        AnimateNewImageIn(prefabRect);
+    }
+
 }
