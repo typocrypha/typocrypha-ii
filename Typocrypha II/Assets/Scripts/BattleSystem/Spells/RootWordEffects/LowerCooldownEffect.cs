@@ -1,7 +1,10 @@
-﻿
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-public abstract class ApplyKeyEffect : RootWordEffect
-{    
+public class LowerCooldownEffect : RootWordEffect
+{
+    public int amount;
     public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.SpecialModifier mod, RootCastResults prevResults = null)
     {
         var results = new CastResults(caster, target)
@@ -25,9 +28,8 @@ public abstract class ApplyKeyEffect : RootWordEffect
         results.Effectiveness = Damage.GetReaction(this, caster, target, out float mult);
         if (Damage.ApplyReflect(results, this, caster, target, spellData))
             return results;
-        ApplyKeyEffectFn(caster, target, spellData, mod, prevResults);
+        SpellCooldownManager.instance.LowerAllCooldowns(amount);
+        SpellCooldownManager.instance.SortCooldowns();
         return results;
     }
-
-    protected abstract void ApplyKeyEffectFn(Caster caster, Caster target, RootCastData spellData, Damage.SpecialModifier mod, RootCastResults prevResults = null);
 }

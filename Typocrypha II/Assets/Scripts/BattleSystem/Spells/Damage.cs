@@ -425,7 +425,7 @@ public static class Damage
             }
             if(effect.tags.Contains("Ice"))
             {
-                Typocrypha.Keyboard.instance.ApplyEffectRandom("KeyEffectFrozen", caster);
+                Typocrypha.Keyboard.instance.ApplyEffectRandom("KeyEffectFrozen", caster, 3);
             }
         }
 

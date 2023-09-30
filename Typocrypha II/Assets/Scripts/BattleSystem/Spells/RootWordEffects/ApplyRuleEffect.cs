@@ -8,6 +8,7 @@ public class ApplyRuleEffect : RootWordEffect
     {
         RemoveRule,
         BurningJustice,
+        FriendshipFrog,
     }
     public override bool CanCrit => false;
 
@@ -30,6 +31,9 @@ public class ApplyRuleEffect : RootWordEffect
         {
             case RuleEnum.BurningJustice:
                 rule = new RuleBurningJustice();
+                break;
+            case RuleEnum.FriendshipFrog:
+                rule = new RuleFriendshipFrog();
                 break;
             default:
                 rule = null;
