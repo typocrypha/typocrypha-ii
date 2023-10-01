@@ -16,6 +16,8 @@ namespace Typocrypha
         public Transform KeyEffectContainer => keyEffectContainer;
         [SerializeField] Transform keyEffectContainer;
 
+        public bool ForceSfx { get; set; } = false;
+
         public char Letter => letter;
         private char letter; // Letter this key represents.
         public IReadOnlyList<char> Output => output;
@@ -125,11 +127,11 @@ namespace Typocrypha
         /// Apply a key effect to this key.
         /// </summary>
         /// <param name="effectPrefab">Key effect prefab.</param>
-        public void ApplyEffect(GameObject effectPrefab)
+        public void ApplyEffect(GameObject effectPrefab, Caster caster)
         {
             var effect = Instantiate(effectPrefab, keyEffectContainer).GetComponent<KeyEffect>();
             effect.transform.localPosition = Vector3.zero;
-            effect.Register(this, letter);
+            effect.Register(this, letter, caster);
             effect.OnStart();
         }
     }

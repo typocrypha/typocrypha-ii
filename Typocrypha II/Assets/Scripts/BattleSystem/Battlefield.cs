@@ -326,6 +326,8 @@ public class Battlefield : MonoBehaviour, IPausable
         return caster == null || caster.IsDeadOrFled;
     }
 
+    public bool IsOccupied(Position position) => !IsEmpty(position);
+
     private class FieldMatrix : Serializable2DMatrix<Caster>
     {
         public FieldMatrix(int rows, int columns) : base(rows, columns) { }

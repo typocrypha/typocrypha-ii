@@ -159,7 +159,7 @@ public class SpellManager : MonoBehaviour
                     else
                     {
                         // Apply the rule effect if necessary
-                        Rule.ActiveRule?.Apply?.Invoke(effect, caster, targetCaster);
+                        Rule.ActiveRule?.ApplyToEffect(effect, caster, targetCaster);
                         // Apply OnCast Callbacks
                         caster.OnBeforeSpellEffectResolved?.Invoke(effect, caster, targetCaster);
                         // Cast the effect
@@ -210,7 +210,7 @@ public class SpellManager : MonoBehaviour
         caster.OnAfterCastResolved?.Invoke(spell, caster);
         if (SpellCooldownManager.instance.Overheated)
         {
-            Typocrypha.Keyboard.instance.DoOverheat();
+            SpellCooldownManager.instance.DoOverheat();
         }
     }
 
@@ -235,10 +235,9 @@ public class SpellManager : MonoBehaviour
             {
                 cancelTarget.Spell = new Spell(remainingWords);
             }
+            SpellFxManager.instance.CounterFx(cancelTarget.FieldPos);
             cancelTarget.OnCounter?.Invoke(cancelTarget);
-            SpellFxManager.instance.LogMessage(cancelTarget.DisplayName + " has been countered!");
         }
-        yield return SpellFxManager.instance.PlayMessages();
     }
 
     public void LogInterruptCast(Spell spell, Caster caster, Battlefield.Position target, string messageOverride = null)

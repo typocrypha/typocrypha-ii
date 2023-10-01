@@ -19,7 +19,7 @@ public class FilledSlicedImage : MonoBehaviour
         get => fillAmount;
         set
         {
-            fillAmount = value;
+            fillAmount = Mathf.Clamp01(value);
             UpdateWidth();
         }
     }

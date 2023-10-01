@@ -8,7 +8,7 @@ public class StatusCryostasis : StatusRemoveAfterHitOrCast
     public override void Apply(ApplyStatusEffect effect, Caster caster, Caster target, CastResults data)
     {
         if(target.IsPlayer)
-            affectedKeys = Typocrypha.Keyboard.instance.ApplyEffectRandom("KeyEffectFrozen", 20);
+            affectedKeys = Typocrypha.Keyboard.instance.ApplyEffectRandom("KeyEffectFrozen", caster, 20);
     }
 
     public override void OnBeforeEffectApplied(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults data)

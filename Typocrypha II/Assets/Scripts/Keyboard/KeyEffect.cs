@@ -18,15 +18,17 @@ namespace Typocrypha
 
         [SerializeField] protected AudioClip sfxOverride;
         protected Key key; // Affected keyboard key.
+        protected Caster caster; // Caster of effect, may be null
 
         void Awake()
         {
             ph = new PauseHandle(OnPause);     
         }
 
-        public void Register(Key keyComponent, char key)
+        public void Register(Key keyComponent, char key, Caster caster)
         {
             this.key = keyComponent;
+            this.caster = caster;
             Keyboard.instance.allEffects.Add(key, this);
         }
 

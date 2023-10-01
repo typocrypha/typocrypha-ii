@@ -417,15 +417,15 @@ public static class Damage
         {
             if (effect.tags.Contains("Fire"))
             {
-                Typocrypha.Keyboard.instance.ApplyEffectRandom("KeyEffectBurning", 3);
+                Typocrypha.Keyboard.instance.ApplyEffectRandom("KeyEffectBurning", caster, 3);
             }
             if(effect.tags.Contains("Lightning"))
             {
-                Typocrypha.Keyboard.instance.ApplyEffectRandom("KeyEffectShocked");
+                Typocrypha.Keyboard.instance.ApplyEffectRandom("KeyEffectShocked", caster);
             }
             if(effect.tags.Contains("Ice"))
             {
-                Typocrypha.Keyboard.instance.ApplyEffectRandom("KeyEffectFrozen");
+                Typocrypha.Keyboard.instance.ApplyEffectRandom("KeyEffectFrozen", caster, 3);
             }
         }
 
