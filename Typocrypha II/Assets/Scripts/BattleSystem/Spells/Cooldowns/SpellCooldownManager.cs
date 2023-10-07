@@ -114,13 +114,18 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
         var cd = Instantiate(cooldownPrefab, cooldownTr).GetComponent<SpellCooldown>();
         cd.SpellText = word.internalName.ToUpper();
         cd.SpellWord = word;
-        cd.FullCooldown = word.cooldown;
+        cd.FullCooldown = GetCooldown(word);
         cd.Cooldown = 0;
         cooldowns.Add(word.internalName.ToUpper(), cd);
         if (sort)
         {
             SortCooldowns();
         }
+    }
+
+    private int GetCooldown(SpellWord word)
+    {
+        return 0; //return word.cooldown
     }
 
     public bool IsOnCooldown(SpellWord word)
@@ -151,7 +156,7 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
         {
             if (TryGetCooldown(word, out var cooldown))
             {
-                int totalCooldown = word.cooldown;
+                int totalCooldown = GetCooldown(word);
                 if(Rule.ActiveRule != null)
                 {
                     totalCooldown += Rule.ActiveRule.CooldownModifier(word);
