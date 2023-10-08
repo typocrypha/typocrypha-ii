@@ -42,6 +42,20 @@ public abstract class DialogViewMessage<T> : DialogView where T : DialogItemMess
         return dialogBox;
     }
 
+    public void CreateEmbeddedImage(Sprite sprite)
+    {
+        var prefab = GetImagePrefab();
+        var instance =  Instantiate(prefab, messageContainer);
+        instance.transform.SetAsFirstSibling();
+        var fitter = instance.GetComponentInChildren<AspectRatioFitter>();
+        var arrow = instance.GetComponentInChildren<DialogContinueIndicator>();
+        var image = fitter.GetComponent<Image>();
+        image.sprite = sprite;
+        fitter.aspectRatio = (float)image.sprite.texture.width / image.sprite.texture.height;
+        AnimateNewImageIn(instance.transform as RectTransform);
+        arrow.Activate();
+    }
+
     private void SetCharacterSpecificUI(VNPlusDialogBoxUI vnPlusUI, List<CharacterData> data)
     {
         if (vnPlusUI == null)
@@ -58,6 +72,7 @@ public abstract class DialogViewMessage<T> : DialogView where T : DialogItemMess
     }
 
     protected abstract GameObject GetMessagePrefab(T dialogItem, List<CharacterData> data, out bool isNarrator);
+    protected abstract GameObject GetImagePrefab();
 
     private DialogBox CreateDialogBox(GameObject prefab)
     {

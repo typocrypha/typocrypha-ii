@@ -275,6 +275,10 @@ public class DialogGraphParser : GraphParser
                 {
                     vnplusView.CreateEmbeddedImage(embedImageNode.sprite);
                 }
+                else if (DialogManager.instance.DialogView is DialogViewChat chatView)
+                {
+                    chatView.CreateEmbeddedImage(embedImageNode.sprite);
+                }
                 return null;
             }
         }

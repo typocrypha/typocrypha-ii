@@ -470,6 +470,11 @@ public class DialogViewVNPlus : DialogViewMessage<DialogItemVNPlus>
         return narratorDialogBoxPrefab;
     }
 
+    protected override GameObject GetImagePrefab()
+    {
+        return embeddedImagePrefab;
+    }
+
     public override void SetEnabled(bool e)
     {
         gameObject.SetActive(e);
@@ -531,17 +536,4 @@ public class DialogViewVNPlus : DialogViewMessage<DialogItemVNPlus>
     {
         contentRoot.DOShakeAnchorPos(duration, intensity, 64); //TODO: fix magic number
     }
-
-    public void CreateEmbeddedImage(Sprite sprite)
-    {
-        var prefab = Instantiate(embeddedImagePrefab, messageContainer);
-        prefab.transform.SetAsFirstSibling();
-        var image = prefab.GetComponentInChildren<Image>();
-        image.sprite = sprite;
-        var fitter = prefab.GetComponentInChildren<AspectRatioFitter>();
-        fitter.aspectRatio = (float)image.sprite.texture.width / image.sprite.texture.height;
-        var prefabRect = (prefab.transform as RectTransform);
-        AnimateNewImageIn(prefabRect);
-    }
-
 }
