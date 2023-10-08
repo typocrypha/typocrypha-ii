@@ -44,16 +44,18 @@ public abstract class DialogViewMessage<T> : DialogView where T : DialogItemMess
 
     public void CreateEmbeddedImage(Sprite sprite)
     {
-        var prefab = GetImagePrefab();
-        var instance =  Instantiate(prefab, messageContainer);
-        instance.transform.SetAsFirstSibling();
-        var fitter = instance.GetComponentInChildren<AspectRatioFitter>();
-        var arrow = instance.GetComponentInChildren<DialogContinueIndicator>();
-        var image = fitter.GetComponent<Image>();
+        var instance =  Instantiate(GetImagePrefab(), messageContainer);
+        var image = instance.GetComponentInChildren<Image>();
         image.sprite = sprite;
-        fitter.aspectRatio = (float)image.sprite.texture.width / image.sprite.texture.height;
+        var imageAspect = (float)image.sprite.texture.width / image.sprite.texture.height;
+        var maxSize = image.rectTransform.sizeDelta;
+        image.rectTransform.sizeDelta = new Vector2(
+            Mathf.Min(maxSize.y * imageAspect, maxSize.x),
+            Mathf.Min(maxSize.x / imageAspect, maxSize.y));
+        instance.transform.SetAsFirstSibling();
+        instance.GetComponentInChildren<DialogContinueIndicator>().Activate();
+        LayoutRebuilder.ForceRebuildLayoutImmediate(instance.transform as RectTransform);
         AnimateNewImageIn(instance.transform as RectTransform);
-        arrow.Activate();
     }
 
     private void SetCharacterSpecificUI(VNPlusDialogBoxUI vnPlusUI, List<CharacterData> data)
