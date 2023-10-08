@@ -78,8 +78,8 @@ public class PlayerDataManager : MonoBehaviour, ISavable
 
     public bool CanCastSpell(SpellWord word)
     {
-        return equipment.EquippedWords.ContainsKey(word.Key) 
-            || (word.IsSynonym && equipment.EquippedWords.ContainsKey(word.synonymOf.Key) && equipment.UnlockedWords.ContainsKey(word.Key));
+        return equipment.EquippedWords.ContainsKey(word.Key)
+            || (word.IsSynonym && equipment.EquippedWords.ContainsKey(word.synonymOf.Key));// && equipment.UnlockedWords.ContainsKey(word.Key));
     }
 
     private void Awake()
