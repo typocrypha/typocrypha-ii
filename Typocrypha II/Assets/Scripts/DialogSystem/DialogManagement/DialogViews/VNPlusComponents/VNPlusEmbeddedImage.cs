@@ -7,35 +7,35 @@ using UnityEngine.UI;
 public class VNPlusEmbeddedImage : MonoBehaviour
 {
     [Header("References")]
+    [HideInInspector] public TweenInfo tweenInfo;
     [SerializeField] Image[] images;
     [SerializeField] private DialogContinueIndicator continueIndicator;
 
     [Header("Values")]
     public int messagesBeforeFade = 1;
-    [SerializeField] float tweenDuration = 0.55f;
     [SerializeField] Color dimColor;
     Tween tween;
 
-    [ContextMenu("DoDim")]
 
     private void OnEnable()
     {
         transform.hasChanged = false;
     }
 
+    //TODO: move to event in DialogViewMessage
     private void Update()
     {
         if (transform.hasChanged && tween == null)
         {
-            if (transform.GetSiblingIndex() >= messagesBeforeFade) DoDim();
+            if (transform.GetSiblingIndex() >= messagesBeforeFade) DoDim(tweenInfo);
             transform.hasChanged = false;
         }
     }
 
-    public void DoDim()
+    public void DoDim(TweenInfo tweenInfo)
     {
-        foreach (var image in images) tween = image.DOColor(image.color * dimColor, tweenDuration);
+        foreach (var image in images) tweenInfo.Start(tween = image.DOColor(image.color * dimColor, tweenInfo.Time), false);
         continueIndicator.Cleanup();
-        Destroy(this, tweenDuration);
+        Destroy(this, tweenInfo.Time);
     }
 }

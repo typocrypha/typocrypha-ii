@@ -53,7 +53,9 @@ public abstract class DialogViewMessage<T> : DialogView where T : DialogItemMess
             Mathf.Min(maxSize.y * imageAspect, maxSize.x),
             Mathf.Min(maxSize.x / imageAspect, maxSize.y));
         instance.transform.SetAsFirstSibling();
-        instance.GetComponent<VNPlusEmbeddedImage>().messagesBeforeFade = messagesBeforeFade;
+        var embedComponent = instance.GetComponent<VNPlusEmbeddedImage>();
+        embedComponent.messagesBeforeFade = messagesBeforeFade;
+        embedComponent.tweenInfo = messageFadeTween;
         instance.GetComponentInChildren<DialogContinueIndicator>().Activate();
         LayoutRebuilder.ForceRebuildLayoutImmediate(instance.transform as RectTransform);
         AnimateNewImageIn(instance.transform as RectTransform);
@@ -152,6 +154,11 @@ public abstract class DialogViewMessage<T> : DialogView where T : DialogItemMess
         // Initialize scale
         imageTransform.localScale = new Vector3(0, 0, imageTransform.localScale.z);
         messageScaleTween.Start(imageTransform.DOScale(new Vector3(1, 1, imageTransform.localScale.z), messageScaleTween.Time));
+        if (lastBoxUI != null)
+        {
+            lastBoxUI.DoDim(messageFadeTween);
+            lastBoxUI = null;
+        }
     }
 
     protected void CompleteMessageTweens()
