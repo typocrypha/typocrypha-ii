@@ -96,4 +96,13 @@ public class InputManager : MonoBehaviour, IPausable
             inputStack.Peek().Focus();
         }
     }
+
+    public void Clear()
+    {
+        if (inputStack.Count <= 0)
+        {
+            return;
+        }
+        inputStack.Peek().Clear();
+    }
 }

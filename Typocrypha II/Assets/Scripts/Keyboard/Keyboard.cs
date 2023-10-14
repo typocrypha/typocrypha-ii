@@ -267,6 +267,7 @@ namespace Typocrypha
         {
             ClearKeyEffects();
             SpellCooldownManager.instance.StopOverheat();
+            castBar.Clear();
             foreach (var c in keyMap) // Turn all highlights off
             {
                 c.Value.Highlight = false;

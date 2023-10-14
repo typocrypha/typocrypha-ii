@@ -11,4 +11,6 @@ public interface IInputHandler : IPausable
     bool? CheckInput(char inputChar);
 
     void Submit();
+
+    void Clear();
 }
