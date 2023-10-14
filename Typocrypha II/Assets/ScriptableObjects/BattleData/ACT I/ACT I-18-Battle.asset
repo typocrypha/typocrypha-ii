@@ -1,33 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8969002844144792050
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 868221be3edd2de408ba9f110b83c983, type: 3}
-  m_Name: Battle Start
-  m_EditorClassIdentifier: 
-  position: {x: -828.6, y: -116.6}
-  dynamicConnectionPorts: []
-  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: 8821139612149277900}
-  player: {fileID: 1801454539022473941, guid: a7732fba40958914fa4b24ef4362d83b, type: 3}
-  totalWaves: 1
-  initialAllyData: {fileID: 11400000, guid: cf0fa100128d95349b9a4aa934ab604c, type: 2}
-  initialAllyPose: action
-  initialAllyExpr: yell
-  transitionType: 0
-  proxyCaster1: {fileID: 8972021060622282792, guid: fab25649afc7953498c25ff8ba7d2642,
-    type: 3}
-  proxyCaster2: {fileID: 8972021060622282792, guid: 0b4e710b26debff41beca9cab319ca93,
-    type: 3}
-  proxyCaster3: {fileID: 0}
---- !u!114 &-7417670159264714132
+--- !u!114 &-8060908836447406008
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -39,16 +12,94 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
   m_Name: To Next
   m_EditorClassIdentifier: 
-  body: {fileID: 484475153815326902}
+  body: {fileID: 7650966448053692992}
   direction: 2
   maxConnectionCount: 0
   styleID: Gameflow
   _connections:
-  - {fileID: -3119975438203296452}
+  - {fileID: 1092720247052100981}
   side: 2
   sidePosition: 30
   sideOffset: 0
---- !u!114 &-6951582912864047587
+--- !u!114 &-5023755058820436450
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
+  m_Name: To Next
+  m_EditorClassIdentifier: 
+  body: {fileID: 3470430904217946354}
+  direction: 2
+  maxConnectionCount: 0
+  styleID: Gameflow
+  _connections:
+  - {fileID: 3551512320741476297}
+  side: 2
+  sidePosition: 30
+  sideOffset: 0
+--- !u!114 &-4639524782079171531
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
+  m_Name: To Next
+  m_EditorClassIdentifier: 
+  body: {fileID: 5070134863516737621}
+  direction: 2
+  maxConnectionCount: 0
+  styleID: Gameflow
+  _connections:
+  - {fileID: 3090630254232585444}
+  side: 2
+  sidePosition: 30
+  sideOffset: 0
+--- !u!114 &-4153943205754463522
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cef2b5720500c184eadf1b3fa29fe190, type: 3}
+  m_Name: Battle Wave
+  m_EditorClassIdentifier: 
+  position: {x: 80, y: -100}
+  dynamicConnectionPorts: []
+  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+  toNextOUT: {fileID: -3458272502296095151}
+  fromPreviousIN: {fileID: 2775412151938969669}
+  clearFieldOptions: 3
+  waveTitle: All enemies defeated...
+  waveNumberOverride: Victory!
+  music: {fileID: 0}
+  battleField:
+    _data:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 6673564152387512629, guid: e44464bf166f3a440956e123f0b4426d, type: 3}
+    _rows: 2
+    _cols: 3
+  openingScene: {fileID: 11400000, guid: 965c48942ab6b4a4ba022afd9761ce0e, type: 2}
+  battleEvents:
+  - {fileID: 1947603192820538980, guid: bfc4798af78a15343acca03fa9ae6de9, type: 3}
+  useStandardEvents: 0
+  reinforcements: []
+--- !u!114 &-3634475407092164609
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -63,9 +114,51 @@ MonoBehaviour:
   canvas: {fileID: 0}
   parentEditor: {fileID: 0}
   selectedNode: {fileID: 0}
-  panOffset: {x: 261, y: -113.40001}
-  zoom: 0.8
---- !u!114 &-6354508140160504803
+  panOffset: {x: -93.80005, y: -20.400017}
+  zoom: 1
+--- !u!114 &-3632679207303806741
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
+  m_Name: To Next
+  m_EditorClassIdentifier: 
+  body: {fileID: -25643596904505910}
+  direction: 2
+  maxConnectionCount: 0
+  styleID: Gameflow
+  _connections:
+  - {fileID: 2775412151938969669}
+  side: 2
+  sidePosition: 30
+  sideOffset: 0
+--- !u!114 &-3458272502296095151
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
+  m_Name: To Next
+  m_EditorClassIdentifier: 
+  body: {fileID: -4153943205754463522}
+  direction: 2
+  maxConnectionCount: 0
+  styleID: Gameflow
+  _connections:
+  - {fileID: 529602613458240646}
+  side: 2
+  sidePosition: 30
+  sideOffset: 0
+--- !u!114 &-25643596904505910
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -77,11 +170,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cef2b5720500c184eadf1b3fa29fe190, type: 3}
   m_Name: Battle Wave
   m_EditorClassIdentifier: 
-  position: {x: -310, y: -110}
+  position: {x: -306, y: -110}
   dynamicConnectionPorts: []
   backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: 1997986434145414171}
-  fromPreviousIN: {fileID: -3119975438203296452}
+  toNextOUT: {fileID: -3632679207303806741}
+  fromPreviousIN: {fileID: 5698356666345902626}
   clearFieldOptions: 3
   waveTitle: Hold the Line!
   waveNumberOverride: 00:60
@@ -118,48 +211,6 @@ MonoBehaviour:
   - {fileID: 340496541364002612, guid: afd0316066a56eb40961623c7dbd0e13, type: 3}
   - {fileID: 1061868014041639493, guid: 818347991781f5a4284d73e5dbb1e4d5, type: 3}
   - {fileID: 3544638609149707849, guid: 61c92ded2cfcecb468b4217905f0891a, type: 3}
---- !u!114 &-5640419420886527401
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: From Previous
-  m_EditorClassIdentifier: 
-  body: {fileID: 6335469444011834816}
-  direction: 1
-  maxConnectionCount: 1
-  styleID: Gameflow
-  _connections:
-  - {fileID: 1997986434145414171}
-  side: 4
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &-3119975438203296452
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: From Previous
-  m_EditorClassIdentifier: 
-  body: {fileID: -6354508140160504803}
-  direction: 1
-  maxConnectionCount: 1
-  styleID: Gameflow
-  _connections:
-  - {fileID: -7417670159264714132}
-  side: 4
-  sidePosition: 30
-  sideOffset: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -173,58 +224,20 @@ MonoBehaviour:
   m_Name: ACT I-18-Battle
   m_EditorClassIdentifier: 
   editorStates:
-  - {fileID: -6951582912864047587}
+  - {fileID: -3634475407092164609}
   saveName: Assets\ScriptableObjects\BattleData\ACT I\ACT I-18-Battle
   savePath: Assets\ScriptableObjects\BattleData\ACT I\ACT I-18-Battle.asset
   livesInScene: 0
   nodes:
-  - {fileID: 6335469444011834816}
-  - {fileID: 484475153815326902}
-  - {fileID: -8969002844144792050}
-  - {fileID: -6354508140160504803}
+  - {fileID: 6816891030177268697}
+  - {fileID: 5070134863516737621}
+  - {fileID: 3470430904217946354}
+  - {fileID: 5735786448118426759}
+  - {fileID: -25643596904505910}
+  - {fileID: 7650966448053692992}
+  - {fileID: -4153943205754463522}
   groups: []
---- !u!114 &484475153815326902
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e3603b13f795bd4c80e577ca5408bda, type: 3}
-  m_Name: Add Spell(s)
-  m_EditorClassIdentifier: 
-  position: {x: -520, y: -110}
-  dynamicConnectionPorts: []
-  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: -7417670159264714132}
-  fromPreviousIN: {fileID: 3906311287393389351}
-  word1: {fileID: 11400000, guid: 3d35f5c67835c734db91be2fe7b97278, type: 2}
-  word2: {fileID: 11400000, guid: 29fa3a1db638b7b41bd0cdccfa674339, type: 2}
-  word3: {fileID: 11400000, guid: f0c5f523181b0a74aa9e44009d75b1c7, type: 2}
---- !u!114 &1997986434145414171
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: To Next
-  m_EditorClassIdentifier: 
-  body: {fileID: -6354508140160504803}
-  direction: 2
-  maxConnectionCount: 0
-  styleID: Gameflow
-  _connections:
-  - {fileID: -5640419420886527401}
-  side: 2
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &3906311287393389351
+--- !u!114 &529602613458240646
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -236,16 +249,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
   m_Name: From Previous
   m_EditorClassIdentifier: 
-  body: {fileID: 484475153815326902}
+  body: {fileID: 7650966448053692992}
   direction: 1
   maxConnectionCount: 1
   styleID: Gameflow
   _connections:
-  - {fileID: 8821139612149277900}
+  - {fileID: -3458272502296095151}
   side: 4
   sidePosition: 30
   sideOffset: 0
---- !u!114 &6335469444011834816
+--- !u!114 &1092720247052100981
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -254,14 +267,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7526e49d92a24a64d82dc85f8f23592c, type: 3}
-  m_Name: End And Transition
+  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
+  m_Name: From Previous
   m_EditorClassIdentifier: 
-  position: {x: 47, y: -110}
-  dynamicConnectionPorts: []
-  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  fromPreviousIN: {fileID: -5640419420886527401}
---- !u!114 &8821139612149277900
+  body: {fileID: 6816891030177268697}
+  direction: 1
+  maxConnectionCount: 1
+  styleID: Gameflow
+  _connections:
+  - {fileID: -8060908836447406008}
+  side: 4
+  sidePosition: 30
+  sideOffset: 0
+--- !u!114 &2277312584023626152
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -273,12 +291,215 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
   m_Name: To Next
   m_EditorClassIdentifier: 
-  body: {fileID: -8969002844144792050}
+  body: {fileID: 5735786448118426759}
   direction: 2
   maxConnectionCount: 0
   styleID: Gameflow
   _connections:
-  - {fileID: 3906311287393389351}
+  - {fileID: 5698356666345902626}
   side: 2
   sidePosition: 30
   sideOffset: 0
+--- !u!114 &2775412151938969669
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
+  m_Name: From Previous
+  m_EditorClassIdentifier: 
+  body: {fileID: -4153943205754463522}
+  direction: 1
+  maxConnectionCount: 1
+  styleID: Gameflow
+  _connections:
+  - {fileID: -3632679207303806741}
+  side: 4
+  sidePosition: 30
+  sideOffset: 0
+--- !u!114 &3090630254232585444
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
+  m_Name: From Previous
+  m_EditorClassIdentifier: 
+  body: {fileID: 3470430904217946354}
+  direction: 1
+  maxConnectionCount: 1
+  styleID: Gameflow
+  _connections:
+  - {fileID: -4639524782079171531}
+  side: 4
+  sidePosition: 30
+  sideOffset: 0
+--- !u!114 &3470430904217946354
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e3603b13f795bd4c80e577ca5408bda, type: 3}
+  m_Name: Add Spell(s)
+  m_EditorClassIdentifier: 
+  position: {x: -690.2, y: -37.399994}
+  dynamicConnectionPorts: []
+  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+  toNextOUT: {fileID: -5023755058820436450}
+  fromPreviousIN: {fileID: 3090630254232585444}
+  word1: {fileID: 11400000, guid: 3d35f5c67835c734db91be2fe7b97278, type: 2}
+  word2: {fileID: 11400000, guid: 29fa3a1db638b7b41bd0cdccfa674339, type: 2}
+  word3: {fileID: 11400000, guid: f0c5f523181b0a74aa9e44009d75b1c7, type: 2}
+--- !u!114 &3551512320741476297
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
+  m_Name: From Previous
+  m_EditorClassIdentifier: 
+  body: {fileID: 5735786448118426759}
+  direction: 1
+  maxConnectionCount: 1
+  styleID: Gameflow
+  _connections:
+  - {fileID: -5023755058820436450}
+  side: 4
+  sidePosition: 30
+  sideOffset: 0
+--- !u!114 &5070134863516737621
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 868221be3edd2de408ba9f110b83c983, type: 3}
+  m_Name: Battle Start
+  m_EditorClassIdentifier: 
+  position: {x: -985.39996, y: -23.399994}
+  dynamicConnectionPorts: []
+  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+  toNextOUT: {fileID: -4639524782079171531}
+  player: {fileID: 1801454539022473941, guid: a7732fba40958914fa4b24ef4362d83b, type: 3}
+  totalWaves: 1
+  initialAllyData: {fileID: 11400000, guid: cf0fa100128d95349b9a4aa934ab604c, type: 2}
+  initialAllyPose: action
+  initialAllyExpr: yell
+  transitionType: 0
+  proxyCaster1: {fileID: 8972021060622282792, guid: fab25649afc7953498c25ff8ba7d2642,
+    type: 3}
+  proxyCaster2: {fileID: 8972021060622282792, guid: 0b4e710b26debff41beca9cab319ca93,
+    type: 3}
+  proxyCaster3: {fileID: 0}
+--- !u!114 &5698356666345902626
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
+  m_Name: From Previous
+  m_EditorClassIdentifier: 
+  body: {fileID: -25643596904505910}
+  direction: 1
+  maxConnectionCount: 1
+  styleID: Gameflow
+  _connections:
+  - {fileID: 2277312584023626152}
+  side: 4
+  sidePosition: 30
+  sideOffset: 0
+--- !u!114 &5735786448118426759
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f802ed5ec22b89b4589d5c56a14dbb31, type: 3}
+  m_Name: Set Background
+  m_EditorClassIdentifier: 
+  position: {x: -498.39996, y: -96}
+  dynamicConnectionPorts: []
+  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+  toNextOUT: {fileID: 2277312584023626152}
+  fromPreviousIN: {fileID: 3551512320741476297}
+  bgType: 1
+  bgSprite: {fileID: 0}
+  bgPrefab: {fileID: 1025748606208915163, guid: 7ad1191ef55b29740ba9543a2212596e,
+    type: 3}
+--- !u!114 &6816891030177268697
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7526e49d92a24a64d82dc85f8f23592c, type: 3}
+  m_Name: End And Transition
+  m_EditorClassIdentifier: 
+  position: {x: 859.4, y: -107}
+  dynamicConnectionPorts: []
+  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+  fromPreviousIN: {fileID: 1092720247052100981}
+--- !u!114 &7650966448053692992
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cef2b5720500c184eadf1b3fa29fe190, type: 3}
+  m_Name: Battle Wave
+  m_EditorClassIdentifier: 
+  position: {x: 430, y: -100}
+  dynamicConnectionPorts: []
+  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+  toNextOUT: {fileID: -8060908836447406008}
+  fromPreviousIN: {fileID: 529602613458240646}
+  clearFieldOptions: 3
+  waveTitle: Pillar of the Storm
+  waveNumberOverride: Mari Urraca
+  music: {fileID: 0}
+  battleField:
+    _data:
+    - {fileID: 0}
+    - {fileID: 2720381236179192261, guid: b987c5c42d8742c47a0f0b4c37a2b438, type: 3}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 6673564152387512629, guid: e44464bf166f3a440956e123f0b4426d, type: 3}
+    _rows: 2
+    _cols: 3
+  openingScene: {fileID: 11400000, guid: 3c8e59c72f0dff74ba1136db10271db5, type: 2}
+  battleEvents: []
+  useStandardEvents: 1
+  reinforcements: []
