@@ -14,12 +14,14 @@ namespace Gameflow
         public override Vector2 MinSize { get { return new Vector2(100, 60); } }
 
         public Sprite sprite;
+        public int messagesBeforeFade = 1;
 
 #if UNITY_EDITOR
         public override void NodeGUI()
         {
             GUILayout.BeginVertical(new GUIStyle());
             sprite = RTEditorGUI.ObjectField(sprite, false);
+            messagesBeforeFade = RTEditorGUI.IntField("Fade", messagesBeforeFade);
             GUILayout.EndVertical();
         }
 #endif

@@ -42,7 +42,7 @@ public abstract class DialogViewMessage<T> : DialogView where T : DialogItemMess
         return dialogBox;
     }
 
-    public void CreateEmbeddedImage(Sprite sprite)
+    public void CreateEmbeddedImage(Sprite sprite, int messagesBeforeFade)
     {
         var instance =  Instantiate(GetImagePrefab(), messageContainer);
         var image = instance.GetComponentInChildren<Image>();
@@ -53,6 +53,7 @@ public abstract class DialogViewMessage<T> : DialogView where T : DialogItemMess
             Mathf.Min(maxSize.y * imageAspect, maxSize.x),
             Mathf.Min(maxSize.x / imageAspect, maxSize.y));
         instance.transform.SetAsFirstSibling();
+        instance.GetComponent<VNPlusEmbeddedImage>().messagesBeforeFade = messagesBeforeFade;
         instance.GetComponentInChildren<DialogContinueIndicator>().Activate();
         LayoutRebuilder.ForceRebuildLayoutImmediate(instance.transform as RectTransform);
         AnimateNewImageIn(instance.transform as RectTransform);

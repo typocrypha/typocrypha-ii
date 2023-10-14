@@ -49,6 +49,7 @@ public class VNPlusDialogBoxUI : MonoBehaviour
         iconImage.sprite = character.chat_icon;
     }
 
+    [ContextMenu("DoDim")]
     public void DoDim(TweenInfo tweenInfo)
     {
         tweenInfo.Complete();

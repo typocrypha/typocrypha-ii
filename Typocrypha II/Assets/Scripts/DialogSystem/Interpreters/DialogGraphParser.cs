@@ -273,11 +273,11 @@ public class DialogGraphParser : GraphParser
             {
                 if (DialogManager.instance.DialogView is DialogViewVNPlus vnplusView)
                 {
-                    vnplusView.CreateEmbeddedImage(embedImageNode.sprite);
+                    vnplusView.CreateEmbeddedImage(embedImageNode.sprite, embedImageNode.messagesBeforeFade);
                 }
                 else if (DialogManager.instance.DialogView is DialogViewChat chatView)
                 {
-                    chatView.CreateEmbeddedImage(embedImageNode.sprite);
+                    chatView.CreateEmbeddedImage(embedImageNode.sprite, embedImageNode.messagesBeforeFade);
                 }
                 return null;
             }
