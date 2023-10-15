@@ -85,10 +85,10 @@ public class Player : Caster, IPausable
             TargetPos.Col = Mathf.Max(0, TargetPos.Col - 1);
         if (Input.GetKeyDown(KeyCode.RightArrow))
             TargetPos.Col = Mathf.Min(2, TargetPos.Col + 1);
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-            TargetPos.Row = 0;
-        if (Input.GetKeyDown(KeyCode.DownArrow))
-            TargetPos.Row = 1;
+        //if (Input.GetKeyDown(KeyCode.UpArrow))
+        //    TargetPos.Row = 0;
+        //if (Input.GetKeyDown(KeyCode.DownArrow))
+        //    TargetPos.Row = 1;
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             var field = Battlefield.instance;
