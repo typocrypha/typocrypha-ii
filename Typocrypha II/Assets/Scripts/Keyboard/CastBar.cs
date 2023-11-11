@@ -201,6 +201,11 @@ namespace Typocrypha
         /// </summary>
         public abstract void Submit();
 
+        public void Clear()
+        {
+            Clear(!PH.Pause);
+        }
+
         protected void Clear(bool showCursor)
         {
             pos = 0;

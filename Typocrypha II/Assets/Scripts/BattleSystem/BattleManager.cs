@@ -158,6 +158,8 @@ public class BattleManager : MonoBehaviour, IPausable
         // Clear player cooldowns
         SpellCooldownManager.instance.ResetAllCooldowns();
         Typocrypha.Keyboard.instance.Clear();
+        Rule.ActiveRule = null;
+        Battlefield.instance.Player.TargetPos = new Battlefield.Position(0, 1);
         StartCoroutine(StartWaveCR(CurrWave));
     }
 
@@ -198,6 +200,31 @@ public class BattleManager : MonoBehaviour, IPausable
             DialogManager.instance.StartDialog(waveData.openingScene, true);
         }
         PH.Pause = false; // Unpause if no dialog scene, else remove extra pause
+    }
+
+    public class ReinforcementData
+    {
+        public ReinforcementData(GameObject prefab, Battlefield.Position pos)
+        {
+            Prefab = prefab;
+            Pos = pos;
+        }
+
+        public ReinforcementData(GameObject prefab, int row, int col) : this(prefab, new Battlefield.Position(row, col))
+        {
+        }
+
+        public GameObject Prefab { get; set; }
+        public Battlefield.Position Pos { get; set; }
+    }
+
+    public IEnumerator AddCasters(IReadOnlyList<ReinforcementData> data, bool unPause = false)
+    {
+        for (int i = 0; i < data.Count; i++)
+        {
+            var casterData = data[i];
+            yield return StartCoroutine(AddCaster(casterData.Prefab, casterData.Pos.Row, casterData.Pos.Col, unPause));
+        }
     }
 
     public IEnumerator AddCaster(GameObject casterPrefab, int row, int col, bool unPause = false)

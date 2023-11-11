@@ -42,6 +42,25 @@ public abstract class DialogViewMessage<T> : DialogView where T : DialogItemMess
         return dialogBox;
     }
 
+    public void CreateEmbeddedImage(Sprite sprite, int messagesBeforeFade)
+    {
+        var instance =  Instantiate(GetImagePrefab(), messageContainer);
+        var image = instance.GetComponentInChildren<Image>();
+        image.sprite = sprite;
+        var imageAspect = (float)image.sprite.texture.width / image.sprite.texture.height;
+        var maxSize = image.rectTransform.sizeDelta;
+        image.rectTransform.sizeDelta = new Vector2(
+            Mathf.Min(maxSize.y * imageAspect, maxSize.x),
+            Mathf.Min(maxSize.x / imageAspect, maxSize.y));
+        instance.transform.SetAsFirstSibling();
+        var embedComponent = instance.GetComponent<VNPlusEmbeddedImage>();
+        embedComponent.messagesBeforeFade = messagesBeforeFade;
+        embedComponent.tweenInfo = messageFadeTween;
+        instance.GetComponentInChildren<DialogContinueIndicator>().Activate();
+        LayoutRebuilder.ForceRebuildLayoutImmediate(instance.transform as RectTransform);
+        AnimateNewImageIn(instance.transform as RectTransform);
+    }
+
     private void SetCharacterSpecificUI(VNPlusDialogBoxUI vnPlusUI, List<CharacterData> data)
     {
         if (vnPlusUI == null)
@@ -58,6 +77,7 @@ public abstract class DialogViewMessage<T> : DialogView where T : DialogItemMess
     }
 
     protected abstract GameObject GetMessagePrefab(T dialogItem, List<CharacterData> data, out bool isNarrator);
+    protected abstract GameObject GetImagePrefab();
 
     private DialogBox CreateDialogBox(GameObject prefab)
     {
@@ -134,6 +154,11 @@ public abstract class DialogViewMessage<T> : DialogView where T : DialogItemMess
         // Initialize scale
         imageTransform.localScale = new Vector3(0, 0, imageTransform.localScale.z);
         messageScaleTween.Start(imageTransform.DOScale(new Vector3(1, 1, imageTransform.localScale.z), messageScaleTween.Time));
+        if (lastBoxUI != null)
+        {
+            lastBoxUI.DoDim(messageFadeTween);
+            lastBoxUI = null;
+        }
     }
 
     protected void CompleteMessageTweens()

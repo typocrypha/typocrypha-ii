@@ -14,6 +14,6 @@ public class KeyboardTEST : MonoBehaviour
     IEnumerator Start()
     {
         yield return new WaitForSeconds(2f);
-        Typocrypha.Keyboard.instance?.ApplyEffect(effectString, effect);
+        Typocrypha.Keyboard.instance?.ApplyEffect(effectString, effect, null);
     }
 }

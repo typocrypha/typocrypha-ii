@@ -337,6 +337,7 @@ public class DialogScriptParser : EditorWindow
         {
             var gnode = CreateNode(EmbedImage.ID) as EmbedImage;
             gnode.sprite = LoadAsset<Sprite>(args[1], "Assets/Graphics/Sprites/Dialog");
+            if (args.Length == 3) gnode.messagesBeforeFade = int.Parse(args[2]);
             nodes.Add(gnode);
         }
         else if (nodeType == typeof(SetExpression))

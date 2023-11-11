@@ -17,6 +17,7 @@ public class DialogViewChat : DialogViewMessage<DialogItemChat>
     [SerializeField] private GameObject leftDialogBoxPrefab;
     [SerializeField] private GameObject narratorDialogBoxPrefab;
     [SerializeField] private GameObject randoDialogBoxPrefab;
+    [SerializeField] private GameObject embeddedImagePrefab;
     [Header("Enter / Exit Anim Parameters")]
     [SerializeField] private RectTransform contentRoot;
     [SerializeField] private TweenInfo enterExitViewTween;
@@ -70,6 +71,11 @@ public class DialogViewChat : DialogViewMessage<DialogItemChat>
         }
         isNarrator = true;
         return narratorDialogBoxPrefab;
+    }
+
+    protected override GameObject GetImagePrefab()
+    {
+        return embeddedImagePrefab;
     }
 
     public override IEnumerator PlayEnterAnimation()
