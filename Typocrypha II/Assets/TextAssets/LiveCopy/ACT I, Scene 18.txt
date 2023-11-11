@@ -10,15 +10,6 @@
 Illyia[0,2]: ...OK, this is actually a lot of demons.
 
 
-Ayin[0,1]: Esaias! H-How long until the assault teams arrive?
-
-
-Esaias[0,1]: They are not far now. Approximately 60 seconds until arrival.
-
-
-Esaias[0,1]: I have put out a distress beacon, so they should be on their way...
-
-
 >addchar,Dahlia,0,0,right,base,stressed
 Dahlia[0,2]: Everyone stay close! We can do this!
 
@@ -69,7 +60,7 @@ Illyia[0,2]: Out of the way!!!
 
 // Spell being cast is placeholder
 >clear
->castSpellAlly,PERISH,0,1
+>castSpellAlly,PERISH,0,1,Illyia goes wild!
 
 
 Illyia[0,2](base,laughing): Phew! You OK, Leader?
@@ -84,10 +75,12 @@ Ayin[0,1]: Uh, y-yeah. Thanks, Illyia!
 +bubble
 
 
-Esaias[0,1]: Support fire from the assault team incoming!
+Esaias[0,1]: Demon presence is diminishing...
 
 
->castSpellProxy,ARTILLERY,0,1,AssaultTeam,ARTILLERY fire rains down!
+Illyia[0,1]: Finish the rest!
+
+
 >clearReinforcements
 
 
@@ -99,18 +92,12 @@ Esaias[0,1]: Support fire from the assault team incoming!
 >playbgm,BGMVictory
 
 
->addchar,Dahlia,0,0,right,normal
-Dahlia[0,2]: Look! You can see the assault teams coming!
+>addchar,Dahlia,0,0,right,base,normal
+Dahlia[0,2]: We... Survived.
 
 
->addchar,Illyia,0,0,right,laughing
+>addchar,Illyia,0,0,right,base,laughing
 Illyia[0,2]: Fuck yeah! We did it!
-
-
-Ayin[0,1]: (Oh thank god.)
-
-
-Ayin[0,1]: OK! Everyone, fall ba-
 
 
 >stopbgm
@@ -166,14 +153,15 @@ Illyia[0,2]: -ACK!
 Ayin[0,1]: Illyia!!
 
 
->addchar,Esaias,0,0,right,anxious
-Esaias[0,2]: W-wait...!
+>addchar,Esaias,0,0,right,normal
+Esaias[0,2]: W-what...!
 
 
 >clear
 >castSpell,LANCE,1,2,0,1,Mari casts ICICLE
 
 
+>setexpr,Esaias,anxious
 Esaias[0,2]: -GAAH!
 
 
