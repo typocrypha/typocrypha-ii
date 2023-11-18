@@ -48,8 +48,13 @@ public class PauseHandle
         if (newParent == null)
             return;
         FreeFromParent();
-        newParent.onPause += onPause;
+        newParent.onPause += SetPause;
         parent = newParent;
+    }
+
+    private void SetPause(bool pauseState)
+    {
+        Pause = pauseState;
     }
 
     public void SetParent(IPausable newParent)
@@ -61,7 +66,7 @@ public class PauseHandle
     {
         if(parent != null)
         {
-            parent.onPause -= onPause;
+            parent.onPause -= SetPause;
             parent = null;
         }
     }

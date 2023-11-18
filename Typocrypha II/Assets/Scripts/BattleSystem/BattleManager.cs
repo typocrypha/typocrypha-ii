@@ -26,6 +26,10 @@ public class BattleManager : MonoBehaviour, IPausable
     [Header("Default Spawn FX")]
     public SpellFxData defualtSpawnFx = new SpellFxData();
 
+    [Header("Game Over")]
+    public UnityEngine.Events.UnityEvent OnGameOver = default;
+    public AudioClip GameOverAudioClip = default;
+
     private BattleGraphParser graphParser;
     private readonly List<BattleEvent> currEvents = new List<BattleEvent>();
     private int waveNum = 0;
@@ -259,5 +263,21 @@ public class BattleManager : MonoBehaviour, IPausable
         }
         yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
         yield return new WaitForSeconds(0.5f);
+    }
+
+    public void GameOver()
+    {
+        PH.Pause = true;
+        AudioManager.instance.PlayBGM(GameOverAudioClip);
+        OnGameOver.Invoke();
+    }
+
+    public void Reload()
+    {
+        Battlefield.instance.Remove(1, 1, true); //removes player if already exists
+        AudioManager.instance.StopBGM();
+        PH.Pause = false;
+        LoadBattle();
+        StartBattle();
     }
 }

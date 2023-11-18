@@ -30,6 +30,12 @@ public class Player : Caster, IPausable
         PH = new PauseHandle(OnPause);
         PH.SetParent(BattleManager.instance.PH);
         atbPlayer = GetComponent<ATB3.ATBPlayer>();
+        OnSpiritMode += BattleManager.instance.GameOver;
+    }
+
+    void OnDestroy()
+    {
+        OnSpiritMode -= BattleManager.instance.GameOver;
     }
 
     /// <summary>
