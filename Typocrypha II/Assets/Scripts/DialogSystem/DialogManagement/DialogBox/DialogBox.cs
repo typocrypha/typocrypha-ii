@@ -69,6 +69,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
     Coroutine scrollCR; // Coroutine that scrolls the text
     private AudioClip[] textBlips = new AudioClip[2];
     private bool started = false;
+    private bool resetTextBlips = false;
 
     /// <summary>
     /// Returns whether text is done scrolling or not.
@@ -120,7 +121,6 @@ public class DialogBox : MonoBehaviour, IDialogBox
                 }
             }
         }
-        started = false;
     }
 
     public void StartDialogScroll()
@@ -167,6 +167,9 @@ public class DialogBox : MonoBehaviour, IDialogBox
         hideText.ind[0] = 0;
         hideText.ind[1] = dialogItem.text.Length;
         hideText.done = false;
+        // Reset private vars
+        resetTextBlips = false;
+        started = false;
     }
 
     /// <summary>
@@ -230,6 +233,8 @@ public class DialogBox : MonoBehaviour, IDialogBox
 	protected IEnumerator TextScrollCR()
     {
         started = true;
+        int speechCounter = 0;
+        resetTextBlips = false;
         for(int pos = 0; pos < dialogItem.text.Length; ++pos)
         {
             // Check text events at every position regardless of batch size
@@ -241,8 +246,13 @@ public class DialogBox : MonoBehaviour, IDialogBox
                     yield return new WaitWhile(this.IsPaused); // Wait on pause.
                 }
             }
+            if (resetTextBlips)
+            {
+                speechCounter = 0;
+                resetTextBlips = false;
+            }
             // Play scroll blips
-            if (pos % SpeechInterval == 0 && (PlaySpeechOnSpaces || !char.IsWhiteSpace(dialogItem.text[pos])))
+            if (speechCounter % SpeechInterval == 0 && (PlaySpeechOnSpaces || !char.IsWhiteSpace(dialogItem.text[pos])))
             {
                 for (int i = 0; i < textBlips.Length; i++)
                 {
@@ -266,6 +276,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
                 DumpText();
                 yield break;
             }
+            ++speechCounter;
         }
         hideText.ind[0] = dialogItem.text.Length;
         hideText.done = true;
@@ -313,10 +324,19 @@ public class DialogBox : MonoBehaviour, IDialogBox
             TextEvent te = dialogItem.TextEventList[0];
             dialogItem.TextEventList.RemoveAt(0);
             var textEventRoutine = TextEvents.instance.PlayEvent(te.evt, te.opt, this);
+            if(ShouldResetTextBlips(te.evt))
+            {
+                resetTextBlips = true;
+            }
             if(textEventRoutine != null)
             {
                 yield return textEventRoutine;
             }
         }
 	}
+
+    private static bool ShouldResetTextBlips(string evt)
+    {
+        return evt == TextEvents.pauseEvent;
+    }
 }
