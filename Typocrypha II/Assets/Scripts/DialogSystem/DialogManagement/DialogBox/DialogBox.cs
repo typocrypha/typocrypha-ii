@@ -37,6 +37,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
     const int defaultTextDisplayInterval = 1; // Default number of characters displayed each scroll.
     const int defaultSpeechInterval = 4; // Default number of characters before speech sfx plays
     const bool defaultPlaySpeechOnSpaces = true;
+    const float defaultDashContinueDelay = 0.5f;
     const float defaultAutoContinueDelay = 0.5f;
     const float textPad = 16f; // Padding between text rect and dialog box rect.
     #endregion
@@ -136,7 +137,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
     {
         SetupDialogBox(dialogItem);
         StartDialogScroll();
-	}
+    }
 
     /// <summary>
     /// Initializes dialogue box (parses tags) and starts text scroll.
@@ -183,7 +184,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
         }
         // End text scroll and display all text.
         StopAllCoroutines();
-		scrollCR = null;
+        scrollCR = null;
         hideText.ind[0] = dialogItem.text.Length;
         hideText.done = true;
         if(ContinueIndicator != null)
@@ -229,8 +230,8 @@ public class DialogBox : MonoBehaviour, IDialogBox
         return GetComponent<RectTransform>().sizeDelta.y;
     }
 
-	// Scrolls text character by character
-	protected IEnumerator TextScrollCR()
+    // Scrolls text character by character
+    protected IEnumerator TextScrollCR()
     {
         started = true;
         int speechCounter = 0;
@@ -284,7 +285,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
         {
             yield return StartCoroutine(CheckEvents(dialogItem.text.Length)); // Play events at end of text.
         }
-        if (ShouldAutoContiune(out float autoDelay))
+        if (ShouldAutoContinue(out float autoDelay))
         {
             yield return new WaitForSeconds(autoDelay);
             DialogManager.instance.NextDialog(true, false);
@@ -300,24 +301,26 @@ public class DialogBox : MonoBehaviour, IDialogBox
         return dialogItem.TextEventList.Count > 0;
     }
 
-    private bool ShouldAutoContiune(out float delay)
+    private bool ShouldAutoContinue(out float delay)
     {
-        if(dialogItem.text.Length > 0 && dialogItem.text[dialogItem.text.Length - 1] == '-')
+        if (Settings.AutoContinue)
         {
-            delay = defaultAutoContinueDelay;
+            delay = defaultAutoContinueDelay / Settings.TextScrollSpeed;
             return true;
         }
-        // else(if override is on)
-        // {
-        //      Use auto delay
-        //      return true;
-        // }
+
+        if (dialogItem.text.Length > 0 && dialogItem.text[dialogItem.text.Length - 1] == '-')
+        {
+            delay = defaultDashContinueDelay;
+            return true;
+        }
+        
         delay = 0;
         return false;
     }
 
-	// Checks for and plays text events
-	IEnumerator CheckEvents(int startPos)
+    // Checks for and plays text events
+    IEnumerator CheckEvents(int startPos)
     {
         while (HasTextEvents() && dialogItem.TextEventList[0].pos <= startPos)
         {
@@ -333,7 +336,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
                 yield return textEventRoutine;
             }
         }
-	}
+    }
 
     private static bool ShouldResetTextBlips(string evt)
     {
