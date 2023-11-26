@@ -23,13 +23,54 @@ Narrator: You’re waiting for Adelai at the Typocry-Pho restaurant.
 Narrator: She’s late.
 
 
-Ayin(nervous): ...
+Ayin(nervous): .[pause,0.2].[pause,0.2].
 
 
-Ayin: Maybe I should call her...
+Ayin: Clarke,[pause,0.1] any updates from Adelai?
 
 
-Narrator: You see Adelai run in through the door.
+>addchar,Clarke,0,0,right
+
+
+Narrator: A hologram of Clarke -[pause,0.2] the Typocrypha’s “Personalized AI Clerk” -[pause,0.2] blips into existence.
+
+
+Clarke: Yes,[pause,0.1] you have received 62 new messages from Adelai Steiner in the past 10 minutes.
+
+
+>setexpr,Ayin,surprisedbad
+
+
+Clarke: Based on your previous preferences,[pause,0.1] I have throttled new notifications from Adelai Steiner.
+
+
+Clarke: Would you like for me to re-enable notifications?
+
+
+Ayin(squint): ...n-no,[pause,0.2] that’s OK Clarke.
+
+
+Narrator: Adelai is a really fast typer.
+
+Clarke: Understood!
+
+
+Clarke: Summarizing recent messages...
+
+
+Clarke: {c,adelai}“Some stuff came up, running late, be there soon, super super super sorry!”{c}
+
+
+Ayin(nervoussmile): Got it,[pause,0.2] thanks...
+
+
+Clarke: You’re welcome, Ayin.
+
+
+>removechar,Clarke
+
+
+Narrator: As if on cue, you see Adelai run in through the door.
 
 
 >playbgm,BGMSecondHand(Redux)
@@ -47,16 +88,10 @@ Adelai(frustrateddistant): I left right after I texted you but then the train wa
 Ayin(nervoussmile): Uh,[pause,0.2] i-it’s OK Adelai.[pause,0.2] I saw your texts. 
 
 
-Narrator: You didn’t get a chance to read them all since there were over 60 of them.
-
-
-Narrator: Adelai is a really fast typer.
-
-
 Adelai: Sorry-[pause,0.2]^shake^Urgh|shake|! It’s just frustrating.
 
 
-Adelai(bffs4ever): Anyways,[pause,0.2] did you already order?
+Adelai(bffs4ever): Anyways,[pause,0.1] did you already order?
 
 
 Ayin(normal): Yeah, two orders of boat noodles.
@@ -68,7 +103,7 @@ Adelai(serious): And you got the sizes right?[pause,0.2] So a-
 Ayin(normal): -Small for me and large for you.
 
 
-Adelai(normal): Perfect, thanks Ayin!
+Adelai(normal): Thanks Ayin!
 
 
 Adelai(caring): You should treat yourself to a large sometimes!
@@ -77,7 +112,7 @@ Adelai(caring): You should treat yourself to a large sometimes!
 Ayin(nervoussmile): Well money’s been kind of tight recently so...
 
 
-Adelai(interested): Ah, right...
+Adelai(interested): Ah,[pause,0.3] right...
 
 
 Adelai: But your dad’s been helping you with the school fees, right?
@@ -101,20 +136,19 @@ Adelai: Why doesn’t he come back to work for Ostanes?
 Adelai(teasing): I’m sure we could at least pay him better. 
 
 
-Ayin(normal): I’ve brought it up before but he always tries to dodge the subject.
+Ayin(normal): I’ve brought it up before[pause,0.1] but he always dodges the subject.
 
 
-Adelai(normal): Well, if he ever changes his mind let me know! 
+Adelai(normal): Well,[pause,0.2] let me know if he ever changes his mind! 
 
 
 Adelai: I could probably put a good word in with my dad.
 
 
-//For now until TIPS is implemented
 Narrator: You have mixed feelings about exploiting the fact that Adelai’s dad is the CEO of Ostanes.
 
 
-Adelai(frustrateddistant): Sigh.[pause,0.1].[pause,0.1].[pause,0.1] Not that I really see him that much either.
+Adelai(frustrateddistant): Sigh...[pause,0.3] Not that I really see him that much either.
 
 
 Adelai: He’s been in constant meetings with the board and AEIOU. 
@@ -132,7 +166,7 @@ Adelai(normal): Oh I don’t know.
 Adelai: I try to keep my nose out of all that bureaucracy.
 
 
-Adelai: Although I have been seeing a lot more of aunty-[pause,0.1]err,[pause,0.1] General Agnes.
+Adelai(serious): Although I have been seeing a lot more of aunty-[pause,0.1]err,[pause,0.1] General Agnes.
 
 
 Adelai(serious): Maybe they’re planning on finally going into the Ruins and just destroying all those stupid demons...
@@ -144,28 +178,40 @@ Narrator: Adelai seems lost in thought.
 Narrator: She’s been feeling distant like this a lot recently.
 
 
-Ayin(sheepish): S-so, sounds like both our dads are pretty busy, huh? 
+Ayin(sheepish): S-so,[pause,0.2] sounds like both our dads are pretty busy, huh? 
 
 
-Adelai(bffs4ever): .[pause,0.1].[pause,0.1].[pause,0.1] Hehe,[pause,0.2] yeah. 
+Adelai(bffs4ever): ...hehe,[pause,0.2] yeah. 
 
 
-Adelai(teasing): Hey,[pause,0.2] do you remember that old play room at the Ostanes office?
+Adelai(teasing): Hey that reminds me,[pause,0.2] do you remember that old play room at the Ostanes office?
 
 
-Ayin(sheepish): Mmm, what was that again?
+Ayin(sheepish): Mmmaybe~?
 
 
-Adelai(normal): C’mon, remember? 
+Adelai(normal): C’mon,[pause,0.2] you remember! 
 
 
 Adelai: We were always playing with each other there while our dads were working.
 
 
-Narrator: Back then... You try not to think about stuff from back then.
+Narrator: Back then...[pause,0.2] Before the Demons attacked and put Agartha into lockdown.
 
 
-Adelai(teasing): And speaking of waiting around, our food’s taking a while, huh?
+Narrator: Ivan was one of the chief engineers for {c,ui-terms}Ostanes{c}:[pause,0.1] the inventor of the Typocrypha.
+
+
+Narrator: Supposedly Ivan even worked directly with Austin Steiner at times.
+
+
+Narrator: But after the Demon attack,[pause,0.1] Ivan suddenly left Ostanes.
+
+
+Narrator: He never told you why.
+
+
+Adelai(teasing): And speaking of waiting around,[pause,0.2] our food’s taking a while, huh?
 
 
 Adelai(normal): Maybe I’ll go ask-
@@ -187,7 +233,7 @@ Narrator: Once the shaking stops, your Typocrypha starts playing an alarm messag
 >addchar,Clarke,0,0.2
 
 
-Clarke: ATTENTION. ATTENTION. 
+Clarke: ATTENTION.[pause,0.2] ATTENTION. 
 
 
 Clarke: Demons have attacked Residential Area B.
@@ -211,7 +257,7 @@ Narrator: The alarm continues on a shrill loop.
 >removechar,Clarke
 
 
-Adelai(serious): Ayin? Are you OK?
+Adelai(serious): Ayin?[pause,0.2] A-Are you OK?
 
 
 Ayin(nervous): I-I... 
@@ -223,16 +269,16 @@ Narrator: A cold wave of anxiety washes over you.
 Narrator: Your arms start to feel numb and tingly.
 
 
-Ayin(ohfuck): H-Haa.... I’m s-sorry, I c-c-can’t...
+Ayin(ohfuck): H-Haa....[pause,0.1] I’m s-sorry,[pause,0.1] I c-c-can’t...
 
 
-Adelai: Hey, Ayin, look at me! 
+Adelai: Ayin,[pause,0.2] look at me! 
 
 
 Adelai(caring): Breathe.[pause,0.2] Breathe, Ayin.
 
 
-Ayin(uncomfortable): Haaa... Haa...
+Ayin(uncomfortable): Haaa...[pause,0.5] Haa...
 
 
 Narrator: Adelai takes your hand into hers and you focus just on that warmth.
@@ -244,19 +290,25 @@ Narrator: A moment passes.
 Adelai: Have you calmed down a bit?
 
 
-Ayin: Y-yeah... Sorry, Adelai.
+Ayin: Y-yeah...[pause,0.2] Sorry, Adelai.
 
 
 Ayin(sheepish): I’m always h-holding you back, aren’t I?
 
 
-Adelai: Of course you’re not. We’re friends, right?
+Adelai: Of course you’re not. 
+
+
+Adelai: We’re friends,[pause,0.1] right?
 
 
 Narrator: You nod wordlessly, and Adelai smiles back.
 
 
-Adelai: C’mon, that explosion sounded really close to here. We better evacuate.
+Adelai(serious): C’mon,[pause,0.1] that explosion sounded really close to here. 
+
+
+Adelai(serious): We better evacuate.
 
 
 >endt
