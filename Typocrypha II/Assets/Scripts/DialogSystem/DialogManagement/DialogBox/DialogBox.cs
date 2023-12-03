@@ -86,6 +86,8 @@ public class DialogBox : MonoBehaviour, IDialogBox
     void Awake()
     {
         ph = new PauseHandle(OnPause);
+        ph.SetParent(DialogManager.instance);
+        ph.PauseIfParentPaused();
     }
 
     public void SetupDialogBox(DialogItem dialogItem)
@@ -236,10 +238,18 @@ public class DialogBox : MonoBehaviour, IDialogBox
         started = true;
         int speechCounter = 0;
         resetTextBlips = false;
-        for(int pos = 0; pos < dialogItem.text.Length; ++pos)
+        if (this.IsPaused())
         {
+            yield return new WaitWhile(this.IsPaused); // Wait on pause.
+        }
+        for (int pos = 0; pos < dialogItem.text.Length; ++pos)
+        {
+            if (this.IsPaused())
+            {
+                yield return new WaitWhile(this.IsPaused); // Wait on pause.
+            }
             // Check text events at every position regardless of batch size
-            if(HasTextEvents() && dialogItem.TextEventList[0].pos <= pos)
+            if (HasTextEvents() && dialogItem.TextEventList[0].pos <= pos)
             {
                 yield return StartCoroutine(CheckEvents(pos));
                 if (this.IsPaused())
@@ -281,6 +291,10 @@ public class DialogBox : MonoBehaviour, IDialogBox
         }
         hideText.ind[0] = dialogItem.text.Length;
         hideText.done = true;
+        if (this.IsPaused())
+        {
+            yield return new WaitWhile(this.IsPaused); // Wait on pause.
+        }
         if (HasTextEvents())
         {
             yield return StartCoroutine(CheckEvents(dialogItem.text.Length)); // Play events at end of text.
@@ -288,6 +302,10 @@ public class DialogBox : MonoBehaviour, IDialogBox
         if (ShouldAutoContinue(out float autoDelay))
         {
             yield return new WaitForSeconds(autoDelay);
+            if (this.IsPaused())
+            {
+                yield return new WaitWhile(this.IsPaused); // Wait on pause.
+            }
             DialogManager.instance.NextDialog(true, false);
         }
         else if (ContinueIndicator != null)

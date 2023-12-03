@@ -62,6 +62,13 @@ public class PauseHandle
         SetParent(newParent.PH);
     }
 
+    public void PauseIfParentPaused()
+    {
+        if (parent == null || !parent.Pause)
+            return;
+        this.Pause = true;
+    }
+
     private void FreeFromParent()
     {
         if(parent != null)
