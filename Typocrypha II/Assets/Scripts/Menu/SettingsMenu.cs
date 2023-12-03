@@ -8,6 +8,7 @@ public class SettingsMenu : MonoBehaviour
     [SerializeField] private MenuSlider uiSpeedSlider;
     [SerializeField] private MenuSlider gameplaySpeedSlider;
     [SerializeField] private MenuSlider textScrollSpeedSlider;
+    [SerializeField] private MenuToggle autoContinueToggle;
 
     public event System.Action OnClose;
     public void Open()
@@ -17,6 +18,7 @@ public class SettingsMenu : MonoBehaviour
         uiSpeedSlider.SetValue(Mathf.FloorToInt(Settings.UISpeed * 100));
         gameplaySpeedSlider.SetValue(Mathf.FloorToInt(Settings.GameplaySpeed * 100));
         textScrollSpeedSlider.SetValue(Mathf.FloorToInt(Settings.TextScrollSpeed * 100));
+        autoContinueToggle.SetValue(Settings.AutoContinue);
     }
 
     private void Update()
@@ -46,5 +48,10 @@ public class SettingsMenu : MonoBehaviour
     public void OnTextScrollSpeedSliderChanged(float value)
     {
         Settings.TextScrollSpeed = value / 100;
+    }
+
+    public void OnAutoContinueToggleChanged()
+    {
+        Settings.AutoContinue = !Settings.AutoContinue;
     }
 }

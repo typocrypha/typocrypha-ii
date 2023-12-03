@@ -26,6 +26,7 @@ public struct TextEvent
 /// </summary>
 public class TextEvents : MonoBehaviour, IPausable
 {
+    public const string pauseEvent = "pause";
     #region IPausable
     public PauseHandle PH { get; private set; }
 
@@ -54,8 +55,7 @@ public class TextEvents : MonoBehaviour, IPausable
         textEventMap = new Dictionary<string, Func<string[], DialogBox, Coroutine>>
         {
             {"test", Test },
-            {"pause-dialog", PauseDialog},
-            {"pause",PauseDialog },
+            {pauseEvent,PauseDialog },
             {"screen-shake",ScreenShake },
             {"shake", ScreenShake},
             {"text-delay", TextDelay},

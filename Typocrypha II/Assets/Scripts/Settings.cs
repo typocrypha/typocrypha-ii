@@ -15,6 +15,8 @@ public static class Settings
     private const KeyLayoutType keyLayoutDefault = KeyLayoutType.QWERTY;
     private const string customKeyLayoutKey = "customKeyLayout";
     private const string customKeyLayoutDefault = Typocrypha.KeyboardBuilder.keyboardFormatQwerty;
+    private const string autoContinueKey = "autoContinue";
+    private const bool autoContinueDefault = false;
 
     public enum KeyLayoutType
     {
@@ -28,7 +30,7 @@ public static class Settings
     {
         get
         {
-            SafeIntialize();
+            SafeInitialize();
             return (KeyLayoutType)PlayerPrefs.GetInt(customKeyLayoutKey);
         }
         set
@@ -41,7 +43,7 @@ public static class Settings
     {
         get
         {
-            SafeIntialize();
+            SafeInitialize();
             return PlayerPrefs.GetString(customKeyLayoutKey);
         }
         set
@@ -54,7 +56,7 @@ public static class Settings
     {
         get
         {
-            SafeIntialize();
+            SafeInitialize();
             return gameSpeed;
         }
         set
@@ -69,7 +71,7 @@ public static class Settings
     {
         get
         {
-            SafeIntialize();
+            SafeInitialize();
             return uiSpeed;
         }
         set
@@ -84,7 +86,7 @@ public static class Settings
     {
         get
         {
-            SafeIntialize();
+            SafeInitialize();
             return textScrollSpeed;
         }
         set
@@ -95,9 +97,24 @@ public static class Settings
     }
     private static float textScrollSpeed = textScrollSpeedDefault;
 
+    public static bool AutoContinue
+    {
+        get
+        {
+            SafeInitialize();
+            return autoContinue;
+        }
+        set
+        {
+            autoContinue = value;
+            PlayerPrefs.SetInt(autoContinueKey, value ? 1 : 0);
+        }
+    }
+    private static bool autoContinue = autoContinueDefault;
+
     private static bool initialized = false;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void SafeIntialize()
+    public static void SafeInitialize()
     {
         if(!initialized)
         {
@@ -139,6 +156,14 @@ public static class Settings
         if (!PlayerPrefs.HasKey(customKeyLayoutKey))
         {
             CustomKeyLayout = customKeyLayoutDefault;
+        }
+        if (!PlayerPrefs.HasKey(autoContinueKey))
+        {
+            AutoContinue = autoContinueDefault;
+        }
+        else
+        {
+            autoContinue = PlayerPrefs.GetInt(autoContinueKey) > 0;
         }
     }
 }
