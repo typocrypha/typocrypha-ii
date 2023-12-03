@@ -37,7 +37,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
     const int defaultTextDisplayInterval = 1; // Default number of characters displayed each scroll.
     const int defaultSpeechInterval = 4; // Default number of characters before speech sfx plays
     const bool defaultPlaySpeechOnSpaces = true;
-    const float defaultDashContinueDelay = 0.5f;
+    const float defaultDashContinueDelay = 0.1f;
     const float defaultAutoContinueDelay = 0.5f;
     const float textPad = 16f; // Padding between text rect and dialog box rect.
     #endregion
