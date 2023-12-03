@@ -115,13 +115,13 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
         }
 #endif
         // Check if submit key is pressed
-        if (!Loading && ReadyToContinue && dialogBox != null && DialogView.ReadyToContinue)
+        if (!Loading && ReadyToContinue && dialogBox != null && DialogView.ReadyToContinue && Input.GetKeyDown(KeyCode.Space))
         {
-            if (dialogBox.IsDone && (Input.GetKeyDown(KeyCode.Space) || Settings.AutoContinue))
+            if (dialogBox.IsDone)
             {
                 NextDialog(true, false); // If dialog is done, go to next dialog
             }
-            if (!dialogBox.IsDone && Input.GetKeyDown(KeyCode.Space) && !Settings.AutoContinue)
+            else if (!Settings.AutoContinue)
             {
                 dialogBox.DumpText(); // Otherwise, skip text scroll and dump current text
             }
