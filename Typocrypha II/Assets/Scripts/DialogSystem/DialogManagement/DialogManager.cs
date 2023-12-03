@@ -115,7 +115,7 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
         }
 #endif
         // Check if submit key is pressed
-        if (!Loading && ReadyToContinue && dialogBox != null && DialogView.ReadyToContinue && Input.GetKeyDown(KeyCode.Space))
+        if (!Loading && ReadyToContinue && dialogBox != null && DialogView.ReadyToContinue && (Input.GetKeyDown(KeyCode.Space) || Settings.AutoContinue))
         {
             if (dialogBox.IsDone)
             {
