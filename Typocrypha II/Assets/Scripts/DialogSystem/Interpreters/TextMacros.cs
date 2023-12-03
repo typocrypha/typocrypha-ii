@@ -16,6 +16,10 @@ public static class TextMacros
 	{
 		{"var", MacroVariable},
 		{"c", MacroColor},
+		{"p", MacroPause},
+		{"ps", MacroPauseShort},
+		{"pm", MacroPauseMed},
+		{"pl", MacroPauseLong},
 		{"tl", MacroTranslate},
 		{"translate", MacroTranslate},
 		{"languageName", MacroTranslatedLanguage},
@@ -93,5 +97,28 @@ public static class TextMacros
 
 	static string MacroTranslatedLanguage(string[] opt) {
 		return "Ihsuik";
+	}
+
+	static string MacroPause(string[] opt)
+	{
+		if (opt.Length <= 0)
+			return string.Empty;
+		return $"[pause,{opt[0]}]";
+	}
+
+	private const string pauseShort = "[pause,0.1]";
+	static string MacroPauseShort(string[] opt)
+	{
+		return pauseShort;
+	}
+	private const string pauseMed = "[pause,0.2]";
+	static string MacroPauseMed(string[] opt)
+	{
+		return pauseMed;
+	}
+	private const string pauseLong = "[pause,0.3]";
+	static string MacroPauseLong(string[] opt)
+	{
+		return pauseLong;
 	}
 }
