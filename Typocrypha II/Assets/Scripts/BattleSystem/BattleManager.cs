@@ -270,7 +270,7 @@ public class BattleManager : MonoBehaviour, IPausable
             equipmentMenu.Enable();
         }
         yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space) && !equipmentMenu.IsShowing);
-        equipmentMenu.Close();
+        equipmentMenu.Disable();
         wT.ContinueAnimation();
         yield return new WaitForSeconds(0.5f);
     }

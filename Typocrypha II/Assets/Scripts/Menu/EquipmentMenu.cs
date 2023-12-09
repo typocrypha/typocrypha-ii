@@ -17,6 +17,7 @@ public class EquipmentMenu : MonoBehaviour, IPausable
     [SerializeField] private BadgeSelectorMenu badgeSelector;
 
     private EquipmentMenuSlot inMenuSlot;
+    private bool skipFrame = false;
     public void Enable()
     {
         IsShowing = false;
@@ -42,8 +43,13 @@ public class EquipmentMenu : MonoBehaviour, IPausable
     {
         IsShowing = false;
         menuObject.SetActive(false);
+        equipmentNotice.SetActive(true);
+        skipFrame = true;
+    }
+
+    public void Disable()
+    {
         gameObject.SetActive(false);
-        equipmentNotice.SetActive(false);
     }
 
     public void OpenBadgeSelector(int slotIndex)
@@ -70,6 +76,11 @@ public class EquipmentMenu : MonoBehaviour, IPausable
 
     private void Update()
     {
+        if (skipFrame)
+        {
+            skipFrame = false;
+            return;
+        }
         if (PH.Pause)
         {
             return;
