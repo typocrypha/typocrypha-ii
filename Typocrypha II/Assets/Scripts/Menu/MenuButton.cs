@@ -51,4 +51,9 @@ public class MenuButton : MonoBehaviour, ISelectHandler, IDeselectHandler, ISubm
     {
         AudioManager.instance.PlaySFX(enterSFX);
     }
+
+    public void SetText(string newText)
+    {
+        text.text = newText;
+    }
 }

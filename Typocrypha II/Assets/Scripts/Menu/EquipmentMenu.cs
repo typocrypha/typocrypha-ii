@@ -4,13 +4,16 @@ using UnityEngine;
 
 public class EquipmentMenu : MonoBehaviour, IPausable
 {
+    private const string noBadgeText = "None";
     public bool IsShowing { get; private set; }
 
     public PauseHandle PH => new PauseHandle();
+    private PlayerEquipment Equipment => PlayerDataManager.instance.equipment;
 
     [SerializeField] private MenuButton first;
     [SerializeField] private GameObject menuObject;
     [SerializeField] private GameObject equipmentNotice;
+    [SerializeField] private EquipmentMenuSlot[] slots;
 
     public void Enable()
     {
@@ -18,6 +21,19 @@ public class EquipmentMenu : MonoBehaviour, IPausable
         menuObject.SetActive(false);
         equipmentNotice.SetActive(true);
         gameObject.SetActive(true);
+    }
+    public void Open()
+    {
+        IsShowing = true;
+        menuObject.SetActive(true);
+        equipmentNotice.SetActive(false);
+        first.InitializeSelection();
+        var equippedBadges = Equipment.EquippedBadgeWords;
+        foreach(var slot in slots)
+        {
+            slot.Button.SetText(equippedBadges.ContainsKey(slot.Slot) ? equippedBadges[slot.Slot].DisplayName : noBadgeText);
+        }
+        Debug.Log("Showing EquipmentMenu");
     }
 
     public void Close()
@@ -42,14 +58,5 @@ public class EquipmentMenu : MonoBehaviour, IPausable
         {
             Open();
         }
-    }
-
-    public void Open()
-    {
-        IsShowing = true;
-        menuObject.SetActive(true);
-        equipmentNotice.SetActive(false);
-        first.InitializeSelection();
-        Debug.Log("Showing EquipmentMenu");
     }
 }
