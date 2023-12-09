@@ -10,10 +10,12 @@ public class EquipmentSpellWord : EquipmentWord
     public override void Equip(Caster player)
     {
         PlayerDataManager.instance.equipment.EquipWord(word);
+        SpellCooldownManager.instance.AddWord(word, true);
     }
 
     public override void Unequip(Caster player)
     {
         PlayerDataManager.instance.equipment.UnequipWord(word);
+        SpellCooldownManager.instance.RemoveWord(word);
     }
 }

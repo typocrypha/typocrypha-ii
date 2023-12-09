@@ -23,6 +23,11 @@ public class MenuButton : MonoBehaviour, ISelectHandler, IDeselectHandler, ISubm
         button.Select();
     }
 
+    public void Select()
+    {
+        button.Select();
+    }
+
     public void OnSelect(BaseEventData eventData)
     {
         //Do this on highlight

@@ -123,6 +123,16 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
         }
     }
 
+    public void RemoveWord(SpellWord word)
+    {
+        string key = word.internalName.ToUpper();
+        // If cooldown for this word doesn't exist, return
+        if (!cooldowns.ContainsKey(key))
+            return;
+        Destroy(cooldowns[key].gameObject);
+        cooldowns.Remove(key);
+    }
+
     public bool IsOnCooldown(SpellWord word)
     {
         return TryGetCooldown(word, out var cooldown) && cooldown.Cooldown > 0;

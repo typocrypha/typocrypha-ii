@@ -25,7 +25,7 @@ public class PlayerEquipment : MonoBehaviour
         UnlockDebugWords();
         EquipDebugWords();
         UnlockDebugBadges();
-        EquipDebugBadges();
+        //EquipDebugBadges();
     }
 
     [Conditional("DEBUG")]
