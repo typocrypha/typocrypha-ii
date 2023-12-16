@@ -62,6 +62,7 @@ public class TextEvents : MonoBehaviour, IPausable
             {"scroll-delay", TextDelay},
             {"speech-interval", SpeechInterval},
             {"play-sfx", PlaySFX },
+            {"next", ContinueDialog },
         };
     }
 
@@ -169,5 +170,18 @@ public class TextEvents : MonoBehaviour, IPausable
         }
         return null;
     }
+
+    Coroutine ContinueDialog(string[] opt, DialogBox box)
+    {
+        float delay = opt.Length > 0 ? float.Parse(opt[0]) : DialogBox.defaultDashContinueDelay;
+        return StartCoroutine(ContinueDialogCR(delay));
+    }
+
+    IEnumerator ContinueDialogCR(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        DialogManager.instance.NextDialog(true, false);
+    }
+
 }
 
