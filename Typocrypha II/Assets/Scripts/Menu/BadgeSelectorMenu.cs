@@ -30,7 +30,8 @@ public class BadgeSelectorMenu : MonoBehaviour
         }
         unlockedBadges.Sort(WordComparer);
 
-        if (!Equipment.EquippedBadgeWords.ContainsKey(slot) || true)
+        int firstBadgeIndex = -1;
+        if (!Equipment.EquippedBadgeWords.ContainsKey(slot))
         {
             selectedBadgeIndex = -1;
             selectedButtonIndex = 0;
@@ -43,6 +44,20 @@ public class BadgeSelectorMenu : MonoBehaviour
                 if(equippedBadge == unlockedBadges[i])
                 {
                     selectedBadgeIndex = i;
+                    if (buttons.Length > selectedBadgeIndex + 1 || buttons.Length > unlockedBadges.Count)
+                    {
+                        selectedButtonIndex = selectedBadgeIndex + 1;
+                    }
+                    else if(unlockedBadges.Count - selectedBadgeIndex < buttons.Length)
+                    {
+                        selectedButtonIndex = buttons.Length - (unlockedBadges.Count - selectedBadgeIndex);
+                        firstBadgeIndex = unlockedBadges.Count - buttons.Length;
+                    }
+                    else
+                    {
+                        selectedButtonIndex = buttons.Length / 2;
+                        firstBadgeIndex = selectedBadgeIndex - selectedButtonIndex;
+                    }
                     break;
                 }
             }
@@ -50,7 +65,7 @@ public class BadgeSelectorMenu : MonoBehaviour
         numActiveButtons = -1;
         for (int i = 0; i < buttons.Length; ++i)
         {
-            int badgeIndex = selectedBadgeIndex + i;
+            int badgeIndex = firstBadgeIndex + i;
             if(badgeIndex < unlockedBadges.Count)
             {
                 SetButtonText(buttons[i], badgeIndex);
@@ -69,7 +84,7 @@ public class BadgeSelectorMenu : MonoBehaviour
         {
             numActiveButtons = buttons.Length;
         }
-        buttons[0].InitializeSelection();
+        buttons[selectedButtonIndex].InitializeSelection();
     }
 
     public void Close()
