@@ -14,6 +14,7 @@ public class BadgeSelectorMenu : MonoBehaviour
     private readonly List<EquipmentWord> unlockedBadges = new List<EquipmentWord>();
     private int selectedBadgeIndex;
     private int selectedButtonIndex;
+    private int numActiveButtons;
     private EquipmentWord.EquipmentSlot targetSlot;
 
     public void Open(EquipmentWord.EquipmentSlot slot)
@@ -46,6 +47,7 @@ public class BadgeSelectorMenu : MonoBehaviour
                 }
             }
         }
+        numActiveButtons = -1;
         for (int i = 0; i < buttons.Length; ++i)
         {
             int wordIndex = selectedBadgeIndex + i;
@@ -56,6 +58,10 @@ public class BadgeSelectorMenu : MonoBehaviour
             }
             else
             {
+                if(numActiveButtons == -1)
+                {
+                    numActiveButtons = i;
+                }
                 buttons[i].gameObject.SetActive(false);
             }
         }
@@ -89,7 +95,7 @@ public class BadgeSelectorMenu : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            if (selectedButtonIndex < buttons.Length - 1)
+            if (selectedButtonIndex < buttons.Length - 1 && selectedButtonIndex < numActiveButtons - 1)
             {
                 buttons[++selectedButtonIndex].Select();
                 selectedBadgeIndex++;
