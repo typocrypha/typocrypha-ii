@@ -65,6 +65,10 @@ public class BadgeSelectorMenu : MonoBehaviour
                 buttons[i].gameObject.SetActive(false);
             }
         }
+        if(numActiveButtons == -1)
+        {
+            numActiveButtons = buttons.Length;
+        }
         buttons[0].InitializeSelection();
     }
 
