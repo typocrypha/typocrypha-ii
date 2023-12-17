@@ -17,6 +17,7 @@ public class DialogScriptParser : EditorWindow
     public const string assetPath = "Assets/ScriptableObjects/DialogScenes/";
     public const string spellWordBundlePath = "Assets/ScriptableObjects/Bundles/AllWordsBundle.asset";
     public const string allyBundlePath = "Assets/ScriptableObjects/Bundles/AllyBundle.asset";
+    public const string characterDataPath = "Assets/ScriptableObjects/CharacterData";
     public TextAsset textScript; // Text script asset
     NodeCanvas canvas; // Generated canvas
     bool endAndTransition = true;
@@ -24,10 +25,9 @@ public class DialogScriptParser : EditorWindow
     float pos; // Position of current node
     Node prev;
 
-    AssetBundle characterDataBundle; // Character data bundle
     SpellWordBundle spellWords; // All spell words
     PrefabBundle allyBundle; // Ally indexable allies
-    CharacterData[] allCharacterData; // All loaded character data
+    IReadOnlyList<CharacterData> allCharacterData; // All loaded character data
 
     readonly char[] lineDelim = new char[] { '\n' }; // Line delimiter.
     readonly char[] argDelim = new char[] { ',' }; // List of arguments delimiter.
@@ -147,14 +147,11 @@ public class DialogScriptParser : EditorWindow
     // Generates node canvases from script
     public void GenerateCanvas()
     {
-        AssetBundle.UnloadAllAssetBundles(true);
-        characterDataBundle = AssetBundle.LoadFromFile(System.IO.Path.Combine(Application.streamingAssetsPath, "characterdata"));
         spellWords = AssetDatabase.LoadAssetAtPath<SpellWordBundle>(spellWordBundlePath);
         allyBundle = AssetDatabase.LoadAssetAtPath<PrefabBundle>(allyBundlePath);
-        allCharacterData = characterDataBundle.LoadAllAssets<CharacterData>();
+        allCharacterData = AssetUtils.LoadAllAssetsInDirectoryRecursive<CharacterData>(characterDataPath);
         canvas = null;
         Parse();
-        AssetBundle.UnloadAllAssetBundles(true);
     }
 
     /// <summary>
