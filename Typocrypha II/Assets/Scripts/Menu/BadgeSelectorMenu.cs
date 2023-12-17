@@ -50,10 +50,10 @@ public class BadgeSelectorMenu : MonoBehaviour
         numActiveButtons = -1;
         for (int i = 0; i < buttons.Length; ++i)
         {
-            int wordIndex = selectedBadgeIndex + i;
-            if(wordIndex < unlockedBadges.Count)
+            int badgeIndex = selectedBadgeIndex + i;
+            if(badgeIndex < unlockedBadges.Count)
             {
-                buttons[i].SetText(wordIndex < 0 ? EquipmentMenu.noBadgeText : unlockedBadges[wordIndex].DisplayName);
+                SetButtonText(buttons[i], badgeIndex);
                 buttons[i].gameObject.SetActive(true);
             }
             else
@@ -95,6 +95,10 @@ public class BadgeSelectorMenu : MonoBehaviour
             {
                 buttons[--selectedButtonIndex].Select();
                 selectedBadgeIndex--;
+            }else if(selectedBadgeIndex > -1)
+            {
+                selectedBadgeIndex--;
+                ScrollUp();
             }
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
@@ -104,7 +108,39 @@ public class BadgeSelectorMenu : MonoBehaviour
                 buttons[++selectedButtonIndex].Select();
                 selectedBadgeIndex++;
             }
+            else if(selectedBadgeIndex < unlockedBadges.Count - 1)
+            {
+                selectedBadgeIndex++;
+                ScrollDown();
+            }
         }
+    }
+
+    private void SetButtonText(MenuButton button, int badgeIndex)
+    {
+        button.SetText(badgeIndex < 0 ? EquipmentMenu.noBadgeText : unlockedBadges[badgeIndex].DisplayName);
+    }
+
+    private void ScrollUp()
+    {
+        for (int i = 0; i < buttons.Length; ++i)
+        {
+            int badgeIndex = selectedBadgeIndex + i;
+            SetButtonText(buttons[i], badgeIndex);
+        }
+        buttons[0].OnSelect(null);
+    }
+
+
+
+    private void ScrollDown()
+    {
+        for (int i = 0; i < buttons.Length; ++i)
+        {
+            int badgeIndex = selectedBadgeIndex - i;
+            SetButtonText(buttons[(buttons.Length - 1) - i], badgeIndex);
+        }
+        buttons[buttons.Length - 1].OnSelect(null);
     }
 
     private static int WordComparer(EquipmentWord w1, EquipmentWord w2)
