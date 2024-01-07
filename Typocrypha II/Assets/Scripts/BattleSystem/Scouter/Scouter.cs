@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 /// <summary>
 /// Target reticule and scouter during battle.
@@ -17,15 +18,18 @@ public class Scouter : MonoBehaviour, IPausable
     }
     #endregion
 
-    public GameObject scouterDisplay; // Scouter display object.
-    public DialogBox scouterDialog; // Scouter text dialog.
-    public Image scouterImage; // Scouter image.
     [SerializeField] private TargetReticle targetReticle;
+
+    public GameObject spellModeDisplay; // Scouter display object.
+    [SerializeField] private Button firstSpellInList;
+
+    private IReadOnlyList<SpellWord> listOfSpells = null;
+    private int currentSpell = -1;
 
     public bool ScouterActive // Is the scouter active (i.e. display is active)?
     {
-        get => scouterDisplay.activeSelf;
-        set => scouterDisplay.SetActive(value);
+        get => spellModeDisplay.activeSelf;
+        set => spellModeDisplay.SetActive(value);
     }
 
     void Awake()
@@ -42,16 +46,24 @@ public class Scouter : MonoBehaviour, IPausable
     void Update()
     {
         // Toggle scouter
-        if (CheckInput() && (!Battlefield.instance.PH.Pause || ScouterActive))
+        if (ScouterKeyPressed() && (!Battlefield.instance.PH.Pause || ScouterActive))
         {
             ToggleScouter();
         }
+
+        if (!ScouterActive) return;
+
+        if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.UpArrow))
+        {
+            currentSpell = EventSystem.current.currentSelectedGameObject.transform.GetSiblingIndex();
+        }
     }
 
-    private bool CheckInput()
+    private bool ScouterKeyPressed()
     {
         return Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift);
     }
+
     private void ToggleScouter()
     {
         if (ScouterActive)
@@ -60,19 +72,19 @@ public class Scouter : MonoBehaviour, IPausable
             targetReticle.PH.Pause = false;
             Battlefield.instance.PH.Pause = false;
             Typocrypha.Keyboard.instance.PH.Pause = false;
-            return;
-        }
-        var target = Battlefield.instance.GetCaster(Battlefield.instance.Player.TargetPos);
-        if(target == null || target.ScouterData == null)
-        {
+            EventSystem.current.SetSelectedGameObject(null);
             return;
         }
 
+        ScouterActive = true;
         targetReticle.PH.Pause = true;
         Battlefield.instance.PH.Pause = true;
         Typocrypha.Keyboard.instance.PH.Pause = true;
-        ScouterActive = true;
-        scouterDialog.StartDialogBox(target.ScouterData.Description);
-        scouterImage.sprite = target.ScouterData.Image;
+        firstSpellInList.Select();
+        currentSpell = 0;
+        listOfSpells = SpellCooldownManager.instance.GetSpells();
+        for (int i = 0; i < 8; i++)
+            firstSpellInList.transform.parent.GetChild(i).gameObject.SetActive(i < listOfSpells.Count);
     }
 }
+ 
