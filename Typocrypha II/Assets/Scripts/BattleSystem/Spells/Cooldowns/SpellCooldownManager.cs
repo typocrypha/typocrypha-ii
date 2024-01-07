@@ -78,6 +78,20 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
         cooldownTr.SortHiearchy(CompareCooldowns);
     }
 
+    public IReadOnlyList<SpellWord> GetSpells()
+    {
+        var ret = new List<SpellWord>(cooldowns.Count);
+        foreach(Transform child in cooldownTr)
+        {
+            var cooldown = child.GetComponent<SpellCooldown>();
+            if(cooldown != null)
+            {
+                ret.Add(cooldown.SpellWord);
+            }
+        }
+        return ret;
+    }
+
     private int CompareCooldowns(Transform a, Transform b)
     {
         var aCooldown = a.GetComponent<SpellCooldown>();
