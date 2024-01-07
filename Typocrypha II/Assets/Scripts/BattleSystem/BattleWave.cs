@@ -18,4 +18,5 @@ public class BattleWave
     public bool useStdEvents;
     public List<GameObject> reinforcementPrefabs;
     public DialogCanvas openingScene;
+    public bool allowEquipment;
 }
