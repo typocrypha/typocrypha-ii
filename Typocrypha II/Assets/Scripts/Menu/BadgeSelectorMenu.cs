@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,6 +10,7 @@ public class BadgeSelectorMenu : MonoBehaviour
 
     [SerializeField] private EquipmentMenu parentMenu;
     [SerializeField] private MenuButton[] buttons;
+    [SerializeField] private TextMeshProUGUI descriptionText;
     [SerializeField] private UnityEvent onClose;
 
     private readonly List<EquipmentWord> unlockedBadges = new List<EquipmentWord>();
@@ -85,6 +87,7 @@ public class BadgeSelectorMenu : MonoBehaviour
             numActiveButtons = buttons.Length;
         }
         buttons[selectedButtonIndex].InitializeSelection();
+        UpdateDescription();
     }
 
     public void Close()
@@ -110,10 +113,13 @@ public class BadgeSelectorMenu : MonoBehaviour
             {
                 buttons[--selectedButtonIndex].Select();
                 selectedBadgeIndex--;
-            }else if(selectedBadgeIndex > -1)
+                UpdateDescription();
+            }
+            else if(selectedBadgeIndex > -1)
             {
                 selectedBadgeIndex--;
                 ScrollUp();
+                UpdateDescription();
             }
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
@@ -122,13 +128,20 @@ public class BadgeSelectorMenu : MonoBehaviour
             {
                 buttons[++selectedButtonIndex].Select();
                 selectedBadgeIndex++;
+                UpdateDescription();
             }
             else if(selectedBadgeIndex < unlockedBadges.Count - 1)
             {
                 selectedBadgeIndex++;
                 ScrollDown();
+                UpdateDescription();
             }
         }
+    }
+
+    private void UpdateDescription()
+    {
+        descriptionText.text = selectedBadgeIndex < 0 ? string.Empty : unlockedBadges[selectedBadgeIndex].Description;
     }
 
     private void SetButtonText(MenuButton button, int badgeIndex)
