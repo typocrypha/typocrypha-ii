@@ -22,9 +22,12 @@ public class Scouter : MonoBehaviour, IPausable
 
     public GameObject spellModeDisplay; // Scouter display object.
     [SerializeField] private Button firstSpellInList;
+    [SerializeField] private Thesaurus thesaurus;
 
     private IReadOnlyList<SpellWord> listOfSpells = null;
     private int currentSpell = -1;
+    private int currentPage = -1;
+    private int pageCount = -1;
 
     public bool ScouterActive // Is the scouter active (i.e. display is active)?
     {
@@ -56,6 +59,17 @@ public class Scouter : MonoBehaviour, IPausable
         if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.UpArrow))
         {
             currentSpell = EventSystem.current.currentSelectedGameObject.transform.GetSiblingIndex();
+            pageCount = thesaurus.DisplaySynonyms(listOfSpells[currentSpell], currentPage = 0);
+        }
+
+        if (Input.GetKeyDown(KeyCode.RightArrow) && currentPage < pageCount - 1)
+        {
+            thesaurus.DisplaySynonyms(listOfSpells[currentSpell], ++currentPage);
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftArrow) && currentPage > 0)
+        {
+            thesaurus.DisplaySynonyms(listOfSpells[currentSpell], --currentPage);
         }
     }
 
@@ -81,10 +95,10 @@ public class Scouter : MonoBehaviour, IPausable
         Battlefield.instance.PH.Pause = true;
         Typocrypha.Keyboard.instance.PH.Pause = true;
         firstSpellInList.Select();
-        currentSpell = 0;
         listOfSpells = SpellCooldownManager.instance.GetSpells();
         for (int i = 0; i < 8; i++)
             firstSpellInList.transform.parent.GetChild(i).gameObject.SetActive(i < listOfSpells.Count);
+        pageCount = thesaurus.DisplaySynonyms(listOfSpells[currentSpell = 0], currentPage = 0);
     }
 }
  
