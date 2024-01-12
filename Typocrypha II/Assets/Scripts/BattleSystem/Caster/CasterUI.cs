@@ -22,4 +22,7 @@ public class CasterUI : MonoBehaviour
     public UnityEvent_string onSpellChanged; // Pass name of spell currently being cast.
     public UnityEvent_sprite onSpellIconChanged; // Pass icon of spell current being cast.
     public UnityEvent_bool onCounterStateChanged;
+    public UnityEvent_string onScouterDataChanged;
+    public UnityEvent onScouterShow;
+    public UnityEvent onScouterHide;
 }

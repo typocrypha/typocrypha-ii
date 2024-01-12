@@ -19,4 +19,15 @@ public class CasterScouterData : ScouterData
     }
 
     public override Sprite Image => casterImage.sprite;
+
+    public CasterUI ui = null;
+
+    private void Awake()
+    {
+        if ((ui = GetComponentInChildren<CasterUI>()) != null)
+        {
+            ui.onScouterDataChanged.Invoke(Description);
+        }
+
+    }
 }

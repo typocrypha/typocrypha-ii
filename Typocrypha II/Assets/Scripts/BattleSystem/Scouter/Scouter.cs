@@ -56,17 +56,20 @@ public class Scouter : MonoBehaviour, IPausable
 
         if (!ScouterActive) return;
 
+        //spell selection
         if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.UpArrow))
         {
             currentSpell = EventSystem.current.currentSelectedGameObject.transform.GetSiblingIndex();
             pageCount = thesaurus.DisplaySynonyms(listOfSpells[currentSpell], currentPage = 0);
         }
 
+        //next thesaurus page
         if (Input.GetKeyDown(KeyCode.RightArrow) && currentPage < pageCount - 1)
         {
             thesaurus.DisplaySynonyms(listOfSpells[currentSpell], ++currentPage);
         }
 
+        //previous thesaurus page
         if (Input.GetKeyDown(KeyCode.LeftArrow) && currentPage > 0)
         {
             thesaurus.DisplaySynonyms(listOfSpells[currentSpell], --currentPage);
@@ -82,18 +85,26 @@ public class Scouter : MonoBehaviour, IPausable
     {
         if (ScouterActive)
         {
+            //exit scanner state
             ScouterActive = false;
             targetReticle.PH.Pause = false;
             Battlefield.instance.PH.Pause = false;
             Typocrypha.Keyboard.instance.PH.Pause = false;
+            foreach (var c in Battlefield.instance.Casters) c.ui.onScouterHide.Invoke();
             EventSystem.current.SetSelectedGameObject(null);
             return;
         }
 
+        //pause
         ScouterActive = true;
         targetReticle.PH.Pause = true;
         Battlefield.instance.PH.Pause = true;
         Typocrypha.Keyboard.instance.PH.Pause = true;
+
+        //show enemy description
+        foreach (var c in Battlefield.instance.Casters) c.ui.onScouterShow.Invoke();
+
+        //spell navigation
         firstSpellInList.Select();
         listOfSpells = SpellCooldownManager.instance.GetSpells();
         for (int i = 0; i < 8; i++)
