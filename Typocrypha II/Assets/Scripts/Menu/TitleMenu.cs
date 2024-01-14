@@ -10,7 +10,7 @@ public class TitleMenu : MonoBehaviour
     [SerializeField] private MenuButton newGameButton;
     [SerializeField] private SettingsMenu settings;
 
-    private static AnimationCurve fadeOutCurve = AnimationCurve.EaseInOut(0, 1, 2, 0);
+    private static readonly AnimationCurve fadeOutCurve = AnimationCurve.EaseInOut(0, 1, 2, 0);
 
     private void Start()
     {

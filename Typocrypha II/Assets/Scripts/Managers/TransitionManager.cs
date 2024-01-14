@@ -15,7 +15,6 @@ public class TransitionManager : MonoBehaviour
     public static TransitionManager instance = null;
     [SerializeField] private LoadingScreen defaultLoadingScreen; // Loading screen prefab
     [SerializeField] private Canvas loadingScreenCanvas;
-    [SerializeField] private int debugContinueIndex;
     [SerializeField] private List<SceneData> sceneData;
     [SerializeField] private SceneData titleSceneData;
 
