@@ -19,7 +19,9 @@ public class TransitionManager : MonoBehaviour
     [SerializeField] private List<SceneData> sceneData;
     [SerializeField] private SceneData titleSceneData;
 
-    private int sceneIndex = -1;
+    public int SceneIndex { get; private set; } = -1;
+    public string SceneName => SceneIndex >= 0 && SceneIndex < sceneData.Count ? sceneData[SceneIndex].Name : string.Empty;
+    private int loadedIndex = -1;
 
 
     void Awake()
@@ -36,59 +38,71 @@ public class TransitionManager : MonoBehaviour
 
     public void TransitionToMainMenu()
     {
-        sceneIndex = -1;
-        if(PlayerDataManager.instance != null)
-        {
-            Destroy(PlayerDataManager.instance.gameObject);
-        }
-        StartCoroutine(PlayLoadingScreen(titleSceneData.loadingScreenOverride, titleSceneData, titleSceneData.SceneName));
+        SaveManager.instance.Save();
+        SceneIndex = -1;
+        StartCoroutine(PlayLoadingScreen(titleSceneData.loadingScreenOverride, titleSceneData, titleSceneData.SceneName, false));
     }
 
     public void TransitionToNextScene()
     {
-        if (sceneIndex + 1 >= sceneData.Count)
+        if (SceneIndex + 1 >= sceneData.Count)
         {
             Debug.LogError("Already at the last scene of the game!");
             return;
         }
-        TransitionToScene(sceneIndex + 1);
+        TransitionToScene(SceneIndex + 1);
     }
 
     public void TransitionToScene(int newIndex)
     {
-        if (sceneIndex == newIndex)
+        if (SceneIndex == newIndex)
             return;
-        var currScene = sceneIndex >= 0 ? sceneData[sceneIndex].SceneName : string.Empty;
+        var currScene = SceneIndex >= 0 ? sceneData[SceneIndex].SceneName : string.Empty;
         var nextSceneData = sceneData[newIndex];
         var nextScene = nextSceneData.SceneName;
         if (nextScene == currScene)
         {
             nextScene = string.Empty;
         }
-        sceneIndex = newIndex;
-        StartCoroutine(PlayLoadingScreen(nextSceneData.loadingScreenOverride, nextSceneData, nextScene));
+        SceneIndex = newIndex;
+        StartCoroutine(PlayLoadingScreen(nextSceneData.loadingScreenOverride, nextSceneData, nextScene, true));
     }
 
     public void Continue()
     {
-#if DEBUG
-        if(debugContinueIndex > 0)
-        {
-            TransitionToScene(debugContinueIndex);
-            return;
-        }
-#endif
-        // TODO: get scene number from saving
-        TransitionToScene(0);
+        TransitionToScene(loadedIndex);
     }
 
-    private IEnumerator PlayLoadingScreen(LoadingScreen loadingScreenOverride, SceneData data, string sceneName)
+    public void LoadIndex(string savedName, int savedIndex)
+    {
+        for (int i = 0; i < sceneData.Count; ++i)
+        {
+            var data = sceneData[i];
+            if(savedName == data.Name)
+            {
+                loadedIndex = i;
+                return;
+            }
+        }
+        if(savedIndex < sceneData.Count)
+        {
+            loadedIndex = savedIndex;
+            return;
+        }
+        loadedIndex = 0;
+    }
+
+    private IEnumerator PlayLoadingScreen(LoadingScreen loadingScreenOverride, SceneData data, string sceneName, bool save)
     {
         loadingScreenCanvas.enabled = true;
         // Play loading screen ON
         LoadingScreen loadingScreen = loadingScreenOverride ?? defaultLoadingScreen;
         loadingScreen.Progress = 0;
         yield return loadingScreen.StartLoading();
+        if (save)
+        {
+            SaveManager.instance.Save();
+        }
         // Start loading screen idle
         // (if new scene) actually load scene
         if(sceneName != string.Empty)

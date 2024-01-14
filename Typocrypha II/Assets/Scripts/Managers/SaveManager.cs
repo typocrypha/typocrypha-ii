@@ -106,6 +106,12 @@ public class SaveManager : MonoBehaviour
         SaveFile(new CampaignSaveData(), SaveFilePath(0));
     }
 
+    public void Save()
+    {
+        SaveCampaign();
+        SaveGlobalData();
+    }
+
     /// <summary>
     /// Save the currently loaded game data into the save file.
     /// </summary>
@@ -116,8 +122,11 @@ public class SaveManager : MonoBehaviour
 
     private CampaignSaveData GetCampaignSaveData()
     {
-        // TODO: actually get save data from relevant places
-        return new CampaignSaveData();
+        var data = new CampaignSaveData();
+        var transitionManager = TransitionManager.instance;
+        data.currentSceneIndex = transitionManager.SceneIndex;
+        data.currentSceneName = transitionManager.SceneName;
+        return data;
     }
 
     public void LoadCampaign(int saveIndex = 0)
@@ -127,7 +136,7 @@ public class SaveManager : MonoBehaviour
 
     private void LoadCampaignData(CampaignSaveData data)
     {
-        // TODO: load data into relevant managers
+        TransitionManager.instance.LoadIndex(data.currentSceneName, data.currentSceneIndex);
     }
 
     public void SaveGlobalData()

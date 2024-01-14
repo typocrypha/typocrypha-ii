@@ -96,6 +96,7 @@ public class PauseManager : MonoBehaviour
     // Menu Button Functions
     public void Quit()
     {
+        SaveManager.instance.Save();
         Application.Quit();
     }
 
