@@ -9,7 +9,7 @@ using TMPro;
 public class Thesaurus : MonoBehaviour
 {
 
-    [SerializeField] private SpellWordBundle SynonymBundle;
+    //[SerializeField] private SpellWordBundle SynonymBundle;
     [SerializeField] private TMPro.TextMeshProUGUI DisplayText;
 
     const int SPELL_DISPLAY_LINES = 7;
@@ -30,7 +30,8 @@ public class Thesaurus : MonoBehaviour
         int padLength = LINE_LENGTH - baseWord.DisplayName.Length;
 
         StringBuilder sb = new StringBuilder(LINE_LENGTH);
-        sb.Append(baseWord.DisplayName).Append($"{page+1}/{indexLastPage+1}".PadLeft(padLength));
+        sb.Append(baseWord.DisplayName);
+        if (indexLastPage > 0) sb.Append($"{page+1}/{indexLastPage+1}".PadLeft(padLength));
         foreach (var word in paginatedWords) sb.Append($"\n-{word.DisplayName}");
         return sb.ToString();
     }

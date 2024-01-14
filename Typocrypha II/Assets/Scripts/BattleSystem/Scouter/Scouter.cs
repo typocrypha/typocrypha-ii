@@ -24,9 +24,10 @@ public class Scouter : MonoBehaviour, IPausable
     public GameObject spellModeDisplay; // Scouter display object.
     [SerializeField] private Button firstSpellInList;
     [SerializeField] private Thesaurus thesaurus;
-    [SerializeField] private VerticalLayoutGroup cursor;
+    [SerializeField] private VerticalLayoutGroup spellCursor;
+    [SerializeField] private HorizontalLayoutGroup thesaurusCursor;
 
-    const float CURSOR_SLIDE_DURATION = 0.2f;
+    const float CURSOR_SLIDE_DURATION = 0.1f;
     const float CURSOR_WIGGLE_DISTANCE = 10f;
     const float CURSOR_WIGGLE_DURATION = 0.35f;
 
@@ -50,7 +51,11 @@ public class Scouter : MonoBehaviour, IPausable
     void Start()
     {
         PH.SetParent(BattleManager.instance.PH);
-        DOTween.To(()=>cursor.spacing, (v)=>cursor.spacing = v, CURSOR_WIGGLE_DISTANCE, CURSOR_WIGGLE_DURATION)
+        DOTween.To(()=>spellCursor.spacing, (v)=>spellCursor.spacing = v, spellCursor.spacing + CURSOR_WIGGLE_DISTANCE, CURSOR_WIGGLE_DURATION)
+            .SetLoops(-1, LoopType.Yoyo)
+            .SetEase(Ease.Linear);
+
+        DOTween.To(() => thesaurusCursor.spacing, (v) => thesaurusCursor.spacing = v, thesaurusCursor.spacing + CURSOR_WIGGLE_DISTANCE, CURSOR_WIGGLE_DURATION)
             .SetLoops(-1, LoopType.Yoyo)
             .SetEase(Ease.Linear);
     }
@@ -71,25 +76,37 @@ public class Scouter : MonoBehaviour, IPausable
         {
             currentSpell = EventSystem.current.currentSelectedGameObject.transform.GetSiblingIndex();
             pageCount = thesaurus.DisplaySynonyms(listOfSpells[currentSpell], currentPage = 0);
-            UpdateCursorPosition(currentSpell);
+            UpdateSpellCursor();
         }
 
         //next thesaurus page
         if (Input.GetKeyDown(KeyCode.RightArrow) && currentPage < pageCount - 1)
         {
             thesaurus.DisplaySynonyms(listOfSpells[currentSpell], ++currentPage);
+            UpdateThesaurusCursor();
         }
 
         //previous thesaurus page
         if (Input.GetKeyDown(KeyCode.LeftArrow) && currentPage > 0)
         {
             thesaurus.DisplaySynonyms(listOfSpells[currentSpell], --currentPage);
+            UpdateThesaurusCursor();
         }
     }
 
-    private void UpdateCursorPosition(int currentSpell)
+    private void UpdateSpellCursor()
     {
-        cursor.transform.DOMoveY(EventSystem.current.currentSelectedGameObject.transform.position.y, CURSOR_SLIDE_DURATION);
+        GameObject target = EventSystem.current.currentSelectedGameObject ?? firstSpellInList.gameObject;
+        spellCursor.transform.DOMoveY(target.transform.position.y, CURSOR_SLIDE_DURATION);
+        spellCursor.transform.GetChild(0).GetComponent<Image>().enabled = currentSpell > 0;
+        spellCursor.transform.GetChild(1).GetComponent<Image>().enabled = currentSpell < listOfSpells.Count - 1;
+        UpdateThesaurusCursor();
+    }
+
+    private void UpdateThesaurusCursor()
+    {
+        thesaurusCursor.transform.GetChild(0).GetComponent<Image>().enabled = currentPage > 0;
+        thesaurusCursor.transform.GetChild(1).GetComponent<Image>().enabled = currentPage < pageCount - 1;
     }
 
     private bool ScouterKeyPressed()
@@ -108,6 +125,7 @@ public class Scouter : MonoBehaviour, IPausable
             Typocrypha.Keyboard.instance.PH.Pause = false;
             foreach (var c in Battlefield.instance.Casters) c.ui.onScouterHide.Invoke();
             EventSystem.current.SetSelectedGameObject(null);
+            UpdateSpellCursor();
             return;
         }
 
@@ -126,6 +144,7 @@ public class Scouter : MonoBehaviour, IPausable
         for (int i = 0; i < 8; i++)
             firstSpellInList.transform.parent.GetChild(i).gameObject.SetActive(i < listOfSpells.Count);
         pageCount = thesaurus.DisplaySynonyms(listOfSpells[currentSpell = 0], currentPage = 0);
+        UpdateSpellCursor();
     }
 }
  
