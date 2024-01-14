@@ -68,6 +68,7 @@ public class AudioManager : MonoBehaviour
         }
         else
         {
+            bgm[bgmInd].volume = 1f;
             bgm[bgmInd].Play();
         }
     }

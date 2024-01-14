@@ -10,6 +10,8 @@ public class TitleMenu : MonoBehaviour
     [SerializeField] private MenuButton newGameButton;
     [SerializeField] private SettingsMenu settings;
 
+    private static AnimationCurve fadeOutCurve = AnimationCurve.EaseInOut(0, 1, 2, 0);
+
     private void Start()
     {
         AudioManager.instance.PlayBGM(titleBGM);
@@ -34,12 +36,14 @@ public class TitleMenu : MonoBehaviour
     {
         EventSystem.current.enabled = false;
         SaveManager.instance.LoadCampaign();
+        AudioManager.instance.StopBGM(fadeOutCurve);
         TransitionManager.instance.Continue();
     }
     public void NewGame()
     {
         EventSystem.current.enabled = false;
         SaveManager.instance.NewGame();
+        AudioManager.instance.StopBGM(fadeOutCurve);
         TransitionManager.instance.TransitionToScene(0);
     }
 
