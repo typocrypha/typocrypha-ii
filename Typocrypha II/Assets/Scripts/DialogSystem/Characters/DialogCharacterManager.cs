@@ -6,38 +6,8 @@ using UnityEngine;
 /// <summary>
 /// Manages character sprites during dialog.
 /// </summary>
-public class DialogCharacterManager : MonoBehaviour, ISavable
+public class DialogCharacterManager : MonoBehaviour
 {
-    #region ISavable
-    [System.Serializable]
-    public struct CharacterSave
-    {
-        public string characterName;
-        public string baseSprite;
-        public string expression;
-        public float xpos;
-        public float ypos;
-        public bool highlight;
-    }
-
-    public void Save()
-    {
-        var characters = new List<CharacterSave>();
-        foreach(var kvp in characterMap) characters.Add(kvp.Value.saveData);
-        SaveManager.instance.loaded.characters = characters;
-    }
-
-    public void Load()
-    {
-        foreach (var cs in SaveManager.instance.loaded.characters)
-        {
-            var data = CharacterDataByName(cs.characterName);
-            AddCharacter(data, cs.baseSprite, cs.expression, new Vector2(cs.xpos, cs.ypos));
-            HighlightCharacter(data, cs.highlight);
-        }
-    }
-    #endregion
-
     public static DialogCharacterManager instance = null;
     public GameObject characterPrefab; // Prefab of dialog character object
     public GameObject characterPrefabAyinCodec; // Prefab for ayin's codec object
@@ -98,7 +68,6 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
         dc.TargetPosition = pos;
         ChangePose(data, baseSprite);
         ChangeExpression(data, expression);
-        dc.saveData.characterName = data.name;
         return dc;
     }
 
@@ -211,7 +180,6 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
         // TEMP: Uses the default of each element (e.g. Illyia's base body, base clothes, and base hair)
         // LATER: string manip? "base_1", "base_halloween"
         ChangeBCH(data, baseSprite, baseSprite, baseSprite);
-        characterMap[data.name].saveData.baseSprite = baseSprite;
         return characterMap[data.name];
     }
 
@@ -227,7 +195,6 @@ public class DialogCharacterManager : MonoBehaviour, ISavable
         if (data.expressions.ContainsKey(expr))
         {
             characterMap[data.name].ExprSprite = data.expressions[expr];
-            characterMap[data.name].saveData.expression = expr;
         }
         else
         {

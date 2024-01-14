@@ -158,4 +158,10 @@ public class PlayerEquipment : MonoBehaviour
         equippedSpellWords.Clear();
         EquipDebugWords();
     }
+
+    public void ClearUnlockedSpells()
+    {
+        unlockedSpellWords.Clear();
+        UnlockDebugWords();
+    }
 }
