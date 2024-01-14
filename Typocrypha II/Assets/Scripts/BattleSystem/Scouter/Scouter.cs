@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using DG.Tweening;
 
 /// <summary>
 /// Target reticule and scouter during battle.
@@ -23,6 +24,12 @@ public class Scouter : MonoBehaviour, IPausable
     public GameObject spellModeDisplay; // Scouter display object.
     [SerializeField] private Button firstSpellInList;
     [SerializeField] private Thesaurus thesaurus;
+    [SerializeField] private VerticalLayoutGroup cursor;
+
+    const float CURSOR_SLIDE_DURATION = 0.2f;
+    const float CURSOR_WIGGLE_DISTANCE = 10f;
+    const float CURSOR_WIGGLE_DURATION = 0.35f;
+
 
     private IReadOnlyList<SpellWord> listOfSpells = null;
     private int currentSpell = -1;
@@ -43,6 +50,9 @@ public class Scouter : MonoBehaviour, IPausable
     void Start()
     {
         PH.SetParent(BattleManager.instance.PH);
+        DOTween.To(()=>cursor.spacing, (v)=>cursor.spacing = v, CURSOR_WIGGLE_DISTANCE, CURSOR_WIGGLE_DURATION)
+            .SetLoops(-1, LoopType.Yoyo)
+            .SetEase(Ease.Linear);
     }
 
     // Update is called once per frame
@@ -61,6 +71,7 @@ public class Scouter : MonoBehaviour, IPausable
         {
             currentSpell = EventSystem.current.currentSelectedGameObject.transform.GetSiblingIndex();
             pageCount = thesaurus.DisplaySynonyms(listOfSpells[currentSpell], currentPage = 0);
+            UpdateCursorPosition(currentSpell);
         }
 
         //next thesaurus page
@@ -74,6 +85,11 @@ public class Scouter : MonoBehaviour, IPausable
         {
             thesaurus.DisplaySynonyms(listOfSpells[currentSpell], --currentPage);
         }
+    }
+
+    private void UpdateCursorPosition(int currentSpell)
+    {
+        cursor.transform.DOMoveY(EventSystem.current.currentSelectedGameObject.transform.position.y, CURSOR_SLIDE_DURATION);
     }
 
     private bool ScouterKeyPressed()

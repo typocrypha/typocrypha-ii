@@ -17,7 +17,8 @@ public class Thesaurus : MonoBehaviour
 
     List<SpellWord> GetSynonymsOfBase(SpellWord word)
     {
-        return SynonymBundle.words.Select(p => p.Value).Where(s => s.synonymOf == word).ToList();
+        //return SynonymBundle.words.Select(p => p.Value).Where(s => s.synonymOf == word).ToList(); //debug with whole synonym list
+        return PlayerDataManager.instance.equipment.UnlockedSpellWords.Select(p => p.Value).Where(s => s.synonymOf == word).ToList();
     }
 
     string FormatWordList(SpellWord baseWord, List<SpellWord> synonyms, int page)
@@ -29,7 +30,7 @@ public class Thesaurus : MonoBehaviour
         int padLength = LINE_LENGTH - baseWord.DisplayName.Length;
 
         StringBuilder sb = new StringBuilder(LINE_LENGTH);
-        sb.Append(baseWord.DisplayName).Append($"page {page+1}/{indexLastPage+1}".PadLeft(padLength));
+        sb.Append(baseWord.DisplayName).Append($"{page+1}/{indexLastPage+1}".PadLeft(padLength));
         foreach (var word in paginatedWords) sb.Append($"\n-{word.DisplayName}");
         return sb.ToString();
     }
