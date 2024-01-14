@@ -174,12 +174,4 @@ public class SaveManager : MonoBehaviour
             equipment.UnlockWord(word);
         }
     }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.F3))
-        {
-            SaveGlobalData();
-        }
-    }
 }
