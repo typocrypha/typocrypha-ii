@@ -60,8 +60,10 @@ public class DialogBox : MonoBehaviour, IDialogBox
 
     public TextMeshProUGUI dialogText; // Text display component
     public bool resizeTextBox = true; // Should dialog box resize itself?
+    [SerializeField] private bool shrinkToFit = false;
     [SerializeField] private bool resolveContinueIndicatorConflicts = false;
     [SerializeField] private RectTransform textHolder;
+    [SerializeField] private LayoutElement textLayoutElement;
     [SerializeField] private RectTransform continueIndicatorTR = null;
     [SerializeField] private DialogContinueIndicator continueIndicator;
     [SerializeField] private CanvasGroup canvasGroup = null;
@@ -71,6 +73,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
     private AudioClip[] textBlips = new AudioClip[2];
     private bool started = false;
     private bool resetTextBlips = false;
+    private float defaultWidth;
 
     /// <summary>
     /// Returns whether text is done scrolling or not.
@@ -88,6 +91,10 @@ public class DialogBox : MonoBehaviour, IDialogBox
         ph = new PauseHandle(OnPause);
         ph.SetParent(DialogManager.instance);
         ph.PauseIfParentPaused();
+        if (textLayoutElement != null)
+        {
+            defaultWidth = textLayoutElement.preferredWidth;
+        }
     }
 
     public void SetupDialogBox(DialogItem dialogItem)
@@ -102,6 +109,11 @@ public class DialogBox : MonoBehaviour, IDialogBox
         hideText.UpdateAllEffects();
         // Set box size based on text.
         if (resizeTextBox) SetBoxHeight();
+        if (shrinkToFit && textLayoutElement != null)
+        {
+            var preferredWidth = dialogText.preferredWidth;
+            textLayoutElement.preferredWidth = Mathf.Min(defaultWidth, preferredWidth);
+        }
         // Set voice sfx.
         if (dialogItem.voice == null || dialogItem.voice.Count == 0)
         {
