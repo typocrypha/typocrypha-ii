@@ -23,13 +23,13 @@ public class SpellTag : ScriptableObject, IComparable<SpellTag>
 
     public static SpellTag GetByName(string name)
     {
-        if(SpellLookup.instance == null)
+        if(Lookup.instance == null)
         {
             Debug.LogError("Trying to look up spell tag by name with no lookup instance. " +
                 "Either there is none in the scene or you are trying to use this method from editor mode");
             return null;
         }
-        return SpellLookup.instance.GetSpellTag(name);
+        return Lookup.instance.GetSpellTag(name);
     }
 
     public int CompareTo(SpellTag other)

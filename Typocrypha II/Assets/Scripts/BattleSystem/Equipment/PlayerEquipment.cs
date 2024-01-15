@@ -49,15 +49,6 @@ public class PlayerEquipment : MonoBehaviour
         }
     }
 
-    [Conditional("DEBUG")]
-    private void EquipDebugBadges()
-    {
-        foreach (var badge in debugBadgeWords)
-        {
-            EquipBadge(badge);
-        }
-    }
-
     public void UnlockWord(SpellWord word, bool equip = false)
     {
         if (!unlockedSpellWords.ContainsKey(word.Key))
@@ -163,5 +154,16 @@ public class PlayerEquipment : MonoBehaviour
     {
         unlockedSpellWords.Clear();
         UnlockDebugWords();
+    }
+
+    public void ClearUnlockedBadges()
+    {
+        unlockedBadgeWords.Clear();
+        UnlockDebugBadges();
+    }
+
+    public void ClearEquippedBadges()
+    {
+        equippedBadgeWords.Clear();
     }
 }

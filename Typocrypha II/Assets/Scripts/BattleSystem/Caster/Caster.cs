@@ -287,7 +287,7 @@ public class Caster : MonoBehaviour
     }
     public void AddTag(string tagName)
     {
-        AddTag(SpellLookup.instance.GetCasterTag(tagName));
+        AddTag(Lookup.instance.GetCasterTag(tagName));
     }
     public void AddTagWithStatusEffect(StatusEffect effect, CasterTag tag)
     {

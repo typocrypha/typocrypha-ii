@@ -18,7 +18,7 @@ public class CasterTagDictionary : IEnumerable<CasterTag>
     }
     public bool ContainsTag(string tagName)
     {
-        var tag = SpellLookup.instance.GetCasterTag(tagName);
+        var tag = Lookup.instance.GetCasterTag(tagName);
         if (tag == null)
             return false;
         return ContainsTag(tag);

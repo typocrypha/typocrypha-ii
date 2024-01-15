@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpellLookup : MonoBehaviour
+public class Lookup : MonoBehaviour
 {
-    public static SpellLookup instance = null;
+    public static Lookup instance = null;
     [SerializeField] private SpellTagBundle spellTagBundle;
     [SerializeField] private CasterTagBundle casterTagBundle;
     [SerializeField] private SpellWordBundle allWordsBundle;
+    [SerializeField] private BadgeBundle allBadges;
     private void Awake()
     {
         if (instance == null)
@@ -37,5 +38,10 @@ public class SpellLookup : MonoBehaviour
     public SpellWord GetSpellWord(string name)
     {
         return allWordsBundle.words.TryGetValue(name.ToLower(), out var word) ? word : null;
+    }
+
+    public EquipmentWord GetBadge(string name)
+    {
+        return allBadges.badges.TryGetValue(name.ToLower(), out var badge) ? badge : null;
     }
 }

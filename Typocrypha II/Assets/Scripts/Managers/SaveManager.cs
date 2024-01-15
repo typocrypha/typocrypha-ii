@@ -15,12 +15,14 @@ public class CampaignSaveData
 {
     public string currentSceneName;
     public int currentSceneIndex;
+    public List<string> equippedBadgeWords = new List<string>();
 }
 
 [System.Serializable]
 public class GlobalSaveData
 {
     public List<string> unlockedSpellWords = new List<string>();
+    public List<string> unlockedBadgeWords = new List<string>();
 }
 
 /// <summary>
@@ -126,12 +128,29 @@ public class SaveManager : MonoBehaviour
         var transitionManager = TransitionManager.instance;
         data.currentSceneIndex = transitionManager.SceneIndex;
         data.currentSceneName = transitionManager.SceneName;
+        var dataManager = PlayerDataManager.instance;
+        var equipment = dataManager.equipment;
+        // Get Unlocked Badges
+        foreach (var kvp in equipment.EquippedBadgeWords)
+        {
+            var badge = kvp.Value;
+            data.equippedBadgeWords.Add(badge.Key);
+        }
         return data;
     }
 
     public void LoadCampaign(int saveIndex = 0)
     {
-        LoadCampaignData(LoadFile<CampaignSaveData>(SaveFilePath(saveIndex)));
+        var data = LoadFile<CampaignSaveData>(SaveFilePath(saveIndex));
+        LoadCampaignData(data);
+        var dataManager = PlayerDataManager.instance;
+        var equipment = dataManager.equipment;
+        // Equipped badges
+        equipment.ClearEquippedBadges();
+        foreach (var key in data.equippedBadgeWords)
+        {
+            equipment.EquipBadge(Lookup.instance.GetBadge(key));
+        }
     }
 
     private void LoadCampaignData(CampaignSaveData data)
@@ -157,6 +176,12 @@ public class SaveManager : MonoBehaviour
                 continue;
             data.unlockedSpellWords.Add(word.Key);
         }
+        // Get Unlocked Badges
+        foreach(var kvp in equipment.UnlockedBadgeWords)
+        {
+            var badge = kvp.Value;
+            data.unlockedBadgeWords.Add(badge.Key);
+        }
         return data;
     }
 
@@ -177,10 +202,16 @@ public class SaveManager : MonoBehaviour
         equipment.ClearUnlockedSpells();
         foreach(var key in data.unlockedSpellWords)
         {
-            var word = SpellLookup.instance.GetSpellWord(key);
+            var word = Lookup.instance.GetSpellWord(key);
             if (word == null)
                 continue;
             equipment.UnlockWord(word);
+        }
+        // Unlocked badges
+        equipment.ClearUnlockedBadges();
+        foreach(var key in data.unlockedBadgeWords)
+        {
+            equipment.UnlockBadge(Lookup.instance.GetBadge(key));
         }
     }
 }
