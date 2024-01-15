@@ -149,7 +149,7 @@ public class SaveManager : MonoBehaviour
         equipment.ClearEquippedBadges();
         foreach (var key in data.equippedBadgeWords)
         {
-            if (Lookup.instance.TryGetBadge(key, out var badge))
+            if (Lookup.TryGetBadge(key, out var badge))
             {
                 equipment.EquipBadge(badge);
             } 
@@ -205,7 +205,7 @@ public class SaveManager : MonoBehaviour
         equipment.ClearUnlockedSpells();
         foreach(var key in data.unlockedSpellWords)
         {
-            if(Lookup.instance.TryGetSpellWord(key, out var word))
+            if(Lookup.TryGetSpellWord(key, out var word))
             {
                 equipment.UnlockWord(word);
             }
@@ -214,7 +214,7 @@ public class SaveManager : MonoBehaviour
         equipment.ClearUnlockedBadges();
         foreach(var key in data.unlockedBadgeWords)
         {
-            if (Lookup.instance.TryGetBadge(key, out var badge))
+            if (Lookup.TryGetBadge(key, out var badge))
             {
                 equipment.UnlockBadge(badge);
             }

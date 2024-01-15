@@ -10,7 +10,7 @@ public class RuleFriendshipFrog : Rule
         {
             return false;
         }
-        effect.tags.Add(Lookup.instance.GetSpellTag("Frogified"));
+        effect.tags.Add(Lookup.GetSpellTag("Frogified"));
         return true;
     }
 

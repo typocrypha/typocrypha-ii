@@ -47,7 +47,7 @@ public class HighlightCounterable : MonoBehaviour
         {
             string spellWord = spellWords[i];
             int index = i * 2;
-            var wordData = Lookup.instance.GetSpellWord(spellWord.ToLower());
+            var wordData = Lookup.GetSpellWord(spellWord.ToLower());
             if(wordData == null)
             {
                 continue;

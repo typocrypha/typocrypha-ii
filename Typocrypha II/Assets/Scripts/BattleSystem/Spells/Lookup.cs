@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Lookup : MonoBehaviour
 {
-    public static Lookup instance = null;
+    public static bool Ready => instance != null;
+    private static Lookup instance = null;
     [SerializeField] private SpellTagBundle spellTagBundle;
     [SerializeField] private CasterTagBundle casterTagBundle;
     [SerializeField] private SpellWordBundle allWordsBundle;
@@ -19,39 +20,41 @@ public class Lookup : MonoBehaviour
     /// <summary>
     /// If the string is a valid spell tag, returns it (else returns null)
     /// </summary>
-    public SpellTag GetSpellTag(string name)
+    public static SpellTag GetSpellTag(string name)
     {
-        if (spellTagBundle.tags.ContainsKey(name))
-            return spellTagBundle.tags[name];
+        var dict = instance.spellTagBundle.tags;
+        if (dict.ContainsKey(name))
+            return dict[name];
         return null;
     }
     /// <summary>
     /// If the string is a valid caster tag, returns it (else returns null)
     /// </summary>
-    public CasterTag GetCasterTag(string name)
+    public static CasterTag GetCasterTag(string name)
     {
-        if (casterTagBundle.tags.ContainsKey(name))
-            return casterTagBundle.tags[name];
+        var dict = instance.casterTagBundle.tags;
+        if (dict.ContainsKey(name))
+            return dict[name];
         return null;
     }
 
-    public SpellWord GetSpellWord(string name)
+    public static SpellWord GetSpellWord(string name)
     {
-        return allWordsBundle.words.TryGetValue(name.ToLower(), out var word) ? word : null;
+        return instance.allWordsBundle.words.TryGetValue(name.ToLower(), out var word) ? word : null;
     }
 
-    public bool TryGetSpellWord(string name, out SpellWord word)
+    public static bool TryGetSpellWord(string name, out SpellWord word)
     {
-        return allWordsBundle.words.TryGetValue(name.ToLower(), out word);
+        return instance.allWordsBundle.words.TryGetValue(name.ToLower(), out word);
     }
 
-    public EquipmentWord GetBadge(string name)
+    public static EquipmentWord GetBadge(string name)
     {
-        return allBadges.badges.TryGetValue(name.ToLower(), out var badge) ? badge : null;
+        return instance.allBadges.badges.TryGetValue(name.ToLower(), out var badge) ? badge : null;
     }
 
-    public bool TryGetBadge(string name, out EquipmentWord badge)
+    public static bool TryGetBadge(string name, out EquipmentWord badge)
     {
-        return allBadges.badges.TryGetValue(name.ToLower(), out badge);
+        return instance.allBadges.badges.TryGetValue(name.ToLower(), out badge);
     }
 }

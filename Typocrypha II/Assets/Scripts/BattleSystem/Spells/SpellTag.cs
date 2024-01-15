@@ -21,17 +21,6 @@ public class SpellTag : ScriptableObject, IComparable<SpellTag>
     public string documentation = string.Empty;
     #endregion
 
-    public static SpellTag GetByName(string name)
-    {
-        if(Lookup.instance == null)
-        {
-            Debug.LogError("Trying to look up spell tag by name with no lookup instance. " +
-                "Either there is none in the scene or you are trying to use this method from editor mode");
-            return null;
-        }
-        return Lookup.instance.GetSpellTag(name);
-    }
-
     public int CompareTo(SpellTag other)
     {
         return internalName.CompareTo(other.internalName);
@@ -42,7 +31,7 @@ public class SpellTag : ScriptableObject, IComparable<SpellTag>
     {
         public bool Contains(string tagName)
         {
-            var tag = GetByName(tagName);
+            var tag = Lookup.GetSpellTag(tagName);
             if (tag == null)
                 return false;
             return Contains(tag);
@@ -50,7 +39,7 @@ public class SpellTag : ScriptableObject, IComparable<SpellTag>
 
         public void Add(string tagName)
         {
-            var tag = GetByName(tagName);
+            var tag = Lookup.GetSpellTag(tagName);
             if (tag == null || Contains(tag))
                 return;
             Add(tag);
