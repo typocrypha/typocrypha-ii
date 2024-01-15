@@ -40,8 +40,18 @@ public class Lookup : MonoBehaviour
         return allWordsBundle.words.TryGetValue(name.ToLower(), out var word) ? word : null;
     }
 
+    public bool TryGetSpellWord(string name, out SpellWord word)
+    {
+        return allWordsBundle.words.TryGetValue(name.ToLower(), out word);
+    }
+
     public EquipmentWord GetBadge(string name)
     {
         return allBadges.badges.TryGetValue(name.ToLower(), out var badge) ? badge : null;
+    }
+
+    public bool TryGetBadge(string name, out EquipmentWord badge)
+    {
+        return allBadges.badges.TryGetValue(name.ToLower(), out badge);
     }
 }
