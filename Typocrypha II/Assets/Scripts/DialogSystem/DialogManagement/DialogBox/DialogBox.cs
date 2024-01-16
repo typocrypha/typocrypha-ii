@@ -39,7 +39,6 @@ public class DialogBox : MonoBehaviour, IDialogBox
     const bool defaultPlaySpeechOnSpaces = true;
     public const float defaultDashContinueDelay = 0.1f;
     const float defaultAutoContinueDelay = 0.5f;
-    const float textPad = 16f; // Padding between text rect and dialog box rect.
     #endregion
 
     float scrollDelay = defaultScrollDelay; // Delay in showing characters for text scroll.
@@ -62,6 +61,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
     public bool resizeTextBox = true; // Should dialog box resize itself?
     [SerializeField] private bool shrinkToFit = false;
     [SerializeField] private bool resolveContinueIndicatorConflicts = false;
+    [SerializeField] private float textPad = 16f; // Padding between text rect and dialog box rect.
     [SerializeField] private RectTransform textHolder;
     [SerializeField] private LayoutElement textLayoutElement;
     [SerializeField] private RectTransform continueIndicatorTR = null;
@@ -211,27 +211,26 @@ public class DialogBox : MonoBehaviour, IDialogBox
     /// <summary>
     /// Set dialog box's height based on amount of text.
     /// </summary>
-    /// <param name="add">Add on size rather than reset size.</param>
     /// <param name="hasContinueIndicator">Whether the dialog box has a continue indicator.<param>
-    public void SetBoxHeight(bool add = false)
+    public void SetBoxHeight()
     {
-        if (textHolder != null)
+        if (textHolder == null || dialogText == null)
         {
-            LayoutRebuilder.ForceRebuildLayoutImmediate(textHolder);
+            return;
         }
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(dialogText.rectTransform);
+        float preferredHeight = dialogText.preferredHeight - 5;
+        float lineWidth = textHolder.sizeDelta.x - 20;
+        if (resolveContinueIndicatorConflicts && dialogText.preferredWidth % lineWidth >= lineWidth - 40)
+        {
+            preferredHeight += 30.45f;
+        }
+        textHolder.sizeDelta = new Vector2(textHolder.sizeDelta.x, preferredHeight);
         RectTransform rectTr = GetComponent<RectTransform>();
-        
-        if (resolveContinueIndicatorConflicts && continueIndicatorTR != null 
-            && dialogText.preferredWidth % dialogText.rectTransform.sizeDelta.x > continueIndicatorTR.localPosition.x - 20f)
+        if (rectTr != null)
         {
-            dialogText.text += "\n\n";
-            LayoutRebuilder.ForceRebuildLayoutImmediate(textHolder);
-        }
-        if (rectTr != null && dialogText != null)
-        {
-            rectTr.sizeDelta = add
-                ? new Vector2(rectTr.sizeDelta.x, rectTr.sizeDelta.y + dialogText.preferredHeight + textPad)
-                : new Vector2(rectTr.sizeDelta.x, dialogText.preferredHeight + textPad);
+            rectTr.sizeDelta = new Vector2(rectTr.sizeDelta.x, preferredHeight + textPad);
         }
     }
 
