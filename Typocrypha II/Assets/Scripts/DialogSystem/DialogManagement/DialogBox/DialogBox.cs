@@ -63,8 +63,6 @@ public class DialogBox : MonoBehaviour, IDialogBox
     [SerializeField] private bool resolveContinueIndicatorConflicts = false;
     [SerializeField] private float textPad = 16f; // Padding between text rect and dialog box rect.
     [SerializeField] private RectTransform textHolder;
-    [SerializeField] private LayoutElement textLayoutElement;
-    [SerializeField] private RectTransform continueIndicatorTR = null;
     [SerializeField] private DialogContinueIndicator continueIndicator;
     [SerializeField] private CanvasGroup canvasGroup = null;
     [SerializeField] FXText.TMProColor hideText; // Allows for hiding parts of text (for scrolling)
@@ -91,9 +89,9 @@ public class DialogBox : MonoBehaviour, IDialogBox
         ph = new PauseHandle(OnPause);
         ph.SetParent(DialogManager.instance);
         ph.PauseIfParentPaused();
-        if (textLayoutElement != null)
+        if (textHolder != null)
         {
-            defaultWidth = textLayoutElement.preferredWidth;
+            defaultWidth = textHolder.sizeDelta.x;
         }
     }
 
@@ -109,10 +107,10 @@ public class DialogBox : MonoBehaviour, IDialogBox
         hideText.UpdateAllEffects();
         // Set box size based on text.
         if (resizeTextBox) SetBoxHeight();
-        if (shrinkToFit && textLayoutElement != null)
+        if (shrinkToFit)
         {
-            var preferredWidth = dialogText.preferredWidth;
-            textLayoutElement.preferredWidth = Mathf.Min(defaultWidth, preferredWidth);
+            var preferredWidth = Mathf.Min(defaultWidth, dialogText.preferredWidth + 50);
+            textHolder.sizeDelta = new Vector2(preferredWidth, textHolder.sizeDelta.y);
         }
         // Set voice sfx.
         if (dialogItem.voice == null || dialogItem.voice.Count == 0)
@@ -185,6 +183,8 @@ public class DialogBox : MonoBehaviour, IDialogBox
         // Reset private vars
         resetTextBlips = false;
         started = false;
+        // Reset width
+        textHolder.sizeDelta = new Vector2(defaultWidth, textHolder.sizeDelta.y);
     }
 
     /// <summary>
