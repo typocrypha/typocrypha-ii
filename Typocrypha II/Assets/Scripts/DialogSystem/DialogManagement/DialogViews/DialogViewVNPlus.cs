@@ -12,6 +12,7 @@ public class DialogViewVNPlus : DialogViewMessage<DialogItemVNPlus>
     private const int maxCharactersPerColumn = 5;
     private const float enterExitStaggerTime = 0.5f;
     private const float enterExitIndividualStaggerTime = 0.05f;
+    private static readonly WaitForSeconds multiJoinLeaveStaggerYielder = new WaitForSeconds(0.1f);
 
     [SerializeField] private GameObject rightDialogBoxPrefab;
     [SerializeField] private GameObject leftDialogBoxPrefab;
@@ -73,23 +74,137 @@ public class DialogViewVNPlus : DialogViewMessage<DialogItemVNPlus>
         if (isActiveAndEnabled)
         {
             readyToContinue = false;
-            StartCoroutine(RmCharacterCR(character, container, characterList));
+            StartCoroutine(RmCharacterCR(character, container, characterList, true, true));
             return true; // Wait for completion
         }
         RemoveCharacterInstant(character, container, characterList);
         return false;
     }
 
-    private IEnumerator RmCharacterCR(VNPlusCharacter character, RectTransform container, List<VNPlusCharacter> characterList)
+    public override bool RemoveCharacterMulti(IReadOnlyList<CharacterData> args)
+    {
+        var charactersToRemove = args.Where(arg => characterMap.ContainsKey(arg.name)).ToList();
+        if (charactersToRemove.Count < 1)
+        {
+            return false;
+        }
+        else if (charactersToRemove.Count == 1)
+        {
+            return RemoveCharacter(args[0]);
+        }
+        var rightCharactersToRemove = new List<VNPlusCharacter>(charactersToRemove.Count);
+        var leftCharactersToRemove = new List<VNPlusCharacter>(charactersToRemove.Count);
+        foreach(var charaData in charactersToRemove)
+        {
+            var character = characterMap[charaData.name];
+            var column = character.Column;
+            if(column == CharacterColumn.Right)
+            {
+                PrepareToRemoveCharacter(character, charaData.name, rightCharacterList, rightCharacterPool);
+                rightCharactersToRemove.Add(character);
+            }
+            else
+            {
+                PrepareToRemoveCharacter(character, charaData.name, leftCharacterList, leftCharacterPool);
+                leftCharactersToRemove.Add(character);
+            }
+        }
+        if (isActiveAndEnabled)
+        {
+            readyToContinue = false;
+            if(rightCharactersToRemove.Count <= 0)
+            {
+                GetColumnData(CharacterColumn.Left, out var container, out var characterList, out var pool);
+                StartCoroutine(RmCharacterCRMulti(leftCharactersToRemove, container, characterList, true, true));
+            }
+            else if(leftCharactersToRemove.Count <= 0)
+            {
+                GetColumnData(CharacterColumn.Right, out var container, out var characterList, out var pool);
+                StartCoroutine(RmCharacterCRMulti(rightCharactersToRemove, container, characterList, true, true));
+            }
+            else
+            {
+                StartCoroutine(RmCharacterCRMultiBothColumns(rightCharactersToRemove, leftCharactersToRemove));
+            }
+            return true;
+        }
+        return base.RemoveCharacterMulti(args);
+    }
+
+    private IEnumerator RmCharacterCR(VNPlusCharacter character, RectTransform container, List<VNPlusCharacter> characterList, bool completePrevious, bool last)
     {
         if (characterList.Count > 0)
         {
             yield return new WaitForSeconds(character.PlayLeaveTween().Time / 2);
-            yield return StartCoroutine(AdjustCharacterListPostLeaveCR(container, characterList));
+            yield return StartCoroutine(AdjustCharacterListPostLeaveCR(container, characterList, completePrevious));
         }
         else
         {
             yield return character.PlayLeaveTween().WaitForCompletion();
+        }
+        if (last)
+        {
+            readyToContinue = true;
+        }
+    }
+
+    private IEnumerator RmCharacterCRMulti(List<VNPlusCharacter> charactersToRemove, RectTransform container, List<VNPlusCharacter> characterList, bool completePrevious, bool last)
+    {
+        if (characterList.Count > 0)
+        {
+            TweenInfo lastTween = null;
+            foreach (var character in charactersToRemove)
+            {
+                lastTween = character.PlayLeaveTween();
+                yield return multiJoinLeaveStaggerYielder;
+            }
+            yield return new WaitForSeconds(lastTween.Time / 2);
+            yield return StartCoroutine(AdjustCharacterListPostLeaveCR(container, characterList, completePrevious));
+        }
+        else
+        {
+            YieldInstruction yielder = null;
+            foreach(var character in charactersToRemove)
+            {
+                yielder = character.PlayLeaveTween().WaitForCompletion();
+                yield return multiJoinLeaveStaggerYielder;
+            }
+            yield return yielder;
+        }
+        if (last)
+        {
+            readyToContinue = true;
+        }
+    }
+
+
+    private IEnumerator RmCharacterCRMultiBothColumns(List<VNPlusCharacter> rightCharactersToRemove, List<VNPlusCharacter> leftCharactersToRemove)
+    {
+        var coroutines = new List<Coroutine>(2);
+        if(rightCharactersToRemove.Count == 1)
+        {
+            GetColumnData(CharacterColumn.Right, out var container, out var characterList, out _);
+            coroutines.Add(StartCoroutine(RmCharacterCR(rightCharactersToRemove[0], container, characterList, false, false)));
+        }
+        else
+        {
+            GetColumnData(CharacterColumn.Right, out var container, out var characterList, out _);
+            coroutines.Add(StartCoroutine(RmCharacterCRMulti(rightCharactersToRemove, container, characterList, false, false)));
+        }
+        yield return multiJoinLeaveStaggerYielder;
+        if (leftCharactersToRemove.Count == 1)
+        {
+            GetColumnData(CharacterColumn.Left, out var container, out var characterList, out _);
+            coroutines.Add(StartCoroutine(RmCharacterCR(leftCharactersToRemove[0], container, characterList, false, false)));
+        }
+        else
+        {
+            GetColumnData(CharacterColumn.Left, out var container, out var characterList, out _);
+            coroutines.Add(StartCoroutine(RmCharacterCRMulti(leftCharactersToRemove, container, characterList, false, false)));
+        }
+        foreach(var cr in coroutines)
+        {
+            yield return cr;
         }
         readyToContinue = true;
     }
@@ -137,6 +252,27 @@ public class DialogViewVNPlus : DialogViewMessage<DialogItemVNPlus>
         AddCharacterInstant(args);
         return false;
     }
+
+    public override bool AddCharacterMulti(IReadOnlyList<AddCharacterArgs> args)
+    {
+        var charactersToAdd = args.Where(arg => !characterMap.ContainsKey(arg.CharacterData.name)).ToArray();
+        if(charactersToAdd.Length < 1)
+        {
+            return false;
+        }
+        else if(charactersToAdd.Length == 1)
+        {
+            return AddCharacter(args[0]);
+        }
+        if (isActiveAndEnabled)
+        {
+            readyToContinue = false;
+            StartCoroutine(AddCharacterMultiCR(args));
+            return true;
+        }
+        return base.AddCharacterMulti(args);
+    }
+
     private void AddCharacterInstant(AddCharacterArgs args)
     {
         GetColumnData(args.Column, out var container, out var characterList, out var pool, out var prefab);
@@ -144,7 +280,7 @@ public class DialogViewVNPlus : DialogViewMessage<DialogItemVNPlus>
         {
             AdjustCharactersPreJoinInstant(container, characterList);
         }
-        var newCharacter = InstantiateCharacter(prefab, container, characterList, pool);
+        var newCharacter = InstantiateCharacter(prefab, container, characterList, pool, 0);
         ProcessNewCharacter(newCharacter, args, true);
     }
 
@@ -189,28 +325,58 @@ public class DialogViewVNPlus : DialogViewMessage<DialogItemVNPlus>
         GetColumnData(args.Column, out var container, out var characterList, out var pool, out var prefab);
         if (characterList.Count > 0)
         {
-            yield return StartCoroutine(AdjustCharacterListPreJoinCR(container, characterList, top, completePrevious));
+            yield return StartCoroutine(AdjustCharacterListPreJoinCR(container, characterList, top, completePrevious, 1));
         }
-        var newCharacter = InstantiateCharacter(prefab, container, characterList, pool, top);
+        var newCharacter = InstantiateCharacter(prefab, container, characterList, pool, top ? 0 : characterList.Count);
         ProcessNewCharacter(newCharacter, args, top);
         yield return newCharacter.PlayJoinTween().WaitForCompletion();
         readyToContinue = true;
     }
 
-    private VNPlusCharacter InstantiateCharacter(GameObject prefab, RectTransform container, List<VNPlusCharacter> characterList, Queue<VNPlusCharacter> pool, bool top = true)
+    private IEnumerator AddCharacterMultiCR(IReadOnlyList<AddCharacterArgs> args, bool top = true, bool completePrevious = true)
+    {
+        GetColumnData(args[0].Column, out var container, out var characterList, out var pool, out var prefab);
+        if (characterList.Count > 0)
+        {
+            yield return StartCoroutine(AdjustCharacterListPreJoinCR(container, characterList, top, completePrevious, args.Count));
+        }
+        var newCharacters = new List<VNPlusCharacter>(args.Count);
+        for (int i = 0; i < args.Count; i++)
+        {
+            newCharacters.Add(CreateCharacter(prefab, container, characterList, pool, i));
+        }
+        for (int i = 0; i < newCharacters.Count; i++)
+        {
+            var arg = args[i];
+            var newCharacter = newCharacters[i];
+            InitializeCharacter(newCharacter, container, characterList, i);
+            ProcessNewCharacter(newCharacter, arg, i == 0);
+            newCharacter.PreJoinTween();
+        }
+        YieldInstruction yielder = null;
+        foreach (var newCharacter in newCharacters)
+        {
+            yielder = newCharacter.PlayJoinTween().WaitForCompletion();
+            yield return multiJoinLeaveStaggerYielder;
+        }
+        yield return yielder;
+        readyToContinue = true;
+    }
+
+    private VNPlusCharacter InstantiateCharacter(GameObject prefab, RectTransform container, List<VNPlusCharacter> characterList, Queue<VNPlusCharacter> pool, int index)
+    {
+        VNPlusCharacter newCharacter = CreateCharacter(prefab, container, characterList, pool, index);
+        InitializeCharacter(newCharacter, container, characterList, index);
+        return newCharacter;
+    }
+
+    private VNPlusCharacter CreateCharacter(GameObject prefab, RectTransform container, List<VNPlusCharacter> characterList, Queue<VNPlusCharacter> pool, int index)
     {
         VNPlusCharacter newCharacter;
-        if(pool.Count > 0)
+        if (pool.Count > 0)
         {
             newCharacter = pool.Dequeue();
-            if (top)
-            {
-                newCharacter.transform.SetAsFirstSibling();
-            }
-            else
-            {
-                newCharacter.transform.SetAsLastSibling();
-            }
+            newCharacter.transform.SetSiblingIndex(index);
             newCharacter.Clear();
         }
         else
@@ -218,44 +384,37 @@ public class DialogViewVNPlus : DialogViewMessage<DialogItemVNPlus>
             newCharacter = Instantiate(prefab, container).GetComponent<VNPlusCharacter>();
         }
         // Add character to list
-        if (top)
-        {
-            characterList.Insert(0, newCharacter);
-        }
-        else
-        {
-            characterList.Add(newCharacter);
-        }
-        var height = container.rect.height / characterList.Count;
-        newCharacter.SetInitialHeight(height);
-        // Set Initial Position
-        if (top)
-        {
-            newCharacter.SetInitialPos(-height / 2); // Top of list
-        }
-        else
-        {
-            newCharacter.SetInitialPos((-height / 2) - ((characterList.Count - 1) * height)); // Bottom of list
-        }
+        characterList.Insert(index, newCharacter);
         return newCharacter;
     }
 
-    private IEnumerator AdjustCharacterListPreJoinCR(RectTransform container, List<VNPlusCharacter> characterList, bool top, bool completePrevious)
+    private void InitializeCharacter(VNPlusCharacter newCharacter, RectTransform container, List<VNPlusCharacter> characterList, int index)
+    {
+        var height = container.rect.height / characterList.Count;
+        newCharacter.SetInitialHeight(height);
+        // Set Initial Position
+        newCharacter.SetInitialPos((-height / 2) - (index * height));
+    }
+
+    private IEnumerator AdjustCharacterListPreJoinCR(RectTransform container, List<VNPlusCharacter> characterList, bool top, bool completePrevious, int numJoining)
     {
         if (completePrevious)
         {
             characterJoinLeaveTween.Complete();
         }
-        GetCharacterAdjustmentValues(container, characterList, 1, out float newHeight, out float posStart, top);
+        GetCharacterAdjustmentValues(container, characterList, numJoining, out float newHeight, out float posStart, top);
         AdjustCharacterHeights(characterJoinLeaveTween, characterList, newHeight);
         yield return new WaitForSeconds(characterJoinLeaveTween.Time / 2);
         AdjustCharacterPositions(characterJoinLeaveTween, characterList, posStart, newHeight);
         yield return new WaitForSeconds(characterJoinLeaveTween.Time / 2);
     }
 
-    private IEnumerator AdjustCharacterListPostLeaveCR(RectTransform container, List<VNPlusCharacter> characterList)
+    private IEnumerator AdjustCharacterListPostLeaveCR(RectTransform container, List<VNPlusCharacter> characterList, bool completePrevious)
     {
-        characterJoinLeaveTween.Complete();
+        if (completePrevious)
+        {
+            characterJoinLeaveTween.Complete();
+        }
         GetCharacterAdjustmentValues(container, characterList, 0, out float newHeight, out float posStart);
         AdjustCharacterPositions(characterJoinLeaveTween, characterList, posStart, newHeight);
         yield return new WaitForSeconds(characterJoinLeaveTween.Time / 2);
@@ -330,7 +489,7 @@ public class DialogViewVNPlus : DialogViewMessage<DialogItemVNPlus>
         // Remove character from current column
         GetColumnData(OtherColumn(targetColumn), out var fromContainer, out var fromList, out var fromPool);
         PrepareToRemoveCharacter(character, character.Data.name, fromList, fromPool);
-        StartCoroutine(RmCharacterCR(character, fromContainer, fromList));
+        StartCoroutine(RmCharacterCR(character, fromContainer, fromList, true, false));
 
         // Wait for half of the leave animation to play (but not any necessary list adjusments)
         yield return new WaitForSeconds(character.JoinTweenTime / 2);

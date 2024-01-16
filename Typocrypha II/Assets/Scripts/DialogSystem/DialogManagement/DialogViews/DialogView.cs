@@ -97,9 +97,29 @@ public abstract class DialogView : MonoBehaviour
         return false;
     }
 
+    public virtual bool AddCharacterMulti(IReadOnlyList<AddCharacterArgs> args)
+    {
+        bool ret = false;
+        foreach(var arg in args)
+        {
+            ret |= AddCharacter(arg);
+        }
+        return ret;
+    }
+
     public virtual bool RemoveCharacter(CharacterData data)
     {
         return false;
+    }
+
+    public virtual bool RemoveCharacterMulti(IReadOnlyList<CharacterData> args)
+    {
+        bool ret = false;
+        foreach (var arg in args)
+        {
+            ret |= RemoveCharacter(arg);
+        }
+        return ret;
     }
 
     public virtual void SetExpression(CharacterData data, string expression)
@@ -124,6 +144,15 @@ public abstract class DialogView : MonoBehaviour
             CharacterData = data;
             Column = column;
             AbsolutePosition = pos;
+            InitialPose = pose;
+            InitialExpression = expr;
+        }
+
+        public AddCharacterArgs(CharacterData data, CharacterColumn column, string pose, string expr)
+        {
+            CharacterData = data;
+            Column = column;
+            AbsolutePosition = Vector2.zero;
             InitialPose = pose;
             InitialExpression = expr;
         }

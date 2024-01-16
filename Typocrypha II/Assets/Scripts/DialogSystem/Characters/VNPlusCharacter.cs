@@ -211,9 +211,14 @@ public class VNPlusCharacter : MonoBehaviour
         mainRect.sizeDelta = new Vector2(mainRect.sizeDelta.x, height);
     }
 
-    public TweenInfo PlayJoinTween()
+    public void PreJoinTween()
     {
         mainRect.localScale = new Vector3(mainRect.localScale.x, 0, mainRect.localScale.z);
+    }
+
+    public TweenInfo PlayJoinTween()
+    {
+        PreJoinTween();
         joinTween.Start(mainRect.DOScaleY(scale, joinTween.Time));
         return joinTween;
     }

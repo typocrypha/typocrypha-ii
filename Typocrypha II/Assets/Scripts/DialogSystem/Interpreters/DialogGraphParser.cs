@@ -177,6 +177,50 @@ public class DialogGraphParser : GraphParser
                     DialogCharacterManager.instance.AnimateCharacter(cNode.characterData, cNode.clip);
                 }
             }
+            else if (currNode is AddCharacterMulti addMultiNode)
+            {
+                var args = new List<DialogView.AddCharacterArgs>(MultiCharacterControlNode.MaxArgs);
+                if(addMultiNode.characterData1 != null)
+                {
+                    args.Add(new DialogView.AddCharacterArgs(addMultiNode.characterData1, addMultiNode.column, addMultiNode.initialPose1, addMultiNode.initialExpr1));
+                }
+                if (addMultiNode.characterData2 != null)
+                {
+                    args.Add(new DialogView.AddCharacterArgs(addMultiNode.characterData2, addMultiNode.column, addMultiNode.initialPose2, addMultiNode.initialExpr2));
+                }
+                if (addMultiNode.characterData3 != null)
+                {
+                    args.Add(new DialogView.AddCharacterArgs(addMultiNode.characterData3, addMultiNode.column, addMultiNode.initialPose3, addMultiNode.initialExpr3));
+                }
+                var currView = DialogManager.instance.DialogView;
+                if (currView.AddCharacterMulti(args))
+                {
+                    StartCoroutine(WaitOnFunc(currView.IsReadyToContinue, loading));
+                    return null;
+                }
+            }
+            else if(currNode is RemoveCharacterMulti removeMultiNode)
+            {
+                var args = new List<CharacterData>(MultiCharacterControlNode.MaxArgs);
+                var currView = DialogManager.instance.DialogView;
+                if(removeMultiNode.characterData1 != null)
+                {
+                    args.Add(removeMultiNode.characterData1);
+                }
+                if (removeMultiNode.characterData2 != null)
+                {
+                    args.Add(removeMultiNode.characterData2);
+                }
+                if (removeMultiNode.characterData3 != null)
+                {
+                    args.Add(removeMultiNode.characterData3);
+                }
+                if (currView.RemoveCharacterMulti(args))
+                {
+                    StartCoroutine(WaitOnFunc(currView.IsReadyToContinue, loading));
+                    return null;
+                }
+            }
             else if (currNode is ClampDialogUINode)
             {
                 var node = currNode as ClampDialogUINode;
