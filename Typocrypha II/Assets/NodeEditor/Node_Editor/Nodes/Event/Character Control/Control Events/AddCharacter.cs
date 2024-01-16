@@ -43,7 +43,7 @@ namespace Gameflow
             targetPos = RTEditorGUI.Vector2Field(new Rect(4, 50, MinSize.x - 10, 20), "", targetPos);
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            column = (DialogViewVNPlus.CharacterColumn)RTEditorGUI.EnumPopup(column);
+            column = (DialogView.CharacterColumn)RTEditorGUI.EnumPopup(column);
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             GUILayout.Label(new GUIContent("Initial Expression"), GUILayout.Width(100));

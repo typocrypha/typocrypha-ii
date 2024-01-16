@@ -306,7 +306,7 @@ public class DialogScriptParser : EditorWindow
             gnode.targetPos = new Vector2(float.Parse(args[2]) * 8.8888f, float.Parse(args[3]) * 5f); // Normalized coordinates (hardcoded 16/9 res with camera size 5).
             if (args.Length > 4)
             {
-                gnode.column = args[4].Trim().ToLower() == "left" ? DialogViewVNPlus.CharacterColumn.Left : DialogViewVNPlus.CharacterColumn.Right;
+                gnode.column = args[4].Trim().ToLower() == "left" ? DialogView.CharacterColumn.Left : DialogView.CharacterColumn.Right;
             }
             if (args.Length == 6)
             {
@@ -403,7 +403,7 @@ public class DialogScriptParser : EditorWindow
         {
             var gnode = CreateNode(MoveCharacter.ID) as MoveCharacter;
             gnode.characterData = GetCharacterData(args[1]);
-            gnode.targetColumn = args[2].Trim().ToLower() == "right" ? DialogViewVNPlus.CharacterColumn.Right : DialogViewVNPlus.CharacterColumn.Left;
+            gnode.targetColumn = args[2].Trim().ToLower() == "right" ? DialogView.CharacterColumn.Right : DialogView.CharacterColumn.Left;
             gnode.top = args[3].Trim().ToLower() == "top";
             nodes.Add(gnode);
         }
