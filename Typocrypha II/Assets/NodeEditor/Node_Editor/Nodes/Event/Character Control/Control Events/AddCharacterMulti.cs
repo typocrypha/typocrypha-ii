@@ -36,24 +36,24 @@ namespace Gameflow
             GUILayout.BeginHorizontal();
             column = (DialogView.CharacterColumn)RTEditorGUI.EnumPopup(column);
             GUILayout.EndHorizontal();
-            DataUI(ref initialExpr1, ref initialPose1);
-            DataUI(ref initialExpr2, ref initialPose2);
-            DataUI(ref initialExpr3, ref initialPose3);
+            DataUI(ref initialExpr1, ref initialPose1, 1);
+            DataUI(ref initialExpr2, ref initialPose2, 2);
+            DataUI(ref initialExpr3, ref initialPose3, 3);
         }
 
-        private void DataUI(ref string initialExpr, ref string initialPose)
+        private void DataUI(ref string initialExpr, ref string initialPose, int number)
         {
             GUILayout.BeginHorizontal();
             GUIStyle dialogTextStyle = new GUIStyle(GUI.skin.textArea);
             dialogTextStyle.wordWrap = true;
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            GUILayout.Label(new GUIContent("Initial Expression"), GUILayout.Width(100));
+            GUILayout.Label(new GUIContent($"Initial Expr {number}"), GUILayout.Width(100));
             initialExpr = RTEditorGUI.TextField(initialExpr);
             GUILayout.Space(5);
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            GUILayout.Label(new GUIContent("Initial Pose"), GUILayout.Width(100));
+            GUILayout.Label(new GUIContent($"Initial Pose {number}"), GUILayout.Width(100));
             initialPose = RTEditorGUI.TextField(initialPose);
             GUILayout.Space(5);
             GUILayout.EndHorizontal();
