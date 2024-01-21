@@ -21,6 +21,7 @@ public class CasterUI : MonoBehaviour
     public UnityEvent onSpiritForm; // Call when entering spirit form
     public UnityEvent_string onSpellChanged; // Pass name of spell currently being cast.
     public UnityEvent_sprite onSpellIconChanged; // Pass icon of spell current being cast.
+    public UnityEvent_sprite onSpriteChanged; // Pass new sprite
     public UnityEvent_bool onCounterStateChanged;
     public UnityEvent_string onScouterDataChanged;
     public UnityEvent onScouterShow;
