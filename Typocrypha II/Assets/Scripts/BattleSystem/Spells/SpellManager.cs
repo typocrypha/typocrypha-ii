@@ -74,8 +74,12 @@ public class SpellManager : MonoBehaviour
     /// <summary> Cast the spell effects and play the associated fx</summary>
     private IEnumerator CastCR(Spell spell, Caster caster, Battlefield.Position target, string castMessageOverride, bool isTopLevel)
     {
+        // Hide target reticle
+        TargetReticle.instance.ShowReticle(false);
         // BattleDim : Dim everyone except caster
-        BattleDimmer.instance.DimCasters(Battlefield.instance.Casters.Where(c => c != caster));
+        BattleDimmer.instance.DimCasters(Battlefield.instance.Casters.Where(c => c != caster), false);
+        // Hide caster's UI
+        caster.ui.ShowUI(false);
         // If the spell is restricted, break and do not cast
         if (SpellRestrictions.instance.IsRestricted(spell, caster, target, true))
         {
@@ -216,8 +220,12 @@ public class SpellManager : MonoBehaviour
         {
             SpellCooldownManager.instance.DoOverheat();
         }
-        //BattleDim: undim all
+        // BattleDim: undim all
         BattleDimmer.instance.SetDimmer(false);
+        // Show target reticle
+        TargetReticle.instance.ShowReticle(true);
+        // Show caster UI
+        caster.ui.ShowUI(true);
     }
 
     private IEnumerator CastAndCounterCR(Spell spell, Caster caster, Battlefield.Position target, Func<Caster, bool> pred, string castMessageOverride, bool isTopLevel)

@@ -41,7 +41,8 @@ public class BattleDimmer : MonoBehaviour
     /// Enable dimming effect on specified casters. Implicitly sets dimmer to active state.
     /// </summary>
     /// <param name="casters">A collection of casters to make dimmable.</param>
-    public void DimCasters(IEnumerable<Caster> casters)
+    /// <param name="showUI">Whether to hide caster UI.</param>
+    public void DimCasters(IEnumerable<Caster> casters, bool showUI = true)
     {
         if (casters == null) return;
 
@@ -50,7 +51,7 @@ public class BattleDimmer : MonoBehaviour
         {
             if (!c || !c.ui) continue;
             dimmedUIs.Add(c.ui);
-            c.ui.onDimEnabled.Invoke();
+            c.ui.SetDimmable(true).ShowUI(showUI);
         }
     }
 
@@ -65,7 +66,7 @@ public class BattleDimmer : MonoBehaviour
         foreach (var c in casters)
         {
             if (!c || !c.ui) continue;
-            c.ui.onDimDisabled.Invoke();
+            c.ui.SetDimmable(false).ShowUI(true);
             dimmedUIs.Remove(c.ui);
         }
         SetDimmer(dimmedUIs.Count > 0);
@@ -78,7 +79,8 @@ public class BattleDimmer : MonoBehaviour
     {
         foreach (var ui in dimmedUIs)
         {
-            if (ui) ui.onDimDisabled.Invoke();
+            if (!ui) continue;
+            ui.SetDimmable(false).ShowUI(true);
         }
         dimmedUIs.Clear();
     }

@@ -26,6 +26,18 @@ public class CasterUI : MonoBehaviour
     public UnityEvent_string onScouterDataChanged;
     public UnityEvent onScouterShow;
     public UnityEvent onScouterHide;
-    public UnityEvent onDimEnabled;
-    public UnityEvent onDimDisabled;
+
+    [SerializeField] SpriteRenderer sprite;
+    [SerializeField] CanvasGroup ui;
+
+    public CasterUI SetDimmable(bool dimmable)
+    {
+        if (sprite) sprite.sortingOrder = dimmable ? -1 : 1;
+        return this;
+    }
+    public CasterUI ShowUI(bool show)
+    {
+        if (ui) ui.alpha = show ? 1 : 0;
+        return this;
+    }
 }

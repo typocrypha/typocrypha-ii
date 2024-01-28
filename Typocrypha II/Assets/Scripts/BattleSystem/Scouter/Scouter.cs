@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -123,20 +123,20 @@ public class Scouter : MonoBehaviour, IPausable
             targetReticle.PH.Pause = false;
             Battlefield.instance.PH.Pause = false;
             Typocrypha.Keyboard.instance.PH.Pause = false;
-            foreach (var c in Battlefield.instance.Casters) c.ui.onScouterHide.Invoke();
+            BattleDimmer.instance.SetDimmer(false);
+            foreach (var c in Battlefield.instance.Enemies) c.ui.onScouterHide.Invoke();
             EventSystem.current.SetSelectedGameObject(null);
             UpdateSpellCursor();
             return;
         }
 
-        //pause
+        //enter scanner state
         ScouterActive = true;
         targetReticle.PH.Pause = true;
         Battlefield.instance.PH.Pause = true;
         Typocrypha.Keyboard.instance.PH.Pause = true;
-
-        //show enemy description
-        foreach (var c in Battlefield.instance.Casters) c.ui.onScouterShow.Invoke();
+        BattleDimmer.instance.DimCasters(Battlefield.instance.Enemies);
+        foreach (var c in Battlefield.instance.Enemies) c.ui.onScouterShow.Invoke();
 
         //spell navigation
         firstSpellInList.Select();
