@@ -75,6 +75,7 @@ public class SpellManager : MonoBehaviour
     private IEnumerator CastCR(Spell spell, Caster caster, Battlefield.Position target, string castMessageOverride, bool isTopLevel)
     {
         // BattleDim : Dim everyone except caster
+        BattleDimmer.instance.DimCasters(Battlefield.instance.Casters.Where(c => c != caster));
         // If the spell is restricted, break and do not cast
         if (SpellRestrictions.instance.IsRestricted(spell, caster, target, true))
         {
@@ -145,7 +146,8 @@ public class SpellManager : MonoBehaviour
             {
                 // Get the effect's targets
                 var targets = effect.pattern.Target(caster.FieldPos, target);
-                // BattleDim: dim all except caster and targets
+                // BattleDim: undim all targets
+                BattleDimmer.instance.UndimCasters(targets.Select(t=>Battlefield.instance.GetCaster(t)));
                 // Log the effect of each effect
                 var effectResults = new List<CastResults>();
                 crList.Clear();
@@ -215,6 +217,7 @@ public class SpellManager : MonoBehaviour
             SpellCooldownManager.instance.DoOverheat();
         }
         //BattleDim: undim all
+        BattleDimmer.instance.SetDimmer(false);
     }
 
     private IEnumerator CastAndCounterCR(Spell spell, Caster caster, Battlefield.Position target, Func<Caster, bool> pred, string castMessageOverride, bool isTopLevel)

@@ -26,4 +26,6 @@ public class CasterUI : MonoBehaviour
     public UnityEvent_string onScouterDataChanged;
     public UnityEvent onScouterShow;
     public UnityEvent onScouterHide;
+    public UnityEvent onDimEnabled;
+    public UnityEvent onDimDisabled;
 }
