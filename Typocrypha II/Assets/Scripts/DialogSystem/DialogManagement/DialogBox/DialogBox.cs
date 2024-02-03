@@ -44,7 +44,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
     float scrollDelay = defaultScrollDelay; // Delay in showing characters for text scroll.
     public float ScrollDelay
     {
-        get => scrollDelay / Settings.TextScrollSpeed;
+        get => scroll ? scrollDelay / Settings.TextScrollSpeed : 0;
         set => scrollDelay = value;
     }
     public int SpeechInterval { get; set; } = defaultSpeechInterval; // Number of character scrolls before speech sfx plays
@@ -66,6 +66,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
     [SerializeField] private DialogContinueIndicator continueIndicator;
     [SerializeField] private CanvasGroup canvasGroup = null;
     [SerializeField] FXText.TMProColor hideText; // Allows for hiding parts of text (for scrolling)
+    [SerializeField] private bool scroll = true;
     DialogItem dialogItem; // Dialog line data
     Coroutine scrollCR; // Coroutine that scrolls the text
     private AudioClip[] textBlips = new AudioClip[2];
