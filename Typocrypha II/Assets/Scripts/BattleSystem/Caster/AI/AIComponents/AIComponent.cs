@@ -11,7 +11,7 @@ public abstract class AIComponent : MonoBehaviour
 {
     protected Caster caster;
 
-    void Awake()
+    protected virtual void Awake()
     {
         InitializeBase();
     }
