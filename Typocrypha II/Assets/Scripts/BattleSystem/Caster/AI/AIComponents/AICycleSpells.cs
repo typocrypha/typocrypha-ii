@@ -10,7 +10,6 @@ public class AICycleSpells : AIComponent
 
     int curr;
 
-    // Start is called before the first frame update
     protected override void Awake()
     {
         // Initialize the standard refs (caster and AI)

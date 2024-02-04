@@ -241,7 +241,8 @@ public class SpellManager : MonoBehaviour
             if (remainingWords.Count() == cancelTarget.Spell.Count)
                 continue;
             // Full counter (no remaining roots)
-            if (remainingWords.Count((w) => w is RootWord) <= 0)
+            bool fullCounter = remainingWords.Count((w) => w is RootWord) <= 0;
+            if (fullCounter)
             {
                 cancelTarget.Spell = new Spell(counterWord);
             }
@@ -250,7 +251,7 @@ public class SpellManager : MonoBehaviour
                 cancelTarget.Spell = new Spell(remainingWords);
             }
             SpellFxManager.instance.CounterFx(cancelTarget.FieldPos);
-            cancelTarget.OnCounter?.Invoke(cancelTarget);
+            cancelTarget.OnCounter?.Invoke(cancelTarget, fullCounter);
         }
     }
 

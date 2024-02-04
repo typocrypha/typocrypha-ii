@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class CasterStats
 {
-    public const int statMax = 10;
+    public const int statMax = 20;
     public const int statMin = -statMax;
     public const int resourceMax = int.MaxValue;
     public const int resourceMin = -resourceMax;

@@ -49,7 +49,7 @@ public class Caster : MonoBehaviour
     /// <summary>
     /// Callbacks applied after a cast resolves
     /// </summary>
-    public System.Action<Caster> OnCounter { get; set; }
+    public System.Action<Caster, bool> OnCounter { get; set; }
     /// <summary>
     /// Callbacks the calculate extra tag reactions
     /// </summary>
@@ -64,6 +64,8 @@ public class Caster : MonoBehaviour
     public HitFn OnAfterHitResolved { get; set; }
     public System.Action OnSpiritMode { get; set; }
     public System.Action<Battlefield.Position> OnNoTargetHit { get; set; }
+    public System.Action OnStunned { get; set; }
+    public System.Action OnUnstunned { get; set; }
 
     #region Field Object Properties
 
@@ -122,7 +124,14 @@ public class Caster : MonoBehaviour
             health = Mathf.Clamp(value, 0, Stats.MaxHP);
             if (value <= 0 && BStatus == BattleStatus.Normal)
             {
-                BStatus = BattleStatus.SpiritMode;
+                if(SP > 0)
+                {
+                    BStatus = BattleStatus.SpiritMode;
+                }
+                else
+                {
+                    BStatus = BattleStatus.Dead;
+                }
             }
             else
             {
@@ -169,16 +178,20 @@ public class Caster : MonoBehaviour
         get => stunned;
         set
         {
+            if (value == stunned)
+                return;
             stunned = value;
             // If stunned display stun UI
             if (stunned)
             {
                 ui?.onStun.Invoke();
+                OnStunned?.Invoke();
             }
             else
             {
                 // If unstunned reset stagger to full
                 ui?.onUnstun.Invoke();
+                OnUnstunned?.Invoke();
                 Stagger = Stats.MaxStagger;
             }
         }
