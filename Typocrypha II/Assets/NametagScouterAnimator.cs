@@ -9,13 +9,17 @@ public class NametagScouterAnimator : MonoBehaviour
     const float TWEEN_DURATION = 0.25f;
     const float TWEEN_DELAY = 0.25f;
 
+    private Tween tween;
+
     public void ShowScouterData()
     {
-        VerticalOffset.DOAnchorPosY(text.preferredHeight, TWEEN_DURATION).SetDelay(TWEEN_DELAY);
+        tween?.Kill();
+        tween = VerticalOffset.DOAnchorPosY(text.preferredHeight, TWEEN_DURATION).SetDelay(TWEEN_DELAY);
     }
 
     public void HideScouterData()
     {
-        VerticalOffset.DOAnchorPosY(0, TWEEN_DURATION);
+        tween?.Kill();
+        tween = VerticalOffset.DOAnchorPosY(0, TWEEN_DURATION);
     }
 }
