@@ -15,14 +15,14 @@ namespace Gameflow
         public override string Title { get { return "Move Character"; } }
         public override Vector2 MinSize { get { return new Vector2(250, 60); } }
 
-        public DialogViewVNPlus.CharacterColumn targetColumn;
+        public DialogView.CharacterColumn targetColumn;
         public bool top;
 
         protected override void OnCreate()
         {
             base.OnCreate();
             top = false;
-            targetColumn = DialogViewVNPlus.CharacterColumn.Left;
+            targetColumn = DialogView.CharacterColumn.Left;
         }
 
         public override void NodeGUI()
@@ -30,7 +30,7 @@ namespace Gameflow
             base.NodeGUI();
 
             GUILayout.Label("Target Column");
-            targetColumn = (DialogViewVNPlus.CharacterColumn)RTEditorGUI.EnumPopup(targetColumn);
+            targetColumn = (DialogView.CharacterColumn)RTEditorGUI.EnumPopup(targetColumn);
 
             GUILayout.BeginHorizontal();
             GUILayout.Space(5);

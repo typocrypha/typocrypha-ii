@@ -7,6 +7,7 @@ public class WaveTransitionBanner : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI titleText;
     [SerializeField] TextMeshProUGUI numberText;
+    [SerializeField] private Animator animationController;
 
     public string TitleText
     {
@@ -18,5 +19,10 @@ public class WaveTransitionBanner : MonoBehaviour
     {
         get => numberText.text;
         set => numberText.text = value;
+    }
+
+    public void ContinueAnimation()
+    {
+        animationController.SetTrigger("KeyDownSpace");
     }
 }

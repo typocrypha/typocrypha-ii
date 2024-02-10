@@ -21,5 +21,23 @@ public class CasterUI : MonoBehaviour
     public UnityEvent onSpiritForm; // Call when entering spirit form
     public UnityEvent_string onSpellChanged; // Pass name of spell currently being cast.
     public UnityEvent_sprite onSpellIconChanged; // Pass icon of spell current being cast.
+    public UnityEvent_sprite onSpriteChanged; // Pass new sprite
     public UnityEvent_bool onCounterStateChanged;
+    public UnityEvent_string onScouterDataChanged;
+    public UnityEvent onScouterShow;
+    public UnityEvent onScouterHide;
+
+    [SerializeField] SpriteRenderer sprite;
+    [SerializeField] CanvasGroup ui;
+
+    public CasterUI SetDimmable(bool dimmable)
+    {
+        if (sprite) sprite.sortingOrder = dimmable ? -1 : 1;
+        return this;
+    }
+    public CasterUI ShowUI(bool show)
+    {
+        if (ui) ui.alpha = show ? 1 : 0;
+        return this;
+    }
 }

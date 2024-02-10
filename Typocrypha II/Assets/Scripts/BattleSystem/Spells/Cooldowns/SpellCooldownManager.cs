@@ -64,7 +64,7 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
 
     public void InitializeEquippedWords()
     {
-        foreach (var kvp in PlayerDataManager.instance.equipment.EquippedWords)
+        foreach (var kvp in PlayerDataManager.instance.equipment.EquippedSpellWords)
         {
             AddWord(kvp.Value);
         }
@@ -76,6 +76,20 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
         if (cooldowns.Count <= 0)
             return;
         cooldownTr.SortHiearchy(CompareCooldowns);
+    }
+
+    public IReadOnlyList<SpellWord> GetSpells()
+    {
+        var ret = new List<SpellWord>(cooldowns.Count);
+        foreach(Transform child in cooldownTr)
+        {
+            var cooldown = child.GetComponent<SpellCooldown>();
+            if(cooldown != null)
+            {
+                ret.Add(cooldown.SpellWord);
+            }
+        }
+        return ret;
     }
 
     private int CompareCooldowns(Transform a, Transform b)
@@ -121,6 +135,16 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
         {
             SortCooldowns();
         }
+    }
+
+    public void RemoveWord(SpellWord word)
+    {
+        string key = word.internalName.ToUpper();
+        // If cooldown for this word doesn't exist, return
+        if (!cooldowns.ContainsKey(key))
+            return;
+        Destroy(cooldowns[key].gameObject);
+        cooldowns.Remove(key);
     }
 
     public bool IsOnCooldown(SpellWord word)

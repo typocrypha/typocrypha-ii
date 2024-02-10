@@ -3,21 +3,8 @@
 /// <summary>
 /// Manages the background and background effects.
 /// </summary>
-public class BackgroundManager : MonoBehaviour, ISavable
+public class BackgroundManager : MonoBehaviour
 {
-    #region ISavable
-    public void Save()
-    {
-        // TEMP
-        SaveManager.instance.loaded.bgsprite = bgsr.sprite.name; 
-    }
-
-    public void Load()
-    {
-        bgsr.sprite = bgBundle.LoadAsset<Sprite>(SaveManager.instance.loaded.bgsprite);
-    }
-    #endregion
-
     public static BackgroundManager instance = null;
     public SpriteRenderer bgsr; // Sprite renderer for the background.
     public GameObject bggo; // Gameobject background (for more complicated backgrounds).

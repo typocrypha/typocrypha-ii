@@ -30,6 +30,9 @@ public class BattleManager : MonoBehaviour, IPausable
     public UnityEngine.Events.UnityEvent OnGameOver = default;
     public AudioClip GameOverAudioClip = default;
 
+    [Header("Equipment Menu")]
+    [SerializeField] private EquipmentMenu equipmentMenu;
+
     private BattleGraphParser graphParser;
     private readonly List<BattleEvent> currEvents = new List<BattleEvent>();
     private int waveNum = 0;
@@ -67,6 +70,7 @@ public class BattleManager : MonoBehaviour, IPausable
         // Initialize Player
         var player = Instantiate(startNode.player, transform).GetComponent<Caster>();
         Battlefield.instance.Add(player, new Battlefield.Position(1, 1));
+        PlayerDataManager.instance.equipment.ReapplyEquippedBadgeWords(player);
         // Initialize ally character
         if(startNode.initialAllyData != null)
         {
@@ -250,7 +254,7 @@ public class BattleManager : MonoBehaviour, IPausable
     }
 
     private IEnumerator WaveTransition(BattleWave waveData)
-    { 
+    {
         var wT = Instantiate(defaultWaveTransitionPrefab, waveTransitionCanvas.transform).GetComponent<WaveTransitionBanner>();
         wT.TitleText = TextMacros.SubstituteMacros(waveData.waveTitle);
         if (!string.IsNullOrEmpty(waveData.waveNumberOverride))
@@ -261,7 +265,13 @@ public class BattleManager : MonoBehaviour, IPausable
         {
             wT.NumberText = "Wave " + waveNum + "/" + totalWaves;
         }
-        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
+        if (waveData.allowEquipment)
+        {
+            equipmentMenu.Enable();
+        }
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space) && !equipmentMenu.IsShowing);
+        equipmentMenu.Disable();
+        wT.ContinueAnimation();
         yield return new WaitForSeconds(0.5f);
     }
 

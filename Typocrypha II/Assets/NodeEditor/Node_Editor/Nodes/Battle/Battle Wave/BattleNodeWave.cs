@@ -26,6 +26,7 @@ namespace Gameflow
         private RListGUI<GameObject> eventGUI;
         public List<GameObject> battleEvents;
         public bool useStandardEvents;
+        public bool allowEquipement;
 
         private RListGUI<GameObject> reinforcementsGUI;
         public List<GameObject> reinforcements;
@@ -66,6 +67,7 @@ namespace Gameflow
             GUILayout.Label(new GUIContent("Opening Scene"), GUI.skin.label, GUILayout.Width(90));
             openingScene = RTEditorGUI.ObjectField(openingScene, false, GUILayout.Width(190));
             GUILayout.EndHorizontal();
+            allowEquipement = GUILayout.Toggle(allowEquipement, new GUIContent("Allow Equipment"));
             GUILayout.EndVertical();
             #endregion
 

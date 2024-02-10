@@ -19,10 +19,10 @@ public class AIAllyNumberDependent : AIComponent
     int spellIndex = -1;
 
     // Start is called before the first frame update
-    void Awake()
+    protected override void Awake()
     {
         // Initialize the standard refs (caster and AI)
-        InitializeBase();
+        base.Awake();
         if(startingSpell != null && startingSpell.Count > 0)
         {
             ChangeSpell(startingSpell);

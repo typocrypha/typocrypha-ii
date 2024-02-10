@@ -55,7 +55,10 @@ public class DialogScriptParser : EditorWindow
     Dictionary<string, System.Type> nodeMap = new Dictionary<string, System.Type>
     {
         {"addchar", typeof(AddCharacter) },
+        {"addcharmulti", typeof(AddCharacterMulti) },
+        {"addcharmultiargs", typeof(AddCharacterMulti) },
         {"removechar", typeof(RemoveCharacter) },
+        {"removecharmulti", typeof(RemoveCharacterMulti) },
         {"movechar", typeof(MoveCharacter) },
         {"embedimage", typeof(EmbedImage) },
         {"playbgm", typeof(PlayBgm) },
@@ -303,7 +306,7 @@ public class DialogScriptParser : EditorWindow
             gnode.targetPos = new Vector2(float.Parse(args[2]) * 8.8888f, float.Parse(args[3]) * 5f); // Normalized coordinates (hardcoded 16/9 res with camera size 5).
             if (args.Length > 4)
             {
-                gnode.column = args[4].Trim().ToLower() == "left" ? DialogViewVNPlus.CharacterColumn.Left : DialogViewVNPlus.CharacterColumn.Right;
+                gnode.column = args[4].Trim().ToLower() == "left" ? DialogView.CharacterColumn.Left : DialogView.CharacterColumn.Right;
             }
             if (args.Length == 6)
             {
@@ -316,17 +319,91 @@ public class DialogScriptParser : EditorWindow
             }
             nodes.Add(gnode);
         }
+        else if (nodeType == typeof(AddCharacterMulti))
+        {
+            var node = CreateNode(AddCharacterMulti.ID) as AddCharacterMulti;
+            node.column = args[1].Trim().ToLower() == "left" ? DialogView.CharacterColumn.Left : DialogView.CharacterColumn.Right;
+            node.characterData1 = GetCharacterData(args[2]);
+            if (args[0] == "addcharmulti")
+            {
+                if(args.Length >= 4)
+                {
+                    node.characterData2 = GetCharacterData(args[3]);
+                    if (args.Length >= 5)
+                    {
+                        node.characterData3 = GetCharacterData(args[4]);
+                    }
+                }
+            }
+            else if(args.Length >= 4) // Add character has arguments, use complex parsing
+            {
+                int i = 3;
+                int subArgumentLength = int.Parse(args[i++]);
+                if(subArgumentLength == 1)
+                {
+                    node.initialExpr1 = args[i++];
+                }
+                else if(subArgumentLength == 2)
+                {
+                    node.initialPose1 = args[i++];
+                    node.initialExpr1 = args[i++];
+                }
+                if(i + 1 < args.Length)
+                {
+                    node.characterData2 = GetCharacterData(args[i++]);
+                    subArgumentLength = int.Parse(args[i++]);
+                    if (subArgumentLength == 1)
+                    {
+                        node.initialExpr2 = args[i++];
+                    }
+                    else if (subArgumentLength == 2)
+                    {
+                        node.initialPose2 = args[i++];
+                        node.initialExpr2 = args[i++];
+                    }
+                    if(i + 1 < args.Length)
+                    {
+                        node.characterData3 = GetCharacterData(args[i++]);
+                        subArgumentLength = int.Parse(args[i++]);
+                        if (subArgumentLength == 1)
+                        {
+                            node.initialExpr3 = args[i++];
+                        }
+                        else if (subArgumentLength == 2)
+                        {
+                            node.initialPose3 = args[i++];
+                            node.initialExpr3 = args[i++];
+                        }
+                    }
+                }
+            }
+            nodes.Add(node);
+        }
         else if (nodeType == typeof(RemoveCharacter))
         {
             var gnode = CreateNode(RemoveCharacter.ID) as RemoveCharacter;
             gnode.characterData = GetCharacterData(args[1]);
             nodes.Add(gnode);
         }
+        else if (nodeType == typeof(RemoveCharacterMulti))
+        {
+            var node = CreateNode(RemoveCharacterMulti.ID) as RemoveCharacterMulti;
+            node.characterData1 = GetCharacterData(args[1]);
+            if(args.Length >= 3)
+            {
+                node.characterData2 = GetCharacterData(args[2]);
+                if (args.Length >= 4)
+                {
+                    node.characterData3 = GetCharacterData(args[3]);
+                }
+            }
+            nodes.Add(node);
+        }
         else if (nodeType == typeof(MoveCharacter))
         {
             var gnode = CreateNode(MoveCharacter.ID) as MoveCharacter;
             gnode.characterData = GetCharacterData(args[1]);
-            gnode.targetColumn = args[2].Trim().ToLower() == "right" ? DialogViewVNPlus.CharacterColumn.Right : DialogViewVNPlus.CharacterColumn.Left;
+            gnode.targetColumn = args[2].Trim().ToLower() == "right" ? DialogView.CharacterColumn.Right : DialogView.CharacterColumn.Left;
             gnode.top = args[3].Trim().ToLower() == "top";
             nodes.Add(gnode);
         }

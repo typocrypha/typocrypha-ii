@@ -10,7 +10,7 @@ using Gameflow;
 /// Starts and manages dialog sequences.
 /// </summary>
 [RequireComponent(typeof(DialogGraphParser))]
-public class DialogManager : MonoBehaviour, IPausable, ISavable
+public class DialogManager : MonoBehaviour, IPausable
 {
     #region IPausable
     PauseHandle ph;
@@ -21,19 +21,6 @@ public class DialogManager : MonoBehaviour, IPausable, ISavable
         enabled = !b; // Disable input checking.
         if (dialogBox != null) dialogBox.PH.Pause = b; // Pause dialog box scrolling.
         TextEvents.instance.PH.Pause = b; // Pause text events.
-    }
-    #endregion
-
-    #region ISavable
-    public void Save()
-    {
-        SaveManager.instance.loaded.currScene = SceneManager.GetActiveScene().name;
-        SaveManager.instance.loaded.nodeCount = dialogCounter;
-    }
-
-    public void Load()
-    {
-        dialogCounter = SaveManager.instance.loaded.nodeCount;
     }
     #endregion
 

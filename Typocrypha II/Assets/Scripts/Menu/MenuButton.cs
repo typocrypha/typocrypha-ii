@@ -23,6 +23,11 @@ public class MenuButton : MonoBehaviour, ISelectHandler, IDeselectHandler, ISubm
         button.Select();
     }
 
+    public void Select()
+    {
+        button.Select();
+    }
+
     public void OnSelect(BaseEventData eventData)
     {
         //Do this on highlight
@@ -50,5 +55,10 @@ public class MenuButton : MonoBehaviour, ISelectHandler, IDeselectHandler, ISubm
     public void OnSubmit(BaseEventData eventData)
     {
         AudioManager.instance.PlaySFX(enterSFX);
+    }
+
+    public void SetText(string newText)
+    {
+        text.text = newText;
     }
 }

@@ -74,6 +74,12 @@ public class SpellManager : MonoBehaviour
     /// <summary> Cast the spell effects and play the associated fx</summary>
     private IEnumerator CastCR(Spell spell, Caster caster, Battlefield.Position target, string castMessageOverride, bool isTopLevel)
     {
+        // Hide target reticle
+        TargetReticle.instance.ShowReticle(false);
+        // BattleDim : Dim everyone except caster
+        BattleDimmer.instance.DimCasters(Battlefield.instance.Casters.Where(c => c != caster), false);
+        // Hide caster's UI
+        caster.ui.ShowUI(false);
         // If the spell is restricted, break and do not cast
         if (SpellRestrictions.instance.IsRestricted(spell, caster, target, true))
         {
@@ -144,6 +150,8 @@ public class SpellManager : MonoBehaviour
             {
                 // Get the effect's targets
                 var targets = effect.pattern.Target(caster.FieldPos, target);
+                // BattleDim: undim all targets
+                BattleDimmer.instance.UndimCasters(targets.Select(t=>Battlefield.instance.GetCaster(t)));
                 // Log the effect of each effect
                 var effectResults = new List<CastResults>();
                 crList.Clear();
@@ -212,6 +220,12 @@ public class SpellManager : MonoBehaviour
         {
             SpellCooldownManager.instance.DoOverheat();
         }
+        // BattleDim: undim all
+        BattleDimmer.instance.SetDimmer(false);
+        // Show target reticle
+        TargetReticle.instance.ShowReticle(true);
+        // Show caster UI
+        caster.ui.ShowUI(true);
     }
 
     private IEnumerator CastAndCounterCR(Spell spell, Caster caster, Battlefield.Position target, Func<Caster, bool> pred, string castMessageOverride, bool isTopLevel)
@@ -227,7 +241,8 @@ public class SpellManager : MonoBehaviour
             if (remainingWords.Count() == cancelTarget.Spell.Count)
                 continue;
             // Full counter (no remaining roots)
-            if (remainingWords.Count((w) => w is RootWord) <= 0)
+            bool fullCounter = remainingWords.Count((w) => w is RootWord) <= 0;
+            if (fullCounter)
             {
                 cancelTarget.Spell = new Spell(counterWord);
             }
@@ -236,7 +251,7 @@ public class SpellManager : MonoBehaviour
                 cancelTarget.Spell = new Spell(remainingWords);
             }
             SpellFxManager.instance.CounterFx(cancelTarget.FieldPos);
-            cancelTarget.OnCounter?.Invoke(cancelTarget);
+            cancelTarget.OnCounter?.Invoke(cancelTarget, fullCounter);
         }
     }
 

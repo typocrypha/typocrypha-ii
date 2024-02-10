@@ -9,61 +9,8 @@ public enum Pronoun { FEMININE, INCLUSIVE, FIRSTNAME, MASCULINE };
 /// Contains several maps for storing data.
 /// Game is generally saved during dialog scenes via 'DialogGraphParser'
 /// </summary>
-public class PlayerDataManager : MonoBehaviour, ISavable
+public class PlayerDataManager : MonoBehaviour
 {
-    #region ISavable
-    [System.Serializable]
-    public struct SaveData
-    {
-        public Dictionary<string, string> stringMap;
-        public Dictionary<string, int> intMap;
-        public Dictionary<string, float> floatMap;
-        public Dictionary<string, bool> boolMap;
-    }
-
-    // Only saves strings, ints, floats, and bools.
-    public void Save()
-    {
-        var sd = new SaveData();
-        sd.stringMap = new Dictionary<string, string>();
-        sd.intMap = new Dictionary<string, int>();
-        sd.floatMap = new Dictionary<string, float>();
-        sd.boolMap = new Dictionary<string, bool>();
-
-        foreach (var kvp in data)
-        {
-            if (kvp.Value is string)
-                sd.stringMap.Add(kvp.Key, (string)kvp.Value);
-            else if (kvp.Value is int)
-                sd.intMap.Add(kvp.Key, (int)kvp.Value);
-            else if (kvp.Value is float)
-                sd.floatMap.Add(kvp.Key, (float)kvp.Value);
-            else if (kvp.Value is bool)
-                sd.boolMap.Add(kvp.Key, (bool)kvp.Value);
-        }
-
-        SaveManager.instance.loaded.playerData = sd;
-    }
-
-    public void Load()
-    {
-        var sd = SaveManager.instance.loaded.playerData;
-        SetDefaults();
-        foreach (var kvp in sd.stringMap)
-            if (!data.ContainsKey(kvp.Key))
-                data.Add(kvp.Key, kvp.Value);
-        foreach (var kvp in sd.intMap)
-            if (!data.ContainsKey(kvp.Key))
-                data.Add(kvp.Key, kvp.Value);
-        foreach (var kvp in sd.floatMap)
-            if (!data.ContainsKey(kvp.Key))
-                data.Add(kvp.Key, kvp.Value);
-        foreach (var kvp in sd.boolMap)
-            if (!data.ContainsKey(kvp.Key))
-                data.Add(kvp.Key, kvp.Value);
-    }
-    #endregion
-
     public static PlayerDataManager instance = null; // global static ref
     private readonly Dictionary<string, object> data = new Dictionary<string, object>(); // string-object data map
 
@@ -78,8 +25,8 @@ public class PlayerDataManager : MonoBehaviour, ISavable
 
     public bool CanCastSpell(SpellWord word)
     {
-        return equipment.EquippedWords.ContainsKey(word.Key)
-            || (word.IsSynonym && equipment.EquippedWords.ContainsKey(word.synonymOf.Key));// && equipment.UnlockedWords.ContainsKey(word.Key));
+        return equipment.EquippedSpellWords.ContainsKey(word.Key)
+            || (word.IsSynonym && equipment.EquippedSpellWords.ContainsKey(word.synonymOf.Key));// && equipment.UnlockedWords.ContainsKey(word.Key));
     }
 
     private void Awake()

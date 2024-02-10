@@ -62,11 +62,11 @@ public class Battlefield : MonoBehaviour, IPausable
     public static Battlefield instance;
     public int Columns { get; } = 3;
     public int Rows { get; } = 2;
-    public Caster Player 
+    public Caster Player
     {
-        get 
+        get
         {
-            foreach(var caster in Casters)
+            foreach (var caster in Casters)
             {
                 if (caster.IsPlayer)
                     return caster;
@@ -75,6 +75,8 @@ public class Battlefield : MonoBehaviour, IPausable
         }
 
     }
+
+    public List<Caster> Enemies => Casters.Where(c=>!c.IsPlayer).ToList();
 
     #region List Accessor Properties
     public List<ATBActor> Actors { get; } = new List<ATBActor>(6);

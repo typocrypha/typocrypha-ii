@@ -14,21 +14,8 @@ using System.Collections;
 /// <example>
 /// <c>AudioManager.instance["clip name"]</c>
 /// </example>
-public class AudioManager : MonoBehaviour, ISavable
-{
-    #region ISavable
-    public void Save()
-    {
-        // if (bgm[bgmInd].isPlaying)
-        //     SaveManager.instance.loaded.bgm = bgm[bgmInd].clip.name;
-    }
-
-    public void Load()
-    {
-        // PlayBGM(this[SaveManager.instance.loaded.bgm]);
-    }
-    #endregion
-    
+public class AudioManager : MonoBehaviour
+{    
     public static AudioManager instance = null; // Global static instance.
     public AudioSource[] bgm; // Audio sources for playing bgms. Should have 2 audio sources (for crossfading).
     public AudioSource sfx; // Audio source for playing simple sfx.
@@ -81,6 +68,7 @@ public class AudioManager : MonoBehaviour, ISavable
         }
         else
         {
+            bgm[bgmInd].volume = 1f;
             bgm[bgmInd].Play();
         }
     }

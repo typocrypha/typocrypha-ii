@@ -30,6 +30,7 @@ public class TargetReticle : MonoBehaviour, IPausable
     }
     #endregion
 
+    public static TargetReticle instance;
     [SerializeField] private RectTransform rectTr;
     [SerializeField] private Image reticleImage;
     [SerializeField] private TweenInfo enableDisableTween;
@@ -38,6 +39,9 @@ public class TargetReticle : MonoBehaviour, IPausable
     {
         PH = new PauseHandle(OnPause);
         PH.SetParent(BattleManager.instance.PH);
+
+        if (instance == null) instance = this;
+        else Destroy(gameObject);
     }
 
     void Start()
@@ -72,5 +76,10 @@ public class TargetReticle : MonoBehaviour, IPausable
             return;
         lastTargetPos = new Battlefield.Position(targetFieldPos);
         targetPosScreenspace = Battlefield.instance.GetSpaceScreenSpace(targetFieldPos);
+    }
+
+    public void ShowReticle(bool show)
+    {
+        reticleImage.enabled = show;
     }
 }

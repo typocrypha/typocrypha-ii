@@ -44,6 +44,7 @@ public class BattleGraphParser : GraphParser
                 reinforcementPrefabs = new List<GameObject>(waveNode.reinforcements),
                 useStdEvents = waveNode.useStandardEvents,
                 openingScene = waveNode.openingScene,
+                allowEquipment = waveNode.allowEquipement,
             };
         }
         //Recursively move to next

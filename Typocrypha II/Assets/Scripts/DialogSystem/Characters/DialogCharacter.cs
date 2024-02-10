@@ -26,7 +26,6 @@ public class DialogCharacter : MonoBehaviour
         get => outlineSprite.material;
     }
     [HideInInspector]public AnimatorOverrideController overrideAnimator; // Override animator.
-    [HideInInspector]public DialogCharacterManager.CharacterSave saveData; // Serializable state.
 
     public const string idleAnimatorState = "Idle";
     public const string onceAnimatorState = "Once";
@@ -120,8 +119,6 @@ public class DialogCharacter : MonoBehaviour
         set
         {
             targetPosition = value;
-            saveData.xpos = value.x;
-            saveData.ypos = value.y;
         }
     }
 
@@ -170,7 +167,5 @@ public class DialogCharacter : MonoBehaviour
         // Highlight outline
         if (on) outlineSprite.material.SetColor("_OutlineColor", outlineColor);
         else    outlineSprite.material.SetColor("_OutlineColor", outlineColor * 0.3f);
-        // Save highlight state
-        saveData.highlight = on;
     }
 }

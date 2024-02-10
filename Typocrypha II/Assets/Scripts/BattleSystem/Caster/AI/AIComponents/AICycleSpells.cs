@@ -10,11 +10,10 @@ public class AICycleSpells : AIComponent
 
     int curr;
 
-    // Start is called before the first frame update
-    void Awake()
+    protected override void Awake()
     {
         // Initialize the standard refs (caster and AI)
-        InitializeBase();
+        base.Awake();
         curr = startIndex;
         ChangeSpell(spells[curr]);
     }

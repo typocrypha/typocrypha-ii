@@ -44,7 +44,7 @@ public class Player : Caster, IPausable
     /// </summary>
     public SpellParser.ParseResults CastString(string[] spellWords)
     {
-        var results = SpellParser.instance.Parse(spellWords, PlayerDataManager.instance.equipment.EquippedWords, out var spell, out string problemWord);
+        var results = SpellParser.instance.Parse(spellWords, PlayerDataManager.instance.equipment.EquippedSpellWords, out var spell, out string problemWord);
         if (results == SpellParser.ParseResults.Valid) 
         {
             // Check cooldowns
