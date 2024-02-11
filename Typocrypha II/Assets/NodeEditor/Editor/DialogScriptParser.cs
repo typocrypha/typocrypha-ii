@@ -12,15 +12,15 @@ using UnityEngine;
 /// <summary>
 /// Parses text scripts into dialog node canvases
 /// </summary>
-public class DialogScriptParser : EditorWindow
+public class DialogScriptParser
 {
     public const string assetPath = "Assets/ScriptableObjects/DialogScenes/";
     public const string spellWordBundlePath = "Assets/ScriptableObjects/Bundles/AllWordsBundle.asset";
     public const string allyBundlePath = "Assets/ScriptableObjects/Bundles/AllyBundle.asset";
     public const string characterDataPath = "Assets/ScriptableObjects/CharacterData";
     public TextAsset textScript; // Text script asset
-    NodeCanvas canvas; // Generated canvas
-    bool endAndTransition = true;
+    public NodeCanvas canvas; // Generated canvas
+    public bool endAndTransition = true;
     System.Type currView = typeof(DialogViewVNPlus); // Current dialog view
     float pos; // Position of current node
     Node prev;
@@ -115,37 +115,6 @@ public class DialogScriptParser : EditorWindow
     readonly Dictionary<string, AnimationCurve> customFadeCurves = new Dictionary<string, AnimationCurve>();
 
     const float nodeSpacing = 40f;
-
-    [MenuItem("Window/DialogScript/Parser")]
-    public static void ShowWindow()
-    {
-        GetWindow(typeof(DialogScriptParser));
-    }
-
-    void OnGUI()
-    {
-        // Main asset fields
-        GUILayout.BeginVertical("Box");
-
-        GUILayout.BeginHorizontal();
-        GUILayout.Label("Text Script");
-        textScript = EditorGUILayout.ObjectField(textScript, typeof(TextAsset), false) as TextAsset;
-        GUILayout.EndHorizontal();
-
-        GUILayout.BeginHorizontal();
-        GUILayout.Label("Node Canvas");
-        canvas = EditorGUILayout.ObjectField(canvas, typeof(NodeCanvas), false) as NodeCanvas;
-        GUILayout.EndHorizontal();
-
-        endAndTransition = EditorGUILayout.ToggleLeft("Use End and Transition as Default End Node", endAndTransition);
-
-        GUILayout.EndVertical();
-        // Generate button
-        if (textScript != null && GUILayout.Button("Generate Canvas", GUILayout.Width(120f)))
-        {
-            GenerateCanvas();
-        }
-    }
 
     // Generates node canvases from script
     public void GenerateCanvas()
