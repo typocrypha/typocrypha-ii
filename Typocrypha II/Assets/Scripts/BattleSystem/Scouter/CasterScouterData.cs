@@ -13,7 +13,7 @@ public class CasterScouterData : ScouterData
 
     public override Sprite Image => casterImage.sprite;
 
-    public CasterUI ui = null;
+    private CasterUI ui = null;
 
     private void Awake()
     {
