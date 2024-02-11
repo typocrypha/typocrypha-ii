@@ -14,6 +14,7 @@ public class BattleDimmer : MonoBehaviour
 
     private readonly List<CasterUI> dimmedUIs = new List<CasterUI>();
     private bool active = false;
+    private Tween dimTween;
 
     private void Awake()
     {
@@ -31,8 +32,9 @@ public class BattleDimmer : MonoBehaviour
     {
         if (active != this.active)
         {
-            var tween = dimmerSprite.DOColor(active ? activeColor : inactiveColor, info.Time);
-            if (!active) tween.OnComplete(UndimAllCasters); //complete animation before resetting sorting order
+            if (dimTween != null && dimTween.IsPlaying()) dimTween.Complete();
+            dimTween = dimmerSprite.DOColor(active ? activeColor : inactiveColor, info.Time);
+            if (!active) dimTween.OnComplete(UndimAllCasters); //complete animation before resetting sorting order
             this.active = active;
         }
     }
