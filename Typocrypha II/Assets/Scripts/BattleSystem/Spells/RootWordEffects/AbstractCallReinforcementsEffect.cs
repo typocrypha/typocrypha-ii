@@ -13,7 +13,7 @@ public abstract class AbstractCallReinforcementsEffect : RootWordEffect
         CastResults results = new CastResults(caster, target);
         var validPositions = Battlefield.instance.ValidReinforcementPositions;
         results.DisplayDamage = false;
-        if (validPositions.Count <= 0 || RandomUtils.RandomU.instance.RandomDouble() < 0.01)
+        if (validPositions.Count <= 0 || (RandomUtils.RandomU.instance.RandomDouble() < 0.01 && !tags.Contains("AlwaysHit")))
         {
             results.Miss = true;
             LogMessage("But nobody came!");

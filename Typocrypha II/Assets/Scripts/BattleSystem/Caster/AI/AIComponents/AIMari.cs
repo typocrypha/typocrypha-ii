@@ -5,9 +5,7 @@ using UnityEngine;
 
 public class AIMari : AIComponent
 {
-    [SerializeField] private Spell stormingFurySpell;
-    [SerializeField] private Spell summonSpell;
-    [SerializeField] private Spell eyeOfTheStormSpell;
+    [SerializeField] private Spell cycleStartSpell;
     [SerializeField] private SpellList cycle1Spells;
     [SerializeField] private SpellList cycle2Spells;
     [SerializeField] private SpellList cycle3Spells;
@@ -56,7 +54,6 @@ public class AIMari : AIComponent
     private void OnStunned()
     {
         state = State.EyeOfTheStorm;
-        //ChangeSpell(eyeOfTheStormSpell); - cast eye of the storm spell immidiately
     }
 
     private void OnUnStunned()
@@ -83,15 +80,15 @@ public class AIMari : AIComponent
     private void EnterStormingState()
     {
         state = State.Storming;
-        ChangeSpell(summonSpell);
         spellIndex = -1;
+        ChangeToCurrentStormSpell();
     }
 
     private void EnterPreparingStormState()
     {
         ++cycleIndex;
         state = State.PreparingStorm;
-        ChangeSpell(stormingFurySpell);
+        ChangeSpell(cycleStartSpell);
     }
 
     private void ChangeToCurrentStormSpell()

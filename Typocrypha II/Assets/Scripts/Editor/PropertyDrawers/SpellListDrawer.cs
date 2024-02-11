@@ -12,8 +12,8 @@ public class SpellListDrawer : PropertyDrawer
     {
         var items = elem.FindPropertyRelative("items");
         if (items.arraySize == 0)
-            return EditorGUIUtility.singleLineHeight * 2.1f; 
-        return EditorGUIUtility.singleLineHeight * (items.arraySize + 1.1f);
+            return EditorGUIUtility.singleLineHeight * 3.1f; 
+        return EditorGUIUtility.singleLineHeight * (items.arraySize + 2.1f);
     }
     protected void InitList(SerializedProperty property, GUIContent label)
     {

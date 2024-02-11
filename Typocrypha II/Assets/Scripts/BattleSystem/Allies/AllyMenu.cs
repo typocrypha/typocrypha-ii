@@ -20,7 +20,7 @@ public class AllyMenu : MonoBehaviour
         spellButtons = GetComponentsInChildren<Button>();
     }
 
-    public bool CanCast => Spells.Any((s) => s.Count != 0 && ally.Mp >= s.Cost);
+    public bool CanCast => Spells.Any((s) => s.Count != 0 && ally.Mp >= s.MPCost);
 
     public void Activate(ATB3.ATBStateID state)
     {
@@ -30,13 +30,13 @@ public class AllyMenu : MonoBehaviour
         bool toggle = true;
         for(int i = 0; i < Spells.Count; ++i)
         {
-            bool active = ally.Mp >= Spells[i].Cost;
+            bool active = ally.Mp >= Spells[i].MPCost;
             spellButtons[i].gameObject.SetActive(true);
             spellButtons[i].interactable = active;
             var spellText = spellButtons[i].GetComponentInChildren<Text>();
             spellText.text = Spells[i].ToDisplayString();
             spellText.color = active ? Color.white : Color.red;
-            spellButtons[i].transform.GetChild(1).GetComponent<Text>().text = ((int)Spells[i].Cost).ToString();
+            spellButtons[i].transform.GetChild(1).GetComponent<Text>().text = ((int)Spells[i].MPCost).ToString();
             spellButtons[i].transform.GetChild(2).GetComponent<Image>().sprite = Spells[i].Icon;
             // Select first available spell.
             if (active && toggle)
@@ -50,7 +50,7 @@ public class AllyMenu : MonoBehaviour
     public void Cast(int index)
     {
         Spell cast = Spells[index];
-        if (cast != null && cast.Count > 0 && ally.Mp >= cast.Cost)
+        if (cast != null && cast.Count > 0 && ally.Mp >= cast.MPCost)
         {
             ally.Cast(cast);
             gameObject.SetActive(false);

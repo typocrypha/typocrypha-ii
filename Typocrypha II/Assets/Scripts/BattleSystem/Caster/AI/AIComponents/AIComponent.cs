@@ -19,7 +19,7 @@ public abstract class AIComponent : MonoBehaviour
     protected void ChangeSpell(Spell spell)
     {
         caster.Spell = spell;
-        caster.ChargeTime = spell.Cost;
+        caster.ChargeTime = spell.CastTime;
         caster.Charge = 0;
     }
 

@@ -121,7 +121,7 @@ namespace ATB3
         /// </summary>
         public void Cast(Spell spell)
         {
-            Mp -= spell.Cost;
+            Mp -= spell.MPCost;
             Caster.Spell = spell;
             Caster.TargetPos = Battlefield.instance.Player.TargetPos;
             StateMachine.PerformTransition(ATBStateID.Cast);

@@ -13,8 +13,8 @@ public class SpellDrawer : PropertyDrawer
     {
         var items = property.FindPropertyRelative("items");
         if (items.arraySize == 0)
-            return EditorGUIUtility.singleLineHeight * 2.1f;
-        return EditorGUIUtility.singleLineHeight * (items.arraySize + 1.1f);
+            return EditorGUIUtility.singleLineHeight * 3.1f;
+        return EditorGUIUtility.singleLineHeight * (items.arraySize + 2.1f);
     }
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -61,8 +61,9 @@ public class SpellDrawer : PropertyDrawer
             {
                 items.InsertArrayElementAtIndex(items.arraySize);
             }
+            UIRect.y += EditorGUIUtility.singleLineHeight;
         }
-
+        EditorGUI.PropertyField(new Rect(UIRect) { width = position.width }, property.FindPropertyRelative("castTimeOverride"));
         EditorGUI.EndProperty();
     }
 }

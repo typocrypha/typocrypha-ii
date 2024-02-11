@@ -17,11 +17,18 @@ public class Spell : IList<SpellWord>, IEquatable<Spell>
     public static readonly char[] separators = { separator, separatorModLeft, separatorModRight };
     [SerializeField]
     private List<SpellWord> items = new List<SpellWord>();
+    [SerializeField] private float castTimeOverride = -1;
 
-    public float Cost
+    public float MPCost => CastTime; // Placeholder implementation for if this mechanic ever returns
+
+    public float CastTime
     {
         get
         {
+            if(castTimeOverride > 0)
+            {
+                return castTimeOverride;
+            }
             float cost = 0;
             foreach (var item in items)
             {
