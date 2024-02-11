@@ -135,6 +135,7 @@ public class Scouter : MonoBehaviour, IPausable
         targetReticle.PH.Pause = true;
         Battlefield.instance.PH.Pause = true;
         Typocrypha.Keyboard.instance.PH.Pause = true;
+        BattleDimmer.instance.SetDimmer(true);
         BattleDimmer.instance.DimCasters(Battlefield.instance.Enemies);
         foreach (var c in Battlefield.instance.Enemies) c.ui.onScouterShow.Invoke();
 
