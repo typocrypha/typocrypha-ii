@@ -71,10 +71,6 @@ public class AIMari : AIComponent
         {
             ChangeToCurrentStormSpell();
         }
-        else if(state == State.EyeOfTheStorm)
-        {
-            EnterPreparingStormState();
-        }
     }
 
     private void EnterStormingState()

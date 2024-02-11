@@ -188,6 +188,10 @@ public class SpellManager : MonoBehaviour
                     yield return cr;
                 // Apply callbacks after the effect is finished
                 caster.OnAfterSpellEffectResolved?.Invoke(spell, caster);
+                if (HasPrompts)
+                {
+                    yield return PlayPrompts();
+                }
                 if (SpellFxManager.instance.HasMessages)
                 {
                     yield return new WaitForSeconds(delayBeforeLog);
@@ -283,6 +287,11 @@ public class SpellManager : MonoBehaviour
     public void LogInteractivePopup(InteractivePopup popup, string title, string prompt, float time, Func<bool, IEnumerator> onComplete = null)
     {
         popupRequests.Enqueue(new PopupData() { popup = popup, title = title, prompt = prompt, time = time, onComplete = onComplete });
+    }
+
+    public void LogPromptPopup(string title, string prompt, float time, Func<bool, IEnumerator> onComplete = null)
+    {
+        popupRequests.Enqueue(new PopupData() { popup = critPopup, title = title, prompt = prompt, time = time, onComplete = onComplete });
     }
 
     public void LogDecodePopup(string title, string prompt, float time, Func<bool, IEnumerator> onComplete = null)

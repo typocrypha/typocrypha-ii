@@ -29,11 +29,13 @@ namespace ATB3
             if (Owner.Caster.Stunned)
             {
                 Source.PerformTransition(ATBStateID.Stunned);
+                return;
             }
             // If finished charging, go to precast
             if (Owner.Caster.Charge >= Owner.Caster.ChargeTime && Owner.Caster.Spell != null)
             {
                 Source.PerformTransition(ATBStateID.PreCast);
+                return;
             }
             return;
         }
