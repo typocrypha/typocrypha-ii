@@ -32,7 +32,7 @@ public class BattleDimmer : MonoBehaviour
     {
         if (active != this.active)
         {
-            if (dimTween != null && dimTween.IsPlaying()) dimTween.Complete();
+            if (dimTween != null && dimTween.IsActive() && dimTween.IsPlaying()) dimTween.Complete();
             dimTween = dimmerSprite.DOColor(active ? activeColor : inactiveColor, info.Time);
             if (!active) dimTween.OnComplete(UndimAllCasters); //complete animation before resetting sorting order
             this.active = active;
