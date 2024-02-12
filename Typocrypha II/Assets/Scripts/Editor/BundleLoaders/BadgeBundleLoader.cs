@@ -16,7 +16,7 @@ public static class BadgeBundleLoader
 
     private static void LoadBadgeBundles(PlayModeStateChange state)
     {
-        if (state != PlayModeStateChange.ExitingEditMode)
+        if (state != PlayModeStateChange.ExitingEditMode || !AutoRefreshBetterBundles.IsEnabled)
             return;
         LoadSpellBundles();
     }

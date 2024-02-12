@@ -16,7 +16,7 @@ public static class CasterTagBundleLoader
 
     private static void LoadCasterTagBundles(PlayModeStateChange state)
     {
-        if (state != PlayModeStateChange.ExitingEditMode)
+        if (state != PlayModeStateChange.ExitingEditMode || !AutoRefreshBetterBundles.IsEnabled)
             return;
         LoadCasterTagBundles();
     }

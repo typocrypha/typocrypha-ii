@@ -17,7 +17,7 @@ public static class PrefabBundleLoader
 
     private static void LoadPrefabBundles(PlayModeStateChange state)
     {
-        if (state != PlayModeStateChange.ExitingEditMode)
+        if (state != PlayModeStateChange.ExitingEditMode || !AutoRefreshBetterBundles.IsEnabled)
             return;
         LoadPrefabBundles();
     }

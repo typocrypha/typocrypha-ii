@@ -16,7 +16,7 @@ public static class SpellTagBundleLoader
 
     private static void LoadSpellTagBundles(PlayModeStateChange state)
     {
-        if (state != PlayModeStateChange.ExitingEditMode)
+        if (state != PlayModeStateChange.ExitingEditMode || !AutoRefreshBetterBundles.IsEnabled)
             return;
         LoadSpellTagBundles();
     }
