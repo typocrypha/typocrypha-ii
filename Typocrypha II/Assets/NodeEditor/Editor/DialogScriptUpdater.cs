@@ -191,8 +191,6 @@ public class DialogScriptUpdater : EditorWindow
         if (filePath.StartsWith(Application.dataPath))
             filePath = $"Assets{filePath.Substring(Application.dataPath.Length)}";
 
-        var parser = new DialogScriptParser();
-        parser.textScript = AssetDatabase.LoadAssetAtPath<TextAsset>(filePath);
-        parser.GenerateCanvas();
+        new DialogScriptParser().GenerateCanvas(AssetDatabase.LoadAssetAtPath<TextAsset>(filePath), true);
     }
 }

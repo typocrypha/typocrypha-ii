@@ -18,9 +18,6 @@ public class DialogScriptParser
     public const string spellWordBundlePath = "Assets/ScriptableObjects/Bundles/AllWordsBundle.asset";
     public const string allyBundlePath = "Assets/ScriptableObjects/Bundles/AllyBundle.asset";
     public const string characterDataPath = "Assets/ScriptableObjects/CharacterData";
-    public TextAsset textScript; // Text script asset
-    public NodeCanvas canvas; // Generated canvas
-    public bool endAndTransition = true;
     System.Type currView = typeof(DialogViewVNPlus); // Current dialog view
     float pos; // Position of current node
     Node prev;
@@ -117,13 +114,12 @@ public class DialogScriptParser
     const float nodeSpacing = 40f;
 
     // Generates node canvases from script
-    public void GenerateCanvas()
+    public NodeCanvas GenerateCanvas(TextAsset asset, bool endAndTransition)
     {
         spellWords = AssetDatabase.LoadAssetAtPath<SpellWordBundle>(spellWordBundlePath);
         allyBundle = AssetDatabase.LoadAssetAtPath<PrefabBundle>(allyBundlePath);
         allCharacterData = AssetUtils.LoadAllAssetsInDirectoryRecursive<CharacterData>(characterDataPath);
-        canvas = null;
-        Parse();
+        return Parse(asset.text, endAndTransition);
     }
 
     /// <summary>
@@ -131,9 +127,9 @@ public class DialogScriptParser
     /// Sets the canvas to the 'canvas' field.
     /// </summary>
     /// <param name="canvasName"></param>
-    void StartCanvas(string canvasName)
+    NodeCanvas StartCanvas(string canvasName)
     {
-        canvas = AssetDatabase.LoadAssetAtPath<DialogCanvas>(assetPath + canvasName + ".asset");
+        NodeCanvas canvas = AssetDatabase.LoadAssetAtPath<DialogCanvas>(assetPath + canvasName + ".asset");
         if (canvas == null) // Generate new canvas if empty
         {
             canvas = NodeCanvas.CreateCanvas(typeof(DialogCanvas));
@@ -146,23 +142,23 @@ public class DialogScriptParser
             canvas.Validate();
         }
         pos = 0f; // Position of current node
-        prev = CreateNode(GameflowStartNode.ID) as GameflowStartNode;
+        prev = CreateNode(canvas, GameflowStartNode.ID) as GameflowStartNode;
         currView = viewMap["vnplus"]; // Default to visual novel view
+        return canvas;
     }
 
     /// <summary>
     /// Saves current canvas.
     /// </summary>
-    void EndCanvas()
+    void EndCanvas(NodeCanvas canvas)
     {
         canvas.saveName = assetPath + canvas.name + ".asset";
         NodeEditorSaveManager.SaveNodeCanvas(canvas.saveName, ref canvas, true);
     }
 
     // Parses text into node canvas
-    void Parse()
+    NodeCanvas Parse(string text, bool endAndTransition)
     {
-        string text = textScript.text;
         #region Preprocessing text
         text = Regex.Replace(text, googleCommentPat, "$1");
         text = Regex.Replace(text, "/{2}.*?\n", "\n"); // Remove comments
@@ -172,13 +168,14 @@ public class DialogScriptParser
         text = Regex.Replace(text, ":\\s*\n", ":"); // Remove newlines after character name delimiters.
         #endregion
         string[] lines = text.Split(lineDelim, escape); // Separate lines
+        NodeCanvas canvas = null;
 
         for (int i = 0; i < lines.Length; i++)
         {
             //Debug.Log("parsing:" + (i+1) +":" + lines[i]);
             try
             {
-                if(ParseLine(lines[i], ref prev))
+                if(ParseLine(ref canvas, lines[i], endAndTransition, ref prev))
                 {
                     break;
                 }
@@ -189,19 +186,21 @@ public class DialogScriptParser
             }
         }
         // Create end node (if not already there)
-        CreateEndNodeIfNeeded(prev);
-        EndCanvas();
+        CreateEndNodeIfNeeded(canvas, prev, endAndTransition);
+        EndCanvas(canvas);
+        return canvas;
     }
 
-    private void CreateEndNodeIfNeeded(Node prev)
+    private void CreateEndNodeIfNeeded(NodeCanvas canvas, Node prev, bool endAndTransition)
     {
         if (prev is GameflowEndNode)
             return;
-        var endNode = (endAndTransition ? CreateNode(EndAndTransition.ID) : CreateNode(EndAndHide.ID)) as GameflowEndNode;
+        var endNode = (endAndTransition ? CreateNode(canvas, EndAndTransition.ID) : CreateNode(canvas, EndAndHide.ID)) as GameflowEndNode;
         (prev as BaseNodeIO).toNextOUT.TryApplyConnection(endNode.fromPreviousIN, true);
     }
+
     // Parses a single line
-    bool ParseLine(string line, ref Node prev)
+    bool ParseLine(ref NodeCanvas canvas, string line, bool endAndTransition, ref Node prev)
     {
         line = line.Trim();
         if (line.Length < 2) return false; // Empty line.
@@ -212,15 +211,15 @@ public class DialogScriptParser
         {
             string[] dialogLine = line.Split(viewSwitchMarker, escape);
             currView = viewMap[dialogLine[1]];
-            nodes = ParseViewSwitchNode(dialogLine[1]);
+            nodes = ParseViewSwitchNode(canvas, dialogLine[1]);
         }
         else if (nodeMarker.Contains(line[0])) // General node.
         {
-            nodes = ParseGeneralNode(line); // Parse node.
+            nodes = ParseGeneralNode(ref canvas, line, endAndTransition); // Parse node.
         }
         else // Line of dialog.
         {
-            nodes = ParseDialogNode(line); // Parse dialog
+            nodes = ParseDialogNode(canvas, line); // Parse dialog
         }
         if (nodes != null)
         {
@@ -242,17 +241,17 @@ public class DialogScriptParser
         return false;
     }
 
-    List<Node> ParseViewSwitchNode(string viewName)
+    List<Node> ParseViewSwitchNode(NodeCanvas canvas, string viewName)
     {
         var nodes = new List<Node>();
-        var switchNode = CreateNode(SetDialogViewNode.Id) as SetDialogViewNode;
+        var switchNode = CreateNode(canvas, SetDialogViewNode.Id) as SetDialogViewNode;
         switchNode.viewName = viewName;
         nodes.Add(switchNode);
         return nodes;
     }
 
     // Parses a general node (not dialog) line. Returns constructed nodes.
-    List<Node> ParseGeneralNode(string line)
+    List<Node> ParseGeneralNode(ref NodeCanvas canvas, string line, bool endAndTransition)
     {
         string[] dialogLine = line.Split(nodeMarker, escape);
         string[] args = dialogLine[1].Split(argDelim, escape);
@@ -263,14 +262,14 @@ public class DialogScriptParser
             if (canvas != null)
             {
                 // Create end node (if not already there)
-                CreateEndNodeIfNeeded(prev);
-                EndCanvas(); // End previous canvas.
+                CreateEndNodeIfNeeded(canvas, prev, endAndTransition);
+                EndCanvas(canvas); // End previous canvas.
             }
-            StartCanvas(args[1]); // Start new canvas.
+            canvas = StartCanvas(args[1]); // Start new canvas.
         }
         else if (nodeType == typeof(AddCharacter))
         {
-            var gnode = CreateNode(AddCharacter.ID) as AddCharacter;
+            var gnode = CreateNode(canvas, AddCharacter.ID) as AddCharacter;
             gnode.characterData = GetCharacterData(args[1]);
             gnode.targetPos = new Vector2(float.Parse(args[2]) * 8.8888f, float.Parse(args[3]) * 5f); // Normalized coordinates (hardcoded 16/9 res with camera size 5).
             if (args.Length > 4)
@@ -290,7 +289,7 @@ public class DialogScriptParser
         }
         else if (nodeType == typeof(AddCharacterMulti))
         {
-            var node = CreateNode(AddCharacterMulti.ID) as AddCharacterMulti;
+            var node = CreateNode(canvas, AddCharacterMulti.ID) as AddCharacterMulti;
             node.column = args[1].Trim().ToLower() == "left" ? DialogView.CharacterColumn.Left : DialogView.CharacterColumn.Right;
             node.characterData1 = GetCharacterData(args[2]);
             if (args[0] == "addcharmulti")
@@ -350,13 +349,13 @@ public class DialogScriptParser
         }
         else if (nodeType == typeof(RemoveCharacter))
         {
-            var gnode = CreateNode(RemoveCharacter.ID) as RemoveCharacter;
+            var gnode = CreateNode(canvas, RemoveCharacter.ID) as RemoveCharacter;
             gnode.characterData = GetCharacterData(args[1]);
             nodes.Add(gnode);
         }
         else if (nodeType == typeof(RemoveCharacterMulti))
         {
-            var node = CreateNode(RemoveCharacterMulti.ID) as RemoveCharacterMulti;
+            var node = CreateNode(canvas, RemoveCharacterMulti.ID) as RemoveCharacterMulti;
             node.characterData1 = GetCharacterData(args[1]);
             if(args.Length >= 3)
             {
@@ -370,7 +369,7 @@ public class DialogScriptParser
         }
         else if (nodeType == typeof(MoveCharacter))
         {
-            var gnode = CreateNode(MoveCharacter.ID) as MoveCharacter;
+            var gnode = CreateNode(canvas, MoveCharacter.ID) as MoveCharacter;
             gnode.characterData = GetCharacterData(args[1]);
             gnode.targetColumn = args[2].Trim().ToLower() == "right" ? DialogView.CharacterColumn.Right : DialogView.CharacterColumn.Left;
             gnode.top = args[3].Trim().ToLower() == "top";
@@ -378,28 +377,28 @@ public class DialogScriptParser
         }
         else if (nodeType == typeof(EmbedImage))
         {
-            var gnode = CreateNode(EmbedImage.ID) as EmbedImage;
+            var gnode = CreateNode(canvas, EmbedImage.ID) as EmbedImage;
             gnode.sprite = LoadAsset<Sprite>(args[1], "Assets/Graphics/Sprites/Dialog");
             if (args.Length == 3) gnode.messagesBeforeFade = int.Parse(args[2]);
             nodes.Add(gnode);
         }
         else if (nodeType == typeof(SetExpression))
         {
-            var node = CreateNode(SetExpression.ID) as SetExpression;
+            var node = CreateNode(canvas, SetExpression.ID) as SetExpression;
             node.characterData = GetCharacterData(args[1]);
             node.expr = args[2];
             nodes.Add(node);
         }
         else if (nodeType == typeof(SetPose))
         {
-            var node = CreateNode(SetPose.ID) as SetPose;
+            var node = CreateNode(canvas, SetPose.ID) as SetPose;
             node.characterData = GetCharacterData(args[1]);
             node.pose = args[2];
             nodes.Add(node);
         }
         else if (nodeType == typeof(PlayBgm))
         {
-            var gnode = CreateNode(PlayBgm.ID) as PlayBgm;
+            var gnode = CreateNode(canvas, PlayBgm.ID) as PlayBgm;
             gnode.bgm = LoadAsset<AudioClip>(args[1], "Assets/Audio/Clips/BGM");
             // If there aren't enough args to contain a fade curve or the curve parse fails, use the default
             if (args.Length == 3)
@@ -424,7 +423,7 @@ public class DialogScriptParser
         }
         else if (nodeType == typeof(StopBgm))
         {
-            var gnode = CreateNode(StopBgm.ID) as StopBgm;
+            var gnode = CreateNode(canvas, StopBgm.ID) as StopBgm;
             // If there aren't enough args to contain a fade curve or the curve parse fails, use the default
             if (args.Length == 2)
             {
@@ -448,13 +447,13 @@ public class DialogScriptParser
         }
         else if (nodeType == typeof(PauseBgm))
         {
-            var pauseBgmNode = CreateNode(PauseBgm.ID) as PauseBgm;
+            var pauseBgmNode = CreateNode(canvas, PauseBgm.ID) as PauseBgm;
             pauseBgmNode.pause = args[0] != "unpausebgm";
             nodes.Add(pauseBgmNode);
         }
         else if (nodeType == typeof(CrossfadeBgm))
         {
-            var node = CreateNode(CrossfadeBgm.ID) as CrossfadeBgm;
+            var node = CreateNode(canvas, CrossfadeBgm.ID) as CrossfadeBgm;
             node.bgm = LoadAsset<AudioClip>(args[1], "Assets/Audio/Clips/BGM");
             switch (args.Length)
             {
@@ -498,13 +497,13 @@ public class DialogScriptParser
         }
         else if (nodeType == typeof(PlaySfx))
         {
-            var playSfxNode = CreateNode(PlaySfx.ID) as PlaySfx;
+            var playSfxNode = CreateNode(canvas, PlaySfx.ID) as PlaySfx;
             playSfxNode.sfx = LoadAsset<AudioClip>(args[1], "Assets/Audio/Clips/SFX");
             nodes.Add(playSfxNode);
         }
         else if (nodeType == typeof(SetBackgroundNode))
         {
-            var gnode = CreateNode(SetBackgroundNode.ID) as SetBackgroundNode;
+            var gnode = CreateNode(canvas, SetBackgroundNode.ID) as SetBackgroundNode;
             bool isSprite = args[1].ToLower() == "sprite";
             gnode.bgType = isSprite ? SetBackgroundNode.BgType.Sprite : SetBackgroundNode.BgType.Prefab;
             string[] folders = GetPathWithSubFolders(isSprite ? spriteBgPath : prefabBgPath);
@@ -519,7 +518,7 @@ public class DialogScriptParser
         }
         else if (nodeType == typeof(MoveCameraNode))
         {
-            var camNode = CreateNode(MoveCameraNode.ID) as MoveCameraNode;
+            var camNode = CreateNode(canvas, MoveCameraNode.ID) as MoveCameraNode;
             camNode.StartPivot = new Vector2(float.Parse(args[1]), float.Parse(args[2]));
             camNode.FinalPivot = new Vector2(float.Parse(args[3]), float.Parse(args[4]));
             camNode.Duration = float.Parse(args[5]);
@@ -528,13 +527,13 @@ public class DialogScriptParser
         }
         else if (nodeType == typeof(SetCameraNode))
         {
-            var camNode = CreateNode(SetCameraNode.ID) as SetCameraNode;
+            var camNode = CreateNode(canvas, SetCameraNode.ID) as SetCameraNode;
             camNode.Pivot = new Vector2(float.Parse(args[1]), float.Parse(args[2]));
             nodes.Add(camNode);
         }
         else if (nodeType == typeof(FadeNode))
         {
-            var gnode = CreateNode(FadeNode.ID) as FadeNode;
+            var gnode = CreateNode(canvas, FadeNode.ID) as FadeNode;
             gnode.fadeType = args[1] == "in" ? FadeNode.FadeType.FadeIn : FadeNode.FadeType.FadeOut;
             gnode.fadeTime = float.Parse(args[2]);
             gnode.fadeColor = new Color(float.Parse(args[3]), float.Parse(args[4]), float.Parse(args[5]), 1f);
@@ -542,26 +541,26 @@ public class DialogScriptParser
         }
         else if (nodeType == typeof(SetVariableNode))
         {
-            var gnode = CreateNode(SetVariableNode.Id) as SetVariableNode;
+            var gnode = CreateNode(canvas, SetVariableNode.Id) as SetVariableNode;
             gnode.variableName = args[1];
             gnode.value = args[2];
             nodes.Add(gnode);
         }
         else if (nodeType == typeof(SetLocationTextNode))
         {
-            var gnode = CreateNode(SetLocationTextNode.Id) as SetLocationTextNode;
+            var gnode = CreateNode(canvas, SetLocationTextNode.Id) as SetLocationTextNode;
             gnode.text = args[1];
             nodes.Add(gnode);
         }
         else if (nodeType == typeof(SetDateTimeTextNode))
         {
-            var gnode = CreateNode(SetDateTimeTextNode.Id) as SetDateTimeTextNode;
+            var gnode = CreateNode(canvas, SetDateTimeTextNode.Id) as SetDateTimeTextNode;
             gnode.text = args[1];
             nodes.Add(gnode);
         }
         else if (nodeType == typeof(CastSpellNode))
         {
-            var castNode = CreateNode(CastSpellNode.Id) as CastSpellNode;
+            var castNode = CreateNode(canvas, CastSpellNode.Id) as CastSpellNode;
             if (args.Length < 4)
             {
                 throw new System.Exception($"Incorrect number of args for cast spell node ({args.Length - 1}). Expected at least 3");
@@ -612,7 +611,7 @@ public class DialogScriptParser
         }
         else if (nodeType == typeof(SetAllyNode))
         {
-            var setAllyNode = CreateNode(SetAllyNode.ID) as SetAllyNode;
+            var setAllyNode = CreateNode(canvas, SetAllyNode.ID) as SetAllyNode;
             allyBundle.prefabs.TryGetValue(args[1], out setAllyNode.prefab);
             setAllyNode.allyData = GetCharacterData(args[2]);
             setAllyNode.show = args[3] == "true";
@@ -629,7 +628,7 @@ public class DialogScriptParser
         }
         else if (nodeType == typeof(AddEquippedSpellsNode))
         {
-            var addSpellsNode = CreateNode(AddEquippedSpellsNode.Id) as AddEquippedSpellsNode;
+            var addSpellsNode = CreateNode(canvas, AddEquippedSpellsNode.Id) as AddEquippedSpellsNode;
             if (args.Length < 2)
             {
                 throw new System.Exception($"Incorrect number of args for add spell node ({args.Length - 1}). Expected at least 2");
@@ -647,7 +646,7 @@ public class DialogScriptParser
         }
         else if (nodeType == typeof(PauseNode))
         {
-            var waitNode = CreateNode(PauseNode.ID) as PauseNode;
+            var waitNode = CreateNode(canvas, PauseNode.ID) as PauseNode;
             if (args.Length < 2)
             {
                 throw new System.Exception($"Incorrect number of args for wait node ({args.Length - 1}). Expected at least 1");
@@ -668,20 +667,20 @@ public class DialogScriptParser
             nodes.Add(waitNode);
         }
         else
-                {
-                    var gnode = CreateNodeGeneric(nodeType);
-                    if (gnode != null)
-                    {
-                        nodes.Add(gnode);
-                    }
-                }
+        {
+            var gnode = CreateNodeGeneric(canvas, nodeType);
+            if (gnode != null)
+            {
+                nodes.Add(gnode);
+            }
+        }
         return nodes;
     }
 
 
 
     // Parses a single dialog line. Returns constructed nodes.
-    List<Node> ParseDialogNode(string line)
+    List<Node> ParseDialogNode(NodeCanvas canvas, string line)
     {
         int nameMarkerIndex = FindNameSeparatorIndex(line);
         int dialogStartIndex = nameMarkerIndex + 1;
@@ -735,14 +734,14 @@ public class DialogScriptParser
                 {
                     if(!string.IsNullOrEmpty(poses[i]))
                     {
-                        var hnode = CreateNode(SetPose.ID) as SetPose;
+                        var hnode = CreateNode(canvas, SetPose.ID) as SetPose;
                         hnode.characterData = cds[i];
                         hnode.pose = poses[i];
                         nodes.Add(hnode);
                     }
                     if(!string.IsNullOrEmpty(exprs[i]))
                     {
-                        var gnode = CreateNode(SetExpression.ID) as SetExpression;
+                        var gnode = CreateNode(canvas, SetExpression.ID) as SetExpression;
                         gnode.characterData = cds[i];
                         gnode.expr = exprs[i];
                         nodes.Add(gnode);
@@ -757,7 +756,7 @@ public class DialogScriptParser
                 string choices = Regex.Match(dialogLine[0], choicePat).Value;
                 choices = choices.Substring(1, choices.Length - 2);
                 var carr = choices.Split(new char[] { ',' }, escape);
-                DialogNodeInput inode = CreateNode(DialogNodeInput.ID) as DialogNodeInput;
+                DialogNodeInput inode = CreateNode(canvas, DialogNodeInput.ID) as DialogNodeInput;
                 inode.showChoicePrompt = carr.Length > 1;
                 inode.variableName = carr[0];
                 for (int i = 1; i < carr.Length; i++)
@@ -766,17 +765,17 @@ public class DialogScriptParser
             }
             else if(currView == typeof(DialogNodeVN))
             {
-                dnode = CreateNode(DialogNodeVN.ID) as DialogNodeVN;
+                dnode = CreateNode(canvas, DialogNodeVN.ID) as DialogNodeVN;
             }
             else
             {
-                dnode = CreateNode(DialogNodeVNPlus.ID) as DialogNodeVNPlus;
+                dnode = CreateNode(canvas, DialogNodeVNPlus.ID) as DialogNodeVNPlus;
             }
         }
         else if (currView == typeof(DialogViewChat))
         {
             // USE EXPRESSION TO CHANGE ICON (currently only 1 icon)
-            var chatNode = CreateNode(DialogNodeChat.ID) as DialogNodeChat;
+            var chatNode = CreateNode(canvas, DialogNodeChat.ID) as DialogNodeChat;
             if (poses.Count <= 0)
             {
                 chatNode.iconSide = IconSide.NONE;
@@ -805,7 +804,7 @@ public class DialogScriptParser
         }
         else if (currView == typeof(DialogViewAN))
         {
-            var dnodeAN = CreateNode(DialogNodeAN.ID) as DialogNodeAN;
+            var dnodeAN = CreateNode(canvas, DialogNodeAN.ID) as DialogNodeAN;
 
             if(exprs.Count > 0)
             {
@@ -843,7 +842,7 @@ public class DialogScriptParser
         }
         else if (currView == typeof(DialogViewBubble))
         {
-            var bubbleNode = CreateNode(DialogNodeBubble.ID) as DialogNodeBubble;
+            var bubbleNode = CreateNode(canvas, DialogNodeBubble.ID) as DialogNodeBubble;
             dnode = bubbleNode;
             //(dnode as DialogNodeBubble).multi = (exprs[0] == "multi");
             // Pose / Expression Change
@@ -855,7 +854,7 @@ public class DialogScriptParser
                     if (exprData.Length == 1)
                     {
                         // Just an expression setter
-                        var setExprNode = CreateNode(SetExpression.ID) as SetExpression;
+                        var setExprNode = CreateNode(canvas, SetExpression.ID) as SetExpression;
                         setExprNode.characterData = cds[0];
                         setExprNode.expr = exprs[0];
                         nodes.Add(setExprNode);
@@ -863,7 +862,7 @@ public class DialogScriptParser
                     else if (exprData.Length == 2)
                     {
                         // Pose + expression
-                        var setPoseNode = CreateNode(SetPose.ID) as SetPose;
+                        var setPoseNode = CreateNode(canvas, SetPose.ID) as SetPose;
                         setPoseNode.characterData = cds[0];
                         setPoseNode.pose = exprData[0];
                         nodes.Add(setPoseNode);
@@ -871,7 +870,7 @@ public class DialogScriptParser
                         // (Optional) expression change
                         if (!string.IsNullOrWhiteSpace(exprData[1]))
                         {
-                            var setExprNote = CreateNode(SetExpression.ID) as SetExpression;
+                            var setExprNote = CreateNode(canvas, SetExpression.ID) as SetExpression;
                             setExprNote.characterData = cds[0];
                             setExprNote.expr = exprData[1];
                             nodes.Add(setExprNote);
@@ -905,7 +904,7 @@ public class DialogScriptParser
         }
         else if (currView == typeof(DialogViewLocation))
         {
-            dnode = CreateNode(DialogNodeLocation.ID) as DialogNodeLocation;
+            dnode = CreateNode(canvas, DialogNodeLocation.ID) as DialogNodeLocation;
         }
         dnode.characterName = cname.Substring(0, cname.Length-1);
         dnode.displayName = displayName;
@@ -947,20 +946,20 @@ public class DialogScriptParser
     }
 
     // Creates node and shifts position.
-    Node CreateNode(string id)
+    Node CreateNode(NodeCanvas canvas, string id)
     {
         var gnode = Node.Create(id, Vector2.right * pos, canvas);
         pos += gnode.MinSize.x + nodeSpacing;
         return gnode;
     }
 
-    private Node CreateNodeGeneric(System.Type nodeType)
+    private Node CreateNodeGeneric(NodeCanvas canvas, System.Type nodeType)
     {
         if(!nodeIDMap.TryGetValue(nodeType, out var id))
         {
             return null;
         }
-        return CreateNode(id);
+        return CreateNode(canvas, id);
     }
 
     private static string[] GetPathWithSubFolders(string path)

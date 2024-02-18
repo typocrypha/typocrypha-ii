@@ -6,6 +6,10 @@ public class DialogScriptParserWindow : EditorWindow
 {
     public readonly DialogScriptParser parser = new DialogScriptParser();
 
+    public TextAsset textScript;
+    public NodeCanvas canvas;
+    public bool endAndTransition = true;
+
     [MenuItem("Window/DialogScript/Parser")]
     public static void ShowWindow()
     {
@@ -19,21 +23,21 @@ public class DialogScriptParserWindow : EditorWindow
 
         GUILayout.BeginHorizontal();
         GUILayout.Label("Text Script");
-        parser.textScript = EditorGUILayout.ObjectField(parser.textScript, typeof(TextAsset), false) as TextAsset;
+        textScript = EditorGUILayout.ObjectField(textScript, typeof(TextAsset), false) as TextAsset;
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
         GUILayout.Label("Node Canvas");
-        parser.canvas = EditorGUILayout.ObjectField(parser.canvas, typeof(NodeCanvas), false) as NodeCanvas;
+        canvas = EditorGUILayout.ObjectField(canvas, typeof(NodeCanvas), false) as NodeCanvas;
         GUILayout.EndHorizontal();
 
-        parser.endAndTransition = EditorGUILayout.ToggleLeft("Use End and Transition as Default End Node", parser.endAndTransition);
+        endAndTransition = EditorGUILayout.ToggleLeft("Use End and Transition as Default End Node", endAndTransition);
 
         GUILayout.EndVertical();
         // Generate button
-        if (parser.textScript != null && GUILayout.Button("Generate Canvas", GUILayout.Width(120f)))
+        if (textScript != null && GUILayout.Button("Generate Canvas", GUILayout.Width(120f)))
         {
-            parser.GenerateCanvas();
+            canvas = parser.GenerateCanvas(textScript, endAndTransition);
         }
     }
 }
