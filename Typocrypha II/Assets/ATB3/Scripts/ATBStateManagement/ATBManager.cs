@@ -51,6 +51,7 @@ namespace ATB3
             {
                 BattleManager.instance.SetBattleEventPause(true); // Pause Battle events.
                 Battlefield.instance.PH.Pause = true; // Pause battle field
+                BattleDimmer.instance.SetDimmer(true); // Dim Start
                 DoSolo(action);
             }
         }
@@ -101,6 +102,7 @@ namespace ATB3
                     actor.isCast = false;
                 BattleManager.instance.SetBattleEventPause(false);
                 Battlefield.instance.PH.Pause = false; // unpause battle field
+                BattleDimmer.instance.SetDimmer(false); // Dim End
             }
             // Otherwise, give solo to next in queue
             else

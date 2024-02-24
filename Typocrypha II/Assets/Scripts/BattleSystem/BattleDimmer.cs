@@ -14,6 +14,7 @@ public class BattleDimmer : MonoBehaviour
 
     private readonly List<CasterUI> dimmedUIs = new List<CasterUI>();
     private bool active = false;
+    private Tween dimTween;
 
     private void Awake()
     {
@@ -31,14 +32,15 @@ public class BattleDimmer : MonoBehaviour
     {
         if (active != this.active)
         {
-            var tween = dimmerSprite.DOColor(active ? activeColor : inactiveColor, info.Time);
-            if (!active) tween.OnComplete(UndimAllCasters); //complete animation before resetting sorting order
+            if (dimTween != null && dimTween.IsPlaying()) dimTween.Complete();
+            dimTween = dimmerSprite.DOColor(active ? activeColor : inactiveColor, info.Time);
+            if (!active) dimTween.OnComplete(UndimAllCasters); //complete animation before resetting sorting order
             this.active = active;
         }
     }
 
     /// <summary>
-    /// Enable dimming effect on specified casters. Implicitly sets dimmer to active state.
+    /// Enable dimming effect on specified casters.
     /// </summary>
     /// <param name="casters">A collection of casters to make dimmable.</param>
     /// <param name="showUI">Whether to hide caster UI.</param>
@@ -46,7 +48,6 @@ public class BattleDimmer : MonoBehaviour
     {
         if (casters == null) return;
 
-        SetDimmer(true);
         foreach (var c in casters)
         {
             if (!c || !c.ui) continue;
@@ -56,7 +57,7 @@ public class BattleDimmer : MonoBehaviour
     }
 
     /// <summary>
-    /// Disabler dimming effect on specified casters
+    /// Disabler dimming effect on specified casters.
     /// </summary>
     /// <param name="casters">A collection of casters to make undimmable.</param>
     public void UndimCasters(IEnumerable<Caster> casters)
@@ -69,7 +70,6 @@ public class BattleDimmer : MonoBehaviour
             c.ui.SetDimmable(false).ShowUI(true);
             dimmedUIs.Remove(c.ui);
         }
-        SetDimmer(dimmedUIs.Count > 0);
     }
 
     /// <summary>
