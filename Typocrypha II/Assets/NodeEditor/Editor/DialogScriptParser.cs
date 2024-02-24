@@ -510,7 +510,7 @@ public class DialogScriptParser
             // Find asset path
             string path = AssetDatabase.FindAssets(args[2], folders)[0];
             path = AssetDatabase.GUIDToAssetPath(path);
-            Debug.Log("bg:" + path);
+            //Debug.Log("bg:" + path);
             // Load actual asset
             if (isSprite) gnode.bgSprite = AssetDatabase.LoadAssetAtPath<Sprite>(path);
             else gnode.bgPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);

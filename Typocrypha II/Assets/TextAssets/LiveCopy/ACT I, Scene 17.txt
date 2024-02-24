@@ -1,10 +1,42 @@
 ﻿>start,ACT I-17
-+vnplus
 >setlocation,The First Barrier
 >setbg,Sprite,BgBarrierMari
->playbgm,BGMExposition
+//>playbgm,BGMExposition //from previous scene
 
 
++an
+
+
+Narrator: You move through the Ruins with renewed purpose.
+
+
+Narrator: Unburdened by self-doubt, Esaias leads you through obscure narrow tunnels as if he’d walked those paths before.
+
+
+Narrator: And for the first time since this mission began, you encounter no Demons.
+
+
+Narrator: You’re not sure if this is a boon or an ominous sign of something more...
+
+
+>stopbgm
+
+
+Narrator: .[pause,0.4] .[pause,0.4] .
+
+
+Narrator: ...and then, finally, you see it.
+
+
+>wait,loadingFade
+>playbgm,BGMMystical
++showlocation
+
+
+Narrator:The First Barrier
+
+
++vnplus
 
 
 >addchar,Esaias,0,0,right,normal
@@ -13,7 +45,7 @@
 >addchar,Dahlia,0,0,left,stressed
 
 
-Esaias: ... We’re here.
+Esaias: ...We’re here.
 
 
 Illyia: Damn. That’s it, huh? 
@@ -22,10 +54,7 @@ Illyia: Damn. That’s it, huh?
 Illyia: How the hell are we supposed to break this thing?
 
 
-Dahlia: Not us per say. 
-
-
-Dahlia(normal): According to the briefing, Ostanes made some kind of super Typocrypha to break through the barriers.
+Dahlia(normal): According to the briefing, Ostanes made some kind of special Typocrypha to break through the barriers.
 
 
 Dahlia: It should be with the main force, so until they arrive...
@@ -34,26 +63,57 @@ Dahlia: It should be with the main force, so until they arrive...
 Ayin: W-we need to hold here, huh...
 
 
-Ayin: Esaias, were you able to get into contact with any of the other teams?
+Narrator: You take out the locator beacon, hesitating only for a moment before pressing the button.
 
 
-Esaias(anxious): Unfortunately, I have not been able to reach anyone else. 
+>addchar,Clarke,0,0,right,normal
 
 
-Esaias: It appears we may have been the first to arrive.
+>playsfx,SFXRingTone
+Clarke: Congratulations on finding the First Barrier!
 
 
-Illyia(ashamed): Or the only ones...
+Clarke: Please standby -[pause,0.2] The Main Attack Team will be arriving shortly!
+
+
+>removechar,Clarke
+
+
+Ayin(serious): Esaias, h-how long do you think it would take the Main Attack Team to arrive?
+
+
+Esaias(anxious): I do not know for sure.
+
+
+Esaias(normal): This deep into the Ruins, I will not be able to get any direct communications from them until they are closer.
+
+
+Esaias(lookingleft): But ideally, they should be able to retrace the markers I left behind.
+
+
+Ayin(ohfuck): {c,whisper}(Esaias was doing that!?){c}
+
+
+Ayin(squint): {c,whisper}(...I should’ve read the debriefing more closely...){c}
+
+
+Esaias(normal): Furthermore, with their increased size, any residual Demon presences should not cause them any major issue.
+
+
+Esaias: So for now... 
+
+
+Illyia(concerned): ...we just gotta wait around, I guess?
+
+
+Illyia(ashamed): Tch, I was kind of hoping for a cool big battle at the end!
 
 
 Dahlia(perish): Illyia!
 
 
-Illyia(concerned): What? Just saying it as it is.
-
-
-Illyia(laughing): And anyways, after that ‘Power of Friendship’ speech, I feel like I can take on a whole army!
 >stopbgm
+>setexpr,Ayin,nervous
 
 
 Narrator: At that moment, the ground starts to tremble.
@@ -62,7 +122,7 @@ Narrator: At that moment, the ground starts to tremble.
 Narrator: Indicators start going wild on your Typocrypha.
 
 
-Narrator: They’re coming.
+Narrator: Something’s coming...
 
 
 >playbgm,BGMBattleDoppelganger
@@ -72,9 +132,6 @@ Esaias: ...!
 
 
 Esaias: Large demon force approaching...
-
-
-Ayin(ohfuck): A-A-Alright team! E-Engage!
 
 
 >endt

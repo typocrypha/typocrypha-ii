@@ -26,6 +26,9 @@ public class DialogParser : MonoBehaviour
         {"illyia", new Color32(199, 1, 38, 255) },
         {"dahlia", new Color32(128, 151, 224, 255) },
         {"esaias", new Color32(74, 209, 150, 255) },
+        {"adelai", new Color32(255, 176, 197, 255) },
+        {"huginn", new Color32(168, 86, 185, 255) },
+        {"muninn", new Color32(86, 185, 168, 255) }
         //{ "spell",      "#ff6eff" },
         //{ "enemy-talk", "#974dfe" },
         //{ "enemy-name", "#16e00c" },
