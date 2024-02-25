@@ -164,6 +164,10 @@ public class DialogManager : MonoBehaviour, IPausable
     private void ResetDialog()
     {
         dialogCounter = 0;
+        if(DialogView != null)
+        {
+            HideViewInstant();
+        }
         DialogView = null;
         lastView = null;
     }
@@ -284,7 +288,7 @@ public class DialogManager : MonoBehaviour, IPausable
         yield return DialogView.PlayExitAnimation(endType);
         if(endType != EndType.SceneEnd || DialogView.DeactivateOnEndSceneHide)
         {
-            DialogView.gameObject.SetActive(false);
+            HideViewInstant();
         }
         if (endType != EndType.None && isBattle)
         {
@@ -297,6 +301,11 @@ public class DialogManager : MonoBehaviour, IPausable
         ReadyToContinue = true;
         PH.Pause = true;
         onComplete?.Invoke();
+    }
+
+    private void HideViewInstant()
+    {
+        DialogView.gameObject.SetActive(false);
     }
 
     private bool ShouldHideAllyBox => isBattle 
