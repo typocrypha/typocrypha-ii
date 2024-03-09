@@ -26,6 +26,9 @@ public class BattleManager : MonoBehaviour, IPausable
     [Header("Default Spawn FX")]
     public SpellFxData defualtSpawnFx = new SpellFxData();
 
+    [Header("Victory")]
+    [SerializeField] VictoryResultsScreen victoryScreen;
+
     [Header("Game Over")]
     public UnityEngine.Events.UnityEvent OnGameOver = default;
     public AudioClip GameOverAudioClip = default;
@@ -273,6 +276,11 @@ public class BattleManager : MonoBehaviour, IPausable
         equipmentMenu.Disable();
         wT.ContinueAnimation();
         yield return new WaitForSeconds(0.5f);
+    }
+
+    public void Victory(VictoryScreenNode results)
+    {
+        victoryScreen.DisplayResults(results);
     }
 
     public void GameOver()
