@@ -172,6 +172,9 @@ public class SpellManager : MonoBehaviour
                         caster.OnBeforeSpellEffectResolved?.Invoke(effect, caster, targetCaster);
                         // Cast the effect
                         var castResults = effect.Cast(caster, targetCaster, spellData, mod, rootResults);
+                        // If the results are null, the effect is a NOP
+                        if (castResults == null)
+                            continue;
                         // Apply OnHit Callbacks (Updates AI)
                         targetCaster.OnAfterHitResolved?.Invoke(effect, caster, targetCaster, spellData, castResults);
                         // Play Effects

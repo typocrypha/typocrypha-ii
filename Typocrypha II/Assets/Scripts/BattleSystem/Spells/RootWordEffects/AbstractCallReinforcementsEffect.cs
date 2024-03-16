@@ -11,10 +11,12 @@ public abstract class AbstractCallReinforcementsEffect : RootWordEffect
     public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.SpecialModifier mod, RootCastResults prevResults = null)
     {
         Clear();
-        CastResults results = new CastResults(caster, target);
         var validPositions = Battlefield.instance.ValidReinforcementPositions;
+        if (validPositions.Count <= 0)
+            return null;
+        CastResults results = new CastResults(caster, target);
         results.DisplayDamage = false;
-        if (validPositions.Count <= 0 || (RandomUtils.RandomU.instance.RandomDouble() < 0.01 && !tags.Contains("AlwaysHit")))
+        if (RandomUtils.RandomU.instance.RandomDouble() < 0.01 && !tags.Contains("AlwaysHit"))
         {
             results.Miss = true;
             LogMessage("But nobody came!");
