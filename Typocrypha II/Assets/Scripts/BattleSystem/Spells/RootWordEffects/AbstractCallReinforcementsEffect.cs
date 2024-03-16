@@ -10,6 +10,7 @@ public abstract class AbstractCallReinforcementsEffect : RootWordEffect
 
     public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.SpecialModifier mod, RootCastResults prevResults = null)
     {
+        Clear();
         CastResults results = new CastResults(caster, target);
         var validPositions = Battlefield.instance.ValidReinforcementPositions;
         results.DisplayDamage = false;
@@ -38,4 +39,5 @@ public abstract class AbstractCallReinforcementsEffect : RootWordEffect
     }
 
     protected abstract GameObject GetReinforcementPrefab(int reinforcementIndex);
+    protected virtual void Clear() { }
 }
