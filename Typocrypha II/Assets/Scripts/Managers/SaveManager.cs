@@ -142,7 +142,6 @@ public class SaveManager : MonoBehaviour
     {
         var data = LoadFile<CampaignSaveData>(SaveFilePath(saveIndex));
         LoadCampaignData(data);
-
     }
 
     [System.Diagnostics.Conditional("DEBUG")]
