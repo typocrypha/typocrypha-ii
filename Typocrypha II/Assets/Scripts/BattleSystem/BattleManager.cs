@@ -56,14 +56,14 @@ public class BattleManager : MonoBehaviour, IPausable
     }
 
     [SerializeField] private bool startOnStart = true; // Should battle start when scene starts?
-    [SerializeField] private int saveFileIndex = -1;
+    [SerializeField] private bool loadDebugSave = false; // Should battle start when scene starts?
 
 #if DEBUG
     private void Start()
     {
-        if(saveFileIndex > -1)
+        if(loadDebugSave)
         {
-            SaveManager.instance.DebugLoadCampaign(saveFileIndex);
+            SaveManager.instance.DebugLoadCampaign();
         }
         if (startOnStart)
         {

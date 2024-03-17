@@ -145,9 +145,14 @@ public class SaveManager : MonoBehaviour
     }
 
     [System.Diagnostics.Conditional("DEBUG")]
-    public void DebugLoadCampaign(int saveIndex)
+    public void DebugLoadCampaign()
     {
-        LoadCampaign(saveIndex);
+        const int debugSaveFile = 99;
+        if (!HasCampaignSaveFile(debugSaveFile))
+        {
+            SaveCampaign(debugSaveFile);
+        }
+        LoadCampaign(debugSaveFile);
         PlayerDataManager.instance.equipment.ReapplyEquippedBadgeWords(Battlefield.instance.Player);
     }
 
