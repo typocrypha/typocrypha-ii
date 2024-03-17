@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using System.Collections.Generic;
 using System;
@@ -143,6 +142,19 @@ public class SaveManager : MonoBehaviour
     {
         var data = LoadFile<CampaignSaveData>(SaveFilePath(saveIndex));
         LoadCampaignData(data);
+
+    }
+
+    [System.Diagnostics.Conditional("DEBUG")]
+    public void DebugLoadCampaign(int saveIndex)
+    {
+        LoadCampaign(saveIndex);
+        PlayerDataManager.instance.equipment.ReapplyEquippedBadgeWords(Battlefield.instance.Player);
+    }
+
+    private void LoadCampaignData(CampaignSaveData data)
+    {
+        TransitionManager.instance.LoadIndex(data.currentSceneName, data.currentSceneIndex);
         var dataManager = PlayerDataManager.instance;
         var equipment = dataManager.equipment;
         // Equipped badges
@@ -152,13 +164,8 @@ public class SaveManager : MonoBehaviour
             if (Lookup.TryGetBadge(key, out var badge))
             {
                 equipment.EquipBadge(badge);
-            } 
+            }
         }
-    }
-
-    private void LoadCampaignData(CampaignSaveData data)
-    {
-        TransitionManager.instance.LoadIndex(data.currentSceneName, data.currentSceneIndex);
     }
 
     public void SaveGlobalData()

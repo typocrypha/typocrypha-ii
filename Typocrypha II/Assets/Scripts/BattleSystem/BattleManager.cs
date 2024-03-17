@@ -55,16 +55,23 @@ public class BattleManager : MonoBehaviour, IPausable
         PH = new PauseHandle(OnPause);
     }
 
-    public bool startOnStart = true; // Should battle start when scene starts?
+    [SerializeField] private bool startOnStart = true; // Should battle start when scene starts?
+    [SerializeField] private int saveFileIndex = -1;
 
+#if DEBUG
     private void Start()
     {
+        if(saveFileIndex > -1)
+        {
+            SaveManager.instance.DebugLoadCampaign(saveFileIndex);
+        }
         if (startOnStart)
         {
             LoadBattle();
             StartBattle();
         }
     }
+#endif
 
     private void LoadBattle()
     {
