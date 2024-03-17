@@ -18,6 +18,7 @@ public class EquipmentMenu : MonoBehaviour, IPausable
 
     private EquipmentMenuSlot inMenuSlot;
     private bool skipFrame = false;
+    private bool pausingWasEnabled;
     public void Enable()
     {
         IsShowing = false;
@@ -36,7 +37,7 @@ public class EquipmentMenu : MonoBehaviour, IPausable
         {
             SetSlotText(slot);
         }
-        Debug.Log("Showing EquipmentMenu");
+        PauseManager.instance.Interactable = false;
     }
 
     public void Close()
@@ -45,6 +46,7 @@ public class EquipmentMenu : MonoBehaviour, IPausable
         menuObject.SetActive(false);
         equipmentNotice.SetActive(true);
         skipFrame = true;
+        PauseManager.instance.Interactable = true;
     }
 
     public void Disable()

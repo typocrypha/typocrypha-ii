@@ -15,7 +15,7 @@ public class PauseManager : MonoBehaviour
     [SerializeField] private MenuButton firstButton;
     [SerializeField] private SettingsMenu settings;
     bool pause = false; // Global pause state.
-    private bool interactable = true;
+    public bool Interactable { get; set; } = true;
 
     public List<PauseHandle> AllPausable { get; } = new List<PauseHandle>(); // All pausable scripts' pause handles.
 
@@ -39,12 +39,12 @@ public class PauseManager : MonoBehaviour
     private void Initialize()
     {
         firstButton.InitializeSelection();
-        interactable = true;
+        Interactable = true;
     }
 
     void Update()
     {
-        if (!interactable)
+        if (!Interactable)
             return;
         if (Input.GetButtonDown("PauseMenu"))
         {
@@ -102,14 +102,14 @@ public class PauseManager : MonoBehaviour
 
     public void MainMenu()
     {
-        interactable = false;
+        Interactable = false;
         EventSystem.current.enabled = false;
         TransitionManager.instance.TransitionToMainMenu();
     }
 
     public void OpenSettingsMenu()
     {
-        interactable = false;
+        Interactable = false;
         settings.Open();
     }
 }
