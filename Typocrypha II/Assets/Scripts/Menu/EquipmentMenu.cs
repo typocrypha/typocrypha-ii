@@ -36,6 +36,7 @@ public class EquipmentMenu : MonoBehaviour, IPausable
         {
             SetSlotText(slot);
         }
+        Typocrypha.Keyboard.instance.DisableInactiveSfx = true;
         PauseManager.instance.Interactable = false;
     }
 
@@ -45,6 +46,7 @@ public class EquipmentMenu : MonoBehaviour, IPausable
         menuObject.SetActive(false);
         equipmentNotice.SetActive(true);
         skipFrame = true;
+        Typocrypha.Keyboard.instance.DisableInactiveSfx = false;
         PauseManager.instance.Interactable = true;
     }
 

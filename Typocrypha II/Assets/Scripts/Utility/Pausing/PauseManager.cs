@@ -81,14 +81,23 @@ public class PauseManager : MonoBehaviour
     void PauseMenu(bool value)
     {
         pauseMenu.SetActive(value);
+        var keyboard = Typocrypha.Keyboard.instance;
         if (value)
         {
             FaderManager.instance.FadeAll(0.5f, Color.black);
             Initialize();
+            if(keyboard != null)
+            {
+                keyboard.DisableInactiveSfx = true;
+            }
         }
         else
         {
             FaderManager.instance.FadeAll(0.0f, Color.black);
+            if (keyboard != null)
+            {
+                keyboard.DisableInactiveSfx = false;
+            }
         }
     }
 
