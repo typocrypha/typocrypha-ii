@@ -7,7 +7,7 @@ public class EquipmentMenu : MonoBehaviour, IPausable
     public const string noBadgeText = "None";
     public bool IsShowing { get; private set; }
 
-    public PauseHandle PH => new PauseHandle();
+    public PauseHandle PH { get; private set; } = null;
     private static PlayerEquipment Equipment => PlayerDataManager.instance.equipment;
 
     [SerializeField] private MenuButton first;
@@ -75,6 +75,11 @@ public class EquipmentMenu : MonoBehaviour, IPausable
     {
         var equippedBadges = Equipment.EquippedBadgeWords;
         slot.Button.SetText(equippedBadges.ContainsKey(slot.Slot) ? equippedBadges[slot.Slot].DisplayName : noBadgeText);
+    }
+
+    private void Start()
+    {
+        PH = new PauseHandle();
     }
 
     private void Update()
