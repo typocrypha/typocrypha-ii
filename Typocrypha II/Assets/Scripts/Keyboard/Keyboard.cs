@@ -65,6 +65,23 @@ namespace Typocrypha
         [SerializeField] private AudioClip pausedCastSfx;
         [SerializeField] private AudioClip noInputSfx;
 
+        private int disableInactiveSfxCount = 0;
+        public bool DisableInactiveSfx
+        {
+            get => disableInactiveSfxCount > 0;
+            set
+            {
+                if (value)
+                {
+                    disableInactiveSfxCount++;
+                }
+                else
+                {
+                    disableInactiveSfxCount = System.Math.Max(0, disableInactiveSfxCount - 1);
+                }
+            }
+        }
+
         void Awake()
         {
             if (instance == null)
@@ -114,6 +131,10 @@ namespace Typocrypha
         {
             if (PH.Pause)
             {
+                if (DisableInactiveSfx)
+                {
+                    return;
+                }
                 foreach (var c in Input.inputString) // Play no input sfx
                 {
                     char input = char.ToLower(c);

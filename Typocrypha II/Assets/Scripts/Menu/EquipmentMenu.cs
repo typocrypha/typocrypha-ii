@@ -18,7 +18,6 @@ public class EquipmentMenu : MonoBehaviour, IPausable
 
     private EquipmentMenuSlot inMenuSlot;
     private bool skipFrame = false;
-    private bool pausingWasEnabled;
     public void Enable()
     {
         IsShowing = false;
@@ -89,6 +88,17 @@ public class EquipmentMenu : MonoBehaviour, IPausable
         }
         if (IsShowing)
         {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (badgeSelector.IsShowing)
+                {
+                    badgeSelector.Close();
+                }
+                else
+                {
+                    Close();
+                }
+            }
             return;
         }
         else if (Input.GetKeyDown(KeyCode.Return))
