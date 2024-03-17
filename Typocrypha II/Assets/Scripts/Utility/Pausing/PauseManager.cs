@@ -54,16 +54,34 @@ public class PauseManager : MonoBehaviour
 
     public void TogglePause()
     {
-        pause = !pause; // Toggle pause state.
-        PauseAll(pause); // Set pause state of all pausable scripts.
-        PauseMenu(pause); // Display/hide pause menu.
+        SetPause(!pause);
+    }
+
+    private void SetPause(bool value)
+    {
+        pause = value;
+        PauseAll(value); // Set pause state of all pausable scripts.
+        PauseMenu(value); // Display/hide pause menu.
+    }
+
+    public void UnpauseButton()
+    {
+        Interactable = false;
+        StartCoroutine(UnpauseButtonCR());
+    }
+
+    private IEnumerator UnpauseButtonCR()
+    {
+        yield return null;
+        SetPause(false);
+        Interactable = true;
     }
 
     // Pause/Unpause all pausable scripts.
     public void PauseAll(bool value)
     {
         List<PauseHandle> destroyed = new List<PauseHandle>(); // Destroyed pausables.
-        foreach(var ph in AllPausable)
+        foreach (var ph in AllPausable)
         {
             try
             {
@@ -74,7 +92,7 @@ public class PauseManager : MonoBehaviour
                 destroyed.Add(ph);
             }
         }
-        foreach(var ph in destroyed) AllPausable.Remove(ph);
+        foreach (var ph in destroyed) AllPausable.Remove(ph);
     }
 
     // Open/Close pause menu
