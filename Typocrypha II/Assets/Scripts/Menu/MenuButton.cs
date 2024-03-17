@@ -32,6 +32,7 @@ public class MenuButton : MonoBehaviour, ISelectHandler, IDeselectHandler, ISubm
     {
         //Do this on highlight
         text.color = selectedColor;
+        TrimText();
         text.text = "> " + text.text + " <";
         buttonImage.sprite = selectedSprite;
         if (SkipSelectSfx)
@@ -48,8 +49,13 @@ public class MenuButton : MonoBehaviour, ISelectHandler, IDeselectHandler, ISubm
     {
         //Do this on un-highlight
         text.color = Color.white;
-        text.text = text.text.Trim(trim);
+        TrimText();
         buttonImage.sprite = deselectedSprite;
+    }
+
+    public void TrimText()
+    {
+        text.text = text.text.Trim(trim);
     }
 
     public void OnSubmit(BaseEventData eventData)
