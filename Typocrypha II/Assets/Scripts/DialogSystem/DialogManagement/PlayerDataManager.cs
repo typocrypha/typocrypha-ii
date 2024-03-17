@@ -22,6 +22,7 @@ public class PlayerDataManager : MonoBehaviour
 
     public PlayerEquipment equipment;
     public ResearchData researchData;
+    public int currency;
 
     public bool CanCastSpell(SpellWord word)
     {

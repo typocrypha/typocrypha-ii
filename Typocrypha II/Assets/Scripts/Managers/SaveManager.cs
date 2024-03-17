@@ -15,6 +15,7 @@ public class CampaignSaveData
     public string currentSceneName;
     public int currentSceneIndex;
     public List<string> equippedBadgeWords = new List<string>();
+    public int currency;
 }
 
 [System.Serializable]
@@ -140,6 +141,7 @@ public class SaveManager : MonoBehaviour
             var badge = kvp.Value;
             data.equippedBadgeWords.Add(badge.Key);
         }
+        data.currency = dataManager.currency;
         return data;
     }
 
@@ -176,6 +178,7 @@ public class SaveManager : MonoBehaviour
                 equipment.EquipBadge(badge);
             }
         }
+        dataManager.currency = data.currency;
     }
 
     public void SaveGlobalData()

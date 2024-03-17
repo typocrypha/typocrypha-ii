@@ -287,7 +287,9 @@ public class BattleManager : MonoBehaviour, IPausable
 
     public void Victory(VictoryScreenNode results)
     {
-        victoryScreen.DisplayResults(results);
+        victoryScreen.OnContinuePressed = NextWave;
+        victoryScreen.DisplayResults(results.Entries, results.Total, PlayerDataManager.instance.currency);
+        PlayerDataManager.instance.currency += results.Total;
     }
 
     public void GameOver()

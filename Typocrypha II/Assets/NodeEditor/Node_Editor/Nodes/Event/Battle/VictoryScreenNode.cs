@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 //using System.Collections;
-using System.Collections.Generic;
+//using System.Collections.Generic;
 using UnityEngine;
 using NodeEditorFramework;
 using NodeEditorFramework.Utilities;
@@ -15,7 +15,7 @@ namespace Gameflow
     public class VictoryScreenNode : BaseNodeIO
     {
         public override string Title { get { return "Victory Screen"; } }
-        public override Vector2 MinSize { get { return new Vector2(200, 100); } }
+        public override Vector2 MinSize { get { return new Vector2(240, 100); } }
 
         public const string Id = "victoryScreen";
         public override string GetID { get { return Id; } }
@@ -28,9 +28,14 @@ namespace Gameflow
         {
             get
             {
-                int total = 0;
-                for (int i = 0; i < numEntries; ++i) total += entries[i].value;
-                return total;
+                float total = 0, percentMultiplier = 0;
+                for (int i = 0; i < numEntries; ++i)
+                {
+                    if (!entries[i].isPercentage) total += entries[i].value;
+                    else percentMultiplier += entries[i].value;
+                }
+                total *= 1 + percentMultiplier/100;
+                return Mathf.FloorToInt(total);
             }
         }
 
@@ -39,18 +44,28 @@ namespace Gameflow
         {
             GUILayout.BeginVertical("box");
             numEntries = Mathf.Clamp(EditorGUILayout.IntField("Number of Tallies", numEntries), 0, MAX_ENTRIES);
+
+            GUI.enabled = false;
+            GUILayout.BeginHorizontal();
+            RTEditorGUI.TextField("Label", GUILayout.ExpandWidth(true));
+            RTEditorGUI.TextField("Value", GUILayout.Width(50));
+            RTEditorGUI.TextField("%", GUILayout.Width(21));
+            GUILayout.EndHorizontal();
+            GUI.enabled = true;
+
             for (int i = 0; i < numEntries; ++i)
             {
                 GUILayout.BeginHorizontal();
                 var label = RTEditorGUI.TextField(entries[i].label, GUILayout.ExpandWidth(true));
                 var value = RTEditorGUI.IntField(entries[i].value, GUILayout.Width(50));
-                entries[i] = new TallyEntry { label = label, value = value };
+                var percent = RTEditorGUI.Toggle(entries[i].isPercentage, "", GUILayout.Width(16));
+                entries[i] = new TallyEntry { label = label, value = value, isPercentage = percent };
                 GUILayout.EndHorizontal();
             }
             GUILayout.BeginHorizontal();
             GUI.enabled = false;
             RTEditorGUI.TextField("Total", GUILayout.ExpandWidth(true));
-            RTEditorGUI.IntField(Total, GUILayout.Width(50));
+            RTEditorGUI.IntField(Total, GUILayout.Width(71));
             GUI.enabled = true;
             GUILayout.EndHorizontal();
 
