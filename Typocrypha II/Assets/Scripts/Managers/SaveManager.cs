@@ -32,6 +32,9 @@ public class SaveManager : MonoBehaviour
     public static SaveManager instance = null; // Global static reference
     private static string SaveFilePath(int saveIndex) => Path.Combine(Application.persistentDataPath, $"campaignSaveData{saveIndex}.dat");
     private static string GlobalSaveFilePath() => Path.Combine(Application.persistentDataPath, "globalSaveData.dat");
+
+    private int loadedCampaignIndex = 0;
+
     void Awake()
     {
         if (instance == null)
@@ -116,7 +119,9 @@ public class SaveManager : MonoBehaviour
     /// <summary>
     /// Save the currently loaded game data into the save file.
     /// </summary>
-    public void SaveCampaign(int saveIndex = 0)
+    public void SaveCampaign() => SaveCampaign(loadedCampaignIndex);
+
+    private void SaveCampaign(int saveIndex)
     {
         SaveFile(GetCampaignSaveData(), SaveFilePath(saveIndex));
     }
@@ -140,6 +145,7 @@ public class SaveManager : MonoBehaviour
 
     public void LoadCampaign(int saveIndex = 0)
     {
+        loadedCampaignIndex = saveIndex;
         var data = LoadFile<CampaignSaveData>(SaveFilePath(saveIndex));
         LoadCampaignData(data);
     }
