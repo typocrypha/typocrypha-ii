@@ -15,7 +15,7 @@ public class PauseManager : MonoBehaviour
     [SerializeField] private MenuButton firstButton;
     [SerializeField] private SettingsMenu settings;
     bool pause = false; // Global pause state.
-    private bool interactable = true;
+    public bool Interactable { get; set; } = true;
 
     public List<PauseHandle> AllPausable { get; } = new List<PauseHandle>(); // All pausable scripts' pause handles.
 
@@ -39,12 +39,12 @@ public class PauseManager : MonoBehaviour
     private void Initialize()
     {
         firstButton.InitializeSelection();
-        interactable = true;
+        Interactable = true;
     }
 
     void Update()
     {
-        if (!interactable)
+        if (!Interactable)
             return;
         if (Input.GetButtonDown("PauseMenu"))
         {
@@ -54,16 +54,34 @@ public class PauseManager : MonoBehaviour
 
     public void TogglePause()
     {
-        pause = !pause; // Toggle pause state.
-        PauseAll(pause); // Set pause state of all pausable scripts.
-        PauseMenu(pause); // Display/hide pause menu.
+        SetPause(!pause);
+    }
+
+    private void SetPause(bool value)
+    {
+        pause = value;
+        PauseAll(value); // Set pause state of all pausable scripts.
+        PauseMenu(value); // Display/hide pause menu.
+    }
+
+    public void UnpauseButton()
+    {
+        Interactable = false;
+        StartCoroutine(UnpauseButtonCR());
+    }
+
+    private IEnumerator UnpauseButtonCR()
+    {
+        yield return null;
+        SetPause(false);
+        Interactable = true;
     }
 
     // Pause/Unpause all pausable scripts.
     public void PauseAll(bool value)
     {
         List<PauseHandle> destroyed = new List<PauseHandle>(); // Destroyed pausables.
-        foreach(var ph in AllPausable)
+        foreach (var ph in AllPausable)
         {
             try
             {
@@ -74,21 +92,30 @@ public class PauseManager : MonoBehaviour
                 destroyed.Add(ph);
             }
         }
-        foreach(var ph in destroyed) AllPausable.Remove(ph);
+        foreach (var ph in destroyed) AllPausable.Remove(ph);
     }
 
     // Open/Close pause menu
     void PauseMenu(bool value)
     {
         pauseMenu.SetActive(value);
+        var keyboard = Typocrypha.Keyboard.instance;
         if (value)
         {
             FaderManager.instance.FadeAll(0.5f, Color.black);
             Initialize();
+            if(keyboard != null)
+            {
+                keyboard.DisableInactiveSfx = true;
+            }
         }
         else
         {
             FaderManager.instance.FadeAll(0.0f, Color.black);
+            if (keyboard != null)
+            {
+                keyboard.DisableInactiveSfx = false;
+            }
         }
     }
 
@@ -102,14 +129,14 @@ public class PauseManager : MonoBehaviour
 
     public void MainMenu()
     {
-        interactable = false;
+        Interactable = false;
         EventSystem.current.enabled = false;
         TransitionManager.instance.TransitionToMainMenu();
     }
 
     public void OpenSettingsMenu()
     {
-        interactable = false;
+        Interactable = false;
         settings.Open();
     }
 }

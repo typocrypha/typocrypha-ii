@@ -19,12 +19,12 @@ public class CasterTagDictionary : IEnumerable<CasterTag>
     public bool ContainsTag(string tagName)
     {
         var tag = Lookup.GetCasterTag(tagName);
-        if (tag == null)
-            return false;
         return ContainsTag(tag);
     }
     public bool ContainsTag(CasterTag tag)
     {
+        if (tag == null)
+            return false;
         return allTags.Contains(tag);
     }
     public void Add(CasterTag tag)

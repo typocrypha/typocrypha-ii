@@ -18,9 +18,11 @@ public class BadgeSelectorMenu : MonoBehaviour
     private int selectedButtonIndex;
     private int numActiveButtons;
     private EquipmentWord.EquipmentSlot targetSlot;
+    public bool IsShowing { get; private set; } = false;
 
     public void Open(EquipmentWord.EquipmentSlot slot)
     {
+        IsShowing = true;
         targetSlot = slot;
         gameObject.SetActive(true);
         unlockedBadges.Clear();
@@ -92,6 +94,7 @@ public class BadgeSelectorMenu : MonoBehaviour
 
     public void Close()
     {
+        IsShowing = false;
         if(selectedBadgeIndex < 0)
         {
             Equipment.UnequipBadgeLive(targetSlot, Battlefield.instance.Player);

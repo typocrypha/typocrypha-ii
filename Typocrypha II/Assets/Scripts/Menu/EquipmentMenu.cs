@@ -7,7 +7,7 @@ public class EquipmentMenu : MonoBehaviour, IPausable
     public const string noBadgeText = "None";
     public bool IsShowing { get; private set; }
 
-    public PauseHandle PH => new PauseHandle();
+    public PauseHandle PH { get; private set; } = null;
     private static PlayerEquipment Equipment => PlayerDataManager.instance.equipment;
 
     [SerializeField] private MenuButton first;
@@ -36,7 +36,8 @@ public class EquipmentMenu : MonoBehaviour, IPausable
         {
             SetSlotText(slot);
         }
-        Debug.Log("Showing EquipmentMenu");
+        Typocrypha.Keyboard.instance.DisableInactiveSfx = true;
+        PauseManager.instance.Interactable = false;
     }
 
     public void Close()
@@ -45,6 +46,8 @@ public class EquipmentMenu : MonoBehaviour, IPausable
         menuObject.SetActive(false);
         equipmentNotice.SetActive(true);
         skipFrame = true;
+        Typocrypha.Keyboard.instance.DisableInactiveSfx = false;
+        PauseManager.instance.Interactable = true;
     }
 
     public void Disable()
@@ -74,6 +77,11 @@ public class EquipmentMenu : MonoBehaviour, IPausable
         slot.Button.SetText(equippedBadges.ContainsKey(slot.Slot) ? equippedBadges[slot.Slot].DisplayName : noBadgeText);
     }
 
+    private void Start()
+    {
+        PH = new PauseHandle();
+    }
+
     private void Update()
     {
         if (skipFrame)
@@ -87,6 +95,17 @@ public class EquipmentMenu : MonoBehaviour, IPausable
         }
         if (IsShowing)
         {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (badgeSelector.IsShowing)
+                {
+                    badgeSelector.Close();
+                }
+                else
+                {
+                    Close();
+                }
+            }
             return;
         }
         else if (Input.GetKeyDown(KeyCode.Return))

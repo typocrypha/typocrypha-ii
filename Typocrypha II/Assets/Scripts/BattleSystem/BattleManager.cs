@@ -55,16 +55,23 @@ public class BattleManager : MonoBehaviour, IPausable
         PH = new PauseHandle(OnPause);
     }
 
-    public bool startOnStart = true; // Should battle start when scene starts?
+    [SerializeField] private bool startOnStart = true; // Should battle start when scene starts?
+    [SerializeField] private bool loadDebugSave = false; // Should battle start when scene starts?
 
+#if DEBUG
     private void Start()
     {
+        if(loadDebugSave)
+        {
+            SaveManager.instance.DebugLoadCampaign();
+        }
         if (startOnStart)
         {
             LoadBattle();
             StartBattle();
         }
     }
+#endif
 
     private void LoadBattle()
     {
@@ -280,7 +287,9 @@ public class BattleManager : MonoBehaviour, IPausable
 
     public void Victory(VictoryScreenNode results)
     {
-        victoryScreen.DisplayResults(results);
+        victoryScreen.OnContinuePressed = NextWave;
+        victoryScreen.DisplayResults(results.Entries, results.Total, PlayerDataManager.instance.currency);
+        PlayerDataManager.instance.currency += results.Total;
     }
 
     public void GameOver()
