@@ -18,11 +18,21 @@ public class VictoryResultsScreen : MonoBehaviour
     [Header("Initialization")]
     [SerializeField] private MenuButton firstButton;
     [SerializeField] private TweenInfo tweenInfo;
+    [SerializeField] private GameObject clarkeContainer;
+    [SerializeField] private GameObject messageContainer;
+    [SerializeField] private CharacterData clarkeData;
 
     [Header("Display Text")]
-    [SerializeField] TMPro.TextMeshProUGUI tally;
-    [SerializeField] TMPro.TextMeshProUGUI total;
-    [SerializeField] TMPro.TextMeshProUGUI balance;
+    [SerializeField] private TMPro.TextMeshProUGUI tally;
+    [SerializeField] private TMPro.TextMeshProUGUI total;
+    [SerializeField] private TMPro.TextMeshProUGUI balance;
+    [SerializeField] private TMPro.TextMeshProUGUI message;
+
+    [Header("Clarke Tweens")]
+    [SerializeField] private Vector3 initialPosition;
+    [SerializeField] private Vector3 finalPosition;
+    [SerializeField] private AnimationCurve clarkeSlideVertical = default;
+    [SerializeField] private AnimationCurve clarkeSlideHorizontal = default;
 
     public Action OnContinuePressed;
 
@@ -41,18 +51,21 @@ public class VictoryResultsScreen : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void DisplayResults(TallyEntry[] tallies, int total, int balance)
+    public void DisplayResults(TallyEntry[] tallies, int total, int balance, string clarkeText)
     {
         gameObject.SetActive(true);
-        StartCoroutine(DisplayResultsCR(tallies, total, balance));
+        messageContainer.gameObject.SetActive(false);
+        clarkeContainer.GetComponent<RectTransform>().anchoredPosition = initialPosition;
+        StartCoroutine(DisplayResultsCR(tallies, total, balance, clarkeText));
     }
 
-    IEnumerator DisplayResultsCR(TallyEntry[] tallies, int total, int balance)
+    IEnumerator DisplayResultsCR(TallyEntry[] tallies, int total, int balance, string clarkeText)
     {
         ClearAllText();
-        firstButton.GetComponent<UnityEngine.UI.Button>().interactable = false;
+        firstButton.gameObject.SetActive(false);
         tweenInfo.Start(GetComponent<CanvasGroup>().DOFade(1, tweenInfo.Time).From(0));
         yield return tweenInfo.WaitForCompletion();
+        yield return DisplayClarke();
         yield return new WaitForSeconds(1f);
         foreach (var entry in tallies) yield return DisplayTally(entry);
         yield return new WaitForSeconds(1f);
@@ -64,13 +77,15 @@ public class VictoryResultsScreen : MonoBehaviour
             var unityButton = firstButton.GetComponent<UnityEngine.UI.Button>();
             unityButton.interactable = true;
             unityButton.onClick.AddListener(new UnityAction(OnContinuePressed));
+            firstButton.gameObject.SetActive(true);
             firstButton.InitializeSelection();
         }
+        yield return DisplayMessage(clarkeText);
     }
 
     private void ClearAllText()
     {
-        tally.text = total.text = balance.text = "";
+        tally.text = total.text = balance.text = message.text = "";
     }
 
     private IEnumerator DisplayTally(TallyEntry entry)
@@ -104,5 +119,30 @@ public class VictoryResultsScreen : MonoBehaviour
             .OnUpdate( () => { balance.text = label + $"{runningTotal.ToString(FORMAT_BALANCE).PadLeft(padAmount)}\n"; } );
         yield return tween.WaitForCompletion();
         yield return new WaitForSeconds(TOTAL_DELAY_AFTER);
+    }
+
+    private IEnumerator DisplayClarke()
+    {
+        const float duration = 0.8f;
+        var clarkeTransform = clarkeContainer.GetComponent<RectTransform>();
+        clarkeTransform.DOAnchorPosX(finalPosition.x, duration).SetEase(clarkeSlideHorizontal);
+        clarkeTransform.DOAnchorPosY(finalPosition.y, duration).SetEase(clarkeSlideVertical);
+        yield return clarkeTransform.DOScale(new Vector2(-1,1), duration).From(new Vector2(-1,1)/2).WaitForCompletion();
+    }
+
+    private IEnumerator DisplayMessage(string clarkeText)
+    {
+        messageContainer.gameObject.SetActive(true);
+        for (int i = 0; i <= clarkeText.Length; i++)
+        {
+            message.text = clarkeText.Substring(0,i);
+            const float defaultScroll = 0.021f;
+            const int SpeechInterval = 3;
+            if (i % SpeechInterval == 0 && !char.IsWhiteSpace(clarkeText[i]))
+            {
+                AudioManager.instance.PlayTextScrollSfx(clarkeData.talk_sfx);
+            }
+            yield return new WaitForSeconds(defaultScroll / Settings.TextScrollSpeed);
+        }
     }
 }

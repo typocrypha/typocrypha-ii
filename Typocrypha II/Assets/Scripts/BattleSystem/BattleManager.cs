@@ -288,7 +288,7 @@ public class BattleManager : MonoBehaviour, IPausable
     public void Victory(VictoryScreenNode results)
     {
         victoryScreen.OnContinuePressed = NextWave;
-        victoryScreen.DisplayResults(results.Entries, results.Total, PlayerDataManager.instance.currency);
+        victoryScreen.DisplayResults(results.Entries, results.Total, PlayerDataManager.instance.currency, results.ClarkeText);
         PlayerDataManager.instance.currency += results.Total;
     }
 
