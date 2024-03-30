@@ -31,7 +31,6 @@ public class BattleManager : MonoBehaviour, IPausable
 
     [Header("Game Over")]
     public UnityEngine.Events.UnityEvent OnGameOver = default;
-    public AudioClip GameOverAudioClip = default;
 
     [Header("Equipment Menu")]
     [SerializeField] private EquipmentMenu equipmentMenu;
@@ -294,8 +293,7 @@ public class BattleManager : MonoBehaviour, IPausable
 
     public void GameOver()
     {
-        PH.Pause = true;
-        AudioManager.instance.PlayBGM(GameOverAudioClip);
+        AudioManager.instance.StopBGM();
         OnGameOver.Invoke();
     }
 

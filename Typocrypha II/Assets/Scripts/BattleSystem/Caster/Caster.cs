@@ -133,11 +133,8 @@ public class Caster : MonoBehaviour
                     BStatus = BattleStatus.Dead;
                 }
             }
-            else
-            {
-                ui?.onHealthChanged.Invoke((float)health / Stats.MaxHP);
-                ui?.onHealthChangedNumber.Invoke(health + "/" + Stats.MaxHP);
-            }         
+            ui?.onHealthChanged.Invoke((float)health / Stats.MaxHP);
+            ui?.onHealthChangedNumber.Invoke(health + "/" + Stats.MaxHP);
         }
     }
     int health;

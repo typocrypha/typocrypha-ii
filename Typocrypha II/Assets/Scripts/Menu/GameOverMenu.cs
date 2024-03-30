@@ -7,6 +7,7 @@ public class GameOverMenu : MonoBehaviour
 {
     [SerializeField] private MenuButton firstButton;
     [SerializeField] private TweenInfo tweenInfo;
+    public AudioClip GameOverAudioClip = default;
 
     public void Awake()
     {
@@ -16,12 +17,35 @@ public class GameOverMenu : MonoBehaviour
 
     public void OnEnable()
     {
-        if (firstButton) firstButton.InitializeSelection();
-        tweenInfo.Start(GetComponent<CanvasGroup>().DOFade(1, tweenInfo.Time).From(0));
+        const float screenDelay = 4f;
+        const float slowdownDuration = 5f;
+        const float startingTimeScale = 0.1f;
+
+        BattleManager.instance.PH.Pause = true;
+        DOTween.defaultTimeScaleIndependent = true;
+
+        //screen fade in
+        var canvasGroup = GetComponent<CanvasGroup>();
+        canvasGroup.DOFade(1, tweenInfo.Time).From(0).SetDelay(screenDelay)
+            .OnPlay(() => AudioManager.instance.PlayBGM(GameOverAudioClip))
+            .OnComplete(() => {
+                if (firstButton) firstButton.InitializeSelection();
+            });
+
+        //time slowdown effect
+        DOTween.To(()=>Time.timeScale, v=>Time.timeScale=v, 1f, slowdownDuration).From(startingTimeScale).SetEase(Ease.OutCubic);
+        DOTween.defaultTimeScaleIndependent = false;
     }
 
     public void RetryBattle()
     {
+        StartCoroutine(RetryBattleCR());
+    }
+
+    public IEnumerator RetryBattleCR()
+    {
+        const float arbitraryWaitTime = 1f; //artificial load time
+        yield return new WaitForSeconds(arbitraryWaitTime);
         BattleManager.instance.Reload();
         gameObject.SetActive(false);
     }
