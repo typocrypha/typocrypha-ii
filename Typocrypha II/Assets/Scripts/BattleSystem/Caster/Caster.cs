@@ -249,12 +249,21 @@ public class Caster : MonoBehaviour
 
     #endregion
 
+    #region Damage Shake
+    [Header("Damage Shake")]
+    [SerializeField] protected float shakeIntensity = 0.5f;
+    [SerializeField] protected float shakeDuration = 0.5f;
+    [SerializeField] protected float shakeDamper = 10f;
+    #endregion
+
     public void Damage(int amount)
     {
+        if (amount < 0) return;
         if (BStatus == BattleStatus.SpiritMode)
             SP -= amount;
         else
             Health -= amount;
+        ui?.onDamageReceived.Invoke();
     }
 
     public void Heal(int amount)
@@ -387,6 +396,7 @@ public class Caster : MonoBehaviour
         if (ui != null)
         {
             ui.onNameChanged.Invoke(DisplayName);
+            ui.onDamageReceived.AddListener(() => CameraManager.instance.Shake(shakeIntensity, shakeDuration, shakeDamper));
         }
     }
 
