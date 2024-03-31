@@ -12,34 +12,39 @@
 >addchar,Ayin,0,0,left,uncomfortable
 
 
-Narrator: Lying in bed, you take a quick glance over at your Typocrypha.
+Narrator: Lying in bed,{pm} you take a quick glance over at your Typocrypha.
 
 
 Narrator: 99+ unread messages from Adelai...
 
 
-Ayin(squint): ...
+Ayin(squint): .{pm} .{pm} .
 
 
-Ayin(uncomfortable): ...
+>setexpr,Ayin,Uncomfortable
 
 
 Narrator: You turn away from the notification screen to get some water.
 
 
-//TODO: play knocking sfx
+>playsfx,SFXDoorKnock
+Narrator: \*KNOCK\*{pm} \*KNOCK\*{pm} \*KNOCK[a]\* 
 
 
-???: \*KNOCK\* \*KNOCK\* \*KNOCK\* Delivery[a]!
+???: Delivery[b]!
 
 
 Ayin(ohfuck): !!
 
 
-Ayin(nervous): {c,whisper}(Ugh, I’m not feeling it, maybe I can just ignore them...){c}
+Ayin(nervous): {c,whisper}(Ugh,{ps} I’m not feeling it,{pm} maybe I can just ignore them...){c}
 
 
-???: \*KNOCK\* \*KNOCK\* Super duper important delivery! 
+>playsfx,SFXDoorKnock
+Narrator: \*KNOCK\*{pm} \*KNOCK\* 
+
+
+???: Super duper important delivery! 
 
 
 ???: I need a signature! 
@@ -62,7 +67,7 @@ Ayin(nervous): C-Coming!
 Adelai: Ayin!
 
 
-Ayin: A-Adelai? Why are you-
+Ayin(surprised): A-Adelai? Why are you-
 
 
 Narrator: [screen-shake,2,0.5] Adelai tackles you with a tight hug.
@@ -71,37 +76,31 @@ Narrator: [screen-shake,2,0.5] Adelai tackles you with a tight hug.
 Narrator: She stays like that for a long moment before finally letting go.
 
 
-Adelai(caring): Well, you didn’t answer any of my messages... 
+Adelai(caring): Well,{pm} you didn’t answer any of my messages... 
 
 
-Adelai(teasing):[b] Bet you couldn’t tell it was me, right?
+Adelai(teasing):[c] Bet you couldn’t tell it was me,{ps} right?
 
 
-Ayin(sheepish): Uh, y-yeah...
+Ayin(sheepish): Uh,{pl} y-yeah...
 
 
 Ayin(uncomfortable): ...
 
 
-Narrator: As the freshness of the unexpected meeting begins to dissipate, Adelai changes her tone as well.
+Narrator: As the freshness of the unexpected meeting begins to dissipate,{pm} Adelai changes her tone as well.
 
 
 >stopbgm
 
 
-Adelai(serious): Ayin... You know you can’t keep running away from everything, right?
-
-
-Ayin: I...
+Adelai(serious): Ayin...
 
 
 Adelai(interested): ...
 
 
-Adelai: Here.
-
-
-Narrator: Adelai hands you a manila folder.
+Narrator: Adelai silently hands you a manila folder.
 
 
 Adelai: It’s your mission briefing.
@@ -113,19 +112,19 @@ Ayin(surprisedbad): !!
 Ayin(uncomfortable): S-So you’re here to force me into the draft after all...
 
 
-Adelai(serious): It’s either that or get sent to prison for deserting, Ayin!
+Adelai(serious): It’s either that or get sent to prison for deserting,{ps} Ayin!
 
 
 Adelai: Just imagine if it wasn’t me coming here to deliver your orders...
 
 
-Adelai(normal): ...and besides, I think once you take a look, you might feel a little better.
+Adelai(normal): ...and besides,{pm} I think once you take a look,{pm} you might feel a little better.
 
 
 >setexpr,Ayin,serious
 
 
-Narrator: Reluctantly, you open the folder, and begin paging through the briefing.
+Narrator: Reluctantly,{pm} you open the folder and begin paging through the briefing.
 
 
 >playbgm,BGMMysterious
@@ -134,28 +133,28 @@ Narrator: Reluctantly, you open the folder, and begin paging through the briefin
 Narrator: “Operation Raindance”
 
 
-Narrator: Goal - Destroy the {c,ui-terms}First Barrier{c}, one of three barriers blocking passage to the Evil Eye.
+Narrator: Goal -{pl} Destroy the {c,ui-terms}First Barrier{c},{pm} one of three barriers blocking passage to the Evil Eye.
 
 
-Narrator: 26 small scouting teams will be sent into the first layer of the Ruins to locate the {c,ui-terms}First Barrier{c}, whose exact location is currently unknown.
+Narrator: 26 small scouting teams will be sent into the first layer of the Ruins to locate the {c,ui-terms}First Barrier{c},{pm} whose exact location is currently unknown.
 
 
-Narrator: Once a scouting team locates the First Barrier, they are to plant a {c,ui-terms}locator{c} beacon to signal the main attack team to strike.
+Narrator: Once a scouting team locates the First Barrier,{pm} they are to plant a {c,ui-terms}locator{c} beacon to signal the main attack team to strike.
 
 
-Narrator: Assignment for Ayin A. - Captain for Scouting Team Z.
+Narrator: Assignment for Ayin A. -{pl} Captain for Scouting Team Z.
 
 
-Ayin(surprised): Captain! Me?
+Ayin(surprised): Captain!{pm} Me?
 
 
-Adelai(bffs4ever): Pretty cool, right?
+Adelai(bffs4ever): Pretty cool,{ps} right?
 
 
-Ayin(uncomfortable): N-no! How did I even end up captain...
+Ayin(uncomfortable): N-no!{pm} How did I even end up captain...
 
 
-Adelai(teasing): Well you did take out a bunch of demons during the Seven Stars attack, remember?
+Adelai(teasing): Well you did take out a bunch of demons during the Seven Stars attack,{ps} remember?
 
 
 Adelai: And then maybe someone included that fact in their report...
@@ -164,7 +163,7 @@ Adelai: And then maybe someone included that fact in their report...
 Ayin(nervous): ...
 
 
-Adelai(normal): Anyways! Look, you’re just in the scouting team!
+Adelai(normal): Anyways!{pm} Look,{pm} you’re just in the scouting team!
 
 
 Ayin(squint): And why is that a good thing?
@@ -173,25 +172,28 @@ Ayin(squint): And why is that a good thing?
 Ayin: Won’t I be sent deep into the Ruins?
 
 
-Adelai(teasing): And if you run into a bunch of demons, you can just run away!
+Adelai(interested): W-Well,{pm} it’s at least not the front lines...
 
 
-Adelai(interested): Err, well maybe not just run away, but there would probably be another path right?
+Adelai(teasing): And if you run into a bunch of demons,{pm} you can just run away!
 
 
-Adelai(ifonly): A-and, you have 25 other teams also looking, so...
+Adelai(interested): Err,{pm} well maybe not just run away,{pm} but there would probably be another path right?
+
+
+Adelai(ifonly): A-and,{ps} you have 25 other teams also looking,{pm} so...
 
 
 >stopbgm
 
 
-Ayin: ...
+Ayin: .{pm} .{pm} .
 
 
-Adelai: ...
+Adelai: .{pm} .{pm} .
 
 
-Adelai(frustrated): OK Ayin, yeah, it’ll be dangerous.
+Adelai(frustrated): OK Ayin,{pm} yeah,{pm} it’ll be dangerous.
 
 
 >playbgm,BGMSecondHand
@@ -200,68 +202,150 @@ Adelai(frustrated): OK Ayin, yeah, it’ll be dangerous.
 Adelai(frustrateddistant): I can’t promise it’ll be easy.
 
 
-Narrator: Adelai takes a small metal tube from her bag - you surmise it must be the locator beacon from the briefing.
+Narrator: Adelai takes out a small metal tube from her bag -{pl} the locator beacon from the briefing.
 
 
 Narrator: She places the beacon firmly in your hand.
 
 
-Adelai(serious): Which is why, Ayin, you have to be the one to find the First Barrier.
+Adelai(serious): Which is why,{ps} Ayin,{pm} you have to be the one to find the First Barrier.
 
 
-Ayin(uncomfortable): But, before you were saying-
+Ayin(uncomfortable): But before you were saying-
 
 
-Adelai: Because! Once you do, and you activate that beacon.
+Adelai: Because!{pm} Once you do,{pm} and you activate that beacon.
 
 
-Adelai: I promise you, I will be there to protect you.
+Adelai: I promise you,{pm} I will be there to protect you.
 
 
 >setexpr,Ayin,serious
 
 
-Adelai (interested): I was assigned to the main attack teams - the ones who will come in and destroy the First Barrier once the scouting teams find it.
+Adelai (interested): I was assigned to the main attack teams -{pl} the ones who will come in and destroy the First Barrier once the scouting teams find it.
 
 
-Adelai(frustrateddistant): I wanted to be on the scouting team with you, but my request was... denied.
+Adelai(frustrateddistant): I wanted to be on the scouting team with you,{pm} but my request was...{pl} denied.
 
 
 Adelai: So this is the only way I can protect you...
 
 
-Ayin(nervous): But I-I don’t know if I can do it...
+Ayin(nervous): Adelai,{pm} I-I can’t do this...
 
 
-Adelai(serious): You can do it, Ayin!
+Adelai(serious): You CAN do it,{pm} Ayin!
 
 
-Adelai(caring): I know I can trust you to make it to the First Barrier.
+Ayin(uncomfortable): .{pm} .{pm} .
 
 
-Adelai: So please, can you trust me?
+Adelai(interested): .{pm} .{pm} .
+
+
+Adelai(normal): Hey,{pm} you remember that practical assignment we had last year?
+
+
+Ayin(squint): ?
+
+
+Adelai: It was a live battle simulation -{pm} a free-for-all. 
+
+
+Adelai(serious): We were graded based on how many hits we got off on the other students.
+
+
+Adelai(teasing): And your grade was a historical moment for the class!
+
+
+Adelai: The first perfect 0!
+
+
+Ayin(ohfuck): O-Oh yeah...
+
+
+Adelai(serious): ...but!
+
+
+>setexpr,Ayin,serious
+
+
+Adelai(caring): Also the first time someone survived the entire test without getting hit even once.
+
+
+Ayin(surprisedbad): That was just cause I w-was panicking in a corner!
+
+
+Ayin(uncomfortable): I just got lucky nobody found me...
+
+
+>stopbgm
+
+
+Narrator: There’s a moment of silence,{pm} before Adelai’s caring expression suddenly turns upset.
+
+
+Adelai(serious): Ayin,{pm} you’ve been studying and working hard at the Academy for 4 years now!
+
+
+Adelai(frustrateddistant): Sure your grades aren’t the highest...
+
+
+Adelai(serious): But you’ve stuck it out while countless others have already dropped out!
+
+
+Adelai: You know how to fight,{pm} Ayin!
+
+
+Ayin(uncomfortable): But-
+
+
+Adelai: Ayin.
+
+
+Narrator: Adelai looks directly at you,{pm} her voice shaking ever so slightly.
+
+
+Adelai(caring): You have to do this,{ps} Ayin.
+
+
+>setexpr,Ayin,serious
+
+
+Adelai(ifonly): For Agartha,{pm} for yourself,{pm} and...
+
+
+Adelai: .{pm} .{pm} .
+
+
+Adelai(serious): You have to help set us free,{pm} Ayin.
+
+
+Adelai(caring): So please,{pm} I know you’re scared,{pm} but can’t you trust me to have your back?
 
 
 Narrator: You flash back to all of your time with Adelai.
 
 
-Narrator: All of the times Adelai’s saved you, supported you.
+Narrator: All of the times Adelai’s helped you study and supported you when you were down.
 
 
-Narrator: This might be the first time Adelai has asked something of you.
+Narrator: Even when you didn’t believe in yourself,{pm} Adelai did.
 
 
-Narrator: The locator beacon in your hand - no larger than a fountain pen - weighs heavy in your hand.
+Narrator: The locator beacon weighs heavy in your hand.
 
 
 Narrator: You tighten your grip.
 
 
-Ayin(nervoussmile): I-I guess I can try...
+Ayin(nervoussmile): I-I trust you,{pm} Adelai.
 
 
 >endt
 
 
-[a]in lower pitched adelai voice
-[b]also in lower pitch voice
+[a]need to turn off voice blips
+[b]in lower pitched adelai voice
+[c]also in lower pitch voice
