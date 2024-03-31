@@ -246,12 +246,6 @@ public class Caster : MonoBehaviour
 
     #endregion
 
-    #region Damage Shake
-    protected const float shakeIntensity = 0.125f;
-    protected const float shakeDuration = 0.5f;
-    protected const float shakeDamper = 5f;
-    #endregion
-
     public void Damage(int amount)
     {
         if (amount <= 0) return;
@@ -392,7 +386,6 @@ public class Caster : MonoBehaviour
         if (ui != null)
         {
             ui.onNameChanged.Invoke(DisplayName);
-            ui.onDamageReceived.AddListener(() => CameraManager.instance.Shake(shakeIntensity, shakeDuration, shakeDamper));
         }
     }
 

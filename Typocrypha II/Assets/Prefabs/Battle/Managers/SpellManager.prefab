@@ -174,6 +174,7 @@ GameObject:
   - component: {fileID: 7912746770556847216}
   - component: {fileID: 2047019823}
   - component: {fileID: 2132063101}
+  - component: {fileID: 3335328008336738273}
   m_Layer: 0
   m_Name: SpellManager
   m_TagString: Untagged
@@ -259,6 +260,7 @@ MonoBehaviour:
   blockSprite: {fileID: 21300000, guid: a7ed544bea1bda648badea3ff9cc78a6, type: 3}
   repelSprite: {fileID: 21300000, guid: cc5fcc96972b38d48b2a5791d7e39857, type: 3}
   missSprite: {fileID: 21300000, guid: 23f02e0dcc1cd64459ab7ca24f918169, type: 3}
+  damageGlitchController: {fileID: 3335328008336738273}
   logger: {fileID: 8118372202662087633}
 --- !u!114 &2047019823
 MonoBehaviour:
@@ -286,6 +288,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   freeWordBundle: {fileID: 11400000, guid: 50aff460abb146e4e81f7cfd4d5d536c, type: 2}
   synonymBundle: {fileID: 11400000, guid: f719fef8cb44d9949af5b87b69927903, type: 2}
+--- !u!114 &3335328008336738273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7912746771425946554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15d5f648b84301f439b9f54543f7ad00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  material: {fileID: 2100000, guid: c051d48919e996146a497da76bdb36b5, type: 2}
+  propertyName: _GlitchAmount
+  initialValue: 1
+  finalValue: 0
+  duration: 0.5
+  ease: 9
 --- !u!1001 &1050047915606046389
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -293,14 +313,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5837060919353632895}
     m_Modifications:
-    - target: {fileID: 1813761539, guid: 0ede6a0e533a0084c9c8e25492a1d4a4, type: 3}
-      propertyPath: m_Name
-      value: BattleLog
-      objectReference: {fileID: 0}
-    - target: {fileID: 1813761539, guid: 0ede6a0e533a0084c9c8e25492a1d4a4, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8071422007260500769, guid: 0ede6a0e533a0084c9c8e25492a1d4a4,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -405,6 +417,14 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1813761539, guid: 0ede6a0e533a0084c9c8e25492a1d4a4, type: 3}
+      propertyPath: m_Name
+      value: BattleLog
+      objectReference: {fileID: 0}
+    - target: {fileID: 1813761539, guid: 0ede6a0e533a0084c9c8e25492a1d4a4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7808263791988901025, guid: 0ede6a0e533a0084c9c8e25492a1d4a4,
         type: 3}
@@ -533,16 +553,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7912746771425946552}
     m_Modifications:
-    - target: {fileID: 5385776760854638689, guid: d6fccc06f175822429d10f3417f1b59b,
-        type: 3}
-      propertyPath: m_Name
-      value: DecodePopup
-      objectReference: {fileID: 0}
-    - target: {fileID: 5385776760854638689, guid: d6fccc06f175822429d10f3417f1b59b,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2283473626613297442, guid: d6fccc06f175822429d10f3417f1b59b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -596,6 +606,16 @@ PrefabInstance:
     - target: {fileID: 2283473626613297442, guid: d6fccc06f175822429d10f3417f1b59b,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5385776760854638689, guid: d6fccc06f175822429d10f3417f1b59b,
+        type: 3}
+      propertyPath: m_Name
+      value: DecodePopup
+      objectReference: {fileID: 0}
+    - target: {fileID: 5385776760854638689, guid: d6fccc06f175822429d10f3417f1b59b,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1717851952624949515, guid: d6fccc06f175822429d10f3417f1b59b,
@@ -675,11 +695,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7912746771425946552}
     m_Modifications:
-    - target: {fileID: 4643794205382656336, guid: 4a4b78ba10c2c8644a193382479a1276,
-        type: 3}
-      propertyPath: m_Name
-      value: CooldownManager
-      objectReference: {fileID: 0}
     - target: {fileID: 6705373016322078374, guid: 4a4b78ba10c2c8644a193382479a1276,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -785,6 +800,11 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4643794205382656336, guid: 4a4b78ba10c2c8644a193382479a1276,
+        type: 3}
+      propertyPath: m_Name
+      value: CooldownManager
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4a4b78ba10c2c8644a193382479a1276, type: 3}
 --- !u!224 &7352868054623047350 stripped
@@ -800,16 +820,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7912746771425946552}
     m_Modifications:
-    - target: {fileID: 5385776760854638689, guid: 57b15382a685fa64b971823c47fe36d5,
-        type: 3}
-      propertyPath: m_Name
-      value: PromptPopup
-      objectReference: {fileID: 0}
-    - target: {fileID: 5385776760854638689, guid: 57b15382a685fa64b971823c47fe36d5,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2283473626613297442, guid: 57b15382a685fa64b971823c47fe36d5,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -863,6 +873,16 @@ PrefabInstance:
     - target: {fileID: 2283473626613297442, guid: 57b15382a685fa64b971823c47fe36d5,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5385776760854638689, guid: 57b15382a685fa64b971823c47fe36d5,
+        type: 3}
+      propertyPath: m_Name
+      value: PromptPopup
+      objectReference: {fileID: 0}
+    - target: {fileID: 5385776760854638689, guid: 57b15382a685fa64b971823c47fe36d5,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3560701897501929854, guid: 57b15382a685fa64b971823c47fe36d5,

@@ -6,9 +6,15 @@ using UnityEngine;
 public class SpellFxManager : MonoBehaviour
 {
     public const float popTime = 0.4f;
+    #region Damage Shake
+    protected const float shakeIntensity = 0.125f;
+    protected const float shakeDuration = 0.5f;
+    protected const float shakeDamper = 5f;
+    #endregion
     public static SpellFxManager instance;
     private static readonly Vector2 reactionOffset = new Vector2(0, -80);
     private static readonly Vector2 stunOffset = new Vector2(0, 80);
+
     public bool HasMessages { get => logData.Count > 0; }
 
     [Header("Repel FX")]
@@ -29,6 +35,8 @@ public class SpellFxManager : MonoBehaviour
     [SerializeField] private Sprite blockSprite = null;
     [SerializeField] private Sprite repelSprite = null;
     [SerializeField] private Sprite missSprite = null;
+    [Header("Damage Fields")]
+    [SerializeField] private MaterialController damageGlitchController;
     [Header("Log Fields")]
     [SerializeField] private BattleLog logger;
 
@@ -136,10 +144,19 @@ public class SpellFxManager : MonoBehaviour
 
         #endregion 
 
+
         foreach (var fx in fxData)
         {
             if (fx != null)
             {
+                if (data.DisplayDamage && (data.WillDealDamage || data.Effectiveness == Reaction.Repel && data.Damage > 0))
+                {
+                    CameraManager.instance.Shake(shakeIntensity, shakeDuration, shakeDamper);
+                    if (data.target.IsPlayer || (data.Effectiveness == Reaction.Repel && data.caster.IsPlayer))
+                    {
+                        damageGlitchController.Play();
+                    }
+                }
                 yield return StartCoroutine(fx.Play(pos));
             }
         }
