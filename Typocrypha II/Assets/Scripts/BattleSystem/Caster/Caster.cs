@@ -255,7 +255,7 @@ public class Caster : MonoBehaviour
 
     public void Damage(int amount)
     {
-        if (amount < 0) return;
+        if (amount <= 0) return;
         if (BStatus == BattleStatus.SpiritMode)
             SP -= amount;
         else

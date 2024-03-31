@@ -6,7 +6,7 @@ Shader "Custom/GlitchScreen"
 	{
 		_MainTex ("Texture", 2D) = "white" {}
 		_Color("Tint",Color)=(1,1,1,1)
-		_GlitchAmount("Glitch Amount",float)=1
+		_GlitchAmount("Glitch Amount",Range(0.0,1.0))=1
 		_GlitchSpeed("Glitch Speed",float)=1
 		_Width("Width",float)=1
 		_Height("Height",float)=1
@@ -74,7 +74,7 @@ Shader "Custom/GlitchScreen"
 				// vary speed
 				float speed = _GlitchSpeed * screenPos.y % 109;
 				// vary intensity (local disturbance)
-				float scale = _GlitchAmount * ((bound % 31)/17);
+				float scale = _GlitchAmount * ((bound % 31)/17) * .01;
 				// shift bands
 				float mod_speed = cos(_Time.g) * 100;
 				float mod_time = ceil(_Time.g * mod_speed)/mod_speed;
