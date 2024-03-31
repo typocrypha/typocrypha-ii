@@ -247,10 +247,9 @@ public class Caster : MonoBehaviour
     #endregion
 
     #region Damage Shake
-    [Header("Damage Shake")]
-    [SerializeField] protected float shakeIntensity = 0.5f;
-    [SerializeField] protected float shakeDuration = 0.5f;
-    [SerializeField] protected float shakeDamper = 10f;
+    protected const float shakeIntensity = 0.125f;
+    protected const float shakeDuration = 0.5f;
+    protected const float shakeDamper = 5f;
     #endregion
 
     public void Damage(int amount)
