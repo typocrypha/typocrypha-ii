@@ -64,7 +64,7 @@ public class Scouter : MonoBehaviour, IPausable
     void Update()
     {
         // Toggle scouter
-        if (ScouterKeyPressed() && (!Battlefield.instance.PH.Pause || ScouterActive))
+        if (ScouterKeyPressed() && (!Battlefield.instance.PH.Paused || ScouterActive))
         {
             ToggleScouter();
         }
@@ -120,9 +120,9 @@ public class Scouter : MonoBehaviour, IPausable
         {
             //exit scanner state
             ScouterActive = false;
-            targetReticle.PH.Pause = false;
-            Battlefield.instance.PH.Pause = false;
-            Typocrypha.Keyboard.instance.PH.Pause = false;
+            targetReticle.PH.Unpause(PauseSources.Scouter);
+            Battlefield.instance.PH.Unpause(PauseSources.Scouter);
+            Typocrypha.Keyboard.instance.PH.Unpause(PauseSources.Scouter);
             BattleDimmer.instance.SetDimmer(false);
             foreach (var c in Battlefield.instance.Enemies) c.ui.onScouterHide.Invoke();
             EventSystem.current.SetSelectedGameObject(null);
@@ -132,9 +132,9 @@ public class Scouter : MonoBehaviour, IPausable
 
         //enter scanner state
         ScouterActive = true;
-        targetReticle.PH.Pause = true;
-        Battlefield.instance.PH.Pause = true;
-        Typocrypha.Keyboard.instance.PH.Pause = true;
+        targetReticle.PH.Pause(PauseSources.Scouter);
+        Battlefield.instance.PH.Pause(PauseSources.Scouter);
+        Typocrypha.Keyboard.instance.PH.Pause(PauseSources.Scouter);
         BattleDimmer.instance.SetDimmer(true);
         BattleDimmer.instance.DimCasters(Battlefield.instance.Enemies);
         foreach (var c in Battlefield.instance.Enemies) c.ui.onScouterShow.Invoke();

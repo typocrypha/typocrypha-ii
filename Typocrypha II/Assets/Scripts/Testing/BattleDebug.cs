@@ -29,7 +29,7 @@ public class BattleDebug : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F1) && !DialogManager.instance.PH.Pause)
+        if (Input.GetKeyDown(KeyCode.F1) && !DialogManager.instance.PH.Paused)
         {
             DialogManager.instance.StopAllCoroutines();
             DialogManager.instance.Hide(DialogManager.EndType.DialogEnd, DialogManager.instance.CleanUp);

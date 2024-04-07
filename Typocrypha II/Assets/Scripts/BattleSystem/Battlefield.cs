@@ -25,18 +25,28 @@ public class Battlefield : MonoBehaviour, IPausable
         if (b)
         {
             foreach (var actor in Actors)
-                if (actor != null) actor.Pause = true;
+            {
+                if (actor != null)
+                {
+                    actor.PH.Pause(PauseSources.Parent);
+                }
+            }
         }
         else
         {
             if (!ATBManager.instance.ProcessingActions)
             {
                 foreach (var actor in Actors)
-                    if (actor != null) actor.Pause = false;
+                {
+                    if (actor != null)
+                    {
+                        actor.PH.Unpause(PauseSources.Parent);
+                    }
+                }
             }
             else
             {
-                ATBManager.instance.SoloActor.Pause = false;
+                ATBManager.instance.SoloActor.PH.Unpause(PauseSources.Parent);
             }
         }
     }
@@ -140,7 +150,14 @@ public class Battlefield : MonoBehaviour, IPausable
         caster.transform.position = spaces[pos].transform.position;
         field[pos] = caster;
         var actor = caster.GetComponent<ATBActor>();
-        if (actor != null) Actors.Add(actor);
+        if (actor != null)
+        {
+            Actors.Add(actor);
+            if (PH.Paused)
+            {
+                actor.PH.Pause(PauseSources.Parent);
+            }
+        }
         Casters.Add(caster);
     }
     public void AddProxyCaster(Caster caster)
@@ -194,6 +211,7 @@ public class Battlefield : MonoBehaviour, IPausable
         if (actor != null)
         {
             Actors.Remove(actor);
+            actor.PH.FreeFromParent();
         }
         if (destroy)
         {

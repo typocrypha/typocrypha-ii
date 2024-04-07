@@ -58,7 +58,8 @@ public class GameOverMenu : MonoBehaviour
 
     private void PlayGameOverSequence()
     {
-        BattleManager.instance.PH.Pause = true;
+        BattleManager.instance.PH.Pause(PauseSources.GameOver);
+        Battlefield.instance.PH.Pause(PauseSources.GameOver);
         gameoverSequence.Restart();
     }
 
@@ -74,6 +75,8 @@ public class GameOverMenu : MonoBehaviour
         const float arbitraryWaitTime = 1.0f; //artificial load time
         yield return new WaitForSeconds(arbitraryWaitTime);
         BattleManager.instance.Reload();
+        BattleManager.instance.PH.Unpause(PauseSources.GameOver);
+        Battlefield.instance.PH.Unpause(PauseSources.GameOver);
         foregroundGroup.alpha = backgroundGroup.alpha = 0;
     }
 

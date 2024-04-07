@@ -74,8 +74,6 @@ public class SpellManager : MonoBehaviour
     /// <summary> Cast the spell effects and play the associated fx</summary>
     private IEnumerator CastCR(Spell spell, Caster caster, Battlefield.Position target, string castMessageOverride, bool isTopLevel)
     {
-        // Hide target reticle
-        TargetReticle.instance.ShowReticle(false);
         // BattleDim : Dim everyone except caster
         BattleDimmer.instance.DimCasters(Battlefield.instance.Casters.Where(c => c != caster), false);
         // Hide caster's UI
@@ -119,6 +117,7 @@ public class SpellManager : MonoBehaviour
         var mod = Damage.SpecialModifier.None;
         if (roots.Any((r) => r.effects.Any((e) => e.CanCrit)))
         {
+
             if (caster.IsPlayer)
             {
                 var player = caster;
@@ -247,8 +246,6 @@ public class SpellManager : MonoBehaviour
         }
         // BattleDim: undim all
         BattleDimmer.instance.SetDimmer(false);
-        // Show target reticle
-        TargetReticle.instance.ShowReticle(true);
         // Show caster UI
         caster.ui.ShowUI(true);
     }

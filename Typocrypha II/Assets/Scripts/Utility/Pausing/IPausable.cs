@@ -44,7 +44,7 @@ public class WaitForSecondsPause : CustomYieldInstruction
     {
         get
         {
-            if (!ph.Pause) seconds -= Time.deltaTime;
+            if (!ph.Paused) seconds -= Time.deltaTime;
             return seconds >= 0f;
         }
     }

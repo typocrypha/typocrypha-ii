@@ -89,7 +89,7 @@ public class EquipmentMenu : MonoBehaviour, IPausable
             skipFrame = false;
             return;
         }
-        if (PH.Pause)
+        if (PH.Paused)
         {
             return;
         }

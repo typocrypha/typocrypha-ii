@@ -57,10 +57,10 @@ public abstract class InteractivePopup : CastBar
     public override void Focus()
     {
         base.Focus();
-        wasPaused = Keyboard.instance.PH.Pause;
+        wasPaused = Keyboard.instance.PH.Paused;
         if (wasPaused)
         {
-            Keyboard.instance.PH.Pause = false;
+            Keyboard.instance.PH.Unpause(PauseSources.Self);
         }
     }
 
@@ -70,7 +70,7 @@ public abstract class InteractivePopup : CastBar
         if (wasPaused)
         {
             wasPaused = false;
-            Keyboard.instance.PH.Pause = true;
+            Keyboard.instance.PH.Pause(PauseSources.Self);
         }
     }
 }

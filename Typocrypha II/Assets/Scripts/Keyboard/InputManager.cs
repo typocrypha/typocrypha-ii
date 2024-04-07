@@ -10,7 +10,7 @@ public class InputManager : MonoBehaviour, IPausable
     {
         foreach(var input in inputStack)
         {
-            input.PH.Pause = pause;
+            input.PH.SimpleParentPause(pause);
         }
     }
     private void Awake()

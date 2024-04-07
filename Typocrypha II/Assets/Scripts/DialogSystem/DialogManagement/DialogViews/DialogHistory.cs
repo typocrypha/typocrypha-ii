@@ -81,7 +81,7 @@ public class DialogHistory : MonoBehaviour, IPausable
                 }
             }
         }
-        else if (Input.GetKeyDown(KeyCode.Semicolon) && !DialogManager.instance.PH.Pause)
+        else if (Input.GetKeyDown(KeyCode.Semicolon) && !DialogManager.instance.PH.Paused)
         {
             Show();
         }
@@ -90,8 +90,8 @@ public class DialogHistory : MonoBehaviour, IPausable
     private void Show()
     {
         // Pause all then unpause self
-        PauseManager.instance.PauseAll(true);
-        ph.Pause = false;
+        PauseManager.instance.PauseAll(true, PauseSources.DialogHistory);
+        ph.Unpause(PauseSources.Self);
         SetHistoryDialogs(Index = 0);
         IsShowing = true;
     }
@@ -104,7 +104,7 @@ public class DialogHistory : MonoBehaviour, IPausable
             historyDialog.Cleanup();
         }
         // Unpause all
-        PauseManager.instance.PauseAll(false);
+        PauseManager.instance.PauseAll(false, PauseSources.DialogHistory);
     }
 
     private void SetHistoryDialogs(int atIndex)

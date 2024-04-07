@@ -29,21 +29,10 @@ namespace ATB3
         public virtual void OnPause(bool b)
         {
             if(BaseStateMachine.PH != null)
-                BaseStateMachine.PH.Pause = b;
+                BaseStateMachine.PH.SimpleParentPause(b);
         }
         #endregion
 
-        public bool Pause // Is this actor paused or not?
-        {
-            get
-            {
-                return PH.Pause;
-            }
-            set
-            {
-                PH.Pause = value;
-            }
-        }
         [HideInInspector]
         public bool isCast; // Is the actor in cast sequence? Isn't unset until all chains are finished.
 

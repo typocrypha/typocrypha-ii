@@ -38,7 +38,7 @@ public abstract class BEFunctionSpawnReinforcementsAbstract : BattleEventFunctio
                 reinforcements.RemoveAt(reinforcementIndex);
             }
             // Spawn reinforcement
-            yield return StartCoroutine(BattleManager.instance.AddCaster(unit, pos.Row, pos.Col, true));
+            yield return StartCoroutine(BattleManager.instance.AddCaster(unit, pos.Row, pos.Col));
         }
         Running = false;
     }

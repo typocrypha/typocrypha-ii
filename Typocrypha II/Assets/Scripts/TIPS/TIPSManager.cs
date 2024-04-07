@@ -65,15 +65,15 @@ public class TIPSManager : MonoBehaviour, IPausable
 
     void Update()
     {
-        if (DialogManager.instance.PH.Pause || DialogManager.instance.isBattle)
+        if (DialogManager.instance.PH.Paused || DialogManager.instance.isBattle)
             return;
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             TIPSMenu.SetActive(!TIPSMenu.activeSelf);
-            PauseManager.instance.PauseAll(TIPSMenu.activeSelf);
+            PauseManager.instance.PauseAll(TIPSMenu.activeSelf, PauseSources.TIPS);
             if (TIPSMenu.activeSelf) // Turning TIPS menu on.
             {
-                PH.Pause = false; // Unpause self.
+                PH.Unpause(PauseSources.Self); // Unpause self.
                 if (CurrSearchable != null)
                     TIPSsearch.text = CurrSearchable.searchTerms.Items[0];
                 else

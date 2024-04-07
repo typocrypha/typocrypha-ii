@@ -42,7 +42,7 @@ namespace ATB3
             {
                 // Charge while in charge state
                 do yield return new WaitForFixedUpdate();
-                while (Pause || !IsCurrentState(ATBStateID.Charge));
+                while (PH.Paused || !IsCurrentState(ATBStateID.Charge));
                 Caster.Charge += Time.fixedDeltaTime * Settings.GameplaySpeed * Caster.Stats.CastingSpeedMod;
             }
             while (Caster.Charge < Caster.ChargeTime);
@@ -60,7 +60,6 @@ namespace ATB3
         {
             StateMachine = GetComponent<ATBStateMachine_Enemy>();
             Caster = GetComponent<Caster>();
-            PH.Pause = true;
         }
     }
 }

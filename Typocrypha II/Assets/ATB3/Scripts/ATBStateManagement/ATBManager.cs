@@ -43,14 +43,18 @@ namespace ATB3
         public void QueueSolo(ATBAction action)
         {
             actionQueue.Enqueue(action);
-            if (action.Actor is ATBPlayer && !Typocrypha.Keyboard.instance.PH.Pause)
+            if (action.Actor is ATBPlayer)
             {
-                Typocrypha.Keyboard.instance.PH.Pause = true;
+                Typocrypha.Keyboard.instance.PH.Pause(PauseSources.ATB);
+                TargetReticle.instance.PH.Pause(PauseSources.ATB);
             }
             if (actionQueue.Count == 1)
             {
-                BattleManager.instance.SetBattleEventPause(true); // Pause Battle events.
-                Battlefield.instance.PH.Pause = true; // Pause battle field
+                foreach (var actor in Battlefield.instance.Actors)
+                {
+                    actor.PH.Pause(PauseSources.ATB);
+                }
+                BattleManager.instance.PauseBattleEvents(true, PauseSources.ATB);
                 BattleDimmer.instance.SetDimmer(true); // Dim Start
                 DoSolo(action);
             }
@@ -60,7 +64,7 @@ namespace ATB3
         {
             if (action.IsValid)
             {
-                action.Actor.Pause = false; // TODO: is this needed?
+                action.Actor.PH.Unpause(PauseSources.ATB);
                 StartCoroutine(DoSoloCR(action));
             }
             else
@@ -92,22 +96,26 @@ namespace ATB3
                 Debug.LogError("StateManager: solo queue Mismatch");
             if (action.Actor is ATBPlayer)
             {
-                Typocrypha.Keyboard.instance.PH.Pause = false;
+                Typocrypha.Keyboard.instance.PH.Unpause(PauseSources.ATB);
+                TargetReticle.instance.PH.Unpause(PauseSources.ATB);
             }
             action.OnComplete?.Invoke();
             // If queue is now empty, unpause all actors
             if (actionQueue.Count == 0)
             {
-                foreach (ATBActor actor in Battlefield.instance.Actors)
+                foreach (var actor in Battlefield.instance.Actors)
+                {
                     actor.isCast = false;
-                BattleManager.instance.SetBattleEventPause(false);
-                Battlefield.instance.PH.Pause = false; // unpause battle field
+                    actor.PH.Unpause(PauseSources.ATB);
+                }
+                BattleManager.instance.PauseBattleEvents(false, PauseSources.ATB);
                 BattleDimmer.instance.SetDimmer(false); // Dim End
             }
-            // Otherwise, give solo to next in queue
-            else
+
+            else // Otherwise, give solo to next in queue
             {
-                action.Actor.Pause = true;
+                // Pause previous solo actor
+                action.Actor.PH.Pause(PauseSources.ATB);
                 DoSolo(actionQueue.Peek());
             }
         }

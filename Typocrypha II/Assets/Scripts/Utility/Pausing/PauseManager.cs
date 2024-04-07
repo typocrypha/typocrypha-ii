@@ -60,7 +60,7 @@ public class PauseManager : MonoBehaviour
     private void SetPause(bool value)
     {
         pause = value;
-        PauseAll(value); // Set pause state of all pausable scripts.
+        PauseAll(value, PauseSources.PauseMenu); // Set pause state of all pausable scripts.
         PauseMenu(value); // Display/hide pause menu.
     }
 
@@ -78,14 +78,21 @@ public class PauseManager : MonoBehaviour
     }
 
     // Pause/Unpause all pausable scripts.
-    public void PauseAll(bool value)
+    public void PauseAll(bool value, PauseSources sources)
     {
         List<PauseHandle> destroyed = new List<PauseHandle>(); // Destroyed pausables.
         foreach (var ph in AllPausable)
         {
             try
             {
-                ph.Pause = value;
+                if (value)
+                {
+                    ph.Pause(sources);
+                }
+                else
+                {
+                    ph.Unpause(sources);
+                }
             }
             catch (MissingReferenceException) // Check if object was destroyed.
             {

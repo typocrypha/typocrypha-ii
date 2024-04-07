@@ -11,9 +11,25 @@ public class BattleManager : MonoBehaviour, IPausable
     public PauseHandle PH { get; private set; }
     public void OnPause(bool pauseState) // Pauses battle events and battlefield
     {
-        SetBattleEventPause(pauseState);
-        Battlefield.instance.PH.Pause = pauseState;
-        Keyboard.instance.PH.Pause = pauseState;
+        foreach (var e in currEvents)
+            e.PH.SimpleParentPause(pauseState);
+        Battlefield.instance.PH.SimpleParentPause(pauseState);
+        Keyboard.instance.PH.SimpleParentPause(pauseState);
+        TargetReticle.instance.PH.SimpleParentPause(pauseState);
+    }
+
+    public void PauseBattleEvents(bool value, PauseSources sources)
+    {
+        if (value)
+        {
+            foreach (var e in currEvents)
+                e.PH.Pause(sources);
+        }
+        else
+        {
+            foreach (var e in currEvents)
+                e.PH.Unpause(sources);
+        }
     }
     #endregion
 
@@ -74,6 +90,7 @@ public class BattleManager : MonoBehaviour, IPausable
 
     private void LoadBattle()
     {
+        PH.Pause(PauseSources.Self);
         var startNode = graphParser.Init();
         totalWaves = startNode.totalWaves;
         // Initialize Player
@@ -142,16 +159,10 @@ public class BattleManager : MonoBehaviour, IPausable
     {
         currEvents.Add(battleEvent);
         // Start it paused if the battleManager is in a paused state
-        if (PH.Pause)
+        if (PH.Paused)
         {
-            battleEvent.PH.Pause = true;
+            battleEvent.PH.SimpleParentPause(true);
         }
-    }
-
-    public void SetBattleEventPause(bool pause)
-    {
-        foreach (var e in currEvents)
-            e.PH.Pause = pause;
     }
 
     public void ClearReinforcements()
@@ -161,7 +172,7 @@ public class BattleManager : MonoBehaviour, IPausable
 
     public void NextWave()
     {
-        PH.Pause = true;
+        PH.Pause(PauseSources.Self);
         ++waveNum;
         CurrWave = graphParser.NextWave();
         if (CurrWave == null) return;
@@ -216,7 +227,7 @@ public class BattleManager : MonoBehaviour, IPausable
             // Play opening scene
             DialogManager.instance.StartDialog(waveData.openingScene, true);
         }
-        PH.Pause = false; // Unpause if no dialog scene, else remove extra pause
+        PH.Unpause(PauseSources.Self); // Will remain paused if dialog scene
     }
 
     public class ReinforcementData
@@ -235,16 +246,16 @@ public class BattleManager : MonoBehaviour, IPausable
         public Battlefield.Position Pos { get; set; }
     }
 
-    public IEnumerator AddCasters(IReadOnlyList<ReinforcementData> data, bool unPause = false)
+    public IEnumerator AddCasters(IReadOnlyList<ReinforcementData> data)
     {
         for (int i = 0; i < data.Count; i++)
         {
             var casterData = data[i];
-            yield return StartCoroutine(AddCaster(casterData.Prefab, casterData.Pos.Row, casterData.Pos.Col, unPause));
+            yield return StartCoroutine(AddCaster(casterData.Prefab, casterData.Pos.Row, casterData.Pos.Col));
         }
     }
 
-    public IEnumerator AddCaster(GameObject casterPrefab, int row, int col, bool unPause = false)
+    public IEnumerator AddCaster(GameObject casterPrefab, int row, int col)
     {
         var caster = Instantiate(casterPrefab).GetComponent<Caster>();
         if (caster == null)
@@ -254,12 +265,6 @@ public class BattleManager : MonoBehaviour, IPausable
         var fx = caster.GetComponent<SpawnFX>()?.fx ?? defualtSpawnFx;
         // Play and wait for spawn effects
         yield return StartCoroutine(fx.Play(caster.transform.position, true));
-        if(unPause)
-        {
-            var actor = caster.GetComponent<ATB3.ATBActor>();
-            if (actor != null)
-                actor.Pause = false;
-        }
     }
 
     private IEnumerator WaveTransition(BattleWave waveData)
@@ -300,7 +305,6 @@ public class BattleManager : MonoBehaviour, IPausable
     {
         Battlefield.instance.Remove(1, 1, true); //removes player if already exists
         AudioManager.instance.StopBGM();
-        PH.Pause = false;
         LoadBattle();
         StartBattle();
     }
