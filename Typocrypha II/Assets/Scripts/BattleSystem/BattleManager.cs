@@ -293,7 +293,6 @@ public class BattleManager : MonoBehaviour, IPausable
 
     public void GameOver()
     {
-        AudioManager.instance.StopBGM();
         OnGameOver.Invoke();
     }
 
