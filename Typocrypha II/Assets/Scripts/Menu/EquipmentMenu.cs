@@ -99,7 +99,7 @@ public class EquipmentMenu : MonoBehaviour, IPausable
             {
                 if (badgeSelector.IsShowing)
                 {
-                    badgeSelector.Close();
+                    badgeSelector.CloseNoEquip();
                 }
                 else
                 {

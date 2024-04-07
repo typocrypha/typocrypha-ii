@@ -108,6 +108,14 @@ public class BadgeSelectorMenu : MonoBehaviour
         onClose?.Invoke();
     }
 
+    public void CloseNoEquip()
+    {
+        IsShowing = false;
+        buttons[selectedButtonIndex].OnDeselect(null);
+        gameObject.SetActive(false);
+        onClose?.Invoke();
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.UpArrow))
