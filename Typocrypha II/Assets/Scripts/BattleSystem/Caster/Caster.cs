@@ -26,6 +26,13 @@ public class Caster : MonoBehaviour
         Dead,
         Fled,
     }
+    [System.Flags]
+    public enum ActiveAbilities
+    {
+        None = 0,
+        Critical = 1,
+        CriticalBlock = 2,
+    }
 
     #region Delegate Declarations
     public delegate void ApplyToEffectFn(RootWordEffect effect, Caster caster, Caster target);
@@ -66,6 +73,20 @@ public class Caster : MonoBehaviour
     public System.Action<Battlefield.Position> OnNoTargetHit { get; set; }
     public System.Action OnStunned { get; set; }
     public System.Action OnUnstunned { get; set; }
+
+    private ActiveAbilities CurrentActiveAbiltiies { get; set; }
+    public void AddActiveAbilities(ActiveAbilities abilities)
+    {
+        CurrentActiveAbiltiies |= abilities;
+    }
+    public void RemoveActiveAbilities(ActiveAbilities abilities)
+    {
+        CurrentActiveAbiltiies &= ~abilities;
+    }
+    public bool HasActiveAbilities(ActiveAbilities abilities)
+    {
+        return (CurrentActiveAbiltiies & abilities) == abilities;
+    }
 
     #region Field Object Properties
 

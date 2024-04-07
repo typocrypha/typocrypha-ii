@@ -116,27 +116,45 @@ public class SpellManager : MonoBehaviour
         }
         var roots = Modify(spell);
         // Critical chance
-        Damage.SpecialModifier mod = Damage.SpecialModifier.None;
-        if (roots.Any((r) => r.effects.Any((e) => e.CanCrit)) && UnityEngine.Random.Range(0, 1f) <= Damage.baseCritChance)
+        var mod = Damage.SpecialModifier.None;
+        if (roots.Any((r) => r.effects.Any((e) => e.CanCrit)))
         {
-            bool friendly = caster.IsPlayer || caster.CasterState == Caster.State.Ally;
-            IEnumerator OnCritPopupComplete(bool popupSuccess)
+            if (caster.IsPlayer)
             {
-                if (friendly)
+                var player = caster;
+                if (player.HasActiveAbilities(Caster.ActiveAbilities.Critical) && EquipmentWordCritical.RollForCritical(player))
                 {
-                    if (popupSuccess)
+                    IEnumerator OnCritPopupComplete(bool popupSuccess)
                     {
-                        mod = Damage.SpecialModifier.Critical;
+                        if (popupSuccess)
+                        {
+                            mod = Damage.SpecialModifier.Critical;
+                        }
+                        return null;
                     }
+                    LogInteractivePopup(critPopup, "Critical Chance!", "CRITICAL", 5, OnCritPopupComplete);
                 }
-                else
-                {
-                    mod = popupSuccess ? Damage.SpecialModifier.CritBlock : Damage.SpecialModifier.Critical;
-                }
-                return null;
             }
-            LogInteractivePopup(critPopup, "Critical Chance!", friendly ? "CRITICAL" : "BLOCK", 5, OnCritPopupComplete);
-            yield return StartCoroutine(PlayPrompts());
+            else if (caster.CasterState == Caster.State.Hostile)
+            {
+                var player = Battlefield.instance.Player;
+                if (player.HasActiveAbilities(Caster.ActiveAbilities.CriticalBlock) && EquipmentWordCritBlock.RollForCritical(player))
+                {
+                    IEnumerator OnBlockPopupComplete(bool popupSuccess)
+                    {
+                        if (popupSuccess)
+                        {
+                            mod = Damage.SpecialModifier.CritBlock;
+                        }
+                        return null;
+                    }
+                    LogInteractivePopup(critPopup, "Block Chance!", "BLOCK", 5, OnBlockPopupComplete);
+                }
+            }
+            if (HasPrompts)
+            {
+                yield return StartCoroutine(PlayPrompts());
+            }
         }
         var casterSpace = Battlefield.instance.GetSpaceScreenSpace(caster.FieldPos);
         List<Coroutine> crList = new List<Coroutine>();
