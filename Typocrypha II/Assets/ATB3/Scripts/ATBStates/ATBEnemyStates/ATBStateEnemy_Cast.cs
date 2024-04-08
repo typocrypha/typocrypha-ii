@@ -14,15 +14,49 @@ namespace ATB3
                 Source.PerformTransition(ATBStateID.Charge);
                 return;
             }
-            var spell = caster.Spell;
             var targetPos = caster.TargetPos;
             bool topLevel = !ATBManager.instance.ProcessingActions;
+            bool enteredSpiritMode = false;
+            void SpiritModeListener()
+            {
+                enteredSpiritMode = true;
+            }
+            if (caster.BStatus == Caster.BattleStatus.Normal)
+            {
+                caster.OnSpiritMode += SpiritModeListener;
+            }
+
             Coroutine Cast()
             {
+                caster.OnSpiritMode -= SpiritModeListener;
+                if (enteredSpiritMode)
+                {
+                    caster.Charge = 0;
+                    SpellManager.instance.PostCastFX(caster);
+                    return null;
+                }
+                if (caster.IsDeadOrFled)
+                {
+                    Debug.LogWarning($"Caster {Owner.name} is dead, returning");
+                    SpellManager.instance.PostCastFX(caster);
+                    return null;
+                }
+                if (caster.Stunned)
+                {
+                    Debug.LogWarning($"Caster {Owner.name} is stunned, returning");
+                    Source.PerformTransition(ATBStateID.Stunned);
+                    SpellManager.instance.PostCastFX(caster);
+                    return null;
+                }
+                if (caster.Countered)
+                {
+                    caster.OnAfterCastResolved?.Invoke(caster.Spell, caster);
+                    SpellManager.instance.PostCastFX(caster);
+                    return null;
+                }
                 Owner.GetComponent<Animator>().SetTrigger("Cast");
-                return SpellManager.instance.Cast(spell, caster, targetPos, null, topLevel);
+                return SpellManager.instance.Cast(caster.Spell, caster, targetPos, null, topLevel);
             }
-            Debug.LogWarning($"Caster {Owner.name} is entering cast");
             ATBManager.instance.QueueSolo(new ATBManager.ATBAction() { Actor = Owner, Action = Cast, OnComplete = CastComplete });
             // Trigger other enemies who are in precast
             if (topLevel)
@@ -52,6 +86,8 @@ namespace ATB3
 
         private void CastComplete()
         {
+            if (Source.CurrentStateID != ATBStateID.Cast)
+                return;
             if (Owner.Caster.BStatus == Caster.BattleStatus.Dead)
             {
                 Source.PerformTransition(ATBStateID.Dead);

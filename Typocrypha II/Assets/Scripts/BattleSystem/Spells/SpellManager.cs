@@ -245,6 +245,11 @@ public class SpellManager : MonoBehaviour
         {
             SpellCooldownManager.instance.DoOverheat();
         }
+        PostCastFX(caster);
+    }
+
+    public void PostCastFX(Caster caster)
+    {
         if (ATB3.ATBManager.instance.OnLastAction)
         {
             // BattleDim: undim all

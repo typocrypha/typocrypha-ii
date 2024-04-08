@@ -19,7 +19,7 @@ namespace ATB3
                 FaderManager.instance.FadeTargets(spell, caster.FieldPos, targetPos);
                 return SpellManager.instance.CastAndCounter(spell, caster, targetPos, null, topLevel);
             }
-            ATBManager.instance.QueueSolo(new ATBManager.ATBAction() { Actor = Owner, Action = CastFn, OnComplete = CastComplete });
+            ATBManager.instance.InsertSolo(new ATBManager.ATBAction() { Actor = Owner, Action = CastFn, OnComplete = CastComplete });
         }
 
         // Call on fixed update while in given state
