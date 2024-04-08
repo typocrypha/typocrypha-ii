@@ -38,6 +38,7 @@ public class EquipmentMenu : MonoBehaviour, IPausable
         }
         Typocrypha.Keyboard.instance.DisableInactiveSfx = true;
         PauseManager.instance.Interactable = false;
+        DialogHistory.instance.PH.Pause(PauseSources.Equipment);
     }
 
     public void Close()
@@ -48,6 +49,7 @@ public class EquipmentMenu : MonoBehaviour, IPausable
         skipFrame = true;
         Typocrypha.Keyboard.instance.DisableInactiveSfx = false;
         PauseManager.instance.Interactable = true;
+        DialogHistory.instance.PH.Unpause(PauseSources.Equipment);
     }
 
     public void Disable()
