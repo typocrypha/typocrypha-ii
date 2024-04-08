@@ -122,7 +122,7 @@ public class Scouter : MonoBehaviour, IPausable
             ScouterActive = false;
             targetReticle.PH.Unpause(PauseSources.Scouter);
             Battlefield.instance.PH.Unpause(PauseSources.Scouter);
-            Typocrypha.Keyboard.instance.PH.Unpause(PauseSources.Scouter);
+            InputManager.Instance.PH.Unpause(PauseSources.Scouter);
             BattleDimmer.instance.SetDimmer(false);
             foreach (var c in Battlefield.instance.Enemies) c.ui.onScouterHide.Invoke();
             EventSystem.current.SetSelectedGameObject(null);
@@ -134,7 +134,7 @@ public class Scouter : MonoBehaviour, IPausable
         ScouterActive = true;
         targetReticle.PH.Pause(PauseSources.Scouter);
         Battlefield.instance.PH.Pause(PauseSources.Scouter);
-        Typocrypha.Keyboard.instance.PH.Pause(PauseSources.Scouter);
+        InputManager.Instance.PH.Pause(PauseSources.Scouter);
         BattleDimmer.instance.SetDimmer(true);
         BattleDimmer.instance.DimCasters(Battlefield.instance.Enemies);
         foreach (var c in Battlefield.instance.Enemies) c.ui.onScouterShow.Invoke();

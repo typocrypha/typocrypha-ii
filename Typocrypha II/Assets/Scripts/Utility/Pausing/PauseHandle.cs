@@ -55,6 +55,13 @@ public class PauseHandle
         }
     }
 
+    public PauseSources UnpauseOverride()
+    {
+        var temp = pauseSources;
+        Unpause(pauseSources);
+        return temp;
+    }
+
     public void SetPauseFunction(OnPauseDel function)
     {
         onPause = function;

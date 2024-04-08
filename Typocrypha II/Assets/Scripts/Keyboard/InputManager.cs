@@ -6,12 +6,14 @@ public class InputManager : MonoBehaviour, IPausable
 {
     public static InputManager Instance { get; private set; }
     public PauseHandle PH { get; private set; }
+    private PauseSources savedPauseSources;
     private void OnPause(bool pause)
     {
         foreach(var input in inputStack)
         {
             input.PH.SimpleParentPause(pause);
         }
+        Typocrypha.Keyboard.instance.PH.SimpleParentPause(pause);
     }
     private void Awake()
     {
@@ -24,11 +26,6 @@ public class InputManager : MonoBehaviour, IPausable
         PH = new PauseHandle(OnPause);
     }
 
-    private void Start()
-    {
-        PH.SetParent(Typocrypha.Keyboard.instance);
-    }
-
     private readonly Stack<IInputHandler> inputStack = new Stack<IInputHandler>();
 
     public void StartInput(IInputHandler handler)
@@ -36,6 +33,7 @@ public class InputManager : MonoBehaviour, IPausable
         if (inputStack.Count > 0)
         {
             inputStack.Peek().Unfocus();
+            savedPauseSources = PH.UnpauseOverride();
         }
         StopAllCoroutines();
         handler.Focus();
@@ -94,6 +92,11 @@ public class InputManager : MonoBehaviour, IPausable
         if(inputStack.Count > 0)
         {
             inputStack.Peek().Focus();
+            if(inputStack.Count == 1 && savedPauseSources != PauseSources.None)
+            {
+                PH.Pause(savedPauseSources);
+                savedPauseSources = PauseSources.None;
+            }
         }
     }
 

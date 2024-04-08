@@ -14,7 +14,7 @@ public class BattleManager : MonoBehaviour, IPausable
         foreach (var e in currEvents)
             e.PH.SimpleParentPause(pauseState);
         Battlefield.instance.PH.SimpleParentPause(pauseState);
-        Keyboard.instance.PH.SimpleParentPause(pauseState);
+        InputManager.Instance.PH.SimpleParentPause(pauseState);
         TargetReticle.instance.PH.SimpleParentPause(pauseState);
     }
 
