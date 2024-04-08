@@ -19,6 +19,7 @@ public enum PauseSources
     ATB = 256,
     DialogHistory = 512,
     TIPS = 1024,
+    Equipment = 2048,
 }
 
 /// <summary>
