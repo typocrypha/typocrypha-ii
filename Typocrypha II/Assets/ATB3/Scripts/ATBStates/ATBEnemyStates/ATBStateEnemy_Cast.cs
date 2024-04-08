@@ -37,13 +37,11 @@ namespace ATB3
                 }
                 if (caster.IsDeadOrFled)
                 {
-                    Debug.LogWarning($"Caster {Owner.name} is dead, returning");
                     SpellManager.instance.PostCastFX(caster);
                     return null;
                 }
                 if (caster.Stunned)
                 {
-                    Debug.LogWarning($"Caster {Owner.name} is stunned, returning");
                     Source.PerformTransition(ATBStateID.Stunned);
                     SpellManager.instance.PostCastFX(caster);
                     return null;
