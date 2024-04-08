@@ -6,7 +6,6 @@ public class InputManager : MonoBehaviour, IPausable
 {
     public static InputManager Instance { get; private set; }
     public PauseHandle PH { get; private set; }
-    private PauseSources savedPauseSources;
     private void OnPause(bool pause)
     {
         foreach(var input in inputStack)
@@ -15,6 +14,27 @@ public class InputManager : MonoBehaviour, IPausable
         }
         Typocrypha.Keyboard.instance.PH.SimpleParentPause(pause);
     }
+    private bool blockCasting = false;
+    public bool BlockCasting 
+    { 
+        get => blockCasting;
+        set 
+        {
+            if(value)
+            {
+                if (!blockCasting)
+                {
+                    Typocrypha.Keyboard.instance.PH.SimpleParentPause(true);
+                }
+            }
+            else if (!PH.Paused)
+            {
+                Typocrypha.Keyboard.instance.PH.SimpleParentPause(false);
+            }
+            blockCasting = value;
+        }
+    }
+
     private void Awake()
     {
         if(Instance != null)
@@ -33,7 +53,7 @@ public class InputManager : MonoBehaviour, IPausable
         if (inputStack.Count > 0)
         {
             inputStack.Peek().Unfocus();
-            savedPauseSources = PH.UnpauseOverride();
+            Typocrypha.Keyboard.instance.PH.SimpleParentPause(false);
         }
         StopAllCoroutines();
         handler.Focus();
@@ -92,10 +112,9 @@ public class InputManager : MonoBehaviour, IPausable
         if(inputStack.Count > 0)
         {
             inputStack.Peek().Focus();
-            if(inputStack.Count == 1 && savedPauseSources != PauseSources.None)
+            if(inputStack.Count == 1 && BlockCasting)
             {
-                PH.Pause(savedPauseSources);
-                savedPauseSources = PauseSources.None;
+                Typocrypha.Keyboard.instance.PH.SimpleParentPause(true);
             }
         }
     }

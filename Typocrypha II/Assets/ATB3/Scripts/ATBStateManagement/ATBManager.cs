@@ -14,7 +14,6 @@ namespace ATB3
     public partial class ATBManager : MonoBehaviour
     {
         public static ATBManager instance;
-
         public bool HasReadyAllies => Battlefield.instance.Actors.Any(a => a is ATBAlly ally && (ally.allyMenu?.CanCast ?? false));
 
         private void Awake()
@@ -45,7 +44,7 @@ namespace ATB3
             actionQueue.Enqueue(action);
             if (action.Actor is ATBPlayer)
             {
-                InputManager.Instance.PH.Pause(PauseSources.ATB);
+                InputManager.Instance.BlockCasting = true;
                 TargetReticle.instance.PH.Pause(PauseSources.ATB);
             }
             if (actionQueue.Count == 1)
@@ -96,7 +95,7 @@ namespace ATB3
                 Debug.LogError("StateManager: solo queue Mismatch");
             if (action.Actor is ATBPlayer)
             {
-                InputManager.Instance.PH.Unpause(PauseSources.ATB);
+                InputManager.Instance.BlockCasting = false;
                 TargetReticle.instance.PH.Unpause(PauseSources.ATB);
             }
             action.OnComplete?.Invoke();
