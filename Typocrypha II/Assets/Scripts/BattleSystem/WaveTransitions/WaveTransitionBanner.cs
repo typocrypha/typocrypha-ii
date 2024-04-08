@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class WaveTransitionBanner : MonoBehaviour
+public class WaveTransitionBanner : MonoBehaviour, IPausable
 {
+    public PauseHandle PH { get; } = new PauseHandle();
+
     [SerializeField] TextMeshProUGUI titleText;
     [SerializeField] TextMeshProUGUI numberText;
     [SerializeField] private Animator animationController;
