@@ -45,7 +45,7 @@ namespace ATB3
             actionQueue.Enqueue(action);
             if (action.Actor is ATBPlayer)
             {
-                Typocrypha.Keyboard.instance.PH.Pause(PauseSources.ATB);
+                InputManager.Instance.PH.Pause(PauseSources.ATB);
                 TargetReticle.instance.PH.Pause(PauseSources.ATB);
             }
             if (actionQueue.Count == 1)
@@ -96,7 +96,7 @@ namespace ATB3
                 Debug.LogError("StateManager: solo queue Mismatch");
             if (action.Actor is ATBPlayer)
             {
-                Typocrypha.Keyboard.instance.PH.Unpause(PauseSources.ATB);
+                InputManager.Instance.PH.Unpause(PauseSources.ATB);
                 TargetReticle.instance.PH.Unpause(PauseSources.ATB);
             }
             action.OnComplete?.Invoke();
