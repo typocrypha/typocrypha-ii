@@ -35,14 +35,30 @@ namespace ATB3
         /// <summary>
         /// The current SoloActor. If the ATB system is not in solo, returns null
         /// </summary>
-        public ATBActor SoloActor => ProcessingActions ? actionQueue.Peek().Actor : null;
+        public ATBActor SoloActor => ProcessingActions ? actionQueue[0].Actor : null;
         // Stack for managing when actors have solo activity (casting)
-        private readonly Queue<ATBAction> actionQueue = new Queue<ATBAction>();
+        private readonly List<ATBAction> actionQueue = new List<ATBAction>();
 
         // Enter solo mode for this actor
         public void QueueSolo(ATBAction action)
         {
-            actionQueue.Enqueue(action);
+            actionQueue.Add(action);
+            ProcessNewSoloAction(action);
+        }
+
+        public void InsertSolo(ATBAction action)
+        {
+            if (!ProcessingActions)
+            {
+                QueueSolo(action);
+                return;
+            }
+            actionQueue.Insert(1, action);
+            ProcessNewSoloAction(action);
+        }
+
+        private void ProcessNewSoloAction(ATBAction action)
+        {
             if (action.Actor is ATBPlayer)
             {
                 InputManager.Instance.BlockCasting = true;
@@ -92,8 +108,12 @@ namespace ATB3
                 return;
             }
             //Debug.Log("exit:" + soloActor.gameObject.name);
-            if (action != actionQueue.Dequeue())
+            if (action != actionQueue[0])
+            {
                 Debug.LogError("StateManager: solo queue Mismatch");
+            }
+            actionQueue.RemoveAt(0);
+
             if (action.Actor is ATBPlayer)
             {
                 InputManager.Instance.BlockCasting = false;
@@ -116,7 +136,7 @@ namespace ATB3
             {
                 // Pause previous solo actor
                 action.Actor.PH.Pause(PauseSources.ATB);
-                DoSolo(actionQueue.Peek());
+                DoSolo(actionQueue[0]);
             }
         }
 
@@ -131,8 +151,6 @@ namespace ATB3
                 {
                     if (Action == null)
                         return false;
-                    //if (Actor is Caster caster && caster.IsDeadOrFled) // TODO, unify systems
-                    //    return false;
                     return true;
                 }
             }
