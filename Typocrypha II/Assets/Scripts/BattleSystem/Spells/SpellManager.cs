@@ -76,6 +76,7 @@ public class SpellManager : MonoBehaviour
     {
         // BattleDim : Dim everyone except caster
         BattleDimmer.instance.DimCasters(Battlefield.instance.Casters.Where(c => c != caster), false);
+        BattleDimmer.instance.UndimCaster(caster);
         // Hide caster's UI
         caster.ui.ShowUI(false);
         // If the spell is restricted, break and do not cast
@@ -244,8 +245,11 @@ public class SpellManager : MonoBehaviour
         {
             SpellCooldownManager.instance.DoOverheat();
         }
-        // BattleDim: undim all
-        BattleDimmer.instance.SetDimmer(false);
+        if (ATB3.ATBManager.instance.OnLastAction)
+        {
+            // BattleDim: undim all
+            BattleDimmer.instance.SetDimmer(false);
+        }
         // Show caster UI
         caster.ui.ShowUI(true);
     }

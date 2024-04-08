@@ -31,6 +31,7 @@ namespace ATB3
 
         // Is the ATB system currently in Solo mode?
         public bool ProcessingActions => actionQueue.Count != 0;
+        public bool OnLastAction => actionQueue.Count == 1;
         /// <summary>
         /// The current SoloActor. If the ATB system is not in solo, returns null
         /// </summary>
