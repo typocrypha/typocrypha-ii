@@ -89,10 +89,7 @@ public class DialogHistory : MonoBehaviour, IPausable
 
     private void Show()
     {
-        // Pause all then unpause self
-        PauseManager.instance.PauseAll(true, PauseSources.DialogHistory);
-        ph.Unpause(PauseSources.DialogHistory);
-        PauseManager.instance.Interactable = false;
+        PauseManager.instance.PauseAll(true, PauseSources.DialogHistory, PH, true);
         SetHistoryDialogs(Index = 0);
         IsShowing = true;
     }
@@ -105,8 +102,7 @@ public class DialogHistory : MonoBehaviour, IPausable
             historyDialog.Cleanup();
         }
         // Unpause all
-        PauseManager.instance.PauseAll(false, PauseSources.DialogHistory);
-        PauseManager.instance.Interactable = true;
+        PauseManager.instance.PauseAll(false, PauseSources.DialogHistory, PH, true);
     }
 
     private void SetHistoryDialogs(int atIndex)
