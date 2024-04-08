@@ -71,6 +71,7 @@ namespace ATB3
                     actor.PH.Pause(PauseSources.ATB);
                 }
                 BattleManager.instance.PauseBattleEvents(true, PauseSources.ATB);
+                PauseManager.instance.PH.Pause(PauseSources.ATB);
                 BattleDimmer.instance.SetDimmer(true); // Dim Start
                 DoSolo(action);
             }
@@ -129,6 +130,7 @@ namespace ATB3
                     actor.PH.Unpause(PauseSources.ATB);
                 }
                 BattleManager.instance.PauseBattleEvents(false, PauseSources.ATB);
+                PauseManager.instance.PH.Unpause(PauseSources.ATB);
                 BattleDimmer.instance.SetDimmer(false); // Dim End
             }
 
