@@ -40,9 +40,10 @@ namespace ATB3
         // GENERIC ACTOR FUNCTIONS                                        //
         //----------------------------------------------------------------//
 
-        void Awake()
+        protected virtual void Awake()
         {
             ph = new PauseHandle(OnPause);
+            Setup();
         }
 
         // Call to do initial setup on actor

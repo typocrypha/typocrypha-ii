@@ -50,12 +50,6 @@ namespace ATB3
             chargeCRObj = null;
         }
 
-        void Awake()
-        {
-            ph = new PauseHandle(OnPause);
-            Setup();
-        }
-
         public override void Setup()
         {
             StateMachine = GetComponent<ATBStateMachine_Enemy>();

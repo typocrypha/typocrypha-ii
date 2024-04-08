@@ -92,12 +92,6 @@ namespace ATB3
             }
         }
 
-        void Awake()
-        {
-            ph = new PauseHandle(OnPause);
-            Setup();
-        }
-
         public override void Setup()
         {
             StateMachine = GetComponent<ATBStateMachine<ATBAlly>>();
