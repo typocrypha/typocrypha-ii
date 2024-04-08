@@ -64,7 +64,7 @@ public class Scouter : MonoBehaviour, IPausable
     void Update()
     {
         // Toggle scouter
-        if (ScouterKeyPressed() && (!Battlefield.instance.PH.Paused || ScouterActive))
+        if (ScouterKeyPressed() && ((!Battlefield.instance.PH.Paused && !ATB3.ATBManager.instance.ProcessingActions) || ScouterActive))
         {
             ToggleScouter();
         }
