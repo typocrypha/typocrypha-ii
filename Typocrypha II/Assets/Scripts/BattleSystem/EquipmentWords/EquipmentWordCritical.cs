@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "EquipmentWordCritical", menuName = "Equipment Word/Critical")]
+[CreateAssetMenu(fileName = "EquipmentWordCritical", menuName = "Equipment Word/Unique/Critical")]
 public class EquipmentWordCritical : EquipmentWord
 {
     public const float baseCritChance = 0.075f;

@@ -53,6 +53,7 @@ public class BattleManager : MonoBehaviour, IPausable
 
     private BattleGraphParser graphParser;
     private readonly List<BattleEvent> currEvents = new List<BattleEvent>();
+    public bool FirstWaveStarted { get; private set; } = false;
     private int waveNum = 0;
 
     private void Awake()
@@ -91,6 +92,7 @@ public class BattleManager : MonoBehaviour, IPausable
     private void LoadBattle()
     {
         PH.Pause(PauseSources.Self);
+        FirstWaveStarted = false;
         var startNode = graphParser.Init();
         totalWaves = startNode.totalWaves;
         // Initialize Player
@@ -227,6 +229,7 @@ public class BattleManager : MonoBehaviour, IPausable
             // Play opening scene
             DialogManager.instance.StartDialog(waveData.openingScene, true);
         }
+        FirstWaveStarted = true;
         PH.Unpause(PauseSources.Self); // Will remain paused if dialog scene
     }
 

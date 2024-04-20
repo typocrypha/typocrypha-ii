@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "EquipmentWordCritBlock", menuName = "Equipment Word/CritBlock")]
+[CreateAssetMenu(fileName = "EquipmentWordCritBlock", menuName = "Equipment Word/Unique/CritBlock")]
 public class EquipmentWordCritBlock : EquipmentWord
 {
     public const float baseCritChance = 0.075f;

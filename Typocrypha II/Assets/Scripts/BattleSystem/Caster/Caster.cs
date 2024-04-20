@@ -285,6 +285,18 @@ public class Caster : MonoBehaviour
             Health += amount;
     }
 
+    public void RecalculateMaxHP()
+    {
+        if (BattleManager.instance != null && !BattleManager.instance.FirstWaveStarted) 
+        {
+            Health = Stats.MaxHP;
+        }
+        else
+        {
+            Health = System.Math.Min(Health, Stats.MaxHP);
+        }
+    }
+
     private StatusEffectDict statusEffects = new StatusEffectDict();
 
     #region Caster Tags and Caster Stats
