@@ -122,7 +122,7 @@ public class SpellManager : MonoBehaviour
             if (caster.IsPlayer)
             {
                 var player = caster;
-                if (player.HasActiveAbilities(Caster.ActiveAbilities.Critical) && EquipmentWordCritical.RollForCritical(player))
+                if (player.HasActiveAbilities(Caster.ActiveAbilities.Critical) && BadgeEfffectCritical.RollForCritical(player))
                 {
                     IEnumerator OnCritPopupComplete(bool popupSuccess)
                     {
@@ -138,7 +138,7 @@ public class SpellManager : MonoBehaviour
             else if (caster.CasterState == Caster.State.Hostile)
             {
                 var player = Battlefield.instance.Player;
-                if (player.HasActiveAbilities(Caster.ActiveAbilities.CriticalBlock) && EquipmentWordCritBlock.RollForCritical(player))
+                if (player.HasActiveAbilities(Caster.ActiveAbilities.CriticalBlock) && BadgeEffectCritBlock.RollForCritical(player))
                 {
                     IEnumerator OnBlockPopupComplete(bool popupSuccess)
                     {

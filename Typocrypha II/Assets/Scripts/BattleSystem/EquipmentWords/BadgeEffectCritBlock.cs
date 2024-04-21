@@ -2,18 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "EquipmentWordCritical", menuName = "Equipment Word/Unique/Critical")]
-public class EquipmentWordCritical : EquipmentWord
+public class BadgeEffectCritBlock : BadgeEffect
 {
     public const float baseCritChance = 0.075f;
     public override void Equip(Caster player)
     {
-        player.AddActiveAbilities(Caster.ActiveAbilities.Critical);
+        player.AddActiveAbilities(Caster.ActiveAbilities.CriticalBlock);
     }
 
     public override void Unequip(Caster player)
     {
-        player.RemoveActiveAbilities(Caster.ActiveAbilities.Critical);
+        player.RemoveActiveAbilities(Caster.ActiveAbilities.CriticalBlock);
     }
 
     public static bool RollForCritical(Caster player)

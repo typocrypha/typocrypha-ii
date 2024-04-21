@@ -27,7 +27,7 @@ public static class BadgeBundleLoader
         foreach (var bundle in spellBundles)
         {
             bundle.badges.Clear();
-            var words = AssetUtils.LoadAllAssetsInDirectoryRecursive<EquipmentWord>(bundle.assetPath);
+            var words = AssetUtils.LoadAllAssetsInDirectoryRecursive<BadgeWord>(bundle.assetPath);
             foreach (var word in words)
             {
                 if (!bundle.badges.ContainsKey(word.Key))

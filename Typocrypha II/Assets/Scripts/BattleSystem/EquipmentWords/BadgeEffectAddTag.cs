@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "EquipmentWordCasterTag", menuName = "Equipment Word/Caster Tag")]
-public class EquipmentTagWord : EquipmentWord
+public class BadgeEffectAddTag : BadgeEffect
 {
     [SerializeField] private CasterTag tag;
 

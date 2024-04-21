@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "EquipmentWordSpell", menuName = "Equipment Word/Spell")]
-public class EquipmentSpellWord : EquipmentWord
+public class BadgeEffectAddSpellWord : BadgeEffect
 {
     [SerializeField] private SpellWord word;
 

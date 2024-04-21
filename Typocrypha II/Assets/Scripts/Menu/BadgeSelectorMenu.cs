@@ -13,14 +13,14 @@ public class BadgeSelectorMenu : MonoBehaviour
     [SerializeField] private TextMeshProUGUI descriptionText;
     [SerializeField] private UnityEvent onClose;
 
-    private readonly List<EquipmentWord> unlockedBadges = new List<EquipmentWord>();
+    private readonly List<BadgeWord> unlockedBadges = new List<BadgeWord>();
     private int selectedBadgeIndex;
     private int selectedButtonIndex;
     private int numActiveButtons;
-    private EquipmentWord.EquipmentSlot targetSlot;
+    private BadgeWord.EquipmentSlot targetSlot;
     public bool IsShowing { get; private set; } = false;
 
-    public void Open(EquipmentWord.EquipmentSlot slot)
+    public void Open(BadgeWord.EquipmentSlot slot)
     {
         IsShowing = true;
         targetSlot = slot;
@@ -182,7 +182,7 @@ public class BadgeSelectorMenu : MonoBehaviour
         buttons[buttons.Length - 1].OnSelect(null);
     }
 
-    private static int WordComparer(EquipmentWord w1, EquipmentWord w2)
+    private static int WordComparer(BadgeWord w1, BadgeWord w2)
     {
         return w1.Key.CompareTo(w2.Key);
     }

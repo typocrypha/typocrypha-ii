@@ -6,5 +6,5 @@ using UnityEngine;
 public class BadgeBundle : BetterBundle
 {
     public BadgeDictionary badges;
-    [System.Serializable] public class BadgeDictionary : SerializableDictionary<string, EquipmentWord> { };
+    [System.Serializable] public class BadgeDictionary : SerializableDictionary<string, BadgeWord> { };
 }
