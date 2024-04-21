@@ -241,7 +241,7 @@ public class SpellManager : MonoBehaviour
         }
         if(spell.Any((w) => w.Key == "unlock"))
         {
-            // VictoryResultsScreen.AddUnlockMessage(badge.DisplayName, "Cast a DEBUG spell")
+            Debug.LogError("TODO: add message unlock code here");
         }
         // Apply callbacks after the whole cast is finished
         caster.OnAfterCastResolved?.Invoke(spell, caster);
