@@ -78,7 +78,11 @@ public class SpellManager : MonoBehaviour
         BattleDimmer.instance.DimCasters(Battlefield.instance.Casters.Where(c => c != caster), false);
         BattleDimmer.instance.UndimCaster(caster);
         // Hide caster's UI
-        caster.ui.ShowUI(false);
+        if(caster.ui != null)
+        {
+            caster.ui.ShowUI(false);
+        }
+
         // If the spell is restricted, break and do not cast
         if (SpellRestrictions.instance.IsRestricted(spell, caster, target, true))
         {
@@ -260,7 +264,10 @@ public class SpellManager : MonoBehaviour
             BattleDimmer.instance.SetDimmer(false);
         }
         // Show caster UI
-        caster.ui.ShowUI(true);
+        if(caster.ui != null)
+        {
+            caster.ui.ShowUI(true);
+        }
     }
 
     private IEnumerator CastAndCounterCR(Spell spell, Caster caster, Battlefield.Position target, Func<Caster, bool> pred, string castMessageOverride, bool isTopLevel)
