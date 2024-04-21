@@ -239,6 +239,10 @@ public class SpellManager : MonoBehaviour
         {
             yield return StartCoroutine(PlayPrompts());
         }
+        if(spell.Any((w) => w.Key == "unlock"))
+        {
+            // VictoryResultsScreen.AddUnlockMessage(badge.DisplayName, "Cast a DEBUG spell")
+        }
         // Apply callbacks after the whole cast is finished
         caster.OnAfterCastResolved?.Invoke(spell, caster);
         if (SpellCooldownManager.instance.Overheated)
