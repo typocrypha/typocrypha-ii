@@ -8,15 +8,15 @@ public class AbilityDoubleDamage : CasterAbility
 
     public override void AddTo(Caster caster)
     {
-        caster.OnBeforeSpellEffectResolved += OnBeforeSpellEffectResolved;
+        caster.OnBeforeSpellEffectCast += OnBeforeSpellEffectCast;
     }
 
     public override void RemoveFrom(Caster caster)
     {
-        caster.OnBeforeSpellEffectResolved -= OnBeforeSpellEffectResolved;
+        caster.OnBeforeSpellEffectCast -= OnBeforeSpellEffectCast;
     }
 
-    public void OnBeforeSpellEffectResolved(RootWordEffect effect, Caster caster, Caster target)
+    public void OnBeforeSpellEffectCast(RootWordEffect effect, Caster caster, Caster target)
     {
        if(effect.tags.Contains(tag) && effect is DamageEffect damageEffect)
             damageEffect.power *= 2;

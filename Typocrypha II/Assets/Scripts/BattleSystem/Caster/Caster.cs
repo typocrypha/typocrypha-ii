@@ -44,7 +44,9 @@ public class Caster : MonoBehaviour
     /// <summary>
     /// Callbacks applied before a spell effect resolves (before they resolve)
     /// </summary>
-    public ApplyToEffectFn OnBeforeSpellEffectResolved { get; set; }
+    public ApplyToEffectFn OnBeforeSpellEffectCast { get; set; }
+
+    public HitFn OnAfterSpellEffectCast { get; set; }
     /// <summary>
     /// Callbacks applied after a spell effect resolves
     /// </summary>
