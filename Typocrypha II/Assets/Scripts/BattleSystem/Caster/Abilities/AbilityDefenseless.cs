@@ -4,7 +4,17 @@ using UnityEngine;
 
 public class AbilityDefenseless : CasterAbility
 {
-    public override void OnBeforeHitApplied(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults castResults)
+    public override void AddTo(Caster caster)
+    {
+        caster.OnBeforeHitResolved += OnBeforeHitResolved;
+    }
+
+    public override void RemoveFrom(Caster caster)
+    {
+        caster.OnBeforeHitResolved -= OnBeforeHitResolved;
+    }
+
+    public void OnBeforeHitResolved(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults castResults)
     {
         if (!target.Stunned || castResults.Effectiveness == Reaction.Weak)
         {
@@ -19,10 +29,5 @@ public class AbilityDefenseless : CasterAbility
         {
             castResults.StaggerDamage = 1;
         }
-    }
-
-    public override void OnBeforeSpellEffectResolved(RootWordEffect effect, Caster caster, Caster target)
-    {
-        return;
     }
 }
