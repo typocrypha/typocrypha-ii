@@ -19,7 +19,7 @@ namespace Typocrypha
         private void OnPause(bool b)
         {
             foreach (var kvp in allEffects)
-                kvp.Value.PH.Pause = b;
+                kvp.Value.PH.SimpleParentPause(b);
             pauseUI.gameObject.SetActive(b);
             if (b)
             {
@@ -120,16 +120,16 @@ namespace Typocrypha
         void Start()
         {
             InputManager.Instance.StartInput(castBar);
-            if (PH.Pause)
+            if (PH.Paused)
             {
-                castBar.PH.Pause = true;
+                castBar.PH.Pause(PauseSources.Self);
             }
         }
 
         // Check user input.
         void Update()
         {
-            if (PH.Pause)
+            if (PH.Paused)
             {
                 if (DisableInactiveSfx)
                 {

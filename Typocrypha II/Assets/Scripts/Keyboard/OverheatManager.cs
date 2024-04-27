@@ -21,7 +21,6 @@ public class OverheatManager : Typocrypha.CastBar
     {
         base.Awake();
         wordSelector = new WordListSelector(overheatWords.Words);
-        PH.SetParent(Typocrypha.Keyboard.instance);
     }
 
     public void DoOverheat()

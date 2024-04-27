@@ -11,12 +11,6 @@ namespace ATB3
         public override IATBStateMachine BaseStateMachine => StateMachine;
         public Battlefield.Position SavedTargetPos { get; private set; }
 
-        void Awake()
-        {
-            ph = new PauseHandle(OnPause);
-            Setup();
-        }
-
         public override void Setup()
         {
             StateMachine = GetComponent<ATBStateMachine_Player>();

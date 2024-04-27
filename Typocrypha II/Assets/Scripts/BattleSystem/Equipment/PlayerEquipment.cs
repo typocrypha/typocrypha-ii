@@ -11,14 +11,14 @@ public class PlayerEquipment : MonoBehaviour
     public IReadOnlyDictionary<string, SpellWord> UnlockedSpellWords => unlockedSpellWords;
     private readonly Dictionary<string, SpellWord> unlockedSpellWords = new Dictionary<string, SpellWord>();
 
-    public IReadOnlyDictionary<EquipmentWord.EquipmentSlot, EquipmentWord> EquippedBadgeWords => equippedBadgeWords;
-    private readonly Dictionary<EquipmentWord.EquipmentSlot, EquipmentWord> equippedBadgeWords = new Dictionary<EquipmentWord.EquipmentSlot, EquipmentWord>();
+    public IReadOnlyDictionary<BadgeWord.EquipmentSlot, BadgeWord> EquippedBadgeWords => equippedBadgeWords;
+    private readonly Dictionary<BadgeWord.EquipmentSlot, BadgeWord> equippedBadgeWords = new Dictionary<BadgeWord.EquipmentSlot, BadgeWord>();
 
-    public IReadOnlyDictionary<string, EquipmentWord> UnlockedBadgeWords => unlockedBadgeWords;
-    private readonly Dictionary<string, EquipmentWord> unlockedBadgeWords = new Dictionary<string, EquipmentWord>();
+    public IReadOnlyDictionary<string, BadgeWord> UnlockedBadgeWords => unlockedBadgeWords;
+    private readonly Dictionary<string, BadgeWord> unlockedBadgeWords = new Dictionary<string, BadgeWord>();
 
     [SerializeField] List<SpellWord> debugWords = new List<SpellWord>();
-    [SerializeField] List<EquipmentWord> debugBadgeWords = new List<EquipmentWord>();
+    [SerializeField] List<BadgeWord> debugBadgeWords = new List<BadgeWord>();
 
     private void Awake()
     {
@@ -92,14 +92,18 @@ public class PlayerEquipment : MonoBehaviour
         equippedSpellWords.Remove(word.Key);
     }
 
-    public void UnlockBadge(EquipmentWord word)
+    public bool IsBadgeUnlocked(BadgeWord word)
+    {
+        return unlockedBadgeWords.ContainsKey(word.Key);
+    }
+    public void UnlockBadge(BadgeWord word)
     {
         if (!unlockedBadgeWords.ContainsKey(word.Key))
         {
             unlockedBadgeWords.Add(word.Key, word);
         }
     }
-    public void EquipBadge(EquipmentWord word)
+    public void EquipBadge(BadgeWord word)
     {
         if (equippedBadgeWords.ContainsKey(word.Slot))
         {
@@ -110,7 +114,7 @@ public class PlayerEquipment : MonoBehaviour
             equippedBadgeWords.Add(word.Slot, word);
         }
     }
-    public void EquipBadgeLive(EquipmentWord word, Caster player)
+    public void EquipBadgeLive(BadgeWord word, Caster player)
     {
         if (equippedBadgeWords.ContainsKey(word.Slot))
         {
@@ -123,13 +127,13 @@ public class PlayerEquipment : MonoBehaviour
         }
         word.Equip(player);
     }
-    public void UnequipBadge(EquipmentWord.EquipmentSlot slot)
+    public void UnequipBadge(BadgeWord.EquipmentSlot slot)
     {
         if (!equippedBadgeWords.ContainsKey(slot))
             return;
         equippedBadgeWords.Remove(slot);
     }
-    public void UnequipBadgeLive(EquipmentWord.EquipmentSlot slot, Caster player)
+    public void UnequipBadgeLive(BadgeWord.EquipmentSlot slot, Caster player)
     {
         if (!equippedBadgeWords.ContainsKey(slot))
             return;

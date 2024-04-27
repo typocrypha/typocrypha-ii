@@ -161,7 +161,6 @@ public class SaveManager : MonoBehaviour
             SaveCampaign(debugSaveFile);
         }
         LoadCampaign(debugSaveFile);
-        PlayerDataManager.instance.equipment.ReapplyEquippedBadgeWords(Battlefield.instance.Player);
     }
 
     private void LoadCampaignData(CampaignSaveData data)

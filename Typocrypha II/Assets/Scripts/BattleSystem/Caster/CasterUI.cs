@@ -26,6 +26,7 @@ public class CasterUI : MonoBehaviour
     public UnityEvent_string onScouterDataChanged;
     public UnityEvent onScouterShow;
     public UnityEvent onScouterHide;
+    public UnityEvent onDamageReceived;
 
     [SerializeField] SpriteRenderer sprite;
     [SerializeField] CanvasGroup ui;

@@ -7,7 +7,7 @@ namespace ATB3
     public class ATBStateEnemy_PreCast : ATBState<ATBEnemy>
     {
         public const float time = 1;
-        private float timer = 0.0f;
+        public float Timer { get; private set; } = 0.0f;
 
         // Call upon entering given state
         public override void OnEnter()
@@ -25,14 +25,14 @@ namespace ATB3
                 Owner.GetComponent<Animator>().SetTrigger("PreCast");
 
             }
-            timer = 0.0f;
+            Timer = 0.0f;
         }
 
         // Call on fixed update while in given state
         public override void OnUpdate()
         {
             var caster = Owner.Caster;
-            timer += Time.fixedDeltaTime * Settings.GameplaySpeed;
+            Timer += Time.fixedDeltaTime * Settings.GameplaySpeed;
             if(caster.BStatus == Caster.BattleStatus.Dead)
             {
                 Source.PerformTransition(ATBStateID.Dead);
@@ -55,7 +55,7 @@ namespace ATB3
             {
                 Source.PerformTransition(ATBStateID.Charge);
             }
-            else if (timer >= time && !ATBManager.instance.ProcessingActions)
+            else if (Timer >= time)
             {
                 Source.PerformTransition(ATBStateID.Cast);
             }

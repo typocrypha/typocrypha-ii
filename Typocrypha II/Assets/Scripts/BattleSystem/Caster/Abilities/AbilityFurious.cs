@@ -39,8 +39,4 @@ public class AbilityFurious : CasterAbility
         Debug.Log($"CurrSpeed-: {self.Stats.Spd}");
         addedSpeed = 0;
     }
-
-    public override void OnBeforeSpellEffectResolved(RootWordEffect effect, Caster caster, Caster target) { }
-
-    public override void OnBeforeHitApplied(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults castResults) { }
 }

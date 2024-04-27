@@ -14,7 +14,6 @@ namespace ATB3
     public partial class ATBManager : MonoBehaviour
     {
         public static ATBManager instance;
-
         public bool HasReadyAllies => Battlefield.instance.Actors.Any(a => a is ATBAlly ally && (ally.allyMenu?.CanCast ?? false));
 
         private void Awake()
@@ -32,25 +31,47 @@ namespace ATB3
 
         // Is the ATB system currently in Solo mode?
         public bool ProcessingActions => actionQueue.Count != 0;
+        public bool OnLastAction => actionQueue.Count == 1;
         /// <summary>
         /// The current SoloActor. If the ATB system is not in solo, returns null
         /// </summary>
-        public ATBActor SoloActor => ProcessingActions ? actionQueue.Peek().Actor : null;
+        public ATBActor SoloActor => ProcessingActions ? actionQueue[0].Actor : null;
         // Stack for managing when actors have solo activity (casting)
-        private readonly Queue<ATBAction> actionQueue = new Queue<ATBAction>();
+        private readonly List<ATBAction> actionQueue = new List<ATBAction>();
 
         // Enter solo mode for this actor
         public void QueueSolo(ATBAction action)
         {
-            actionQueue.Enqueue(action);
-            if (action.Actor is ATBPlayer && !Typocrypha.Keyboard.instance.PH.Pause)
+            actionQueue.Add(action);
+            ProcessNewSoloAction(action);
+        }
+
+        public void InsertSolo(ATBAction action)
+        {
+            if (!ProcessingActions)
             {
-                Typocrypha.Keyboard.instance.PH.Pause = true;
+                QueueSolo(action);
+                return;
+            }
+            actionQueue.Insert(1, action);
+            ProcessNewSoloAction(action);
+        }
+
+        private void ProcessNewSoloAction(ATBAction action)
+        {
+            if (action.Actor is ATBPlayer)
+            {
+                InputManager.Instance.BlockCasting = true;
+                TargetReticle.instance.PH.Pause(PauseSources.ATB);
             }
             if (actionQueue.Count == 1)
             {
-                BattleManager.instance.SetBattleEventPause(true); // Pause Battle events.
-                Battlefield.instance.PH.Pause = true; // Pause battle field
+                foreach (var actor in Battlefield.instance.Actors)
+                {
+                    actor.PH.Pause(PauseSources.ATB);
+                }
+                BattleManager.instance.PauseBattleEvents(true, PauseSources.ATB);
+                PauseManager.instance.PH.Pause(PauseSources.ATB);
                 BattleDimmer.instance.SetDimmer(true); // Dim Start
                 DoSolo(action);
             }
@@ -60,7 +81,7 @@ namespace ATB3
         {
             if (action.IsValid)
             {
-                action.Actor.Pause = false; // TODO: is this needed?
+                action.Actor.PH.Unpause(PauseSources.ATB);
                 StartCoroutine(DoSoloCR(action));
             }
             else
@@ -88,27 +109,36 @@ namespace ATB3
                 return;
             }
             //Debug.Log("exit:" + soloActor.gameObject.name);
-            if (action != actionQueue.Dequeue())
+            if (action != actionQueue[0])
+            {
                 Debug.LogError("StateManager: solo queue Mismatch");
+            }
+            actionQueue.RemoveAt(0);
+
             if (action.Actor is ATBPlayer)
             {
-                Typocrypha.Keyboard.instance.PH.Pause = false;
+                InputManager.Instance.BlockCasting = false;
+                TargetReticle.instance.PH.Unpause(PauseSources.ATB);
             }
             action.OnComplete?.Invoke();
             // If queue is now empty, unpause all actors
             if (actionQueue.Count == 0)
             {
-                foreach (ATBActor actor in Battlefield.instance.Actors)
+                foreach (var actor in Battlefield.instance.Actors)
+                {
                     actor.isCast = false;
-                BattleManager.instance.SetBattleEventPause(false);
-                Battlefield.instance.PH.Pause = false; // unpause battle field
+                    actor.PH.Unpause(PauseSources.ATB);
+                }
+                BattleManager.instance.PauseBattleEvents(false, PauseSources.ATB);
+                PauseManager.instance.PH.Unpause(PauseSources.ATB);
                 BattleDimmer.instance.SetDimmer(false); // Dim End
             }
-            // Otherwise, give solo to next in queue
-            else
+
+            else // Otherwise, give solo to next in queue
             {
-                action.Actor.Pause = true;
-                DoSolo(actionQueue.Peek());
+                // Pause previous solo actor
+                action.Actor.PH.Pause(PauseSources.ATB);
+                DoSolo(actionQueue[0]);
             }
         }
 
@@ -123,8 +153,6 @@ namespace ATB3
                 {
                     if (Action == null)
                         return false;
-                    //if (Actor is Caster caster && caster.IsDeadOrFled) // TODO, unify systems
-                    //    return false;
                     return true;
                 }
             }

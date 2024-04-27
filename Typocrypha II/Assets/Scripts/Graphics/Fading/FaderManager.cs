@@ -136,7 +136,7 @@ public class FaderManager : MonoBehaviour, IPausable
         {
             if (allowPause)
             {
-                yield return new WaitWhile(() => PH.Pause);
+                yield return new WaitWhile(() => PH.Paused);
             }
             FadeScreen(Mathf.Lerp(fadeStart, fadeEnd, time / fadeTime), fadeColor);
             yield return new WaitForFixedUpdate();

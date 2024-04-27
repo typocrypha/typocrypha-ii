@@ -74,12 +74,15 @@ public class SpellManager : MonoBehaviour
     /// <summary> Cast the spell effects and play the associated fx</summary>
     private IEnumerator CastCR(Spell spell, Caster caster, Battlefield.Position target, string castMessageOverride, bool isTopLevel)
     {
-        // Hide target reticle
-        TargetReticle.instance.ShowReticle(false);
         // BattleDim : Dim everyone except caster
         BattleDimmer.instance.DimCasters(Battlefield.instance.Casters.Where(c => c != caster), false);
+        BattleDimmer.instance.UndimCaster(caster);
         // Hide caster's UI
-        caster.ui.ShowUI(false);
+        if(caster.ui != null)
+        {
+            caster.ui.ShowUI(false);
+        }
+
         // If the spell is restricted, break and do not cast
         if (SpellRestrictions.instance.IsRestricted(spell, caster, target, true))
         {
@@ -116,27 +119,46 @@ public class SpellManager : MonoBehaviour
         }
         var roots = Modify(spell);
         // Critical chance
-        Damage.SpecialModifier mod = Damage.SpecialModifier.None;
-        if (roots.Any((r) => r.effects.Any((e) => e.CanCrit)) && UnityEngine.Random.Range(0, 1f) <= Damage.baseCritChance)
+        var mod = Damage.SpecialModifier.None;
+        if (roots.Any((r) => r.effects.Any((e) => e.CanCrit)))
         {
-            bool friendly = caster.IsPlayer || caster.CasterState == Caster.State.Ally;
-            IEnumerator OnCritPopupComplete(bool popupSuccess)
+
+            if (caster.IsPlayer)
             {
-                if (friendly)
+                var player = caster;
+                if (player.HasActiveAbilities(Caster.ActiveAbilities.Critical) && BadgeEfffectCritical.RollForCritical(player))
                 {
-                    if (popupSuccess)
+                    IEnumerator OnCritPopupComplete(bool popupSuccess)
                     {
-                        mod = Damage.SpecialModifier.Critical;
+                        if (popupSuccess)
+                        {
+                            mod = Damage.SpecialModifier.Critical;
+                        }
+                        return null;
                     }
+                    LogInteractivePopup(critPopup, "Critical Chance!", "CRITICAL", 5, OnCritPopupComplete);
                 }
-                else
-                {
-                    mod = popupSuccess ? Damage.SpecialModifier.CritBlock : Damage.SpecialModifier.Critical;
-                }
-                return null;
             }
-            LogInteractivePopup(critPopup, "Critical Chance!", friendly ? "CRITICAL" : "BLOCK", 5, OnCritPopupComplete);
-            yield return StartCoroutine(PlayPrompts());
+            else if (caster.CasterState == Caster.State.Hostile)
+            {
+                var player = Battlefield.instance.Player;
+                if (player.HasActiveAbilities(Caster.ActiveAbilities.CriticalBlock) && BadgeEffectCritBlock.RollForCritical(player))
+                {
+                    IEnumerator OnBlockPopupComplete(bool popupSuccess)
+                    {
+                        if (popupSuccess)
+                        {
+                            mod = Damage.SpecialModifier.CritBlock;
+                        }
+                        return null;
+                    }
+                    LogInteractivePopup(critPopup, "Block Chance!", "BLOCK", 5, OnBlockPopupComplete);
+                }
+            }
+            if (HasPrompts)
+            {
+                yield return StartCoroutine(PlayPrompts());
+            }
         }
         var casterSpace = Battlefield.instance.GetSpaceScreenSpace(caster.FieldPos);
         List<Coroutine> crList = new List<Coroutine>();
@@ -169,7 +191,7 @@ public class SpellManager : MonoBehaviour
                         // Apply the rule effect if necessary
                         Rule.ActiveRule?.ApplyToEffect(effect, caster, targetCaster);
                         // Apply OnCast Callbacks
-                        caster.OnBeforeSpellEffectResolved?.Invoke(effect, caster, targetCaster);
+                        caster.OnBeforeSpellEffectCast?.Invoke(effect, caster, targetCaster);
                         // Cast the effect
                         var castResults = effect.Cast(caster, targetCaster, spellData, mod, rootResults);
                         // If the results are null, the effect is a NOP
@@ -177,6 +199,7 @@ public class SpellManager : MonoBehaviour
                             continue;
                         // Apply OnHit Callbacks (Updates AI)
                         targetCaster.OnAfterHitResolved?.Invoke(effect, caster, targetCaster, spellData, castResults);
+                        caster.OnAfterSpellEffectCast?.Invoke(effect, caster, targetCaster, spellData, castResults);
                         // Play Effects
                         var fx = new SpellFxData[] { root.leftMod?.fx, effect.fx, root.rightMod?.fx };
                         crList.Add(SpellFxManager.instance.Play(fx, castResults, targetSpace, casterSpace));
@@ -221,18 +244,31 @@ public class SpellManager : MonoBehaviour
         {
             yield return StartCoroutine(PlayPrompts());
         }
+        if(spell.Any((w) => w.Key == "unlock"))
+        {
+            Debug.LogError("TODO: add message unlock code here");
+        }
         // Apply callbacks after the whole cast is finished
         caster.OnAfterCastResolved?.Invoke(spell, caster);
         if (SpellCooldownManager.instance.Overheated)
         {
             SpellCooldownManager.instance.DoOverheat();
         }
-        // BattleDim: undim all
-        BattleDimmer.instance.SetDimmer(false);
-        // Show target reticle
-        TargetReticle.instance.ShowReticle(true);
+        PostCastFX(caster);
+    }
+
+    public void PostCastFX(Caster caster)
+    {
+        if (ATB3.ATBManager.instance.OnLastAction)
+        {
+            // BattleDim: undim all
+            BattleDimmer.instance.SetDimmer(false);
+        }
         // Show caster UI
-        caster.ui.ShowUI(true);
+        if(caster.ui != null)
+        {
+            caster.ui.ShowUI(true);
+        }
     }
 
     private IEnumerator CastAndCounterCR(Spell spell, Caster caster, Battlefield.Position target, Func<Caster, bool> pred, string castMessageOverride, bool isTopLevel)

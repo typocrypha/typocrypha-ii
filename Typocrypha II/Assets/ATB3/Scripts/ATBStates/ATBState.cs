@@ -42,7 +42,7 @@ namespace ATB3
     //================================================================//
 
     [System.Serializable]
-    public abstract class ATBState<T> where T : ATBActor
+    public abstract class ATBState<T> : IATBState where T : ATBActor
     {
         public ATBStateID StateID { get; set; } = ATBStateID.NullATBStateID; 
         private T owner; 

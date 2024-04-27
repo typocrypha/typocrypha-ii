@@ -48,12 +48,12 @@ public class Lookup : MonoBehaviour
         return instance.allWordsBundle.words.TryGetValue(name.ToLower(), out word);
     }
 
-    public static EquipmentWord GetBadge(string name)
+    public static BadgeWord GetBadge(string name)
     {
         return instance.allBadges.badges.TryGetValue(name.ToLower(), out var badge) ? badge : null;
     }
 
-    public static bool TryGetBadge(string name, out EquipmentWord badge)
+    public static bool TryGetBadge(string name, out BadgeWord badge)
     {
         return instance.allBadges.badges.TryGetValue(name.ToLower(), out badge);
     }

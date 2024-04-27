@@ -37,7 +37,7 @@ public class EquipmentMenu : MonoBehaviour, IPausable
             SetSlotText(slot);
         }
         Typocrypha.Keyboard.instance.DisableInactiveSfx = true;
-        PauseManager.instance.Interactable = false;
+        PauseManager.instance.PauseAll(true, PauseSources.Equipment, PH, true);
     }
 
     public void Close()
@@ -47,7 +47,7 @@ public class EquipmentMenu : MonoBehaviour, IPausable
         equipmentNotice.SetActive(true);
         skipFrame = true;
         Typocrypha.Keyboard.instance.DisableInactiveSfx = false;
-        PauseManager.instance.Interactable = true;
+        PauseManager.instance.PauseAll(false, PauseSources.Equipment, PH, true);
     }
 
     public void Disable()
@@ -71,6 +71,16 @@ public class EquipmentMenu : MonoBehaviour, IPausable
         inMenuSlot = null;
     }
 
+    public void OpenShopMenu()
+    {
+        PH.Pause(PauseSources.Self);
+    }
+
+    public void OnCloseShopMenu()
+    {
+        PH.Unpause(PauseSources.Self);
+    }
+
     private static void SetSlotText(EquipmentMenuSlot slot)
     {
         var equippedBadges = Equipment.EquippedBadgeWords;
@@ -89,7 +99,7 @@ public class EquipmentMenu : MonoBehaviour, IPausable
             skipFrame = false;
             return;
         }
-        if (PH.Pause)
+        if (PH.Paused)
         {
             return;
         }
@@ -99,7 +109,7 @@ public class EquipmentMenu : MonoBehaviour, IPausable
             {
                 if (badgeSelector.IsShowing)
                 {
-                    badgeSelector.Close();
+                    badgeSelector.CloseNoEquip();
                 }
                 else
                 {

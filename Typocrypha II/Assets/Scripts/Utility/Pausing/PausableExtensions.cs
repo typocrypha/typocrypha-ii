@@ -1,4 +1,4 @@
 ﻿public static class PausableExtensions
 {
-    public static bool IsPaused(this IPausable self) => self.PH.Pause;
+    public static bool IsPaused(this IPausable self) => self.PH.Paused;
 }

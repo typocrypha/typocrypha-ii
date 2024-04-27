@@ -48,6 +48,7 @@ namespace ATB3
         // The only way one can change the state of the machine is by performing a transition
         // Don't change the CurrentState directly (unless initializing with SetState())
         public ATBStateID CurrentStateID { get; set; }
+        public IATBState CurrentATBState => CurrentState;
         public ATBState<T> CurrentState { get; private set; }
         public ATBStateID PreviousStateID { get; private set; }
         public ATBState<T> PreviousState { get; private set; }

@@ -24,6 +24,8 @@ namespace Gameflow
         [SerializeField] TallyEntry[] entries = new TallyEntry[MAX_ENTRIES];
         public int numEntries = 1;
         public TallyEntry[] Entries => entries.Take(numEntries).ToArray();
+        public string ClarkeText = "";
+
         public int Total
         {
             get
@@ -68,6 +70,10 @@ namespace Gameflow
             RTEditorGUI.IntField(Total, GUILayout.Width(71));
             GUI.enabled = true;
             GUILayout.EndHorizontal();
+
+            GUILayout.Space(10);
+            GUILayout.Label(new GUIContent("Clarke Text"));
+            ClarkeText = GUILayout.TextArea(ClarkeText, GUI.skin.textArea, GUILayout.MinHeight(RTEditorGUI.lineHeight * 2));
 
             GUILayout.EndVertical();
         }

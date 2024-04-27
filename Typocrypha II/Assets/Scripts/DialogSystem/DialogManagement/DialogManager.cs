@@ -19,8 +19,8 @@ public class DialogManager : MonoBehaviour, IPausable
     public void OnPause(bool b)
     {
         enabled = !b; // Disable input checking.
-        if (dialogBox != null) dialogBox.PH.Pause = b; // Pause dialog box scrolling.
-        TextEvents.instance.PH.Pause = b; // Pause text events.
+        if (dialogBox != null) dialogBox.PH.SimpleParentPause(b); // Pause dialog box scrolling.
+        TextEvents.instance.PH.SimpleParentPause(b); // Pause text events.
     }
     #endregion
 
@@ -139,10 +139,10 @@ public class DialogManager : MonoBehaviour, IPausable
     /// </summary>
     private void StartDialog(bool reset, bool loading)
     {
-        PH.Pause = false;
+        PH.Unpause(PauseSources.Self);
         if (isBattle)
         {
-            BattleManager.instance.PH.Pause = true;
+            BattleManager.instance.PH.Pause(PauseSources.Dialog);
         }
         graphParser.Init();
         if (reset)
@@ -249,7 +249,7 @@ public class DialogManager : MonoBehaviour, IPausable
     /// <param name="show">If true, display dialog. Otherwise, hide.</param>
     public void Show(System.Action onComplete)
     {
-        PH.Pause = false;
+        PH.Unpause(PauseSources.Self);
         if (DialogView == null || !DialogView.IsHidden)
         {
             onComplete?.Invoke();
@@ -262,7 +262,7 @@ public class DialogManager : MonoBehaviour, IPausable
     {
         if (DialogView == null || DialogView.IsHidden)
         {
-            PH.Pause = true;
+            PH.Pause(PauseSources.Self);
             onComplete?.Invoke();
             return;
         }
@@ -296,10 +296,10 @@ public class DialogManager : MonoBehaviour, IPausable
             {
                 yield return new WaitForSeconds(0.5f);
             }
-            BattleManager.instance.PH.Pause = false;
+            BattleManager.instance.PH.Unpause(PauseSources.Dialog);
         }
         ReadyToContinue = true;
-        PH.Pause = true;
+        PH.Pause(PauseSources.Self);
         onComplete?.Invoke();
     }
 

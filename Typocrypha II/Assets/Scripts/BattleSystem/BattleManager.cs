@@ -11,9 +11,25 @@ public class BattleManager : MonoBehaviour, IPausable
     public PauseHandle PH { get; private set; }
     public void OnPause(bool pauseState) // Pauses battle events and battlefield
     {
-        SetBattleEventPause(pauseState);
-        Battlefield.instance.PH.Pause = pauseState;
-        Keyboard.instance.PH.Pause = pauseState;
+        foreach (var e in currEvents)
+            e.PH.SimpleParentPause(pauseState);
+        Battlefield.instance.PH.SimpleParentPause(pauseState);
+        InputManager.Instance.PH.SimpleParentPause(pauseState);
+        TargetReticle.instance.PH.SimpleParentPause(pauseState);
+    }
+
+    public void PauseBattleEvents(bool value, PauseSources sources)
+    {
+        if (value)
+        {
+            foreach (var e in currEvents)
+                e.PH.Pause(sources);
+        }
+        else
+        {
+            foreach (var e in currEvents)
+                e.PH.Unpause(sources);
+        }
     }
     #endregion
 
@@ -31,13 +47,13 @@ public class BattleManager : MonoBehaviour, IPausable
 
     [Header("Game Over")]
     public UnityEngine.Events.UnityEvent OnGameOver = default;
-    public AudioClip GameOverAudioClip = default;
 
     [Header("Equipment Menu")]
     [SerializeField] private EquipmentMenu equipmentMenu;
 
     private BattleGraphParser graphParser;
     private readonly List<BattleEvent> currEvents = new List<BattleEvent>();
+    public bool FirstWaveStarted { get; private set; } = false;
     private int waveNum = 0;
 
     private void Awake()
@@ -75,6 +91,8 @@ public class BattleManager : MonoBehaviour, IPausable
 
     private void LoadBattle()
     {
+        PH.Pause(PauseSources.Self);
+        FirstWaveStarted = false;
         var startNode = graphParser.Init();
         totalWaves = startNode.totalWaves;
         // Initialize Player
@@ -143,16 +161,10 @@ public class BattleManager : MonoBehaviour, IPausable
     {
         currEvents.Add(battleEvent);
         // Start it paused if the battleManager is in a paused state
-        if (PH.Pause)
+        if (PH.Paused)
         {
-            battleEvent.PH.Pause = true;
+            battleEvent.PH.SimpleParentPause(true);
         }
-    }
-
-    public void SetBattleEventPause(bool pause)
-    {
-        foreach (var e in currEvents)
-            e.PH.Pause = pause;
     }
 
     public void ClearReinforcements()
@@ -162,7 +174,7 @@ public class BattleManager : MonoBehaviour, IPausable
 
     public void NextWave()
     {
-        PH.Pause = true;
+        PH.Pause(PauseSources.Self);
         ++waveNum;
         CurrWave = graphParser.NextWave();
         if (CurrWave == null) return;
@@ -217,7 +229,8 @@ public class BattleManager : MonoBehaviour, IPausable
             // Play opening scene
             DialogManager.instance.StartDialog(waveData.openingScene, true);
         }
-        PH.Pause = false; // Unpause if no dialog scene, else remove extra pause
+        FirstWaveStarted = true;
+        PH.Unpause(PauseSources.Self); // Will remain paused if dialog scene
     }
 
     public class ReinforcementData
@@ -236,16 +249,16 @@ public class BattleManager : MonoBehaviour, IPausable
         public Battlefield.Position Pos { get; set; }
     }
 
-    public IEnumerator AddCasters(IReadOnlyList<ReinforcementData> data, bool unPause = false)
+    public IEnumerator AddCasters(IReadOnlyList<ReinforcementData> data)
     {
         for (int i = 0; i < data.Count; i++)
         {
             var casterData = data[i];
-            yield return StartCoroutine(AddCaster(casterData.Prefab, casterData.Pos.Row, casterData.Pos.Col, unPause));
+            yield return StartCoroutine(AddCaster(casterData.Prefab, casterData.Pos.Row, casterData.Pos.Col));
         }
     }
 
-    public IEnumerator AddCaster(GameObject casterPrefab, int row, int col, bool unPause = false)
+    public IEnumerator AddCaster(GameObject casterPrefab, int row, int col)
     {
         var caster = Instantiate(casterPrefab).GetComponent<Caster>();
         if (caster == null)
@@ -255,12 +268,6 @@ public class BattleManager : MonoBehaviour, IPausable
         var fx = caster.GetComponent<SpawnFX>()?.fx ?? defualtSpawnFx;
         // Play and wait for spawn effects
         yield return StartCoroutine(fx.Play(caster.transform.position, true));
-        if(unPause)
-        {
-            var actor = caster.GetComponent<ATB3.ATBActor>();
-            if (actor != null)
-                actor.Pause = false;
-        }
     }
 
     private IEnumerator WaveTransition(BattleWave waveData)
@@ -279,7 +286,7 @@ public class BattleManager : MonoBehaviour, IPausable
         {
             equipmentMenu.Enable();
         }
-        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space) && !equipmentMenu.IsShowing);
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space) && !wT.PH.Paused);
         equipmentMenu.Disable();
         wT.ContinueAnimation();
         yield return new WaitForSeconds(0.5f);
@@ -288,14 +295,12 @@ public class BattleManager : MonoBehaviour, IPausable
     public void Victory(VictoryScreenNode results)
     {
         victoryScreen.OnContinuePressed = NextWave;
-        victoryScreen.DisplayResults(results.Entries, results.Total, PlayerDataManager.instance.currency);
+        victoryScreen.DisplayResults(results.Entries, results.Total, PlayerDataManager.instance.currency, results.ClarkeText);
         PlayerDataManager.instance.currency += results.Total;
     }
 
     public void GameOver()
     {
-        PH.Pause = true;
-        AudioManager.instance.PlayBGM(GameOverAudioClip);
         OnGameOver.Invoke();
     }
 
@@ -303,7 +308,6 @@ public class BattleManager : MonoBehaviour, IPausable
     {
         Battlefield.instance.Remove(1, 1, true); //removes player if already exists
         AudioManager.instance.StopBGM();
-        PH.Pause = false;
         LoadBattle();
         StartBattle();
     }

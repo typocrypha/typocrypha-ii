@@ -24,7 +24,7 @@ public abstract class SpellWord : ScriptableObject
     public SpellWord synonymOf;
 
     public bool IsSynonym => synonymOf != null;
-    public bool IsDebug => Key == "debug";
+    public bool IsDebug => Key == "debug" || IsSynonym && synonymOf.Key == "debug";
 
     public static bool CompareKeys(SpellWord w1, SpellWord w2) => w1.Key == w2.Key;
 

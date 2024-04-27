@@ -37,7 +37,7 @@ public class DialogInput : MonoBehaviour, IPausable
     /// <param name="value">Submitted value.</param>
     public void Submit(string value)
     {
-        if (!alphaNumeric.IsMatch(value) || value.Length == 0 || PH.Pause)
+        if (!alphaNumeric.IsMatch(value) || value.Length == 0 || PH.Paused)
         {
             return;
         }

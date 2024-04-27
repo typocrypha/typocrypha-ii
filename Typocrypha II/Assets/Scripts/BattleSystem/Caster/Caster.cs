@@ -26,6 +26,13 @@ public class Caster : MonoBehaviour
         Dead,
         Fled,
     }
+    [System.Flags]
+    public enum ActiveAbilities
+    {
+        None = 0,
+        Critical = 1,
+        CriticalBlock = 2,
+    }
 
     #region Delegate Declarations
     public delegate void ApplyToEffectFn(RootWordEffect effect, Caster caster, Caster target);
@@ -37,7 +44,9 @@ public class Caster : MonoBehaviour
     /// <summary>
     /// Callbacks applied before a spell effect resolves (before they resolve)
     /// </summary>
-    public ApplyToEffectFn OnBeforeSpellEffectResolved { get; set; }
+    public ApplyToEffectFn OnBeforeSpellEffectCast { get; set; }
+
+    public HitFn OnAfterSpellEffectCast { get; set; }
     /// <summary>
     /// Callbacks applied after a spell effect resolves
     /// </summary>
@@ -66,6 +75,20 @@ public class Caster : MonoBehaviour
     public System.Action<Battlefield.Position> OnNoTargetHit { get; set; }
     public System.Action OnStunned { get; set; }
     public System.Action OnUnstunned { get; set; }
+
+    private ActiveAbilities CurrentActiveAbiltiies { get; set; }
+    public void AddActiveAbilities(ActiveAbilities abilities)
+    {
+        CurrentActiveAbiltiies |= abilities;
+    }
+    public void RemoveActiveAbilities(ActiveAbilities abilities)
+    {
+        CurrentActiveAbiltiies &= ~abilities;
+    }
+    public bool HasActiveAbilities(ActiveAbilities abilities)
+    {
+        return (CurrentActiveAbiltiies & abilities) == abilities;
+    }
 
     #region Field Object Properties
 
@@ -133,11 +156,8 @@ public class Caster : MonoBehaviour
                     BStatus = BattleStatus.Dead;
                 }
             }
-            else
-            {
-                ui?.onHealthChanged.Invoke((float)health / Stats.MaxHP);
-                ui?.onHealthChangedNumber.Invoke(health + "/" + Stats.MaxHP);
-            }         
+            ui?.onHealthChanged.Invoke((float)health / Stats.MaxHP);
+            ui?.onHealthChangedNumber.Invoke(health + "/" + Stats.MaxHP);
         }
     }
     int health;
@@ -251,10 +271,12 @@ public class Caster : MonoBehaviour
 
     public void Damage(int amount)
     {
+        if (amount <= 0) return;
         if (BStatus == BattleStatus.SpiritMode)
             SP -= amount;
         else
             Health -= amount;
+        ui?.onDamageReceived.Invoke();
     }
 
     public void Heal(int amount)
@@ -263,6 +285,18 @@ public class Caster : MonoBehaviour
             SP += amount;
         else
             Health += amount;
+    }
+
+    public void RecalculateMaxHP()
+    {
+        if (BattleManager.instance != null && !BattleManager.instance.FirstWaveStarted) 
+        {
+            Health = Stats.MaxHP;
+        }
+        else
+        {
+            Health = System.Math.Min(Health, Stats.MaxHP);
+        }
     }
 
     private StatusEffectDict statusEffects = new StatusEffectDict();

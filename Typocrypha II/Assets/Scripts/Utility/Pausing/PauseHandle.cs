@@ -4,6 +4,24 @@ using UnityEngine;
 
 public delegate void OnPauseDel(bool b);
 
+[System.Flags]
+public enum PauseSources
+{
+    None = 0,
+    PauseMenu = 1,
+    GameOver = 2,
+    Dialog = 4,
+    Battle = 8,
+    Parent = 16,
+    Self = 32,
+    Misc = 64,
+    Scouter = 128,
+    ATB = 256,
+    DialogHistory = 512,
+    TIPS = 1024,
+    Equipment = 2048,
+}
+
 /// <summary>
 /// Wrapper for pause state, allowing for nested pause states. 
 /// Used by 'IPausable' interface which requires an 'OnPause' handle to be implemented.
@@ -11,36 +29,44 @@ public delegate void OnPauseDel(bool b);
 public class PauseHandle
 {
     OnPauseDel onPause; // Function called when paused/unpaused.
-    int pauseCount = 0; // Number of nested pause states.
+    private PauseSources pauseSources;
     private PauseHandle parent;
-    public bool Pause
+
+    public bool Paused
     {
-        get => pauseCount != 0;
-        set
+        get => pauseSources != PauseSources.None;
+    }
+    public void Pause(PauseSources sources)
+    {
+        bool wasPaused = Paused;
+        pauseSources |= sources;
+        if(!wasPaused && Paused)
         {
-            if (value)
-            {
-                pauseCount++;
-                if(pauseCount == 1)
-                {
-                    onPause?.Invoke(true);
-                }
-            }
-            else if (pauseCount > 0)
-            {
-                pauseCount--;
-                if(pauseCount == 0)
-                {
-                    onPause?.Invoke(false);
-                }
-            }
+            onPause?.Invoke(true);
         }
+    }
+
+    public void Unpause(PauseSources sources)
+    {
+        bool wasPaused = Paused;
+        pauseSources &= ~sources;
+        if (wasPaused && !Paused)
+        {
+            onPause?.Invoke(false);
+        }
+    }
+
+    public PauseSources UnpauseOverride()
+    {
+        var temp = pauseSources;
+        Unpause(pauseSources);
+        return temp;
     }
 
     public void SetPauseFunction(OnPauseDel function)
     {
         onPause = function;
-        onPause?.Invoke(Pause);
+        onPause?.Invoke(Paused);
     }
 
     public void SetParent(PauseHandle newParent)
@@ -48,13 +74,8 @@ public class PauseHandle
         if (newParent == null)
             return;
         FreeFromParent();
-        newParent.onPause += SetPause;
+        newParent.onPause += SimpleParentPause;
         parent = newParent;
-    }
-
-    private void SetPause(bool pauseState)
-    {
-        Pause = pauseState;
     }
 
     public void SetParent(IPausable newParent)
@@ -64,16 +85,28 @@ public class PauseHandle
 
     public void PauseIfParentPaused()
     {
-        if (parent == null || !parent.Pause)
+        if (parent == null || !parent.Paused)
             return;
-        this.Pause = true;
+        Pause(parent.pauseSources);
     }
 
-    private void FreeFromParent()
+    public void SimpleParentPause(bool value)
+    {
+        if (value)
+        {
+            Pause(PauseSources.Parent);
+        }
+        else
+        {
+            Unpause(PauseSources.Parent);
+        }
+    }
+
+    public void FreeFromParent()
     {
         if(parent != null)
         {
-            parent.onPause -= SetPause;
+            parent.onPause -= SimpleParentPause;
             parent = null;
         }
     }

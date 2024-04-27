@@ -8,22 +8,28 @@ using UnityEngine.UI;
 /// <summary>
 /// Manages pausing to a pause menu.
 /// </summary>
-public class PauseManager : MonoBehaviour
+public class PauseManager : MonoBehaviour, IPausable
 {
     public static PauseManager instance = null;
     [SerializeField] private GameObject pauseMenu; // Pause menu Canvas.
     [SerializeField] private MenuButton firstButton;
     [SerializeField] private SettingsMenu settings;
     bool pause = false; // Global pause state.
-    public bool Interactable { get; set; } = true;
 
     public List<PauseHandle> AllPausable { get; } = new List<PauseHandle>(); // All pausable scripts' pause handles.
+
+    public PauseHandle PH { get; private set; }
+    private void OnPause(bool pause)
+    {
+        enabled = !pause;
+    }
 
     void Awake()
     {
         if (instance == null)
         {
             instance = this;
+            PH = new PauseHandle(OnPause);
         }
         else
         {
@@ -39,13 +45,11 @@ public class PauseManager : MonoBehaviour
     private void Initialize()
     {
         firstButton.InitializeSelection();
-        Interactable = true;
+        PH.Unpause(PauseSources.Self);
     }
 
     void Update()
     {
-        if (!Interactable)
-            return;
         if (Input.GetButtonDown("PauseMenu"))
         {
             TogglePause();
@@ -60,13 +64,13 @@ public class PauseManager : MonoBehaviour
     private void SetPause(bool value)
     {
         pause = value;
-        PauseAll(value); // Set pause state of all pausable scripts.
+        PauseAll(value, PauseSources.PauseMenu); // Set pause state of all pausable scripts.
         PauseMenu(value); // Display/hide pause menu.
     }
 
     public void UnpauseButton()
     {
-        Interactable = false;
+        PH.Pause(PauseSources.Self);
         StartCoroutine(UnpauseButtonCR());
     }
 
@@ -74,18 +78,29 @@ public class PauseManager : MonoBehaviour
     {
         yield return null;
         SetPause(false);
-        Interactable = true;
+        PH.Unpause(PauseSources.Self);
     }
 
     // Pause/Unpause all pausable scripts.
-    public void PauseAll(bool value)
+    public void PauseAll(bool value, PauseSources sources, PauseHandle except = null, bool includePauseMenu = false)
     {
         List<PauseHandle> destroyed = new List<PauseHandle>(); // Destroyed pausables.
         foreach (var ph in AllPausable)
         {
             try
             {
-                ph.Pause = value;
+                if (!includePauseMenu && ph == PH) // Skip own pause handle
+                    continue;
+                if (except != null && ph == except)
+                    continue;
+                if (value)
+                {
+                    ph.Pause(sources);
+                }
+                else
+                {
+                    ph.Unpause(sources);
+                }
             }
             catch (MissingReferenceException) // Check if object was destroyed.
             {
@@ -129,14 +144,14 @@ public class PauseManager : MonoBehaviour
 
     public void MainMenu()
     {
-        Interactable = false;
+        PH.Pause(PauseSources.Self);
         EventSystem.current.enabled = false;
         TransitionManager.instance.TransitionToMainMenu();
     }
 
     public void OpenSettingsMenu()
     {
-        Interactable = false;
+        PH.Pause(PauseSources.Self);
         settings.Open();
     }
 }

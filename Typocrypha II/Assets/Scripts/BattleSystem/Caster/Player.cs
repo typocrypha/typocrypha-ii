@@ -8,13 +8,8 @@ public class Player : Caster, IPausable
 {
     private const float castFailTextTime = 0.6f;
     #region IPausable
-    public PauseHandle PH { get; private set; }
+    public PauseHandle PH { get; } = new PauseHandle();
 
-    public void OnPause(bool pause)
-    {
-        // Stop input (target control)
-        enabled = !pause;
-    }
     #endregion
 
     [SerializeField] private AudioClip castFailureSfx;
@@ -27,8 +22,6 @@ public class Player : Caster, IPausable
         ui = Typocrypha.Keyboard.instance.PlayerUI;
         base.Awake();
         TargetPos = new Battlefield.Position(0, 1);
-        PH = new PauseHandle(OnPause);
-        PH.SetParent(BattleManager.instance.PH);
         atbPlayer = GetComponent<ATB3.ATBPlayer>();
         OnSpiritMode += BattleManager.instance.GameOver;
     }
@@ -84,32 +77,5 @@ public class Player : Caster, IPausable
             }
         }
         return results;
-    }
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-            TargetPos.Col = Mathf.Max(0, TargetPos.Col - 1);
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-            TargetPos.Col = Mathf.Min(2, TargetPos.Col + 1);
-        //if (Input.GetKeyDown(KeyCode.UpArrow))
-        //    TargetPos.Row = 0;
-        //if (Input.GetKeyDown(KeyCode.DownArrow))
-        //    TargetPos.Row = 1;
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            var field = Battlefield.instance;
-            var newPos = new Battlefield.Position(TargetPos);
-            do
-            {
-                ++newPos.Col;
-                if (newPos.Col >= field.Columns)
-                    newPos.Col = 0;
-                var caster = field.GetCaster(newPos);
-                if (caster != null && !caster.IsDeadOrFled)
-                    break;
-            }
-            while (newPos.Col != TargetPos.Col);
-            TargetPos.Col = newPos.Col;
-        }
     }
 }

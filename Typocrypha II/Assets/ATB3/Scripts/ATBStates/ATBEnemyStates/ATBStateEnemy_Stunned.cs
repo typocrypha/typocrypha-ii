@@ -32,7 +32,7 @@ namespace ATB3
             else if (timer >= stuntime || !Owner.Caster.Stunned)
             {
                 // Interrupt if stunned in precast
-                if(Source.PreviousStateID == ATBStateID.PreCast)
+                if(Source.PreviousStateID == ATBStateID.PreCast || Source.PreviousStateID == ATBStateID.Cast)
                 {
                     caster.Charge = 0;
                     caster.OnAfterCastResolved?.Invoke(caster.Spell, caster);

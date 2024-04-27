@@ -66,10 +66,15 @@ public class BattleDimmer : MonoBehaviour
 
         foreach (var c in casters)
         {
-            if (!c || !c.ui) continue;
-            c.ui.SetDimmable(false).ShowUI(true);
-            dimmedUIs.Remove(c.ui);
+            UndimCaster(c);
         }
+    }
+
+    public void UndimCaster(Caster c)
+    {
+        if (!c || !c.ui) return;
+        c.ui.SetDimmable(false).ShowUI(true);
+        dimmedUIs.Remove(c.ui);
     }
 
     /// <summary>

@@ -39,7 +39,7 @@ public class BEConditionTimer : BattleEventCondition
         float currTime = 0f;
         while (currTime < time)
         {
-            yield return new WaitWhile(() => battleEvent.PH.Pause);
+            yield return new WaitWhile(() => battleEvent.PH.Paused);
             yield return new WaitForFixedUpdate();
             currTime += Time.fixedDeltaTime;
         }
