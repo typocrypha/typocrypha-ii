@@ -8,7 +8,6 @@ public class BadgeSelectorMenu : MonoBehaviour
 {
     private static PlayerEquipment Equipment => PlayerDataManager.instance.equipment;
 
-    [SerializeField] private EquipmentMenu parentMenu;
     [SerializeField] private MenuButton[] buttons;
     [SerializeField] private TextMeshProUGUI descriptionText;
     [SerializeField] private UnityEvent onClose;
