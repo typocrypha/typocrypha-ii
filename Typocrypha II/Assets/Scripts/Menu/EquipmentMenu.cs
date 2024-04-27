@@ -71,6 +71,16 @@ public class EquipmentMenu : MonoBehaviour, IPausable
         inMenuSlot = null;
     }
 
+    public void OpenShopMenu()
+    {
+        PH.Pause(PauseSources.Self);
+    }
+
+    public void OnCloseShopMenu()
+    {
+        PH.Unpause(PauseSources.Self);
+    }
+
     private static void SetSlotText(EquipmentMenuSlot slot)
     {
         var equippedBadges = Equipment.EquippedBadgeWords;
