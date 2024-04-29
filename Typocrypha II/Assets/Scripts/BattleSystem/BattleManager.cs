@@ -296,6 +296,12 @@ public class BattleManager : MonoBehaviour, IPausable
     {
         victoryScreen.OnScreenClosed = NextWave;
         victoryScreen.DisplayResults(results.Entries, results.Total, PlayerDataManager.instance.currency, results.ClarkeText);
+        var unlocks = RewardsManager.Instance.BonusEntries;
+        if (unlocks.Count > 0)
+        {
+            victoryScreen.SetBonuses(unlocks);
+            RewardsManager.Instance.ClearUnlockEntries();
+        }
         PlayerDataManager.instance.currency += results.Total;
     }
 

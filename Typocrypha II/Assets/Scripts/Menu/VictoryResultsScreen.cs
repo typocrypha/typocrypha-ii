@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Diagnostics;
-//using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
@@ -11,34 +11,6 @@ using TMPro;
 
 public class VictoryResultsScreen : MonoBehaviour
 {
-    [System.Serializable]
-    public struct TallyEntry
-    {
-        public string label; //value description
-        public int value; //contributes to the total
-        public bool isPercentage; //whether value affects base total or final multiplier
-
-        public TallyEntry(string label, int value, bool isPercentage)
-        {
-            this.label = label;
-            this.value = value;
-            this.isPercentage = isPercentage;
-        }
-    }
-    public struct BonusEntry
-    {
-        public string badgeName; //badge name
-        public string unlockReason; //how the badge was earned
-        public string description; //describes the effects of wearing the badge
-
-        public BonusEntry(string badgeName, string unlockReason, string description)
-        {
-            this.badgeName = badgeName;
-            this.unlockReason = unlockReason;
-            this.description = description;
-        }
-    }
-
     [Header("Initialization")]
     [SerializeField] private Button continueButton;
     [SerializeField] private TweenInfo tweenInfo;
@@ -77,6 +49,7 @@ public class VictoryResultsScreen : MonoBehaviour
     private bool shouldShowBonuses = false;
 
     private Sequence bonusScroll;
+    private string bonusClarkeMessage;
 
     private void Awake()
     {
@@ -109,16 +82,16 @@ public class VictoryResultsScreen : MonoBehaviour
         };
         DisplayResults(tallies, 270, 1000, "goobaba!");
         SetBonuses(new BonusEntry[] {
-            new BonusEntry("Badge A", "Reason A", "This badge does a lot of good things when you equip it."),
-            new BonusEntry("Badge B", "Reason B", "This badge also does a lot of good things when you equip it."),
+            new BonusEntry("Badge A", "Reason A", "This badge does a lot of good things when you equip it.", 0, ""),
+            new BonusEntry("Badge B", "Reason B", "This badge also does a lot of good things when you equip it.", 0, "You should really equip badge B!"),
             new BonusEntry("Badge C", "Reason C", "This badge is either really good or really bad, idk."),
             new BonusEntry("Badge D", "Reason D", "This badge has a slight chance to make the user explode."),
-            new BonusEntry("Badge E", "Reason E", "This badge will make your wildest dreams come true."),
-            new BonusEntry("Badge F", "Reason F", "This badge is for aesthetic purposes only."),
-            //new BonusEntry("Badge G", "Reason F", "This badge is for aesthetic purposes only."),
-            //new BonusEntry("Badge H", "Reason F", "This badge is for aesthetic purposes only."),
-            //new BonusEntry("Badge I", "Reason F", "This badge is for aesthetic purposes only."),
-            //new BonusEntry("Badge J", "Reason F", "This badge is for aesthetic purposes only."),
+            //new BonusEntry("Badge E", "Reason E", "This badge will make your wildest dreams come true."),
+            //new BonusEntry("Badge F", "Reason F", "This badge is for aesthetic purposes only."),
+            //new BonusEntry("Badge G", "Reason G", "This badge is for aesthetic purposes only."),
+            //new BonusEntry("Badge H", "Reason H", "This badge is for aesthetic purposes only."),
+            //new BonusEntry("Badge I", "Reason I", "This badge is for aesthetic purposes only."),
+            //new BonusEntry("Badge J", "Reason J", "This badge is for aesthetic purposes only."),
         });
     }
 
@@ -153,10 +126,10 @@ public class VictoryResultsScreen : MonoBehaviour
         else SetButtonToExit();
     }
 
-    public void SetBonuses(BonusEntry[] bonuses)
+    public void SetBonuses(IReadOnlyList<BonusEntry> bonuses)
     {
         foreach (Transform child in bonusView.transform) child.gameObject.SetActive(false);
-        for (int i = 0; i < bonuses.Length; i++)
+        for (int i = 0; i < bonuses.Count; i++)
         {
             if (i >= bonusView.transform.childCount)
             {
@@ -166,12 +139,13 @@ public class VictoryResultsScreen : MonoBehaviour
             entryGO.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = bonuses[i].badgeName;
             entryGO.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = bonuses[i].unlockReason;
             entryGO.transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = bonuses[i].description;
+            if (string.IsNullOrEmpty(bonusClarkeMessage)) bonusClarkeMessage = bonuses[i].clarkeText;
             entryGO.SetActive(true);
         }
         shouldShowBonuses = true;
     }
 
-    public void TransitionToBonusScreen()
+    private void TransitionToBonusScreen()
     {
         header.text = "Bonus";
         HideMessage();
@@ -186,21 +160,33 @@ public class VictoryResultsScreen : MonoBehaviour
         var scrollHeight = Mathf.Max(0, (bonusView.transform as RectTransform).rect.height) - MASK_HEIGHT;
         if (scrollHeight > 0)
         {
-            const float secondsPerBadge = 0.75f;
-            var waitTime = 3f + Mathf.Max((bonusView.transform.childCount-8) * secondsPerBadge, 0f);
-            bonusScroll = DOTween.Sequence()
-                .SetDelay(secondsPerBadge * 4 * 0.5f, false) //this time is only waited on entry
-                .AppendInterval(secondsPerBadge * 4 * 0.5f) //this time is waited at the start and end of each loop
-                .Append(bonusView.transform.DOBlendableLocalMoveBy(Vector3.up * scrollHeight, waitTime).SetEase(Ease.Linear))
-                .AppendInterval(secondsPerBadge * 0.5f)
-                .AppendCallback(SetButtonToExit)
-                .AppendInterval(secondsPerBadge * 0.5f)
-                .SetLoops(-1, LoopType.Yoyo);
+            StartCoroutine(BonusScroll_CR(scrollHeight));
         }
         else
         {
             DOTween.Sequence().AppendInterval(4f).AppendCallback(SetButtonToExit);
         }
+    }
+
+    private IEnumerator BonusScroll_CR(float scrollHeight)
+    {
+        const float secondsPerBadge = 1f;
+        var waitTime = 3f + Mathf.Max((bonusView.transform.childCount - 8) * secondsPerBadge, 0f);
+
+        bonusScroll = DOTween.Sequence()
+            .SetDelay(secondsPerBadge * 4 * 0.5f, false) //this time is only waited on entry
+            .AppendInterval(secondsPerBadge * 4 * 0.5f) //this time is waited at the start and end of each loop
+            .Append(bonusView.transform.DOBlendableLocalMoveBy(Vector3.up * scrollHeight, waitTime).SetEase(Ease.Linear))
+            .AppendInterval(secondsPerBadge * 4 * 0.5f)
+            .SetLoops(-1, LoopType.Yoyo);
+
+        yield return bonusScroll.WaitForElapsedLoops(1);
+        if (!string.IsNullOrEmpty(bonusClarkeMessage))
+        {
+            yield return DisplayMessage(bonusClarkeMessage);
+            yield return new WaitForSeconds(1f);
+        }
+        SetButtonToExit();
     }
 
     private void ClearAllText()
