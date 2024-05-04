@@ -4,7 +4,6 @@
 using UnityEngine;
 using NodeEditorFramework;
 using NodeEditorFramework.Utilities;
-using TallyEntry = VictoryResultsScreen.TallyEntry;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif

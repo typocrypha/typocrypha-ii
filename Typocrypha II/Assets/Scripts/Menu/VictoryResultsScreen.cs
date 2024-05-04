@@ -1,32 +1,31 @@
 ﻿using System;
 using System.Collections;
-//using System.Collections.Generic;
+using System.Diagnostics;
+using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
+using UnityEngine.EventSystems;
 using UnityEngine.Events;
+using UnityEngine.UI;
+using DG.Tweening;
+using TMPro;
 
 public class VictoryResultsScreen : MonoBehaviour
 {
-    [System.Serializable]
-    public struct TallyEntry
-    {
-        public string label; //value description
-        public int value; //contributes to the total
-        public bool isPercentage; //whether value affects base total or final multiplier
-    }
-
     [Header("Initialization")]
-    [SerializeField] private MenuButton firstButton;
+    [SerializeField] private Button continueButton;
     [SerializeField] private TweenInfo tweenInfo;
     [SerializeField] private GameObject clarkeContainer;
     [SerializeField] private GameObject messageContainer;
     [SerializeField] private CharacterData clarkeData;
+    [SerializeField] private RectTransform tallyView;
+    [SerializeField] private VerticalLayoutGroup bonusView;
 
     [Header("Display Text")]
-    [SerializeField] private TMPro.TextMeshProUGUI tally;
-    [SerializeField] private TMPro.TextMeshProUGUI total;
-    [SerializeField] private TMPro.TextMeshProUGUI balance;
-    [SerializeField] private TMPro.TextMeshProUGUI message;
+    [SerializeField] private TextMeshProUGUI header;
+    [SerializeField] private TextMeshProUGUI tally;
+    [SerializeField] private TextMeshProUGUI total;
+    [SerializeField] private TextMeshProUGUI balance;
+    [SerializeField] private TextMeshProUGUI message;
 
     [Header("Clarke Tweens")]
     [SerializeField] private Vector3 initialPosition;
@@ -34,25 +33,74 @@ public class VictoryResultsScreen : MonoBehaviour
     [SerializeField] private AnimationCurve clarkeSlideVertical = default;
     [SerializeField] private AnimationCurve clarkeSlideHorizontal = default;
 
-    public Action OnContinuePressed;
+    public Action OnScreenClosed;
 
     const int LINE_LENGTH = 36;
 
     //animation values
     const float TALLY_DELAY_AFTER = 0.75f;
     const float TOTAL_DELAY_AFTER = 1.50f;
+    const float MASK_HEIGHT = 520f;
 
     const string FORMAT_DOLLAR = "+$#;-$#;$0";
     const string FORMAT_PERCENT = @"+#\%;-#\%;0\%";
     const string FORMAT_BALANCE = "$#;-$#;$0";
 
-    public void Awake()
+    private bool shouldShowBonuses = false;
+
+    private Sequence bonusScroll;
+    private string bonusClarkeMessage;
+
+    private void Awake()
     {
         gameObject.SetActive(false);
     }
 
+    [Conditional("DEBUG"), ContextMenu("Test")]
+    public void TestDisplay()
+    {
+        var tallies = new TallyEntry[] {
+            new TallyEntry("Tally A", 200, false),
+            new TallyEntry("Tally B", 100, false),
+            new TallyEntry("Tally C", -10, true),
+        };
+        DisplayResults(tallies, 270, 1000, "goobaba!");
+        SetBonuses(new BonusEntry[] {
+            new BonusEntry("Badge A", "Reason A", "This badge does a lot of good things when you equip it."),
+            new BonusEntry("Badge B", "Reason B", "This badge also does a lot of good things when you equip it."),
+            new BonusEntry("Badge C", "Reason C", "This badge is either really good or really bad, idk."),
+        });
+    }
+
+    [Conditional("DEBUG"), ContextMenu("Test2")]
+    public void TestDisplay2()
+    {
+        var tallies = new TallyEntry[] {
+            new TallyEntry("Tally A", 200, false),
+            new TallyEntry("Tally B", 100, false),
+            new TallyEntry("Tally C", -10, true),
+        };
+        DisplayResults(tallies, 270, 1000, "goobaba!");
+        SetBonuses(new BonusEntry[] {
+            new BonusEntry("Badge A", "Reason A", "This badge does a lot of good things when you equip it.", 0, ""),
+            new BonusEntry("Badge B", "Reason B", "This badge also does a lot of good things when you equip it.", 0, "You should really equip badge B!"),
+            new BonusEntry("Badge C", "Reason C", "This badge is either really good or really bad, idk."),
+            new BonusEntry("Badge D", "Reason D", "This badge has a slight chance to make the user explode."),
+            //new BonusEntry("Badge E", "Reason E", "This badge will make your wildest dreams come true."),
+            //new BonusEntry("Badge F", "Reason F", "This badge is for aesthetic purposes only."),
+            //new BonusEntry("Badge G", "Reason G", "This badge is for aesthetic purposes only."),
+            //new BonusEntry("Badge H", "Reason H", "This badge is for aesthetic purposes only."),
+            //new BonusEntry("Badge I", "Reason I", "This badge is for aesthetic purposes only."),
+            //new BonusEntry("Badge J", "Reason J", "This badge is for aesthetic purposes only."),
+        });
+    }
+
     public void DisplayResults(TallyEntry[] tallies, int total, int balance, string clarkeText)
     {
+        (tallyView.transform as RectTransform).anchoredPosition = new Vector3(0f, 0f);
+        (bonusView.transform as RectTransform).anchoredPosition = new Vector3(1000f, 0f);
+        ClearAllText();
+        DisableButton();
         gameObject.SetActive(true);
         messageContainer.gameObject.SetActive(false);
         clarkeContainer.GetComponent<RectTransform>().anchoredPosition = initialPosition;
@@ -61,8 +109,6 @@ public class VictoryResultsScreen : MonoBehaviour
 
     IEnumerator DisplayResultsCR(TallyEntry[] tallies, int total, int balance, string clarkeText)
     {
-        ClearAllText();
-        firstButton.gameObject.SetActive(false);
         tweenInfo.Start(GetComponent<CanvasGroup>().DOFade(1, tweenInfo.Time).From(0));
         yield return tweenInfo.WaitForCompletion();
         yield return DisplayClarke();
@@ -71,16 +117,76 @@ public class VictoryResultsScreen : MonoBehaviour
         yield return new WaitForSeconds(1f);
         yield return DisplayTotal(total);
         yield return DisplayBalance(balance, balance+total);
-        //activate button
-        if (firstButton)
-        {
-            var unityButton = firstButton.GetComponent<UnityEngine.UI.Button>();
-            unityButton.interactable = true;
-            unityButton.onClick.AddListener(new UnityAction(OnContinuePressed));
-            firstButton.gameObject.SetActive(true);
-            firstButton.InitializeSelection();
-        }
+
         yield return DisplayMessage(clarkeText);
+
+        yield return new WaitForSeconds(1f);
+        //activate button
+        if (shouldShowBonuses) SetButtonAction(TransitionToBonusScreen);
+        else SetButtonToExit();
+    }
+
+    public void SetBonuses(IReadOnlyList<BonusEntry> bonuses)
+    {
+        foreach (Transform child in bonusView.transform) child.gameObject.SetActive(false);
+        for (int i = 0; i < bonuses.Count; i++)
+        {
+            if (i >= bonusView.transform.childCount)
+            {
+                Instantiate(bonusView.transform.GetChild(1).gameObject, bonusView.transform);
+            }
+            var entryGO = bonusView.transform.GetChild(i).gameObject;
+            entryGO.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = bonuses[i].badgeName;
+            entryGO.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = bonuses[i].unlockReason;
+            entryGO.transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = bonuses[i].description;
+            if (string.IsNullOrEmpty(bonusClarkeMessage)) bonusClarkeMessage = bonuses[i].clarkeText;
+            entryGO.SetActive(true);
+        }
+        shouldShowBonuses = true;
+    }
+
+    private void TransitionToBonusScreen()
+    {
+        header.text = "Bonus";
+        HideMessage();
+
+        var tallyRectTransform = tallyView.transform as RectTransform;
+        var bonusRectTransform = bonusView.transform as RectTransform;
+        tallyRectTransform.anchoredPosition = new Vector3(0f, 0f);
+        bonusRectTransform.anchoredPosition = new Vector3(1000f, 0f);
+        tallyRectTransform.DOAnchorPosX(-1000f, 0.5f).SetRelative();
+        bonusRectTransform.DOAnchorPosX(-1000f, 0.5f).SetRelative();
+
+        var scrollHeight = Mathf.Max(0, (bonusView.transform as RectTransform).rect.height) - MASK_HEIGHT;
+        if (scrollHeight > 0)
+        {
+            StartCoroutine(BonusScroll_CR(scrollHeight));
+        }
+        else
+        {
+            DOTween.Sequence().AppendInterval(4f).AppendCallback(SetButtonToExit);
+        }
+    }
+
+    private IEnumerator BonusScroll_CR(float scrollHeight)
+    {
+        const float secondsPerBadge = 1f;
+        var waitTime = 3f + Mathf.Max((bonusView.transform.childCount - 8) * secondsPerBadge, 0f);
+
+        bonusScroll = DOTween.Sequence()
+            .SetDelay(secondsPerBadge * 4 * 0.5f, false) //this time is only waited on entry
+            .AppendInterval(secondsPerBadge * 4 * 0.5f) //this time is waited at the start and end of each loop
+            .Append(bonusView.transform.DOBlendableLocalMoveBy(Vector3.up * scrollHeight, waitTime).SetEase(Ease.Linear))
+            .AppendInterval(secondsPerBadge * 4 * 0.5f)
+            .SetLoops(-1, LoopType.Yoyo);
+
+        yield return bonusScroll.WaitForElapsedLoops(1);
+        if (!string.IsNullOrEmpty(bonusClarkeMessage))
+        {
+            yield return DisplayMessage(bonusClarkeMessage);
+            yield return new WaitForSeconds(1f);
+        }
+        SetButtonToExit();
     }
 
     private void ClearAllText()
@@ -144,5 +250,41 @@ public class VictoryResultsScreen : MonoBehaviour
             }
             yield return new WaitForSeconds(defaultScroll / Settings.TextScrollSpeed);
         }
+    }
+
+    private void HideMessage()
+    {
+        messageContainer.gameObject.SetActive(false);
+    }
+
+    private void DisableButton()
+    {
+        continueButton.interactable = false;
+        continueButton.gameObject.SetActive(false);
+        EventSystem.current.SetSelectedGameObject(null);
+    }
+
+    private void SetButtonAction(params Action[] callbacks)
+    {
+        continueButton.interactable = true;
+        continueButton.gameObject.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(continueButton.gameObject);
+        continueButton.onClick.RemoveAllListeners();
+        continueButton.onClick.AddListener(DisableButton);
+        foreach (var callback in callbacks)
+        {
+            if (callback != null)
+            continueButton.onClick.AddListener(new UnityAction(callback));
+        }
+    }
+
+    private void SetButtonToExit()
+    {
+        SetButtonAction(OnScreenClosed, KillBonusScroll);
+    }
+
+    private void KillBonusScroll()
+    {
+        if (bonusScroll.IsActive()) bonusScroll.Kill();
     }
 }

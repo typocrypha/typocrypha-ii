@@ -15,6 +15,7 @@ public class EquipmentMenu : MonoBehaviour, IPausable
     [SerializeField] private GameObject equipmentNotice;
     [SerializeField] private EquipmentMenuSlot[] slots;
     [SerializeField] private BadgeSelectorMenu badgeSelector;
+    [SerializeField] private ShopMenu shopMenu;
 
     private EquipmentMenuSlot inMenuSlot;
     private bool skipFrame = false;
@@ -74,6 +75,7 @@ public class EquipmentMenu : MonoBehaviour, IPausable
     public void OpenShopMenu()
     {
         PH.Pause(PauseSources.Self);
+        shopMenu.Open();
     }
 
     public void OnCloseShopMenu()
