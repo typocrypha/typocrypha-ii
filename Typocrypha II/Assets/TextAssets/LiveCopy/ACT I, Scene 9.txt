@@ -16,60 +16,72 @@ Narrator:Ruins BF1
 +vnplus
 
 
+>addchar,Esaias,0,0,left
 >addchar,Ayin,0,0,left,nervous
 >addchar,Dahlia,0,0,left
->addchar,Esaias,0,0,right
 
 
-Narrator: You, Dahlia, and Esaias travel through the Ruins.
+Narrator: You,{pm} Dahlia,{pm} and Esaias travel through the Ruins.
 
 
 >addchar,Illyia,0,0,right,concerned
 
 
-Narrator: ...with Illyia about 20 feet ahead, keeping her distance.
+Narrator: ...with Illyia about 20 feet ahead,{pm} keeping her distance.
 
 
-Illyia(concerned): ...
+Illyia(concerned): .{pl}.{pl}.
 
 
-Dahlia(normal): Illyia! Hold up!
+Dahlia(normal): Illyia!{pm} Hold up!
 
 
-Illyia(serious): What do you want, Bob Cut?
+Illyia(ashamed): What do you want,{pm} Bob Cut?
 
 
-Dahlia(stressed): Bob Cut-? I- Urgh!
+Dahlia(stressed): B-Bob Cut!?{pm} I-{pm} ^shake^Urgh!|shake|
 
 
-Dahlia(perish): {c,whisper}deep breaths, Dahlia... in... out... {c}
+Dahlia(perish): {c,whisper}deep breaths,{pm} Dahlia...{c}
+
+
+Dahlia(normal): {c,whisper}in...[pause,0.4] out...[pause,0.4] in...[pause,0.4] out...{c}
+
+
+>movechar,Dahlia,right,top
 
 
 Dahlia(happy): I think we maybe got off on the wrong foot.
 
 
-Dahlia: I get it, you’re from the Xiong family, right?
+Dahlia: I get it,{pm} you’re from the Xiong family,{ps} right?
+
+
+>setexpr,Illyia,serious
 
 
 Narrator: Illyia furrows her brow.
 
 
-Illyia: ...So what?
+Illyia: ...so what?
 
 
 Dahlia(normal): You’ve probably been fighting demons from the day you learned how to type.
 
 
-Dahlia(concerned): But the Ruins are dangerous! It’ll be safer if we stick together.
+Dahlia(concerned): But the Ruins are dangerous! 
 
 
-Dahlia(laughing): Right, leader?
+Dahlia: It’ll be safer if we stick together.
 
 
-Ayin(nervoussmile): Huh? Oh, uh, yeah! 
+Dahlia(laughing): Right,{ps} leader?
 
 
-Esaias(lookingleft): Actually, as long as we follow the planned route, I would imagine a Typocrypha user as skilled as Illyia would have little trouble.
+Ayin(nervoussmile): Huh?{pm} Oh,{pm} uh,{ps} yeah! 
+
+
+Esaias(lookingleft): Actually,{pm} as long as we follow the planned route,{pm} I would imagine a Typocrypha user as skilled as Illyia would have little trouble.
 
 
 Dahlia(perish): Esaias!
@@ -78,13 +90,13 @@ Dahlia(perish): Esaias!
 Esaias(embarrassed): ...Oh!
 
 
-Esaias(anxious): Well, u-um, it would also reflect poorly on your performance rating to go against the wishes of your team leader.
+Esaias(anxious): Well,{pm} u-um,{pm} it would also reflect poorly on your performance rating to go against the wishes of your team leader.
 
 
-Esaias(lookingleft): Especially for someone on observation, I would advise some prudence in your actions.
+Esaias(lookingleft): Especially for someone on observation,{pm} I would advise some prudence in your actions.
 
 
-Ayin(ohfuck): {c,whisper}(Wait, we’re being graded?){c}
+Ayin(ohfuck): {c,whisper}(Wait,{pm} we’re being graded?){c}
 
 
 Illyia(ashamed): ...Fine.
@@ -93,46 +105,58 @@ Illyia(ashamed): ...Fine.
 >setexpr,Ayin,serious
 
 
-Illyia(concerned): I’ll stick around. For now.
+Illyia(concerned): I’ll stick around.{pm} For now... 
 
 
-Illyia(serious): Just don’t get in my way, OK?
+Illyia(serious): Just don’t get in my way,{ps} OK?
 
 
-Dahlia(laughing): See? It’s no so bad when-
+Dahlia(laughing): See?{pm} It’s no so bad when-
 
 
-Illyia(ashamed): -You can stop that, you know.
+Illyia(ashamed): -You can stop that,{ps} you know.
 
 
-Dahlia(normal): ...Stop what?
+Dahlia(normal): ...stop what?
 
 
 Illyia: The whole friendly act. 
 
 
-Illyia(serious): This isn’t a company picnic -[pause,0.1] we’re at war, if you haven’t noticed.
+Illyia(serious): This isn’t a company picnic -{pm} we’re at war,{ps} if you haven’t noticed.
 
 
 Illyia(ashamed): Why’d you even volunteer for this clusterfuck of an operation anyways?
 
 
-Dahlia(serious): I could ask the same of you.
+Illyia: What,{pm} hoping to make an easy buck from AEIOU?
 
 
-Dahlia: I’m sure a Xiong like you could’ve easily gotten onto the attack team if they wanted.
-
-
-Dahlia(Happy): Oh wait, that’s right, you’re currently on “observation” and probably got thrown onto the scouting teams as punishment!
+Dahlia(perish):...!
 
 
 >stopbgm
 
 
-Narrator: Illyia stops and turns to face Dahlia.
+Narrator: Dahlia suddenly stops walking,{pm} clenching her fists.
+
+
+Dahlia(serious): ...I could ask the same of you.
+
+
+Dahlia: I’m sure a Xiong like you could’ve easily gotten onto the attack team if they wanted.
+
+
+Dahlia(Happy): Oh wait,{pm} that’s right,{pm} you’re currently on “observation” and probably got thrown onto the scouting teams as punishment!
+
+
+Narrator: Illyia stops and turns around to face Dahlia.
 
 
 Illyia(serious): You don’t know shit.
+
+
+>playbgm,BGMExposition
 
 
 Dahlia(stressed): Oh I know plenty! 
@@ -141,22 +165,19 @@ Dahlia(stressed): Oh I know plenty!
 Dahlia: We’ve been in the same team for less than an hour and I know you’re arrogant and don’t know how to work with a team!
 
 
->playbgm,BGMExposition
-
-
-Narrator: Illyia and Dahlia continue to go back and forth, their yells bouncing off the Ruins walls.
+Narrator: Illyia and Dahlia continue to go back and forth,{pm} their yells bouncing off the Ruins walls.
 
 
 Ayin(nervous): {c,whisper}(D-Do I need to do something about this?){c}
 
 
-Ayin(nervoussmile): U-Uh, hey, maybe we shouldn’t-
+Ayin(nervoussmile): U-Uh,{pm} hey,{pm} maybe we shouldn’t-
 
 
-Dahlia(perish): And you know what else? What’s wrong with your Typocrypha!? It’s just a sword!
+Dahlia(perish): And you know what else?{pm} What’s wrong with your Typocrypha!?{pm} It’s just a sword!
 
 
-Illyia[action](yell): Well maybe if you’d studied a little more combat theory you’d know the sword is the most efficient spell weapon!
+Illyia[action](yell): Well maybe if you’d studied a little more combat theory,{pm} you’d know the sword is the most efficient spell weapon!
 
 
 >setexpr,Ayin,ohfuck
@@ -174,19 +195,22 @@ Illyia[base](pissed): ...!
 Illyia(serious): How dare you...
 
 
-Narrator: You desperately look towards Esaias, powerless to do anything about the situation.
+Narrator: You desperately look towards Esaias,{pm} powerless to do anything about the situation.
 
 
 >stopbgm
 
 
-Esaias(embarrassed): U-Uh, um! I volunteered because I wanted to see the Ruins!
+Esaias(embarrassed): U-Uh,{ps} um!!
+
+
+Esaias: I volunteered because I wanted to see the Ruins!
 
 
 >setexpr,Dahlia,normal
 
 
-Esaias(normal): ...
+Illyia: .{pl}.{pl}.
 
 
 Illyia: ...What?
@@ -204,22 +228,22 @@ Ayin: ...
 Illyia(ashamed): I...
 
 
-Illyia(concerned): -Fine, yeah sure, whatever.
+Illyia(concerned): -Fine,{pm} yeah sure,{pm} whatever.
 
 
-Illyia(serious): Why don’t you start navigating us then, Mr. Sightseer. 
+Illyia(serious): Why don’t you start navigating us then,{pm} Mr. Sightseer. 
 
 
 >playbgm,BGMAgarthanRuins
 
 
-Esaias: Yes, of course.
+Esaias: Yes,{ps} of course.
 
 
 Esaias(normal): The current tunnel we are in will take us all the way to the inner levels where the First Barrier is most likely to be located.
 
 
-Esaias(lookingright): The tunnel itself is isolated from the main atrium, and as such we should meet virtually no demon re-
+Esaias(lookingright): The tunnel itself is isolated from the main atrium,{pm} and as such we should meet virtually no demon re-
 
 
 >stopbgm
@@ -228,22 +252,22 @@ Esaias(lookingright): The tunnel itself is isolated from the main atrium, and as
 Illyia(serious): -Shh!
 
 
-Narrator: Illyia suddenly pulls the party into a side passage.
+Narrator: Illyia suddenly pulls the party into an alcove.
 
 
-Narrator: Peering deeper into the hall, you see a large group of demons guarding the passage.
+Narrator: Peering deeper into the hall,{pm} you see a large group of demons guarding the passage.
 
 
 Illyia(ashamed): Well so much for your plan.
 
 
-Esaias(anxious): No... This does not make sense.
+Esaias(anxious): No...{pm} This does not make sense.
 
 
-Dahlia(concerned): Don’t worry Esaias! Is there another path we can take?
+Dahlia(concerned): Is there another path we can take?
 
 
-Esaias(lookingright): As I had previously stated, due to the isolated nature of this tunnel there are few other options than to backtrack if we wish to avoid the demons.
+Esaias(lookingright): As I had previously stated,{pm} due to the isolated nature of this tunnel there are few other options than to backtrack if we wish to avoid the demons.
 
 
 Illyia(normal): I think I have a better idea.
@@ -261,16 +285,16 @@ Dahlia(stressed): Wai-
 >removechar,Illyia
 
 
-Narrator: You helplessly watch Illyia spring from your hideout and charge towards the demon horde.
+Narrator: You helplessly watch Illyia charge towards the demon horde.
 
 
-Ayin(ohfuck): Um, s-so do we-
+Ayin(ohfuck): Um,{pm} s-so do we-
 
 
-Dahlia(perish): Argh she’s so infuriating! 
+Dahlia(perish): Argh!{pm} She’s so infuriating! 
 
 
-Dahlia(serious): We have to back her up! C’mon!
+Dahlia(serious): We have to back her up!{pm} C’mon!
 
 
 Ayin:{c,whisper}(I was hoping you wouldn’t say that...){c}
