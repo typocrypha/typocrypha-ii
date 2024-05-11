@@ -9,12 +9,12 @@ public class BadgeWord : ScriptableObject
         Passive,
         Soldier,
     }
-    public string DisplayName => internalName.ToUpper();
+    public string DisplayName => CurrentBadge.internalName.ToUpper();
     public string Key => internalName.ToLower();
     [SerializeField] private string internalName;
-    public string Description => description;
+    public string Description => CurrentBadge.description;
     [TextArea(2, 4)] [SerializeField] private string description;
-    public EquipmentSlot Slot => slot;
+    public EquipmentSlot Slot => CurrentBadge.slot;
     [SerializeField] private EquipmentSlot slot;
     [SerializeField] private int cost;
 
@@ -25,6 +25,21 @@ public class BadgeWord : ScriptableObject
     [SerializeField] [SubSO("Effect5")] private BadgeEffect effect5;
 
     [SerializeField] private BadgeWord[] upgrades;
+
+    private int UpgradeLevel { get; set; } = 0;
+    private bool IsUpgraded => UpgradeLevel > 0;
+
+    public bool HasUpgrade => upgrades.Length >= UpgradeLevel;
+    public BadgeWord NextUpgrade => HasUpgrade ? upgrades[UpgradeLevel] : null;
+    private BadgeWord CurrentBadge => IsUpgraded ? upgrades[UpgradeLevel - 1] : this;
+
+    public void Upgrade()
+    {
+        // Stub Implementation
+        if (!HasUpgrade)
+            return;
+        UpgradeLevel++;
+    }
 
     public void Equip(Caster player)
     {
