@@ -23,6 +23,7 @@ public class GlobalSaveData
 {
     public List<string> unlockedSpellWords = new List<string>();
     public List<string> unlockedBadgeWords = new List<string>();
+    public List<int> badgeUpgradeLevels = new List<int>();
 }
 
 /// <summary>
@@ -203,6 +204,7 @@ public class SaveManager : MonoBehaviour
         {
             var badge = kvp.Value;
             data.unlockedBadgeWords.Add(badge.Key);
+            data.badgeUpgradeLevels.Add(equipment.GetUpgradeLevel(badge));
         }
         return data;
     }
@@ -231,11 +233,13 @@ public class SaveManager : MonoBehaviour
         }
         // Unlocked badges
         equipment.ClearUnlockedBadges();
-        foreach(var key in data.unlockedBadgeWords)
+        for (int i = 0; i < data.unlockedBadgeWords.Count && i < data.badgeUpgradeLevels.Count; i++)
         {
+            string key = data.unlockedBadgeWords[i];
             if (Lookup.TryGetBadge(key, out var badge))
             {
                 equipment.UnlockBadge(badge);
+                equipment.SetUpgradeLevel(badge, data.badgeUpgradeLevels[i]);
             }
         }
     }

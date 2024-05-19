@@ -26,7 +26,11 @@ public class BadgeWord : ScriptableObject
 
     [SerializeField] private BadgeWord[] upgrades;
 
-    private int UpgradeLevel { get; set; } = 0;
+    private int UpgradeLevel
+    {
+        get => PlayerDataManager.instance.equipment.GetUpgradeLevel(this);
+        set => PlayerDataManager.instance.equipment.SetUpgradeLevel(this, value);
+    }
     private bool IsUpgraded => UpgradeLevel > 0;
 
     public bool HasUpgrade => upgrades.Length >= UpgradeLevel;
