@@ -33,7 +33,7 @@ public class BadgeWord : ScriptableObject
     }
     private bool IsUpgraded => UpgradeLevel > 0;
 
-    public bool HasUpgrade => upgrades.Length >= UpgradeLevel;
+    public bool HasUpgrade => upgrades.Length > UpgradeLevel;
     public BadgeWord NextUpgrade => HasUpgrade ? upgrades[UpgradeLevel] : null;
     private BadgeWord CurrentBadge => IsUpgraded ? upgrades[UpgradeLevel - 1] : this;
 
