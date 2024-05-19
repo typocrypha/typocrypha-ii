@@ -42,16 +42,27 @@ public class BadgeWord : ScriptableObject
         // Stub Implementation
         if (!HasUpgrade)
             return;
+        var equipment = PlayerDataManager.instance.equipment;
+        var shouldRefresh = equipment.IsBadgeEquipped(this) && Battlefield.instance != null && Battlefield.instance.Player != null;
+        if (shouldRefresh)
+        {
+            Unequip(Battlefield.instance.Player);
+        }
         UpgradeLevel++;
+        if (shouldRefresh)
+        {
+            Equip(Battlefield.instance.Player);
+        }
     }
 
     public void Equip(Caster player)
     {
-        EquipEffect(effect1, player);
-        EquipEffect(effect2, player);
-        EquipEffect(effect3, player);
-        EquipEffect(effect4, player);
-        EquipEffect(effect5, player);
+        var badge = CurrentBadge;
+        EquipEffect(badge.effect1, player);
+        EquipEffect(badge.effect2, player);
+        EquipEffect(badge.effect3, player);
+        EquipEffect(badge.effect4, player);
+        EquipEffect(badge.effect5, player);
     }
 
     private void EquipEffect(BadgeEffect effect, Caster player)
@@ -63,11 +74,12 @@ public class BadgeWord : ScriptableObject
 
     public void Unequip(Caster player)
     {
-        UnequipEffect(effect1, player);
-        UnequipEffect(effect2, player);
-        UnequipEffect(effect3, player);
-        UnequipEffect(effect4, player);
-        UnequipEffect(effect5, player);
+        var badge = CurrentBadge;
+        UnequipEffect(badge.effect1, player);
+        UnequipEffect(badge.effect2, player);
+        UnequipEffect(badge.effect3, player);
+        UnequipEffect(badge.effect4, player);
+        UnequipEffect(badge.effect5, player);
     }
 
     private void UnequipEffect(BadgeEffect effect, Caster player)

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -18,6 +19,17 @@ public class BadgeSelectorMenu : MonoBehaviour
     private int numActiveButtons;
     private BadgeWord.EquipmentSlot targetSlot;
     public bool IsShowing { get; private set; } = false;
+
+    [Conditional("DEBUG"), ContextMenu("Upgrade Selected Badge")]
+    private void UpgradeSelectedBadge()
+    {
+        if(selectedBadgeIndex >= 0 && unlockedBadges[selectedBadgeIndex].HasUpgrade)
+        {
+            unlockedBadges[selectedBadgeIndex].Upgrade();
+            UpdateDescription();
+            SetButtonText(buttons[selectedButtonIndex], selectedBadgeIndex);
+        }
+    }
 
     public void Open(BadgeWord.EquipmentSlot slot)
     {
