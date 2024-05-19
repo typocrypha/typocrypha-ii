@@ -88,4 +88,10 @@ public class BadgeWord : ScriptableObject
             return;
         effect.Unequip(player);
     }
+
+    public override string ToString()
+    {
+        char slotType = Slot.ToString()[0];
+        return string.Format("{0} - {1} {2}", slotType, DisplayName, cost.ToString("C0"));
+    }
 }
