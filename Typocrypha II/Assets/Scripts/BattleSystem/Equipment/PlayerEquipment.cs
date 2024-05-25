@@ -16,9 +16,11 @@ public class PlayerEquipment : MonoBehaviour
 
     public IReadOnlyDictionary<string, BadgeWord> UnlockedBadgeWords => unlockedBadgeWords;
     private readonly Dictionary<string, BadgeWord> unlockedBadgeWords = new Dictionary<string, BadgeWord>();
+    private readonly Dictionary<string, int> badgeUpgradeLevels = new Dictionary<string, int>();
 
     [SerializeField] List<SpellWord> debugWords = new List<SpellWord>();
     [SerializeField] List<BadgeWord> debugBadgeWords = new List<BadgeWord>();
+
 
     private void Awake()
     {
@@ -96,6 +98,24 @@ public class PlayerEquipment : MonoBehaviour
     {
         return unlockedBadgeWords.ContainsKey(word.Key);
     }
+
+    public int GetUpgradeLevel(BadgeWord word)
+    {
+        return badgeUpgradeLevels.TryGetValue(word.Key, out int value) ? value : 0; 
+    }
+
+    public void SetUpgradeLevel(BadgeWord word, int value)
+    {
+        if (badgeUpgradeLevels.ContainsKey(word.Key))
+        {
+            badgeUpgradeLevels[word.Key] = value;
+        }
+        else
+        {
+            badgeUpgradeLevels.Add(word.Key, value);
+        }
+    }
+    
     public void UnlockBadge(BadgeWord word)
     {
         if (!unlockedBadgeWords.ContainsKey(word.Key))
@@ -146,6 +166,11 @@ public class PlayerEquipment : MonoBehaviour
         {
             kvp.Value.Equip(player);
         }
+    }
+
+    public bool IsBadgeEquipped(BadgeWord badge)
+    {
+        return EquippedBadgeWords.TryGetValue(badge.Slot, out var equippedBadge) && badge == equippedBadge;
     }
 
     public void ClearEquipment()

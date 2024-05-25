@@ -75,7 +75,7 @@ public class EquipmentMenu : MonoBehaviour, IPausable
     public void OpenShopMenu()
     {
         PH.Pause(PauseSources.Self);
-        shopMenu.Open();
+        shopMenu.OpenLanding();
     }
 
     public void OnCloseShopMenu()

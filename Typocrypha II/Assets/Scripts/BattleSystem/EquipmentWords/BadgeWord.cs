@@ -9,12 +9,12 @@ public class BadgeWord : ScriptableObject
         Passive,
         Soldier,
     }
-    public string DisplayName => internalName.ToUpper();
+    public string DisplayName => CurrentBadge.internalName.ToUpper();
     public string Key => internalName.ToLower();
     [SerializeField] private string internalName;
-    public string Description => description;
+    public string Description => CurrentBadge.description;
     [TextArea(2, 4)] [SerializeField] private string description;
-    public EquipmentSlot Slot => slot;
+    public EquipmentSlot Slot => CurrentBadge.slot;
     [SerializeField] private EquipmentSlot slot;
     [SerializeField] private int cost;
 
@@ -26,13 +26,43 @@ public class BadgeWord : ScriptableObject
 
     [SerializeField] private BadgeWord[] upgrades;
 
+    private int UpgradeLevel
+    {
+        get => PlayerDataManager.instance.equipment.GetUpgradeLevel(this);
+        set => PlayerDataManager.instance.equipment.SetUpgradeLevel(this, value);
+    }
+    private bool IsUpgraded => UpgradeLevel > 0;
+
+    public bool HasUpgrade => upgrades.Length > UpgradeLevel;
+    public BadgeWord NextUpgrade => HasUpgrade ? upgrades[UpgradeLevel] : null;
+    private BadgeWord CurrentBadge => IsUpgraded ? upgrades[UpgradeLevel - 1] : this;
+
+    public void Upgrade()
+    {
+        // Stub Implementation
+        if (!HasUpgrade)
+            return;
+        var equipment = PlayerDataManager.instance.equipment;
+        var shouldRefresh = equipment.IsBadgeEquipped(this) && Battlefield.instance != null && Battlefield.instance.Player != null;
+        if (shouldRefresh)
+        {
+            Unequip(Battlefield.instance.Player);
+        }
+        UpgradeLevel++;
+        if (shouldRefresh)
+        {
+            Equip(Battlefield.instance.Player);
+        }
+    }
+
     public void Equip(Caster player)
     {
-        EquipEffect(effect1, player);
-        EquipEffect(effect2, player);
-        EquipEffect(effect3, player);
-        EquipEffect(effect4, player);
-        EquipEffect(effect5, player);
+        var badge = CurrentBadge;
+        EquipEffect(badge.effect1, player);
+        EquipEffect(badge.effect2, player);
+        EquipEffect(badge.effect3, player);
+        EquipEffect(badge.effect4, player);
+        EquipEffect(badge.effect5, player);
     }
 
     private void EquipEffect(BadgeEffect effect, Caster player)
@@ -44,11 +74,12 @@ public class BadgeWord : ScriptableObject
 
     public void Unequip(Caster player)
     {
-        UnequipEffect(effect1, player);
-        UnequipEffect(effect2, player);
-        UnequipEffect(effect3, player);
-        UnequipEffect(effect4, player);
-        UnequipEffect(effect5, player);
+        var badge = CurrentBadge;
+        UnequipEffect(badge.effect1, player);
+        UnequipEffect(badge.effect2, player);
+        UnequipEffect(badge.effect3, player);
+        UnequipEffect(badge.effect4, player);
+        UnequipEffect(badge.effect5, player);
     }
 
     private void UnequipEffect(BadgeEffect effect, Caster player)
@@ -56,5 +87,11 @@ public class BadgeWord : ScriptableObject
         if (effect == null)
             return;
         effect.Unequip(player);
+    }
+
+    public override string ToString()
+    {
+        char slotType = Slot.ToString()[0];
+        return string.Format("{0} - {1} {2}", slotType, DisplayName, cost.ToString("C0"));
     }
 }

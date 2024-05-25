@@ -1,12 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿//using System.Collections;
+//using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class MenuButton : MonoBehaviour, ISelectHandler, IDeselectHandler, ISubmitHandler
 {
+    public UnityEvent onSelect = default;
+
     private static readonly char[] trim = new char[] { '>', ' ', ' ', '<' };
     public static readonly Color selectedColor = new Color(219f / 255f, 56f / 255f, 202f / 255f);
     [SerializeField] private AudioClip selectSFX;
@@ -43,6 +46,7 @@ public class MenuButton : MonoBehaviour, ISelectHandler, IDeselectHandler, ISubm
         {
             AudioManager.instance.PlaySFX(selectSFX);
         }
+        onSelect.Invoke();
     }
 
     public void OnDeselect(BaseEventData eventData)
