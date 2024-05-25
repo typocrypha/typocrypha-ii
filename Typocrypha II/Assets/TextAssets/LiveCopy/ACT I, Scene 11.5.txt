@@ -244,7 +244,7 @@ NarratorSilent: Armed with only the flashlight on your Typocrypha,{pm} you slowl
 NarratorSilent: After what feels like an eternity,{pm} you encounter a fork in the path. 
 
 
-Ayin: Should I just pick one randomly...?
+NarratorSilent: ...![b]
 
 
 NarratorSilent: Suddenly,{pm} you start to hear footsteps coming from one of the pathways.
@@ -253,7 +253,7 @@ NarratorSilent: Suddenly,{pm} you start to hear footsteps coming from one of the
 >setexpr,Ayin,surprisedbad
 
 
-NarratorSilent: Without thinking,{pm} you run into one of the other pathways to escape.
+NarratorSilent: You run into one of the other pathways to escape.
 
 
 NarratorSilent: Your heart is pounding,{pm} you can’t think straight.
@@ -280,13 +280,16 @@ NarratorSilent: How long were you running for?
 NarratorSilent: You check your clock -{pm} 13:55.
 
 
-Ayin: I-I have to get back,{pm} where is-
+NarratorSilent: You’re late.{pm} You have to get back.
+
+
+NarratorSilent: But which way do you go?
 
 
 >stopbgm
 
 
-NarratorSilent: *rustle[b]*
+NarratorSilent: *rustle*[c]
 
 
 NarratorSilent: ...someone is in the room with you.
@@ -295,13 +298,10 @@ NarratorSilent: ...someone is in the room with you.
 NarratorSilent: You fall forward and manage to shine your light in the figure’s direction.
 
 
-//TODO: Dialog UI dimly fades back in
-
-
 >addchar,Niya,0,0,right
 
 
-Niya: ...!{pm} Ayin?[c]
+Niya: ...!{pm} Ayin?[d]
 
 
 Ayin(surprisedbad): N-Niya?
@@ -349,7 +349,7 @@ Ayin(ohfuck): H-How’re you,{pm} Niya?
 Narrator: Niya squints at you,{pm} and lets out a sigh.
 
 
-Niya: I’m fine[d].
+Niya: I’m fine[e].
 
 
 Niya: Anyways,{pm} are we going to do this?
@@ -361,7 +361,7 @@ Ayin(surprisedbad): W-What?
 >stopbgm
 
 
-Narrator: Niya pulls down their mask over their [e]face...
+Narrator: Niya pulls down their mask over their [f]face...
 
 
 Narrator: ...and takes out their weapon,{pm} a strange-looking Typocrypha,{pm} aiming it directly at you.
@@ -371,7 +371,8 @@ Narrator: ...and takes out their weapon,{pm} a strange-looking Typocrypha,{pm} a
 
 
 [a]can probably remove 'captain's log' thing - just make normal narrator scene
-[b]rustle sound effect
-[c]have niya start out as masked - also need to add more details/dialog
-[d]add flavor that Niya was the one going around using magic to mislead AEIOU
-[e]need niya mask pose face
+[b]footstep sfx
+[c]rustle sfx
+[d]have niya start out as masked - also need to add more details/dialog
+[e]add flavor that Niya was the one going around using magic to mislead AEIOU
+[f]need niya mask pose face
