@@ -95,6 +95,14 @@ public class TargetReticle : MonoBehaviour, IPausable
         }
     }
 
+    public void SetPosInstant()
+    {
+        lastTargetPos = new Battlefield.Position(TargetPos);
+        TargetPos.Col = Battlefield.instance.Player.TargetPos.Col;
+        TargetPos.Row = Battlefield.instance.Player.TargetPos.Row;
+        targetPosScreenspace = Battlefield.instance.GetSpaceScreenSpace(TargetPos);
+    }
+
     protected void UpdateTargetPos()
     {
         if (Battlefield.instance.Player == null)
