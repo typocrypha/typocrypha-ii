@@ -32,6 +32,7 @@ public class Caster : MonoBehaviour
         None = 0,
         Critical = 1,
         CriticalBlock = 2,
+        Riposte = 4,
     }
 
     #region Delegate Declarations
