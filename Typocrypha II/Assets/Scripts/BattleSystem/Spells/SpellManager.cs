@@ -298,7 +298,8 @@ public class SpellManager : MonoBehaviour
             if (ShouldRiposte(caster, cancelTarget, fullCounter))
             {
                 yield return SpellFxManager.instance.CounterFx(cancelTarget.FieldPos);
-                cancelTarget.OnCounter?.Invoke(cancelTarget, fullCounter);
+                cancelTarget.OnCountered?.Invoke(cancelTarget, fullCounter);
+                caster.OnCounterOther?.Invoke(cancelTarget, fullCounter);
                 IEnumerator OnRipostComplete(bool success)
                 {
                     if (success)
@@ -313,7 +314,8 @@ public class SpellManager : MonoBehaviour
             else
             {
                 SpellFxManager.instance.CounterFx(cancelTarget.FieldPos);
-                cancelTarget.OnCounter?.Invoke(cancelTarget, fullCounter);
+                cancelTarget.OnCountered?.Invoke(cancelTarget, fullCounter);
+                caster.OnCounterOther?.Invoke(cancelTarget, fullCounter);
             }
         }
     }
