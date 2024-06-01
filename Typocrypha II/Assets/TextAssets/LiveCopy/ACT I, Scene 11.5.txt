@@ -1,84 +1,6 @@
 ﻿>start,ACT I-11p5
 
 
-+an
-
-
->playbgm,BGMBirdPeople
-
-
-NarratorSilent: Captain’s log -{pm} Scouting Team Z.
-
-
-NarratorSIlent: 13:32,{pm} 4.5 hours since the start of operation.[a]
-
-
-NarratorSilent: We have progressed halfway through the Ruins towards where we believe the First Barrier is.
-
-
-NarratorSilent: There has been a larger Demon presence than expected,{pm} however we have so far had no major casualties.
-
-
-NarratorSilent: .{pl}.{pl}.
-
-
-Ayin: {c,ayin}“...”{c}
-
-
-Ayin(ohfuck): {c,ayin}”(Uhh...{pm} What else do I write in these things?)”{c}
-
-
->clear
-
-
-NarratorSilent: Team morale is high.
-
-
-Dahlia(stressed): {c,dahlia}”Hey,{ps} Illyia!{pm} That was my ration!”{c}
-
-
-Illyia(pissed): {c,illyia}”I’m the Forward Guard,{pm} you’re just the Medic!{pm} I burn more calories than you!”{c}
-
-
-NarratorSilent: Team morale is OK.
-
-
->clear
-
-
-NarratorSilent: The team remains focused on our goal to find the First Barrier.
-
-
-Esaias(normal): {c,esaias}”Ayin,{pm} look!”{c}
-
-
-Ayin(surprisedbad): {c,ayin}”Wh-What is it Esaias?{pm} Is it more Demons!?”{c}
-
-
-Esaias(embarrassed): {c,esaias}”The writing on these tablets are of a quality I have never seen before!{pm} If I had to hazard a guess,{pm} these were markers used by the Obscurians to help navigate and..."{c}
-
-
-Ayin(concerned): {c,ayin}”...”{c}
-
-
-NarratorSilent: As Captain,{pm} I have faith that our team will be able to find the First Barrier.
-
-
-NarratorSilent: As long as we stick together...
-
-
->clear
-
-
->stopbgm
-
-
-Illyia[middle](center): {c,illyia}”Alright team,{pm} looks like it’s time for us to split up!”{c}
-
-
-Ayin[middle](center): {c,ayin}”H-Huh?”{c}
-
-
 >playbgm,BGMAgarthanRuins
 >setbg,Sprite,BgObscurianRuins
 
@@ -91,10 +13,10 @@ Ayin[middle](center): {c,ayin}”H-Huh?”{c}
 >addcharmultiargs,right,Illyia,1,serious,Dahlia,1,serious
 
 
-Narrator: You look up from your Typocrypha to see the team stopped at a four-way fork in the tunnel.
+Narrator: The party arrives at a four-way fork in the tunnel.
 
 
-Narrator: Esaias is staring at his map equally perplexed.
+Narrator: Esaias pauses to look down at his map,{pm} perplexed.
 
 
 >setexpr,Ayin,serious
@@ -112,7 +34,7 @@ Esaias(embarrassed): N-No...
 Illyia(ashamed): Of course you don’t,{pm} why’d I even bother asking?
 
 
-Dahlia(stressed): Hey,{pm} don’t lash out at Saia!
+Dahlia(stressed): Hey,{pm} don’t lash out at Esaias!
 
 
 Dahlia(sarcastic): Not like you know which way to go!
@@ -184,7 +106,7 @@ Illyia(normal): Ah,{pm} our “brave leader” can handle themselves,{pm} right?
 Ayin(nervoussmile): Y-Yeah...
 
 
-Ayin(normal): Thanks Dahlia,{pm} but it’s just a short scouting trip, right?
+Ayin(normal): Thanks Dahlia,{pm} but it’s just a short scouting trip,{ps} right?
 
 
 Ayin(nervous): A-And if something happens,{pm} I can always just run back here...
@@ -208,7 +130,7 @@ Illyia: Off we go!
 >removechar,Illyia
 
 
-Dahlia(concerned): Sigh...{pm} Ayin,{pm} just be careful,{ps} OK?
+Dahlia(concerned): Ayin,{pm} just be careful,{ps} OK?
 
 
 >removechar,Dahlia
@@ -244,7 +166,7 @@ NarratorSilent: Armed with only the flashlight on your Typocrypha,{pm} you slowl
 NarratorSilent: After what feels like an eternity,{pm} you encounter a fork in the path. 
 
 
-NarratorSilent: ...![b]
+NarratorSilent: ...![a]
 
 
 NarratorSilent: Suddenly,{pm} you start to hear footsteps coming from one of the pathways.
@@ -289,7 +211,8 @@ NarratorSilent: But which way do you go?
 >stopbgm
 
 
-NarratorSilent: *rustle*[c]
+>playsfx,SFXRustle
+NarratorSilent: ...!
 
 
 NarratorSilent: ...someone is in the room with you.
@@ -301,7 +224,7 @@ NarratorSilent: You fall forward and manage to shine your light in the figure’
 >addchar,Niya,0,0,right
 
 
-Niya: ...!{pm} Ayin?[d]
+Niya: ...!{pm} Ayin?[b]
 
 
 Ayin(surprisedbad): N-Niya?
@@ -349,7 +272,7 @@ Ayin(ohfuck): H-How’re you,{pm} Niya?
 Narrator: Niya squints at you,{pm} and lets out a sigh.
 
 
-Niya: I’m fine[e].
+Niya: I’m fine[c].
 
 
 Niya: Anyways,{pm} are we going to do this?
@@ -361,7 +284,7 @@ Ayin(surprisedbad): W-What?
 >stopbgm
 
 
-Narrator: Niya pulls down their mask over their [f]face...
+Narrator: Niya pulls down their mask over their [d]face...
 
 
 Narrator: ...and takes out their weapon,{pm} a strange-looking Typocrypha,{pm} aiming it directly at you.
@@ -370,9 +293,7 @@ Narrator: ...and takes out their weapon,{pm} a strange-looking Typocrypha,{pm} a
 >endt
 
 
-[a]can probably remove 'captain's log' thing - just make normal narrator scene
-[b]footstep sfx
-[c]rustle sfx
-[d]have niya start out as masked - also need to add more details/dialog
-[e]add flavor that Niya was the one going around using magic to mislead AEIOU
-[f]need niya mask pose face
+[a]footstep sfx
+[b]have niya start out as masked - also need to add more details/dialog
+[c]add flavor that Niya was the one going around using magic to mislead AEIOU
+[d]need niya mask pose face
