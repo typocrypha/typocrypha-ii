@@ -216,6 +216,10 @@ MonoBehaviour:
   counterWord: {fileID: 11400000, guid: 9be8dcc13705f4e4aa3ba6dddf0a1d28, type: 2}
   runWord: {fileID: 11400000, guid: 924c56eb65b8f1347a4fa95ccade6124, type: 2}
   runAllWord: {fileID: 11400000, guid: e3c153b188e5c624c8c201204cb7f6d9, type: 2}
+  riposteSpell:
+    items:
+    - {fileID: 11400000, guid: 5856a0cc1a0ce1145a8f90a81de46b58, type: 2}
+    castTimeOverride: -1
   critPopup: {fileID: 3257754580303646853}
   decodePopup: {fileID: 7097113746181805208}
 --- !u!114 &7912746770556847216
@@ -301,12 +305,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   materialAsset: {fileID: 2100000, guid: c051d48919e996146a497da76bdb36b5, type: 2}
+  cloneMaterialOnStart: 1
   propertyName: _GlitchAmount
   initialValue: 1
   finalValue: 0
   duration: 0.5
   ease: 9
-  lerpValue: 1
+  shouldResetProperty: 0
+  resetValue: 0
 --- !u!1001 &1050047915606046389
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -314,14 +320,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5837060919353632895}
     m_Modifications:
-    - target: {fileID: 1813761539, guid: 0ede6a0e533a0084c9c8e25492a1d4a4, type: 3}
-      propertyPath: m_Name
-      value: BattleLog
-      objectReference: {fileID: 0}
-    - target: {fileID: 1813761539, guid: 0ede6a0e533a0084c9c8e25492a1d4a4, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8071422007260500769, guid: 0ede6a0e533a0084c9c8e25492a1d4a4,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -426,6 +424,14 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1813761539, guid: 0ede6a0e533a0084c9c8e25492a1d4a4, type: 3}
+      propertyPath: m_Name
+      value: BattleLog
+      objectReference: {fileID: 0}
+    - target: {fileID: 1813761539, guid: 0ede6a0e533a0084c9c8e25492a1d4a4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7808263791988901025, guid: 0ede6a0e533a0084c9c8e25492a1d4a4,
         type: 3}
@@ -554,16 +560,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7912746771425946552}
     m_Modifications:
-    - target: {fileID: 5385776760854638689, guid: d6fccc06f175822429d10f3417f1b59b,
-        type: 3}
-      propertyPath: m_Name
-      value: DecodePopup
-      objectReference: {fileID: 0}
-    - target: {fileID: 5385776760854638689, guid: d6fccc06f175822429d10f3417f1b59b,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2283473626613297442, guid: d6fccc06f175822429d10f3417f1b59b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -617,6 +613,16 @@ PrefabInstance:
     - target: {fileID: 2283473626613297442, guid: d6fccc06f175822429d10f3417f1b59b,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5385776760854638689, guid: d6fccc06f175822429d10f3417f1b59b,
+        type: 3}
+      propertyPath: m_Name
+      value: DecodePopup
+      objectReference: {fileID: 0}
+    - target: {fileID: 5385776760854638689, guid: d6fccc06f175822429d10f3417f1b59b,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1717851952624949515, guid: d6fccc06f175822429d10f3417f1b59b,
@@ -696,11 +702,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7912746771425946552}
     m_Modifications:
-    - target: {fileID: 4643794205382656336, guid: 4a4b78ba10c2c8644a193382479a1276,
-        type: 3}
-      propertyPath: m_Name
-      value: CooldownManager
-      objectReference: {fileID: 0}
     - target: {fileID: 6705373016322078374, guid: 4a4b78ba10c2c8644a193382479a1276,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -806,6 +807,11 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4643794205382656336, guid: 4a4b78ba10c2c8644a193382479a1276,
+        type: 3}
+      propertyPath: m_Name
+      value: CooldownManager
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4a4b78ba10c2c8644a193382479a1276, type: 3}
 --- !u!224 &7352868054623047350 stripped
@@ -821,16 +827,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7912746771425946552}
     m_Modifications:
-    - target: {fileID: 5385776760854638689, guid: 57b15382a685fa64b971823c47fe36d5,
-        type: 3}
-      propertyPath: m_Name
-      value: PromptPopup
-      objectReference: {fileID: 0}
-    - target: {fileID: 5385776760854638689, guid: 57b15382a685fa64b971823c47fe36d5,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2283473626613297442, guid: 57b15382a685fa64b971823c47fe36d5,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -884,6 +880,16 @@ PrefabInstance:
     - target: {fileID: 2283473626613297442, guid: 57b15382a685fa64b971823c47fe36d5,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5385776760854638689, guid: 57b15382a685fa64b971823c47fe36d5,
+        type: 3}
+      propertyPath: m_Name
+      value: PromptPopup
+      objectReference: {fileID: 0}
+    - target: {fileID: 5385776760854638689, guid: 57b15382a685fa64b971823c47fe36d5,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3560701897501929854, guid: 57b15382a685fa64b971823c47fe36d5,

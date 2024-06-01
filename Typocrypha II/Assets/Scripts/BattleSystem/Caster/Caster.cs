@@ -32,6 +32,7 @@ public class Caster : MonoBehaviour
         None = 0,
         Critical = 1,
         CriticalBlock = 2,
+        Riposte = 4,
     }
 
     #region Delegate Declarations
@@ -55,10 +56,8 @@ public class Caster : MonoBehaviour
     /// Callbacks applied after a cast resolves
     /// </summary>
     public AfterCastFn OnAfterCastResolved { get; set; }
-    /// <summary>
-    /// Callbacks applied after a cast resolves
-    /// </summary>
-    public System.Action<Caster, bool> OnCounter { get; set; }
+    public System.Action<Caster, bool> OnCountered { get; set; }
+    public System.Action<Caster, bool> OnCounterOther { get; set; }
     /// <summary>
     /// Callbacks the calculate extra tag reactions
     /// </summary>
@@ -75,6 +74,7 @@ public class Caster : MonoBehaviour
     public System.Action<Battlefield.Position> OnNoTargetHit { get; set; }
     public System.Action OnStunned { get; set; }
     public System.Action OnUnstunned { get; set; }
+    public System.Action<Caster, Spell> OnSpellChanged { get; set; }
 
     private ActiveAbilities CurrentActiveAbiltiies { get; set; }
     public void AddActiveAbilities(ActiveAbilities abilities)
@@ -231,6 +231,7 @@ public class Caster : MonoBehaviour
         set
         {
             spell = value;
+            OnSpellChanged?.Invoke(this, spell);
             if (spell == null || ui == null)
                 return;
             // Set spell word

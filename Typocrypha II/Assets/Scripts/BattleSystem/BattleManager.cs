@@ -190,6 +190,7 @@ public class BattleManager : MonoBehaviour, IPausable
         Typocrypha.Keyboard.instance.Clear();
         Rule.ActiveRule = null;
         Battlefield.instance.Player.TargetPos = new Battlefield.Position(0, 1);
+        TargetReticle.instance.SetPosInstant();
         StartCoroutine(StartWaveCR(CurrWave));
     }
 

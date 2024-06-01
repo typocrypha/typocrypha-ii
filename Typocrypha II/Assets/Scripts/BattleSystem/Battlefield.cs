@@ -383,7 +383,7 @@ public class Battlefield : MonoBehaviour, IPausable
     {
         public bool IsLegal { get => _col >= 0 && _col < instance.Columns && _row >= 0 && _row < instance.Rows; }
         [SerializeField] int _row;
-        public int Row { get => _row; set =>_row = value; }
+        public int Row { get => _row; set => _row = value; }
         [SerializeField] int _col;
         public int Col { get => _col; set => _col = value; }
         public Position(int row, int col)
@@ -404,7 +404,7 @@ public class Battlefield : MonoBehaviour, IPausable
             _col = toCopy.x;
         }
 
-        public void SetIllegalPosition (int row, int col)
+        public void SetIllegalPosition(int row, int col)
         {
             _row = row;
             _col = col;
@@ -422,7 +422,15 @@ public class Battlefield : MonoBehaviour, IPausable
             return other is Position pos && Equals(pos);
         }
 
-        public static bool operator ==(Position a, Position b) => a.Equals(b);
+        public static bool operator ==(Position a, Position b) 
+        {
+            if (a is null || b is null)
+            {
+                return a is null && b is null;
+            }
+            return a.Equals(b);
+        }
+
         public static bool operator !=(Position a, Position b) => !(a == b);
         
         public override int GetHashCode()

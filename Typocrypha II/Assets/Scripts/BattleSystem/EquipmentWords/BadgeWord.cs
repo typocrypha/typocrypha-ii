@@ -37,6 +37,8 @@ public class BadgeWord : ScriptableObject
     public BadgeWord NextUpgrade => HasUpgrade ? upgrades[UpgradeLevel] : null;
     private BadgeWord CurrentBadge => IsUpgraded ? upgrades[UpgradeLevel - 1] : this;
 
+    public bool CanPurchase => !PlayerDataManager.instance.equipment.IsBadgeUnlocked(this);
+
     public void Upgrade()
     {
         // Stub Implementation

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BadgeEfffectCritical : BadgeEffect
+public class BadgeEffectCritical : BadgeEffect
 {
     public const float baseCritChance = 0.075f;
     public override void Equip(Caster player)
