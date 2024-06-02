@@ -17,7 +17,7 @@ namespace ATB3
             if (caster.Spell.Countered) // Spell is countered
             {
                 // Apply callbacks after the whole cast is finished (as if this cast happened)
-                caster.OnAfterCastResolved?.Invoke(caster.Spell, caster);
+                caster.OnAfterCastResolved?.Invoke(caster.Spell, caster, false);
                 Source.PerformTransition(ATBStateID.Charge);
             }
             else
@@ -48,7 +48,7 @@ namespace ATB3
             else if (caster.Spell.Countered) // Spell is countered
             {
                 // Apply callbacks after the whole cast is finished (as if this cast happened)
-                caster.OnAfterCastResolved?.Invoke(caster.Spell, caster);
+                caster.OnAfterCastResolved?.Invoke(caster.Spell, caster, false);
                 Source.PerformTransition(ATBStateID.Charge);
             }
             else if (caster.Charge <= 0)

@@ -19,6 +19,7 @@ public class SpellManager : MonoBehaviour
 
     [Header("Interactive Popups")]
     [SerializeField] private InteractivePopup critPopup;
+    [SerializeField] private CastPopup castPopup;
     [SerializeField] private InteractivePopup decodePopup;
 
     /// <summary> Singleton implementation </summary>
@@ -161,8 +162,33 @@ public class SpellManager : MonoBehaviour
                 yield return StartCoroutine(PlayPrompts());
             }
         }
+        if (caster.IsPlayer && !SpellCooldownManager.instance.Overheated)
+        {
+            var comboBadge = Lookup.GetBadge("combo");
+            if (PlayerDataManager.instance.equipment.IsBadgeEquipped(comboBadge))
+            {
+                var comboEffect = comboBadge.GetEffect<BadgeEffectCombo>();
+                if (comboEffect != null && comboEffect.CanFollowUp(caster))
+                {
+                    IEnumerator OnComboPopupComplete(bool popupSuccess)
+                    {
+                        if (popupSuccess && caster is Player player)
+                        {
+                            player.InsertCast(castPopup.Spell, target, string.Empty);
+                        }
+                        return null;
+                    }
+                    LogInteractivePopup(castPopup, "Combo Spell!", string.Empty, 5, OnComboPopupComplete);
+                }
+            }
+            if (HasPrompts)
+            {
+                yield return StartCoroutine(PlayPrompts());
+            }
+        }
         var casterSpace = Battlefield.instance.GetSpaceScreenSpace(caster.FieldPos);
-        List<Coroutine> crList = new List<Coroutine>();
+        var crList = new List<Coroutine>();
+        bool hitTarget = false;
         for (int rootIndex = 0; rootIndex < roots.Count; rootIndex++)
         {
             var root = roots[rootIndex];
@@ -189,6 +215,7 @@ public class SpellManager : MonoBehaviour
                     }
                     else
                     {
+                        hitTarget = true;
                         // Apply the rule effect if necessary
                         Rule.ActiveRule?.ApplyToEffect(effect, caster, targetCaster);
                         // Apply OnCast Callbacks
@@ -214,7 +241,7 @@ public class SpellManager : MonoBehaviour
                 foreach (var cr in crList)
                     yield return cr;
                 // Apply callbacks after the effect is finished
-                caster.OnAfterSpellEffectResolved?.Invoke(spell, caster);
+                caster.OnAfterSpellEffectResolved?.Invoke(spell, caster, hitTarget);
                 if (HasPrompts)
                 {
                     yield return PlayPrompts();
@@ -250,7 +277,7 @@ public class SpellManager : MonoBehaviour
             Debug.LogError("TODO: add message unlock code here");
         }
         // Apply callbacks after the whole cast is finished
-        caster.OnAfterCastResolved?.Invoke(spell, caster);
+        caster.OnAfterCastResolved?.Invoke(spell, caster, hitTarget);
         if (SpellCooldownManager.instance.Overheated)
         {
             SpellCooldownManager.instance.DoOverheat();

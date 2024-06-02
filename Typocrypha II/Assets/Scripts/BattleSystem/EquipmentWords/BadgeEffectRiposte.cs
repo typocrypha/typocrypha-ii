@@ -6,12 +6,12 @@ public class BadgeEffectRiposte : BadgeEffect
 {
     public const float baseRiposteChance = 0.15f;
     public const float fullCounterRiposteChance = 0.25f;
-    public override void Equip(Caster player)
+    public override void Equip(Player player)
     {
         player.AddActiveAbilities(Caster.ActiveAbilities.Riposte);
     }
 
-    public override void Unequip(Caster player)
+    public override void Unequip(Player player)
     {
         player.RemoveActiveAbilities(Caster.ActiveAbilities.Riposte);
     }

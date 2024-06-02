@@ -35,7 +35,7 @@ namespace ATB3
                 if(Source.PreviousStateID == ATBStateID.PreCast || Source.PreviousStateID == ATBStateID.Cast)
                 {
                     caster.Charge = 0;
-                    caster.OnAfterCastResolved?.Invoke(caster.Spell, caster);
+                    caster.OnAfterCastResolved?.Invoke(caster.Spell, caster, false);
                     Source.PerformTransition(ATBStateID.Charge);
                 }
                 else

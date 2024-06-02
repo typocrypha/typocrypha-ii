@@ -40,7 +40,7 @@ public class BEConditionDecoded : BattleEventCondition
         }
     }
 
-    public void CheckCast(Spell s, Caster caster)
+    public void CheckCast(Spell s, Caster caster, bool hitTarget)
     {
         CheckDecoded();
     }

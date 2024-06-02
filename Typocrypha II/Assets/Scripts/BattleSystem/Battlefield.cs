@@ -72,14 +72,14 @@ public class Battlefield : MonoBehaviour, IPausable
     public static Battlefield instance;
     public int Columns { get; } = 3;
     public int Rows { get; } = 2;
-    public Caster Player
+    public Player Player
     {
         get
         {
             foreach (var caster in Casters)
             {
-                if (caster.IsPlayer)
-                    return caster;
+                if (caster is Player player)
+                    return player;
             }
             return null;
         }

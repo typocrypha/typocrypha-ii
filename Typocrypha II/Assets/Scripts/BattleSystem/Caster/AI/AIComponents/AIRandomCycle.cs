@@ -31,7 +31,7 @@ public class AIRandomCycle : AIComponent
         caster.OnAfterCastResolved -= CycleSpell;
     }
 
-    public void CycleSpell(Spell spell, Caster self)
+    public void CycleSpell(Spell spell, Caster self, bool hitTarget)
     {
         if (onSpell1)
         {

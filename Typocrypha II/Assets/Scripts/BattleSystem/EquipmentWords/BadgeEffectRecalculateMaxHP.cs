@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class BadgeEffectRecalculateMaxHP : BadgeEffect
 {
-    public override void Equip(Caster player)
+    public override void Equip(Player player)
     {
         player.RecalculateMaxHP();
     }
 
-    public override void Unequip(Caster player)
+    public override void Unequip(Player player)
     {
         player.RecalculateMaxHP();
     }

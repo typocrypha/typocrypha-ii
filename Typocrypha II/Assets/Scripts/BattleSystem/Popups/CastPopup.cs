@@ -4,16 +4,37 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class PromptPopup : InteractivePopup
+public class CastPopup : InteractivePopup
 {
     [SerializeField] private TextMeshProUGUI headerText;
     [SerializeField] private AudioClip successSfx;
     [SerializeField] private AudioClip failSfx;
     [SerializeField] CastBarResizer resizer;
 
+    public Spell Spell => lastSpell;
+    private Spell lastSpell = null;
+
     public override void Submit()
     {
-        LastPromptSuccess = Text.ToUpper() == Prompt.ToUpper();
+        var spellWords = Text.TrimEnd(KeywordDelimiters).Split(KeywordDelimiters);
+        var results = SpellParser.instance.Parse(spellWords, PlayerDataManager.instance.equipment.EquippedSpellWords, out lastSpell, out _);
+        if(results == SpellParser.ParseResults.Valid)
+        {
+            var cooldowns = SpellCooldownManager.instance;
+            if(cooldowns.IsOnCooldown(lastSpell, out _))
+            {
+                LastPromptSuccess = false;
+            }
+            else
+            {
+                LastPromptSuccess = true;
+                cooldowns.DoCooldowns(lastSpell);
+            }
+        }
+        else
+        {
+            LastPromptSuccess = false;
+        }
         AudioManager.instance.PlaySFX(LastPromptSuccess ? successSfx : failSfx);
         Completed = true;
         Battlefield.instance.Player.OnPromptComplete?.Invoke(LastPromptSuccess);
@@ -32,10 +53,10 @@ public class PromptPopup : InteractivePopup
         Completed = false;
         LastPromptSuccess = false;
         headerText.text = header;
-        Prompt = prompt;
+        Prompt = string.Empty;
         gameObject.SetActive(true);
-        resizer.Resize(Prompt.Length);
-        Resize(Prompt.Length);
+        resizer.Resize(22);
+        Resize(22);
         Clear(true);
         InputManager.Instance.StartInput(this);
     }

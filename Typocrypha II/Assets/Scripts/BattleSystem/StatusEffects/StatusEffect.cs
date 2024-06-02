@@ -47,7 +47,7 @@ public abstract class StatusEffect : MonoBehaviour
 
     }
 
-    public virtual void OnAfterCastResolved(Spell s, Caster self)
+    public virtual void OnAfterCastResolved(Spell s, Caster self, bool hitTarget)
     {
 
     }

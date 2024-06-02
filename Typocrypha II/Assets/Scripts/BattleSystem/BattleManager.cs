@@ -96,7 +96,7 @@ public class BattleManager : MonoBehaviour, IPausable
         var startNode = graphParser.Init();
         totalWaves = startNode.totalWaves;
         // Initialize Player
-        var player = Instantiate(startNode.player, transform).GetComponent<Caster>();
+        var player = Instantiate(startNode.player, transform).GetComponent<Player>();
         Battlefield.instance.Add(player, new Battlefield.Position(1, 1));
         PlayerDataManager.instance.equipment.ReapplyEquippedBadgeWords(player);
         // Initialize ally character

@@ -7,13 +7,13 @@ public class BadgeEffectAddAbilityOnCounter : BadgeEffect
     [SubSO("Ability")]
     [SerializeField] private CasterAbility ability;
 
-    public override void Equip(Caster player)
+    public override void Equip(Player player)
     {
         player.OnCounterOther -= OnCounter;
         player.OnCounterOther += OnCounter;
     }
 
-    public override void Unequip(Caster player)
+    public override void Unequip(Player player)
     {
         player.OnCounterOther += OnCounter;
     }

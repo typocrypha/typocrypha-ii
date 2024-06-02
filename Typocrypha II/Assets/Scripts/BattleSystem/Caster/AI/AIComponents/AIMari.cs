@@ -66,7 +66,7 @@ public class AIMari : AIComponent, IPromptProvider
         EnterPreparingStormState(); // May not need anything except buff here
     }
 
-    private void AfterCastResolved(Spell spell, Caster self)
+    private void AfterCastResolved(Spell spell, Caster self, bool hitTarget)
     {
         if(state == State.PreparingStorm)
         {
