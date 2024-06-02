@@ -5,9 +5,10 @@ using UnityEngine;
 
 public class BadgeEffectCombo : BadgeEffect
 {
-    public const float baseCritChance = 0.03f;
-    private const int comboThreshold = 10;
+    public const float baseCritChance = 0.05f;
+    private const int comboThreshold = 5;
     private int combo;
+    private int missCounter = 0;
     public override void Equip(Player player)
     {
         ResetCombo();
@@ -84,6 +85,17 @@ public class BadgeEffectCombo : BadgeEffect
         if (combo < comboThreshold)
             return false;
         int comboScore = combo - comboThreshold;
-        return UnityEngine.Random.Range(0, 1f) <= Mathf.Max(0, baseCritChance + (comboScore * ((player.Stats.Luck + 1) * 0.01f)));
+        float missComponent = missCounter * 0.1f + (player.Stats.Luck * 0.01f);
+        float comboComponent = Mathf.Min(0.25f, comboScore * ((player.Stats.Luck + 1) * 0.01f));
+        if (UnityEngine.Random.Range(0, 1f) <= Mathf.Max(0, baseCritChance + missComponent + comboComponent))
+        {
+            missCounter = 0;
+            return true;
+        }
+        else
+        {
+            missCounter++;
+            return false;
+        }
     }
 }
