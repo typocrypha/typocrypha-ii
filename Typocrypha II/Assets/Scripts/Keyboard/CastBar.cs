@@ -12,7 +12,7 @@ namespace Typocrypha
     /// </summary>
     public abstract class CastBar : MonoBehaviour, IInputHandler
     {
-        protected const int maxLetters = 30;
+        public const int maxLetters = 30;
         protected static readonly Color promptColor = Color.gray;
         protected static readonly Color normalColor = Color.white;
         protected static readonly Color wrongColor = Color.red;

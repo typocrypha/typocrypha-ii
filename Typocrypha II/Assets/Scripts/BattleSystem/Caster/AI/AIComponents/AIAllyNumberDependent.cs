@@ -29,7 +29,7 @@ public class AIAllyNumberDependent : AIComponent
         }
         else
         {
-            SetNextSpell(null, selfCaster);
+            SetNextSpell(null, selfCaster, false);
         }
     }
 
@@ -44,7 +44,7 @@ public class AIAllyNumberDependent : AIComponent
         caster.OnAfterCastResolved -= SetNextSpell;
     }
 
-    private void SetNextSpell(Spell spell, Caster self)
+    private void SetNextSpell(Spell spell, Caster self, bool hitTarget)
     {
         int numAllies = GetNumAllies(self);
         var spellList = GetSpellList(numAllies, out int loopIndex);

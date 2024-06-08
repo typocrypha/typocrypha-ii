@@ -90,7 +90,7 @@ public class SpellFxManager : MonoBehaviour
     }
     public Coroutine CounterFx(Battlefield.Position pos)
     {
-        return PlayText(Battlefield.instance.GetSpaceScreenSpace(pos), true, "Countered!", Color.green, popTime);
+        return PlayText(pos, "Countered!", Color.green, popTime);
     }
     public Coroutine Play(SpellFxData[] fxData, CastResults data, Vector2 targetPos, Vector2 casterPos)
     {
@@ -237,7 +237,12 @@ public class SpellFxManager : MonoBehaviour
         return PlayImage(targetPos + reactionOffset, true, sprite, Color.white, popTime);
     }
 
-    public Coroutine PlayText(Vector2 position, bool isScreenSpace, string text, Color color, float time)
+    public Coroutine PlayText(Battlefield.Position pos, string text, Color color, float time = popTime)
+    {
+        return PlayText(Battlefield.instance.GetSpaceScreenSpace(pos), true, text, color, time);
+    }
+
+    public Coroutine PlayText(Vector2 position, bool isScreenSpace, string text, Color color, float time = popTime)
     {
         var player = textPopupPool.Get(popupCanvas.transform);
         if (isScreenSpace)

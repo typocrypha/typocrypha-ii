@@ -48,7 +48,7 @@ namespace ATB3
                 }
                 if (caster.Countered)
                 {
-                    caster.OnAfterCastResolved?.Invoke(caster.Spell, caster);
+                    caster.OnAfterCastResolved?.Invoke(caster.Spell, caster, false);
                     SpellManager.instance.PostCastFX(caster);
                     return null;
                 }

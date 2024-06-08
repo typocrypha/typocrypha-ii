@@ -134,7 +134,7 @@ public class PlayerEquipment : MonoBehaviour
             equippedBadgeWords.Add(word.Slot, word);
         }
     }
-    public void EquipBadgeLive(BadgeWord word, Caster player)
+    public void EquipBadgeLive(BadgeWord word, Player player)
     {
         if (equippedBadgeWords.ContainsKey(word.Slot))
         {
@@ -153,14 +153,14 @@ public class PlayerEquipment : MonoBehaviour
             return;
         equippedBadgeWords.Remove(slot);
     }
-    public void UnequipBadgeLive(BadgeWord.EquipmentSlot slot, Caster player)
+    public void UnequipBadgeLive(BadgeWord.EquipmentSlot slot, Player player)
     {
         if (!equippedBadgeWords.ContainsKey(slot))
             return;
         equippedBadgeWords[slot].Unequip(player);
         equippedBadgeWords.Remove(slot);
     }
-    public void ReapplyEquippedBadgeWords(Caster player)
+    public void ReapplyEquippedBadgeWords(Player player)
     {
         foreach(var kvp in equippedBadgeWords)
         {

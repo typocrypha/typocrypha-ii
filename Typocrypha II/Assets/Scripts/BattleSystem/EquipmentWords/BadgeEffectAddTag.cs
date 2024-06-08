@@ -6,12 +6,12 @@ public class BadgeEffectAddTag : BadgeEffect
 {
     [SerializeField] private CasterTag tag;
 
-    public override void Equip(Caster player)
+    public override void Equip(Player player)
     {
         player.AddTag(tag);
     }
 
-    public override void Unequip(Caster player)
+    public override void Unequip(Player player)
     {
         player.RemoveTag(tag);
     }

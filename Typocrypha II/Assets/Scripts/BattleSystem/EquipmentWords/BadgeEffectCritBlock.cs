@@ -5,12 +5,12 @@ using UnityEngine;
 public class BadgeEffectCritBlock : BadgeEffect
 {
     public const float baseCritChance = 0.075f;
-    public override void Equip(Caster player)
+    public override void Equip(Player player)
     {
         player.AddActiveAbilities(Caster.ActiveAbilities.CriticalBlock);
     }
 
-    public override void Unequip(Caster player)
+    public override void Unequip(Player player)
     {
         player.RemoveActiveAbilities(Caster.ActiveAbilities.CriticalBlock);
     }

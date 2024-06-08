@@ -36,7 +36,7 @@ public class StatusRemoveAfterHitOrCast : StatusEffect
             Remove();
     }
 
-    public override void OnAfterCastResolved(Spell s, Caster self)
+    public override void OnAfterCastResolved(Spell s, Caster self, bool hitTarget)
     {
         if (!removeFromCasts)
             return;

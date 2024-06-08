@@ -57,7 +57,7 @@ public class BadgeWord : ScriptableObject
         }
     }
 
-    public void Equip(Caster player)
+    public void Equip(Player player)
     {
         var badge = CurrentBadge;
         EquipEffect(badge.effect1, player);
@@ -67,14 +67,14 @@ public class BadgeWord : ScriptableObject
         EquipEffect(badge.effect5, player);
     }
 
-    private void EquipEffect(BadgeEffect effect, Caster player)
+    private void EquipEffect(BadgeEffect effect, Player player)
     {
         if (effect == null)
             return;
         effect.Equip(player);
     }
 
-    public void Unequip(Caster player)
+    public void Unequip(Player player)
     {
         var badge = CurrentBadge;
         UnequipEffect(badge.effect1, player);
@@ -84,11 +84,37 @@ public class BadgeWord : ScriptableObject
         UnequipEffect(badge.effect5, player);
     }
 
-    private void UnequipEffect(BadgeEffect effect, Caster player)
+    private void UnequipEffect(BadgeEffect effect, Player player)
     {
         if (effect == null)
             return;
         effect.Unequip(player);
+    }
+
+    public T GetEffect<T>() where T : BadgeEffect
+    {
+        var badge = CurrentBadge;
+        if(badge.effect1 is T tEffect1)
+        {
+            return tEffect1;
+        }
+        if (badge.effect2 is T tEffect2)
+        {
+            return tEffect2;
+        }
+        if (badge.effect3 is T tEffect3)
+        {
+            return tEffect3;
+        }
+        if (badge.effect4 is T tEffect4)
+        {
+            return tEffect4;
+        }
+        if (badge.effect5 is T tEffect5)
+        {
+            return tEffect5;
+        }
+        return null;
     }
 
     public override string ToString()

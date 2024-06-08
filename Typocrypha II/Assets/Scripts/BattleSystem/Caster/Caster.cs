@@ -33,13 +33,14 @@ public class Caster : MonoBehaviour
         Critical = 1,
         CriticalBlock = 2,
         Riposte = 4,
+        Combo = 8,
     }
 
     #region Delegate Declarations
     public delegate void ApplyToEffectFn(RootWordEffect effect, Caster caster, Caster target);
     public delegate void HitFn(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults data);
     public delegate CasterTagDictionary.ReactionMultiSet GetReactionsFn(SpellTag tag);
-    public delegate void AfterCastFn(Spell s, Caster caster); // Add targets and results?
+    public delegate void AfterCastFn(Spell s, Caster caster, bool hitTarget); // Add targets and results?
     #endregion
 
     /// <summary>

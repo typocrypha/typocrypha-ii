@@ -23,6 +23,21 @@ namespace ATB3
             StateMachine.PerformTransition(ATBStateID.Cast);
         }
 
+        public void InsertCast(Battlefield.Position spellTargetPosition, Spell spellToCast, System.Action onComplete, string messageOverride = null)
+        {
+            var caster = GetComponent<Caster>();
+            var spell = spellToCast;
+            var targetPos = spellTargetPosition;
+            bool topLevel = !ATBManager.instance.ProcessingActions;
+            Coroutine CastFn()
+            {
+                isCast = true;
+                FaderManager.instance.FadeTargets(spell, caster.FieldPos, targetPos);
+                return SpellManager.instance.CastAndCounter(spell, caster, targetPos, messageOverride, topLevel);
+            }
+            ATBManager.instance.InsertSolo(new ATBManager.ATBAction() { Actor = this, Action = CastFn, OnComplete = onComplete });
+        }
+
     }
 }
 

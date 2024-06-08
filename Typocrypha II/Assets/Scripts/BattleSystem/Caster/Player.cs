@@ -17,6 +17,9 @@ public class Player : Caster, IPausable
 
     private ATB3.ATBPlayer atbPlayer;
 
+    public event System.Action OnCastFail;
+    public System.Action<bool> OnPromptComplete { get; set; }
+
     protected override void Awake()
     {
         ui = Typocrypha.Keyboard.instance.PlayerUI;
@@ -35,7 +38,7 @@ public class Player : Caster, IPausable
     /// Cast a spell from the keyboard. Called when enter is pressed by player.
     /// Parses spell and, if spell is valid, casts it.
     /// </summary>
-    public SpellParser.ParseResults CastString(string[] spellWords)
+    private SpellParser.ParseResults CastString(string[] spellWords, Battlefield.Position targetPosition, bool insertCast)
     {
         var results = SpellParser.instance.Parse(spellWords, PlayerDataManager.instance.equipment.EquippedSpellWords, out var spell, out string problemWord);
         if (results == SpellParser.ParseResults.Valid) 
@@ -44,17 +47,22 @@ public class Player : Caster, IPausable
             var cooldowns = SpellCooldownManager.instance;
             if(cooldowns.IsOnCooldown(spell, out var wordOnCooldown))
             {
-                results = SpellParser.ParseResults.OnCooldown;
                 AudioManager.instance.PlaySFX(castFailureSfx);
                 SpellFxManager.instance.PlayText(new Vector2(0f, -2f), false, $"{wordOnCooldown.BaseName} on Cooldown", Color.red, castFailTextTime);
+                OnCastFail?.Invoke();
+                return SpellParser.ParseResults.OnCooldown;
             }
-            if (results != SpellParser.ParseResults.OnCooldown)
+            cooldowns.DoCooldowns(spell);
+            if (insertCast)
             {
-                cooldowns.DoCooldowns(spell);
-                Spell = spell;
-                atbPlayer.Cast(TargetPos); // Start casting sequence
-                //AudioManager.instance.PlaySFX(castSuccessSfx);
+                atbPlayer.InsertCast(targetPosition, spell, null);
             }
+            else
+            {
+                Spell = spell;
+                atbPlayer.Cast(targetPosition); // Start casting sequence
+            }
+            //AudioManager.instance.PlaySFX(castSuccessSfx);
         }
         else
         {
@@ -75,7 +83,23 @@ public class Player : Caster, IPausable
             {
                 SpellFxManager.instance.PlayText(new Vector2(0f, -2f), false, $"Invalid Spell", Color.red, castFailTextTime);
             }
+            OnCastFail?.Invoke();
         }
         return results;
+    }
+
+    public SpellParser.ParseResults CastString(string[] spellWords)
+    {
+        return CastString(spellWords, TargetPos, false);
+    }
+
+    public SpellParser.ParseResults CastStringInsert(string[] spellWords, Battlefield.Position targetPosition)
+    {
+        return CastString(spellWords, targetPosition, true);
+    }
+
+    public void InsertCast(Spell spell, Battlefield.Position targetPosition, string messageOverride = null)
+    {
+        atbPlayer.InsertCast(targetPosition, spell, null, messageOverride);
     }
 }

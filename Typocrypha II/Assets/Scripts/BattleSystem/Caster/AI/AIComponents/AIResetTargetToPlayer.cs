@@ -6,12 +6,12 @@ public class AIResetTargetToPlayer : AIComponent
 {
     private void OnEnable()
     {
-        caster.OnAfterCastResolved += (spell, self) => ResetTarget();
+        caster.OnAfterCastResolved += (spell, self, hitTarget) => ResetTarget();
     }
 
     private void OnDisable()
     {
-        caster.OnAfterCastResolved -= (spell, self) => ResetTarget();
+        caster.OnAfterCastResolved -= (spell, self, hitTarget) => ResetTarget();
     }
 
     public void ResetTarget()
