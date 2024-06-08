@@ -53,24 +53,4 @@ public abstract class InteractivePopup : CastBar
     {
 
     }
-
-    public override void Focus()
-    {
-        base.Focus();
-        wasPaused = Keyboard.instance.PH.Pause;
-        if (wasPaused)
-        {
-            Keyboard.instance.PH.Pause = false;
-        }
-    }
-
-    public override void Unfocus()
-    {
-        base.Unfocus();
-        if (wasPaused)
-        {
-            wasPaused = false;
-            Keyboard.instance.PH.Pause = true;
-        }
-    }
 }

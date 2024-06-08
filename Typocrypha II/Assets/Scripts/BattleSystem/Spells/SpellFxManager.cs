@@ -6,9 +6,15 @@ using UnityEngine;
 public class SpellFxManager : MonoBehaviour
 {
     public const float popTime = 0.4f;
+    #region Damage Shake
+    protected const float shakeIntensity = 0.125f;
+    protected const float shakeDuration = 0.5f;
+    protected const float shakeDamper = 5f;
+    #endregion
     public static SpellFxManager instance;
     private static readonly Vector2 reactionOffset = new Vector2(0, -80);
     private static readonly Vector2 stunOffset = new Vector2(0, 80);
+
     public bool HasMessages { get => logData.Count > 0; }
 
     [Header("Repel FX")]
@@ -29,6 +35,8 @@ public class SpellFxManager : MonoBehaviour
     [SerializeField] private Sprite blockSprite = null;
     [SerializeField] private Sprite repelSprite = null;
     [SerializeField] private Sprite missSprite = null;
+    [Header("Damage Fields")]
+    [SerializeField] private MaterialController damageGlitchController;
     [Header("Log Fields")]
     [SerializeField] private BattleLog logger;
 
@@ -82,7 +90,7 @@ public class SpellFxManager : MonoBehaviour
     }
     public Coroutine CounterFx(Battlefield.Position pos)
     {
-        return PlayText(Battlefield.instance.GetSpaceScreenSpace(pos), true, "Countered!", Color.green, popTime);
+        return PlayText(pos, "Countered!", Color.green, popTime);
     }
     public Coroutine Play(SpellFxData[] fxData, CastResults data, Vector2 targetPos, Vector2 casterPos)
     {
@@ -136,10 +144,19 @@ public class SpellFxManager : MonoBehaviour
 
         #endregion 
 
+
         foreach (var fx in fxData)
         {
             if (fx != null)
             {
+                if (data.DisplayDamage && (data.WillDealDamage || data.Effectiveness == Reaction.Repel && data.Damage > 0))
+                {
+                    CameraManager.instance.Shake(shakeIntensity, shakeDuration, shakeDamper);
+                    if (data.target.IsPlayer || (data.Effectiveness == Reaction.Repel && data.caster.IsPlayer))
+                    {
+                        damageGlitchController.Play();
+                    }
+                }
                 yield return StartCoroutine(fx.Play(pos));
             }
         }
@@ -220,7 +237,12 @@ public class SpellFxManager : MonoBehaviour
         return PlayImage(targetPos + reactionOffset, true, sprite, Color.white, popTime);
     }
 
-    public Coroutine PlayText(Vector2 position, bool isScreenSpace, string text, Color color, float time)
+    public Coroutine PlayText(Battlefield.Position pos, string text, Color color, float time = popTime)
+    {
+        return PlayText(Battlefield.instance.GetSpaceScreenSpace(pos), true, text, color, time);
+    }
+
+    public Coroutine PlayText(Vector2 position, bool isScreenSpace, string text, Color color, float time = popTime)
     {
         var player = textPopupPool.Get(popupCanvas.transform);
         if (isScreenSpace)

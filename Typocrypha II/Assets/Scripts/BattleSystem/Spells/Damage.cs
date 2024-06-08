@@ -7,7 +7,6 @@ public static class Damage
 {
     public const float stunBonusDamageMod = 1.25f;
     public const float critDamageMod = 2f;
-    public const float baseCritChance = 0.075f;
 
     public enum FormulaType
     {
@@ -96,43 +95,6 @@ public static class Damage
         }
         float hitChance = 1 * CompareStatsWeak(caster.Stats.Acc, target.Stats.Evade);
         results.Miss = (Random.Range(0f, 1f) > hitChance);
-    }
-    /// <summary>
-    /// Sets the Crit property and modifies damage and stagger based on a standard crit check
-    /// </summary>
-    public static bool StandardCritCheck(RootWordEffect effect, Caster caster, Caster target)
-    {
-        // If the move always crits, bypass accuracy checks
-        if (effect.tags.Contains("AlwaysCrit"))
-        {
-            return true;
-        }
-        // If the move always misses, bypass accuracy checks
-        else if (effect.tags.Contains("NeverCrit"))
-        {
-            return false;
-        }
-        float critChance = baseCritChance * CompareStats(caster.Stats.Luck, target.Stats.Luck);
-        return Random.Range(0, 1f) <= critChance;
-    }
-
-    /// <summary>
-    /// Sets the Crit property and modifies damage and stagger based on a standard crit check
-    /// </summary>
-    public static bool StandardCritCheckBuff(CastResults results, RootWordEffect effect, Caster caster, Caster target)
-    {
-        // If the move always crits, bypass accuracy checks
-        if (effect.tags.Contains("AlwaysCrit"))
-        {
-            return true;
-        }
-        // If the move always misses, bypass accuracy checks
-        else if (effect.tags.Contains("NeverCrit"))
-        {
-            return false;
-        }
-        float critChance = baseCritChance + (0.025f * (caster.Stats.Luck + target.Stats.Luck));
-        return Random.Range(0, 1f) <= critChance;
     }
 
     /// <summary>

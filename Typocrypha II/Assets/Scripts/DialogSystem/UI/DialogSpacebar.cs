@@ -52,7 +52,7 @@ public class DialogSpacebar : MonoBehaviour
     void Update()
     {
         State newState = CurrState;
-        if (DialogManager.instance.PH.Pause) newState = State.blocked;
+        if (DialogManager.instance.PH.Paused) newState = State.blocked;
         else
         {
             if (DialogManager.instance.dialogBox.IsDone) newState = State.next;

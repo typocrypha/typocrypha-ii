@@ -19,7 +19,7 @@ namespace Typocrypha
         private void OnPause(bool b)
         {
             foreach (var kvp in allEffects)
-                kvp.Value.PH.Pause = b;
+                kvp.Value.PH.SimpleParentPause(b);
             pauseUI.gameObject.SetActive(b);
             if (b)
             {
@@ -65,6 +65,23 @@ namespace Typocrypha
         [SerializeField] private AudioClip pausedCastSfx;
         [SerializeField] private AudioClip noInputSfx;
 
+        private int disableInactiveSfxCount = 0;
+        public bool DisableInactiveSfx
+        {
+            get => disableInactiveSfxCount > 0;
+            set
+            {
+                if (value)
+                {
+                    disableInactiveSfxCount++;
+                }
+                else
+                {
+                    disableInactiveSfxCount = System.Math.Max(0, disableInactiveSfxCount - 1);
+                }
+            }
+        }
+
         void Awake()
         {
             if (instance == null)
@@ -103,17 +120,21 @@ namespace Typocrypha
         void Start()
         {
             InputManager.Instance.StartInput(castBar);
-            if (PH.Pause)
+            if (PH.Paused)
             {
-                castBar.PH.Pause = true;
+                castBar.PH.Pause(PauseSources.Self);
             }
         }
 
         // Check user input.
         void Update()
         {
-            if (PH.Pause)
+            if (PH.Paused)
             {
+                if (DisableInactiveSfx)
+                {
+                    return;
+                }
                 foreach (var c in Input.inputString) // Play no input sfx
                 {
                     char input = char.ToLower(c);

@@ -15,9 +15,11 @@ public class SpellManager : MonoBehaviour
     public SpellWord counterWord;
     [SerializeField] private SpellWord runWord;
     [SerializeField] private SpellWord runAllWord;
+    [SerializeField] private Spell riposteSpell;
 
     [Header("Interactive Popups")]
     [SerializeField] private InteractivePopup critPopup;
+    [SerializeField] private CastPopup castPopup;
     [SerializeField] private InteractivePopup decodePopup;
 
     /// <summary> Singleton implementation </summary>
@@ -74,12 +76,15 @@ public class SpellManager : MonoBehaviour
     /// <summary> Cast the spell effects and play the associated fx</summary>
     private IEnumerator CastCR(Spell spell, Caster caster, Battlefield.Position target, string castMessageOverride, bool isTopLevel)
     {
-        // Hide target reticle
-        TargetReticle.instance.ShowReticle(false);
         // BattleDim : Dim everyone except caster
         BattleDimmer.instance.DimCasters(Battlefield.instance.Casters.Where(c => c != caster), false);
+        BattleDimmer.instance.UndimCaster(caster);
         // Hide caster's UI
-        caster.ui.ShowUI(false);
+        if(caster.ui != null)
+        {
+            caster.ui.ShowUI(false);
+        }
+
         // If the spell is restricted, break and do not cast
         if (SpellRestrictions.instance.IsRestricted(spell, caster, target, true))
         {
@@ -107,7 +112,7 @@ public class SpellManager : MonoBehaviour
             {
                 SpellFxManager.instance.LogMessage(castMessageOverride ?? $"{caster.DisplayName} and crew ran away!", spell.Icon);
             }
-            else
+            else if(castMessageOverride != string.Empty)
             {
                 SpellFxManager.instance.LogMessage(castMessageOverride ?? $"{caster.DisplayName} casts {spell.ToDisplayString()}", spell.Icon);
             }
@@ -116,30 +121,74 @@ public class SpellManager : MonoBehaviour
         }
         var roots = Modify(spell);
         // Critical chance
-        Damage.SpecialModifier mod = Damage.SpecialModifier.None;
-        if (roots.Any((r) => r.effects.Any((e) => e.CanCrit)) && UnityEngine.Random.Range(0, 1f) <= Damage.baseCritChance)
+        var mod = Damage.SpecialModifier.None;
+        if (roots.Any((r) => r.effects.Any((e) => e.CanCrit)))
         {
-            bool friendly = caster.IsPlayer || caster.CasterState == Caster.State.Ally;
-            IEnumerator OnCritPopupComplete(bool popupSuccess)
+
+            if (caster.IsPlayer)
             {
-                if (friendly)
+                var player = caster;
+                if (player.HasActiveAbilities(Caster.ActiveAbilities.Critical) && BadgeEffectCritical.RollForCritical(player))
                 {
-                    if (popupSuccess)
+                    IEnumerator OnCritPopupComplete(bool popupSuccess)
                     {
-                        mod = Damage.SpecialModifier.Critical;
+                        if (popupSuccess)
+                        {
+                            mod = Damage.SpecialModifier.Critical;
+                        }
+                        return null;
                     }
+                    LogInteractivePopup(critPopup, "Critical Chance!", "CRITICAL", 5, OnCritPopupComplete);
                 }
-                else
-                {
-                    mod = popupSuccess ? Damage.SpecialModifier.CritBlock : Damage.SpecialModifier.Critical;
-                }
-                return null;
             }
-            LogInteractivePopup(critPopup, "Critical Chance!", friendly ? "CRITICAL" : "BLOCK", 5, OnCritPopupComplete);
-            yield return StartCoroutine(PlayPrompts());
+            else if (caster.CasterState == Caster.State.Hostile)
+            {
+                var player = Battlefield.instance.Player;
+                if (player.HasActiveAbilities(Caster.ActiveAbilities.CriticalBlock) && BadgeEffectCritBlock.RollForCritical(player))
+                {
+                    IEnumerator OnBlockPopupComplete(bool popupSuccess)
+                    {
+                        if (popupSuccess)
+                        {
+                            mod = Damage.SpecialModifier.CritBlock;
+                        }
+                        return null;
+                    }
+                    LogInteractivePopup(critPopup, "Block Chance!", "BLOCK", 5, OnBlockPopupComplete);
+                }
+            }
+            if (HasPrompts)
+            {
+                yield return StartCoroutine(PlayPrompts());
+            }
+        }
+        if (caster.IsPlayer && !SpellCooldownManager.instance.Overheated)
+        {
+            var comboBadge = Lookup.GetBadge("combo");
+            if (PlayerDataManager.instance.equipment.IsBadgeEquipped(comboBadge))
+            {
+                var comboEffect = comboBadge.GetEffect<BadgeEffectCombo>();
+                if (comboEffect != null && comboEffect.CanFollowUp(caster))
+                {
+                    IEnumerator OnComboPopupComplete(bool popupSuccess)
+                    {
+                        if (popupSuccess && caster is Player player)
+                        {
+                            player.InsertCast(castPopup.Spell, target, string.Empty);
+                        }
+                        return null;
+                    }
+                    LogInteractivePopup(castPopup, "Combo Spell!", string.Empty, 5, OnComboPopupComplete);
+                }
+            }
+            if (HasPrompts)
+            {
+                yield return StartCoroutine(PlayPrompts());
+            }
         }
         var casterSpace = Battlefield.instance.GetSpaceScreenSpace(caster.FieldPos);
-        List<Coroutine> crList = new List<Coroutine>();
+        var crList = new List<Coroutine>();
+        bool hitTarget = false;
         for (int rootIndex = 0; rootIndex < roots.Count; rootIndex++)
         {
             var root = roots[rootIndex];
@@ -166,14 +215,19 @@ public class SpellManager : MonoBehaviour
                     }
                     else
                     {
+                        hitTarget = true;
                         // Apply the rule effect if necessary
                         Rule.ActiveRule?.ApplyToEffect(effect, caster, targetCaster);
                         // Apply OnCast Callbacks
-                        caster.OnBeforeSpellEffectResolved?.Invoke(effect, caster, targetCaster);
+                        caster.OnBeforeSpellEffectCast?.Invoke(effect, caster, targetCaster);
                         // Cast the effect
                         var castResults = effect.Cast(caster, targetCaster, spellData, mod, rootResults);
+                        // If the results are null, the effect is a NOP
+                        if (castResults == null)
+                            continue;
                         // Apply OnHit Callbacks (Updates AI)
                         targetCaster.OnAfterHitResolved?.Invoke(effect, caster, targetCaster, spellData, castResults);
+                        caster.OnAfterSpellEffectCast?.Invoke(effect, caster, targetCaster, spellData, castResults);
                         // Play Effects
                         var fx = new SpellFxData[] { root.leftMod?.fx, effect.fx, root.rightMod?.fx };
                         crList.Add(SpellFxManager.instance.Play(fx, castResults, targetSpace, casterSpace));
@@ -187,7 +241,7 @@ public class SpellManager : MonoBehaviour
                 foreach (var cr in crList)
                     yield return cr;
                 // Apply callbacks after the effect is finished
-                caster.OnAfterSpellEffectResolved?.Invoke(spell, caster);
+                caster.OnAfterSpellEffectResolved?.Invoke(spell, caster, hitTarget);
                 if (HasPrompts)
                 {
                     yield return PlayPrompts();
@@ -218,18 +272,31 @@ public class SpellManager : MonoBehaviour
         {
             yield return StartCoroutine(PlayPrompts());
         }
+        if(spell.Any((w) => w.Key == "unlock"))
+        {
+            Debug.LogError("TODO: add message unlock code here");
+        }
         // Apply callbacks after the whole cast is finished
-        caster.OnAfterCastResolved?.Invoke(spell, caster);
+        caster.OnAfterCastResolved?.Invoke(spell, caster, hitTarget);
         if (SpellCooldownManager.instance.Overheated)
         {
             SpellCooldownManager.instance.DoOverheat();
         }
-        // BattleDim: undim all
-        BattleDimmer.instance.SetDimmer(false);
-        // Show target reticle
-        TargetReticle.instance.ShowReticle(true);
+        PostCastFX(caster);
+    }
+
+    public void PostCastFX(Caster caster)
+    {
+        if (ATB3.ATBManager.instance.OnLastAction)
+        {
+            // BattleDim: undim all
+            BattleDimmer.instance.SetDimmer(false);
+        }
         // Show caster UI
-        caster.ui.ShowUI(true);
+        if(caster.ui != null)
+        {
+            caster.ui.ShowUI(true);
+        }
     }
 
     private IEnumerator CastAndCounterCR(Spell spell, Caster caster, Battlefield.Position target, Func<Caster, bool> pred, string castMessageOverride, bool isTopLevel)
@@ -249,14 +316,41 @@ public class SpellManager : MonoBehaviour
             if (fullCounter)
             {
                 cancelTarget.Spell = new Spell(counterWord);
+
             }
             else // Partial counter
             {
                 cancelTarget.Spell = new Spell(remainingWords);
             }
-            SpellFxManager.instance.CounterFx(cancelTarget.FieldPos);
-            cancelTarget.OnCounter?.Invoke(cancelTarget, fullCounter);
+            if (ShouldRiposte(caster, cancelTarget, fullCounter))
+            {
+                yield return SpellFxManager.instance.CounterFx(cancelTarget.FieldPos);
+                cancelTarget.OnCountered?.Invoke(cancelTarget, fullCounter);
+                caster.OnCounterOther?.Invoke(cancelTarget, fullCounter);
+                IEnumerator OnRipostComplete(bool success)
+                {
+                    if (success)
+                    {
+                        LogInterruptCast(riposteSpell, caster, target, string.Empty);
+                        yield return StartCoroutine(ProcessInterrupts());
+                    }
+                }
+                LogInteractivePopup(critPopup, "Riposte Chance!", "RIPOSTE", 5, OnRipostComplete);
+                yield return StartCoroutine(PlayPrompts());
+            }
+            else
+            {
+                SpellFxManager.instance.CounterFx(cancelTarget.FieldPos);
+                cancelTarget.OnCountered?.Invoke(cancelTarget, fullCounter);
+                caster.OnCounterOther?.Invoke(cancelTarget, fullCounter);
+            }
         }
+    }
+
+    private bool ShouldRiposte(Caster caster, Caster cancelTarget, bool fullCounter)
+    {
+        return caster is Player player && player.HasActiveAbilities(Caster.ActiveAbilities.Riposte)
+                                       && BadgeEffectRiposte.RollForRiposte(player, fullCounter);
     }
 
     public void LogInterruptCast(Spell spell, Caster caster, Battlefield.Position target, string messageOverride = null)

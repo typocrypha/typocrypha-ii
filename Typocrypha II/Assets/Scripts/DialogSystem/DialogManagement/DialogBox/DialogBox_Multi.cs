@@ -18,7 +18,7 @@ public class DialogBox_Multi : DialogBox, IDialogBox
 
     public new void OnPause(bool b)
     {
-        foreach (var box in boxes) box.PH.Pause = b;
+        foreach (var box in boxes) box.PH.SimpleParentPause(b);
     }
     #endregion
 

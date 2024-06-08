@@ -14,6 +14,7 @@ public class CallRandomReinforcementsEffectInspector : RootWordEffectInspector
         var effect = target as CallRandomReinforcementsEffect;
         EditorGUILayout.PropertyField(serializedObject.FindProperty("reinforcementPrefabs"), true);
         effect.number = EditorGUILayout.IntSlider(new GUIContent("Number"), effect.number, 1, 2);
+        effect.preventRepeats = EditorGUILayout.ToggleLeft(new GUIContent("Prevent Repeats"), effect.preventRepeats);
         serializedObject.ApplyModifiedProperties();
         if (GUI.changed)
             EditorUtility.SetDirty(target);

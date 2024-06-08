@@ -7,26 +7,26 @@ using UnityEngine;
 /// </summary>
 public class PostProcess : MonoBehaviour
 {
-	public static Dictionary<string, PostProcess> postProcessMap 
+    public static Dictionary<string, PostProcess> postProcessMap 
         = new Dictionary<string, PostProcess>(); // List of all post process effects
     public Material mat; // Material for shader effect
     public Dictionary<string, float> shaderParams = new Dictionary<string, float>(); // Shader property parameters (mapped by name)
 
-	void Awake()
+    void Start()
     {
         postProcessMap[mat.name] = this;
-	}
+    }
 
-	void Update()
+    void Update()
     {
         foreach (var kvp in shaderParams)
         {
             mat.SetFloat(kvp.Key, kvp.Value);
         }
-	}
+    }
 
-	void OnRenderImage(RenderTexture src, RenderTexture dest)
+    void OnRenderImage(RenderTexture src, RenderTexture dest)
     {
-		Graphics.Blit (src, dest, mat);
-	}
+        Graphics.Blit (src, dest, mat);
+    }
 }

@@ -5,15 +5,22 @@ using System.Linq;
 
 public class FormulaDrainDamage : CustomFormula
 {
+    public CasterTag filterTag;
     public float drainMod = 0.5f;
     public override CastResults Apply(DamageEffect effect, Caster caster, Caster target, Damage.SpecialModifier mod, RootCastData spellData, RootCastResults prevResults = null)
     {
-        var results = new CastResults(caster, target);
         if (prevResults == null || prevResults.Count <= 0)
-            return results;
-        results.Damage = -(prevResults.LastEffect.Sum((r) => r.WillDealDamage ? r.Damage : 0));
-        if (results.Damage > 0)
-            results.Damage = 0;
+            return null;
+        var results = new CastResults(caster, target);
+        results.Damage = 0;
+        foreach (var r in prevResults.LastEffect)
+        {
+            if (!r.WillDealDamage || (filterTag != null && !r.target.HasTag(filterTag)))
+                continue;
+            results.Damage -= r.Damage;
+        }
+        if (results.Damage >= 0)
+            return null;
         results.Damage *= drainMod;
         if (mod == Damage.SpecialModifier.Critical)
         {

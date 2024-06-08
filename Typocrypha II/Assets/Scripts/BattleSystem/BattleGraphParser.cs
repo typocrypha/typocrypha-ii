@@ -31,6 +31,16 @@ public class BattleGraphParser : GraphParser
             TransitionManager.instance.TransitionToNextScene();
             return null;
         }
+        else if (currNode is VictoryScreenNode victoryNode)
+        {
+            BattleManager.instance.Victory(victoryNode);
+            return null;
+        }
+        else if(currNode is VictoryScreenUnlockNode unlockMessageNode)
+        {
+            Debug.LogError("TODO: add message unlock code here");
+            return NextWave();
+        }
         else if (currNode is BattleNodeWave waveNode)
         {
             return new BattleWave()

@@ -10,9 +10,31 @@ public class InputManager : MonoBehaviour, IPausable
     {
         foreach(var input in inputStack)
         {
-            input.PH.Pause = pause;
+            input.PH.SimpleParentPause(pause);
+        }
+        Typocrypha.Keyboard.instance.PH.SimpleParentPause(pause);
+    }
+    private bool blockCasting = false;
+    public bool BlockCasting 
+    { 
+        get => blockCasting;
+        set 
+        {
+            if(value)
+            {
+                if (!blockCasting)
+                {
+                    Typocrypha.Keyboard.instance.PH.SimpleParentPause(true);
+                }
+            }
+            else if (!PH.Paused)
+            {
+                Typocrypha.Keyboard.instance.PH.SimpleParentPause(false);
+            }
+            blockCasting = value;
         }
     }
+
     private void Awake()
     {
         if(Instance != null)
@@ -24,11 +46,6 @@ public class InputManager : MonoBehaviour, IPausable
         PH = new PauseHandle(OnPause);
     }
 
-    private void Start()
-    {
-        PH.SetParent(Typocrypha.Keyboard.instance);
-    }
-
     private readonly Stack<IInputHandler> inputStack = new Stack<IInputHandler>();
 
     public void StartInput(IInputHandler handler)
@@ -36,6 +53,7 @@ public class InputManager : MonoBehaviour, IPausable
         if (inputStack.Count > 0)
         {
             inputStack.Peek().Unfocus();
+            Typocrypha.Keyboard.instance.PH.SimpleParentPause(false);
         }
         StopAllCoroutines();
         handler.Focus();
@@ -94,6 +112,10 @@ public class InputManager : MonoBehaviour, IPausable
         if(inputStack.Count > 0)
         {
             inputStack.Peek().Focus();
+            if(inputStack.Count == 1 && BlockCasting)
+            {
+                Typocrypha.Keyboard.instance.PH.SimpleParentPause(true);
+            }
         }
     }
 

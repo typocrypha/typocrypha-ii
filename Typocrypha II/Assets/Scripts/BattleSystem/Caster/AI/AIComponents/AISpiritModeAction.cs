@@ -36,7 +36,7 @@ public class AISpiritModeAction : AIComponent
         caster.TargetPos = Battlefield.instance.Player.FieldPos;
     }
 
-    private void ResetCast(Spell spell, Caster self)
+    private void ResetCast(Spell spell, Caster self, bool hitTarget)
     {
         if (caster.BStatus == Caster.BattleStatus.SpiritMode && resetToRunAfterCast)
         {

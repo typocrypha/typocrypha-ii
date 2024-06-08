@@ -11,12 +11,6 @@ namespace ATB3
         public override IATBStateMachine BaseStateMachine => StateMachine;
         public Battlefield.Position SavedTargetPos { get; private set; }
 
-        void Awake()
-        {
-            ph = new PauseHandle(OnPause);
-            Setup();
-        }
-
         public override void Setup()
         {
             StateMachine = GetComponent<ATBStateMachine_Player>();
@@ -27,6 +21,21 @@ namespace ATB3
         {
             SavedTargetPos = new Battlefield.Position(targetPos);
             StateMachine.PerformTransition(ATBStateID.Cast);
+        }
+
+        public void InsertCast(Battlefield.Position spellTargetPosition, Spell spellToCast, System.Action onComplete, string messageOverride = null)
+        {
+            var caster = GetComponent<Caster>();
+            var spell = spellToCast;
+            var targetPos = spellTargetPosition;
+            bool topLevel = !ATBManager.instance.ProcessingActions;
+            Coroutine CastFn()
+            {
+                isCast = true;
+                FaderManager.instance.FadeTargets(spell, caster.FieldPos, targetPos);
+                return SpellManager.instance.CastAndCounter(spell, caster, targetPos, messageOverride, topLevel);
+            }
+            ATBManager.instance.InsertSolo(new ATBManager.ATBAction() { Actor = this, Action = CastFn, OnComplete = onComplete });
         }
 
     }

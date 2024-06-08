@@ -16,6 +16,7 @@ public class PromptPopup : InteractivePopup
         LastPromptSuccess = Text.ToUpper() == Prompt.ToUpper();
         AudioManager.instance.PlaySFX(LastPromptSuccess ? successSfx : failSfx);
         Completed = true;
+        Battlefield.instance.Player.OnPromptComplete?.Invoke(LastPromptSuccess);
         InputManager.Instance.CompleteInput();
     }
 
@@ -23,6 +24,7 @@ public class PromptPopup : InteractivePopup
     {
         base.OnTimeout();
         AudioManager.instance.PlaySFX(failSfx);
+        Battlefield.instance.Player.OnPromptComplete?.Invoke(false);
     }
 
     protected override void Setup(string header, string prompt, float time)

@@ -28,7 +28,7 @@ public class AICycleSpells : AIComponent
         caster.OnAfterCastResolved -= CycleSpell;
     }
 
-    public void CycleSpell(Spell spell, Caster self)
+    public void CycleSpell(Spell spell, Caster self, bool hitTarget)
     {
         if (++curr >= spells.Count)
             curr = loopIndex;

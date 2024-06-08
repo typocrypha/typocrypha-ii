@@ -10,16 +10,7 @@ namespace ATB3
         public override void OnEnter()
         {
             var caster = Owner.GetComponent<Caster>();
-            var spell = caster.Spell;
-            var targetPos = Owner.SavedTargetPos;
-            bool topLevel = !ATBManager.instance.ProcessingActions;
-            Coroutine CastFn()
-            {
-                Owner.isCast = true;
-                FaderManager.instance.FadeTargets(spell, caster.FieldPos, targetPos);
-                return SpellManager.instance.CastAndCounter(spell, caster, targetPos, null, topLevel);
-            }
-            ATBManager.instance.QueueSolo(new ATBManager.ATBAction() { Actor = Owner, Action = CastFn, OnComplete = CastComplete });
+            Owner.InsertCast(Owner.SavedTargetPos, caster.Spell, CastComplete);
         }
 
         // Call on fixed update while in given state

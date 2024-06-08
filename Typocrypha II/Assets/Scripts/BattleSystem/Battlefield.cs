@@ -25,18 +25,28 @@ public class Battlefield : MonoBehaviour, IPausable
         if (b)
         {
             foreach (var actor in Actors)
-                if (actor != null) actor.Pause = true;
+            {
+                if (actor != null)
+                {
+                    actor.PH.Pause(PauseSources.Parent);
+                }
+            }
         }
         else
         {
             if (!ATBManager.instance.ProcessingActions)
             {
                 foreach (var actor in Actors)
-                    if (actor != null) actor.Pause = false;
+                {
+                    if (actor != null)
+                    {
+                        actor.PH.Unpause(PauseSources.Parent);
+                    }
+                }
             }
             else
             {
-                ATBManager.instance.SoloActor.Pause = false;
+                ATBManager.instance.SoloActor.PH.Unpause(PauseSources.Parent);
             }
         }
     }
@@ -62,14 +72,14 @@ public class Battlefield : MonoBehaviour, IPausable
     public static Battlefield instance;
     public int Columns { get; } = 3;
     public int Rows { get; } = 2;
-    public Caster Player
+    public Player Player
     {
         get
         {
             foreach (var caster in Casters)
             {
-                if (caster.IsPlayer)
-                    return caster;
+                if (caster is Player player)
+                    return player;
             }
             return null;
         }
@@ -140,7 +150,14 @@ public class Battlefield : MonoBehaviour, IPausable
         caster.transform.position = spaces[pos].transform.position;
         field[pos] = caster;
         var actor = caster.GetComponent<ATBActor>();
-        if (actor != null) Actors.Add(actor);
+        if (actor != null)
+        {
+            Actors.Add(actor);
+            if (PH.Paused)
+            {
+                actor.PH.Pause(PauseSources.Parent);
+            }
+        }
         Casters.Add(caster);
     }
     public void AddProxyCaster(Caster caster)
@@ -194,6 +211,7 @@ public class Battlefield : MonoBehaviour, IPausable
         if (actor != null)
         {
             Actors.Remove(actor);
+            actor.PH.FreeFromParent();
         }
         if (destroy)
         {
@@ -365,7 +383,7 @@ public class Battlefield : MonoBehaviour, IPausable
     {
         public bool IsLegal { get => _col >= 0 && _col < instance.Columns && _row >= 0 && _row < instance.Rows; }
         [SerializeField] int _row;
-        public int Row { get => _row; set =>_row = value; }
+        public int Row { get => _row; set => _row = value; }
         [SerializeField] int _col;
         public int Col { get => _col; set => _col = value; }
         public Position(int row, int col)
@@ -386,7 +404,7 @@ public class Battlefield : MonoBehaviour, IPausable
             _col = toCopy.x;
         }
 
-        public void SetIllegalPosition (int row, int col)
+        public void SetIllegalPosition(int row, int col)
         {
             _row = row;
             _col = col;
@@ -404,7 +422,15 @@ public class Battlefield : MonoBehaviour, IPausable
             return other is Position pos && Equals(pos);
         }
 
-        public static bool operator ==(Position a, Position b) => a.Equals(b);
+        public static bool operator ==(Position a, Position b) 
+        {
+            if (a is null || b is null)
+            {
+                return a is null && b is null;
+            }
+            return a.Equals(b);
+        }
+
         public static bool operator !=(Position a, Position b) => !(a == b);
         
         public override int GetHashCode()

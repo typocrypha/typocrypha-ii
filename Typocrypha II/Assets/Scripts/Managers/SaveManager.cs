@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using System.Collections.Generic;
 using System;
@@ -16,6 +15,7 @@ public class CampaignSaveData
     public string currentSceneName;
     public int currentSceneIndex;
     public List<string> equippedBadgeWords = new List<string>();
+    public int currency;
 }
 
 [System.Serializable]
@@ -23,6 +23,7 @@ public class GlobalSaveData
 {
     public List<string> unlockedSpellWords = new List<string>();
     public List<string> unlockedBadgeWords = new List<string>();
+    public List<int> badgeUpgradeLevels = new List<int>();
 }
 
 /// <summary>
@@ -33,6 +34,9 @@ public class SaveManager : MonoBehaviour
     public static SaveManager instance = null; // Global static reference
     private static string SaveFilePath(int saveIndex) => Path.Combine(Application.persistentDataPath, $"campaignSaveData{saveIndex}.dat");
     private static string GlobalSaveFilePath() => Path.Combine(Application.persistentDataPath, "globalSaveData.dat");
+
+    private int loadedCampaignIndex = 0;
+
     void Awake()
     {
         if (instance == null)
@@ -117,7 +121,9 @@ public class SaveManager : MonoBehaviour
     /// <summary>
     /// Save the currently loaded game data into the save file.
     /// </summary>
-    public void SaveCampaign(int saveIndex = 0)
+    public void SaveCampaign() => SaveCampaign(loadedCampaignIndex);
+
+    private void SaveCampaign(int saveIndex)
     {
         SaveFile(GetCampaignSaveData(), SaveFilePath(saveIndex));
     }
@@ -136,13 +142,31 @@ public class SaveManager : MonoBehaviour
             var badge = kvp.Value;
             data.equippedBadgeWords.Add(badge.Key);
         }
+        data.currency = dataManager.currency;
         return data;
     }
 
     public void LoadCampaign(int saveIndex = 0)
     {
+        loadedCampaignIndex = saveIndex;
         var data = LoadFile<CampaignSaveData>(SaveFilePath(saveIndex));
         LoadCampaignData(data);
+    }
+
+    [System.Diagnostics.Conditional("DEBUG")]
+    public void DebugLoadCampaign()
+    {
+        const int debugSaveFile = 99;
+        if (!HasCampaignSaveFile(debugSaveFile))
+        {
+            SaveCampaign(debugSaveFile);
+        }
+        LoadCampaign(debugSaveFile);
+    }
+
+    private void LoadCampaignData(CampaignSaveData data)
+    {
+        TransitionManager.instance.LoadIndex(data.currentSceneName, data.currentSceneIndex);
         var dataManager = PlayerDataManager.instance;
         var equipment = dataManager.equipment;
         // Equipped badges
@@ -152,13 +176,9 @@ public class SaveManager : MonoBehaviour
             if (Lookup.TryGetBadge(key, out var badge))
             {
                 equipment.EquipBadge(badge);
-            } 
+            }
         }
-    }
-
-    private void LoadCampaignData(CampaignSaveData data)
-    {
-        TransitionManager.instance.LoadIndex(data.currentSceneName, data.currentSceneIndex);
+        dataManager.currency = data.currency;
     }
 
     public void SaveGlobalData()
@@ -184,6 +204,7 @@ public class SaveManager : MonoBehaviour
         {
             var badge = kvp.Value;
             data.unlockedBadgeWords.Add(badge.Key);
+            data.badgeUpgradeLevels.Add(equipment.GetUpgradeLevel(badge));
         }
         return data;
     }
@@ -212,11 +233,13 @@ public class SaveManager : MonoBehaviour
         }
         // Unlocked badges
         equipment.ClearUnlockedBadges();
-        foreach(var key in data.unlockedBadgeWords)
+        for (int i = 0; i < data.unlockedBadgeWords.Count && i < data.badgeUpgradeLevels.Count; i++)
         {
+            string key = data.unlockedBadgeWords[i];
             if (Lookup.TryGetBadge(key, out var badge))
             {
                 equipment.UnlockBadge(badge);
+                equipment.SetUpgradeLevel(badge, data.badgeUpgradeLevels[i]);
             }
         }
     }

@@ -3,12 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class AIMari : AIComponent
+public class AIMari : AIComponent, IPromptProvider
 {
     [SerializeField] private Spell cycleStartSpell;
     [SerializeField] private SpellList cycle1Spells;
     [SerializeField] private SpellList cycle2Spells;
     [SerializeField] private SpellList cycle3Spells;
+
+    [SerializeField] private List<PromptData> cycle1Prompts;
+    [SerializeField] private List<PromptData> cycle2Prompts;
+    [SerializeField] private List<PromptData> cycle3Prompts;
+
     private int cycleIndex = -1;
     private int spellIndex;
     private State state;
@@ -61,7 +66,7 @@ public class AIMari : AIComponent
         EnterPreparingStormState(); // May not need anything except buff here
     }
 
-    private void AfterCastResolved(Spell spell, Caster self)
+    private void AfterCastResolved(Spell spell, Caster self, bool hitTarget)
     {
         if(state == State.PreparingStorm)
         {
@@ -105,5 +110,65 @@ public class AIMari : AIComponent
         if (++spellIndex >= spellList.Count)
             spellIndex = 0;
         ChangeSpell(spellList[spellIndex]);
+    }
+
+    public string Title(int index)
+    {
+        return "COUNTER";
+    }
+
+    public string Prompt(int index)
+    {
+        if(!GetPromptData(index, out var promptData))
+        {
+            return string.Empty;
+        }
+        return promptData.Prompt;
+    }
+
+    public float Time(int index)
+    {
+        if (!GetPromptData(index, out var promptData))
+        {
+            return 1;
+        }
+        return promptData.Time;
+    }
+
+    private bool GetPromptData(int index, out PromptData promptData)
+    { 
+        if(cycleIndex < 0 || index < 0)
+        {
+            promptData = null;
+            return false;
+        }
+        List<PromptData> promptList;
+        if (cycleIndex == 0)
+        {
+            promptList = cycle1Prompts;
+        }
+        else if (cycleIndex == 1)
+        {
+            promptList = cycle2Prompts;
+        }
+        else
+        {
+            promptList = cycle3Prompts;
+        }
+        if(index >= promptList.Count)
+        {
+            promptData = null;
+            return false;
+        }
+        promptData = promptList[index];
+        return true;
+    }
+
+
+    [System.Serializable]
+    public class PromptData
+    {
+        public string Prompt;
+        public float Time;
     }
 }

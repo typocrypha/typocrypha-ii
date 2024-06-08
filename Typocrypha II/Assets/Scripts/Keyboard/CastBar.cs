@@ -12,7 +12,7 @@ namespace Typocrypha
     /// </summary>
     public abstract class CastBar : MonoBehaviour, IInputHandler
     {
-        protected const int maxLetters = 30;
+        public const int maxLetters = 30;
         protected static readonly Color promptColor = Color.gray;
         protected static readonly Color normalColor = Color.white;
         protected static readonly Color wrongColor = Color.red;
@@ -50,7 +50,7 @@ namespace Typocrypha
             {
                 Resize(letters.Length);
             }
-            Clear(!PH.Pause);
+            Clear(!PH.Paused);
         }
 
         public void Resize(int size)
@@ -203,7 +203,7 @@ namespace Typocrypha
 
         public void Clear()
         {
-            Clear(!PH.Pause);
+            Clear(!PH.Paused);
         }
 
         protected void Clear(bool showCursor)
@@ -250,13 +250,13 @@ namespace Typocrypha
 
         public virtual void Focus()
         {
-            PH.Pause = false;
-            UpdateCursor(!PH.Pause);
+            PH.Unpause(PauseSources.Self);
+            UpdateCursor(!PH.Paused);
         }
 
         public virtual void Unfocus()
         {
-            PH.Pause = true;
+            PH.Pause(PauseSources.Self);
         }
     }
 }

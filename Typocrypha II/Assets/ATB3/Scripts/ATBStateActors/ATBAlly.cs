@@ -39,7 +39,7 @@ namespace ATB3
             while (true)
             {
                 yield return new WaitForFixedUpdate();
-                yield return new WaitWhile(() => Pause || !IsCurrentState(ATBStateID.Charge));
+                yield return new WaitWhile(() => PH.Paused || !IsCurrentState(ATBStateID.Charge));
                 if (Mp == mpMax)
                     continue;
                 time += Time.fixedDeltaTime * Caster.Stats.CastingSpeedMod;
@@ -92,17 +92,10 @@ namespace ATB3
             }
         }
 
-        void Awake()
-        {
-            ph = new PauseHandle(OnPause);
-            Setup();
-        }
-
         public override void Setup()
         {
             StateMachine = GetComponent<ATBStateMachine<ATBAlly>>();
             Caster = GetComponent<Caster>();
-            PH.Pause = true;
             StartCoroutine(ChargeCR());
         }
 

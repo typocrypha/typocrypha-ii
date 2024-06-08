@@ -12,10 +12,6 @@ public class TargetReticle : MonoBehaviour, IPausable
     public void OnPause(bool pause)
     {
         enabled = !pause;
-        if (Battlefield.instance.Player is Player player)
-        {
-            player.PH.Pause = pause;
-        }
         //gameObject.SetActive(!pause);
         if (pause)
         {
@@ -34,12 +30,11 @@ public class TargetReticle : MonoBehaviour, IPausable
     [SerializeField] private RectTransform rectTr;
     [SerializeField] private Image reticleImage;
     [SerializeField] private TweenInfo enableDisableTween;
+    private Battlefield.Position TargetPos { get; } = new Battlefield.Position(0, 1);
 
     void Awake()
     {
         PH = new PauseHandle(OnPause);
-        PH.SetParent(BattleManager.instance.PH);
-
         if (instance == null) instance = this;
         else Destroy(gameObject);
     }
@@ -59,27 +54,63 @@ public class TargetReticle : MonoBehaviour, IPausable
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.LeftArrow) && TargetPos.Col > 0)
+        {
+            TargetPos.Col--;
+            UpdateTargetPos();
+        }
+
+        if (Input.GetKeyDown(KeyCode.RightArrow) && TargetPos.Col < (Battlefield.instance.Columns - 1))
+        {
+            TargetPos.Col++;
+            UpdateTargetPos();
+        }
+
+        //if (Input.GetKeyDown(KeyCode.UpArrow))
+        //    TargetPos.Row = 0;
+        //if (Input.GetKeyDown(KeyCode.DownArrow))
+        //    TargetPos.Row = 1;
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            var field = Battlefield.instance;
+            var newPos = new Battlefield.Position(TargetPos);
+            do
+            {
+                ++newPos.Col;
+                if (newPos.Col >= field.Columns)
+                    newPos.Col = 0;
+                var caster = field.GetCaster(newPos);
+                if (caster != null && !caster.IsDeadOrFled)
+                    break;
+            }
+            while (newPos.Col != TargetPos.Col);
+            TargetPos.Col = newPos.Col;
+            UpdateTargetPos();
+        }
         // Move scouter reticule
-        SetTargetPos();
-        if(transform.position.x != targetPosScreenspace.x || transform.position.y != targetPosScreenspace.y)
+        UpdateTargetPos();
+        if (transform.position.x != targetPosScreenspace.x || transform.position.y != targetPosScreenspace.y)
         {
             transform.position = Vector2.Lerp(transform.position, targetPosScreenspace, MoveSpeed);
         }
     }
 
-    protected void SetTargetPos()
+    public void SetPosInstant()
+    {
+        lastTargetPos = new Battlefield.Position(TargetPos);
+        TargetPos.Col = Battlefield.instance.Player.TargetPos.Col;
+        TargetPos.Row = Battlefield.instance.Player.TargetPos.Row;
+        targetPosScreenspace = Battlefield.instance.GetSpaceScreenSpace(TargetPos);
+    }
+
+    protected void UpdateTargetPos()
     {
         if (Battlefield.instance.Player == null)
             return;
-        var targetFieldPos = Battlefield.instance.Player.TargetPos;
-        if (lastTargetPos == targetFieldPos)
+        if (lastTargetPos == TargetPos)
             return;
-        lastTargetPos = new Battlefield.Position(targetFieldPos);
-        targetPosScreenspace = Battlefield.instance.GetSpaceScreenSpace(targetFieldPos);
-    }
-
-    public void ShowReticle(bool show)
-    {
-        reticleImage.enabled = show;
+        Battlefield.instance.Player.TargetPos = TargetPos;
+        lastTargetPos = new Battlefield.Position(TargetPos);
+        targetPosScreenspace = Battlefield.instance.GetSpaceScreenSpace(TargetPos);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -8,19 +9,31 @@ public class BadgeSelectorMenu : MonoBehaviour
 {
     private static PlayerEquipment Equipment => PlayerDataManager.instance.equipment;
 
-    [SerializeField] private EquipmentMenu parentMenu;
     [SerializeField] private MenuButton[] buttons;
     [SerializeField] private TextMeshProUGUI descriptionText;
     [SerializeField] private UnityEvent onClose;
 
-    private readonly List<EquipmentWord> unlockedBadges = new List<EquipmentWord>();
+    private readonly List<BadgeWord> unlockedBadges = new List<BadgeWord>();
     private int selectedBadgeIndex;
     private int selectedButtonIndex;
     private int numActiveButtons;
-    private EquipmentWord.EquipmentSlot targetSlot;
+    private BadgeWord.EquipmentSlot targetSlot;
+    public bool IsShowing { get; private set; } = false;
 
-    public void Open(EquipmentWord.EquipmentSlot slot)
+    [Conditional("DEBUG"), ContextMenu("Upgrade Selected Badge")]
+    private void UpgradeSelectedBadge()
     {
+        if(selectedBadgeIndex >= 0 && unlockedBadges[selectedBadgeIndex].HasUpgrade)
+        {
+            unlockedBadges[selectedBadgeIndex].Upgrade();
+            UpdateDescription();
+            SetButtonText(buttons[selectedButtonIndex], selectedBadgeIndex);
+        }
+    }
+
+    public void Open(BadgeWord.EquipmentSlot slot)
+    {
+        IsShowing = true;
         targetSlot = slot;
         gameObject.SetActive(true);
         unlockedBadges.Clear();
@@ -92,6 +105,7 @@ public class BadgeSelectorMenu : MonoBehaviour
 
     public void Close()
     {
+        IsShowing = false;
         if(selectedBadgeIndex < 0)
         {
             Equipment.UnequipBadgeLive(targetSlot, Battlefield.instance.Player);
@@ -100,6 +114,14 @@ public class BadgeSelectorMenu : MonoBehaviour
         {
             Equipment.EquipBadgeLive(unlockedBadges[selectedBadgeIndex], Battlefield.instance.Player);
         }
+        buttons[selectedButtonIndex].OnDeselect(null);
+        gameObject.SetActive(false);
+        onClose?.Invoke();
+    }
+
+    public void CloseNoEquip()
+    {
+        IsShowing = false;
         buttons[selectedButtonIndex].OnDeselect(null);
         gameObject.SetActive(false);
         onClose?.Invoke();
@@ -171,7 +193,7 @@ public class BadgeSelectorMenu : MonoBehaviour
         buttons[buttons.Length - 1].OnSelect(null);
     }
 
-    private static int WordComparer(EquipmentWord w1, EquipmentWord w2)
+    private static int WordComparer(BadgeWord w1, BadgeWord w2)
     {
         return w1.Key.CompareTo(w2.Key);
     }

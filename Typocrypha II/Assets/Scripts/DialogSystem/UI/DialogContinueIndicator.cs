@@ -55,7 +55,7 @@ public class DialogContinueIndicator : MonoBehaviour
 
         AnimateIndicator();
 
-        yield return new WaitUntil(() => !DialogManager.instance.PH.Pause && Input.GetKeyDown(KeyCode.Space));
+        yield return new WaitUntil(() => !DialogManager.instance.PH.Paused && Input.GetKeyDown(KeyCode.Space));
         
         StopAnimation();
     }

@@ -20,7 +20,7 @@ public class BEConditionPlayerCast : BattleEventCondition
         Battlefield.instance.Player.OnAfterCastResolved -= CheckCast;
     }
 
-    public void CheckCast(Spell s, Caster caster)
+    public void CheckCast(Spell s, Caster caster, bool hitTarget)
     {
         if (!IsValidCast(s, caster))
             return;
