@@ -15,7 +15,6 @@ public class SpellManager : MonoBehaviour
     public SpellWord counterWord;
     [SerializeField] private SpellWord runWord;
     [SerializeField] private SpellWord runAllWord;
-    [SerializeField] private SpellWord riposteWord;
 
     [Header("Interactive Popups")]
     [SerializeField] private InteractivePopup critPopup;
