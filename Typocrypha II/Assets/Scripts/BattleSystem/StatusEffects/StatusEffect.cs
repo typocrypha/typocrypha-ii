@@ -17,7 +17,7 @@ public abstract class StatusEffect : MonoBehaviour
         Cleanup();
     }
 
-    public abstract string FailMessage(Caster caster);
+    public abstract string FailMessage(Caster caster, Caster target);
 
     /// <summary>
     /// Initialize subscriptions to Caster callbacks
@@ -30,37 +30,14 @@ public abstract class StatusEffect : MonoBehaviour
             Debug.LogError("StatusEffect: " + name + " does could not find a caster on it's parent object ");
             return;
         }         
-        affected.OnAfterHitResolved += OnAfterHit;
-        affected.OnAfterSpellEffectResolved += OnAfterCastResolved;
-        affected.OnBeforeHitResolved += OnBeforeEffectApplied;
     }
 
-    public abstract void Apply(ApplyStatusEffect effect, Caster caster, Caster target, CastResults data);
-
-    public virtual void OnAfterHit(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults data)
-    {
-
-    }
-
-    public virtual void OnBeforeEffectApplied(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults data)
-    {
-
-    }
-
-    public virtual void OnAfterCastResolved(Spell s, Caster self, bool hitTarget)
-    {
-
-    }
+    public virtual void Apply(ApplyStatusEffect effect, Caster caster, Caster target, CastResults data) { }
 
     /// <summary>
     /// Removes all subscriptions to Caster callbacks
     /// </summary>
-    public virtual void Cleanup()
-    {
-        affected.OnAfterHitResolved -= OnAfterHit;
-        affected.OnAfterSpellEffectResolved -= OnAfterCastResolved;
-        affected.OnBeforeHitResolved -= OnBeforeEffectApplied;
-    }
+    public virtual void Cleanup() { }
 
     /// <summary>
     /// Simply removes the associated tag from the caster.

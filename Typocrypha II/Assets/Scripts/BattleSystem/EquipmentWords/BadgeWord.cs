@@ -17,6 +17,10 @@ public class BadgeWord : ScriptableObject
     public EquipmentSlot Slot => CurrentBadge.slot;
     [SerializeField] private EquipmentSlot slot;
     [SerializeField] private int cost;
+    public int Cost => CurrentBadge.cost;
+    public int UpgradeCost => HasUpgrade ? NextUpgrade.cost : 0;
+
+    public int NextCost => IsUnlocked ? UpgradeCost : Cost;
 
     [SerializeField] [SubSO("Effect1")] private BadgeEffect effect1;
     [SerializeField] [SubSO("Effect2")] private BadgeEffect effect2;
@@ -34,6 +38,7 @@ public class BadgeWord : ScriptableObject
     private bool IsUpgraded => UpgradeLevel > 0;
 
     public bool HasUpgrade => upgrades.Length > UpgradeLevel;
+    public bool IsUnlocked => PlayerDataManager.instance.equipment.IsBadgeUnlocked(this);
     public BadgeWord NextUpgrade => HasUpgrade ? upgrades[UpgradeLevel] : null;
     private BadgeWord CurrentBadge => IsUpgraded ? upgrades[UpgradeLevel - 1] : this;
 
@@ -120,6 +125,6 @@ public class BadgeWord : ScriptableObject
     public override string ToString()
     {
         char slotType = Slot.ToString()[0];
-        return string.Format("{0} - {1} {2}", slotType, DisplayName, cost.ToString("C0"));
+        return string.Format("{0} - {1}", slotType, DisplayName);
     }
 }

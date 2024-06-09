@@ -13,7 +13,7 @@ public class StatusRemoveAfterHitOrCast : StatusEffect
     private int casts;
     private int hits;
 
-    public override string FailMessage(Caster caster)
+    public override string FailMessage(Caster caster, Caster target)
     {
         return "But it failed!";
     }
@@ -23,7 +23,7 @@ public class StatusRemoveAfterHitOrCast : StatusEffect
         // Only count hits that would deal damage and are not misses
         return data.WillDealDamage;
     }
-    public override void OnAfterHit(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults data)
+    private void OnAfterHit(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults data)
     {
         if (!removeFromHits)
             return;
@@ -36,7 +36,7 @@ public class StatusRemoveAfterHitOrCast : StatusEffect
             Remove();
     }
 
-    public override void OnAfterCastResolved(Spell s, Caster self, bool hitTarget)
+    private void OnAfterCastResolved(Spell s, Caster self, bool hitTarget)
     {
         if (!removeFromCasts)
             return;
@@ -49,8 +49,17 @@ public class StatusRemoveAfterHitOrCast : StatusEffect
             Remove();
     }
 
-    public override void Apply(ApplyStatusEffect effect, Caster caster, Caster target, CastResults data)
+    protected override void Initialize()
     {
-        return;
+        base.Initialize();
+        affected.OnAfterHitResolved += OnAfterHit;
+        affected.OnAfterSpellEffectResolved += OnAfterCastResolved;
+    }
+
+    public override void Cleanup()
+    {
+        base.Cleanup();
+        affected.OnAfterHitResolved -= OnAfterHit;
+        affected.OnAfterSpellEffectResolved -= OnAfterCastResolved;
     }
 }

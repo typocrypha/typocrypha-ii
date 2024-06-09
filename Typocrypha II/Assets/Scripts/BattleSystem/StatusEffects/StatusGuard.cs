@@ -7,7 +7,7 @@ public class StatusGuard : StatusRemoveAfterHitOrCast
     private SpellTag.TagSet resistTags = new SpellTag.TagSet();
     private Reaction resistReaction;
 
-    public override string FailMessage(Caster caster)
+    public override string FailMessage(Caster caster, Caster target)
     {
         return $"{caster.DisplayName} is already guarding!";
     }

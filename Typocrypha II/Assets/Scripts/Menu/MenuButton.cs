@@ -11,18 +11,46 @@ public class MenuButton : MonoBehaviour, ISelectHandler, IDeselectHandler, ISubm
     public UnityEvent onSelect = default;
 
     private static readonly char[] trim = new char[] { '>', ' ', ' ', '<' };
-    public static readonly Color selectedColor = new Color(219f / 255f, 56f / 255f, 202f / 255f);
+    public Color selectedColor = new Color(219f / 255f, 56f / 255f, 202f / 255f);
+    public Color defaultColor = Color.white;
     [SerializeField] private AudioClip selectSFX;
     [SerializeField] private AudioClip enterSFX;
     [SerializeField] private TextMeshProUGUI text;
-    [SerializeField] private Button button;
+    [SerializeField] public Button button;
     [SerializeField] private Image buttonImage;
+    [SerializeField] private string selectionPrefix = "> ";
+    [SerializeField] private string selectionSuffix = " <";
     [SerializeField] private Sprite selectedSprite;
     [SerializeField] private Sprite deselectedSprite;
-    public bool SkipSelectSfx { get; set; }
+    [SerializeField] private KeyCode[] shortcutKeys = default;
+    public bool SkipSelectSfxOnce { get; set; }
+
+    private EventSystem currentES;
+
+    private void OnEnable()
+    {
+        currentES = EventSystem.current;
+        ToggleHighlight(false);
+    }
+
+    private void Update()
+    {
+        if (shortcutKeys.Length == 0) return;
+        //check selection for context
+        if (currentES && currentES.currentSelectedGameObject.transform.parent != transform.parent) return;
+        foreach (var key in shortcutKeys)
+        {
+            if (Input.GetKeyDown(key))
+            {
+                ExecuteEvents.Execute(button.gameObject, new BaseEventData(EventSystem.current), ExecuteEvents.submitHandler);
+                return;
+            }
+        }
+    }
+
     public void InitializeSelection()
     {
-        SkipSelectSfx = true;
+        SkipSelectSfxOnce = true;
         button.Select();
     }
 
@@ -33,28 +61,40 @@ public class MenuButton : MonoBehaviour, ISelectHandler, IDeselectHandler, ISubm
 
     public void OnSelect(BaseEventData eventData)
     {
-        //Do this on highlight
-        text.color = selectedColor;
-        TrimText();
-        text.text = "> " + text.text + " <";
-        buttonImage.sprite = selectedSprite;
-        if (SkipSelectSfx)
+        ToggleHighlight(true);
+        if (SkipSelectSfxOnce)
         {
-            SkipSelectSfx = false;
+            SkipSelectSfxOnce = false;
         }
         else
         {
-            AudioManager.instance.PlaySFX(selectSFX);
+            if (selectSFX) AudioManager.instance.PlaySFX(selectSFX);
         }
         onSelect.Invoke();
     }
 
     public void OnDeselect(BaseEventData eventData)
     {
-        //Do this on un-highlight
-        text.color = Color.white;
-        TrimText();
-        buttonImage.sprite = deselectedSprite;
+        ToggleHighlight(false);
+    }
+
+    public void ToggleHighlight(bool value)
+    {
+        if (value)
+        {
+            //Do this on highlight
+            text.color = selectedColor;
+            TrimText();
+            text.text = selectionPrefix + text.text + selectionSuffix;
+            buttonImage.sprite = selectedSprite;
+        }
+        else
+        {
+            //Do this on un-highlight
+            text.color = defaultColor;
+            TrimText();
+            buttonImage.sprite = deselectedSprite;
+        }
     }
 
     public void TrimText()
@@ -64,7 +104,7 @@ public class MenuButton : MonoBehaviour, ISelectHandler, IDeselectHandler, ISubm
 
     public void OnSubmit(BaseEventData eventData)
     {
-        AudioManager.instance.PlaySFX(enterSFX);
+        if (enterSFX) AudioManager.instance.PlaySFX(enterSFX);
     }
 
     public void SetText(string newText)

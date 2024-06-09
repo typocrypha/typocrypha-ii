@@ -15,7 +15,6 @@ public class SpellManager : MonoBehaviour
     public SpellWord counterWord;
     [SerializeField] private SpellWord runWord;
     [SerializeField] private SpellWord runAllWord;
-    [SerializeField] private Spell riposteSpell;
 
     [Header("Interactive Popups")]
     [SerializeField] private InteractivePopup critPopup;
@@ -322,35 +321,10 @@ public class SpellManager : MonoBehaviour
             {
                 cancelTarget.Spell = new Spell(remainingWords);
             }
-            if (ShouldRiposte(caster, cancelTarget, fullCounter))
-            {
-                yield return SpellFxManager.instance.CounterFx(cancelTarget.FieldPos);
-                cancelTarget.OnCountered?.Invoke(cancelTarget, fullCounter);
-                caster.OnCounterOther?.Invoke(cancelTarget, fullCounter);
-                IEnumerator OnRipostComplete(bool success)
-                {
-                    if (success)
-                    {
-                        LogInterruptCast(riposteSpell, caster, target, string.Empty);
-                        yield return StartCoroutine(ProcessInterrupts());
-                    }
-                }
-                LogInteractivePopup(critPopup, "Riposte Chance!", "RIPOSTE", 5, OnRipostComplete);
-                yield return StartCoroutine(PlayPrompts());
-            }
-            else
-            {
-                SpellFxManager.instance.CounterFx(cancelTarget.FieldPos);
-                cancelTarget.OnCountered?.Invoke(cancelTarget, fullCounter);
-                caster.OnCounterOther?.Invoke(cancelTarget, fullCounter);
-            }
+            SpellFxManager.instance.CounterFx(cancelTarget.FieldPos);
+            cancelTarget.OnCountered?.Invoke(cancelTarget, fullCounter);
+            caster.OnCounterOther?.Invoke(caster, cancelTarget, fullCounter);
         }
-    }
-
-    private bool ShouldRiposte(Caster caster, Caster cancelTarget, bool fullCounter)
-    {
-        return caster is Player player && player.HasActiveAbilities(Caster.ActiveAbilities.Riposte)
-                                       && BadgeEffectRiposte.RollForRiposte(player, fullCounter);
     }
 
     public void LogInterruptCast(Spell spell, Caster caster, Battlefield.Position target, string messageOverride = null)

@@ -40,11 +40,11 @@ public class Player : Caster, IPausable
     /// </summary>
     private SpellParser.ParseResults CastString(string[] spellWords, Battlefield.Position targetPosition, bool insertCast)
     {
-        var results = SpellParser.instance.Parse(spellWords, PlayerDataManager.instance.equipment.EquippedSpellWords, out var spell, out string problemWord);
+        var cooldowns = SpellCooldownManager.instance;
+        var results = SpellParser.instance.Parse(spellWords, cooldowns.GetSpellsDict(), out var spell, out string problemWord);
         if (results == SpellParser.ParseResults.Valid) 
         {
             // Check cooldowns
-            var cooldowns = SpellCooldownManager.instance;
             if(cooldowns.IsOnCooldown(spell, out var wordOnCooldown))
             {
                 AudioManager.instance.PlaySFX(castFailureSfx);

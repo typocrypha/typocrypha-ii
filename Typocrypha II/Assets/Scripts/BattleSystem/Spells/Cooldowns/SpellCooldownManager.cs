@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using Utilities.Unity;
 
 /// <summary>
 /// Keeps track of spell cooldowns.
@@ -29,7 +30,7 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
                 if (kvp.Value.SpellWord.IsDebug)
                     continue;
 #endif
-                if (kvp.Value.Cooldown <= 0)
+                if (!kvp.Value.OnCooldown)
                     return false;
             }
             return true;
@@ -75,18 +76,32 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
     {
         if (cooldowns.Count <= 0)
             return;
-        cooldownTr.SortHiearchy(CompareCooldowns);
+        cooldownTr.SortHierarchy(CompareCooldowns);
     }
 
     public IReadOnlyList<SpellWord> GetSpells()
     {
         var ret = new List<SpellWord>(cooldowns.Count);
-        foreach(Transform child in cooldownTr)
+        foreach(var kvp in cooldowns)
         {
-            var cooldown = child.GetComponent<SpellCooldown>();
-            if(cooldown != null)
+            var cooldown = kvp.Value;
+            if (cooldown != null)
             {
                 ret.Add(cooldown.SpellWord);
+            }
+        }
+        return ret;
+    }
+
+    public IReadOnlyDictionary<string, SpellWord> GetSpellsDict()
+    {
+        var ret = new Dictionary<string, SpellWord>(cooldowns.Count);
+        foreach (var kvp in cooldowns)
+        {
+            var cooldown = kvp.Value;
+            if (cooldown != null)
+            {
+                ret.Add(cooldown.SpellWord.Key, cooldown.SpellWord);
             }
         }
         return ret;
@@ -96,6 +111,18 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
     {
         var aCooldown = a.GetComponent<SpellCooldown>();
         var bCooldown = b.GetComponent<SpellCooldown>();
+        if (aCooldown.IsFixedUse)
+        {
+            if (!bCooldown.IsFixedUse)
+                return ComparisonConstants.greaterThan;
+            if(aCooldown.Uses == bCooldown.Uses)
+                return bCooldown.SpellText.CompareTo(aCooldown.SpellText);
+            return bCooldown.Uses.CompareTo(aCooldown.Uses);
+        }
+        if (bCooldown.IsFixedUse)
+        {
+            return ComparisonConstants.lessThan;
+        }
         if(aCooldown.Cooldown == bCooldown.Cooldown)
         {
             if(aCooldown.SpellWord.category == bCooldown.SpellWord.category)
@@ -125,12 +152,38 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
         // If cooldown for this word already exists, return
         if (TryGetCooldown(word, out _))
             return;
+        var cd = NewCooldown(word);
+        cd.SetupCooldown(word.cooldown);
+        AddNewCooldown(cd, sort);
+    }
+
+    public void AddFixedUseWord(SpellWord word, int uses, int maxUses, bool sort = false)
+    {
+        // If cooldown for this word already exists, return
+        if (TryGetCooldown(word, out var existingCd))
+        {
+            if (existingCd.IsFixedUse)
+            {
+                existingCd.Uses += uses;
+            }
+            return;
+        }
+        var cd = NewCooldown(word);
+        cd.SetupWithFixedUses(uses, maxUses);
+        AddNewCooldown(cd, sort);
+    }
+
+    private SpellCooldown NewCooldown(SpellWord word)
+    {
         var cd = Instantiate(cooldownPrefab, cooldownTr).GetComponent<SpellCooldown>();
         cd.SpellText = word.internalName.ToUpper();
         cd.SpellWord = word;
-        cd.FullCooldown = word.cooldown;
-        cd.Cooldown = 0;
-        cooldowns.Add(word.internalName.ToUpper(), cd);
+        return cd;
+    }
+
+    private void AddNewCooldown(SpellCooldown cd, bool sort)
+    {
+        cooldowns.Add(cd.SpellWord.internalName.ToUpper(), cd);
         if (sort)
         {
             SortCooldowns();
@@ -149,7 +202,7 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
 
     public bool IsOnCooldown(SpellWord word)
     {
-        return TryGetCooldown(word, out var cooldown) && cooldown.Cooldown > 0;
+        return TryGetCooldown(word, out var cooldown) && cooldown.OnCooldown;
     }
 
     public bool IsOnCooldown(Spell spell, out SpellWord word)
@@ -180,7 +233,10 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
                 {
                     totalCooldown += Rule.ActiveRule.CooldownModifier(word);
                 }
-                cooldown.Cooldown += totalCooldown;
+                if (cooldown.OnCast(totalCooldown))
+                {
+                    RemoveWord(cooldown.SpellWord);
+                }
             }
         }
         SortCooldowns();
@@ -190,7 +246,7 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
     {
         foreach (var kvp in cooldowns)
         {
-            kvp.Value.Cooldown -= amount; 
+            kvp.Value.LowerCooldown(amount); 
         }
     }
 
@@ -207,7 +263,7 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
     {
         foreach(var kvp in cooldowns)
         {
-            kvp.Value.Cooldown = 0;
+            kvp.Value.ResetCooldown();
         }
         SortCooldowns();
     }

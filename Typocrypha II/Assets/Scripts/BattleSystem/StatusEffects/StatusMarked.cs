@@ -7,7 +7,7 @@ public class StatusMarked : StatusEffect
     public bool stacks;
     public int intensity;
 
-    public override string FailMessage(Caster caster)
+    public override string FailMessage(Caster caster, Caster target)
     {
         return $"{caster.DisplayName} is already marked!";
     }
