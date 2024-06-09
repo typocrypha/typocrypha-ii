@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class MenuSlider : Selectable
 {
     private static readonly char[] trim = new char[] { '>', ' ', ' ', '<', '-' };
+    public static readonly Color selectedColor = new Color(219f / 255f, 56f / 255f, 202f / 255f);
     [SerializeField] private AudioClip selectSFX;
     [SerializeField] private AudioClip adjustSfx;
     [SerializeField] private AudioClip adjustFailedSfx;
@@ -92,7 +93,7 @@ public class MenuSlider : Selectable
     public override void OnSelect(BaseEventData eventData)
     {
         //Do this on highlight
-        text.color = MenuButton.selectedColor;
+        text.color = selectedColor;
         text.text = $"<- {text.text} ->";
         selectorImage.sprite = selectedSprite;
         if (SkipSelectSfx)

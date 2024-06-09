@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using Utilities.Unity;
 
 /// <summary>
 /// Keeps track of spell cooldowns.
@@ -75,7 +76,7 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
     {
         if (cooldowns.Count <= 0)
             return;
-        cooldownTr.SortHiearchy(CompareCooldowns);
+        cooldownTr.SortHierarchy(CompareCooldowns);
     }
 
     public IReadOnlyList<SpellWord> GetSpells()
