@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.EventSystems;
 using TMPro;
 using UnityEngine.UI;
 using Utilities.Unity;
 using System.Globalization;
+using DG.Tweening;
 
 public class ShopMenu : MonoBehaviour
 {
@@ -139,6 +139,7 @@ public class ShopMenu : MonoBehaviour
         else
         {
             AudioManager.instance.PlaySFX(purchaseInvalidSFX);
+            ShakeCurrency();
         }
     }
 
@@ -206,6 +207,9 @@ public class ShopMenu : MonoBehaviour
     public void OpenConfirmation(BadgeWord purchase, MenuButton previousSelection)
     {
         confirmationWindow.SetActive(true);
+        DOTween.Complete("OpenConfirmation");
+        DOTween.Complete("CloseConfirmation");
+        (confirmationWindow.transform as RectTransform).DOScaleX(1f, 0.1f).From(0f).SetId("OpenConfirmation");
 
         PrintConfirmation(purchase.DisplayName, purchase.NextCost);
 
@@ -220,7 +224,10 @@ public class ShopMenu : MonoBehaviour
 
     public void CloseConfirmation(MenuButton previousSelection = null, bool redraw = false)
     {
-        confirmationWindow.SetActive(false);
+        DOTween.Complete("OpenConfirmation");
+        DOTween.Complete("CloseConfirmation");
+        (confirmationWindow.transform as RectTransform).DOScaleX(0f, 0.1f).From(1f).SetId("CloseConfirmation")
+            .OnComplete(() => confirmationWindow.SetActive(false));
 
         if (!redraw)
         {
@@ -277,6 +284,18 @@ public class ShopMenu : MonoBehaviour
     private void PrintCurrency()
     {
         currencyUI.text = PlayerDataManager.instance.currency.ToString("C0", formatInfo);
+    }
+
+    private void ShakeCurrency()
+    {
+        var rectTransform = currencyUI.transform.parent as RectTransform;
+        DOTween.Complete("ShakeCurrency");
+        DOTween.Sequence()
+            .SetId("ShakeCurrency")
+            .Append(rectTransform.DOAnchorPosX(5, 0.075f).SetRelative(true))
+            .Append(rectTransform.DOAnchorPosX(-10, 0.075f).SetRelative(true))
+            .Append(rectTransform.DOAnchorPosX(10, 0.075f).SetRelative(true))
+            .Append(rectTransform.DOAnchorPosX(-5, 0.075f).SetRelative(true));
     }
 
     private void PrintConfirmation(string badgeName, int cost)
