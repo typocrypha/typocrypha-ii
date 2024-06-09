@@ -32,7 +32,11 @@ public class ApplyStatusEffect : RootWordEffect
         if(target.GetStatusEffect(baseEffect.casterTag) != null)
         {
             results.Miss = true;
-            LogMessage(baseEffect.FailMessage(caster));
+            var failMessage = baseEffect.FailMessage(caster, target);
+            if(!string.IsNullOrEmpty(failMessage))
+            {
+                LogMessage(failMessage);
+            }
             return results;
         }
         var effect = Instantiate(statusEffectPrefab, target.transform).GetComponent<StatusEffect>();

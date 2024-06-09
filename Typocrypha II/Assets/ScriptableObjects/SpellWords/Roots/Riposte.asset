@@ -1,0 +1,110 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8455562057369640089
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FomulaCritCountered
+--- !u!114 &-5094478774589773536
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6877ebd7b07cd2844b5400d46b5e89eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fx:
+    effectType: 0
+    effectPrefab: {fileID: 0}
+    effectPackets:
+    - clip: {fileID: 0}
+      sfx: {fileID: 0}
+  tags:
+    _items:
+    - {fileID: 11400000, guid: 27ea16d509180ab4d9e4076f9dd29e78, type: 2}
+  pattern:
+    pattern:
+      _data: 000000000000
+      _rows: 2
+      _cols: 3
+    type: 4
+  statusEffectPrefab: {fileID: 6286660537390904996, guid: 4b31dd2fad620bb43841cf4651e1b7a7,
+    type: 3}
+  canCrit: 0
+--- !u!114 &-2906432558279584323
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FormulaExtraCounteredDamage
+  multiplier: 2.2
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ad21af439bb1644bb9af59d8557b304, type: 3}
+  m_Name: Riposte
+  m_EditorClassIdentifier: 
+  internalName: Riposte
+  description: A skill that deals magic damage and slows targets until on hit. Does
+    critical damage to fully countered targets
+  cost: 0
+  cooldown: 3
+  category: 0
+  synonymOf: {fileID: 0}
+  effects:
+  - {fileID: 8639394740116944119}
+  - {fileID: -5094478774589773536}
+  icon: {fileID: 21300000, guid: ff652a7fc4da3c9478deac4cb0cb3c68, type: 3}
+--- !u!114 &8639394740116944119
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35cd35fb4345c904dad0fb9a244a1fdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fx:
+    effectType: 1
+    effectPrefab: {fileID: 0}
+    effectPackets:
+    - clip: {fileID: 7400000, guid: d96339788095a1a4690ea44bb52c16d5, type: 2}
+      sfx: {fileID: 8300000, guid: da23b395e3fdff24b9d0f241a33682fe, type: 3}
+  tags:
+    _items:
+    - {fileID: 11400000, guid: 27ea16d509180ab4d9e4076f9dd29e78, type: 2}
+  pattern:
+    pattern:
+      _data: 000000000000
+      _rows: 2
+      _cols: 3
+    type: 4
+  formula: 1
+  customFormula: {fileID: -8455562057369640089}
+  power: 14

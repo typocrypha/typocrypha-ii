@@ -11,7 +11,13 @@ public class StatusCryostasis : StatusRemoveAfterHitOrCast
             affectedKeys = Typocrypha.Keyboard.instance.ApplyEffectRandom("KeyEffectFrozen", caster, 20);
     }
 
-    public override void OnBeforeEffectApplied(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults data)
+    protected override void Initialize()
+    {
+        base.Initialize();
+        affected.OnBeforeHitResolved += OnBeforeEffectApplied;
+    }
+
+    private void OnBeforeEffectApplied(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults data)
     {
         if(!effect.tags.Contains("Fire") && !data.IsCrit)
         {
@@ -24,5 +30,6 @@ public class StatusCryostasis : StatusRemoveAfterHitOrCast
     {
         Typocrypha.Keyboard.instance.RemoveEffect(affectedKeys);
         base.Cleanup();
+        affected.OnBeforeHitResolved -= OnBeforeEffectApplied;
     }
 }

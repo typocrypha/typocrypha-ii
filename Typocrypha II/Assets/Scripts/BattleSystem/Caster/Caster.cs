@@ -32,7 +32,6 @@ public class Caster : MonoBehaviour
         None = 0,
         Critical = 1,
         CriticalBlock = 2,
-        Riposte = 4,
         Combo = 8,
     }
 
@@ -41,6 +40,7 @@ public class Caster : MonoBehaviour
     public delegate void HitFn(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults data);
     public delegate CasterTagDictionary.ReactionMultiSet GetReactionsFn(SpellTag tag);
     public delegate void AfterCastFn(Spell s, Caster caster, bool hitTarget); // Add targets and results?
+    public delegate void OnCounterOtherFn(Caster caster, Caster countered, bool fullCounter);
     #endregion
 
     /// <summary>
@@ -58,7 +58,7 @@ public class Caster : MonoBehaviour
     /// </summary>
     public AfterCastFn OnAfterCastResolved { get; set; }
     public System.Action<Caster, bool> OnCountered { get; set; }
-    public System.Action<Caster, bool> OnCounterOther { get; set; }
+    public OnCounterOtherFn OnCounterOther { get; set; }
     /// <summary>
     /// Callbacks the calculate extra tag reactions
     /// </summary>
