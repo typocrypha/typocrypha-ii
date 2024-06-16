@@ -38,7 +38,7 @@ public class BattleGraphParser : GraphParser
         }
         else if(currNode is VictoryScreenUnlockNode unlockMessageNode)
         {
-            Debug.LogError("TODO: add message unlock code here");
+            RewardsManager.Instance.AddBonusEntry(unlockMessageNode.name, unlockMessageNode.reasonText, string.Empty);
             return NextWave();
         }
         else if (currNode is BattleNodeWave waveNode)
