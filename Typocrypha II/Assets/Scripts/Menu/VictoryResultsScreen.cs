@@ -13,12 +13,12 @@ public class VictoryResultsScreen : MonoBehaviour
 {
     [Header("Initialization")]
     [SerializeField] private Button continueButton;
-    [SerializeField] private TweenInfo tweenInfo;
     [SerializeField] private GameObject clarkeContainer;
     [SerializeField] private GameObject messageContainer;
     [SerializeField] private CharacterData clarkeData;
     [SerializeField] private RectTransform tallyView;
     [SerializeField] private VerticalLayoutGroup bonusView;
+    [SerializeField] private AudioClip victoryBGM;
 
     [Header("Display Text")]
     [SerializeField] private TextMeshProUGUI header;
@@ -32,6 +32,10 @@ public class VictoryResultsScreen : MonoBehaviour
     [SerializeField] private Vector3 finalPosition;
     [SerializeField] private AnimationCurve clarkeSlideVertical = default;
     [SerializeField] private AnimationCurve clarkeSlideHorizontal = default;
+
+    [Header("Animation")]
+    [SerializeField] private float fadeInDelay = 1f;
+    [SerializeField] private float fadeInDuration = 0.5f;
 
     public Action OnScreenClosed;
 
@@ -109,8 +113,9 @@ public class VictoryResultsScreen : MonoBehaviour
 
     IEnumerator DisplayResultsCR(TallyEntry[] tallies, int total, int balance, string clarkeText)
     {
-        tweenInfo.Start(GetComponent<CanvasGroup>().DOFade(1, tweenInfo.Time).From(0));
-        yield return tweenInfo.WaitForCompletion();
+        AudioManager.instance.StopBGM(AnimationCurve.Linear(0f, 1f, fadeInDelay, 0f));
+        yield return GetComponent<CanvasGroup>().DOFade(1, fadeInDuration).From(0).SetDelay(fadeInDelay).WaitForCompletion();
+        AudioManager.instance.PlayBGM(victoryBGM);
         yield return DisplayClarke();
         yield return new WaitForSeconds(1f);
         foreach (var entry in tallies) yield return DisplayTally(entry);
