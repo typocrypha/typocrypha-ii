@@ -223,7 +223,6 @@ public class BattleManager : MonoBehaviour, IPausable
         if (waveData.music != null)
         {
             AudioManager.instance.PlayBGM(waveData.music);
-            AudioManager.instance.BGMVolume = 0.6f;
         }
         if (waveData.openingScene != null)
         {
