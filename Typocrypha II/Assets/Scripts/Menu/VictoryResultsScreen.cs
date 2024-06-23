@@ -37,6 +37,10 @@ public class VictoryResultsScreen : MonoBehaviour
     [SerializeField] private float fadeInDelay = 1f;
     [SerializeField] private float fadeInDuration = 0.5f;
 
+    [Header("Bonus Screen")]
+    [SerializeField] private List<BonusEntryUI> bonusEntryUI;
+    [SerializeField] private GameObject bonusEntryPrefab;
+
     public Action OnScreenClosed;
 
     const int LINE_LENGTH = 36;
@@ -133,19 +137,20 @@ public class VictoryResultsScreen : MonoBehaviour
 
     public void SetBonuses(IReadOnlyList<BonusEntry> bonuses)
     {
-        foreach (Transform child in bonusView.transform) child.gameObject.SetActive(false);
+        foreach(var entryUI in bonusEntryUI)
+        {
+            entryUI.gameObject.SetActive(false);
+        }
         for (int i = 0; i < bonuses.Count; i++)
         {
-            if (i >= bonusView.transform.childCount)
+            if (i >= bonusEntryUI.Count)
             {
-                Instantiate(bonusView.transform.GetChild(1).gameObject, bonusView.transform);
+                bonusEntryUI.Add(Instantiate(bonusEntryPrefab, bonusView.transform).GetComponent<BonusEntryUI>());
             }
-            var entryGO = bonusView.transform.GetChild(i).gameObject;
-            entryGO.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = bonuses[i].badgeName;
-            entryGO.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = bonuses[i].unlockReason;
-            entryGO.transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = bonuses[i].description;
+            var entryUI = bonusEntryUI[i];
+            entryUI.Setup(bonuses[i]);
+            entryUI.gameObject.SetActive(true);
             if (string.IsNullOrEmpty(bonusClarkeMessage)) bonusClarkeMessage = bonuses[i].clarkeText;
-            entryGO.SetActive(true);
         }
         shouldShowBonuses = true;
     }
