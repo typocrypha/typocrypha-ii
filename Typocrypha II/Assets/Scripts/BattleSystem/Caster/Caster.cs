@@ -150,11 +150,11 @@ public class Caster : MonoBehaviour
             {
                 if(SP > 0)
                 {
-                    BStatus = BattleStatus.SpiritMode;
+                    EnterSpritMode();
                 }
                 else
                 {
-                    BStatus = BattleStatus.Dead;
+                    Kill();
                 }
             }
             ui?.onHealthChanged.Invoke((float)health / Stats.MaxHP);
@@ -170,7 +170,7 @@ public class Caster : MonoBehaviour
             sp = value;
             if (value <= 0 && BStatus == BattleStatus.SpiritMode)
             {
-                BStatus = BattleStatus.Dead;
+                Kill();
             }
             ui?.onSpChanged.Invoke((float)sp / Stats.MaxSP);
             ui?.onHealthChangedNumber.Invoke(sp + "/" + Stats.MaxSP);
@@ -270,6 +270,15 @@ public class Caster : MonoBehaviour
     public ScouterData ScouterData => scouterData ?? (scouterData = GetComponent<ScouterData>());
 
     #endregion
+
+    private void EnterSpritMode()
+    {
+        BStatus = BattleStatus.SpiritMode;
+    }
+    private void Kill()
+    {
+        BStatus = BattleStatus.Dead;
+    }
 
     public void Damage(int amount)
     {
