@@ -167,10 +167,26 @@ public class VictoryResultsScreen : MonoBehaviour
         {
             StartCoroutine(BonusScroll_CR(scrollHeight));
         }
+        else if(!string.IsNullOrEmpty(bonusClarkeMessage))
+        {
+            DOTween.Sequence().AppendInterval(2f).AppendCallback(BonusMessage);
+        }
         else
         {
-            DOTween.Sequence().AppendInterval(4f).AppendCallback(SetButtonToExit);
+            DOTween.Sequence().AppendInterval(2f).AppendCallback(SetButtonToExit);
         }
+    }
+
+    private void BonusMessage()
+    {
+        StartCoroutine(BonusMessage_Cr());
+    }
+
+    private IEnumerator BonusMessage_Cr()
+    {
+        yield return DisplayMessage(bonusClarkeMessage);
+        yield return new WaitForSeconds(1f);
+        SetButtonToExit();
     }
 
     private IEnumerator BonusScroll_CR(float scrollHeight)
