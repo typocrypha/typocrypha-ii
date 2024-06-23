@@ -104,6 +104,7 @@ public class Caster : MonoBehaviour
     #region State, Status, and Class
 
     public bool IsPlayer => CasterState == State.Player;
+    public bool IsDemon => HasTag(Lookup.GetCasterTag("Demon"));
     public State CasterState { get => _type; set => _type = value; }
     [SerializeField] private State _type;
     public BattleStatus BStatus
