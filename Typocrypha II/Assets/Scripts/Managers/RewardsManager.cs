@@ -23,6 +23,15 @@ public struct TallyEntry
 
 public struct BonusEntry : IComparable<BonusEntry>
 {
+    public const int criticalPriority = 100;
+    public const int criticalPriority2 = 99;
+    public const int criticalPriority3 = 98;
+    public const int highPriority = 50;
+    public const int highPriority2 = 49;
+    public const int highPriority3 = 48;
+    public const int lowPriority = 3;
+    public const int lowPriority2 = 2;
+    public const int lowPriority3 = 1;
     public string badgeName; //badge name
     public string unlockReason; //how the badge was earned
     public string description; //describes the effects of wearing the badge
