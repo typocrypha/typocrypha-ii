@@ -37,14 +37,16 @@ public struct BonusEntry : IComparable<BonusEntry>
     public string description; //describes the effects of wearing the badge
     public int priority; //for order of appearance (higher comes first)
     public string clarkeText; //what clarke says about this item
+    public Sprite iconSprite;
 
-    public BonusEntry(string badgeName, string unlockReason, string description, int priority = 0, string clarkeText = "")
+    public BonusEntry(string badgeName, string unlockReason, string description, Sprite icon, int priority = 0, string clarkeText = "")
     {
         this.badgeName = badgeName;
         this.unlockReason = unlockReason;
         this.description = description;
         this.priority = priority;
         this.clarkeText = clarkeText;
+        this.iconSprite = icon;
     }
 
     public int CompareTo(BonusEntry other)
@@ -74,9 +76,9 @@ public class RewardsManager : MonoBehaviour
 
     public void ClearUnlockEntries() => bonusEntries.Clear();
 
-    public void AddBonusEntry(string name, string reason, string description, int priority = 0, string clarkeMessage = "")
+    public void AddBonusEntry(string name, string reason, string description, Sprite icon, int priority = 0, string clarkeMessage = "")
     {
-        bonusEntries.Add(new BonusEntry(name, reason, description, priority, clarkeMessage));
+        bonusEntries.Add(new BonusEntry(name, reason, description, icon, priority, clarkeMessage));
         bonusEntries.Sort();
     }
 

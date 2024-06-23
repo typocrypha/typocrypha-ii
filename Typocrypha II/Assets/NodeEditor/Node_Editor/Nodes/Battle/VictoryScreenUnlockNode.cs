@@ -21,6 +21,7 @@ namespace Gameflow
         public string descriptionText;
         public int priority;
         public string clarkeMessage;
+        public Sprite iconSprite;
 
         private const string priorityTooltip = "public const int criticalPriority = 100; " +
          "\npublic const int criticalPriority2 = 99;" +
@@ -47,6 +48,7 @@ namespace Gameflow
             GUILayout.Label("Clarke Message");
             clarkeMessage = GUILayout.TextArea(clarkeMessage, GUI.skin.textArea, GUILayout.MinHeight(RTEditorGUI.lineHeight * 2));
             priority = RTEditorGUI.IntField(new GUIContent("Priority", priorityTooltip), priority);
+            iconSprite = RTEditorGUI.ObjectField("Icon Sprite", iconSprite, false);
             GUILayout.EndVertical();
 
             //Don't know why this code needs to be here exactly, but it makes everything nicer? maybe add to some static stuff?

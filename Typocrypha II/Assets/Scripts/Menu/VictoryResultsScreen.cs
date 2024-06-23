@@ -74,9 +74,9 @@ public class VictoryResultsScreen : MonoBehaviour
         };
         DisplayResults(tallies, 270, 1000, "goobaba!");
         SetBonuses(new BonusEntry[] {
-            new BonusEntry("Badge A", "Reason A", "This badge does a lot of good things when you equip it."),
-            new BonusEntry("Badge B", "Reason B", "This badge also does a lot of good things when you equip it."),
-            new BonusEntry("Badge C", "Reason C", "This badge is either really good or really bad, idk."),
+            new BonusEntry("Badge A", "Reason A", "This badge does a lot of good things when you equip it.", null),
+            new BonusEntry("Badge B", "Reason B", "This badge also does a lot of good things when you equip it.", null),
+            new BonusEntry("Badge C", "Reason C", "This badge is either really good or really bad, idk.", null),
         });
     }
 
@@ -90,10 +90,10 @@ public class VictoryResultsScreen : MonoBehaviour
         };
         DisplayResults(tallies, 270, 1000, "goobaba!");
         SetBonuses(new BonusEntry[] {
-            new BonusEntry("Badge A", "Reason A", "This badge does a lot of good things when you equip it.", 0, ""),
-            new BonusEntry("Badge B", "Reason B", "This badge also does a lot of good things when you equip it.", 0, "You should really equip badge B!"),
-            new BonusEntry("Badge C", "Reason C", "This badge is either really good or really bad, idk."),
-            new BonusEntry("Badge D", "Reason D", "This badge has a slight chance to make the user explode."),
+            new BonusEntry("Badge A", "Reason A", "This badge does a lot of good things when you equip it.", null, 0, ""),
+            new BonusEntry("Badge B", "Reason B", "This badge also does a lot of good things when you equip it.", null, 0, "You should really equip badge B!"),
+            new BonusEntry("Badge C", "Reason C", "This badge is either really good or really bad, idk.", null),
+            new BonusEntry("Badge D", "Reason D", "This badge has a slight chance to make the user explode.", null),
             //new BonusEntry("Badge E", "Reason E", "This badge will make your wildest dreams come true."),
             //new BonusEntry("Badge F", "Reason F", "This badge is for aesthetic purposes only."),
             //new BonusEntry("Badge G", "Reason G", "This badge is for aesthetic purposes only."),
