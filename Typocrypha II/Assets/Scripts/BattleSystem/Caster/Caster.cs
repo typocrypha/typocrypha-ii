@@ -151,7 +151,7 @@ public class Caster : MonoBehaviour
             {
                 if(SP > 0)
                 {
-                    EnterSpritMode();
+                    EnterSpiritMode();
                 }
                 else
                 {
@@ -272,13 +272,15 @@ public class Caster : MonoBehaviour
 
     #endregion
 
-    private void EnterSpritMode()
+    private void EnterSpiritMode()
     {
         BStatus = BattleStatus.SpiritMode;
+        if (IsDemon) RewardsManager.Instance?.IncrementCasualty();
     }
     private void Kill()
     {
         BStatus = BattleStatus.Dead;
+        if (IsDemon) RewardsManager.Instance?.IncrementKill();
     }
 
     public void Damage(int amount)

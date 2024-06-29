@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Gameflow;
+using System;
 //using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
@@ -63,7 +65,23 @@ public struct BonusEntry : IComparable<BonusEntry>
 
 public class RewardsManager : MonoBehaviour
 {
+    private const int DEFEAT_REWARD = 10;
+    private const int KILL_REWARD = 20;
+
     public static RewardsManager Instance;
+
+    public int DemonCasualties => casualtyCount;
+    public int DemonsDefeated => casualtyCount - killCount;
+    public int DemonsKilled => killCount;
+
+    private int casualtyCount;
+    private int killCount;
+
+    private bool rewardCasualties;
+    private TallyEntry[] fixedRewards;
+
+    public IReadOnlyList<BonusEntry> BonusEntries => bonusEntries;
+    private readonly List<BonusEntry> bonusEntries = new List<BonusEntry>();
 
     private void Awake()
     {
@@ -71,8 +89,17 @@ public class RewardsManager : MonoBehaviour
         Instance = this;
     }
 
-    private readonly List<BonusEntry> bonusEntries = new List<BonusEntry>();
-    public IReadOnlyList<BonusEntry> BonusEntries => bonusEntries;
+    public void Initialize()
+    {
+        ClearUnlockEntries();
+        ClearCasualtyCounters();
+    }
+
+    public void ParseNode(VictoryScreenNode victoryNode)
+    {
+        fixedRewards = victoryNode.Entries;
+        rewardCasualties = victoryNode.RewardCasualties;
+    }
 
     public void ClearUnlockEntries() => bonusEntries.Clear();
 
@@ -82,4 +109,40 @@ public class RewardsManager : MonoBehaviour
         bonusEntries.Sort();
     }
 
+    public void ClearCasualtyCounters() => casualtyCount = killCount = 0;
+    public void IncrementCasualty() => ++casualtyCount;
+    public void IncrementKill() => ++killCount;
+
+    public int GetDefeatReward() => rewardCasualties ? DEFEAT_REWARD * DemonsDefeated : 0;
+    public int GetKillReward() => rewardCasualties ? KILL_REWARD * DemonsKilled : 0;
+
+    public static int CalculateReward(TallyEntry[] entries)
+    {
+        float total = 0, percentMultiplier = 0;
+        for (int i = 0; i < entries.Length; ++i)
+        {
+            if (!entries[i].isPercentage) total += entries[i].value;
+            else percentMultiplier += entries[i].value;
+        }
+        total *= 1 + percentMultiplier / 100;
+        return Mathf.FloorToInt(total);
+    }
+
+    private TallyEntry[] CreateDynamicEntries()
+    {
+        return new TallyEntry[]
+        {
+            new TallyEntry("Demons Defeated x" + DemonsDefeated, GetDefeatReward(), false),
+            new TallyEntry("Demons Killed x" + DemonsKilled, GetKillReward(), false)
+        };
+    }
+
+    public TallyEntry[] GetAllTallies()
+    {
+        var dynamicTallies = CreateDynamicEntries();
+        var fixedTallies = fixedRewards;
+        return dynamicTallies.Concat(fixedTallies).ToArray();
+    }
+
+    public int GetTotalReward() => CalculateReward(GetAllTallies());
 }

@@ -136,6 +136,8 @@ public class BattleManager : MonoBehaviour, IPausable
     /// </summary>
     public void StartBattle()
     {
+        RewardsManager.Instance?.Initialize();
+
         waveNum = 0;
         NextWave();
     }
@@ -294,15 +296,24 @@ public class BattleManager : MonoBehaviour, IPausable
 
     public void Victory(VictoryScreenNode results)
     {
+        RewardsManager.Instance.ParseNode(results);
+        var totalReward = RewardsManager.Instance.GetTotalReward();
+
         victoryScreen.OnScreenClosed = NextWave;
-        victoryScreen.DisplayResults(results.Entries, results.Total, PlayerDataManager.instance.currency, results.ClarkeText);
+        victoryScreen.DisplayResults(
+            tallies: RewardsManager.Instance.GetAllTallies(),
+            total: totalReward,
+            balance: PlayerDataManager.instance.currency,
+            clarkeText: results.ClarkeText
+        );
+
+        PlayerDataManager.instance.currency += totalReward;
+
         var unlocks = RewardsManager.Instance.BonusEntries;
         if (unlocks.Count > 0)
         {
             victoryScreen.SetBonuses(unlocks);
-            RewardsManager.Instance.ClearUnlockEntries();
         }
-        PlayerDataManager.instance.currency += results.Total;
     }
 
     public void GameOver()
