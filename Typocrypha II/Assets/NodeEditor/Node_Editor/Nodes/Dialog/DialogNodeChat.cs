@@ -32,8 +32,8 @@ namespace Gameflow
             NameGUI();
             TextGUI();
             GUILayout.BeginHorizontal();
-            GUILayout.Label(new GUIContent("Time Text", tooltipName), NodeEditorGUI.nodeLabel, GUILayout.Width(45f));
-            timeText = GUILayout.TextField(timeText, GUILayout.Width(MinSize.x - 65));
+            GUILayout.Label(new GUIContent("Time Text"), NodeEditorGUI.nodeLabel, GUILayout.Width(65f));
+            timeText = GUILayout.TextField(timeText, GUILayout.Width(MinSize.x - 85));
             GUILayout.EndHorizontal();
 
             //Don't know why this code needs to be here exactly, but it makes everything nicer? maybe add to some static stuff?
