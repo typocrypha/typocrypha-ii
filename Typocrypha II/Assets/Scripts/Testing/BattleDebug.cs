@@ -15,6 +15,7 @@ public class BattleDebug : MonoBehaviour
     public float gameSpeed = 0f;
 
     [SerializeField] bool lockWindow = false;
+    [SerializeField] bool logUISelection = true;
     [SerializeField] int _width = 240;
     [SerializeField] int _height = 140;
 
@@ -22,7 +23,7 @@ public class BattleDebug : MonoBehaviour
 
     private Rect windowRect = new Rect(20, 20, 0, 0); //window starts at 20,20
     private Vector2 _scroll;
-    private bool debugButtonPressed;
+    private bool debugButtonHeld;
 
     readonly Vector2 nativeSize = new Vector2(1280, 720);
 
@@ -35,11 +36,15 @@ public class BattleDebug : MonoBehaviour
             DialogManager.instance.Hide(DialogManager.EndType.DialogEnd, DialogManager.instance.CleanUp);
         }
 
-        debugButtonPressed = Input.GetKey(KeyCode.LeftAlt);
+        debugButtonHeld = Input.GetKey(KeyCode.LeftAlt);
+        var debugButtonPressed = Input.GetKeyDown(KeyCode.LeftAlt);
         Time.timeScale = Mathf.Pow(10, gameSpeed);
-        if (!debugButtonPressed) return;
+        if (!debugButtonHeld) return;
         gameSpeed = Mathf.Clamp(gameSpeed + Input.GetAxisRaw("Horizontal") / 100f, -1, 1);
         if (Input.GetKeyDown(KeyCode.LeftControl)) lockWindow = !lockWindow;
+        if (debugButtonPressed && logUISelection) Debug.Log(
+            UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject,
+            UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject);
     }
 
     private void OnDisable()
@@ -49,7 +54,7 @@ public class BattleDebug : MonoBehaviour
 
     private void OnGUI()
     {
-        if (!lockWindow && !debugButtonPressed) return;
+        if (!lockWindow && !debugButtonHeld) return;
         Vector3 scale = new Vector3(Screen.width / nativeSize.x, Screen.height / nativeSize.y, 1.0f);
         GUI.matrix = Matrix4x4.TRS(new Vector3(0, 0, 0), Quaternion.identity, scale);
 
@@ -74,6 +79,8 @@ public class BattleDebug : MonoBehaviour
         GUILayout.EndHorizontal();
         gameSpeed = GUILayout.HorizontalSlider(gameSpeed, -1, 1);
         if (GUILayout.Button("Reset Speed")) gameSpeed = 0;
+
+        logUISelection = GUILayout.Toggle(logUISelection, "Log UI Selection");
 
         GUILayout.EndScrollView();
     }
