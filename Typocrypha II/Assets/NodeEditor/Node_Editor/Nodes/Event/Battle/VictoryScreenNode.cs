@@ -66,6 +66,6 @@ namespace Gameflow
 
             GUILayout.EndVertical();
         }
-    }
 #endif
+    }
 }
