@@ -22,10 +22,10 @@ public class DialogBox_Multi : DialogBox, IDialogBox
     }
     #endregion
 
-    public new bool UseScrollDelay
+    public new bool Scroll
     {
-        get => boxes[0].UseScrollDelay;
-        set => boxes[0].UseScrollDelay = value;
+        get => boxes[0].Scroll;
+        set => boxes[0].Scroll = value;
     }
 
     /// <summary>

@@ -10,7 +10,7 @@ using TMPro;
 /// </summary>
 public interface IDialogBox : IPausable
 {
-    bool UseScrollDelay { get; set; }
+    bool Scroll { get; set; }
     bool IsDone { get; }
     void DumpText();
 }
@@ -40,7 +40,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
     const float defaultAutoContinueDelay = 0.5f;
     #endregion
 
-    public bool UseScrollDelay { get; set; }
+    public bool Scroll { get; set; }
     public int SpeechInterval { get; set; } = defaultSpeechInterval; // Number of character scrolls before speech sfx plays
     public bool PlaySpeechOnSpaces { get; set; } = defaultPlaySpeechOnSpaces;
 
@@ -163,7 +163,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
     public void ResetDialogBox()
     {
         // Reset parameters
-        UseScrollDelay = scroll;
+        Scroll = scroll;
         SpeechInterval = defaultSpeechInterval;
         PlaySpeechOnSpaces = defaultPlaySpeechOnSpaces;
         // Remove old text
@@ -269,7 +269,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
                 resetTextBlips = false;
             }
             // Play scroll blips
-            if (speechCounter % SpeechInterval == 0 && (PlaySpeechOnSpaces || !char.IsWhiteSpace(dialogItem.text[pos])))
+            if (Scroll && speechCounter % SpeechInterval == 0 && (PlaySpeechOnSpaces || !char.IsWhiteSpace(dialogItem.text[pos])))
             {
                 for (int i = 0; i < textBlips.Length; i++)
                 {
@@ -284,7 +284,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
                 hideText.ind[0] = pos + defaultTextDisplayInterval;
             }
             // Apply scroll delay if necessary
-            if (UseScrollDelay)
+            if (Scroll)
             {
                 yield return new WaitForFixedUpdate();
             }

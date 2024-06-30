@@ -157,7 +157,7 @@ public class TextEvents : MonoBehaviour, IPausable
     /// </param>
     Coroutine TextDelay(string[] opt, DialogBox box)
     {
-        box.UseScrollDelay = float.Parse(opt[0]) != 0f;
+        box.Scroll = float.Parse(opt[0]) != 0f;
         return null;
     }
 
