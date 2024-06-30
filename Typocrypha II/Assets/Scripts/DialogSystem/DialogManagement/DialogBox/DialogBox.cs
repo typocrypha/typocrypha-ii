@@ -292,7 +292,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
             // Apply scroll delay if necessary
             if (ScrollDelay > 0f)
             {
-                yield return new WaitForSeconds(ScrollDelay);
+                yield return new WaitForFixedUpdate();
             }
             else // If scale is at 0, skip to next dialog event
             {
