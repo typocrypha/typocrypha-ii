@@ -16,6 +16,8 @@ public class CasterTagDictionary : IEnumerable<CasterTag>
             return tags.Count;
         }
     }
+    public int MultiSetCount => allTags.Count;
+
     public bool ContainsTag(string tagName)
     {
         var tag = Lookup.GetCasterTag(tagName);
@@ -89,6 +91,13 @@ public class CasterTagDictionary : IEnumerable<CasterTag>
             if (reactions[reaction.Key].Count <= 0)
                 reactions.Remove(reaction.Key);
         }
+    }
+    public void Clear()
+    {
+        allTags.Clear();
+        tags.Clear();
+        reactions.Clear();
+        statMod = new CasterStats();
     }
     #endregion
 
