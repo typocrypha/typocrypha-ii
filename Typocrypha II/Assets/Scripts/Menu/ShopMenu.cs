@@ -32,7 +32,7 @@ public class ShopMenu : MonoBehaviour
     [SerializeField] private LabeledContent ItemDescriptionRight;
     [SerializeField] private GameObject purchaseButtonContainer;
     [SerializeField] private TextMeshProUGUI currencyUI;
-    [SerializeField] private GameObject confirmationWindow;
+    [SerializeField] private ConfirmationWindow confirmationWindow;
     [SerializeField] private RectTransform gradientTop;
     [SerializeField] private RectTransform gradientBottom;
 
@@ -223,30 +223,21 @@ public class ShopMenu : MonoBehaviour
 
     public void OpenConfirmation(BadgeWord purchase, MenuButton previousSelection)
     {
-        confirmationWindow.SetActive(true);
-        DOTween.Complete("OpenConfirmation");
-        DOTween.Complete("CloseConfirmation");
-        (confirmationWindow.transform as RectTransform).DOScaleX(1f, 0.1f).From(0f).SetId("OpenConfirmation");
-
-        PrintConfirmation(purchase.DisplayName, purchase.NextCost);
+        confirmationWindow.Open(GetConfirmationPrompt(purchase.DisplayName, purchase.NextCost), true);
 
         var buttons = confirmationWindow.GetComponentsInChildren<MenuButton>();
-        buttons[0].button.onClick.ReplaceAllListeners(()=> {
+        confirmationWindow.SetConfirmAction(()=> {
             PurchaseOrUpgradeBadge(purchase);
             CloseConfirmation(previousSelection, true);
         });
-        buttons[1].button.onClick.ReplaceAllListeners(()=>CloseConfirmation(previousSelection));
-        buttons[0].InitializeSelection(); //select yes by default
+        confirmationWindow.SetDenyAction(()=>CloseConfirmation(previousSelection));
     }
 
-    public void CloseConfirmation(MenuButton previousSelection = null, bool redraw = false)
+    public void CloseConfirmation(MenuButton previousSelection = null, bool rebuildButtons = false)
     {
-        DOTween.Complete("OpenConfirmation");
-        DOTween.Complete("CloseConfirmation");
-        (confirmationWindow.transform as RectTransform).DOScaleX(0f, 0.1f).From(1f).SetId("CloseConfirmation")
-            .OnComplete(() => confirmationWindow.SetActive(false));
+        confirmationWindow.Close();
 
-        if (!redraw)
+        if (!rebuildButtons)
         {
             previousSelection.InitializeSelection();
         }
@@ -315,10 +306,9 @@ public class ShopMenu : MonoBehaviour
             .Append(rectTransform.DOAnchorPosX(-5, 0.075f).SetRelative(true));
     }
 
-    private void PrintConfirmation(string badgeName, int cost)
+    private string GetConfirmationPrompt(string badgeName, int cost)
     {
-        var text = string.Format("Purchase {0} for {1}?", badgeName, cost.ToString("C0", formatInfo));
-        confirmationWindow.GetComponentInChildren<TextMeshProUGUI>().text = text;
+        return string.Format("Purchase {0} for {1}?", badgeName, cost.ToString("C0", formatInfo));
     }
 
     private void ScrollToButton(RectTransform buttonRect, bool immediate = false)

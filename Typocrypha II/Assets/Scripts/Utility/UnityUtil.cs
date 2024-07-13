@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -27,10 +28,10 @@ namespace Utilities.Unity
             }
         }
 
-        public static void ReplaceAllListeners(this UnityEngine.Events.UnityEvent evt, params UnityAction[] calls)
+        public static void ReplaceAllListeners(this UnityEngine.Events.UnityEvent evt, params Action[] calls)
         {
             evt.RemoveAllListeners();
-            foreach (var call in calls) evt.AddListener(call);
+            foreach (var call in calls) evt.AddListener(new UnityAction(call));
         }
     }
 
