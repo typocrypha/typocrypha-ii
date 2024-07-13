@@ -76,15 +76,16 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
     {
         if (cooldowns.Count <= 0)
             return;
-        cooldownTr.SortHierarchy(CompareCooldowns);
+        cooldownTr.SortHierarchy(CompareCooldownsHeirarchy);
     }
 
     public IReadOnlyList<SpellWord> GetSpells()
     {
         var ret = new List<SpellWord>(cooldowns.Count);
-        foreach(var kvp in cooldowns)
+        var cooldownList = new List<SpellCooldown>(cooldowns.Values);
+        cooldownList.Sort(CompareCooldowns);
+        foreach(var cooldown in cooldownList)
         {
-            var cooldown = kvp.Value;
             if (cooldown != null)
             {
                 ret.Add(cooldown.SpellWord);
@@ -107,35 +108,38 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
         return ret;
     }
 
-    private int CompareCooldowns(Transform a, Transform b)
+    private int CompareCooldownsHeirarchy(Transform a, Transform b)
     {
-        var aCooldown = a.GetComponent<SpellCooldown>();
-        var bCooldown = b.GetComponent<SpellCooldown>();
-        if (aCooldown.IsFixedUse)
-        {
-            if (!bCooldown.IsFixedUse)
-                return ComparisonConstants.greaterThan;
-            if(aCooldown.Uses == bCooldown.Uses)
-                return bCooldown.SpellText.CompareTo(aCooldown.SpellText);
-            return bCooldown.Uses.CompareTo(aCooldown.Uses);
-        }
+        return -CompareCooldowns(a.GetComponent<SpellCooldown>(), b.GetComponent<SpellCooldown>());
+    }
+
+    private int CompareCooldowns(SpellCooldown aCooldown, SpellCooldown bCooldown)
+    {
         if (bCooldown.IsFixedUse)
+        {
+            if (!aCooldown.IsFixedUse)
+                return ComparisonConstants.greaterThan;
+            if (bCooldown.Uses == aCooldown.Uses)
+                return aCooldown.SpellText.CompareTo(bCooldown.SpellText);
+            return aCooldown.Uses.CompareTo(bCooldown.Uses);
+        }
+        if (aCooldown.IsFixedUse)
         {
             return ComparisonConstants.lessThan;
         }
-        if(aCooldown.Cooldown == bCooldown.Cooldown)
+        if (bCooldown.Cooldown == aCooldown.Cooldown)
         {
-            if(aCooldown.SpellWord.category == bCooldown.SpellWord.category)
+            if (bCooldown.SpellWord.category == aCooldown.SpellWord.category)
             {
-                if (aCooldown.FullCooldown == bCooldown.FullCooldown)
+                if (bCooldown.FullCooldown == aCooldown.FullCooldown)
                 {
-                    return bCooldown.SpellText.CompareTo(aCooldown.SpellText);
+                    return aCooldown.SpellText.CompareTo(bCooldown.SpellText);
                 }
-                return bCooldown.FullCooldown.CompareTo(aCooldown.FullCooldown);
+                return aCooldown.FullCooldown.CompareTo(bCooldown.FullCooldown);
             }
-            return bCooldown.SpellWord.category.CompareTo(aCooldown.SpellWord.category);
+            return aCooldown.SpellWord.category.CompareTo(bCooldown.SpellWord.category);
         }
-        return bCooldown.Cooldown.CompareTo(aCooldown.Cooldown);
+        return aCooldown.Cooldown.CompareTo(bCooldown.Cooldown);
     }
 
     public void ClearWords()
