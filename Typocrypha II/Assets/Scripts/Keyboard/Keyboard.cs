@@ -205,8 +205,8 @@ namespace Typocrypha
             {
                 if (!unaffectedKeys.Contains(c))
                     continue;
-                keyMap[c].ApplyEffect(effectPrefab, caster);
                 unaffectedKeys.Remove(c);
+                keyMap[c].ApplyEffect(effectPrefab, caster);
             }
         }
         /// <summary>
