@@ -139,9 +139,10 @@ public class RewardsManager : MonoBehaviour
 
     public TallyEntry[] GetAllTallies()
     {
-        var dynamicTallies = CreateDynamicEntries();
-        var fixedTallies = fixedRewards;
-        return dynamicTallies.Concat(fixedTallies).ToArray();
+        if (!rewardCasualties) return fixedRewards;
+
+        var dynamicRewards = CreateDynamicEntries();
+        return dynamicRewards.Concat(fixedRewards).ToArray();
     }
 
     public int GetTotalReward() => CalculateReward(GetAllTallies());
