@@ -267,7 +267,7 @@ public class VictoryResultsScreen : MonoBehaviour
         messageContainer.gameObject.SetActive(true);
         for (int i = 0; i < clarkeText.Length; i++)
         {
-            message.text = clarkeText.Substring(0,i);
+            message.text = clarkeText.Substring(0, i + 1);
             const float defaultScroll = 0.021f;
             const int SpeechInterval = 3;
             if (i % SpeechInterval == 0 && !char.IsWhiteSpace(clarkeText[i]))
