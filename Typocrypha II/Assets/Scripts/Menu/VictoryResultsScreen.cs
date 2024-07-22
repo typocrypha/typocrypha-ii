@@ -265,7 +265,7 @@ public class VictoryResultsScreen : MonoBehaviour
     private IEnumerator DisplayMessage(string clarkeText)
     {
         messageContainer.gameObject.SetActive(true);
-        for (int i = 0; i <= clarkeText.Length; i++)
+        for (int i = 0; i < clarkeText.Length; i++)
         {
             message.text = clarkeText.Substring(0,i);
             const float defaultScroll = 0.021f;
