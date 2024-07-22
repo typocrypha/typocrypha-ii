@@ -16,7 +16,7 @@ namespace Typocrypha
 
         private bool inAltMode = false;
 
-        public KeyCode debugKey = KeyCode.LeftBracket;
+        private const KeyCode debugKey = KeyCode.PageUp;
 
         public void Switch()
         {
