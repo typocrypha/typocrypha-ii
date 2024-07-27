@@ -32,8 +32,9 @@ public class GlobalSaveData
 public class SaveManager : MonoBehaviour
 {
     public static SaveManager instance = null; // Global static reference
-    private static string SaveFilePath(int saveIndex) => Path.Combine(Application.persistentDataPath, $"campaignSaveData{saveIndex}.dat");
-    private static string GlobalSaveFilePath() => Path.Combine(Application.persistentDataPath, "globalSaveData.dat");
+    public const int debugSaveFile = 99;
+    public static string SaveFilePath(int saveIndex) => Path.Combine(Application.persistentDataPath, $"campaignSaveData{saveIndex}.dat");
+    public static string GlobalSaveFilePath() => Path.Combine(Application.persistentDataPath, "globalSaveData.dat");
 
     private int loadedCampaignIndex = 0;
 
@@ -156,7 +157,6 @@ public class SaveManager : MonoBehaviour
     [System.Diagnostics.Conditional("DEBUG")]
     public void DebugLoadCampaign()
     {
-        const int debugSaveFile = 99;
         if (!HasCampaignSaveFile(debugSaveFile))
         {
             SaveCampaign(debugSaveFile);

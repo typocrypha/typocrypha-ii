@@ -18,7 +18,7 @@ public class BadgeEffectAddAbilityOnCounter : BadgeEffect
         player.OnCounterOther += OnCounter;
     }
 
-    private void OnCounter(Caster countered, bool fullCounter)
+    private void OnCounter(Caster caster, Caster countered, bool fullCounter)
     {
         if (!fullCounter)
             return;

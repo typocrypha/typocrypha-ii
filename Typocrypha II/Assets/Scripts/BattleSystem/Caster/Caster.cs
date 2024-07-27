@@ -32,7 +32,6 @@ public class Caster : MonoBehaviour
         None = 0,
         Critical = 1,
         CriticalBlock = 2,
-        Riposte = 4,
         Combo = 8,
     }
 
@@ -41,6 +40,7 @@ public class Caster : MonoBehaviour
     public delegate void HitFn(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults data);
     public delegate CasterTagDictionary.ReactionMultiSet GetReactionsFn(SpellTag tag);
     public delegate void AfterCastFn(Spell s, Caster caster, bool hitTarget); // Add targets and results?
+    public delegate void OnCounterOtherFn(Caster caster, Caster countered, bool fullCounter);
     #endregion
 
     /// <summary>
@@ -58,7 +58,7 @@ public class Caster : MonoBehaviour
     /// </summary>
     public AfterCastFn OnAfterCastResolved { get; set; }
     public System.Action<Caster, bool> OnCountered { get; set; }
-    public System.Action<Caster, bool> OnCounterOther { get; set; }
+    public OnCounterOtherFn OnCounterOther { get; set; }
     /// <summary>
     /// Callbacks the calculate extra tag reactions
     /// </summary>
@@ -104,6 +104,7 @@ public class Caster : MonoBehaviour
     #region State, Status, and Class
 
     public bool IsPlayer => CasterState == State.Player;
+    public bool IsDemon => HasTag(Lookup.GetCasterTag("Demon"));
     public State CasterState { get => _type; set => _type = value; }
     [SerializeField] private State _type;
     public BattleStatus BStatus
@@ -150,11 +151,11 @@ public class Caster : MonoBehaviour
             {
                 if(SP > 0)
                 {
-                    BStatus = BattleStatus.SpiritMode;
+                    EnterSpiritMode();
                 }
                 else
                 {
-                    BStatus = BattleStatus.Dead;
+                    Kill();
                 }
             }
             ui?.onHealthChanged.Invoke((float)health / Stats.MaxHP);
@@ -170,7 +171,7 @@ public class Caster : MonoBehaviour
             sp = value;
             if (value <= 0 && BStatus == BattleStatus.SpiritMode)
             {
-                BStatus = BattleStatus.Dead;
+                Kill();
             }
             ui?.onSpChanged.Invoke((float)sp / Stats.MaxSP);
             ui?.onHealthChangedNumber.Invoke(sp + "/" + Stats.MaxSP);
@@ -270,6 +271,17 @@ public class Caster : MonoBehaviour
     public ScouterData ScouterData => scouterData ?? (scouterData = GetComponent<ScouterData>());
 
     #endregion
+
+    private void EnterSpiritMode()
+    {
+        BStatus = BattleStatus.SpiritMode;
+        if (IsDemon) RewardsManager.Instance?.IncrementCasualty();
+    }
+    private void Kill()
+    {
+        BStatus = BattleStatus.Dead;
+        if (IsDemon) RewardsManager.Instance?.IncrementKill();
+    }
 
     public void Damage(int amount)
     {

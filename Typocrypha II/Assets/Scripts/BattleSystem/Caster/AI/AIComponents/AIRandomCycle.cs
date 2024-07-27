@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class AIRandomCycle : AIComponent
 {
+    [SerializeField] private Spell openingSpell;
     [SerializeField] private SpellList spells1;
     [SerializeField] private SpellList spells2;
 
@@ -17,8 +18,16 @@ public class AIRandomCycle : AIComponent
         // Initialize the standard refs (caster and AI)
         base.Awake();
         ind1 = RandomUtils.RandomU.instance.RandomInt(0, spells1.Count);
-        ChangeSpell(spells1[ind1]);
-        onSpell1 = spells2.Count <= 0;
+        if (openingSpell.Count > 0)
+        {
+            ChangeSpell(openingSpell);
+            onSpell1 = true;
+        }
+        else
+        {
+            ChangeSpell(spells1[ind1]);
+            onSpell1 = spells2.Count <= 0;
+        }
     }
 
     private void OnEnable()

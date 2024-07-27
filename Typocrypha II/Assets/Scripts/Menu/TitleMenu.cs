@@ -1,7 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿//using System.Collections;
+//using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Utilities.Unity;
 
 public class TitleMenu : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class TitleMenu : MonoBehaviour
     [SerializeField] private MenuButton continueButton;
     [SerializeField] private MenuButton newGameButton;
     [SerializeField] private SettingsMenu settings;
+    [SerializeField] private ConfirmationWindow confirmationWindow;
 
     private static readonly AnimationCurve fadeOutCurve = AnimationCurve.EaseInOut(0, 1, 2, 0);
 
@@ -25,12 +27,17 @@ public class TitleMenu : MonoBehaviour
         {
             continueButton.gameObject.SetActive(true);
             continueButton.InitializeSelection();
+            newGameButton.button.onClick.ReplaceAllListeners(ConfirmNewGame);
         }
         else
         {
             continueButton.gameObject.SetActive(false);
             newGameButton.InitializeSelection();
+            newGameButton.button.onClick.ReplaceAllListeners(NewGame);
         }
+
+        confirmationWindow.SetConfirmAction(NewGame);
+        confirmationWindow.SetDenyAction(newGameButton.InitializeSelection);
     }
     public void Continue()
     {
@@ -39,6 +46,12 @@ public class TitleMenu : MonoBehaviour
         AudioManager.instance.StopBGM(fadeOutCurve);
         TransitionManager.instance.Continue();
     }
+
+    public void ConfirmNewGame()
+    {
+        confirmationWindow.Open(null, false);
+    }
+
     public void NewGame()
     {
         EventSystem.current.enabled = false;

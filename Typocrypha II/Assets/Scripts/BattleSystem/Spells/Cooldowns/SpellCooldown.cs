@@ -13,10 +13,14 @@ public class SpellCooldown : MonoBehaviour
     [SerializeField] private Color textOnColor;
     [SerializeField] private Color textOffColor;
     [Header("Icon Fields")]
+    [SerializeField] private GameObject cooldownUI;
     [SerializeField] private Image[] icons; // Hourglass icons.
     [SerializeField] private Color onColor; // Color when on cooldown.
     [SerializeField] private Color offColor; // Color when off cooldown.
     [SerializeField] private Color bonusColor; // Color when bonus cooldown
+    [Header("Fixed Use Fields")]
+    [SerializeField] private GameObject fixedUseUI;
+    [SerializeField] private TMPro.TextMeshProUGUI fixedUseNumberText;
 
     public int MaxCooldown => icons.Length;
     public int FullCooldown
@@ -37,7 +41,7 @@ public class SpellCooldown : MonoBehaviour
     public int Cooldown
     {
         get => cooldown;
-        set
+        private set
         {
             cooldown = Mathf.Clamp(value, 0, MaxCooldown);
             // Bonus Cooldown!
@@ -78,10 +82,66 @@ public class SpellCooldown : MonoBehaviour
     }
     private int cooldown;
 
+    public bool OnCooldown => Cooldown > 0;
+
     public string SpellText
     {
         get => spellText.text;
         set => spellText.text = value;
+    }
+
+    public bool IsFixedUse { get; private set; }
+
+    public int Uses 
+    {
+        get => uses;
+        set
+        {
+            uses = System.Math.Min(value, MaxUses);
+            fixedUseNumberText.text = uses.ToString();
+        } 
+    }
+    private int uses;
+
+    public int MaxUses { get; private set; }
+
+    public bool OnCast(int cooldown)
+    {
+        if (IsFixedUse)
+        {
+            Uses -= 1;
+            return Uses <= 0;
+        }
+        Cooldown += cooldown;
+        return false;
+    }
+
+    public void ResetCooldown()
+    {
+        Cooldown = 0;
+    }
+
+    public void LowerCooldown(int amount)
+    {
+        Cooldown -= amount;
+    }
+
+    public void SetupCooldown(int fullCooldown)
+    {
+        FullCooldown = fullCooldown;
+        Cooldown = 0;
+        cooldownUI.SetActive(true);
+        fixedUseUI.SetActive(false);
+        IsFixedUse = false;
+    }
+
+    public void SetupWithFixedUses(int uses, int maxUses)
+    {
+        MaxUses = maxUses;
+        Uses = uses;
+        cooldownUI.SetActive(false);
+        fixedUseUI.SetActive(true);
+        IsFixedUse = true;
     }
 
     public SpellWord SpellWord { get; set; }

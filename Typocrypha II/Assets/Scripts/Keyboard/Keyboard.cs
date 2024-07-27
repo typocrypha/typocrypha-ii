@@ -161,8 +161,8 @@ namespace Typocrypha
                 if (keyMap.ContainsKey(input))
                 {
                     var key = keyMap[input];
-                    key.OnPress?.Invoke();
                     var keySfx = InputManager.Instance.CheckInput(keyMap[input].Output);
+                    key.OnPress?.Invoke();
                     if (key.ForceSfx)
                     {
                         key.PlaySfx();
@@ -205,8 +205,8 @@ namespace Typocrypha
             {
                 if (!unaffectedKeys.Contains(c))
                     continue;
-                keyMap[c].ApplyEffect(effectPrefab, caster);
                 unaffectedKeys.Remove(c);
+                keyMap[c].ApplyEffect(effectPrefab, caster);
             }
         }
         /// <summary>

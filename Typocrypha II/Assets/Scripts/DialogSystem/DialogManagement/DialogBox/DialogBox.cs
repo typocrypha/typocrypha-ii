@@ -10,7 +10,7 @@ using TMPro;
 /// </summary>
 public interface IDialogBox : IPausable
 {
-    float ScrollDelay { get; set; }
+    bool Scroll { get; set; }
     bool IsDone { get; }
     void DumpText();
 }
@@ -33,7 +33,6 @@ public class DialogBox : MonoBehaviour, IDialogBox
     #endregion
 
     #region Constants
-    const float defaultScrollDelay = 0.021f; // Default text scrolling speed.
     const int defaultTextDisplayInterval = 1; // Default number of characters displayed each scroll.
     const int defaultSpeechInterval = 4; // Default number of characters before speech sfx plays
     const bool defaultPlaySpeechOnSpaces = true;
@@ -41,12 +40,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
     const float defaultAutoContinueDelay = 0.5f;
     #endregion
 
-    float scrollDelay = defaultScrollDelay; // Delay in showing characters for text scroll.
-    public float ScrollDelay
-    {
-        get => scroll ? scrollDelay / Settings.TextScrollSpeed : 0;
-        set => scrollDelay = value;
-    }
+    public bool Scroll { get; set; }
     public int SpeechInterval { get; set; } = defaultSpeechInterval; // Number of character scrolls before speech sfx plays
     public bool PlaySpeechOnSpaces { get; set; } = defaultPlaySpeechOnSpaces;
 
@@ -169,7 +163,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
     public void ResetDialogBox()
     {
         // Reset parameters
-        ScrollDelay = defaultScrollDelay;
+        Scroll = scroll;
         SpeechInterval = defaultSpeechInterval;
         PlaySpeechOnSpaces = defaultPlaySpeechOnSpaces;
         // Remove old text
@@ -275,7 +269,7 @@ public class DialogBox : MonoBehaviour, IDialogBox
                 resetTextBlips = false;
             }
             // Play scroll blips
-            if (speechCounter % SpeechInterval == 0 && (PlaySpeechOnSpaces || !char.IsWhiteSpace(dialogItem.text[pos])))
+            if (Scroll && speechCounter % SpeechInterval == 0 && (PlaySpeechOnSpaces || !char.IsWhiteSpace(dialogItem.text[pos])))
             {
                 for (int i = 0; i < textBlips.Length; i++)
                 {
@@ -290,9 +284,9 @@ public class DialogBox : MonoBehaviour, IDialogBox
                 hideText.ind[0] = pos + defaultTextDisplayInterval;
             }
             // Apply scroll delay if necessary
-            if (ScrollDelay > 0f)
+            if (Scroll)
             {
-                yield return new WaitForSeconds(ScrollDelay);
+                yield return new WaitForFixedUpdate();
             }
             else // If scale is at 0, skip to next dialog event
             {
