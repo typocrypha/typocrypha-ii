@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Typocrypha
 {
@@ -16,9 +17,13 @@ namespace Typocrypha
 
         const float time = 12f; // Duration of shock.
 
+        public float FillAmount { get => radialFill.fillAmount; set => radialFill.fillAmount = value; }
+
         public GameObject swappedKeyEffectPrefab;
+        [SerializeField] private Image radialFill;
 
         private GameObject swappedKeyEffect;
+        private KeyEffectShockedSub swappedShockEffect;
         private char swappedWith = ' ';
 
         public override void OnStart()
@@ -42,6 +47,7 @@ namespace Typocrypha
             swappedKey.SfxOverride = sfxOverride;
             // Create the visuals for the other key
             swappedKeyEffect = Instantiate(swappedKeyEffectPrefab, swappedKey.KeyEffectContainer);
+            swappedShockEffect = swappedKeyEffect.GetComponent<KeyEffectShockedSub>();
 
             // Start timer.
             StartCoroutine(DestroyAfterTime(time));
@@ -68,7 +74,22 @@ namespace Typocrypha
         // Remove effect when time runs out.
         IEnumerator DestroyAfterTime(float seconds)
         {
-            yield return new WaitForSecondsPause(seconds / Settings.GameplaySpeed, PH);
+            float curr = 0;
+            while (curr < seconds)
+            {
+                if (PH.Paused)
+                {
+                    yield return new WaitWhile(PH.IsPaused);
+                }
+                yield return new WaitForEndOfFrame();
+                curr += Time.deltaTime / Settings.GameplaySpeed;
+                radialFill.fillAmount = 1 - Mathf.Min(curr / seconds, 1);
+                swappedShockEffect.FillAmount = radialFill.fillAmount;
+                if (PH.Paused)
+                {
+                    yield return new WaitWhile(PH.IsPaused);
+                }
+            }
             Remove();
         }
     }
