@@ -36,6 +36,9 @@ public class PauseHandle
     {
         get => pauseSources != PauseSources.None;
     }
+
+    public bool IsPaused() => Paused;
+
     public void Pause(PauseSources sources)
     {
         bool wasPaused = Paused;
