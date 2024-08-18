@@ -22,6 +22,8 @@ public class PlayerDataManager : MonoBehaviour
 
     public PlayerEquipment equipment;
     public ResearchData researchData;
+    public ShopData ShopData => shopData;
+    [SerializeField] private ShopData shopData;
     public int currency;
 
     public bool CanCastSpell(SpellWord word)

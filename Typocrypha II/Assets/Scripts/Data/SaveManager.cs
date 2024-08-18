@@ -15,6 +15,7 @@ public class CampaignSaveData
     public string currentSceneName;
     public int currentSceneIndex;
     public List<string> equippedBadgeWords = new List<string>();
+    public int shopUnlockCodes;
     public int currency;
 }
 
@@ -144,6 +145,7 @@ public class SaveManager : MonoBehaviour
             data.equippedBadgeWords.Add(badge.Key);
         }
         data.currency = dataManager.currency;
+        data.shopUnlockCodes = (int)dataManager.ShopData.UnlockedShopCodes;
         return data;
     }
 
@@ -179,6 +181,7 @@ public class SaveManager : MonoBehaviour
             }
         }
         dataManager.currency = data.currency;
+        dataManager.ShopData.UnlockShopCodes((BadgeWord.ShopUnlockCodes)data.shopUnlockCodes);
     }
 
     public void SaveGlobalData()
