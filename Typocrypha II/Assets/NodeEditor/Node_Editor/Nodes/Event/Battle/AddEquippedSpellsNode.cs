@@ -10,11 +10,11 @@ namespace Gameflow
     public class AddEquippedSpellsNode : BaseNodeIO
     {
         #region Editor
-        public override string Title { get { return "Add Spell(s)"; } }
-        public override Vector2 MinSize { get { return new Vector2(150, 40); } }
+        public override string Title => "Add Spell(s)";
+        public override Vector2 MinSize => new Vector2(150, 40);
 
         public const string Id = "addEquippedSpells";
-        public override string GetID { get { return Id; } }
+        public override string GetID => Id;
 
         public SpellWord word1;
         public SpellWord word2;

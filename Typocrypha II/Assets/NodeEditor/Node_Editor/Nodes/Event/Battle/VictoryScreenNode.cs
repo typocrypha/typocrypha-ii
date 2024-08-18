@@ -13,8 +13,8 @@ namespace Gameflow
     [Node(false, "Battle/Victory Screen", typeof(BattleCanvas))]
     public class VictoryScreenNode : BaseNodeIO
     {
-        public override string Title { get { return "Victory Screen"; } }
-        public override Vector2 MinSize { get { return new Vector2(240, 100); } }
+        public override string Title => "Victory Screen";
+        public override Vector2 MinSize => new Vector2(240, 100);
 
         public const string Id = "victoryScreen";
         public override string GetID { get { return Id; } }
