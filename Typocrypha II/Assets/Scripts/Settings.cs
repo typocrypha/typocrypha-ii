@@ -82,6 +82,7 @@ public static class Settings
     }
     private static float uiSpeed = uiSpeedDefault;
 
+    const float baseScrollDelay = 0.028f; // Default text scrolling speed.
     public static float TextScrollSpeed
     {
         get
@@ -92,6 +93,7 @@ public static class Settings
         set
         {
             textScrollSpeed = value;
+            Time.fixedDeltaTime = baseScrollDelay / textScrollSpeed;
             PlayerPrefs.SetFloat(textScrollSpeedKey, value);
         }
     }

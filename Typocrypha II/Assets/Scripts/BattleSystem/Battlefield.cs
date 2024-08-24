@@ -86,7 +86,34 @@ public class Battlefield : MonoBehaviour, IPausable
 
     }
 
-    public List<Caster> Enemies => Casters.Where(c=>!c.IsPlayer).ToList();
+    public IEnumerable<Caster> Enemies
+    {
+        get
+        {
+            foreach(var caster in Casters)
+            {
+                if (caster.CasterState == Caster.State.Hostile)
+                {
+                    yield return caster;
+                }
+            }
+        }
+    }
+
+    public IEnumerable<Caster> TopRowCasters
+    {
+        get
+        {
+            for (int col = 0; col < field.Columns; col++)
+            {
+                var caster = GetCaster(new Position(0, col));
+                if (caster != null && !caster.IsDeadOrFled)
+                {
+                    yield return caster;
+                }
+            }
+        }
+    }
 
     #region List Accessor Properties
     public List<ATBActor> Actors { get; } = new List<ATBActor>(6);

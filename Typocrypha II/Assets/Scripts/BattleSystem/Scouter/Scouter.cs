@@ -137,7 +137,9 @@ public class Scouter : MonoBehaviour, IPausable
         InputManager.Instance.PH.Pause(PauseSources.Scouter);
         BattleDimmer.instance.SetDimmer(true);
         BattleDimmer.instance.DimCasters(Battlefield.instance.Enemies);
-        foreach (var c in Battlefield.instance.Enemies) c.ui.onScouterShow.Invoke();
+        foreach (var c in Battlefield.instance.Enemies)
+            if (c != null && c.ui != null)
+                c.ui.onScouterShow.Invoke();
 
         //spell navigation
         firstSpellInList.Select();

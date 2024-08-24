@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using SerializableCollections.GUIUtils;
+using System.Linq;
 
 [CanEditMultipleObjects]
 [CustomEditor(typeof(Caster), true)]
@@ -58,10 +59,21 @@ public class CasterInspector : Editor
         int count = data.TagDict.Count;
         // Tag GUI
         EditorUtils.CasterUtils.CasterTagDictionaryGUILayout(data.TagDict);
-        if(count != data.TagDict.Count)
+        if (GUILayout.Button("Rebuild Tag Set"))
+        {
+            var topLevelTags = data.TagDict.TopLevelTags.ToArray();
+            data.TagDict.Clear();
+            foreach(var tag in topLevelTags)
+            {
+                data.TagDict.Add(tag);
+            }
+            EditorUtils.SetSceneDirty(target);
+        }
+        else if (count != data.TagDict.Count)
         {
             EditorUtils.SetSceneDirty(target);
         }
+
         serializedObject.ApplyModifiedProperties();
         EditorUtils.SetSceneDirtyIfGUIChanged(target);
     }

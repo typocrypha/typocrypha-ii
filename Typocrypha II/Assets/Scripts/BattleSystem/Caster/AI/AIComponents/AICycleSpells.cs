@@ -4,18 +4,20 @@ using UnityEngine;
 
 public class AICycleSpells : AIComponent
 {
-    public int startIndex = 0;
-    public int loopIndex = 0;
-    public SpellList spells;
+    [SerializeField] private int startIndex = 0;
+    [SerializeField] private int loopIndex = 0;
+    [SerializeField] private SpellList spells;
 
-    int curr;
+    protected virtual SpellList Spells => spells;
+
+    private int curr;
 
     protected override void Awake()
     {
         // Initialize the standard refs (caster and AI)
         base.Awake();
         curr = startIndex;
-        ChangeSpell(spells[curr]);
+        ChangeSpell(Spells[curr]);
     }
 
     private void OnEnable()
@@ -30,8 +32,8 @@ public class AICycleSpells : AIComponent
 
     public void CycleSpell(Spell spell, Caster self, bool hitTarget)
     {
-        if (++curr >= spells.Count)
+        if (++curr >= Spells.Count)
             curr = loopIndex;
-        ChangeSpell(spells[curr]);
+        ChangeSpell(Spells[curr]);
     }
 }

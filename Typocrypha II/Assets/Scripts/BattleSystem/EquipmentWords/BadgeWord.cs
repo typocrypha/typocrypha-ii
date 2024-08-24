@@ -9,6 +9,16 @@ public class BadgeWord : ScriptableObject
         Passive,
         Soldier,
     }
+
+    [System.Flags]
+    public enum ShopUnlockCodes
+    {
+        None = 0,
+        CannotPurchase = 1,
+        A = 2,
+        B = 4,
+        C = 8,
+    }
     public string DisplayName => CurrentBadge.internalName.ToUpper();
     public string Key => internalName.ToLower();
     [SerializeField] private string internalName;
@@ -17,6 +27,8 @@ public class BadgeWord : ScriptableObject
     public EquipmentSlot Slot => CurrentBadge.slot;
     [SerializeField] private EquipmentSlot slot;
     [SerializeField] private int cost;
+    public ShopUnlockCodes ShopUnlockRequirements => shopUnlockRequirements;
+    [SerializeField] private ShopUnlockCodes shopUnlockRequirements;
     public int Cost => CurrentBadge.cost;
     public int UpgradeCost => HasUpgrade ? NextUpgrade.cost : 0;
 
@@ -42,7 +54,14 @@ public class BadgeWord : ScriptableObject
     public BadgeWord NextUpgrade => HasUpgrade ? upgrades[UpgradeLevel] : null;
     private BadgeWord CurrentBadge => IsUpgraded ? upgrades[UpgradeLevel - 1] : this;
 
-    public bool CanPurchase => !PlayerDataManager.instance.equipment.IsBadgeUnlocked(this);
+    public bool CanPurchase
+    {
+        get
+        {
+            var data = PlayerDataManager.instance;
+            return !data.equipment.IsBadgeUnlocked(this) && data.ShopData.IsUnlockedInShop(this);
+        }
+    }
 
     public void Upgrade()
     {

@@ -53,6 +53,10 @@ public abstract class GraphParser : MonoBehaviour
             PlayerDataManager.instance.Set(setVariableNode.variableName, setVariableNode.value);
             return true;
         }
+        if (node is ShopUnlockNode shopUnlockNode)
+        {
+            PlayerDataManager.instance.ShopData.UnlockShopCodes(shopUnlockNode.unlockCodes);
+        }
         if (node is SetBackgroundNode setBgNode)
         {
             if (setBgNode.bgType == SetBackgroundNode.BgType.Sprite)

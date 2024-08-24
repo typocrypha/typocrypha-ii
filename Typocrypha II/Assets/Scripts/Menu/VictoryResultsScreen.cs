@@ -13,12 +13,12 @@ public class VictoryResultsScreen : MonoBehaviour
 {
     [Header("Initialization")]
     [SerializeField] private Button continueButton;
-    [SerializeField] private TweenInfo tweenInfo;
     [SerializeField] private GameObject clarkeContainer;
     [SerializeField] private GameObject messageContainer;
     [SerializeField] private CharacterData clarkeData;
     [SerializeField] private RectTransform tallyView;
     [SerializeField] private VerticalLayoutGroup bonusView;
+    [SerializeField] private AudioClip victoryBGM;
 
     [Header("Display Text")]
     [SerializeField] private TextMeshProUGUI header;
@@ -32,6 +32,14 @@ public class VictoryResultsScreen : MonoBehaviour
     [SerializeField] private Vector3 finalPosition;
     [SerializeField] private AnimationCurve clarkeSlideVertical = default;
     [SerializeField] private AnimationCurve clarkeSlideHorizontal = default;
+
+    [Header("Animation")]
+    [SerializeField] private float fadeInDelay = 1f;
+    [SerializeField] private float fadeInDuration = 0.5f;
+
+    [Header("Bonus Screen")]
+    [SerializeField] private List<BonusEntryUI> bonusEntryUI;
+    [SerializeField] private GameObject bonusEntryPrefab;
 
     public Action OnScreenClosed;
 
@@ -66,9 +74,9 @@ public class VictoryResultsScreen : MonoBehaviour
         };
         DisplayResults(tallies, 270, 1000, "goobaba!");
         SetBonuses(new BonusEntry[] {
-            new BonusEntry("Badge A", "Reason A", "This badge does a lot of good things when you equip it."),
-            new BonusEntry("Badge B", "Reason B", "This badge also does a lot of good things when you equip it."),
-            new BonusEntry("Badge C", "Reason C", "This badge is either really good or really bad, idk."),
+            new BonusEntry("Badge A", "Reason A", "This badge does a lot of good things when you equip it.", null),
+            new BonusEntry("Badge B", "Reason B", "This badge also does a lot of good things when you equip it.", null),
+            new BonusEntry("Badge C", "Reason C", "This badge is either really good or really bad, idk.", null),
         });
     }
 
@@ -82,10 +90,10 @@ public class VictoryResultsScreen : MonoBehaviour
         };
         DisplayResults(tallies, 270, 1000, "goobaba!");
         SetBonuses(new BonusEntry[] {
-            new BonusEntry("Badge A", "Reason A", "This badge does a lot of good things when you equip it.", 0, ""),
-            new BonusEntry("Badge B", "Reason B", "This badge also does a lot of good things when you equip it.", 0, "You should really equip badge B!"),
-            new BonusEntry("Badge C", "Reason C", "This badge is either really good or really bad, idk."),
-            new BonusEntry("Badge D", "Reason D", "This badge has a slight chance to make the user explode."),
+            new BonusEntry("Badge A", "Reason A", "This badge does a lot of good things when you equip it.", null, 0, ""),
+            new BonusEntry("Badge B", "Reason B", "This badge also does a lot of good things when you equip it.", null, 0, "You should really equip badge B!"),
+            new BonusEntry("Badge C", "Reason C", "This badge is either really good or really bad, idk.", null),
+            new BonusEntry("Badge D", "Reason D", "This badge has a slight chance to make the user explode.", null),
             //new BonusEntry("Badge E", "Reason E", "This badge will make your wildest dreams come true."),
             //new BonusEntry("Badge F", "Reason F", "This badge is for aesthetic purposes only."),
             //new BonusEntry("Badge G", "Reason G", "This badge is for aesthetic purposes only."),
@@ -109,8 +117,9 @@ public class VictoryResultsScreen : MonoBehaviour
 
     IEnumerator DisplayResultsCR(TallyEntry[] tallies, int total, int balance, string clarkeText)
     {
-        tweenInfo.Start(GetComponent<CanvasGroup>().DOFade(1, tweenInfo.Time).From(0));
-        yield return tweenInfo.WaitForCompletion();
+        AudioManager.instance.StopBGM(AnimationCurve.Linear(0f, 1f, fadeInDelay, 0f));
+        yield return GetComponent<CanvasGroup>().DOFade(1, fadeInDuration).From(0).SetDelay(fadeInDelay).WaitForCompletion();
+        AudioManager.instance.PlayBGM(victoryBGM);
         yield return DisplayClarke();
         yield return new WaitForSeconds(1f);
         foreach (var entry in tallies) yield return DisplayTally(entry);
@@ -128,19 +137,20 @@ public class VictoryResultsScreen : MonoBehaviour
 
     public void SetBonuses(IReadOnlyList<BonusEntry> bonuses)
     {
-        foreach (Transform child in bonusView.transform) child.gameObject.SetActive(false);
+        foreach(var entryUI in bonusEntryUI)
+        {
+            entryUI.gameObject.SetActive(false);
+        }
         for (int i = 0; i < bonuses.Count; i++)
         {
-            if (i >= bonusView.transform.childCount)
+            if (i >= bonusEntryUI.Count)
             {
-                Instantiate(bonusView.transform.GetChild(1).gameObject, bonusView.transform);
+                bonusEntryUI.Add(Instantiate(bonusEntryPrefab, bonusView.transform).GetComponent<BonusEntryUI>());
             }
-            var entryGO = bonusView.transform.GetChild(i).gameObject;
-            entryGO.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = bonuses[i].badgeName;
-            entryGO.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = bonuses[i].unlockReason;
-            entryGO.transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = bonuses[i].description;
+            var entryUI = bonusEntryUI[i];
+            entryUI.Setup(bonuses[i]);
+            entryUI.gameObject.SetActive(true);
             if (string.IsNullOrEmpty(bonusClarkeMessage)) bonusClarkeMessage = bonuses[i].clarkeText;
-            entryGO.SetActive(true);
         }
         shouldShowBonuses = true;
     }
@@ -162,10 +172,26 @@ public class VictoryResultsScreen : MonoBehaviour
         {
             StartCoroutine(BonusScroll_CR(scrollHeight));
         }
+        else if(!string.IsNullOrEmpty(bonusClarkeMessage))
+        {
+            DOTween.Sequence().AppendInterval(2f).AppendCallback(BonusMessage);
+        }
         else
         {
-            DOTween.Sequence().AppendInterval(4f).AppendCallback(SetButtonToExit);
+            DOTween.Sequence().AppendInterval(2f).AppendCallback(SetButtonToExit);
         }
+    }
+
+    private void BonusMessage()
+    {
+        StartCoroutine(BonusMessage_Cr());
+    }
+
+    private IEnumerator BonusMessage_Cr()
+    {
+        yield return DisplayMessage(bonusClarkeMessage);
+        yield return new WaitForSeconds(1f);
+        SetButtonToExit();
     }
 
     private IEnumerator BonusScroll_CR(float scrollHeight)
@@ -239,9 +265,9 @@ public class VictoryResultsScreen : MonoBehaviour
     private IEnumerator DisplayMessage(string clarkeText)
     {
         messageContainer.gameObject.SetActive(true);
-        for (int i = 0; i <= clarkeText.Length; i++)
+        for (int i = 0; i < clarkeText.Length; i++)
         {
-            message.text = clarkeText.Substring(0,i);
+            message.text = clarkeText.Substring(0, i + 1);
             const float defaultScroll = 0.021f;
             const int SpeechInterval = 3;
             if (i % SpeechInterval == 0 && !char.IsWhiteSpace(clarkeText[i]))

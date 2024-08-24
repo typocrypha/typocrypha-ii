@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Typocrypha
 {
@@ -13,6 +14,8 @@ namespace Typocrypha
         const float time = 12f; // Duration of fire.
 
         int reps = 0; // Number of additional times key is repeated.
+
+        [SerializeField] private Image radialFill;
 
         public override void OnStart()
         {
@@ -32,7 +35,21 @@ namespace Typocrypha
         // Remove effect when time runs out.
         IEnumerator DestroyAfterTime(float seconds)
         {
-            yield return new WaitForSecondsPause(seconds / Settings.GameplaySpeed, PH);
+            float curr = 0;
+            while(curr < seconds)
+            {
+                if (PH.Paused)
+                {
+                    yield return new WaitWhile(PH.IsPaused);
+                }
+                yield return new WaitForEndOfFrame();
+                curr += Time.deltaTime / Settings.GameplaySpeed;
+                radialFill.fillAmount = 1 - Mathf.Min(curr / seconds, 1);
+                if (PH.Paused)
+                {
+                    yield return new WaitWhile(PH.IsPaused);
+                }
+            }
             Remove();
         }
     }

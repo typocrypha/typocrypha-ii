@@ -104,6 +104,7 @@ public class Caster : MonoBehaviour
     #region State, Status, and Class
 
     public bool IsPlayer => CasterState == State.Player;
+    public bool IsDemon => HasTag(Lookup.GetCasterTag("Demon"));
     public State CasterState { get => _type; set => _type = value; }
     [SerializeField] private State _type;
     public BattleStatus BStatus
@@ -150,11 +151,11 @@ public class Caster : MonoBehaviour
             {
                 if(SP > 0)
                 {
-                    BStatus = BattleStatus.SpiritMode;
+                    EnterSpiritMode();
                 }
                 else
                 {
-                    BStatus = BattleStatus.Dead;
+                    Kill();
                 }
             }
             ui?.onHealthChanged.Invoke((float)health / Stats.MaxHP);
@@ -170,7 +171,7 @@ public class Caster : MonoBehaviour
             sp = value;
             if (value <= 0 && BStatus == BattleStatus.SpiritMode)
             {
-                BStatus = BattleStatus.Dead;
+                Kill();
             }
             ui?.onSpChanged.Invoke((float)sp / Stats.MaxSP);
             ui?.onHealthChangedNumber.Invoke(sp + "/" + Stats.MaxSP);
@@ -270,6 +271,17 @@ public class Caster : MonoBehaviour
     public ScouterData ScouterData => scouterData ?? (scouterData = GetComponent<ScouterData>());
 
     #endregion
+
+    private void EnterSpiritMode()
+    {
+        BStatus = BattleStatus.SpiritMode;
+        if (IsDemon) RewardsManager.Instance?.IncrementCasualty();
+    }
+    private void Kill()
+    {
+        BStatus = BattleStatus.Dead;
+        if (IsDemon) RewardsManager.Instance?.IncrementKill();
+    }
 
     public void Damage(int amount)
     {

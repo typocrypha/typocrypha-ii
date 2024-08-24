@@ -37,7 +37,10 @@ public class MenuButton : MonoBehaviour, ISelectHandler, IDeselectHandler, ISubm
     {
         if (shortcutKeys.Length == 0) return;
         //check selection for context
-        if (currentES && currentES.currentSelectedGameObject.transform.parent != transform.parent) return;
+        if (currentES == null) return;
+        if (currentES.currentSelectedGameObject == null) return;
+        if (currentES.currentSelectedGameObject.transform.parent != transform.parent) return;
+
         foreach (var key in shortcutKeys)
         {
             if (Input.GetKeyDown(key))

@@ -12,8 +12,8 @@ namespace Typocrypha
     {
         int health = 0;
 
-        const int minHealth = 3;
-        const int maxHealth = 3;
+        const int minHealth = 2;
+        const int maxHealth = 2;
 
         [SerializeField] private AudioClip breakSfx;
 

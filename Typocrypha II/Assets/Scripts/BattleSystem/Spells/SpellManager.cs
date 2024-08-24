@@ -142,18 +142,22 @@ public class SpellManager : MonoBehaviour
             }
             else if (caster.CasterState == Caster.State.Hostile)
             {
-                var player = Battlefield.instance.Player;
-                if (player.HasActiveAbilities(Caster.ActiveAbilities.CriticalBlock) && BadgeEffectCritBlock.RollForCritical(player))
+                var bulwarkBadge = Lookup.GetBadge("bulwark");
+                if (PlayerDataManager.instance.equipment.IsBadgeEquipped(bulwarkBadge))
                 {
-                    IEnumerator OnBlockPopupComplete(bool popupSuccess)
+                    var critBlockEffect = bulwarkBadge.GetEffect<BadgeEffectCritBlock>();
+                    if (critBlockEffect != null && critBlockEffect.RollForCritical(Battlefield.instance.Player))
                     {
-                        if (popupSuccess)
+                        IEnumerator OnBlockPopupComplete(bool popupSuccess)
                         {
-                            mod = Damage.SpecialModifier.CritBlock;
+                            if (popupSuccess)
+                            {
+                                mod = Damage.SpecialModifier.CritBlock;
+                            }
+                            return null;
                         }
-                        return null;
+                        LogInteractivePopup(critPopup, "Block Chance!", "BLOCK", 5, OnBlockPopupComplete);
                     }
-                    LogInteractivePopup(critPopup, "Block Chance!", "BLOCK", 5, OnBlockPopupComplete);
                 }
             }
             if (HasPrompts)

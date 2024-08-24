@@ -13,8 +13,8 @@ namespace Gameflow
     [Node(false, "Battle/Victory Screen", typeof(BattleCanvas))]
     public class VictoryScreenNode : BaseNodeIO
     {
-        public override string Title { get { return "Victory Screen"; } }
-        public override Vector2 MinSize { get { return new Vector2(240, 100); } }
+        public override string Title => "Victory Screen";
+        public override Vector2 MinSize => new Vector2(240, 100);
 
         public const string Id = "victoryScreen";
         public override string GetID { get { return Id; } }
@@ -24,21 +24,9 @@ namespace Gameflow
         public int numEntries = 1;
         public TallyEntry[] Entries => entries.Take(numEntries).ToArray();
         public string ClarkeText = "";
+        public bool RewardCasualties = true;
 
-        public int Total
-        {
-            get
-            {
-                float total = 0, percentMultiplier = 0;
-                for (int i = 0; i < numEntries; ++i)
-                {
-                    if (!entries[i].isPercentage) total += entries[i].value;
-                    else percentMultiplier += entries[i].value;
-                }
-                total *= 1 + percentMultiplier/100;
-                return Mathf.FloorToInt(total);
-            }
-        }
+        private int BaseTotal => RewardsManager.CalculateReward(Entries);
 
 #if UNITY_EDITOR
         public override void NodeGUI()
@@ -65,10 +53,12 @@ namespace Gameflow
             }
             GUILayout.BeginHorizontal();
             GUI.enabled = false;
-            RTEditorGUI.TextField("Total", GUILayout.ExpandWidth(true));
-            RTEditorGUI.IntField(Total, GUILayout.Width(71));
+            RTEditorGUI.TextField("Base Total", GUILayout.ExpandWidth(true));
+            RTEditorGUI.IntField(BaseTotal, GUILayout.Width(71));
             GUI.enabled = true;
             GUILayout.EndHorizontal();
+
+            RewardCasualties = RTEditorGUI.Toggle(RewardCasualties, "Reward Demon Casualties");
 
             GUILayout.Space(10);
             GUILayout.Label(new GUIContent("Clarke Text"));
@@ -76,6 +66,6 @@ namespace Gameflow
 
             GUILayout.EndVertical();
         }
-    }
 #endif
+    }
 }

@@ -19,6 +19,7 @@ public class ShopMenu : MonoBehaviour
     [SerializeField] private Color purchaseInvalidColor;
     [SerializeField] private Color purchaseValidSelectColor;
     [SerializeField] private Color purchaseInvalidSelectColor;
+    [SerializeField] private float purchaseContainerOffsetY = -470f;
 
     [Header("Child Object References")]
     [SerializeField] private MenuButton firstLandingSelection;
@@ -31,13 +32,16 @@ public class ShopMenu : MonoBehaviour
     [SerializeField] private LabeledContent ItemDescriptionRight;
     [SerializeField] private GameObject purchaseButtonContainer;
     [SerializeField] private TextMeshProUGUI currencyUI;
-    [SerializeField] private GameObject confirmationWindow;
+    [SerializeField] private ConfirmationWindow confirmationWindow;
+    [SerializeField] private RectTransform gradientTop;
+    [SerializeField] private RectTransform gradientBottom;
 
     [Header("Events")]
     [SerializeField] private UnityEvent onExit;
 
     [Header("Badges")]
     [SerializeField] private BadgeBundle allBadges;
+
 
     private enum PurchaseMode { None, Buy, Upgrade }
     private PurchaseMode currentMode = PurchaseMode.None;
@@ -74,6 +78,8 @@ public class ShopMenu : MonoBehaviour
         formatInfo = CultureInfo.CurrentCulture.NumberFormat.Clone() as NumberFormatInfo;
         formatInfo.CurrencyGroupSeparator = ""; // remove the group separator
         PrintCurrency();
+
+        firstPurchaseSelection.onSelect.AddListener(() => ScrollToButton(firstPurchaseSelection.transform as RectTransform));
     }
 
     public void OpenLanding()
@@ -83,6 +89,7 @@ public class ShopMenu : MonoBehaviour
         foreach (var go in landingExclusiveUI) go.SetActive(true);
         firstLandingSelection.InitializeSelection();
         currentMode = PurchaseMode.None;
+        ToggleGradient(false);
     }
 
     private void OpenPurchase()
@@ -91,6 +98,8 @@ public class ShopMenu : MonoBehaviour
         foreach (var go in landingExclusiveUI) go.SetActive(false);
         foreach (var go in purchaseExclusiveUI) go.SetActive(true);
         firstPurchaseSelection.InitializeSelection();
+        ScrollToButton(firstPurchaseSelection.transform as RectTransform, true);
+        ToggleGradient(true);
 
         // disable all buttons except first (return button)
         foreach (Transform buttonTransform in purchaseButtonContainer.transform)
@@ -170,7 +179,9 @@ public class ShopMenu : MonoBehaviour
 
             //set callbacks
             menuButton.button.onClick.ReplaceAllListeners(()=>ItemButtonAction(badge, menuButton));
-            menuButton.onSelect.ReplaceAllListeners(() => InspectBadge(badge));
+            menuButton.onSelect.ReplaceAllListeners(
+                () => InspectBadge(badge),
+                () => ScrollToButton(menuButton.transform as RectTransform));
 
 
             //set previous navigation
@@ -183,7 +194,13 @@ public class ShopMenu : MonoBehaviour
             tempNavigation = menuButton.button.navigation;
             tempNavigation.mode = Navigation.Mode.Explicit;
             tempNavigation.selectOnUp = previousMenuButton.button;
+            tempNavigation.selectOnDown = firstPurchaseSelection.button;
             menuButton.button.navigation = tempNavigation;
+
+            tempNavigation = firstPurchaseSelection.button.navigation;
+            tempNavigation.mode = Navigation.Mode.Explicit;
+            tempNavigation.selectOnUp = menuButton.button;
+            firstPurchaseSelection.button.navigation = tempNavigation;
 
             previousMenuButton = menuButton;
             ++i;
@@ -206,30 +223,21 @@ public class ShopMenu : MonoBehaviour
 
     public void OpenConfirmation(BadgeWord purchase, MenuButton previousSelection)
     {
-        confirmationWindow.SetActive(true);
-        DOTween.Complete("OpenConfirmation");
-        DOTween.Complete("CloseConfirmation");
-        (confirmationWindow.transform as RectTransform).DOScaleX(1f, 0.1f).From(0f).SetId("OpenConfirmation");
-
-        PrintConfirmation(purchase.DisplayName, purchase.NextCost);
+        confirmationWindow.Open(GetConfirmationPrompt(purchase.DisplayName, purchase.NextCost), true);
 
         var buttons = confirmationWindow.GetComponentsInChildren<MenuButton>();
-        buttons[0].button.onClick.ReplaceAllListeners(()=> {
+        confirmationWindow.SetConfirmAction(()=> {
             PurchaseOrUpgradeBadge(purchase);
             CloseConfirmation(previousSelection, true);
         });
-        buttons[1].button.onClick.ReplaceAllListeners(()=>CloseConfirmation(previousSelection));
-        buttons[0].InitializeSelection(); //select yes by default
+        confirmationWindow.SetDenyAction(()=>CloseConfirmation(previousSelection));
     }
 
-    public void CloseConfirmation(MenuButton previousSelection = null, bool redraw = false)
+    public void CloseConfirmation(MenuButton previousSelection = null, bool rebuildButtons = false)
     {
-        DOTween.Complete("OpenConfirmation");
-        DOTween.Complete("CloseConfirmation");
-        (confirmationWindow.transform as RectTransform).DOScaleX(0f, 0.1f).From(1f).SetId("CloseConfirmation")
-            .OnComplete(() => confirmationWindow.SetActive(false));
+        confirmationWindow.Close();
 
-        if (!redraw)
+        if (!rebuildButtons)
         {
             previousSelection.InitializeSelection();
         }
@@ -298,9 +306,29 @@ public class ShopMenu : MonoBehaviour
             .Append(rectTransform.DOAnchorPosX(-5, 0.075f).SetRelative(true));
     }
 
-    private void PrintConfirmation(string badgeName, int cost)
+    private string GetConfirmationPrompt(string badgeName, int cost)
     {
-        var text = string.Format("Purchase {0} for {1}?", badgeName, cost.ToString("C0", formatInfo));
-        confirmationWindow.GetComponentInChildren<TextMeshProUGUI>().text = text;
+        return string.Format("Purchase {0} for {1}?", badgeName, cost.ToString("C0", formatInfo));
+    }
+
+    private void ScrollToButton(RectTransform buttonRect, bool immediate = false)
+    {
+        var newAnchorY = purchaseContainerOffsetY - 0.5f * buttonRect.rect.height - buttonRect.anchoredPosition.y;
+
+        DOTween.Kill("ScrollPurchase");
+        (purchaseButtonContainer.transform as RectTransform).DOAnchorPosY(newAnchorY, 0.1f).SetId("ScrollPurchase");
+        if (immediate) DOTween.Complete("ScrollPurchase");
+    }
+
+    private void ToggleGradient(bool isVisible)
+    {
+        const float duration = 0f;
+        float posY = isVisible ? 0f : 100f;
+
+        DOTween.Kill("GradientTween");
+        DOTween.Sequence()
+            .SetId("GradientTween")
+            .Append(gradientTop.DOAnchorPosY(posY, duration))
+            .Append(gradientBottom.DOAnchorPosY(-posY, duration));
     }
 }
