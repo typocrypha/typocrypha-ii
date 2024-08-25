@@ -8,22 +8,40 @@
 
 
 >addchar,Ayin,0,0,left,surprisedbad
->addchar,Adelai,0,0,right,frustrated
+>addchar,Adelai,0,0,right,serious
 
 
-Narrator: Demons pour out of the train station and quickly surround you.
+Narrator: Demons are pouring out of the station.
 
 
-Narrator: This doesn’t look good.
+Narrator: This does not look good...
 
 
-Ayin: H-How did they get here already??
+Ayin: A-Adelai!
 
 
-Adelai(frustrated): I don’t know,{pm} but we’re going to have to break through.
+Adelai: Keep it together,{ps} Ayin!
 
 
-Adelai: I’ll take the ones in front,{pm} cover me!
++bubble
+
+
+>addchar,Adelai,0,0,right,serious
+
+
+Demon[1,1]: Hey!{pm} More Human soldiers!
+
+
+Adelai(serious)[0,2]: Ayin,{ps} look out for that {c,ui-terms}Demon{c}!
+
+
+Adelai[0,2]: You have to fight back with your Typocrypha!
+
+
+Clarke[0,1]: Demon threat detected.{pm} Typing assist engaged.[a]
+
+
+Clarke[0,1]: Please type in basic combat spell {c,ui-terms}“SWORD”{c} and press ENTER.
 
 
 >end
@@ -31,40 +49,22 @@ Adelai: I’ll take the ones in front,{pm} cover me!
 >start,ACT I-4-1-Success
 
 
-+vnplus
-
-
->addchar,Ayin,0,0,left
-
-
->addchar,Adelai,0,0,right
-
-
-Adelai(caring): Hey,{pm} so you can still fight after all!
-
-
-Ayin(embarrassed): Somehow,{pm} haha...
-
-
-Adelai(normal): OK,{pm} just keep on typing in those spells!
-
-
-Adelai(normal): And remember...
-
-
 +bubble
 
 
->addchar,Adelai,0,0,right
+Clarke[0,1]: Cast successful.{pm} Spell “SWORD” going on cooldown for one(1) cast.
 
 
-Adelai[0,2]: After you use a spell,{pm} it goes on {c,ui-terms}cooldown.{c}
+Clarke[0,1]: Casting a Spell causes all cooldowns to go down by one(1).
 
 
-Adelai[0,2]: You’ll have to {c,ui-terms}use different spells{c} until it recharges.
+Clarke[0,1]: As such,{pm} cycling through different Spells is recommended to ensure efficient casting.
 
 
-Adelai[0,2]: Just keep using whatever’s highlighted in your {c,ui-terms}Spell List{c} located at the {c,ui-terms}bottom left of your Typocrypha interface.{c}
+Clarke[0,1]: Please refer to the {c,ui-terms}Spell List{c} in the bottom left of your HUD for available Spells.
+
+
+Clarke[0,1]: Now,{pm} please type in basic combat spell {c,ui-terms}”LANCE”{c} and press ENTER.
 
 
 >end
@@ -75,8 +75,12 @@ Adelai[0,2]: Just keep using whatever’s highlighted in your {c,ui-terms}Spell 
 +vnplus
 
 
->addchar,Ayin,0,0,left
->addchar,Adelai,0,0,right
+>addchar,Ayin,0,0,left,uncomfortable
+>addchar,Adelai,0,0,right,serious
+>addchar,Clarke,0,0
+
+
+Clarke: WARNING!{pm} Caster damage taken!
 
 
 Adelai(serious): Ayin!{pm} What are you doing?
@@ -113,6 +117,34 @@ Adelai[0,2]: Try typing in the spell “SWORD” and then {c,ui-terms}press ente
 
 
 >end
+//When demon is defeated:
+>start,ACT I-4-1-Spirit
+
+
++bubble
+
+
+>addchar,Adelai,0,0,right,serious
+
+
+Clarke[0,1]: Demon has been defeated.
+
+
+Clarke[0,1]: Demon has entered its {c,ui-terms}Spirit Form{c}.
+
+
+Ayin[0,1]: Spirit Form?{pm} D-Do I need to keep fighting it?
+
+
+Adelai(normal)[0,2]: Don’t worry,{ps} Ayin!{pm} Those Spirit balls are harmless!
+
+
+Adelai[0,2]: While difficult to kill completely,{pm} they’ll run off on their own.
+
+
+>end
+
+
 //Round 2: Table for Two
 //Opening Dialog:
 >start,ACT I-4-2-Opening
@@ -173,7 +205,7 @@ Adelai[0,2]: If it’s easier,{pm} you can also use the {c,ui-terms}tab key to c
 >addchar,Adelai,0,0,right
 
 
-Adelai(frustrated): Um,{pm} hey Ayin?{pm} I know these demons aren’t very strong,{ps} but[a]...
+Adelai(frustrated): Um,{pm} hey Ayin?{pm} I know these demons aren’t very strong,{ps} but[b]...
 
 
 Adelai(teasing): Shouldn’t you use more spells than just PUNCH and KICK?
@@ -318,18 +350,6 @@ Ayin(ohfuck): *gasp*{pm} *gasp*{pm} Y-yeah.{pm} Just give me a sec...
 Adelai: Hurry up!
 
 
->stopbgm
-
-
-Narrator: [shake,1,1.5] *BOOOOOOOOOOOM!!!*
-
-
-Narrator: Another explosion knocks both of you to the ground.
-
-
-Narrator: A figure appears in the smoke.
-
-
 >end
 
 
@@ -353,4 +373,5 @@ Adelai[0,2]: Another one!?
 
 
 
-[a]pending tutorial update
+[a]static prompt
+[b]pending tutorial update
