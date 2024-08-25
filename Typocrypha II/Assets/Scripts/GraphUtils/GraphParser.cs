@@ -53,6 +53,16 @@ public abstract class GraphParser : MonoBehaviour
             PlayerDataManager.instance.Set(setVariableNode.variableName, setVariableNode.value);
             return true;
         }
+        if(node is BadgeUnlockNode badgeUnlockNode)
+        {
+            foreach(var word in badgeUnlockNode.Words)
+            {
+                if(word != null)
+                {
+                    PlayerDataManager.instance.equipment.UnlockBadge(word);
+                }
+            }
+        }
         if (node is ShopUnlockNode shopUnlockNode)
         {
             PlayerDataManager.instance.ShopData.UnlockShopCodes(shopUnlockNode.unlockCodes);
