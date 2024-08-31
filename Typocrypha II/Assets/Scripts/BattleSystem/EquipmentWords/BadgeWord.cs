@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 [CreateAssetMenu(fileName = "BadgeWord", menuName = "BadgeWord")]
 public class BadgeWord : ScriptableObject
@@ -33,6 +34,34 @@ public class BadgeWord : ScriptableObject
     public int UpgradeCost => HasUpgrade ? NextUpgrade.cost : 0;
 
     public int NextCost => IsUnlocked ? UpgradeCost : Cost;
+
+    public IEnumerable<BadgeEffect> Effects
+    {
+        get
+        {
+            var badge = CurrentBadge;
+            if(effect1 != null)
+            {
+                yield return badge.effect1;
+            }
+            if (effect2 != null)
+            {
+                yield return badge.effect2;
+            }
+            if (effect3 != null)
+            {
+                yield return badge.effect3;
+            }
+            if (effect4 != null)
+            {
+                yield return badge.effect4;
+            }
+            if (effect5 != null)
+            {
+                yield return badge.effect5;
+            }
+        }
+    }
 
     [SerializeField] [SubSO("Effect1")] private BadgeEffect effect1;
     [SerializeField] [SubSO("Effect2")] private BadgeEffect effect2;
@@ -83,29 +112,18 @@ public class BadgeWord : ScriptableObject
 
     public void Equip(Player player)
     {
-        var badge = CurrentBadge;
-        EquipEffect(badge.effect1, player);
-        EquipEffect(badge.effect2, player);
-        EquipEffect(badge.effect3, player);
-        EquipEffect(badge.effect4, player);
-        EquipEffect(badge.effect5, player);
-    }
-
-    private void EquipEffect(BadgeEffect effect, Player player)
-    {
-        if (effect == null)
-            return;
-        effect.Equip(player);
+        foreach (var effect in Effects)
+        {
+            effect.Equip(player);
+        }
     }
 
     public void Unequip(Player player)
     {
-        var badge = CurrentBadge;
-        UnequipEffect(badge.effect1, player);
-        UnequipEffect(badge.effect2, player);
-        UnequipEffect(badge.effect3, player);
-        UnequipEffect(badge.effect4, player);
-        UnequipEffect(badge.effect5, player);
+        foreach(var effect in Effects)
+        {
+            effect.Unequip(player);
+        }
     }
 
     private void UnequipEffect(BadgeEffect effect, Player player)
@@ -117,26 +135,12 @@ public class BadgeWord : ScriptableObject
 
     public T GetEffect<T>() where T : BadgeEffect
     {
-        var badge = CurrentBadge;
-        if(badge.effect1 is T tEffect1)
+        foreach(var effect in Effects)
         {
-            return tEffect1;
-        }
-        if (badge.effect2 is T tEffect2)
-        {
-            return tEffect2;
-        }
-        if (badge.effect3 is T tEffect3)
-        {
-            return tEffect3;
-        }
-        if (badge.effect4 is T tEffect4)
-        {
-            return tEffect4;
-        }
-        if (badge.effect5 is T tEffect5)
-        {
-            return tEffect5;
+            if(effect is T tEffect)
+            {
+                return tEffect;
+            }
         }
         return null;
     }
