@@ -7,7 +7,7 @@ using RandomUtils;
 public class SpellParser : MonoBehaviour
 {
     public const int maxWords = int.MaxValue;
-    public const int maxRoots = int.MaxValue;
+    public const int maxRoots = 1;
     public enum ParseResults
     {
         Valid,
@@ -51,7 +51,7 @@ public class SpellParser : MonoBehaviour
     /// Returns other ParseResults to indicate different failure conditions 
     /// Returns the parsed spell in out list s.
     /// Also Checks and starts spell cooldowns. </summary>
-    public ParseResults Parse(string[] spellwords, IReadOnlyDictionary<string, SpellWord> words, out Spell s, out string problemWord)
+    public ParseResults Parse(string[] spellwords, IReadOnlyDictionary<string, SpellWord> words, bool isPlayer, out Spell s, out string problemWord)
     {
         problemWord = null;
         s = new Spell();
@@ -109,8 +109,16 @@ public class SpellParser : MonoBehaviour
         // Root count checks
         if (roots <= 0)
             return ParseResults.NoRoot;
-        if (roots > maxRoots)
+        if(isPlayer && PlayerDataManager.instance.equipment.TryGetEquippedBadgeEffect<BadgeEffectMulticast>(out var multicastEffect))
+        {
+            if (roots > multicastEffect.MaxWords)
+                return ParseResults.TooManyRoots;
+        }
+        else if (roots > maxRoots)
+        {
             return ParseResults.TooManyRoots;
+        }
+
 
         return ParseResults.Valid;
     }

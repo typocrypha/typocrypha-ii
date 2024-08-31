@@ -41,7 +41,7 @@ public class Player : Caster, IPausable
     private SpellParser.ParseResults CastString(string[] spellWords, Battlefield.Position targetPosition, bool insertCast)
     {
         var cooldowns = SpellCooldownManager.instance;
-        var results = SpellParser.instance.Parse(spellWords, cooldowns.GetSpellsDict(), out var spell, out string problemWord);
+        var results = SpellParser.instance.Parse(spellWords, cooldowns.GetSpellsDict(), true, out var spell, out string problemWord);
         if (results == SpellParser.ParseResults.Valid) 
         {
             // Check cooldowns
@@ -78,6 +78,10 @@ public class Player : Caster, IPausable
             else if(results == SpellParser.ParseResults.TypoFailure)
             {
                 SpellFxManager.instance.PlayText(new Vector2(0f, -2f), false, $"Invalid Word: {problemWord.ToUpper()}", Color.red, castFailTextTime);
+            }
+            else if(results == SpellParser.ParseResults.TooManyRoots)
+            {
+                SpellFxManager.instance.PlayText(new Vector2(0f, -2f), false, $"Too Many Words!", Color.red, castFailTextTime);
             }
             else
             {

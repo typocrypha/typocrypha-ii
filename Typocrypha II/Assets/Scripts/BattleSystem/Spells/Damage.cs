@@ -123,12 +123,16 @@ public static class Damage
 
     public static float StandardComboMod(float comboValue)
     {
-        return 1 + (comboValue * 0.15f);
+        return PlayerDataManager.instance.equipment.TryGetEquippedBadgeEffect<BadgeEffectMulticast>(out var multicastEffect) ?
+            1 + (comboValue * multicastEffect.WordMultiplier) : 1;
     }
 
     public static void ComputeStandardComboValue(CastResults results, Spell spell)
     {
-        results.Combo = spell.Count - 1;
+        if (results.caster.IsPlayer)
+        {
+            results.Combo = spell.Count - 1;
+        }
     }
 
     /// <summary>

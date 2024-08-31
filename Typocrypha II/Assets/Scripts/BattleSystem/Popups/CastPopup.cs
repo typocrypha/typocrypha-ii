@@ -17,7 +17,7 @@ public class CastPopup : InteractivePopup
     public override void Submit()
     {
         var spellWords = Text.TrimEnd(KeywordDelimiters).Split(KeywordDelimiters);
-        var results = SpellParser.instance.Parse(spellWords, SpellCooldownManager.instance.GetSpellsDict(), out lastSpell, out _);
+        var results = SpellParser.instance.Parse(spellWords, SpellCooldownManager.instance.GetSpellsDict(), true, out lastSpell, out _);
         if(results == SpellParser.ParseResults.Valid)
         {
             var cooldowns = SpellCooldownManager.instance;
