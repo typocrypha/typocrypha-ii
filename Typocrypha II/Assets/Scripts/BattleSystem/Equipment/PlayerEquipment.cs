@@ -192,7 +192,17 @@ public class PlayerEquipment : MonoBehaviour
     public bool TryGetEquippedBadgeEffect<T>(out T effect) where T : BadgeEffect
     {
         effect = GetEquippedBadgeEffect<T>();
-        return effect != null;
+        foreach (var kvp in equippedBadgeWords)
+        {
+            var badgeEffect = kvp.Value.GetEffect<T>();
+            if (badgeEffect != null)
+            {
+                effect = badgeEffect;
+                return true;
+            }
+        }
+        effect = null;
+        return false;
     }
 
     public void ClearEquipment()
