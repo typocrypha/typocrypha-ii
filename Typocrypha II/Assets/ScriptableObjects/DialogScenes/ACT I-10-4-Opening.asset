@@ -1,27 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-9048069380381631107
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: To Next
-  m_EditorClassIdentifier: 
-  body: {fileID: 3239348808853203290}
-  direction: 2
-  maxConnectionCount: 0
-  styleID: Gameflow
-  _connections:
-  - {fileID: 8765942208652939175}
-  side: 2
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &-6657486053005758052
+--- !u!114 &-9030152315599380241
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -36,15 +15,15 @@ MonoBehaviour:
   position: {x: 670, y: 0}
   dynamicConnectionPorts: []
   backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: -2606764647192279390}
-  fromPreviousIN: {fileID: 8765942208652939175}
+  toNextOUT: {fileID: -287498160384544330}
+  fromPreviousIN: {fileID: -2886132920610597205}
   characterName: Esaias
   displayName: 
   text: Remember to use your scanner by pressing SHIFT to identify their weaknesses.
   tipsData: {fileID: 0}
   gridPosition: {x: 0, y: 2}
   absolutePosition: {x: -100, y: -100}
---- !u!114 &-5736934962737803094
+--- !u!114 &-7109102787759601418
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -54,18 +33,62 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: To Next
+  m_Name: From Previous
   m_EditorClassIdentifier: 
-  body: {fileID: -2196750933254696662}
-  direction: 2
-  maxConnectionCount: 0
+  body: {fileID: -3853777465800662980}
+  direction: 1
+  maxConnectionCount: 1
   styleID: Gameflow
   _connections:
-  - {fileID: -2453048443499971591}
-  side: 2
+  - {fileID: -287498160384544330}
+  side: 4
   sidePosition: 30
   sideOffset: 0
---- !u!114 &-4636617941037386168
+--- !u!114 &-6743314172753151148
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
+  m_Name: From Previous
+  m_EditorClassIdentifier: 
+  body: {fileID: -5159786924941663030}
+  direction: 1
+  maxConnectionCount: 1
+  styleID: Gameflow
+  _connections:
+  - {fileID: -4175302591780639286}
+  side: 4
+  sidePosition: 30
+  sideOffset: 0
+--- !u!114 &-5522613389581570448
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 648e1859616c185439cc1cabbedf0a64, type: 3}
+  m_Name: Bubble Dialog
+  m_EditorClassIdentifier: 
+  position: {x: 380, y: 0}
+  dynamicConnectionPorts: []
+  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+  toNextOUT: {fileID: 1298840197972953615}
+  fromPreviousIN: {fileID: 3464102283842428218}
+  characterName: Esaias
+  displayName: 
+  text: Watch out, Ayin. Some of these demons have strong defenses.
+  tipsData: {fileID: 0}
+  gridPosition: {x: 0, y: 2}
+  absolutePosition: {x: -100, y: -100}
+--- !u!114 &-5159786924941663030
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -80,73 +103,10 @@ MonoBehaviour:
   position: {x: 190, y: 0}
   dynamicConnectionPorts: []
   backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: -2564118587667224618}
-  fromPreviousIN: {fileID: -2453048443499971591}
+  toNextOUT: {fileID: -292148155221079600}
+  fromPreviousIN: {fileID: -6743314172753151148}
   viewName: bubble
---- !u!114 &-2606764647192279390
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: To Next
-  m_EditorClassIdentifier: 
-  body: {fileID: -6657486053005758052}
-  direction: 2
-  maxConnectionCount: 0
-  styleID: Gameflow
-  _connections:
-  - {fileID: 1184286717551349761}
-  side: 2
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &-2564118587667224618
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: To Next
-  m_EditorClassIdentifier: 
-  body: {fileID: -4636617941037386168}
-  direction: 2
-  maxConnectionCount: 0
-  styleID: Gameflow
-  _connections:
-  - {fileID: 8619078838051014315}
-  side: 2
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &-2453048443499971591
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: From Previous
-  m_EditorClassIdentifier: 
-  body: {fileID: -4636617941037386168}
-  direction: 1
-  maxConnectionCount: 1
-  styleID: Gameflow
-  _connections:
-  - {fileID: -5736934962737803094}
-  side: 4
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &-2196750933254696662
+--- !u!114 &-5147863295433687370
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -161,8 +121,29 @@ MonoBehaviour:
   position: {x: 0, y: 0}
   dynamicConnectionPorts: []
   backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: -5736934962737803094}
---- !u!114 &-1495556751646427369
+  toNextOUT: {fileID: -4175302591780639286}
+--- !u!114 &-4175302591780639286
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
+  m_Name: To Next
+  m_EditorClassIdentifier: 
+  body: {fileID: -5147863295433687370}
+  direction: 2
+  maxConnectionCount: 0
+  styleID: Gameflow
+  _connections:
+  - {fileID: -6743314172753151148}
+  side: 2
+  sidePosition: 30
+  sideOffset: 0
+--- !u!114 &-3853777465800662980
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -177,7 +158,70 @@ MonoBehaviour:
   position: {x: 960, y: 0}
   dynamicConnectionPorts: []
   backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  fromPreviousIN: {fileID: 1184286717551349761}
+  fromPreviousIN: {fileID: -7109102787759601418}
+--- !u!114 &-2886132920610597205
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
+  m_Name: From Previous
+  m_EditorClassIdentifier: 
+  body: {fileID: -9030152315599380241}
+  direction: 1
+  maxConnectionCount: 1
+  styleID: Gameflow
+  _connections:
+  - {fileID: 1298840197972953615}
+  side: 4
+  sidePosition: 30
+  sideOffset: 0
+--- !u!114 &-292148155221079600
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
+  m_Name: To Next
+  m_EditorClassIdentifier: 
+  body: {fileID: -5159786924941663030}
+  direction: 2
+  maxConnectionCount: 0
+  styleID: Gameflow
+  _connections:
+  - {fileID: 3464102283842428218}
+  side: 2
+  sidePosition: 30
+  sideOffset: 0
+--- !u!114 &-287498160384544330
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
+  m_Name: To Next
+  m_EditorClassIdentifier: 
+  body: {fileID: -9030152315599380241}
+  direction: 2
+  maxConnectionCount: 0
+  styleID: Gameflow
+  _connections:
+  - {fileID: -7109102787759601418}
+  side: 2
+  sidePosition: 30
+  sideOffset: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -195,13 +239,13 @@ MonoBehaviour:
   savePath: Assets\ScriptableObjects\DialogScenes\ACT I-10-4-Opening.asset
   livesInScene: 0
   nodes:
-  - {fileID: -2196750933254696662}
-  - {fileID: -4636617941037386168}
-  - {fileID: 3239348808853203290}
-  - {fileID: -6657486053005758052}
-  - {fileID: -1495556751646427369}
+  - {fileID: -5147863295433687370}
+  - {fileID: -5159786924941663030}
+  - {fileID: -5522613389581570448}
+  - {fileID: -9030152315599380241}
+  - {fileID: -3853777465800662980}
   groups: []
---- !u!114 &1184286717551349761
+--- !u!114 &1298840197972953615
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -211,41 +255,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: From Previous
+  m_Name: To Next
   m_EditorClassIdentifier: 
-  body: {fileID: -1495556751646427369}
-  direction: 1
-  maxConnectionCount: 1
+  body: {fileID: -5522613389581570448}
+  direction: 2
+  maxConnectionCount: 0
   styleID: Gameflow
   _connections:
-  - {fileID: -2606764647192279390}
-  side: 4
+  - {fileID: -2886132920610597205}
+  side: 2
   sidePosition: 30
   sideOffset: 0
---- !u!114 &3239348808853203290
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 648e1859616c185439cc1cabbedf0a64, type: 3}
-  m_Name: Bubble Dialog
-  m_EditorClassIdentifier: 
-  position: {x: 380, y: 0}
-  dynamicConnectionPorts: []
-  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: -9048069380381631107}
-  fromPreviousIN: {fileID: 8619078838051014315}
-  characterName: Esaias
-  displayName: 
-  text: Watch out, Ayin. Some of these demons have strong defenses.
-  tipsData: {fileID: 0}
-  gridPosition: {x: 0, y: 2}
-  absolutePosition: {x: -100, y: -100}
---- !u!114 &8619078838051014315
+--- !u!114 &3464102283842428218
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -257,33 +278,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
   m_Name: From Previous
   m_EditorClassIdentifier: 
-  body: {fileID: 3239348808853203290}
+  body: {fileID: -5522613389581570448}
   direction: 1
   maxConnectionCount: 1
   styleID: Gameflow
   _connections:
-  - {fileID: -2564118587667224618}
-  side: 4
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &8765942208652939175
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: From Previous
-  m_EditorClassIdentifier: 
-  body: {fileID: -6657486053005758052}
-  direction: 1
-  maxConnectionCount: 1
-  styleID: Gameflow
-  _connections:
-  - {fileID: -9048069380381631107}
+  - {fileID: -292148155221079600}
   side: 4
   sidePosition: 30
   sideOffset: 0

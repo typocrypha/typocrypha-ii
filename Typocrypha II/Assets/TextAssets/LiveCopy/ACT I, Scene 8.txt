@@ -1,4 +1,4 @@
-﻿>start,ACT I-8[a]
+﻿>start,ACT I-8
 
 
 >setlocation,The End of the Line
@@ -6,6 +6,7 @@
 
 
 >playbgm,BGMExplorer
+>playsfx,SFXTrain(I-8)
 
 
 /*Background pans to show how far down the Ruins goes before chat UI comes up.*/
@@ -25,7 +26,7 @@ Narrator:The End of the Line
 >addchar,Ayin,0,0,left,nervous
 
 
-Narrator: You arrive at “The End of the Line” - the aptly named main entrance to the labyrinthian Ruins snaking beneath Agartha.
+Narrator: The train arrives at “The End of the Line” -{pl} the aptly named main entrance to the labyrinthian Ruins snaking beneath Agartha.
 
 
 >playsfx,SFXRingtone
@@ -40,16 +41,19 @@ Narrator: Your Typocrypha starts to ring.
 >addchar,Clarke,0,0,right
 
 
-Clarke: Hello, Ayin! {c,ui-terms}Operation “Raindance”{c} begins in 14 minutes and 39 seconds.
+Clarke: Hello Ayin! 
+
+
+Clarke: {c,ui-terms}Operation “Raindance”{c} begins in 24 minutes and 39 seconds.
 
 
 Clarke: Why have you not rendezvoused with your team yet?
 
 
-Ayin(nervoussmile): Uh, hehe, w-where was that again?
+Ayin(nervoussmile): Uh,{pm} hehe,{pm} w-where was that again?
 
 
-Clarke: ...
+Clarke: .{pl}.{pl}.
 
 
 Clarke: You have been assigned to Scouting Team Z.
@@ -61,24 +65,22 @@ Clarke: Listing all team members and associated roles...
 Narrator: Your Typocrypha lists out your team members.
 
 
-Narrator: Ayin A. - ID:NB - CAPTAIN
-Narrator: Illyia X. - ID:F - FORWARD GUARD
-Narrator: Dahlia B. - ID:F - MEDIC
-Narrator: Esaias W. - ID:M - NAVIGATOR
+Narrator: Ayin A. (ID:NB) -{pl} CAPTAIN
+Narrator: Illyia X. (ID:F) -{pl} FORWARD GUARD
+Narrator: Dahlia B. (ID:F) -{pl} MEDIC
+Narrator: Esaias W. (ID:M) -{pl} NAVIGATOR
 
 
+Clarke: In the interest of time,{pm} I have provided your teammates with your current position. 
 
 
-Clarke: In the interest of time, I have provided your teammates with your current position. 
+Clarke: They should be joining you shortly from the neighboring train cars.
 
 
-Clarke: They should be arriving shortly.
+Ayin(nervoussmile): O-OK,{pm} thanks...
 
 
-Ayin(nervoussmile): O-OK, thanks...
-
-
-Ayin(serious): Um, could you also look up another person?
+Ayin(serious): Um,{pm} could you also look up another person?
 
 
 Clarke: Certainly!
@@ -87,177 +89,194 @@ Clarke: Certainly!
 Ayin: Adelai Steiner.
 
 
-Clarke: Searching...
+Clarke: Searching.{pl}.{pl}.
 
 
-Narrator: Adelai S. - FORWARD GUARD - Attack Team
+Narrator: Adelai S. -{pl} FORWARD GUARD -{pl} Attack Team
 
 
 Ayin(concerned): Do you know where the Attack Team is meeting up?
 
 
-Clarke: The Attack Team has already begun preparing at the main Ruins entrance.
+Clarke: The Attack Team has already descended and is standing by in the main atria of the Ruins.
 
 
-Clarke: Your team will be infiltrating through a separate side tunnel to attempt to sneak past demon forces to scout out the location of the {c,ui-terms}First Barrier{c,ui-terms}.[b]
+Clarke: Your team will be infiltrating through a separate side tunnel to scout out the location of the {c,ui-terms}First Barrier{c,ui-terms}.
 
 
 Ayin: Side tunnel?
 
 
-Clarke: Agent Ayin, have you read the mission briefing?
+Clarke: Agent Ayin,{pm} have you read the mission briefing?
 
 
-Ayin(ohfuck): Uh, y-yeah! Of course, haha...
+Ayin(ohfuck): Uh,{ps} y-yeah!{pm} Of course,{ps} haha...
 
 
-Clarke: ...OK!
+Clarke: .{pl}.{pl}.
 
 
-Clarke: Good luck, Ayin!
+Clarke: OK!
+
+
+Clarke: Good luck,{pm} Ayin!
 
 
 >removechar,Clarke
 
 
-Ayin(nervous): {c,whisper}(I hope the team is nice...){c}
+Ayin(serious): {c,whisper}(I hope the team is nice...){c}
 
 
->addchar,Esaias,0,0,right
->addchar,Dahlia,0,0,right
+>addcharmultiargs,right,Esaias,0,Dahlia,0
 
 
-Narrator: In the distance, a kind looking person and a serious looking one start moving towards you.
+Narrator: In the distance,{pm} you see two people start moving towards you.
 
 
-Narrator: The kind looking one starts waving as if you were an old friend.
+Narrator: One of them starts waving as if you were an old friend.
+
+
+>setexpr,Ayin,nervous
 
 
 Narrator: You awkwardly avert your gaze.
 
 
-Dahlia(normal): Oh, excuse me!
+Dahlia(normal): Oh,{pm} excuse me!
 
 
-Ayin(surprised): Uh, y-yes?
+Ayin(surprised): Y-Yes?
 
 
-Dahlia(laughing): You’re Ayin, right? We’re your other teammates. Nice to meet you!
+Dahlia(laughing): You’re Ayin,{pm} right? 
 
 
-Dahlia(happy): I’m {c,ui-terms}Dahlia Bulsara{c}, but you can just call me Dahlia. I use she/her pronouns. 
+Dahlia: We’re your other teammates.{pl} Nice to meet you!
 
 
-Dahlia: And, while I’ve been assigned as the medic, I’m no stranger to fighting, so you can count on me for backup!
+Dahlia(happy): I’m {c,ui-terms}Dahlia Bulsara{c},{ps} but you can just call me Dahlia.{pm} I use she/her pronouns. 
+
+
+Dahlia: And while I’ve been assigned as the medic,{pm} I’m no stranger to combat,{ps} so you can count on me for backup!
 
 
 Esaias: I would recommend we stick closely to our assigned roles for the mission.
 
 
-Dahlia(normal): Ah, you gotta loosen up, Saia!
+Dahlia(normal): Ah,{pm} you gotta loosen up,{ps} Saia!
 
 
 Dahlia(sarcastic): It’s not like you’re going to be just staring at a map the whole time we’re down there.
 
 
-Esaias(anxious): Actually, the layout of the Ruins of Obscurai is extremely complicated.
+Esaias(anxious): Actually,{pm} the layout of the Ruins of Obscurai is extremely complicated.
 
 
-Esaias(lookingleft): Due to electro-magical interference, we will be unable to use any form of automated guidance when inside.
+Esaias(lookingleft): Due to electro-magical interference,{pm} we will be unable to use any form of automated guidance when inside.
 
 
-Esaias(lookingright): Furthermore, current maps of the Ruins are horribly inaccurate, and-
+Esaias(lookingright): Furthermore,{pm} current maps of the Ruins are horribly inaccurate and-
 
 
-Dahlia(happy): OK OK, I’ll stop you right there. 
+Dahlia(happy): OK OK,{pm} I’ll stop you right there. 
 
 
-Dahlia(serious): Why don’t you introduce yourself to our new captain first, yeah?
+Dahlia(serious): Why don’t you introduce yourself to our new captain first,{ps} yeah?
 
 
-Esaias(embarrassed): ...Apologies.
+Esaias(embarrassed): ...apologies.
 
 
-Esaias(normal): I am {c,ui-terms}Esaias Walker{c}, Navigator. He/him pronouns.
+Esaias(normal): I am {c,ui-terms}Esaias Walker{c},{pm} Navigator.{pl} He/him pronouns.
 
 
 Esaias: Please do not hesitate to ask if you require any additional information on the Ruins.
 
 
-Ayin(sheepish): Uh, sure!
+Ayin(sheepish): Uh,{ps} sure!
 
 
-Ayin(surprised): ...Oh! Right, my name! You can, uh, j-just call me Ayin...?
+Ayin(surprised): ...Oh!{pm} Right,{pm} my name! 
 
 
-Ayin(nervous): I, um, I use they/them pronouns...
+Ayin(nervous): You can,{pm} uh,{pm} j-just call me Ayin...?
 
 
-Dahlia(laughing): Haha, you don’t have to be so nervous, Ayin!
+Ayin(ohfuck): I,{ps} um,{pm} I use they/them pronouns...
 
 
-Dahlia(normal): I mean, we’re just scouting the place out.
+Dahlia(laughing): You don’t have to be so nervous,{ps} Ayin!
 
 
-Esaias(anxious): Agreed. If you look here...
+Dahlia(normal): I mean,{pm} we’re just scouting the place out.
+
+
+>setexpr,Ayin,serious
+
+
+Esaias(anxious): Agreed.{pl} If you look here...
 
 
 Narrator: Esaias brings up a map projection on his Typocrypha.
 
 
-Narrator: It is, to Esaias’s credit, horribly complicated and you don’t understand much of it.
+Narrator: It is,{pm} to Esaias’s credit,{pm} horribly complicated and you don’t understand much of it.
 
 
-Esaias(normal): Our planned path will follow along an old Obscurian aqueduct, which was abandoned years before the construction of the surrounding atria allowing us to exploit the-
+Esaias(normal): Our planned path will follow along an old Obscurian aqueduct,{pm} which was abandoned years before the construction of the surrounding atria allowing us to exploit the-
 
 
-Dahlia(sarcastic): Uh, Sai? Maybe just the short version for now...
+Dahlia(sarcastic): Uh,{ps} Sai?{pm} Maybe just the short version for now...
 
 
-Esaias(embarrassed): ...Apologies, again.
+Esaias(embarrassed): ...apologies again.
 
 
 // TODO: Map hides.
 
 
-Esaias(normal): In short, we should not encounter significant demon resistance.
+Esaias(normal): In short,{pm} we should not encounter significant Demon resistance.
 
 
-Dahlia(happy): See? We’ll get in there, find the First Barrier, and will be back in the rear while the Attack Team handles the rest.
+Dahlia(happy): See?{pm} We’ll get in there,{pm} find the First Barrier,{pm} and will be back in the rear while the Attack Team handles the rest.
 
 
 Narrator: The Attack Team with Adelai in it.
 
 
-Ayin(nervoussmile): Y-yeah... Thanks.
+Ayin(nervoussmile): Y-Yeah...{pm}
 
 
-Narrator: You begin to think, with these two, things might be OK after all.
+Narrator: You begin to think,{pm} with these two,{pm} things might be OK after all.
 
 
 >stopbgm
 
 
-Narrator: Just as you’re thinking this, another person walks up to your group. 
+Narrator: Just as you’re thinking this,{pm} another person walks up to your group. 
 
 
 >addchar,Illyia,0,0,right,serious
 
 
-Narrator: She doesn’t look at you in the eyes, seeming to look farther into the distance.
+Narrator: She doesn’t look at you in the eyes,{pm} seeming to look farther into the distance.
 
 
 Narrator: She kind of reminds you of Adelai.
 
 
 >setexpr,Ayin,nervous
-Illyia(serious): ...
+Illyia(serious): .{pl}.{pl}.
 
 
-Dahlia: Oh, you must be Illyia! Hi, I’m Da-
+Dahlia(normal): Oh,{ps} you must be Illyia!
 
 
-Illyia(concerned): Yeah yeah, I reviewed all of your profiles.
+Dahlia(happy): Hi,{ps} I’m Da-
+
+
+Illyia(concerned): Yeah yeah,{ps} I reviewed all of your profiles.
 
 
 Illyia: Two civilian volunteers and an Academy grunt...
@@ -266,55 +285,64 @@ Illyia: Two civilian volunteers and an Academy grunt...
 Illyia(ashamed): Just my luck... 
 
 
-Dahlia(serious): ...Excuse me?
+Dahlia(serious): ...excuse me?
 
 
 >playbgm,BGMMilitary
 
 
-Illyia(pissed): Alright, listen up! We’re changing our planned route.
+Illyia(pissed): Alright,{ps} listen up! 
 
 
-Illyia(serious): From Point A, we’ll cut through Sub-Atrium D to get to the main Chamber.
+Illyia: We’re changing our planned route.
 
 
-Illyia: It’ll be faster and we’ll be able to cover more ground to find the First Barrier.
+Illyia(serious): From Point A,{pm} we’ll cut through Sub-Atrium D to get to the main Chamber.
+
+
+Illyia: It’ll be faster{ps} and we’ll be able to cover more ground to find the First Barrier.
 
 
 Illyia(ashamed): Any questions?
 
 
-Narrator: You find yourself at a loss for words - partially because you didn’t really understand what Illyia just said.
+Narrator: You find yourself at a loss for words -{pl} partially because you didn’t really understand what Illyia just said.
 
 
 Narrator: Esaias is the first to break the silence.
 
 
-Esaias(whut): Er,[pause,0.1] Illyia?[pause,0.1] If I may...
+Esaias(whut): Illyia?{pm} If I may...
 
 
-Esaias(anxious): If we take that route, we will encounter significantly more demon resistance.
+Esaias(anxious): If we take that route,{pm} we will encounter significantly more Demon resistance.
 
 
-Illyia(pissed): What? You scared of a few demons?
+Illyia(pissed): What?{pm} You scared of a few Demons?
 
 
 Illyia(serious): Just don’t worry about it and follow my lead.
 
 
-Dahlia(stressed): Hey, what’s your problem? You’re not the captain!
+Dahlia(stressed): Hey,{ps} what’s your problem?
 
 
-Illyia(normal): ...You know what, you’re right. I’m not the captain.
+Dahlia: You’re not the captain!
 
 
-Illyia(serious): Me? The one with years of demon combat experience? I’m just another soldier.
+Illyia(normal): ...you know what,{pm} you’re right. 
 
 
-Illyia(pissed): But the draftee who’s still in Academy? Of course they get to be captain!
+Illyia: I’m not the captain.
 
 
-Dahlia: Look, that doesn’t mean-
+Illyia(serious): Me?{pm} The one with years of Demon combat experience?{pm} I’m just another soldier.
+
+
+Illyia(pissed): But the draftee who’s still in Academy?{pm} Of course they get to be captain!
+
+
+Dahlia: Look,{pm} that doesn’t mean-
 
 
 >stopbgm
@@ -326,43 +354,46 @@ Ayin(uncomfortable): I-I’ll give it to you!
 Dahlia(concerned): !!
 
 
-Ayin(serious): Illyia, you can be team captain. I’ll transfer the designation.
+Ayin(serious): Illyia,{pm} you can be team captain. 
 
 
-Illyia(quietlyhappy): Hmph, it’s good to see at least one of you has some common sense.
+Ayin: I-I’ll transfer the designation.
 
 
-Ayin: Clarke, transfer role CAPTAIN to Illyia.
+Illyia(quietlyhappy): Hmph,{pm} it’s good to see at least one of you has some common sense.
+
+
+Ayin: Clarke,{pm} transfer role CAPTAIN to Illyia.
 
 
 >addchar,Clarke,0,0,left
 
 
-Clarke: Transfer request DENIED.
+Clarke: Transfer request -{pm} DENIED.
 
 
-Illyia(pissed): What? 
+Illyia(pissed): What!? 
 
 
-Clarke: REASON: Illyia Xiong has been put on observation per General {c,ui-terms}Iris Xiong’s{c} request.
+Clarke: REASON:{pl} Illyia Xiong has been put on observation per General {c,ui-terms}Iris Xiong’s{c} request.
 
 
 Clarke: Agents on observation are prohibited from taking team designation status of CAPTAIN.
 
 
-Illyia(serious): ^shake^Iris?!|shake| That bitch...
+Illyia(serious): ^shake^Iris?!|shake|{pm} That bitch...
 
 
 Illyia(pissed): First you take me off the Attack Team and now this?
 
 
-Dahlia(sarcastic): Well well, it’s good to see that the higher ups have some common sense, keeping a tight leash on a hothead like you.
+Dahlia(sarcastic): Well well,{ps} it’s good to see that the higher ups have some common sense,{ps} keeping a tight leash on a hothead like you.
 
 
 Illyia(serious): You shut up right now or I’ll-
 
 
-Clarke: NOTICE: Operation “Raindance”, begins in 10 minutes and 55 seconds. 
+Clarke: NOTICE:{pl} Operation “Raindance”, begins in 10 minutes and 55 seconds. 
 
 
 Clarke: All scouting teams please prepare to descend into the Ruins.
@@ -371,47 +402,45 @@ Clarke: All scouting teams please prepare to descend into the Ruins.
 >removechar,Clarke
 
 
-Illyia(ashamed): ...
+Illyia(ashamed): .{pl}.{pl}.
 
 
-Narrator: Without a word, Illyia starts walking towards the Ruins entrance.
+Narrator: Without a word,{pm} Illyia heads towards the train doors.
 
 
 >removechar,Illyia
 >playbgm,BGMExplorer
 
 
-Dahlia: Jeez, she sure is a hot mess.
+Dahlia: Jeez,{pm} she sure is a hot mess.
 
 
-Dahlia(eyeroll): Sigh...[pause,0.1] But we shouldn’t let her go off by herself, I guess.
+Dahlia(eyeroll): Sigh...{pm} But we shouldn’t let her go off by herself,{ps} I guess.
 
 
-Dahlia(normal): Ah, and don’t worry too much about the captain stuff, Ayin. 
+Dahlia(normal): Ah,{ps} and don’t worry too much about the captain stuff Ayin. 
 
 
 Dahlia(happy): Saia and I got your back!
 
 
-Esaias(whut): Agreed. I am still in disbelief that she thought cutting through Sub-Atrium D would be better than my planned route!
+Esaias(whut): Agreed.{pm} I am still in disbelief that she thought cutting through Sub-Atrium D would be better than my planned route!
 
 
-Esaias(anxious): The demon interference alone would cost-
+Esaias(anxious): The Demon interference alone would cost-
 
 
 Dahlia(perish): Ahem-!
 
 
-Esaias(embarrassed): -Ah...[pause,0.1] We will support you, Ayin.
+Esaias(embarrassed): -Ah...{pm} We will support you Ayin.
 
 
-Ayin(ohfuck): G-got it, thanks...
+Ayin(ohfuck): G-Got it,{pm} thanks...
 
 
-// add falling down transition[c]
+// add falling down transition[a]
 
 
 >endt
-[a]maybe just have them talk in the train
-[b]wordy
-[c]add transition where camera pans down to show they're jumping down
+[a]add transition where camera pans down to show they're jumping down

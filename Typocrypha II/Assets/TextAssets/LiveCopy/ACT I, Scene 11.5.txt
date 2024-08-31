@@ -1,76 +1,6 @@
 ﻿>start,ACT I-11p5
 
 
-+an
-
-
->stopbgm
-
-
-Narrator: Captain’s log - Scouting Team Z\
-13:32, 4.5 hours since the start of operation.[a]
-
-
->playbgm,BGMBirdPeople
-
-
-Narrator: We have progressed halfway through the Ruins towards where we believe the First Barrier is.
-
-
-Narrator: There has been a larger Demon presence than expected, however we have so far had no major casualties.
-
-
-Narrator: ...
-
-
-Ayin: {c,ayin}“...”{c}
-
-
-Ayin(ohfuck): {c,ayin}”(Uhh... What else do I write in these things? Uh...)”{c}
-
-
-Narrator: Team morale is high.
-
-
-Dahlia(stressed): {c,dahlia}”Hey, Illyia! That was my ration!”{c}
-
-
-Illyia(pissed): {c,illyia}”I’m the Forward Guard, you’re just the Medic! I burn more calories than you!”{c}
-
-
-Narrator: ...Team morale is OK.
-
-
-Narrator: The team remains focused on our goal to find the First Barrier.
-
-
-Esaias(normal): {c,esaias}”Ayin, look!”{c}
-
-
-Ayin(surprisedbad): {c,ayin}”Wh-What is it Esaias? Is it more Demons!?”{c}
-
-
-Esaias(embarrassed): {c,esaias}”The writing on these tablets are of a quality I have never seen before! If I had to hazard a guess, these were markers used by the Obscurians to help..."{c}
-
-
-Ayin(concerned): {c,ayin}”...”{c}
-
-
-Narrator: As Captain, I have faith that our team will be able to find the First Barrier.
-
-
-Narrator: As long as we stick together-
-
-
->stopbgm
-
-
-Illyia(serious): {c,illyia}”Alright team, looks like it’s time for us to split up.”{c}
-
-
-Ayin(uncomfortable): {c,ayin}”H-Huh?”{c}
-
-
 >playbgm,BGMAgarthanRuins
 >setbg,Sprite,BgObscurianRuins
 
@@ -79,34 +9,32 @@ Ayin(uncomfortable): {c,ayin}”H-Huh?”{c}
 >setlocation,Ruins
 
 
->addchar,Ayin,0,0,left,serious
->addchar,Illyia,0,0,right,serious
->addchar,Dahlia,0,0,right,serious
->addchar,Esaias,0,0,left,normal
+>addcharmultiargs,left,Ayin,1,serious,Esaias,0
+>addcharmultiargs,right,Illyia,1,serious,Dahlia,1,serious
 
 
-Narrator: You look up from your Typocrypha to see the team stopped at a four-way fork in the tunnel.
+Narrator: The party arrives at a four-way fork in the tunnel.
 
 
-Narrator: Esaias is staring at his map equally perplexed.
+Narrator: Esaias pauses to look down at his map,{pm} perplexed.
 
 
 >setexpr,Ayin,serious
 
 
-Esaias(anxious): Based on my maps one of these paths should lead us further into the Ruins...
+Esaias(anxious): Based on my maps,{pm} one of these paths should lead us further into the Ruins...
 
 
-Illyia(concerned): And let me guess, you don’t know which one.
+Illyia(concerned): And let me guess,{pm} you don’t know which one.
 
 
 Esaias(embarrassed): N-No...
 
 
-Illyia(ashamed): Of course you don’t, why’d I even bother asking?
+Illyia(ashamed): Of course you don’t,{pm} why’d I even bother asking?
 
 
-Dahlia(stressed): Hey, don’t lash out at Saia!
+Dahlia(stressed): Hey,{pm} don’t lash out at Esaias!
 
 
 Dahlia(sarcastic): Not like you know which way to go!
@@ -115,73 +43,82 @@ Dahlia(sarcastic): Not like you know which way to go!
 Illyia(normal): But I do know how to find out.
 
 
-Illyia(quietlyhappy): Four doors and four people - you do the math.
+Illyia(quietlyhappy): Four doors and four people -{pm} you do the math.
 
 
-Illyia: We fan out and report back here in 30 minutes.
+Illyia: We split up and report back here in 30 minutes.
 
 
-Dahlia(serious): We can’t do that! What if there are more Demons?
+Dahlia(serious): We can’t do that!{pm} What if there are more Demons?
 
 
-Illyia(serious): Then you handle them - we’re all soldiers, aren’t we?
+Illyia(serious): Then you handle them. 
+
+
+Illyia: We’re all soldiers,{pm} aren’t we?
+
+
+>setexpr,Ayin,ohfuck
 
 
 Narrator: Illyia shoots you a nasty look.
 
 
-Dahlia(concerned): Esaias, what do you think?
+>setexpr,Ayin,serious
 
 
-Esaias(lookingleft): ...
+Dahlia(concerned): Esaias,{pm} what do you think?
+
+
+Esaias(lookingleft): .{pl}.{pl}.
+
+
+>setexpr,Ayin,serious
 
 
 Esaias(normal): I agree with Illyia.
 
 
-Esaias(anxious): If I only had a little more data on the paths ahead, I should be able to deduce the correct path forward.
+Esaias(anxious): If I only had a little more data on the paths ahead,{pm} I should be able to deduce the correct path forward.
 
 
-Esaias(normal): 30, no... 15 minutes of scouting down each path should be more than enough to get a sense of the layout.
+Esaias(normal): 30,{pm} no...{pm} 15 minutes of scouting down each path should be more than enough to get a sense of the layout.
 
 
-Illyia(normal): See? Our Navigator seems to agree!
+Illyia(normal): See?{pm} Our Navigator seems to agree!
 
 
-Dahlia(concerned): I’m still against this, we’ve run into so many Demons already.
+Dahlia(concerned): I’m still against this,{pm} we’ve run into so many Demons already.
 
 
-Ayin: ...
+Ayin: .{pl}.{pl}.
 
 
-Ayin(nervous): I-I think we should split up too.[b]
+Ayin(nervous): I-I think we should split up too.
 
 
-Dahlia(serious): Are you sure, Ayin? I could go with you-
+Dahlia(serious): Are you sure,{pm} Ayin?{pm} I could go with you-
 
 
-Illyia(serious): Ah, our “brave leader” can handle themselves, right?
+Illyia(normal): Ah,{pm} our “Brave Captain” can handle themselves,{pm} right?
 
 
-Ayin(nervoussmile): Um, y-yeah.
+Ayin(nervoussmile): Y-Yeah...
 
 
-Ayin(normal): Thanks Dahlia, but it’s just a short scouting trip, right?
+Ayin(normal): Thanks Dahlia,{pm} but it’s just a short scouting trip,{ps} right?
 
 
-Ayin(nervous): A-And if something happens, I can always just run back here...
+Ayin(nervous): A-And if something happens,{pm} I can always just run back here...
 
 
-Esaias(normal): Actually, for the purposes of data collection, it would be better if you could fight the demons to continue...
+Esaias(normal): Actually,{pm} for the purposes of data collection,{pm} it would be better if you could fight the Demons to continue...
 
 
-Dahlia(perish): ...
+Ayin(ohfuck): {c,whisper}(gulp...!){c}
 
 
-Esaias(lookingright): But safety is a priority, so...
-
-
-Illyia(laughing): Alright, then it’s decided!
+Illyia(laughing): Alright,{pm} then it’s decided!
 
 
 Illyia(normal): We’ll meet back here at 13:50 on the dot.
@@ -193,16 +130,13 @@ Illyia: Off we go!
 >removechar,Illyia
 
 
-Narrator: Illyia runs off into one of the tunnels.
-
-
-Dahlia(concerned): Sigh... Ayin, just be careful, OK?
+Dahlia(concerned): Ayin,{pm} just be careful,{ps} OK?
 
 
 >removechar,Dahlia
 
 
-Esaias(lookingleft): Best of luck, Ayin.
+Esaias(lookingleft): Best of luck,{pm} Ayin.
 
 
 >removechar,Esaias
@@ -211,10 +145,13 @@ Esaias(lookingleft): Best of luck, Ayin.
 >stopbgm
 
 
-Narrator: As each of your party members leave, you start to feel the initial pinpricks of anxiety creep up on you.
+Narrator: As each of your party members leave,{pm} you start to feel the initial pinpricks of anxiety creep up on you.
 
 
-Narrator: Taking deep breaths, you head into your own tunnel.
+Narrator: Taking deep breaths,{pm} you head into your own tunnel.
+
+
+>clear
 
 
 >playbgm,BGMRuinsUnease
@@ -223,76 +160,71 @@ Narrator: Taking deep breaths, you head into your own tunnel.
 >setexpr,Ayin,nervous
 
 
-Narrator: You carefully head down the tunnel, noting the direction and shape of the space.
+NarratorSilent: Armed with only the flashlight on your Typocrypha,{pm} you slowly inch down the corridor.
 
 
-Narrator: Soon after entering, the path curves left into a small room.
+NarratorSilent: After what feels like an eternity,{pm} you encounter a fork in the path. 
 
 
-Narrator: The room is dark - only your Typocrypha illuminates the area.
+NarratorSilent: ...![a]
 
 
-Narrator: There are several paths leading out of the room.
-
-
-Ayin: (Should I just pick one...?)
-
-
-Narrator: Suddenly, you start to hear footsteps coming through one of the paths.
+NarratorSilent: Suddenly,{pm} you start to hear footsteps coming from one of the pathways.
 
 
 >setexpr,Ayin,surprisedbad
 
 
-Narrator: Without thinking, you run into one of the other pathways to escape.
+NarratorSilent: You run into one of the other pathways to escape.
 
 
-Narrator: Your heart is pounding, you can’t think straight.
+NarratorSilent: Your heart is pounding,{pm} you can’t think straight.
 
 
-Narrator: You just keep running.
+NarratorSilent: You just keep running.
 
 
-Narrator: ...
+NarratorSilent: And running...
 
 
-Narrator: ...
+NarratorSilent: .{pl}.{pl}.
 
 
-Narrator: You look around - the area is unfamiliar.
+>clear
 
 
-Narrator: How long were you running for?
+NarratorSilent: You look around -{pm} the area is unfamiliar.
 
 
-Narrator: You check your clock - 13:55.
+NarratorSilent: How long were you running for?
 
 
-Ayin: (I have to get back, where is-)
+NarratorSilent: You check your clock -{pm} 13:55.
+
+
+NarratorSilent: You’re late.{pm} You have to get back.
+
+
+NarratorSilent: But which way do you go?
 
 
 >stopbgm
 
 
-Narrator: *rustle[c]*
+>playsfx,SFXRustle
+NarratorSilent: ...!
 
 
-Narrator: ...someone is in the room with you.
+NarratorSilent: ...someone is in the room with you.
 
 
-Narrator: You instinctively fall forward and fumble with your Typocrypha and manage to turn on its dim light.[d]
-
-
-Narrator: The shadowy figure comes into view.
-
-
-//TODO: Dialog UI dimly fades back in
+NarratorSilent: You fall forward and manage to shine your light in the figure’s direction.
 
 
 >addchar,Niya,0,0,right
 
 
-Niya: ...! Ayin?[e]
+Niya: ...!{pm} Ayin?[b]
 
 
 Ayin(surprisedbad): N-Niya?
@@ -301,25 +233,25 @@ Ayin(surprisedbad): N-Niya?
 >playbgm,BGMMysterious
 
 
-Narrator: Standing before you is Niya, your twin.
-
-
-Narrator: By appearance your spitting image, but truth be told they couldn’t be any more different from you.
+Narrator: Standing before you is Niya,{pm} your twin.
 
 
 Narrator: They glare at you menacingly.
 
 
-Niya: ... 
+Narrator: It’s a look you’re all too familiar with.
 
 
-Ayin(nervous): ...
+Niya: .{pl}.{pl}. 
 
 
-Niya: What? No hello?
+Ayin(nervous): .{pl}.{pl}.
 
 
-Ayin(uncomfortable): Th-that’s not... I...
+Niya: What?{pm} No hello?
+
+
+Ayin(uncomfortable): Th-that’s not...{pm} I...
 
 
 Ayin: S-Sorry...
@@ -328,28 +260,22 @@ Ayin: S-Sorry...
 Niya(normal): Hmph. 
 
 
-Niya: ...How’s Ivan?
+Niya: .{pl}.{pl}.{pl}how’s Ivan?
 
 
-Ayin(serious): He-Uh, he’s fine.
+Ayin(serious): He-{ps}uh,{pm} he’s fine.
 
 
-Ayin(serious): ...
+Ayin(ohfuck): H-How’re you,{pm} Niya?
 
 
-Ayin(ohfuck): H-How’re you, Niya?
+Narrator: Niya squints at you,{pm} and lets out a sigh.
 
 
-Niya: ...
+Niya: I’m fine[c].
 
 
-Narrator: Niya squints at you, and lets out a sigh.
-
-
-Niya: I’m fine[f].
-
-
-Niya: Anyways, are we going to do this?
+Niya: Anyways,{pm} are we going to do this?
 
 
 Ayin(surprisedbad): W-What?
@@ -358,19 +284,16 @@ Ayin(surprisedbad): W-What?
 >stopbgm
 
 
-Narrator: Niya pulls down their mask over their [g]face...
+Narrator: Niya pulls down their mask over their [d]face...
 
 
-Narrator: ...and takes out their weapon, a strange-looking Typocrypha, aiming it directly at you.
+Narrator: ...and takes out their weapon,{pm} a strange-looking Typocrypha,{pm} aiming it directly at you.
 
 
 >endt
 
 
-[a]can probably remove 'captain's log' thing - just make normal narrator scene
-[b]maybe too subtle that ayin doesnt want to actually split up
-[c]rustle sound effect
-[d]wordy
-[e]have niya start out as masked - also need to add more details/dialog
-[f]add flavor that Niya was the one going around using magic to mislead AEIOU
-[g]need niya mask pose face
+[a]footstep sfx
+[b]have niya start out as masked - also need to add more details/dialog
+[c]add flavor that Niya was the one going around using magic to mislead AEIOU
+[d]need niya mask pose face
