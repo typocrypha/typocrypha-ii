@@ -178,6 +178,32 @@ public class PlayerEquipment : MonoBehaviour
         return Lookup.TryGetBadge(name, out badge) && IsBadgeEquipped(badge);
     }
 
+    public T GetEquippedBadgeEffect<T>() where T : BadgeEffect
+    {
+        foreach(var kvp in equippedBadgeWords)
+        {
+            var effect = kvp.Value.GetEffect<T>();
+            if (effect != null)
+                return effect;
+        }
+        return null;
+    }
+
+    public bool TryGetEquippedBadgeEffect<T>(out T effect) where T : BadgeEffect
+    {
+        foreach (var kvp in equippedBadgeWords)
+        {
+            var badgeEffect = kvp.Value.GetEffect<T>();
+            if (badgeEffect != null)
+            {
+                effect = badgeEffect;
+                return true;
+            }
+        }
+        effect = null;
+        return false;
+    }
+
     public void ClearEquipment()
     {
         equippedSpellWords.Clear();

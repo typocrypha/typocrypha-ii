@@ -142,21 +142,17 @@ public class SpellManager : MonoBehaviour
             }
             else if (caster.CasterState == Caster.State.Hostile)
             {
-                if (PlayerDataManager.instance.equipment.IsBadgeEquipped("bulwark", out var bulwarkBadge))
+                if (PlayerDataManager.instance.equipment.TryGetEquippedBadgeEffect<BadgeEffectCritBlock>(out var critBlockEffect) && critBlockEffect.RollForCritical(Battlefield.instance.Player))
                 {
-                    var critBlockEffect = bulwarkBadge.GetEffect<BadgeEffectCritBlock>();
-                    if (critBlockEffect != null && critBlockEffect.RollForCritical(Battlefield.instance.Player))
+                    IEnumerator OnBlockPopupComplete(bool popupSuccess)
                     {
-                        IEnumerator OnBlockPopupComplete(bool popupSuccess)
+                        if (popupSuccess)
                         {
-                            if (popupSuccess)
-                            {
-                                mod = Damage.SpecialModifier.CritBlock;
-                            }
-                            return null;
+                            mod = Damage.SpecialModifier.CritBlock;
                         }
-                        LogInteractivePopup(critPopup, "Block Chance!", "BLOCK", 5, OnBlockPopupComplete);
+                        return null;
                     }
+                    LogInteractivePopup(critPopup, "Block Chance!", "BLOCK", 5, OnBlockPopupComplete);
                 }
             }
             if (HasPrompts)
@@ -166,21 +162,17 @@ public class SpellManager : MonoBehaviour
         }
         if (caster.IsPlayer && !SpellCooldownManager.instance.Overheated)
         {
-            if (PlayerDataManager.instance.equipment.IsBadgeEquipped("combo", out var comboBadge))
+            if (PlayerDataManager.instance.equipment.TryGetEquippedBadgeEffect<BadgeEffectCombo>(out var comboEffect) && comboEffect.CanFollowUp(caster))
             {
-                var comboEffect = comboBadge.GetEffect<BadgeEffectCombo>();
-                if (comboEffect != null && comboEffect.CanFollowUp(caster))
+                IEnumerator OnComboPopupComplete(bool popupSuccess)
                 {
-                    IEnumerator OnComboPopupComplete(bool popupSuccess)
+                    if (popupSuccess && caster is Player player)
                     {
-                        if (popupSuccess && caster is Player player)
-                        {
-                            player.InsertCast(castPopup.Spell, target, string.Empty);
-                        }
-                        return null;
+                        player.InsertCast(castPopup.Spell, target, string.Empty);
                     }
-                    LogInteractivePopup(castPopup, "Combo Spell!", string.Empty, 5, OnComboPopupComplete);
+                    return null;
                 }
+                LogInteractivePopup(castPopup, "Combo Spell!", string.Empty, 5, OnComboPopupComplete);
             }
             if (HasPrompts)
             {
