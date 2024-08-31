@@ -20,7 +20,10 @@ Narrator: This does not look good...
 Ayin: A-Adelai!
 
 
-Adelai: Keep it together,{ps} Ayin!
+Adelai: Don’t worry,{ps} Ayin!
+
+
+Adelai(normal): I’ll be right here beside you!
 
 
 +bubble
@@ -29,19 +32,22 @@ Adelai: Keep it together,{ps} Ayin!
 >addchar,Adelai,0,0,right,serious
 
 
-Demon[1,1]: Hey!{pm} More Human soldiers!
+Demon[1,1]: Hey!{pm} What are Human soldiers doing here!?
 
 
-Adelai(serious)[0,2]: Ayin,{ps} look out for that {c,ui-terms}Demon{c}!
+Ayin[0,1]: A real D-Demon!?
 
 
-Adelai[0,2]: You have to fight back with your Typocrypha!
+Adelai[0,2]: Just remember your training.
 
 
-Clarke[0,1]: Demon threat detected.{pm} Typing assist engaged.[a]
+Adelai[0,2]: Use your Typocrypha to send those Demons back to the Ruins!
 
 
-Clarke[0,1]: Please type in basic combat spell {c,ui-terms}“SWORD”{c} and press ENTER.
+Clarke[0,1]: Demon threat detected.{pm} Typing auto-prompt engaged.[a]
+
+
+Clarke[0,1]: Please type in basic combat Spell{ps} {c,ui-terms}“SWORD”{c}{ps} and press {c,ui-terms}ENTER{c}.
 
 
 >end
@@ -52,10 +58,16 @@ Clarke[0,1]: Please type in basic combat spell {c,ui-terms}“SWORD”{c} and pr
 +bubble
 
 
-Clarke[0,1]: Cast successful.{pm} Spell “SWORD” going on cooldown for one(1) cast.
+Clarke[0,1]: Cast successful.{pm} Spell {c,ui-terms}“SWORD”{c} going on {c,ui-terms}Cooldown{c} for one(1) cast.
 
 
-Clarke[0,1]: Casting a Spell causes all cooldowns to go down by one(1).
+Clarke[0,1]: Casting a Spell causes it to go on {c,ui-terms}Cooldown{c}.
+
+
+Clarke[0,1]: Spells on Cooldown cannot be used.
+
+
+Clarke[0,1]: Casting a different Spell will reduce the Spell Cooldown to reduce by one(1).
 
 
 Clarke[0,1]: As such,{pm} cycling through different Spells is recommended to ensure efficient casting.
@@ -64,7 +76,7 @@ Clarke[0,1]: As such,{pm} cycling through different Spells is recommended to ens
 Clarke[0,1]: Please refer to the {c,ui-terms}Spell List{c} in the bottom left of your HUD for available Spells.
 
 
-Clarke[0,1]: Now,{pm} please type in basic combat spell {c,ui-terms}”LANCE”{c} and press ENTER.
+Clarke[0,1]: Now,{pm} please type in basic combat Spell {ps}{c,ui-terms}”LANCE”{c}{ps} and press ENTER.
 
 
 >end
@@ -72,48 +84,25 @@ Clarke[0,1]: Now,{pm} please type in basic combat spell {c,ui-terms}”LANCE”{
 >start,ACT I-4-1-Hit
 
 
-+vnplus
-
-
->addchar,Ayin,0,0,left,uncomfortable
->addchar,Adelai,0,0,right,serious
->addchar,Clarke,0,0
-
-
-Clarke: WARNING!{pm} Caster damage taken!
-
-
-Adelai(serious): Ayin!{pm} What are you doing?
-
-
-Ayin(uncomfortable): I’m sorry I-
-
-
-Adelai(serious): Move out of the way!
-
-
 +bubble
 
 
->addchar,Adelai,0,0,right
+>addchar,Adelai,0,0,right,serious
 
 
-Adelai[0,2]: SWORD!
+Clarke[0,1]: WARNING!{pm} Caster damage taken!
 
 
->clear
+Adelai(serious)[0,2]: Ayin!{pm} What are you doing?
 
 
->castSpell,SWORD,0,1,1,2
+Ayin[0,1]: I’m sorry.{pm} I-I don’t know!
 
 
-Adelai[0,2]: Ayin,{pm} you have to {c,ui-terms}type the spells{c} into your Typocrypha!{pm} Remember?
+Adelai[0,2]: You have to {c,ui-terms}type the Spells{c} into your Typocrypha!{pm} Remember?
 
 
-Adelai[0,2]: In the {c,ui-terms}bottom left of your Typocrypha interface{c} is your {c,ui-terms}Spell List.{c}
-
-
-Adelai[0,2]: Try typing in the spell “SWORD” and then {c,ui-terms}press enter{c} to cast the spell!
+Adelai[0,2]: Try typing in the Spell {c,ui-terms}“SWORD”{c} and then press {c,ui-terms}ENTER{c} to cast the Spell!
 
 
 >end
@@ -136,10 +125,10 @@ Clarke[0,1]: Demon has entered its {c,ui-terms}Spirit Form{c}.
 Ayin[0,1]: Spirit Form?{pm} D-Do I need to keep fighting it?
 
 
-Adelai(normal)[0,2]: Don’t worry,{ps} Ayin!{pm} Those Spirit balls are harmless!
+Adelai(normal)[0,2]: Don’t worry,{ps} Ayin!{pm} Those Spirit balls are basically harmless.
 
 
-Adelai[0,2]: While difficult to kill completely,{pm} they’ll run off on their own.
+Adelai[0,2]: They’ll run off on their own soon.
 
 
 >end
@@ -150,26 +139,42 @@ Adelai[0,2]: While difficult to kill completely,{pm} they’ll run off on their 
 >start,ACT I-4-2-Opening
 
 
-+vnplus
-
-
->addchar,Ayin,0,0,left
->addchar,Adelai,0,0,right
-
-
-Ayin(nervous): There’s more of them!
-
-
-Adelai(serious): You’ll have to use the targeting functionality of your Typocrypha,{ps} Ayin!
-
-
 +bubble
 
 
 >addchar,Adelai,0,0,right
 
 
-Adelai[0,2]: {c,ui-terms}Use the arrow keys to move your target cursor{c} to one of those demons.
+Demon[1,0]: These humans are tough!
+
+
+Demon[1,2]: Surround them!
+
+
+Clarke[0,1]: Multiple Demons detected!
+
+
+Clarke[0,1]: Press the {c,ui-terms}TAB{c} key cycle your reticle between targets.
+
+
+Clarke[0,1]: Once your target is selected,{pm} type in your desired {c,ui-terms}Spell{c} and press {c,ui-terms}ENTER{c}.
+
+
+>end
+//Attacking empty space
+>start,ACT I-4-2-Empty
+
+
++bubble
+
+
+Clarke[0,1]: ERROR!{pm} No target for Spell!
+
+
+Clarke[0,1]: Please press the {c,ui-terms}TAB{c} key cycle your reticle between targets.
+
+
+Clarke[0,1]: Once your target is selected,{pm} type in your desired {c,ui-terms}Spell{c} and press {c,ui-terms}ENTER{c}.
 
 
 >end
@@ -183,13 +188,16 @@ Adelai[0,2]: {c,ui-terms}Use the arrow keys to move your target cursor{c} to one
 >addchar,Adelai,0,0,right
 
 
-Adelai[0,2]: Good work,{pm} Ayin!
+Clarke[0,1]: Demon has been defeated.
+
+
+Adelai[0,2]: Good work,{ps} Ayin!
 
 
 Adelai[0,2]: Now retarget and finish off the other one!
 
 
-Adelai[0,2]: If it’s easier,{pm} you can also use the {c,ui-terms}tab key to cycle through targets.{c}
+Adelai[0,2]: You can also manually move the reticle with the {c,ui-terms}arrow keys{c}.
 
 
 >end
@@ -205,22 +213,22 @@ Adelai[0,2]: If it’s easier,{pm} you can also use the {c,ui-terms}tab key to c
 >addchar,Adelai,0,0,right
 
 
-Adelai(frustrated): Um,{pm} hey Ayin?{pm} I know these demons aren’t very strong,{ps} but[b]...
+Adelai(frustrated): Um,{pm} hey Ayin?{pm} I know these demons aren’t very strong,{ps} but...
 
 
-Adelai(teasing): Shouldn’t you use more spells than just PUNCH and KICK?
+Adelai(teasing): Shouldn’t you use more Spells than just SWORD and LANCE?
 
 
-Ayin(concerned): Wait, aren’t those the only ones I have?
+Ayin(concerned): B-But that’s all Clarke told me to cast...
 
 
 Adelai(serious): What.
 
 
-Adelai(caring): ... OH! Ayin you still have your Typocrypha on CIVILIAN mode!
+Adelai(caring): ...OH!{pm} Ayin,{pm} you still have your Typocrypha on Training mode!
 
 
-Adelai: Here, let me just...
+Adelai: Here,{pm} let me just...
 
 
 +bubble
@@ -229,20 +237,23 @@ Adelai: Here, let me just...
 >addchar,Adelai,0,0,right
 
 
-Clarke[0,1]: Typocrypha mode switch: BATTLE mode.
+Clarke[0,1]: Typocrypha Training mode disabled.
+
+
+Clarke[0,1]: Auto-prompt disabled.{pm} Please refer to the Spell List for available Spells to cast.
+
+
+Clarke[0,1]: Unlocking high-power combat Spell {ps}{c,ui-terms}“HAMMER”{c}...
 
 
 >clearSpells
 >addSpells,SWORD,LANCE,HAMMER
 
 
-Adelai(normal)[0,2]: There!
+Ayin[0,1]: Woah!{pm} What does HAMMER do?
 
 
-Ayin[0,1]: W-Woah! What do all these spells do?
-
-
-Adelai(serious)[0,2]: No time to explain! Just keep typing!!
+Adelai(serious)[0,2]: No time to explain!{pm} Just keep typing!!
 
 
 >end
@@ -258,13 +269,13 @@ Adelai(serious)[0,2]: No time to explain! Just keep typing!!
 >addchar,Adelai,0,0,right
 
 
-Adelai(bffs4ever): See, you’re doing fine!
+Adelai(bffs4ever): See,{pm} you’re doing fine!
 
 
-Adelai(normal): Now that you have more spells, you can start looking out for opportunities to {c,ui-terms}Counter{c} enemy spells!
+Adelai(normal): You should also start looking out for opportunities to {c,ui-terms}Counter{c} enemy Spells!
 
 
-Ayin(surprised): Counter?
+Ayin(surprised): {c,ui-terms}Counter{c}?
 
 
 +bubble
@@ -273,21 +284,21 @@ Ayin(surprised): Counter?
 >addchar,Adelai,0,0,right
 
 
-Adelai(normal)[0,2]: Whenever you see an enemy casting a spell that you also have, try hitting them with it!
+Adelai(normal)[0,2]: Whenever you see an enemy casting a {c,ui-terms}Spell{c} that you also have,{pm} try hitting them with it!
 
 
 Adelai[0,2]: Like those Tanukis! 
 
 
-Tanuki[1,1]: Feel the pointy wrath of my {c,highlight}LANCE{c} spell!
+Tanuki[1,1]: Feel the pointy wrath of my {c,highlight}LANCE{c} Spell!
 
 
+Adelai[0,2]: When they start charging up a {c,ui-terms}LANCE{c} Spell,{pm} use your own {c,ui-terms}LANCE{c} to counter them!
 
 
-Adelai[0,2]: When they start charging up a {c,ui-terms}LANCE{c} spell, use your own {c,ui-terms}LANCE{c} to counter them!
+Adelai(serious)[0,2]: Your Typocrypha should highlight those opportunities in {c,highlight}Orange{c},{pm} so just keep a lookout!
 
 
-Adelai(serious)[0,2]: Your Typocrypha should highlight those opportunities in {c,highlight}Orange{c}, so just keep a lookout!
 
 
 >end
@@ -301,13 +312,16 @@ Adelai(serious)[0,2]: Your Typocrypha should highlight those opportunities in {c
 >addchar,Adelai,0,0,right
 
 
-Adelai(normal)[0,2]: You {c,ui-terms}countered{c} that demon, Ayin!
+Adelai(normal)[0,2]: You {c,ui-terms}Countered{c} that Demon,{pm} Ayin!
 
 
-Adelai[0,2]: Whenever you counter a demon, it’ll make them stop casting their current spell!
+Adelai[0,2]: Whenever you Counter a Demon,{pm} it’ll make them stop casting their current Spell!
 
 
-Adelai[0,2]: By countering you can greatly reduce the amount of damage you take.
+Adelai[0,2]: By Countering,{pm} you can greatly reduce the amount of damage you take.
+
+
+Adelai(serious)[0,2]: Pro-tip:{pm} If you see a Spell you can normally cast not highlighted in {c,highlight}Orange{c},{pm} it probably means the Spell is on Cooldown!
 
 
 >end
@@ -353,7 +367,7 @@ Adelai: Hurry up!
 >end
 
 
-//Round 6: ???
+//Round 6[b]: ???
 //Opening Dialog:
 >start,ACT I-4-6-Opening
 
@@ -365,7 +379,13 @@ Adelai: Hurry up!
 ???[1,1]: Cursed Humans!!{pm} Was this your doing!?
 
 
-Adelai[0,2]: Another one!?
+Adelai[0,2]: !?
+
+
+Adelai[0,2]: This Demon seems different from the others,{pm} Ayin!
+
+
+Adelai[0,2]: Stay close!
 
 
 >end
@@ -374,4 +394,4 @@ Adelai[0,2]: Another one!?
 
 
 [a]static prompt
-[b]pending tutorial update
+[b]unused
