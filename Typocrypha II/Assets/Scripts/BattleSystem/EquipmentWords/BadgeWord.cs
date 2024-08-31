@@ -126,13 +126,6 @@ public class BadgeWord : ScriptableObject
         }
     }
 
-    private void UnequipEffect(BadgeEffect effect, Player player)
-    {
-        if (effect == null)
-            return;
-        effect.Unequip(player);
-    }
-
     public T GetEffect<T>() where T : BadgeEffect
     {
         foreach(var effect in Effects)
