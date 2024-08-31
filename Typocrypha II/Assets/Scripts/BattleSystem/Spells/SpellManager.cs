@@ -142,8 +142,7 @@ public class SpellManager : MonoBehaviour
             }
             else if (caster.CasterState == Caster.State.Hostile)
             {
-                var bulwarkBadge = Lookup.GetBadge("bulwark");
-                if (PlayerDataManager.instance.equipment.IsBadgeEquipped(bulwarkBadge))
+                if (PlayerDataManager.instance.equipment.IsBadgeEquipped("bulwark", out var bulwarkBadge))
                 {
                     var critBlockEffect = bulwarkBadge.GetEffect<BadgeEffectCritBlock>();
                     if (critBlockEffect != null && critBlockEffect.RollForCritical(Battlefield.instance.Player))
@@ -167,8 +166,7 @@ public class SpellManager : MonoBehaviour
         }
         if (caster.IsPlayer && !SpellCooldownManager.instance.Overheated)
         {
-            var comboBadge = Lookup.GetBadge("combo");
-            if (PlayerDataManager.instance.equipment.IsBadgeEquipped(comboBadge))
+            if (PlayerDataManager.instance.equipment.IsBadgeEquipped("combo", out var comboBadge))
             {
                 var comboEffect = comboBadge.GetEffect<BadgeEffectCombo>();
                 if (comboEffect != null && comboEffect.CanFollowUp(caster))

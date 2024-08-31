@@ -173,6 +173,11 @@ public class PlayerEquipment : MonoBehaviour
         return EquippedBadgeWords.TryGetValue(badge.Slot, out var equippedBadge) && badge == equippedBadge;
     }
 
+    public bool IsBadgeEquipped(string name, out BadgeWord badge)
+    {
+        return Lookup.TryGetBadge(name, out badge) && IsBadgeEquipped(badge);
+    }
+
     public void ClearEquipment()
     {
         equippedSpellWords.Clear();
