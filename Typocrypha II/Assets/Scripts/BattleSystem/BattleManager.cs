@@ -144,6 +144,11 @@ public class BattleManager : MonoBehaviour, IPausable
 
     public void SetBattleEvents(IEnumerable<GameObject> eventObjects, bool addStd)
     {
+        // Add the new battle events
+        foreach (var e in eventObjects)
+        {
+            AddBattleEvent(Instantiate(e).GetComponent<BattleEvent>());
+        }
         // Add the standard battle events for this battle to the list
         if (addStd)
         {
@@ -151,11 +156,6 @@ public class BattleManager : MonoBehaviour, IPausable
             {
                 AddBattleEvent(Instantiate(e).GetComponent<BattleEvent>());
             }
-        }
-        // Add the new battle events
-        foreach (var e in eventObjects)
-        {
-            AddBattleEvent(Instantiate(e).GetComponent<BattleEvent>());
         }
     }
 
