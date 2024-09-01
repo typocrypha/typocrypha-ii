@@ -4,6 +4,6 @@ using UnityEngine;
 
 public abstract class BadgeEffect : ScriptableObject
 {
-    public abstract void Equip(Player player);
-    public abstract void Unequip(Player player);
+    public virtual void Equip(Player player) { }
+    public virtual void Unequip(Player player) { }
 }

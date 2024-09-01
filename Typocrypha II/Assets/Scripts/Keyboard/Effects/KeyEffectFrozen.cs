@@ -23,7 +23,17 @@ namespace Typocrypha
             base.OnStart();
             key.ClearOutput();
             key.ForceSfx = true;
-            health = Random.Range(minHealth, maxHealth);
+            int baseHealth = Random.Range(minHealth, maxHealth);
+            if(PlayerDataManager.instance.equipment.TryGetEquippedBadgeEffect<BadgeEffectFrozenHitsModifier>(out var mod))
+            {
+                baseHealth += mod.Modifier;
+            }
+            if(baseHealth <= 0)
+            {
+                Remove();
+                return;
+            }
+            health = baseHealth;
         }
 
         public override void ResetEffect()

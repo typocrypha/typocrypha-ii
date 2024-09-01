@@ -48,9 +48,18 @@ namespace Typocrypha
             // Create the visuals for the other key
             swappedKeyEffect = Instantiate(swappedKeyEffectPrefab, swappedKey.KeyEffectContainer);
             swappedShockEffect = swappedKeyEffect.GetComponent<KeyEffectShockedSub>();
-
-            // Start timer.
-            StartCoroutine(DestroyAfterTime(time));
+            // Start timer
+            var modTime = time;
+            if (PlayerDataManager.instance.equipment.TryGetEquippedBadgeEffect<BadgeEffectShockedTimeMultiplier>(out var multiplier))
+            {
+                modTime *= multiplier.Multiplier;
+            }
+            if (modTime <= 0)
+            {
+                Remove();
+                return;
+            }
+            StartCoroutine(DestroyAfterTime(modTime));
         }
 
         public override void OnPress()

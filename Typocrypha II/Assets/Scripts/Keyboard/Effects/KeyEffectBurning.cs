@@ -20,14 +20,24 @@ namespace Typocrypha
         public override void OnStart()
         {
             base.OnStart();
-            // Multiply output.
+            // Multiply output
             reps = 1;
             for (int i = 0; i < reps; i++)
             {
                 key.AddToOutput(key.Letter);
             }
-            // Start timer.
-            StartCoroutine(DestroyAfterTime(time));
+            // Start timer
+            var modTime = time;
+            if(PlayerDataManager.instance.equipment.TryGetEquippedBadgeEffect<BadgeEffectBurningTimeMultiplier>(out var multiplier))
+            {
+                modTime *= multiplier.Multiplier;
+            }
+            if(modTime <= 0)
+            {
+                Remove();
+                return;
+            }
+            StartCoroutine(DestroyAfterTime(modTime));
         }
 
         public override void OnPress() { }
