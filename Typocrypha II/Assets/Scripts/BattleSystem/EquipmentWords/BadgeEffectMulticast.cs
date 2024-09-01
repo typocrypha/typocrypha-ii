@@ -8,7 +8,4 @@ public class BadgeEffectMulticast : BadgeEffect
     [SerializeField] private int maxWords;
     public float WordMultiplier => wordMultiplier;
     [SerializeField] private float wordMultiplier;
-
-    public override void Equip(Player player) { }
-    public override void Unequip(Player player) { }
 }
