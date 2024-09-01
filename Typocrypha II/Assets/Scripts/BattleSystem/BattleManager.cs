@@ -219,6 +219,19 @@ public class BattleManager : MonoBehaviour, IPausable
                 ++row;
             }
         }
+        foreach(var caster in Battlefield.instance.Casters)
+        {
+            if (caster.OnWaveStart == null)
+                continue;
+            foreach(System.Func<Caster, Coroutine> onStartEvent in caster.OnWaveStart.GetInvocationList())
+            {
+                var routine = onStartEvent(caster);
+                if(routine != null)
+                {
+                    yield return routine;
+                }
+            }
+        }
         yield return StartCoroutine(WaveTransition(waveData));
         // Set and pause the battle events
         SetBattleEvents(waveData.battleEvents, waveData.useStdEvents);

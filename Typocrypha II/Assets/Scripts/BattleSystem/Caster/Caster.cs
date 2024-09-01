@@ -76,6 +76,7 @@ public class Caster : MonoBehaviour
     public System.Action OnStunned { get; set; }
     public System.Action OnUnstunned { get; set; }
     public System.Action<Caster, Spell> OnSpellChanged { get; set; }
+    public System.Func<Caster, Coroutine> OnWaveStart { get; set; }
 
     private ActiveAbilities CurrentActiveAbiltiies { get; set; }
     public void AddActiveAbilities(ActiveAbilities abilities)
