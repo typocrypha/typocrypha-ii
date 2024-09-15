@@ -137,9 +137,8 @@ public class SaveManager : MonoBehaviour
         data.currentSceneIndex = transitionManager.SceneIndex;
         data.currentSceneName = transitionManager.SceneName;
         var dataManager = PlayerDataManager.instance;
-        var equipment = dataManager.equipment;
         // Get Unlocked Badges
-        foreach (var kvp in equipment.EquippedBadgeWords)
+        foreach (var kvp in PlayerDataManager.Equipment.EquippedBadgeWords)
         {
             var badge = kvp.Value;
             data.equippedBadgeWords.Add(badge.Key);
@@ -170,7 +169,7 @@ public class SaveManager : MonoBehaviour
     {
         TransitionManager.instance.LoadIndex(data.currentSceneName, data.currentSceneIndex);
         var dataManager = PlayerDataManager.instance;
-        var equipment = dataManager.equipment;
+        var equipment = PlayerDataManager.Equipment;
         // Equipped badges
         equipment.ClearEquippedBadges();
         foreach (var key in data.equippedBadgeWords)
@@ -191,8 +190,7 @@ public class SaveManager : MonoBehaviour
 
     private GlobalSaveData GetGlobalSaveData()
     {
-        var dataManager = PlayerDataManager.instance;
-        var equipment = dataManager.equipment;
+        var equipment = PlayerDataManager.Equipment;
         // Get Unlocked Spell Words
         var data = new GlobalSaveData();
         foreach(var kvp in equipment.UnlockedSpellWords)
@@ -223,8 +221,7 @@ public class SaveManager : MonoBehaviour
 
     private void LoadGlobalData(GlobalSaveData data)
     {
-        var dataManager = PlayerDataManager.instance;
-        var equipment = dataManager.equipment;
+        var equipment = PlayerDataManager.Equipment;
         // Unlocked spells
         equipment.ClearUnlockedSpells();
         foreach(var key in data.unlockedSpellWords)

@@ -17,7 +17,7 @@ public abstract class InteractivePopup : CastBar
     {
         Setup(header, data, time);
         float modTime = time;
-        if(PlayerDataManager.instance.equipment.TryGetEquippedBadgeEffect<BadgeEffectExtendPromptTimer>(out var promptExtendedEffect))
+        if(PlayerDataManager.Equipment.TryGetEquippedBadgeEffect<BadgeEffectExtendPromptTimer>(out var promptExtendedEffect))
         {
             modTime *= promptExtendedEffect.Multiplier;
         }

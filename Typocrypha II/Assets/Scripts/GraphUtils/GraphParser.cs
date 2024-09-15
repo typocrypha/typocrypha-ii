@@ -59,7 +59,7 @@ public abstract class GraphParser : MonoBehaviour
             {
                 if(word != null)
                 {
-                    PlayerDataManager.instance.equipment.UnlockBadge(word);
+                    PlayerDataManager.Equipment.UnlockBadge(word);
                 }
             }
         }
@@ -117,10 +117,9 @@ public abstract class GraphParser : MonoBehaviour
             if (playerData != null)
             {
                 var cooldowns = SpellCooldownManager.instance;
-                var equipment = playerData.equipment;
-                if (cooldowns != null && equipment != null)
+                if (cooldowns != null && PlayerDataManager.Equipment != null)
                 {
-                    equipment.ClearEquipment();
+                    PlayerDataManager.Equipment.ClearEquipment();
                     cooldowns.ClearWords();
                     cooldowns.InitializeEquippedWords();
                 }
@@ -133,15 +132,14 @@ public abstract class GraphParser : MonoBehaviour
             if (playerData != null)
             {
                 var cooldowns = SpellCooldownManager.instance;
-                var equipment = playerData.equipment;
-                if (cooldowns != null && equipment != null)
+                if (cooldowns != null && PlayerDataManager.Equipment != null)
                 {
                     void AddWord(SpellWord word)
                     {
                         if (word != null)
                         {
                             cooldowns.AddWord(word);
-                            equipment.EquipWord(word);
+                            PlayerDataManager.Equipment.EquipWord(word);
                         }
                     }
                     AddWord(addSpellsNode.word1);

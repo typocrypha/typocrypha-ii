@@ -109,7 +109,7 @@ public class SpellParser : MonoBehaviour
         // Root count checks
         if (roots <= 0)
             return ParseResults.NoRoot;
-        if(isPlayer && PlayerDataManager.instance.equipment.TryGetEquippedBadgeEffect<BadgeEffectMulticast>(out var multicastEffect))
+        if(isPlayer && PlayerDataManager.Equipment.TryGetEquippedBadgeEffect<BadgeEffectMulticast>(out var multicastEffect))
         {
             if (roots > multicastEffect.MaxWords)
                 return ParseResults.TooManyRoots;

@@ -51,7 +51,7 @@ namespace Typocrypha
             swappedShockEffect = swappedKeyEffect.GetComponent<KeyEffectShockedSub>();
             // Start timer
             var modTime = time;
-            if (PlayerDataManager.instance.equipment.TryGetEquippedBadgeEffect<BadgeEffectShockedTimeMultiplier>(out var multiplier))
+            if (PlayerDataManager.Equipment.TryGetEquippedBadgeEffect<BadgeEffectShockedTimeMultiplier>(out var multiplier))
             {
                 modTime *= multiplier.Multiplier;
             }

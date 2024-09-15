@@ -7,8 +7,6 @@ using UnityEngine.Events;
 
 public class BadgeSelectorMenu : MonoBehaviour
 {
-    private static PlayerEquipment Equipment => PlayerDataManager.instance.equipment;
-
     [SerializeField] private MenuButton[] buttons;
     [SerializeField] private TextMeshProUGUI descriptionText;
     [SerializeField] private UnityEvent onClose;
@@ -37,7 +35,7 @@ public class BadgeSelectorMenu : MonoBehaviour
         targetSlot = slot;
         gameObject.SetActive(true);
         unlockedBadges.Clear();
-        foreach(var kvp in Equipment.UnlockedBadgeWords)
+        foreach(var kvp in PlayerDataManager.Equipment.UnlockedBadgeWords)
         {
             if (kvp.Value.Slot != slot)
                 continue;
@@ -46,14 +44,14 @@ public class BadgeSelectorMenu : MonoBehaviour
         unlockedBadges.Sort(WordComparer);
 
         int firstBadgeIndex = -1;
-        if (!Equipment.EquippedBadgeWords.ContainsKey(slot))
+        if (!PlayerDataManager.Equipment.EquippedBadgeWords.ContainsKey(slot))
         {
             selectedBadgeIndex = -1;
             selectedButtonIndex = 0;
         }
         else
         {
-            var equippedBadge = Equipment.EquippedBadgeWords[slot];
+            var equippedBadge = PlayerDataManager.Equipment.EquippedBadgeWords[slot];
             for (int i = 0; i < unlockedBadges.Count; i++)
             {
                 if(equippedBadge == unlockedBadges[i])
@@ -108,11 +106,11 @@ public class BadgeSelectorMenu : MonoBehaviour
         IsShowing = false;
         if(selectedBadgeIndex < 0)
         {
-            Equipment.UnequipBadgeLive(targetSlot, Battlefield.instance.Player);
+            PlayerDataManager.Equipment.UnequipBadgeLive(targetSlot, Battlefield.instance.Player);
         }
         else
         {
-            Equipment.EquipBadgeLive(unlockedBadges[selectedBadgeIndex], Battlefield.instance.Player);
+            PlayerDataManager.Equipment.EquipBadgeLive(unlockedBadges[selectedBadgeIndex], Battlefield.instance.Player);
         }
         buttons[selectedButtonIndex].OnDeselect(null);
         gameObject.SetActive(false);

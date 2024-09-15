@@ -8,7 +8,7 @@ public class EquipmentMenu : MonoBehaviour, IPausable
     public bool IsShowing { get; private set; }
 
     public PauseHandle PH { get; private set; } = null;
-    private static PlayerEquipment Equipment => PlayerDataManager.instance.equipment;
+    private static PlayerEquipment Equipment => PlayerDataManager.Equipment;
 
     [SerializeField] private MenuButton first;
     [SerializeField] private GameObject menuObject;

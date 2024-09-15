@@ -143,7 +143,7 @@ public static class Damage
 
     public static float StandardComboMod(float comboValue)
     {
-        return PlayerDataManager.instance.equipment.TryGetEquippedBadgeEffect<BadgeEffectMulticast>(out var multicastEffect) ?
+        return PlayerDataManager.Equipment.TryGetEquippedBadgeEffect<BadgeEffectMulticast>(out var multicastEffect) ?
             1 + (comboValue * multicastEffect.WordMultiplier) : 1;
     }
 
@@ -383,7 +383,7 @@ public static class Damage
                         research.SetDecoded(target.ResearchKey);
                         if (word != null)
                         {
-                            PlayerDataManager.instance.equipment.UnlockWord(word, true);
+                            PlayerDataManager.Equipment.UnlockWord(word, true);
                         }
                     }
                     else

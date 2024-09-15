@@ -142,7 +142,7 @@ public class SpellManager : MonoBehaviour
             }
             else if (caster.CasterState == Caster.State.Hostile)
             {
-                if (PlayerDataManager.instance.equipment.TryGetEquippedBadgeEffect<BadgeEffectCritBlock>(out var critBlockEffect) && critBlockEffect.RollForCritical(Battlefield.instance.Player))
+                if (PlayerDataManager.Equipment.TryGetEquippedBadgeEffect<BadgeEffectCritBlock>(out var critBlockEffect) && critBlockEffect.RollForCritical(Battlefield.instance.Player))
                 {
                     IEnumerator OnBlockPopupComplete(bool popupSuccess)
                     {
@@ -162,7 +162,7 @@ public class SpellManager : MonoBehaviour
         }
         if (caster.IsPlayer && !SpellCooldownManager.instance.Overheated)
         {
-            if (PlayerDataManager.instance.equipment.TryGetEquippedBadgeEffect<BadgeEffectCombo>(out var comboEffect) && comboEffect.CanFollowUp(caster))
+            if (PlayerDataManager.Equipment.TryGetEquippedBadgeEffect<BadgeEffectCombo>(out var comboEffect) && comboEffect.CanFollowUp(caster))
             {
                 IEnumerator OnComboPopupComplete(bool popupSuccess)
                 {
@@ -254,7 +254,7 @@ public class SpellManager : MonoBehaviour
             }
             if (caster.IsPlayer && PlayerDataManager.instance != null)
             {
-                PlayerDataManager.instance.equipment.UnlockWord(root);
+                PlayerDataManager.Equipment.UnlockWord(root);
             }
         }
         if (specialMod == Damage.SpecialModifier.Critical)

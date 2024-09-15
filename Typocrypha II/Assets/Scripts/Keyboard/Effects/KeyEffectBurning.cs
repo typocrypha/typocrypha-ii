@@ -30,7 +30,7 @@ namespace Typocrypha
             }
             // Start timer
             var modTime = time;
-            if(PlayerDataManager.instance.equipment.TryGetEquippedBadgeEffect<BadgeEffectBurningTimeMultiplier>(out var multiplier))
+            if(PlayerDataManager.Equipment.TryGetEquippedBadgeEffect<BadgeEffectBurningTimeMultiplier>(out var multiplier))
             {
                 modTime *= multiplier.Multiplier;
             }
