@@ -7,7 +7,7 @@ public class FormulaDrainDamage : CustomFormula
 {
     public CasterTag filterTag;
     public float drainMod = 0.5f;
-    public override CastResults Apply(DamageEffect effect, Caster caster, Caster target, Damage.SpecialModifier mod, RootCastData spellData, RootCastResults prevResults = null)
+    public override CastResults Apply(DamageEffect effect, Caster caster, Caster target, Damage.DamageModifier mod, RootCastData spellData, RootCastResults prevResults = null)
     {
         if (prevResults == null || prevResults.Count <= 0)
             return null;
@@ -22,7 +22,7 @@ public class FormulaDrainDamage : CustomFormula
         if (results.Damage >= 0)
             return null;
         results.Damage *= drainMod;
-        if (mod == Damage.SpecialModifier.Critical)
+        if (mod.specialModifier == Damage.SpecialModifier.Critical)
         {
             results.Mod = Damage.SpecialModifier.Critical;
             results.Damage *= Damage.critDamageMod;

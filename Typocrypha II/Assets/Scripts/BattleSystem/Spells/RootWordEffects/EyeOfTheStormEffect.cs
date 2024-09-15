@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EyeOfTheStormEffect : RootWordEffect
 {
-    public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.SpecialModifier mod, RootCastResults prevResults = null)
+    public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.DamageModifier mod, RootCastResults prevResults = null)
     {
         if (!target.HasTag("StormOrb"))
         {

@@ -58,7 +58,7 @@ public class SaveManager : MonoBehaviour
         LoadGlobalData();
     }
 
-    private static void SaveFile(object saveData, string path)
+    public static void SaveFile(object saveData, string path)
     {
         try
         {
@@ -79,7 +79,7 @@ public class SaveManager : MonoBehaviour
         }
     }
 
-    private static T LoadFile<T>(string path) where T : new()
+    public static T LoadFile<T>(string path) where T : new()
     {
         if (File.Exists(path))
         {
@@ -130,7 +130,7 @@ public class SaveManager : MonoBehaviour
         SaveFile(GetCampaignSaveData(), SaveFilePath(saveIndex));
     }
 
-    private CampaignSaveData GetCampaignSaveData()
+    private static CampaignSaveData GetCampaignSaveData()
     {
         var data = new CampaignSaveData();
         var transitionManager = TransitionManager.instance;

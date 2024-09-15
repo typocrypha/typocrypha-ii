@@ -5,9 +5,9 @@ public abstract class BaseShowInputPromptEffect : RootWordEffect
 {
     [SubSO("Fail Effect")]
     public RootWordEffect onFail;
-    public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.SpecialModifier mod, RootCastResults prevResults = null)
+    public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.DamageModifier mod, RootCastResults prevResults = null)
     {
-        Initialize(caster, target, spellData, mod, prevResults);
+        Initialize(caster, target, spellData, mod.specialModifier, prevResults);
         IEnumerator OnPromptComplete(bool succeeded)
         {
             if (succeeded)

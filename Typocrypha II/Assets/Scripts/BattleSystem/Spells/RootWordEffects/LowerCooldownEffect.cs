@@ -5,11 +5,11 @@ using UnityEngine;
 public class LowerCooldownEffect : RootWordEffect
 {
     public int amount;
-    public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.SpecialModifier mod, RootCastResults prevResults = null)
+    public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.DamageModifier mod, RootCastResults prevResults = null)
     {
         var results = new CastResults(caster, target)
         {
-            Mod = mod,
+            Mod = mod.specialModifier,
             DisplayDamage = false,
         };
         Damage.StandardHitCheck(results, this, caster, target);
@@ -18,7 +18,7 @@ public class LowerCooldownEffect : RootWordEffect
             results.Effectiveness = Reaction.Block;
             return results;
         }
-        if (mod == Damage.SpecialModifier.CritBlock)
+        if (mod.specialModifier == Damage.SpecialModifier.CritBlock)
         {
             results.Miss = true;
             return results;

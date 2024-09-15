@@ -9,7 +9,7 @@ public class DamageEffect : RootWordEffect
     public CustomFormula customFormula;
     public int power;
 
-    public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.SpecialModifier mod, RootCastResults prevResults = null)
+    public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.DamageModifier mod, RootCastResults prevResults = null)
     {
         if (formula == Damage.FormulaType.Custom)
             return customFormula.Apply(this, caster, target, mod, spellData, prevResults);
