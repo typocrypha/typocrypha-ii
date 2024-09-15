@@ -17,7 +17,6 @@ public class BadgeEffectElementalist : BadgeEffectOnBeforeSpellEffectCast
                 idSet.Add(kvp.Value.EffectID);
             }
         }
-        Debug.Log($"Count: {idSet.Count}");
         mod.damageMultiplier += (multiplier * idSet.Count);
     }
 }
