@@ -13,6 +13,7 @@ namespace Typocrypha
     /// </summary>
     public class KeyEffectShocked : KeyEffect
     {
+        public override EffectType EffectID => EffectType.Shocked;
         public override int NumAffectedKeys => 2;
 
         const float time = 12f; // Duration of shock.

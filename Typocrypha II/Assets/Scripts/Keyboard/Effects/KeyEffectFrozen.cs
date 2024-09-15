@@ -17,6 +17,7 @@ namespace Typocrypha
 
         [SerializeField] private AudioClip breakSfx;
 
+        public override EffectType EffectID => EffectType.Frozen;
 
         public override void OnStart()
         {

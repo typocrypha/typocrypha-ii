@@ -10,6 +10,14 @@ namespace Typocrypha
     /// </summary>
     public abstract class KeyEffect : MonoBehaviour, IPausable
     {
+        public enum EffectType
+        {
+            None,
+            Burning,
+            Frozen,
+            Shocked,
+            Locked,
+        }
         #region IPausable
         PauseHandle ph;
         public PauseHandle PH { get => ph; }
@@ -18,7 +26,9 @@ namespace Typocrypha
 
         [SerializeField] protected AudioClip sfxOverride;
         protected Key key; // Affected keyboard key.
-        protected Caster caster; // Caster of effect, may be null
+        protected Caster caster; // Caster of effect, may be 
+
+        public abstract EffectType EffectID { get; }
 
         void Awake()
         {

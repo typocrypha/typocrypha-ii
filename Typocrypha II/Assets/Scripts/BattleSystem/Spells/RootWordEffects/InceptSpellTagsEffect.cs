@@ -8,7 +8,7 @@ public class InceptSpellTagsEffect : RootWordEffect
 
     public override bool CanCrit => false;
 
-    public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.SpecialModifier mod, RootCastResults prevResults = null)
+    public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.DamageModifier mod, RootCastResults prevResults = null)
     {
         target.OnBeforeSpellEffectCast += InceptTag;
         CastResults results = new CastResults(caster, target)
@@ -19,7 +19,7 @@ public class InceptSpellTagsEffect : RootWordEffect
         return results;
     }
 
-    public void InceptTag(RootWordEffect effect, Caster caster, Caster target)
+    public void InceptTag(RootWordEffect effect, Caster caster, Caster target, Damage.DamageModifier mod)
     {
         foreach (var t in spellTagsToAdd)
             effect.tags.Add(t);

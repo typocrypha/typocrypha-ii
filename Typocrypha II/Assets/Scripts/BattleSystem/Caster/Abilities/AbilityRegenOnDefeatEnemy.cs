@@ -21,7 +21,7 @@ public class AbilityRegenOnDefeatEnemy : CasterAbility
         caster.OnBeforeSpellEffectCast -= OnBeforeSpellEffectCast;
     }
 
-    private void OnBeforeSpellEffectCast(RootWordEffect effect, Caster caster, Caster target)
+    private void OnBeforeSpellEffectCast(RootWordEffect effect, Caster caster, Caster target, Damage.DamageModifier mod)
     {
         target.OnSpiritMode += OnTargetSpiritMode;
     }

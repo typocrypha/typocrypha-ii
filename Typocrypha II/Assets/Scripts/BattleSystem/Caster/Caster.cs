@@ -36,7 +36,7 @@ public class Caster : MonoBehaviour
     }
 
     #region Delegate Declarations
-    public delegate void ApplyToEffectFn(RootWordEffect effect, Caster caster, Caster target);
+    public delegate void ApplyToEffectFn(RootWordEffect effect, Caster caster, Caster target, Damage.DamageModifier mod);
     public delegate void HitFn(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults data);
     public delegate CasterTagDictionary.ReactionMultiSet GetReactionsFn(SpellTag tag);
     public delegate void AfterCastFn(Spell s, Caster caster, bool hitTarget); // Add targets and results?

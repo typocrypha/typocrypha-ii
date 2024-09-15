@@ -17,6 +17,8 @@ namespace Typocrypha
 
         [SerializeField] private Image radialFill;
 
+        public override EffectType EffectID => EffectType.Burning;
+
         public override void OnStart()
         {
             base.OnStart();

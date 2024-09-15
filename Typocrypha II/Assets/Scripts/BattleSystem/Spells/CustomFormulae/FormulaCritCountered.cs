@@ -5,9 +5,10 @@ using System.Linq;
 
 public class FormulaCritCountered : CustomFormula
 {
-    public override CastResults Apply(DamageEffect effect, Caster caster, Caster target, Damage.SpecialModifier mod, RootCastData spellData, RootCastResults prevResults = null)
+    public override CastResults Apply(DamageEffect effect, Caster caster, Caster target, Damage.DamageModifier mod, RootCastData spellData, RootCastResults prevResults = null)
     {
-        var results = Damage.Standard(effect, caster, target, target.Countered ? Damage.SpecialModifier.Critical : mod, spellData);
+        var dmgMod = target.Countered ? new Damage.DamageModifier(mod) { specialModifier = Damage.SpecialModifier.Critical } : mod;
+        var results = Damage.Standard(effect, caster, target, dmgMod, spellData);
         Damage.ApplyStandard(results, effect, caster, target, spellData);
         return results;
     }

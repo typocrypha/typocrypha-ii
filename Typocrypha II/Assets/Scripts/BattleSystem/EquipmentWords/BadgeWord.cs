@@ -19,6 +19,7 @@ public class BadgeWord : ScriptableObject
         A = 2,
         B = 4,
         C = 8,
+        All = A | B | C,
     }
     public string DisplayName => CurrentBadge.internalName.ToUpper();
     public string Key => internalName.ToLower();

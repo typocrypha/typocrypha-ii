@@ -16,7 +16,7 @@ public class AbilityDoubleDamage : CasterAbility
         caster.OnBeforeSpellEffectCast -= OnBeforeSpellEffectCast;
     }
 
-    public void OnBeforeSpellEffectCast(RootWordEffect effect, Caster caster, Caster target)
+    public void OnBeforeSpellEffectCast(RootWordEffect effect, Caster caster, Caster target, Damage.DamageModifier mod)
     {
        if(effect.tags.Contains(tag) && effect is DamageEffect damageEffect)
             damageEffect.power *= 2;
