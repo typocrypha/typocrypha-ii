@@ -228,6 +228,7 @@ public class Caster : MonoBehaviour
         } 
     }
     public bool Countered => Spell.Countered;
+    public bool Running => Spell.IsRun;
     public Spell Spell
     {
         get => spell;
