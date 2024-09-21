@@ -8,7 +8,7 @@ public class BEConditionKeyEffectApplied : BattleEventCondition
 {
     [SerializeField] private Typocrypha.KeyEffect.EffectType effectId;
     private bool applied = false;
-    public override bool Check()
+    protected override bool CheckInternal()
     {
         return applied;
     }

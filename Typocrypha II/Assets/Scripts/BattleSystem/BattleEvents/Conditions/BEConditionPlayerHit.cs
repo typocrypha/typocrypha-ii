@@ -25,13 +25,13 @@ public class BEConditionPlayerHit : BattleEventCondition
         if (!data.WillDealDamage)
             return;
         currCasts++;
-        if (Check())
+        if (CheckInternal())
         {
             RemoveEventHandlers();
         }
     }
 
-    public override bool Check()
+    protected override bool CheckInternal()
     {
         return currCasts >= numCasts;
     }

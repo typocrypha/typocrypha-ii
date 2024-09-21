@@ -23,13 +23,13 @@ public class BEConditionPlayerNoTarget : BattleEventCondition
     public void CheckCast(Battlefield.Position pos)
     {
         currCasts++;
-        if (Check())
+        if (CheckInternal())
         {
             RemoveEventHandlers();
         }
     }
 
-    public override bool Check()
+    protected override bool CheckInternal()
     {
         return currCasts >= numCasts;
     }
