@@ -16,7 +16,7 @@ public abstract class BEConditionUnit : BattleEventCondition
     [SerializeField] private Caster.State casterState = Caster.State.Hostile;
     [SerializeField] private string specificName = "";
 
-    public override bool Check()
+    protected override bool CheckInternal()
     {
         if(op == Operator.Player)
         {

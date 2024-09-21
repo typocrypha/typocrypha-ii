@@ -25,7 +25,7 @@ public class BEConditionPlayerCast : BattleEventCondition
         if (!IsValidCast(s, caster))
             return;
         currCasts++;
-        if (Check())
+        if (CheckInternal())
         {
             RemoveEventHandlers();
         }
@@ -36,7 +36,7 @@ public class BEConditionPlayerCast : BattleEventCondition
         return true;
     }
 
-    public override bool Check()
+    protected override bool CheckInternal()
     {
         return currCasts >= numCasts;
     }
