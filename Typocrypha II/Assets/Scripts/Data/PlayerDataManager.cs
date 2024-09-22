@@ -12,6 +12,7 @@ public enum Pronoun { FEMININE, INCLUSIVE, FIRSTNAME, MASCULINE };
 public class PlayerDataManager : MonoBehaviour
 {
     public static PlayerDataManager instance = null; // global static ref
+    public static PlayerEquipment Equipment => instance.equipment;
     private readonly Dictionary<string, object> data = new Dictionary<string, object>(); // string-object data map
 
     #region Preset string key constants (faux named map)
@@ -20,7 +21,7 @@ public class PlayerDataManager : MonoBehaviour
     public const string lastInputKey = "prompt";
     #endregion
 
-    public PlayerEquipment equipment;
+    [SerializeField] private PlayerEquipment equipment;
     public ResearchData researchData;
     public ShopData ShopData => shopData;
     [SerializeField] private ShopData shopData;

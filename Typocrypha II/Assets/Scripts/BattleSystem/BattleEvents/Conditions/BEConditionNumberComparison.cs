@@ -27,7 +27,7 @@ public abstract class BEConditionNumberComparison : BattleEventCondition
     [SerializeField] private int num;
     [SerializeField] private Operator op;
 
-    public override bool Check()
+    protected override bool CheckInternal()
     {
         return EvalComparison(num, Number, op);
     }

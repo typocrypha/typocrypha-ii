@@ -18,7 +18,7 @@ public class Thesaurus : MonoBehaviour
     List<SpellWord> GetSynonymsOfBase(SpellWord word)
     {
         //return SynonymBundle.words.Select(p => p.Value).Where(s => s.synonymOf == word).ToList(); //debug with whole synonym list
-        return PlayerDataManager.instance.equipment.UnlockedSpellWords.Select(p => p.Value).Where(s => s.synonymOf == word).ToList();
+        return PlayerDataManager.Equipment.UnlockedSpellWords.Select(p => p.Value).Where(s => s.synonymOf == word).ToList();
     }
 
     string FormatWordList(SpellWord baseWord, List<SpellWord> synonyms, int page)

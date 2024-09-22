@@ -14,7 +14,7 @@ public class ApplyRuleEffect : RootWordEffect
 
     public RuleEnum ruleType;
 
-    public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.SpecialModifier mod, RootCastResults prevResults = null)
+    public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.DamageModifier mod, RootCastResults prevResults = null)
     {
         var results = new CastResults(caster, target, 0)
         {

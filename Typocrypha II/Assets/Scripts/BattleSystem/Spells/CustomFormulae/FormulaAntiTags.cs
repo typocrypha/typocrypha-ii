@@ -5,7 +5,7 @@ using UnityEngine;
 public class FormulaAntiTags : CustomFormula
 {
     [SerializeField] private CasterTag[] tags;
-    public override CastResults Apply(DamageEffect effect, Caster caster, Caster target, Damage.SpecialModifier mod, RootCastData spellData, RootCastResults prevResults = null)
+    public override CastResults Apply(DamageEffect effect, Caster caster, Caster target, Damage.DamageModifier mod, RootCastData spellData, RootCastResults prevResults = null)
     {
         // Calculate standard results using the standard formula
         bool hasTag = false;
@@ -31,11 +31,12 @@ public class FormulaAntiTags : CustomFormula
                 results.EffectivenessMagnitude += normalMagnitude;
             }
             Damage.ApplyReaction(results, effect, caster, target);
-            Damage.StandardSpecialMod(results, effect, caster, target, mod);
+            Damage.StandardSpecialMod(results, effect, caster, target, mod.specialModifier);
             Damage.StandardPower(results, effect, caster, target);
             Damage.ComputeStandardComboValue(results, spellData.Spell);
             Damage.ApplyStandardComboMod(results);
             Damage.StandardStunBonus(results, effect, caster, target);
+            Damage.StandardMultipliers(results, mod);
         }
         else
         {

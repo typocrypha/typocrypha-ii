@@ -9,6 +9,8 @@ namespace ATB3
         public const float time = 1;
         public float Timer { get; private set; } = 0.0f;
 
+        private float timeGoal = time;
+
         // Call upon entering given state
         public override void OnEnter()
         {
@@ -26,6 +28,14 @@ namespace ATB3
 
             }
             Timer = 0.0f;
+            if(PlayerDataManager.Equipment.TryGetEquippedBadgeEffect<BadgeEffectExtendPrecast>(out var extenstionEffect))
+            {
+                timeGoal = time * extenstionEffect.Multiplier;
+            }
+            else
+            {
+                timeGoal = time;
+            }
         }
 
         // Call on fixed update while in given state
@@ -55,7 +65,7 @@ namespace ATB3
             {
                 Source.PerformTransition(ATBStateID.Charge);
             }
-            else if (Timer >= time)
+            else if (Timer >= timeGoal)
             {
                 Source.PerformTransition(ATBStateID.Cast);
             }

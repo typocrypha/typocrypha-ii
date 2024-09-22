@@ -8,7 +8,7 @@ public class FormulaFinishingBlow : CustomFormula
     public List<CasterTag> tags = new List<CasterTag>();
     public bool finishStunned = false;
     public float finishMultiplier;
-    public override CastResults Apply(DamageEffect effect, Caster caster, Caster target, Damage.SpecialModifier mod, RootCastData spellData, RootCastResults prevResults = null)
+    public override CastResults Apply(DamageEffect effect, Caster caster, Caster target, Damage.DamageModifier mod, RootCastData spellData, RootCastResults prevResults = null)
     {
         var results = Damage.Standard(effect, caster, target, mod, spellData);
 

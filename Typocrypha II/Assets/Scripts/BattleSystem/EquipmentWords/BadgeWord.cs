@@ -19,6 +19,7 @@ public class BadgeWord : ScriptableObject
         A = 2,
         B = 4,
         C = 8,
+        All = A | B | C,
     }
     public string DisplayName => CurrentBadge.internalName.ToUpper();
     public string Key => internalName.ToLower();
@@ -73,13 +74,13 @@ public class BadgeWord : ScriptableObject
 
     private int UpgradeLevel
     {
-        get => PlayerDataManager.instance.equipment.GetUpgradeLevel(this);
-        set => PlayerDataManager.instance.equipment.SetUpgradeLevel(this, value);
+        get => PlayerDataManager.Equipment.GetUpgradeLevel(this);
+        set => PlayerDataManager.Equipment.SetUpgradeLevel(this, value);
     }
     private bool IsUpgraded => UpgradeLevel > 0;
 
     public bool HasUpgrade => upgrades.Length > UpgradeLevel;
-    public bool IsUnlocked => PlayerDataManager.instance.equipment.IsBadgeUnlocked(this);
+    public bool IsUnlocked => PlayerDataManager.Equipment.IsBadgeUnlocked(this);
     public BadgeWord NextUpgrade => HasUpgrade ? upgrades[UpgradeLevel] : null;
     private BadgeWord CurrentBadge => IsUpgraded ? upgrades[UpgradeLevel - 1] : this;
 
@@ -88,7 +89,7 @@ public class BadgeWord : ScriptableObject
         get
         {
             var data = PlayerDataManager.instance;
-            return !data.equipment.IsBadgeUnlocked(this) && data.ShopData.IsUnlockedInShop(this);
+            return !PlayerDataManager.Equipment.IsBadgeUnlocked(this) && data.ShopData.IsUnlockedInShop(this);
         }
     }
 
@@ -97,8 +98,7 @@ public class BadgeWord : ScriptableObject
         // Stub Implementation
         if (!HasUpgrade)
             return;
-        var equipment = PlayerDataManager.instance.equipment;
-        var shouldRefresh = equipment.IsBadgeEquipped(this) && Battlefield.instance != null && Battlefield.instance.Player != null;
+        var shouldRefresh = PlayerDataManager.Equipment.IsBadgeEquipped(this) && Battlefield.instance != null && Battlefield.instance.Player != null;
         if (shouldRefresh)
         {
             Unequip(Battlefield.instance.Player);

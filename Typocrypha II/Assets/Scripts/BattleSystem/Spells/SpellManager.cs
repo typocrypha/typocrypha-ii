@@ -120,7 +120,7 @@ public class SpellManager : MonoBehaviour
         }
         var roots = Modify(spell);
         // Critical chance
-        var mod = Damage.SpecialModifier.None;
+        var specialMod = Damage.SpecialModifier.None;
         if (roots.Any((r) => r.effects.Any((e) => e.CanCrit)))
         {
 
@@ -133,7 +133,7 @@ public class SpellManager : MonoBehaviour
                     {
                         if (popupSuccess)
                         {
-                            mod = Damage.SpecialModifier.Critical;
+                            specialMod = Damage.SpecialModifier.Critical;
                         }
                         return null;
                     }
@@ -142,13 +142,13 @@ public class SpellManager : MonoBehaviour
             }
             else if (caster.CasterState == Caster.State.Hostile)
             {
-                if (PlayerDataManager.instance.equipment.TryGetEquippedBadgeEffect<BadgeEffectCritBlock>(out var critBlockEffect) && critBlockEffect.RollForCritical(Battlefield.instance.Player))
+                if (PlayerDataManager.Equipment.TryGetEquippedBadgeEffect<BadgeEffectCritBlock>(out var critBlockEffect) && critBlockEffect.RollForCritical(Battlefield.instance.Player))
                 {
                     IEnumerator OnBlockPopupComplete(bool popupSuccess)
                     {
                         if (popupSuccess)
                         {
-                            mod = Damage.SpecialModifier.CritBlock;
+                            specialMod = Damage.SpecialModifier.CritBlock;
                         }
                         return null;
                     }
@@ -162,7 +162,7 @@ public class SpellManager : MonoBehaviour
         }
         if (caster.IsPlayer && !SpellCooldownManager.instance.Overheated)
         {
-            if (PlayerDataManager.instance.equipment.TryGetEquippedBadgeEffect<BadgeEffectCombo>(out var comboEffect) && comboEffect.CanFollowUp(caster))
+            if (PlayerDataManager.Equipment.TryGetEquippedBadgeEffect<BadgeEffectCombo>(out var comboEffect) && comboEffect.CanFollowUp(caster))
             {
                 IEnumerator OnComboPopupComplete(bool popupSuccess)
                 {
@@ -209,12 +209,13 @@ public class SpellManager : MonoBehaviour
                     else
                     {
                         hitTarget = true;
+                        var damageMod = new Damage.DamageModifier() { specialModifier = specialMod };
                         // Apply the rule effect if necessary
                         Rule.ActiveRule?.ApplyToEffect(effect, caster, targetCaster);
                         // Apply OnCast Callbacks
-                        caster.OnBeforeSpellEffectCast?.Invoke(effect, caster, targetCaster);
+                        caster.OnBeforeSpellEffectCast?.Invoke(effect, caster, targetCaster, damageMod);
                         // Cast the effect
-                        var castResults = effect.Cast(caster, targetCaster, spellData, mod, rootResults);
+                        var castResults = effect.Cast(caster, targetCaster, spellData, damageMod, rootResults);
                         // If the results are null, the effect is a NOP
                         if (castResults == null)
                             continue;
@@ -253,10 +254,10 @@ public class SpellManager : MonoBehaviour
             }
             if (caster.IsPlayer && PlayerDataManager.instance != null)
             {
-                PlayerDataManager.instance.equipment.UnlockWord(root);
+                PlayerDataManager.Equipment.UnlockWord(root);
             }
         }
-        if (mod == Damage.SpecialModifier.Critical)
+        if (specialMod == Damage.SpecialModifier.Critical)
         {
             SpellFxManager.instance.LogMessage("A critical hit!");
             yield return SpellFxManager.instance.PlayMessages();

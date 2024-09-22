@@ -13,6 +13,7 @@ namespace Typocrypha
     /// </summary>
     public class KeyEffectShocked : KeyEffect
     {
+        public override EffectType EffectID => EffectType.Shocked;
         public override int NumAffectedKeys => 2;
 
         const float time = 12f; // Duration of shock.
@@ -50,7 +51,7 @@ namespace Typocrypha
             swappedShockEffect = swappedKeyEffect.GetComponent<KeyEffectShockedSub>();
             // Start timer
             var modTime = time;
-            if (PlayerDataManager.instance.equipment.TryGetEquippedBadgeEffect<BadgeEffectShockedTimeMultiplier>(out var multiplier))
+            if (PlayerDataManager.Equipment.TryGetEquippedBadgeEffect<BadgeEffectShockedTimeMultiplier>(out var multiplier))
             {
                 modTime *= multiplier.Multiplier;
             }

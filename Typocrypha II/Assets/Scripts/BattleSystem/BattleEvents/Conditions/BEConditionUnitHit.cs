@@ -67,7 +67,7 @@ public abstract class BEConditionUnitHit : BattleEventCondition
         }
     }
 
-    public override bool Check()
+    protected override bool CheckInternal()
     {
         return conditionFulfilled;
     }

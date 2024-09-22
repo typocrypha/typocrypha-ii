@@ -127,7 +127,7 @@ public class ShopMenu : MonoBehaviour
         if (purchase.CanPurchase)
         {
             PlayerDataManager.instance.currency -= purchase.Cost;
-            PlayerDataManager.instance.equipment.UnlockBadge(purchase);
+            PlayerDataManager.Equipment.UnlockBadge(purchase);
             PrintCurrency();
         }
         else if (purchase.IsUnlocked)

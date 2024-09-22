@@ -17,6 +17,7 @@ namespace Typocrypha
 
         [SerializeField] private AudioClip breakSfx;
 
+        public override EffectType EffectID => EffectType.Frozen;
 
         public override void OnStart()
         {
@@ -24,7 +25,7 @@ namespace Typocrypha
             key.ClearOutput();
             key.ForceSfx = true;
             int baseHealth = Random.Range(minHealth, maxHealth);
-            if(PlayerDataManager.instance.equipment.TryGetEquippedBadgeEffect<BadgeEffectFrozenHitsModifier>(out var mod))
+            if(PlayerDataManager.Equipment.TryGetEquippedBadgeEffect<BadgeEffectFrozenHitsModifier>(out var mod))
             {
                 baseHealth += mod.Modifier;
             }

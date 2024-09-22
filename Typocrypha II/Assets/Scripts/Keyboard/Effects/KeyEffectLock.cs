@@ -11,6 +11,8 @@ namespace Typocrypha
     /// </summary>
     public class KeyEffectLock : KeyEffect
     {
+        public override EffectType EffectID => EffectType.Locked;
+
         public override void OnStart()
         {
             base.OnStart();

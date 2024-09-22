@@ -82,6 +82,8 @@ namespace Typocrypha
             }
         }
 
+        public event System.Action<KeyEffect> OnKeyEffectApplied;
+
         void Awake()
         {
             if (instance == null)
@@ -206,7 +208,8 @@ namespace Typocrypha
                 if (!unaffectedKeys.Contains(c))
                     continue;
                 unaffectedKeys.Remove(c);
-                keyMap[c].ApplyEffect(effectPrefab, caster);
+                var effect = keyMap[c].ApplyEffect(effectPrefab, caster);
+                OnKeyEffectApplied?.Invoke(effect);
             }
         }
         /// <summary>

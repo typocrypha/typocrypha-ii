@@ -98,7 +98,7 @@ public class BattleManager : MonoBehaviour, IPausable
         // Initialize Player
         var player = Instantiate(startNode.player, transform).GetComponent<Player>();
         Battlefield.instance.Add(player, new Battlefield.Position(1, 1));
-        PlayerDataManager.instance.equipment.ReapplyEquippedBadgeWords(player);
+        PlayerDataManager.Equipment.ReapplyEquippedBadgeWords(player);
         // Initialize ally character
         if(startNode.initialAllyData != null)
         {

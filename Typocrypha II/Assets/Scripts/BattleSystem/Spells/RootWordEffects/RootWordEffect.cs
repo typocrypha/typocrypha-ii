@@ -9,7 +9,7 @@ public abstract class RootWordEffect : ScriptableObject
     public TargetData pattern = new TargetData();
 
     public virtual bool CanCrit => !tags.Contains("NeverCrit");
-    public abstract CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.SpecialModifier mod, RootCastResults prevResults = null);
+    public abstract CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.DamageModifier mod, RootCastResults prevResults = null);
 
     protected void LogMessage(string message, Sprite icon = null)
     {

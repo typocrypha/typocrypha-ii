@@ -16,7 +16,12 @@ public abstract class InteractivePopup : CastBar
     public virtual Coroutine Show(string header, string data, float time)
     {
         Setup(header, data, time);
-        return StartCoroutine(PromptCr(time));
+        float modTime = time;
+        if(PlayerDataManager.Equipment.TryGetEquippedBadgeEffect<BadgeEffectExtendPromptTimer>(out var promptExtendedEffect))
+        {
+            modTime *= promptExtendedEffect.Multiplier;
+        }
+        return StartCoroutine(PromptCr(modTime));
     }
 
     protected abstract void Setup(string header, string data, float time);

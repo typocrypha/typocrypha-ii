@@ -21,7 +21,7 @@ public class BEConditionTimer : BattleEventCondition
         StartCoroutine(Timer());
     }
 
-    public override bool Check()
+    protected override bool CheckInternal()
     {
         return done;
     }

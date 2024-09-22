@@ -121,7 +121,7 @@ Ayin(ohfuck): {c,whisper}(gulp...!){c}
 Illyia(laughing): Alright,{pm} then it’s decided!
 
 
-Illyia(normal): We’ll meet back here at 13:50 on the dot.
+Illyia(normal): It’s now 13:35,{pm} so we’ll meet back here at 13:50 on the dot.
 
 
 Illyia: Off we go!
@@ -145,6 +145,9 @@ Esaias(lookingleft): Best of luck,{pm} Ayin.
 >stopbgm
 
 
+>setexpr,Ayin,nervous
+
+
 Narrator: As each of your party members leave,{pm} you start to feel the initial pinpricks of anxiety creep up on you.
 
 
@@ -154,77 +157,94 @@ Narrator: Taking deep breaths,{pm} you head into your own tunnel.
 >clear
 
 
++an
+
+
 >playbgm,BGMRuinsUnease
 
 
->setexpr,Ayin,nervous
+NarratorSilent: Armed with only the narrow flashlight on your Typocrypha,{pm} you inch down the corridor.
 
 
-NarratorSilent: Armed with only the flashlight on your Typocrypha,{pm} you slowly inch down the corridor.
+NarratorSilent(center): “Just a short scouting trip.”
 
 
-NarratorSilent: After what feels like an eternity,{pm} you encounter a fork in the path. 
+NarratorSilent: These words become your mantra,{pm} spoken under your breath with each shaky exhale.
 
 
-NarratorSilent: ...![a]
+NarratorSilent: But with every breath,{pm} you come closer to a stark realization.
 
 
-NarratorSilent: Suddenly,{pm} you start to hear footsteps coming from one of the pathways.
+NarratorSilent: This whole mission was supposed to be “just a short scouting trip.”
 
 
->setexpr,Ayin,surprisedbad
-
-
-NarratorSilent: You run into one of the other pathways to escape.
-
-
-NarratorSilent: Your heart is pounding,{pm} you can’t think straight.
-
-
-NarratorSilent: You just keep running.
-
-
-NarratorSilent: And running...
-
-
-NarratorSilent: .{pl}.{pl}.
+NarratorSilent: And now look where you are.
 
 
 >clear
 
 
-NarratorSilent: You look around -{pm} the area is unfamiliar.
+NarratorSilent[Middle](left): You’re alone...
 
 
-NarratorSilent: How long were you running for?
+NarratorSilent[Middle](center): ...in the dark...
 
 
-NarratorSilent: You check your clock -{pm} 13:55.
+NarratorSilent[Middle](right): ...with Demons everywhere.
 
 
-NarratorSilent: You’re late.{pm} You have to get back.
+>clear
 
 
-NarratorSilent: But which way do you go?
+NarratorSilent: You check your clock -{pm} 13:37.
 
 
+NarratorSilent: Has it really only been 2 minutes?
+
+
+NarratorSilent: Did 15 minutes always feel this long?
+
+
+NarratorSilent: You quicken your pace as if to move faster through this eternity.
+
+
+NarratorSilent: Spotlight bouncing chaotically between the walls and floor.
+
+
+NarratorSilent: You go faster,{pm} and faster,{ps} and faster and faster and-
+
+
+>clear
 >stopbgm
 
 
+>playsfx,SFXCall
+NarratorSilent: *BEEP* *BEEP*
+
+
+NarratorSilent: Your alarm goes off -{pm} 13:50.
+
+
+NarratorSilent: You’re late.
+
+
 >playsfx,SFXRustle
-NarratorSilent: ...!
+NarratorSilent(right): ...!
 
 
-NarratorSilent: ...someone is in the room with you.
+NarratorSilent: ...and someone is in the room with you.
 
 
 NarratorSilent: You fall forward and manage to shine your light in the figure’s direction.
 
 
++vnplus
+
+
 >addchar,Niya,0,0,right
 
 
-Niya: ...!{pm} Ayin?[b]
+Niya: ...!{pm} Ayin?[a]
 
 
 Ayin(surprisedbad): N-Niya?
@@ -272,7 +292,7 @@ Ayin(ohfuck): H-How’re you,{pm} Niya?
 Narrator: Niya squints at you,{pm} and lets out a sigh.
 
 
-Niya: I’m fine[c].
+Niya: I’m fine[b].
 
 
 Niya: Anyways,{pm} are we going to do this?
@@ -284,7 +304,7 @@ Ayin(surprisedbad): W-What?
 >stopbgm
 
 
-Narrator: Niya pulls down their mask over their [d]face...
+Narrator: Niya pulls down their mask over their [c]face...
 
 
 Narrator: ...and takes out their weapon,{pm} a strange-looking Typocrypha,{pm} aiming it directly at you.
@@ -293,7 +313,6 @@ Narrator: ...and takes out their weapon,{pm} a strange-looking Typocrypha,{pm} a
 >endt
 
 
-[a]footstep sfx
-[b]have niya start out as masked - also need to add more details/dialog
-[c]add flavor that Niya was the one going around using magic to mislead AEIOU
-[d]need niya mask pose face
+[a]have niya start out as masked - also need to add more details/dialog
+[b]add flavor that Niya was the one going around using magic to mislead AEIOU
+[c]need niya mask pose face

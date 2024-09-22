@@ -65,7 +65,7 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
 
     public void InitializeEquippedWords()
     {
-        foreach (var kvp in PlayerDataManager.instance.equipment.EquippedSpellWords)
+        foreach (var kvp in PlayerDataManager.Equipment.EquippedSpellWords)
         {
             AddWord(kvp.Value);
         }

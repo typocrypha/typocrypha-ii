@@ -8,13 +8,13 @@ public class BadgeEffectAddSpellWord : BadgeEffect
 
     public override void Equip(Player player)
     {
-        PlayerDataManager.instance.equipment.EquipWord(word);
+        PlayerDataManager.Equipment.EquipWord(word);
         SpellCooldownManager.instance.AddWord(word, true);
     }
 
     public override void Unequip(Player player)
     {
-        PlayerDataManager.instance.equipment.UnequipWord(word);
+        PlayerDataManager.Equipment.UnequipWord(word);
         SpellCooldownManager.instance.RemoveWord(word);
     }
 }

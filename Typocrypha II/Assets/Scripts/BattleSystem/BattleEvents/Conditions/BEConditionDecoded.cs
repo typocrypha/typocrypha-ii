@@ -6,7 +6,7 @@ public class BEConditionDecoded : BattleEventCondition
 {
     [SerializeField] private string researchKey;
     private bool complete = false;
-    public override bool Check()
+    protected override bool CheckInternal()
     {
         return complete;
     }

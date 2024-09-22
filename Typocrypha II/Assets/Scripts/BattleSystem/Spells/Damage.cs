@@ -15,7 +15,7 @@ public static class Damage
         StandardHeal,
     }
 
-    public delegate CastResults Formula(DamageEffect effect, Caster caster, Caster target, SpecialModifier mod, RootCastData spellData);
+    public delegate CastResults Formula(DamageEffect effect, Caster caster, Caster target, DamageModifier mod, RootCastData spellData);
 
     public enum SpecialModifier
     {
@@ -24,20 +24,39 @@ public static class Damage
         CritBlock
     }
 
+    public class DamageModifier
+    {
+        public float damageMultiplier;
+        public float damageResistance;
+        public SpecialModifier specialModifier;
+
+        public DamageModifier() 
+        {
+            damageMultiplier = 1;
+            damageResistance = 1;
+        }
+        public DamageModifier(DamageModifier toCopy)
+        {
+            damageMultiplier = toCopy.damageMultiplier;
+            damageResistance = toCopy.damageResistance;
+            specialModifier = toCopy.specialModifier;
+        }
+    }
+
     public static Dictionary<FormulaType, Formula> PresetFormulae { get; } = new Dictionary<FormulaType, Formula>
     {
         { FormulaType.StandardDmg, StandardApplied },
         { FormulaType.StandardHeal, StandardHealApplied },
     };
 
-    private static CastResults StandardApplied(DamageEffect effect, Caster caster, Caster target, SpecialModifier mod, RootCastData spellData)
+    private static CastResults StandardApplied(DamageEffect effect, Caster caster, Caster target, DamageModifier mod, RootCastData spellData)
     {
         var results = Standard(effect, caster, target, mod, spellData);
         ApplyStandard(results, effect, caster, target, spellData);
         return results;
     }
 
-    private static CastResults StandardHealApplied(DamageEffect effect, Caster caster, Caster target, SpecialModifier mod, RootCastData spellData)
+    private static CastResults StandardHealApplied(DamageEffect effect, Caster caster, Caster target, DamageModifier mod, RootCastData spellData)
     {
         var results = StandardHeal(effect, caster, target, mod, spellData);
         ApplyStandard(results, effect, caster, target, spellData);
@@ -46,28 +65,29 @@ public static class Damage
 
     #region Calculation
 
-    public static CastResults Standard(DamageEffect effect, Caster caster, Caster target, SpecialModifier mod, RootCastData spellData)
+    public static CastResults Standard(DamageEffect effect, Caster caster, Caster target, DamageModifier mod, RootCastData spellData)
     {
         var results = new CastResults(caster, target, 1);
         StandardHitCheck(results, effect, caster, target);
         StandardAtkDef(results, effect, caster, target);
         StandardElements(results, effect, caster, target);
-        StandardSpecialMod(results, effect, caster, target, mod);
+        StandardSpecialMod(results, effect, caster, target, mod.specialModifier);
         StandardPower(results, effect, caster, target);
         ComputeStandardComboValue(results, spellData.Spell);
         ApplyStandardComboMod(results);
         StandardStunBonus(results, effect, caster, target);
+        StandardMultipliers(results, mod);
         return results;
     }
 
-    public static CastResults StandardHeal(DamageEffect effect, Caster caster, Caster target, SpecialModifier mod, RootCastData spellData)
+    public static CastResults StandardHeal(DamageEffect effect, Caster caster, Caster target, DamageModifier mod, RootCastData spellData)
     {
         var results = new CastResults(caster, target, 1)
         {
             Miss = effect.tags.Contains("AlwaysMiss"),
         };
         StandardElements(results, effect, caster, target);
-        StandardSpecialMod(results, effect, caster, target, mod);
+        StandardSpecialMod(results, effect, caster, target, mod.specialModifier);
         results.StaggerDamage = 0;
         StandardPower(results, effect, caster, target);
         ComputeStandardComboValue(results, spellData.Spell);
@@ -123,7 +143,7 @@ public static class Damage
 
     public static float StandardComboMod(float comboValue)
     {
-        return PlayerDataManager.instance.equipment.TryGetEquippedBadgeEffect<BadgeEffectMulticast>(out var multicastEffect) ?
+        return PlayerDataManager.Equipment.TryGetEquippedBadgeEffect<BadgeEffectMulticast>(out var multicastEffect) ?
             1 + (comboValue * multicastEffect.WordMultiplier) : 1;
     }
 
@@ -179,6 +199,12 @@ public static class Damage
     {
         if (target.Stunned && results.StaggerDamage > 0)
             results.Damage *= stunBonusDamageMod;
+    }
+
+    public static void StandardMultipliers(CastResults results, DamageModifier mod)
+    {
+        results.Damage *= mod.damageMultiplier;
+        results.Damage *= mod.damageResistance;
     }
 
     #region Standard Elements and Reactions
@@ -307,7 +333,7 @@ public static class Damage
         if (results.Effectiveness == Reaction.Repel)
         {
             effect.tags.Add("Reflected");
-            var newResults = effect.Cast(caster, caster, spellData, results.Mod);
+            var newResults = effect.Cast(caster, caster, spellData, new DamageModifier());
             caster.OnAfterHitResolved?.Invoke(effect, caster, caster, spellData, newResults);
             return true;
         }
@@ -357,7 +383,7 @@ public static class Damage
                         research.SetDecoded(target.ResearchKey);
                         if (word != null)
                         {
-                            PlayerDataManager.instance.equipment.UnlockWord(word, true);
+                            PlayerDataManager.Equipment.UnlockWord(word, true);
                         }
                     }
                     else

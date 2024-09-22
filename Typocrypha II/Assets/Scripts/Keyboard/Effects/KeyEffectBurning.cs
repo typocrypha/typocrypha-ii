@@ -17,6 +17,8 @@ namespace Typocrypha
 
         [SerializeField] private Image radialFill;
 
+        public override EffectType EffectID => EffectType.Burning;
+
         public override void OnStart()
         {
             base.OnStart();
@@ -28,7 +30,7 @@ namespace Typocrypha
             }
             // Start timer
             var modTime = time;
-            if(PlayerDataManager.instance.equipment.TryGetEquippedBadgeEffect<BadgeEffectBurningTimeMultiplier>(out var multiplier))
+            if(PlayerDataManager.Equipment.TryGetEquippedBadgeEffect<BadgeEffectBurningTimeMultiplier>(out var multiplier))
             {
                 modTime *= multiplier.Multiplier;
             }

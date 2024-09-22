@@ -6,7 +6,7 @@ using System.Linq;
 public class BEConditionAllStatus : BattleEventCondition
 {
     [SerializeField] private List<Caster.BattleStatus> statuses = new List<Caster.BattleStatus>();
-    public override bool Check()
+    protected override bool CheckInternal()
     {
         bool foundEnemy = false;
         foreach(var caster in Battlefield.instance.Casters)

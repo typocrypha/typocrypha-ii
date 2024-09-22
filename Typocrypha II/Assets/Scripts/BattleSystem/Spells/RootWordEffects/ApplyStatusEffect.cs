@@ -10,14 +10,14 @@ public class ApplyStatusEffect : RootWordEffect
     public override bool CanCrit => canCrit;
     protected StatusEffect Effect => statusEffectPrefab.GetComponent<StatusEffect>();
 
-    public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.SpecialModifier mod, RootCastResults prevResults = null)
+    public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.DamageModifier mod, RootCastResults prevResults = null)
     {
         var results = new CastResults(caster, target)
         {
-            Mod = mod,
+            Mod = mod.specialModifier,
         };
         Damage.StandardHitCheck(results, this, caster, target);
-        if(mod == Damage.SpecialModifier.CritBlock)
+        if(mod.specialModifier == Damage.SpecialModifier.CritBlock)
         {
             results.Miss = true;
             return results;

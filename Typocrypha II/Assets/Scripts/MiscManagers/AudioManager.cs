@@ -56,6 +56,8 @@ public class AudioManager : MonoBehaviour
     /// <param name="fadeCurve">Volume curve to fade in with.</param>
     public void PlayBGM(AudioClip clip, AnimationCurve fadeCurve = null)
     {
+        if (bgm[bgmInd].clip == clip && bgm[bgmInd].isPlaying)
+            return;
         bgm[bgmInd].clip = clip;
         bgm[bgmInd].loop = true;
         if (fadeCurve != null && fadeCurve.keys.Length > 0)

@@ -127,12 +127,13 @@ namespace Typocrypha
         /// Apply a key effect to this key.
         /// </summary>
         /// <param name="effectPrefab">Key effect prefab.</param>
-        public void ApplyEffect(GameObject effectPrefab, Caster caster)
+        public KeyEffect ApplyEffect(GameObject effectPrefab, Caster caster)
         {
             var effect = Instantiate(effectPrefab, keyEffectContainer).GetComponent<KeyEffect>();
             effect.transform.localPosition = Vector3.zero;
             effect.Register(this, letter, caster);
             effect.OnStart();
+            return effect;
         }
     }
 }

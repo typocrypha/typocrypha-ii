@@ -8,6 +8,7 @@ using UnityEngine;
 [RequireComponent(typeof(BattleEvent))]
 public abstract class BattleEventCondition : MonoBehaviour
 {
+    [SerializeField] private bool invert;
     protected BattleEvent battleEvent; // Battle event management code.
 
     protected void Awake()
@@ -45,7 +46,12 @@ public abstract class BattleEventCondition : MonoBehaviour
     /// Return whether condition has been satisfied.
     /// </summary>
     /// <returns>Whether condition has been satisfied or not.</returns>
-    public abstract bool Check();
+    public bool Check()
+    {
+        return invert ^ CheckInternal();
+    }
+
+    protected abstract bool CheckInternal();
 
     public virtual void ResetValues() { }
 }

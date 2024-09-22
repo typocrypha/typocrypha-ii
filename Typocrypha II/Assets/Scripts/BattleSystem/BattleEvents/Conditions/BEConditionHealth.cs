@@ -10,7 +10,7 @@ public class BEConditionHealth : BattleEventCondition
     public string targetName; // Name of caster whose health you want to check.
     public int threshold; // Health threshold to check.
 
-    public override bool Check()
+    protected override bool CheckInternal()
     {
         Caster targetCaster = null; // Caster whose health we're checking.
         foreach (var caster in Battlefield.instance.Casters)

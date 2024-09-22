@@ -1,0 +1,187 @@
+﻿//Wave 1: Mightier than the SWORD
+//Opening Dialog:
+>start,ACT-I-14-1-Opening
+
+
++bubble
+
+
+Tanuki[1,0]: More humans!?
+
+
+Tanuki[1,2]: Stop them!
+
+
+>addchar,Esaias,0,0,right,anxious
+Esaias[0,2]: The scream came from that direction...
+
+
+Esaias[0,2]: We need to defeat these Demons quickly.
+
+
+>end
+//Wave 2: Reunited
+//Opening Dialog:
+>start,ACT-I-14-2-Opening
+
+
++vnplus
+
+
+>addchar,Ayin,0,0,left,surprised
+>addchar,Esaias,0,0,left,anxious
+>addchar,Illyia,0,0,right,serious
+>addchar,Dahlia,0,0,injured,ouch
+
+
+Dahlia: Shit...
+
+
+Esaias: Dahlia!{pm} Are you OK?
+
+
+Dahlia: S-Saia?{pm} Gh-!
+
+
+Esaias: We need to fall back.
+
+
+Illyia(serious): No good -{pm} they have us surrounded!
+Ayin(nervous): E-Everyone,{pm} cover Dahlia!
+
+
+>end
+//Battle end:
+>start,ACT-I-14-2-End
+
+
++bubble
+
+
+>addchar,Illyia,0,0,right,base,serious
+Illyia[0,2]: Ha,{pm} those guys weren’t too strong.
+
+
+>addchar,Dahlia,0,0,right,stressed
+Dahlia[0,2]: N-No,{pm} it’s not just those small fry…
+
+
+>end
+//Round 3: Flaming Justice Bunbuku
+//Opening Dialog:
+>start,ACT-I-14-3-Opening
+
+
++bubble
+
+
+>crossfadebgm,BGMBattleRevolutionaryPrelude
+
+
+Bunbuku[1,1]: Hmph!{pm} Arrogant Humans!
+
+
+Bunbuku[1,1]: You think you’re hot stuff don’t ya?{pm} Beating on my soldiers like that!
+
+
+Bunbuku[1,1]: But we’re not done yet,{pm} right boys?
+
+
+Tanuki[1,0]: BUNBUKU!{pm} BUNBUKU!
+Tanuki[1,2]: BUNBUKU!{pm} BUNBUKU!
+
+
+Ayin[0,1]: W-What’s happening??
+
+
+Bunbuku[1,1]: HAHAHA!{pm} Prepare to meet{ps} {c,evil-eye}BURNING JUSTICE!{c}
+
+
+>crossfadebgm,BGMBattleRevolutionary
+>end
+//When Bunbuku enters spirit mode
+>start,ACT-I-14-3-BunbukuDefeated
+
+
++bubble
+>playbgm,BGMBattleRevolutionaryPrelude
+
+
+Bunbuku[1,1]: Kh-! Not bad, evildoers!
+
+
+Bunbuku[1,1]: But I won’t let you put out my fiery passion!
+
+
+???[0,1,0.75,0.5]: Bunbuku, wait!
+
+
+// Narrator: A voice calls out from behind Bunbuku.
+
+
+// Narrator: Accompanying the ambient heat, the humidity starts to rise as if you were in a sauna.
+
+
+// Narrator: You sense a dire fight approaching.
+
+
+>clear
+>castSpell,RUNALL,0,1,0,1
+
+
+>end
+//Round 4: Revolutionary Frog Ogama
+//Opening
+
+
+>start,ACT-I-14-4-Opening
+
+
++bubble
+
+
+// Bunbuku: Captain? What are you-
+
+
+Ogama[1,1]: You’re hurt, Bunbuku - step back.
+
+
+// Narrator: You watch in surprise as the fiery demon steps aside - could this be the true leader?
+
+
+Ogama[1,1]: Cursed humans... You have invaded our home and attacked our people.
+
+
+Ogama[1,1]: I, Ogama, Leader of the Tanuki Frog Revolution, can no longer watch as you hurt my compatriots like this!
+
+
+>stopbgm
+
+
+Ogama[1,1]: EN GARDE!
+>playbgm,BGMBattleRevolutionaryOgama
+>end
+//When Ogama enters spirit mode
+>start,ACT-I-14-4-OgamaDefeated
+
+
++bubble
+
+
+Ogama[1,1]: How are you so powerful??
+
+
+Ogama[1,1]: Those spells you’re using, it’s as if...
+
+
+Ogama[1,1]: ...
+
+
+Ogama[1,1]: Tanuki Frog Revolution, retreat!!
+
+
+>clear
+>castSpell,RUNALL,0,1,0,1
+
+
+>end
