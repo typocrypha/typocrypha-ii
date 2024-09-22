@@ -67,7 +67,7 @@ Clarke[0,1]: Casting a Spell causes it to go on {c,ui-terms}Cooldown{c}.
 Clarke[0,1]: Spells on Cooldown cannot be used.
 
 
-Clarke[0,1]: Casting a different Spell will reduce the Spell Cooldown by one(1).
+Clarke[0,1]: Casting a {c,ui-terms}different Spell{c} will {c,ui-terms}reduce the Spell Cooldown by one(1).{c}
 
 
 Clarke[0,1]: As such,{pm} cycling through different Spells is recommended to ensure efficient casting.
@@ -76,7 +76,7 @@ Clarke[0,1]: As such,{pm} cycling through different Spells is recommended to ens
 Clarke[0,1]: Please refer to the {c,ui-terms}Spell List{c} in the bottom left of your HUD for available Spells.
 
 
-Clarke[0,1]: Now,{pm} please type in basic combat Spell {ps}{c,ui-terms}”LANCE”{c}{ps} and press ENTER.
+Clarke[0,1]: Now,{pm} please type in basic combat Spell {ps}{c,ui-terms}”LANCE”{c}{ps} and press {c,ui-terms}ENTER{c}.
 
 
 >end
@@ -125,10 +125,13 @@ Clarke[0,1]: Demon has entered its {c,ui-terms}Spirit Form{c}.
 Ayin[0,1]: Spirit Form?{pm} D-Do I need to keep fighting it?
 
 
-Adelai(normal)[0,2]: Don’t worry,{ps} Ayin!{pm} Those Spirit balls are basically harmless.
+Adelai(serious)[0,2]: Don’t bother,{ps} Ayin!{pm} Those spirit balls are nearly impossible to destroy.
 
 
-Adelai[0,2]: They’ll run off on their own soon.
+Adelai(interested)[0,2]: It’s the only way to truly kill a Demon,{pm} but thankfully they’re harmless.
+
+
+Adelai[0,2]: It’ll run away soon.
 
 
 >end
@@ -194,7 +197,7 @@ Clarke[0,1]: Demon has been defeated.
 Adelai[0,2]: Good work,{ps} Ayin!
 
 
-Adelai[0,2]: Now retarget and finish off the other one!
+Adelai[0,2]: Now press {c,ui-terms}TAB{c} to retarget and finish off the other one!
 
 
 Adelai[0,2]: You can also manually move the reticle with the {c,ui-terms}ARROW KEYS{c}.
@@ -253,7 +256,7 @@ Clarke[0,1]: Unlocking high-power combat Spell {ps}{c,ui-terms}“HAMMER”{c}.{
 >addSpells,SWORD,LANCE,HAMMER
 
 
-Ayin[0,1]: Woah!{pm} What does HAMMER do?
+Ayin[0,1]: Woah!{pm} What does {c,ui-terms}HAMMER{c} do?
 
 
 Adelai(serious)[0,2]: No time to explain!{pm} Just keep typing!!
@@ -265,26 +268,19 @@ Adelai(serious)[0,2]: No time to explain!{pm} Just keep typing!!
 >start,ACT I-4-4-Opening
 
 
-+vnplus
-
-
->addchar,Ayin,0,0,left
->addchar,Adelai,0,0,right
-
-
-Adelai(bffs4ever): See,{pm} you’re doing fine!
-
-
-Adelai(normal): You should also start looking out for opportunities to {c,ui-terms}Counter{c} enemy Spells!
-
-
-Ayin(surprised): {c,ui-terms}Counter{c}?
-
-
 +bubble
 
 
 >addchar,Adelai,0,0,right
+
+
+Adelai[0,2](bffs4ever): See,{pm} you’re doing fine!
+
+
+Adelai[0,2](normal): You should also start looking out for opportunities to {c,ui-terms}Counter{c} enemy Spells!
+
+
+Ayin[0,1]: {c,ui-terms}Counter{c}?
 
 
 Adelai(normal)[0,2]: Whenever you see an enemy casting a {c,ui-terms}Spell{c} that you also have,{pm} try hitting them with it!
@@ -348,24 +344,27 @@ Adelai[0,2]: They’ll start swarming us out of desperation,{pm} so just keep ta
 >end
 //After end of battle:
 >start,ACT I-4-5-End
-+vnplus
 
 
->addchar,Ayin,0,0,left
++bubble
+
+
 >addchar,Adelai,0,0,right
+
+
 >playbgm,BGMVictory
 
 
-Adelai(serious): Alright,{pm} there’s an opening!
+Adelai[0,2]: Alright,{pm} there’s an opening!
 
 
-Adelai: C’mon,{pm} Ayin!
+Adelai[0,2]: C’mon,{pm} Ayin!
 
 
-Ayin(ohfuck): *gasp*{pm} *gasp*{pm} Y-yeah.{pm} Just give me a sec...
+Ayin[0,1]: *gasp*{pm} *gasp*{pm} Y-yeah.{pm} Just give me a sec...
 
 
-Adelai: Hurry up!
+Adelai[0,2]: Hurry up!
 
 
 >stopbgm,ease,3
