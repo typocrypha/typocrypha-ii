@@ -62,7 +62,7 @@ public class BackgroundElementAnimator : MonoBehaviour
 
             case AnimationType.Rotation:
 
-                Vector3 rotation = new Vector3(0f, 0f, Mathf.Deg2Rad * anim.targetRotation);
+                Vector3 rotation = new Vector3(0f, 0f, anim.targetRotation);
                 if (!anim.useCustomCurve)
                 {
                     anim.transformToAnimate.DOBlendableLocalRotateBy(rotation, anim.animationSpeed, RotateMode.LocalAxisAdd)
@@ -72,7 +72,7 @@ public class BackgroundElementAnimator : MonoBehaviour
                 }
                 else
                 {
-                    anim.transformToAnimate.DOBlendableRotateBy(rotation, anim.animationSpeed, RotateMode.LocalAxisAdd)
+                    anim.transformToAnimate.DOBlendableLocalRotateBy(rotation, anim.animationSpeed, RotateMode.LocalAxisAdd)
                         .SetEase(anim.customCurve)
                         .SetLoops(-1, anim.loopBehavior)
                         .SetDelay(anim.animationStartOffset);
