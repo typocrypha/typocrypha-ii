@@ -6,7 +6,7 @@
 +bubble
 
 
-Tanuki[1,0]: More humans!?
+Tanuki[1,0]: More Humans!?
 
 
 Tanuki[1,2]: Stop them!
@@ -19,38 +19,28 @@ Tanuki[1,2]: In the name of the {c,ui-terms}Tanuki Frog Revolution!{c}
 Esaias[0,2]: Dahlia’s scream came from that direction...
 
 
-Esaias[0,2](normal): We need to defeat these Demons quickly!
+Esaias[0,2](normal): We need to get past these Demons quickly!
 
 
 >end
-//Wave 2: Reunited
+//Wave 2: Break Through!
 //Opening Dialog:
 >start,ACT-I-14-2-Opening
 
 
-+vnplus
++bubble
 
 
->addchar,Ayin,0,0,left,surprised
 >addchar,Esaias,0,0,left,anxious
->addchar,Illyia,0,0,right,serious
->addchar,Dahlia,0,0,right,injured,determined
 
 
-Dahlia: Shit...
+Esaias[0,2]: We must keep going.{pm} Hurry!
 
 
-Esaias: Dahlia!{pm} Are you OK?
+Ayin[0,1]: W-Wait up Esaias...
 
 
-Dahlia(ouch): Gh-!{pm} S-Saia?{pm}
-
-
-Esaias(normal): Dahlia is injured!{pm} We need to fall back-
-
-
-Illyia(serious): No good -{pm} they have us surrounded!
-Ayin(nervous): E-Everyone,{pm} cover Dahlia!
+Kitsune[1,1]: Stop those Humans before they reach {c,ui-terms}our Leader!{c}
 
 
 >end
@@ -58,19 +48,51 @@ Ayin(nervous): E-Everyone,{pm} cover Dahlia!
 >start,ACT-I-14-2-End
 
 
-+bubble
++vnplus
 
 
->addchar,Illyia,0,0,right,base,normal
->stopbgm,linear,4
-Illyia[0,2]: Ha,{pm} those guys weren’t too strong.
+>addchar,Ayin,0,0,left,surprised
+>addchar,Esaias,0,0,left,anxious
+>addchar,Illyia,0,0,left,serious
+
+
+Ayin: There she is!
 
 
 >addchar,Dahlia,0,0,right,injured,determined
-Dahlia[0,2]: N-No,{pm} those were just the small fry.
 
 
-Dahlia[0,2]: The one who got me was {c,ui-terms}their Leader{c}...
+Esaias(normal): Dahlia!
+
+
+Dahlia: S-Saia?{pm} How did you-
+
+
+>setexpr,Ayin,nervous
+
+
+Dahlia(ouch): Gh-!
+
+
+Esaias(anxious): Dahlia’s hurt,{pm} we need to fall back!
+
+
+Illyia(serious): No good!{pm} We’re surrounded!
+
+
+Illyia[action](yell): We’ll have to fight our way out!
+
+
+Ayin(surprisedbad):Everyone,{pm} cover Dahlia!
+
+
+Dahlia(determined): Be...{pm}careful...!
+
+
+Dahlia: The one who did this to me...{pm}they’re-
+
+
+>stopbgm
 
 
 >end
@@ -88,7 +110,26 @@ Dahlia[0,2]: The one who got me was {c,ui-terms}their Leader{c}...
 Bunbuku[1,1]: Hmph!{pm} You Humans think you’re hot stuff don’t ya?{pm} Beating on my friends like that!
 
 
-Bunbuku[1,1]: But we’re not done yet,{pm} right everyone?
+>addchar,Illyia,0,0,right,action,yell
+
+
+Illyia[0,2]: What?{pm} You {c,evil-eye}evil Demons{c} are the ones who struck first!
+
+
+Bunbuku[1,1]: ...evil?
+
+
+Bunbuku[1,1]: Hmhmhm...
+
+
+>playsfx,SFXFlash
+Bunbuku[1,1]: HAAAHAHAHAHA!![a]
+
+
+Bunbuku[1,1]: If you’re looking for evil,{pm} I suggest you look in a mirror!
+
+
+Bunbuku[1,1]: Everyone!{pm} Who here is truly on the side of Justice?
 
 
 Tanuki[1,0]: BUNBUKU!{pm} BUNBUKU!
@@ -98,7 +139,7 @@ Tanuki[1,2]: BUNBUKU!{pm} BUNBUKU!
 Bunbuku[1,1]: HAHAHA!{pm} That’s right!
 
 
-Bunbuku[1,1]: Prepare to meet{ps} {c,evil-eye}BURNING JUSTICE!{c}
+Bunbuku[1,1]: Evildoers,{pm} prepare to feel the heat of my{ps} {c,evil-eye}BURNING JUSTICE!{c}
 
 
 >crossfadebgm,BGMBattleRevolutionary
@@ -107,7 +148,7 @@ Bunbuku[1,1]: Prepare to meet{ps} {c,evil-eye}BURNING JUSTICE!{c}
 >end
 
 
-//When first player spell cast[a]
+//When first player spell cast[b]
 >start,ACT-I-14-3-FirstCast
 
 
@@ -124,10 +165,10 @@ Clarke[0,1]: That Demon seems to be exerting a powerful influence on the battlef
 Clarke[0,1]: This Demon’s {c,ui-terms}Rule{c} is making all of your {c,ui-terms}Cooldowns longer!{c}
 
 
-Clarke[0,1]: If {c,ui-terms}all of your Spells end up on Cooldown at the same time{c},{pm} you’ll need to {c,ui-terms}manually{c} discharge your Typocrypha.[b]
+Clarke[0,1]: If all of your Spells end up on {c,ui-terms}Cooldown at the same time{c},{pm} you’ll need to {c,ui-terms}manually{c} discharge your Typocrypha.[c]
 
 
-Clarke[0,1]: When that happens,{pm} {c,ui-terms}type in the Overheat prompt on your Spell List UI{c} to restore your Spells.
+Clarke[0,1]: When that happens,{pm} type in the {c,ui-terms}Overheat prompt{c} on your Spell List to restore your Spells.
 
 
 >end
@@ -141,10 +182,10 @@ Clarke[0,1]: When that happens,{pm} {c,ui-terms}type in the Overheat prompt on y
 Bunbuku[1,1]: Kh-!{pm} Not bad,{ps} evildoers!
 
 
-Bunbuku[1,1]: But you won’t be able to beat {c,ui-terms}our Leader!{c}
+Bunbuku[1,1]: You may have bested me,{pm} but you won’t be able to beat {c,ui-terms}our Leader!{c}
 
 
-Ayin[0,1]: Wait,{pm} THAT wasn’t the leader!?
+Ayin[0,1]: Wait,{pm} THAT wasn’t their Leader!?
 
 
 >clear
@@ -162,30 +203,48 @@ Ayin[0,1]: Wait,{pm} THAT wasn’t the leader!?
 +bubble
 
 
-Ogama[1,1]: Bunbuku,{pm} fall back!
+Ogama[1,1]: Uh,{ps} Um!
 
 
-Ogama[1,1]: I,{ps} {c,ui-terms}Ogama,{pm} Leader of the Tanuki Frog Revolution,{pm}{c} will handle it from here!
+Ogama[1,1]: E-E-E-Evildoers!{pm} I will,{ps} uh.....
 
 
-Ogama[1,1]: EN GARDE!
+Ogama[1,1]: {c,whisper}(Oh Bunbuku,{pm} why’d you introduce me like that!?){c}
+
+
+Ogama[1,1]: {c,whisper}(You’re the one who should really be the Leader!){c}
+
+
+Ogama[1,1]: {c,whisper}(I’m so scared,{pm} but...{pm}I’ll try my best!){c}
+
+
+Ogama[1,1]: H-Humans!{pm} Your reign of terror ends here!
+
+
+Ogama[1,1]: Together with my friends,{pm} we will stop you!
+
+
+Ogama[1,1]: Go,{pm} {c,evil-eye}FRIENDSHIP FROG!!!{c}
+
+
+Ogama[1,1]: {c,whisper}(...nailed it!){c}
 
 
 >end
-//When Ogama is at 50% health
+//When Ogama is at 50% health[d]
 >start,ACT-I-14-4-OgamaWeak
 
 
 +bubble
 
 
-Ogama[1,1]: You Humans have invaded our home and attacked our people.
+Ogama[1,1]: {c,whisper}(Maybe I’ll try out that Spell the Winter Nymphs taught me...){c}
 
 
-Ogama[1,1]: You’ve taken away so much...
+Ogama[1,1]: Uh,{ps} it was....{ps}oh right!
 
 
-Ogama[1,1]: ...but with the help of my friends,{pm} that ends now!
+Ogama[1,1]: You need to take a ch-chill pill!{pm} {c,evil-eye}FLASHFREEZE!!{c}
 
 
 >end
@@ -196,10 +255,26 @@ Ogama[1,1]: ...but with the help of my friends,{pm} that ends now!
 +bubble
 
 
-Ogama[1,1]: ...we’ve failed...
+>stopbgm
+
+
+
+
+
+
+Ogama[1,1]: ...I failed to protect my friends...
+
+
+Ogama[1,1]: I’m sorry,{ps} Bunbuku...
+
+
+Ayin[0,1]: ...
 
 
 Ogama[1,1]: Tanuki Frog Revolution,{pm} retreat!
+
+
+Ogama[1,1]: {c,whisper}(I hope Miss Mari will be able to stop them...){c}
 
 
 >clear
@@ -207,5 +282,7 @@ Ogama[1,1]: Tanuki Frog Revolution,{pm} retreat!
 
 
 >end
-[a]should probably be after rule is enacted/rule ui effect
-[b]added temp overheat tutorial - should normally happen dynamically when it occurs
+[a]nice to have - have bunbuku move/have short animations
+[b]should probably be after rule is enacted/rule ui effect
+[c]added temp overheat tutorial - should normally happen dynamically when it occurs
+[d]have trigger when flashfreeze used
