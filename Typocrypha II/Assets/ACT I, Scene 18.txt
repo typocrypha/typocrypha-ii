@@ -1,0 +1,203 @@
+﻿//Round 1: Hold The Line!
+//Opening Dialog:
+>start,ACT-I-18-1-Opening
+
+
++bubble
+
+
+>addchar,Illyia,0,0,right,concerned
+Illyia[0,2]: ...OK,{ps} this is actually a lot of Demons.
+
+
+>addchar,Dahlia,0,0,right,action,yell
+Dahlia[0,2]: Everyone stay close!{pm} We can do this!
+
+
+>end
+//Ayin gets to low health for the first time (<30%):
+>start,ACT-I-18-1-AyinWeak
++bubble
+
+
+>addchar,Dahlia,0,0,right,action,yell
+
+
+Dahlia[0,2]: {c,ui-terms}SUTURE{c}!
+
+
+>clear
+
+
+>castSpellName,SUTURE,1,1,Dahlia[a]
+
+
+Ayin[0,1]: Thanks,{ps} Dahlia!
+
+
+Dahlia[0,2]: Don’t thank me just yet:{pm} {c,ui-terms}SUTURE{c} has a ridiculously long cooldown. 
+
+
+Dahlia[0,2]: Try not to get too beaten up!
+
+
+>end
+//After getting halfway (30 seconds):
+
+
+>start,ACT-I-18-1-Halfway
+>setAlly,AllyIllyiaActI-18,Illyia,false,action,yell
+
+
++bubble
+>addchar,Illyia,0,0,right,action,yell
+
+
+Illyia[0,2]: Out of the way!!!
+
+
+// Spell being cast is placeholder
+>clear
+>castSpellAlly,PERISH,0,1,Illyia goes wild!
+
+
+Illyia[0,2](base,laughing): Phew!{pm} You OK,{ps} Leader?
+
+
+Ayin[0,1]: Yeah!{pm} Thanks,{ps} Illyia!
+
+
+>end
+//After reaching end (60 seconds):
+>start,ACT-I-18-1-End
++bubble
+
+
+>addchar,Esaias,0,0,right,base,normal
+Esaias[0,1]: Demon presence is diminishing…
+
+
+>addchar,Illyia,0,0,right,action,yell
+Illyia[0,1]: Finish the rest!
+
+
+>clearReinforcements
+
+
+>end
+//Round V: Victory!
+//Opening Dialog:
+>start,ACT-I-18-V-Opening
++bubble
+
+
+>addchar,Esaias,0,0,right,base,normal
+Esaias[0,2]: The attack team is almost here!
+
+
+>addchar,Dahlia,0,0,right,base,normal
+Dahlia[0,2]: We survived...!
+
+
+>addchar,Illyia,0,0,right,base,laughing
+Illyia[0,2]: Fuck yeah!{pm} We did it!
+
+
+>stopbgm
+>playsfx,SFXEvilLaugh[b]
+Mari[1,1]: [scroll-delay,0.15]OoooOOoOoohh...
+
+
+Ayin[0,1]: Wh-What was that?
+
+
+>end[c]
+
+
+//Eye of the Storm
+//Opening Dialog:
+>start,ACT-I-18-2-Opening
++bubble
+>playbgm,BGMCurseIntro
+
+
+Mari[1,1]: OooOoohhh,{pm} oooOOOohhhhh...
+
+
+Mari[1,1]: Cursed humans...{pm} Are you blind to the destruction you have caused?
+
+
+Mari[1,1]: Leave this sacred ground... 
+
+
+Mari[1,1]: NOW!
+
+
+>addchar,Dahlia,0,0,right,stressed
+Dahlia[0,2]: It’s...{pm} Another demon?
+
+
+>addchar,Illyia,0,0,right,serious
+Illyia[0,2]: What,{ps} just one more?{pm} I’ll take care of it!
+
+
+>clear
+>castSpell,SWORD,0,1,1,2,Illyia casts SWORD
+
+
+Mari[1,1]: Annoying Human...
+
+
+>clear
+>castSpell,HAMMER,1,2,0,1,Mari casts CYCLONE
+
+
+>setpose,Illyia,injuredscuffed
+>setexpr,Illyia,woundedanimal
+Illyia[0,2]: -ACK!
+
+
+Ayin[0,1]: Illyia!!
+
+
+>addchar,Esaias,0,0,right,normal
+Esaias[0,2]: W-what...!
+
+
+>clear
+>castSpell,LANCE,1,2,0,1,Mari casts ICICLE
+
+
+>setexpr,Esaias,anxious
+Esaias[0,2]: -GAAH!
+
+
+>addchar,Dahlia,0,0,right,stressed
+Dahlia[0,2]: Esaias!!{pm} I’m coming!
+>removechar,dahlia
+
+
+>stopbgm,linear,1.5
+
+
+Mari[1,1]: Demons and Humans... 
+
+
+Mari[1,1]: We may never return to how we once were...
+
+
+Mari[1,1]: I,{pm} Mari Urraca,{ps} Pillar of Obscurai,{pm} shall ensure the spread of your corruption stops here and now!
+>clear
+
+
+>castSpell,HEAL,0,1,0,1,Mari traps Ayin in a TYPHOON[d]! 
+
+
+>playbgm,BGMBattleEvilEye
+
+
+>end
+[a]to fix
+[b]maybe have more of a moaning sfx?
+[c]need to auto transition to next wave
+[d]to have allies leave
