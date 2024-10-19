@@ -48,11 +48,12 @@ public class AllyBattleBoxManager : MonoBehaviour
     public void SetCharacterInstant(CharacterData data, string initialExpr = "", string initialPose = "")
     {
         CurrentChar.Data = data;
-        CurrentChar.NameText = data?.mainAlias ?? "No Ally";
         if(data == null)
         {
+            CurrentChar.NameText = "No Ally";
             return;
         }
+        CurrentChar.NameText = data.mainAlias;
         if (!string.IsNullOrEmpty(initialPose))
         {
             CurrentChar.SetPose(initialPose);

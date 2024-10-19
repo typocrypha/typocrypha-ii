@@ -87,6 +87,7 @@ public class DialogScriptParser
         {"castSpellName", typeof(CastSpellNode) },
         {"castSpellAlly", typeof(CastSpellNode) },
         {"setAlly", typeof(SetAllyNode) },
+        {"clearAlly", typeof(SetAllyNode) },
         {"clear", typeof(ClearNode) },
         {"clearReinforcements", typeof(ClearReinforcementsNode) },
         {"clearSpells", typeof(ClearEquippedSpellsNode) },
@@ -612,17 +613,25 @@ public class DialogScriptParser
         else if (nodeType == typeof(SetAllyNode))
         {
             var setAllyNode = CreateNode(canvas, SetAllyNode.ID) as SetAllyNode;
-            allyBundle.prefabs.TryGetValue(args[1], out setAllyNode.prefab);
-            setAllyNode.allyData = GetCharacterData(args[2]);
-            setAllyNode.show = args[3] == "true";
-            if (args.Length == 5)
+            if(args[0] == "clearAlly")
             {
-                setAllyNode.expr = args[4];
+                setAllyNode.allyData = null;
+                setAllyNode.show = args[1] == "true";
             }
-            else if (args.Length >= 6)
+            else
             {
-                setAllyNode.pose = args[4];
-                setAllyNode.expr = args[5];
+                allyBundle.prefabs.TryGetValue(args[1], out setAllyNode.prefab);
+                setAllyNode.allyData = GetCharacterData(args[2]);
+                setAllyNode.show = args[3] == "true";
+                if (args.Length == 5)
+                {
+                    setAllyNode.expr = args[4];
+                }
+                else if (args.Length >= 6)
+                {
+                    setAllyNode.pose = args[4];
+                    setAllyNode.expr = args[5];
+                }
             }
             nodes.Add(setAllyNode);
         }
