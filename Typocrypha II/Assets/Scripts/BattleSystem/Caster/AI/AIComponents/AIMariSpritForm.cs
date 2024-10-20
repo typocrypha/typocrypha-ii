@@ -18,6 +18,11 @@ public class AIMariSpritForm : AIComponent
 
     private string[] wordList = new[]
     {
+        "Revenge",
+        "Birthright",
+        "Obscurian",
+        "Hurricane",
+        "Howling",
         "Pain",
         "Sorrow",
         "Suffering",
@@ -31,9 +36,7 @@ public class AIMariSpritForm : AIComponent
         "To die",
         "Murder",
         "Unfair",
-        "Revenge",
         "Avenge",
-        "Birthright",
         "Ayin",
         "Obscurian",
         "Land",
@@ -53,7 +56,6 @@ public class AIMariSpritForm : AIComponent
         "Terror",
         "Dark",
         "Freezing",
-        "Howling",
         "Screaming",
         "Goodbye",
         "Resolve",
