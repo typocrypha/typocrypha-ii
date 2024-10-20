@@ -16,6 +16,50 @@ public class AIMariSpritForm : AIComponent
         caster.OnSpiritMode -= OnSpiritForm;
     }
 
+    private string[] wordList = new[]
+    {
+        "Pain",
+        "Sorrow",
+        "Suffering",
+        "Hatred",
+        "Agartha",
+        "Soldier",
+        "Evil",
+        "Eye",
+        "I miss her",
+        "I don't want",
+        "To die",
+        "Murder",
+        "Unfair",
+        "Revenge",
+        "Avenge",
+        "Birthright",
+        "Ayin",
+        "Obscurian",
+        "Land",
+        "Agartha",
+        "Evil",
+        "Eye",
+        "Save Me",
+        "Hurt",
+        "Hurricane",
+        "Torrential",
+        "Protector",
+        "Defender",
+        "Guardian",
+        "Storm",
+        "Evil",
+        "Eye",
+        "Terror",
+        "Dark",
+        "Freezing",
+        "Howling",
+        "Screaming",
+        "Goodbye",
+        "Resolve",
+        "Determination",
+    };
+
     private void OnSpiritForm()
     {
         Battlefield.instance.PH.Pause(PauseSources.Misc);
@@ -25,7 +69,7 @@ public class AIMariSpritForm : AIComponent
         for (int i = 0; i < numWords; i++)
         {
             var word = Instantiate(wordPrefab, caster.transform).GetComponent<WordRotator>();
-            word.Play("Testing");
+            word.Play(wordList[i % wordList.Length]);
         }
     }
 }
