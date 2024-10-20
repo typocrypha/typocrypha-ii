@@ -73,7 +73,7 @@ Clarke[0,1]: Casting a {c,ui-terms}different Spell{c} will {c,ui-terms}reduce th
 Clarke[0,1]: As such,{pm} {c,ui-terms}cycling through different Spells{c} is recommended to ensure efficient casting.
 
 
-Clarke[0,1]: Please refer to the {c,ui-terms}Spell List{c} in the bottom left of your HUD for available Spells.
+Clarke[0,1]: Please refer to the {c,ui-terms}Spell List{c} in the {c,ui-terms}bottom left{c} of your HUD for available Spells.
 
 
 Clarke[0,1]: Now,{pm} please type in basic combat Spell {ps}{c,ui-terms}”LANCE”{c}{ps} and press {c,ui-terms}ENTER{c}.
@@ -361,13 +361,13 @@ Adelai[0,2]: Alright,{pm} there’s an opening!
 Adelai[0,2]: C’mon,{pm} Ayin!
 
 
+>stopbgm,ease,2
+
+
 Ayin[0,1]: *gasp*{pm} *gasp*{pm} Y-yeah.{pm} Just give me a sec...
 
 
 Adelai[0,2]: Hurry up!
-
-
->stopbgm,ease,3
 
 
 >end
@@ -380,26 +380,162 @@ Adelai[0,2]: Hurry up!
 
 +bubble
 >addchar,Adelai,0,0,right
+>playbgm,BGMCurseIntro
 
 
-???[1,1]: Cursed Humans...
+Adrestia[1,1]: Cursed Humans,{ps} was this your doing!?
 
 
-???[1,1]: You will pay for what you have done!
+Adelai[0,2]: Wha-!?
 
 
-Adelai[0,2]: !?
+>castSpell,SWORD,1,2,0,1,The Demon Attacks Adelai![b]
 
 
-Adelai[0,2]: This Demon seems different from the others,{pm} Ayin!
+Adelai[0,2](frustrated):[c] AAAAH!
 
 
-Adelai[0,2]: Stay close!
+>removechar,Adelai
+>clearAlly,false
+
+
+Ayin[0,1]: A-Adelai!!
+
+
+Adrestia[1,1]: I feel the pain and suffering of my people...
+
+
+Adrestia[1,1]: ...and that pain shall become my blade!
+
+
+>stopbgm,immediate
+
+
+Adrestia[1,1]: Face my VENGEANCE!
+
+
+>playbgm,BGMBattleAdrestiaDraft1
 
 
 >end
 
 
+//When Ayin at 50% health[d]:
+>start,ACT I-4-6-AyinLow
 
 
++bubble
+
+
+Adrestia[1,1]: This is the END!
+
+
+Ayin[0,1]: Haa...{pm} Haa...
+
+
+Ayin[0,1]: St-Stay back!
+
+
+>addchar,Adelai,0,0,left,base,frustrated[e]
+
+
+Adelai[0,2]: Ugh...
+
+
+Ayin[0,1]: Adelai!{pm} Are you OK?
+
+
+Adelai(frustrateddistant)[0,2]: A-Ayin?{pm} You need to...{pm}run...
+
+
+Ayin[0,1]: N-No,{pm} Adelai I-I-I can’t!
+
+
+Ayin[0,1]: I can’t just leave you...
+
+
+Adelai[0,2]: .{pl}.{pl}.
+
+
+Ayin[0,1]:{c,whisper}(It’s over...{pm} I’m not strong enough...){c}
+
+
+Ayin[0,1]:{c,whisper}(I’m sorry Adelai...){c}
+
+
+>stopbgm,immediate
+
+
+>setAlly,AllyIllyiaActI-18[f],Kaia,true,base,commanding
+
+
+>castSpell,RAILGUN,0,1,1,2,A sudden blast strikes the Demon!
+
+
+Adrestia[1,1]: Kh-!{pm} More Humans!?
+
+
+>playbgm,BGMMilitary
+
+
+Kaia[0,2]: Stand back citizens!
+
+
+Kaia[0,2](confident): AEIOU will handle it from-
+
+
+Kaia[0,2](commanding): Wait,{pm} Adelai!?
+
+
+>addchar,Adelai,0,0,left,base,serious
+
+
+Adelai[0,2](serious): G-General Kaia!
+
+
+>addchar,Kaia,0,0,left,base,normal
+
+
+Kaia[0,2](normal): Fall back,{pm} Adelai.{pm} You’re wounded.
+
+
+Kaia[0,2](confident): We’ll take it from here.
+
+
+>addchar,Adelai,0,0,left,base,serious
+
+
+Adelai[0,2](serious): ...yes ma’am.
+
+
+Ayin[0,1]: C’mon Adelai.{pm} I-I’ll help you...
+
+
+>addchar,Kaia,0,0,left,base,normal
+
+
+Kaia[0,2](normal): As for you,{pm} Demon.
+
+
+Kaia[0,2]: Our agents have surrounded your Demon forces. 
+
+
+Kaia[0,2](confident): Your scheme has failed!
+
+
+Adrestia[1,1]: Our...{pm}scheme!?
+
+
+Adrestia[1,1]: Grr...
+
+
+>castSpell,RUN,1,2,0,1,The Demon Retreats!
+
+
+>end
 [a]static prompt
+[b]BUG: says 'notarget'
+[c]need scuffed adelai sprite
+[d]temp event - pending full adrestria battle design
+[e]pending adelai scuffed sprite
+[f]need to create kaia caster ally prefab
