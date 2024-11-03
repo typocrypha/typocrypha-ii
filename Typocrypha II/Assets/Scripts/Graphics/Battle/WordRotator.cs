@@ -3,18 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class WordRotator : MonoBehaviour
+public class WordRotator : MonoBehaviour, IInputHandler
 {
     private const float dimAmount = 0.3f;
     private static readonly Color dimColor = new Color(dimAmount, dimAmount, dimAmount, 0);
     [SerializeField] private TMPro.TextMeshPro text;
+    [SerializeField] private FXText.TMProColor colorEffect;
+    [SerializeField] private FXText.TMProShake shakeEffect;
+    [SerializeField] private AudioClip successClip;
+    [SerializeField] private AudioClip failClip;
 
     private float goal = 3;
     private float time = 0.6f;
     private Color brightColor;
     private bool skipColor = false;
+    private bool pendingFocus = false;
+    private float focusTime = 2f;
 
-    public bool Pending = false;
+    public PauseHandle PH { get; } => new PauseHandle();
 
     public void Play(string word)
     {
@@ -32,13 +38,13 @@ public class WordRotator : MonoBehaviour
 
     public void MoveRight()
     {
-        if (Pending)
+        if (pendingFocus)
         {
             text.renderer.sortingOrder = 2;
             float centerTime = 0.5f;
-            transform.DOMove(new Vector2(0, 1), centerTime).SetEase(Ease.InOutCubic);
+            transform.DOMove(new Vector2(0, 1) + (new Vector2(2.5f, 0.5f) * Random.insideUnitCircle), centerTime).SetEase(Ease.InOutCubic);
             transform.DOScale(new Vector2(2, 2), centerTime).SetEase(Ease.InOutCubic);
-            text.DOColor(new Color(1, 0.6666667f, 0, 1), centerTime).OnComplete(HideAfterTime);
+            text.DOColor(new Color(1, 0.6666667f, 0, 1), centerTime).OnComplete(OnFocused);
         }
         else
         {
@@ -47,14 +53,49 @@ public class WordRotator : MonoBehaviour
         }
     }
 
-    private void HideAfterTime()
+    public void FocusPending(float timePerLetter)
     {
-        StartCoroutine(HideAfterTimeCR());
+        pendingFocus = true;
+        focusTime = text.text.Length * timePerLetter;
     }
 
-    private IEnumerator HideAfterTimeCR()
+    private void OnFocused()
     {
-        yield return new WaitForSeconds(1.5f);
+        StartCoroutine(FocusedCR(focusTime));
+    }
+
+    private IEnumerator FocusedCR(float timeAllowed)
+    {
+        colorEffect.enabled = true;
+        shakeEffect.enabled = true;
+        InputManager.Instance.StartInput(this);
+        var pause = Typocrypha.Keyboard.instance.PH.UnpauseOverride();
+        float time = 0;
+        var endOfFrameYielder = new WaitForEndOfFrame();
+        bool success = false;
+        while (time < timeAllowed)
+        {
+            if(index >= text.text.Length)
+            {
+                success = true;
+                break;
+            }
+            yield return endOfFrameYielder;
+            time += Time.deltaTime / Settings.GameplaySpeed;
+        }
+        shakeEffect.done = true;
+        InputManager.Instance.CompleteInput();
+        Typocrypha.Keyboard.instance.PH.Pause(pause);
+        if (success)
+        {
+            AudioManager.instance.PlaySFX(successClip);
+        }
+        else
+        {
+            AudioManager.instance.PlaySFX(failClip);
+            Battlefield.instance.Player.Damage(10);
+        }
+        colorEffect.done = true;
         gameObject.SetActive(false);
     }
 
@@ -79,4 +120,37 @@ public class WordRotator : MonoBehaviour
         time *= Random.Range(0.95f, 1.05f);
         StartCoroutine(RunAnimation(Random.Range(0.1f, (time * 4) + 0.1f)));
     }
+
+    public void Focus() { }
+
+    public void Unfocus() { }
+
+    private int index;
+    public bool? CheckInput(char inputChar)
+    {
+        if(char.ToLower(inputChar) == char.ToLower(text.text[index]))
+        {
+            index++;
+            colorEffect.ind[1] = index;
+            shakeEffect.ind[0]++;
+            shakeEffect.ind[1]++;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public void Submit()
+    {
+        return;
+    }
+
+    public void Clear()
+    {
+        return;
+    }
+
+
 }

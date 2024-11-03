@@ -68,10 +68,29 @@ public class AIMariSpritForm : AIComponent
         Typocrypha.Keyboard.instance.PH.Pause(PauseSources.Misc);
         TargetReticle.instance.PH.Pause(PauseSources.Misc);
         caster.ui.gameObject.SetActive(false);
+        var words = new List<WordRotator>(numWords);
+        AllyBattleBoxManager.instance.HideCharacter();
+        SpellCooldownManager.instance.Hide();
         for (int i = 0; i < numWords; i++)
         {
             var word = Instantiate(wordPrefab, caster.transform).GetComponent<WordRotator>();
             word.Play(wordList[i % wordList.Length]);
+            words.Add(word);
+        }
+        StartCoroutine(SpiritFormCR(words));
+    }
+
+    private IEnumerator SpiritFormCR(IList<WordRotator> words)
+    {
+        yield return new WaitForSeconds(2f);
+        while (words.Count > 0)
+        {
+            if (Battlefield.instance.Player.BStatus == Caster.BattleStatus.SpiritMode)
+                yield break;
+            var word = RandomUtils.RandomU.instance.Choice(words, out int index);
+            word.FocusPending(0.4f);
+            yield return new WaitWhile(() => word.isActiveAndEnabled);
+            words.RemoveAt(index);
         }
     }
 }

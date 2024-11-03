@@ -26,7 +26,7 @@ namespace FXText
         }
 
         public bool done = false; // Remove self from allEffects lists when done
-        public TextMeshProUGUI text; // Text component attached
+        public TMPro.TMP_Text text; // Text component attached
         public List<int> ind; // List of text indices to apply effect on: in between consecutive pairs
         public int Priority = 0; // Priority of effect when multiple are working. Higher priority = displayed.
         public abstract PriorityGroupEnum PriorityGroup // Priority group of effect
@@ -72,7 +72,7 @@ namespace FXText
         /// <summary>
         /// Update text mesh with all effects
         /// </summary>
-        static void UpdateMesh(TextMeshProUGUI text, List<TMProEffect> allEffects, SharedMemory sharedMemory)
+        static void UpdateMesh(TMP_Text text, List<TMProEffect> allEffects, SharedMemory sharedMemory)
         {
             // Iterate through each character
             for (int charIndex = 0; charIndex < text.textInfo.characterCount && charIndex < text.text.Length; ++charIndex)
