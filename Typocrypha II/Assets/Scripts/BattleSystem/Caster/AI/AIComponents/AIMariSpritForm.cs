@@ -71,12 +71,14 @@ public class AIMariSpritForm : AIComponent
         var words = new List<WordRotator>(numWords);
         AllyBattleBoxManager.instance.HideCharacter();
         SpellCooldownManager.instance.Hide();
+        // TODO: something better than this
         foreach(var enemy in Battlefield.instance.Enemies)
         {
             if(enemy == caster)
             {
                 continue;
             }
+            SpellFxManager.instance.PlayDamageNumber(999, enemy);
             enemy.Damage(999);
             enemy.gameObject.SetActive(false);
         }
@@ -102,6 +104,7 @@ public class AIMariSpritForm : AIComponent
             words.RemoveAt(index);
         }
         caster.Damage(9999);
+        SpellFxManager.instance.PlayDamageNumber(999, caster);
         Battlefield.instance.PH.Unpause(PauseSources.Misc);
     }
 }

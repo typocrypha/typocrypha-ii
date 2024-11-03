@@ -94,6 +94,7 @@ public class WordRotator : MonoBehaviour, IInputHandler
         {
             AudioManager.instance.PlaySFX(failClip);
             Battlefield.instance.Player.Damage(10);
+            SpellFxManager.instance.PlayDamageNumber(10, Battlefield.instance.Player);
         }
         colorEffect.done = true;
         gameObject.SetActive(false);
