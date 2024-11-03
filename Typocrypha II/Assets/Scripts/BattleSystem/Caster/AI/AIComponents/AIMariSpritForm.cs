@@ -71,6 +71,15 @@ public class AIMariSpritForm : AIComponent
         var words = new List<WordRotator>(numWords);
         AllyBattleBoxManager.instance.HideCharacter();
         SpellCooldownManager.instance.Hide();
+        foreach(var enemy in Battlefield.instance.Enemies)
+        {
+            if(enemy == caster)
+            {
+                continue;
+            }
+            enemy.Damage(999);
+            enemy.gameObject.SetActive(false);
+        }
         for (int i = 0; i < numWords; i++)
         {
             var word = Instantiate(wordPrefab, caster.transform).GetComponent<WordRotator>();
@@ -92,5 +101,7 @@ public class AIMariSpritForm : AIComponent
             yield return new WaitWhile(() => word.isActiveAndEnabled);
             words.RemoveAt(index);
         }
+        caster.Damage(9999);
+        Battlefield.instance.PH.Unpause(PauseSources.Misc);
     }
 }
