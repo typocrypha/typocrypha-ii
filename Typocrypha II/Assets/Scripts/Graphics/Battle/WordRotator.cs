@@ -20,7 +20,7 @@ public class WordRotator : MonoBehaviour, IInputHandler
     private bool pendingFocus = false;
     private float focusTime = 2f;
 
-    public PauseHandle PH { get; } => new PauseHandle();
+    public PauseHandle PH { get; } = new PauseHandle();
 
     public void Play(string word)
     {
