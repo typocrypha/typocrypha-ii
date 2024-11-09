@@ -18,9 +18,11 @@ public class WordRotator : MonoBehaviour, IInputHandler
     private Color brightColor;
     private bool skipColor = false;
     private bool pendingFocus = false;
+    private bool pendingFade = false;
     private float focusTime = 2f;
 
     public PauseHandle PH { get; } = new PauseHandle();
+    public event System.Action OnComplete;
 
     public void Play(string word)
     {
@@ -38,7 +40,11 @@ public class WordRotator : MonoBehaviour, IInputHandler
 
     public void MoveRight()
     {
-        if (pendingFocus)
+        if (pendingFade)
+        {
+            DoFade();
+        }
+        else if (pendingFocus)
         {
             text.renderer.sortingOrder = 2;
             float centerTime = 0.5f;
@@ -53,10 +59,23 @@ public class WordRotator : MonoBehaviour, IInputHandler
         }
     }
 
+    private void DoFade()
+    {
+        pendingFade = false;
+        // Maybe replace with shatter effect?
+        text.DOFade(0, 0.75f);
+        transform.DOScale(0, 0.75f);
+    }
+
     public void FocusPending(float timePerLetter)
     {
         pendingFocus = true;
         focusTime = text.text.Length * timePerLetter;
+    }
+
+    public void FadePending()
+    {
+        pendingFade = true;
     }
 
     private void OnFocused()
@@ -98,10 +117,16 @@ public class WordRotator : MonoBehaviour, IInputHandler
         }
         colorEffect.done = true;
         gameObject.SetActive(false);
+        OnComplete?.Invoke();
     }
 
     public void MoveLeft()
     {
+        if (pendingFade)
+        {
+            DoFade();
+            return;
+        }
         text.renderer.sortingOrder = 0;
         transform.DOMoveX(-goal, time).SetEase(Ease.InOutSine).OnComplete(MoveRight);
         if (!skipColor)

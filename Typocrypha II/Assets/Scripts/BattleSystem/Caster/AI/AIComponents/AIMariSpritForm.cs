@@ -68,7 +68,6 @@ public class AIMariSpritForm : AIComponent
         Typocrypha.Keyboard.instance.PH.Pause(PauseSources.Misc);
         TargetReticle.instance.PH.Pause(PauseSources.Misc);
         caster.ui.gameObject.SetActive(false);
-        var words = new List<WordRotator>(numWords);
         AllyBattleBoxManager.instance.HideCharacter();
         SpellCooldownManager.instance.Hide();
         // TODO: something better than this
@@ -82,26 +81,41 @@ public class AIMariSpritForm : AIComponent
             enemy.Damage(999);
             enemy.gameObject.SetActive(false);
         }
+        var wordDict = new Dictionary<string, List<WordRotator>>(numWords);
         for (int i = 0; i < numWords; i++)
         {
             var word = Instantiate(wordPrefab, caster.transform).GetComponent<WordRotator>();
-            word.Play(wordList[i % wordList.Length]);
-            words.Add(word);
+            string text = wordList[i % wordList.Length];
+            if (!wordDict.ContainsKey(text))
+            {
+                wordDict[text] = new List<WordRotator>() { word };
+            }
+            else
+            {
+                wordDict[text].Add(word);
+            }
+            word.Play(text);
         }
-        StartCoroutine(SpiritFormCR(words));
+        StartCoroutine(SpiritFormCR(wordDict));
     }
 
-    private IEnumerator SpiritFormCR(IList<WordRotator> words)
+    private IEnumerator SpiritFormCR(Dictionary<string, List<WordRotator>> words)
     {
         yield return new WaitForSeconds(2f);
         while (words.Count > 0)
         {
             if (Battlefield.instance.Player.BStatus == Caster.BattleStatus.SpiritMode)
                 yield break;
-            var word = RandomUtils.RandomU.instance.Choice(words, out int index);
+            string text = RandomUtils.RandomU.instance.Choice(words.Keys);
+            var wordList = words[text];
+            var word = wordList[0];
             word.FocusPending(0.4f);
             yield return new WaitWhile(() => word.isActiveAndEnabled);
-            words.RemoveAt(index);
+            for (int i = 1; i < wordList.Count; i++)
+            {
+                wordList[i].FadePending();
+            }
+            words.Remove(text);
         }
         caster.Damage(9999);
         SpellFxManager.instance.PlayDamageNumber(999, caster);
