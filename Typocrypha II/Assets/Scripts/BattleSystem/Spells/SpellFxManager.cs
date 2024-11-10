@@ -200,6 +200,11 @@ public class SpellFxManager : MonoBehaviour
         }
     }
 
+    public Coroutine PlayDamageNumber(float damage, Caster target)
+    {
+        return PlayDamageNumber(damage, Battlefield.instance.GetSpaceScreenSpace(target.FieldPos));
+    }
+
     public Coroutine PlayDamageNumber(float damage, Vector2 targetPos)
     {
         // If damage should be displayed, display damage

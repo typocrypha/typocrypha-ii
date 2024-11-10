@@ -43,6 +43,7 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
     public GameObject cooldownPrefab; // Prefab for single cooldown UI object.
     public Transform cooldownTr; // Object that contains all cooldown UI.
     [SerializeField] private OverheatManager overheatManager;
+    [SerializeField] private Canvas canvas;
 
     public void Awake()
     {
@@ -61,6 +62,11 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
     private void Start()
     {
         InitializeEquippedWords();
+    }
+
+    public void Hide()
+    {
+        canvas.enabled = false;
     }
 
     public void InitializeEquippedWords()

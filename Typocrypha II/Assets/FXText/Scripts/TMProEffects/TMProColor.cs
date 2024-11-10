@@ -10,7 +10,7 @@ namespace FXText
     public class TMProColor : TMProEffect
     {
         public Color32 color; // Color of text
-        static readonly Color32 defaultColor = new Color32(255, 255, 255, 255); // Default color
+        public Color32 defaultColor = new Color32(255, 255, 255, 255);
 
         public override PriorityGroupEnum PriorityGroup => PriorityGroupEnum.COLOR;
 
