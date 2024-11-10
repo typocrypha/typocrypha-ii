@@ -6,6 +6,7 @@ public class AIMariSpritForm : AIComponent
 {
     [SerializeField] private GameObject wordPrefab;
     [SerializeField] private int numWords;
+    [SerializeField] private AudioClip bgm;
     private void OnEnable()
     {
         caster.OnSpiritMode += OnSpiritForm;
@@ -31,9 +32,7 @@ public class AIMariSpritForm : AIComponent
         "Soldier",
         "Evil",
         "Eye",
-        "I miss her",
-        "I don't want",
-        "To die",
+        "Die",
         "Murder",
         "Unfair",
         "Avenge",
@@ -110,7 +109,9 @@ public class AIMariSpritForm : AIComponent
 
     private IEnumerator SpiritFormCR(Dictionary<string, List<WordRotator>> words)
     {
+        AudioManager.instance.StopBGM();
         yield return new WaitForSeconds(2f);
+        AudioManager.instance.PlayBGM(bgm);
         int positionIndex = -1;
         while (words.Count > 0)
         {
