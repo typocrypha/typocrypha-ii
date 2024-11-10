@@ -20,6 +20,7 @@ public class WordRotator : MonoBehaviour, IInputHandler
     private bool pendingFocus = false;
     private bool pendingFade = false;
     private float focusTime = 2f;
+    private Vector2 focusPosition;
 
     public PauseHandle PH { get; } = new PauseHandle();
     public event System.Action OnComplete;
@@ -48,7 +49,7 @@ public class WordRotator : MonoBehaviour, IInputHandler
         {
             text.renderer.sortingOrder = 2;
             float centerTime = 0.5f;
-            transform.DOMove(new Vector2(0, 1) + (new Vector2(2.5f, 0.5f) * Random.insideUnitCircle), centerTime).SetEase(Ease.InOutCubic);
+            transform.DOMove(focusPosition, centerTime).SetEase(Ease.InOutCubic);
             transform.DOScale(new Vector2(2, 2), centerTime).SetEase(Ease.InOutCubic);
             text.DOColor(new Color(1, 0.6666667f, 0, 1), centerTime).OnComplete(OnFocused);
         }
@@ -61,16 +62,18 @@ public class WordRotator : MonoBehaviour, IInputHandler
 
     private void DoFade()
     {
+        text.renderer.sortingOrder = -1;
         pendingFade = false;
         // Maybe replace with shatter effect?
         text.DOFade(0, 0.75f);
         transform.DOScale(0, 0.75f);
     }
 
-    public void FocusPending(float timePerLetter)
+    public void FocusPending(float timePerLetter, Vector2 focusPosition)
     {
         pendingFocus = true;
         focusTime = text.text.Length * timePerLetter;
+        this.focusPosition = focusPosition;
     }
 
     public void FadePending()

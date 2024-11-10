@@ -99,9 +99,19 @@ public class AIMariSpritForm : AIComponent
         StartCoroutine(SpiritFormCR(wordDict));
     }
 
+    private Vector2[] focusPositions = new Vector2[]
+    {
+        new Vector2(0, 1),
+        new Vector2(2.5f, 1),
+        new Vector2(4, 1.5f),
+        new Vector2(-4, 1.5f),
+        new Vector2(-2.5f, 1),
+    };
+
     private IEnumerator SpiritFormCR(Dictionary<string, List<WordRotator>> words)
     {
         yield return new WaitForSeconds(2f);
+        int positionIndex = -1;
         while (words.Count > 0)
         {
             if (Battlefield.instance.Player.BStatus == Caster.BattleStatus.SpiritMode)
@@ -109,7 +119,17 @@ public class AIMariSpritForm : AIComponent
             string text = RandomUtils.RandomU.instance.Choice(words.Keys);
             var wordList = words[text];
             var word = wordList[0];
-            word.FocusPending(0.4f);
+            Vector2 focusPosition;
+            if(++positionIndex >= focusPositions.Length)
+            {
+                positionIndex = -1;
+                focusPosition = RandomUtils.RandomU.instance.Choice(focusPositions);
+            }
+            else
+            {
+                focusPosition = focusPositions[positionIndex];
+            }
+            word.FocusPending(0.4f, focusPosition);
             yield return new WaitWhile(() => word.isActiveAndEnabled);
             for (int i = 1; i < wordList.Count; i++)
             {
