@@ -5,6 +5,7 @@ using DG.Tweening;
 
 public class WordRotator : MonoBehaviour, IInputHandler
 {
+    private const float centerTime = 0.5f;
     private const float dimAmount = 0.3f;
     private static readonly Color dimColor = new Color(dimAmount, dimAmount, dimAmount, 0);
     [SerializeField] private TMPro.TextMeshPro text;
@@ -12,6 +13,7 @@ public class WordRotator : MonoBehaviour, IInputHandler
     [SerializeField] private FXText.TMProShake shakeEffect;
     [SerializeField] private AudioClip successClip;
     [SerializeField] private AudioClip failClip;
+    [SerializeField] private AudioClip focusClip;
 
     private float goal = 3;
     private float time = 0.6f;
@@ -48,10 +50,10 @@ public class WordRotator : MonoBehaviour, IInputHandler
         else if (pendingFocus)
         {
             text.renderer.sortingOrder = 2;
-            float centerTime = 0.5f;
             transform.DOMove(focusPosition, centerTime).SetEase(Ease.InOutCubic);
             transform.DOScale(new Vector2(2, 2), centerTime).SetEase(Ease.InOutCubic);
             text.DOColor(new Color(1, 0.6666667f, 0, 1), centerTime).OnComplete(OnFocused);
+            AudioManager.instance.PlaySFX(focusClip);
         }
         else
         {
@@ -115,8 +117,13 @@ public class WordRotator : MonoBehaviour, IInputHandler
         else
         {
             AudioManager.instance.PlaySFX(failClip);
-            Battlefield.instance.Player.Damage(10);
-            SpellFxManager.instance.PlayDamageNumber(10, Battlefield.instance.Player);
+            colorEffect.defaultColor = Color.red;
+            float attackTime = 0.25f;
+            transform.DOMove(Battlefield.instance.Player.transform.position + new Vector3(0, 0.5f), attackTime).SetEase(Ease.InOutCubic);
+            transform.DOScale(Vector2.zero, attackTime).SetEase(Ease.InOutCubic);
+            yield return new WaitForSeconds(attackTime);
+            Battlefield.instance.Player.Damage(12);
+            SpellFxManager.instance.PlayDamageNumber(12, Battlefield.instance.Player);
         }
         colorEffect.done = true;
         gameObject.SetActive(false);
