@@ -164,6 +164,8 @@ public class WordRotator : MonoBehaviour, IInputHandler
     private int index;
     public bool? CheckInput(char inputChar)
     {
+        if (index >= text.text.Length)
+            return null;
         if(char.ToLower(inputChar) == char.ToLower(text.text[index]))
         {
             index++;
