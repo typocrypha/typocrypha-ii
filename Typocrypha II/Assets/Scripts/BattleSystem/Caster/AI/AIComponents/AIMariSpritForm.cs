@@ -52,7 +52,6 @@ public class AIMariSpritForm : AIComponent
         "Agartha",
         "Evil",
         "Eye",
-        "Save Me",
         "Hurt",
         "Hurricane",
         "Torrential",
@@ -138,9 +137,12 @@ public class AIMariSpritForm : AIComponent
             int cadence = wordCadence[cadenceIndex];
             var mapping = cadenceMapping[cadence];
             focusedWords.Clear();
+            float focusTime = 0;
             for (int i = 0; i < cadence; i++)
             {
                 string text = RandomUtils.RandomU.instance.Choice(words.Keys);
+                if (text == null)
+                    break;
                 var wordList = words[text];
                 var word = wordList[0];
                 Vector2 focusPosition;
@@ -160,16 +162,23 @@ public class AIMariSpritForm : AIComponent
                 {
                     focusPosition = focusPositions[mapping[i]];
                 }
-                word.FocusPending(0.4f, focusPosition);
+                focusTime += 1.25f + 0.25f * text.Length;
+                word.FocusPending(focusTime, focusPosition, i == 0);
+                focusTime -= 0.25f;
                 words.Remove(text);
                 focusedWords.Add(wordList);
             }
+
 
             for (int i = 0; i < focusedWords.Count; i++)
             {
                 var allWords = focusedWords[i];
                 var word = allWords[0];
-                word.DoFocused();
+                if (word.PendingFocus)
+                {
+                    yield return new WaitWhile(() => word.PendingFocus);
+                }
+                word.SetTarget();
                 yield return new WaitWhile(() => word.isActiveAndEnabled);
                 for (int j = 1; j < allWords.Count; j++)
                 {

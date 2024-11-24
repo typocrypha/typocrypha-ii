@@ -19,7 +19,8 @@ public class WordRotator : MonoBehaviour, IInputHandler
     private float time = 0.6f;
     private Color brightColor;
     private bool skipColor = false;
-    private bool pendingFocus = false;
+    public bool PendingFocus { get; private set; } = false;
+    private bool activeWord = false;
     private bool pendingFade = false;
     private float focusTime = 2f;
     private Vector2 focusPosition;
@@ -47,11 +48,19 @@ public class WordRotator : MonoBehaviour, IInputHandler
         {
             DoFade();
         }
-        else if (pendingFocus)
+        else if (PendingFocus)
         {
             text.renderer.sortingOrder = 2;
             transform.DOMove(focusPosition, centerTime).SetEase(Ease.InOutCubic);
-            transform.DOScale(new Vector2(2, 2), centerTime).SetEase(Ease.InOutCubic);
+            if (activeWord)
+            {
+                text.DOColor(new Color(1, 0.6666667f, 0, 1), 0.1f);
+            }
+            else
+            {
+                text.DOColor(Color.white, 0.1f);
+            }
+            transform.DOScale(new Vector2(2, 2), centerTime).SetEase(Ease.InOutCubic).OnComplete(OnFocused);
             AudioManager.instance.PlaySFX(focusClip);
         }
         else
@@ -70,11 +79,12 @@ public class WordRotator : MonoBehaviour, IInputHandler
         transform.DOScale(0, 0.75f);
     }
 
-    public void FocusPending(float timePerLetter, Vector2 focusPosition)
+    public void FocusPending(float focusTime, Vector2 focusPosition, bool activeWord)
     {
-        pendingFocus = true;
-        focusTime = text.text.Length * timePerLetter;
+        PendingFocus = true;
+        this.focusTime = focusTime;
         this.focusPosition = focusPosition;
+        this.activeWord = activeWord;
     }
 
     public void FadePending()
@@ -82,22 +92,28 @@ public class WordRotator : MonoBehaviour, IInputHandler
         pendingFade = true;
     }
 
-    public void DoFocused()
-    {
-        text.DOColor(new Color(1, 0.6666667f, 0, 1), 0.1f).OnComplete(OnFocused);
-    }
-
-    private void OnFocused()
-    {
-        StartCoroutine(FocusedCR(focusTime));
-    }
-
-    private IEnumerator FocusedCR(float timeAllowed)
+    public void SetTarget()
     {
         colorEffect.enabled = true;
         shakeEffect.enabled = true;
         InputManager.Instance.StartInput(this);
         var pause = Typocrypha.Keyboard.instance.PH.UnpauseOverride();
+        void TimerComplete()
+        {
+            InputManager.Instance.CompleteInput();
+            Typocrypha.Keyboard.instance.PH.Pause(pause);
+        }
+        OnComplete += TimerComplete;
+    }
+
+    private void OnFocused()
+    {
+        PendingFocus = false;
+        StartCoroutine(FocusedCR(focusTime));
+    }
+
+    private IEnumerator FocusedCR(float timeAllowed)
+    {
         float time = 0;
         var endOfFrameYielder = new WaitForEndOfFrame();
         bool success = false;
@@ -112,8 +128,6 @@ public class WordRotator : MonoBehaviour, IInputHandler
             time += Time.deltaTime / Settings.GameplaySpeed;
         }
         shakeEffect.done = true;
-        InputManager.Instance.CompleteInput();
-        Typocrypha.Keyboard.instance.PH.Pause(pause);
         if (success)
         {
             AudioManager.instance.PlaySFX(successClip);
