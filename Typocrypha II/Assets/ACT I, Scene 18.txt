@@ -85,35 +85,38 @@ Illyia[0,1]: Finish the rest!
 
 
 >end
-//Round V: Victory!
-//Opening Dialog:
->start,ACT-I-18-V-Opening
+//After all enemies defeated
+>start,ACT-I-18-1-Victory
 +bubble
+
+
+>crossfadebgm,BGMVictory
 
 
 >addchar,Esaias,0,0,right,base,normal
 Esaias[0,2]: The attack team is almost here!
 
 
->addchar,Dahlia,0,0,right,base,normal
+>addchar,Dahlia,0,0,right,base,laughing
 Dahlia[0,2]: We survived...!
 
 
 >addchar,Illyia,0,0,right,base,laughing
-Illyia[0,2]: Fuck yeah!{pm} We did it!
+Illyia[0,2]: Haha,{ps} yes!{pm} We did it!
+
+
+>setexpr,Illyia,serious
 
 
 >stopbgm
->playsfx,SFXEvilLaugh[b]
+>playsfx,SFXEvilLaugh
 Mari[1,1]: [scroll-delay,0.2]^shake^Cursed Humans...|shake|
 
 
 Ayin[0,1]: Wh-What was that?
 
 
->end[c]
-
-
+>end
 //Eye of the Storm
 //Opening Dialog:
 >start,ACT-I-18-2-Opening
@@ -127,17 +130,14 @@ Mari[1,1]: All this pain and suffering...
 Mari[1,1]: You Humans are blind to the destruction you have caused!
 
 
-Mari[1,1]: Leave this place... 
-
-
-Mari[1,1]: NOW!
+Mari[1,1]: Leave this place,{pm} ^shake^NOW!|shake|
 
 
 >addchar,Dahlia,0,0,right,stressed
 Dahlia[0,2]: It’s...{pm} Another Demon?
 
 
->addchar,Illyia,0,0,right,serious
+>addchar,Illyia,0,0,right,action,yell
 Illyia[0,2]: Just one more?{pm} I’ll take care of it!
 
 
@@ -157,10 +157,13 @@ Mari[1,1]: Annoying Human...
 Illyia[0,2]: -ACK!
 
 
+>removechar,Illyia
+
+
 Ayin[0,1]: Illyia!!
 
 
->addchar,Esaias,0,0,right,normal
+>addchar,Esaias,0,0,right,anxious
 Esaias[0,2]: W-What...!
 
 
@@ -168,11 +171,12 @@ Esaias[0,2]: W-What...!
 >castSpell,LANCE,1,2,0,1,Mari casts ICICLE
 
 
->setexpr,Esaias,anxious
-Esaias[0,2]: -GAAH!
+>setpose,Esaias,injured
+>setexpr,Esaias,eyesclosed
+Esaias[0,2]: Ghhh-!
 
 
->addchar,Dahlia,0,0,right,stressed
+>addchar,Dahlia,0,0,right,action,yell
 Dahlia[0,2]: Esaias!!{pm} I’m coming!
 >removechar,dahlia
 
@@ -187,17 +191,32 @@ Mari[1,1]: I,{pm} Mari Urraca,{ps} Pillar of the Obscurai,{pm} shall ensure the 
 >clear
 
 
->castSpell,HEAL,0,1,0,1,Mari traps Ayin in a TYPHOON[d]! 
+>castSpell,HEAL,0,1,0,1,Mari traps Ayin in a TYPHOON[b]! 
 
 
 >crossfadebgm,BGMBattleDoppelganger
 
 
 >end
-//When Mari is turned into spirit form
+//When Mari is at 0 HP
 >start,ACT-I-18-2-SpiritForm
 +bubble
->stopbgm
+>stopbgm,immediate
+
+
+Mari[1,1]: H-{pm}Humans...[c]
+
+
+Mari[1,1]: I will not...{pm} L-{ps}Let this stop me...
+
+
+Mari[1,1]: KH-!{pm} AAAAAAAAAAAAHH!
+
+
+>playsfx,SFXVRBootup
+>fade,out,1,1,1,1[d]
+>wait,1
+>fade,in,2,1,1,1
 
 
 Ayin[0,1]: Haa...{pm} Haa...{pm}
@@ -207,25 +226,22 @@ Ayin[0,1]: I-Is it over?
 >playbgm,BGMHowlingWind
 
 
-Narrator[1,1]: The wind gets stronger...
+NarratorSilent[1,1]: The wind gets stronger...
 
 
 Mari[1,1]: OooooOOOOoooooh...
 
 
-Mari[1,1]: C-Curssssed... HuuUUuumanssss...
+Mari[1,1]: C-Curssssed...{pm} HuuUUuumanssss...
 
 
-Mari[1,1]: Thissss c-cannot ssstop meee...
-
-
-Mari[1,1]: I... M-Mari of the ssssstorm...
+Mari[1,1]: I...{pm} M-Mari of the ssssstorm...
 
 
 Mari[1,1]: By m-m-myyy will,{pm} I condemnnn theeee...
 
 
->stopbgm
+>stopbgm,immediate
 
 
 Mari[1,1]: SUFFOCATE IN YOUR GREED AND AVARICE!!!!!
@@ -238,7 +254,12 @@ Mari[1,1]: SUFFOCATE IN YOUR GREED AND AVARICE!!!!!
 
 
 >end
+
+
+//When Phase 2 Mari Storm is defeated
+
+
 [a]to fix
-[b]maybe have more of a moaning sfx?
-[c]need to auto transition to next wave
-[d]to have allies leave
+[b]to have allies leave
+[c]should have new animation to show gravely injured
+[d]fade for mari to transition to spirit form
