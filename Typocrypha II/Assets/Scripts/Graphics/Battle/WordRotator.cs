@@ -52,7 +52,6 @@ public class WordRotator : MonoBehaviour, IInputHandler
             text.renderer.sortingOrder = 2;
             transform.DOMove(focusPosition, centerTime).SetEase(Ease.InOutCubic);
             transform.DOScale(new Vector2(2, 2), centerTime).SetEase(Ease.InOutCubic);
-            text.DOColor(new Color(1, 0.6666667f, 0, 1), centerTime).OnComplete(OnFocused);
             AudioManager.instance.PlaySFX(focusClip);
         }
         else
@@ -81,6 +80,11 @@ public class WordRotator : MonoBehaviour, IInputHandler
     public void FadePending()
     {
         pendingFade = true;
+    }
+
+    public void DoFocused()
+    {
+        text.DOColor(new Color(1, 0.6666667f, 0, 1), 0.1f).OnComplete(OnFocused);
     }
 
     private void OnFocused()
