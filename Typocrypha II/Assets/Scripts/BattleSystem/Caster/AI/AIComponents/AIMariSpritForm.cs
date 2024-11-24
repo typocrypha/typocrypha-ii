@@ -68,6 +68,9 @@ public class AIMariSpritForm : AIComponent
         "Goodbye",
         "Resolve",
         "Determination",
+        "Pouring",
+        "Endless",
+        "Always"
     };
 
     private void OnSpiritForm()
@@ -124,6 +127,8 @@ public class AIMariSpritForm : AIComponent
         int positionIndex = 1;
         int cadenceIndex = -1;
         var focusedWords = new List<List<WordRotator>>();
+        var staggerYielder = new WaitForSeconds(0.25f);
+        float delay = 0.15f;
         while (words.Count > 0)
         {
             // TODO: stop player from typing after death
@@ -163,10 +168,11 @@ public class AIMariSpritForm : AIComponent
                     focusPosition = focusPositions[mapping[i]];
                 }
                 focusTime += 1.25f + 0.25f * text.Length;
-                word.FocusPending(focusTime, focusPosition, i == 0);
+                word.Focus(focusTime, focusPosition, i == 0, 5 - i);
                 focusTime -= 0.25f;
                 words.Remove(text);
                 focusedWords.Add(wordList);
+                yield return staggerYielder;
             }
 
 
@@ -185,6 +191,11 @@ public class AIMariSpritForm : AIComponent
                     allWords[j].FadePending();
                 }
             }
+            if(delay > 0)
+            {
+                yield return new WaitForSeconds(delay + (float)(0.1 * RandomUtils.RandomU.instance.RandomDouble()));
+            }
+            delay -= 0.01f;
         }
         caster.Damage(9999);
         SpellFxManager.instance.PlayDamageNumber(999, caster);
