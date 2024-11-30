@@ -17,6 +17,10 @@ public class AIMariSpritForm : AIComponent
         new int[] { 0, 1, 3, 4 },
         new int[] { 0, 1, 2, 3, 4 },
     };
+    [SerializeField] private GameObject standardVisuals;
+    [SerializeField] private GameObject spiritFormVisuals;
+
+
     private void OnEnable()
     {
         caster.OnSpiritMode += OnSpiritForm;
@@ -81,6 +85,9 @@ public class AIMariSpritForm : AIComponent
         caster.ui.gameObject.SetActive(false);
         AllyBattleBoxManager.instance.HideCharacter();
         SpellCooldownManager.instance.Hide();
+        // TODO form change sequence
+        standardVisuals.SetActive(false);
+        spiritFormVisuals.SetActive(true);
         // TODO: something better than this
         foreach(var enemy in Battlefield.instance.Enemies)
         {
