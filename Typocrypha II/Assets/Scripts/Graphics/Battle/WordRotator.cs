@@ -9,6 +9,7 @@ public class WordRotator : MonoBehaviour, IInputHandler
     private const float dimAmount = 0.3f;
     private static readonly Color dimColor = new Color(dimAmount, dimAmount, dimAmount, 0);
     [SerializeField] private TMPro.TextMeshPro text;
+    [SerializeField] private TMPro.TextMeshPro timerText;
     [SerializeField] private FXText.TMProColor colorEffect;
     [SerializeField] private FXText.TMProShake shakeEffect;
     [SerializeField] private AudioClip successClip;
@@ -51,14 +52,14 @@ public class WordRotator : MonoBehaviour, IInputHandler
         }
         else
         {
-            text.renderer.sortingOrder = 1;
+            SetSortingOrder(1);
             activeTweens.Add(transform.DOMoveX(goal, time).SetEase(Ease.InOutSine).OnComplete(MoveLeft));
         }
     }
 
     private void DoFade()
     {
-        text.renderer.sortingOrder = -1;
+        SetSortingOrder(-1);
         pendingFade = false;
         // Maybe replace with shatter effect?
         text.DOFade(0, 0.75f);
@@ -73,7 +74,7 @@ public class WordRotator : MonoBehaviour, IInputHandler
         }
         PendingFocus = true;
         this.focusTime = focusTime;
-        text.renderer.sortingOrder = 2 + wordIndex;
+        SetSortingOrder(2 + wordIndex);
         transform.DOMove(focusPosition, centerTime).SetEase(Ease.InOutCubic);
         if (activeWord)
         {
@@ -117,6 +118,8 @@ public class WordRotator : MonoBehaviour, IInputHandler
         float time = 0;
         var endOfFrameYielder = new WaitForEndOfFrame();
         bool success = false;
+        timerText.text = Mathf.FloorToInt(timeAllowed).ToString();
+        timerText.gameObject.SetActive(true);
         while (time < timeAllowed)
         {
             if(index >= text.text.Length)
@@ -126,7 +129,9 @@ public class WordRotator : MonoBehaviour, IInputHandler
             }
             yield return endOfFrameYielder;
             time += Time.deltaTime / Settings.GameplaySpeed;
+            timerText.text = Mathf.FloorToInt(timeAllowed - time).ToString();
         }
+        timerText.gameObject.SetActive(false);
         shakeEffect.done = true;
         if (success)
         {
@@ -156,7 +161,7 @@ public class WordRotator : MonoBehaviour, IInputHandler
             DoFade();
             return;
         }
-        text.renderer.sortingOrder = 0;
+        SetSortingOrder(0);
         activeTweens.Add(transform.DOMoveX(-goal, time).SetEase(Ease.InOutSine).OnComplete(MoveRight));
         if (!skipColor)
         {
@@ -174,6 +179,12 @@ public class WordRotator : MonoBehaviour, IInputHandler
         brightColor.a = 1;
         time *= Random.Range(0.95f, 1.05f);
         StartCoroutine(RunAnimation(Random.Range(0.1f, (time * 4) + 0.1f)));
+    }
+
+    private void SetSortingOrder(int order)
+    {
+        text.renderer.sortingOrder = order;
+        timerText.renderer.sortingOrder = order;
     }
 
     public void Focus() { }
