@@ -19,10 +19,11 @@ public class WordRotator : MonoBehaviour, IInputHandler
     private float time = 0.6f;
     private Color brightColor;
     private bool skipColor = false;
-    private bool pendingFocus = false;
+    public bool PendingFocus { get; private set; } = false;
     private bool pendingFade = false;
     private float focusTime = 2f;
-    private Vector2 focusPosition;
+    private readonly List<Tween> activeTweens = new List<Tween>();
+    
 
     public PauseHandle PH { get; } = new PauseHandle();
     public event System.Action OnComplete;
@@ -43,22 +44,15 @@ public class WordRotator : MonoBehaviour, IInputHandler
 
     public void MoveRight()
     {
+        activeTweens.Clear();
         if (pendingFade)
         {
             DoFade();
         }
-        else if (pendingFocus)
-        {
-            text.renderer.sortingOrder = 2;
-            transform.DOMove(focusPosition, centerTime).SetEase(Ease.InOutCubic);
-            transform.DOScale(new Vector2(2, 2), centerTime).SetEase(Ease.InOutCubic);
-            text.DOColor(new Color(1, 0.6666667f, 0, 1), centerTime).OnComplete(OnFocused);
-            AudioManager.instance.PlaySFX(focusClip);
-        }
         else
         {
             text.renderer.sortingOrder = 1;
-            transform.DOMoveX(goal, time).SetEase(Ease.InOutSine).OnComplete(MoveLeft);
+            activeTweens.Add(transform.DOMoveX(goal, time).SetEase(Ease.InOutSine).OnComplete(MoveLeft));
         }
     }
 
@@ -71,11 +65,26 @@ public class WordRotator : MonoBehaviour, IInputHandler
         transform.DOScale(0, 0.75f);
     }
 
-    public void FocusPending(float timePerLetter, Vector2 focusPosition)
+    public void Focus(float focusTime, Vector2 focusPosition, bool activeWord, int wordIndex)
     {
-        pendingFocus = true;
-        focusTime = text.text.Length * timePerLetter;
-        this.focusPosition = focusPosition;
+        foreach(var tween in activeTweens)
+        {
+            tween.Kill();
+        }
+        PendingFocus = true;
+        this.focusTime = focusTime;
+        text.renderer.sortingOrder = 2 + wordIndex;
+        transform.DOMove(focusPosition, centerTime).SetEase(Ease.InOutCubic);
+        if (activeWord)
+        {
+            text.DOColor(new Color(1, 0.6666667f, 0, 1), 0.1f);
+        }
+        else
+        {
+            text.DOColor(Color.white, 0.1f);
+        }
+        transform.DOScale(new Vector2(2, 2), centerTime).SetEase(Ease.InOutCubic).OnComplete(OnFocused);
+        AudioManager.instance.PlaySFX(focusClip);
     }
 
     public void FadePending()
@@ -83,17 +92,28 @@ public class WordRotator : MonoBehaviour, IInputHandler
         pendingFade = true;
     }
 
-    private void OnFocused()
-    {
-        StartCoroutine(FocusedCR(focusTime));
-    }
-
-    private IEnumerator FocusedCR(float timeAllowed)
+    public void SetTarget()
     {
         colorEffect.enabled = true;
         shakeEffect.enabled = true;
         InputManager.Instance.StartInput(this);
         var pause = Typocrypha.Keyboard.instance.PH.UnpauseOverride();
+        void TimerComplete()
+        {
+            InputManager.Instance.CompleteInput();
+            Typocrypha.Keyboard.instance.PH.Pause(pause);
+        }
+        OnComplete += TimerComplete;
+    }
+
+    private void OnFocused()
+    {
+        PendingFocus = false;
+        StartCoroutine(FocusedCR(focusTime));
+    }
+
+    private IEnumerator FocusedCR(float timeAllowed)
+    {
         float time = 0;
         var endOfFrameYielder = new WaitForEndOfFrame();
         bool success = false;
@@ -108,8 +128,6 @@ public class WordRotator : MonoBehaviour, IInputHandler
             time += Time.deltaTime / Settings.GameplaySpeed;
         }
         shakeEffect.done = true;
-        InputManager.Instance.CompleteInput();
-        Typocrypha.Keyboard.instance.PH.Pause(pause);
         if (success)
         {
             AudioManager.instance.PlaySFX(successClip);
@@ -132,16 +150,17 @@ public class WordRotator : MonoBehaviour, IInputHandler
 
     public void MoveLeft()
     {
+        activeTweens.Clear();
         if (pendingFade)
         {
             DoFade();
             return;
         }
         text.renderer.sortingOrder = 0;
-        transform.DOMoveX(-goal, time).SetEase(Ease.InOutSine).OnComplete(MoveRight);
+        activeTweens.Add(transform.DOMoveX(-goal, time).SetEase(Ease.InOutSine).OnComplete(MoveRight));
         if (!skipColor)
         {
-            text.DOColor(brightColor - dimColor, time * 0.75f).OnComplete(() => text.DOColor(brightColor, time * 0.25f));
+            activeTweens.Add(text.DOColor(brightColor - dimColor, time * 0.75f).OnComplete(() => text.DOColor(brightColor, time * 0.25f)));
         }
     }
 

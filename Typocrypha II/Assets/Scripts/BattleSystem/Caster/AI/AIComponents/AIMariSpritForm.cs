@@ -7,6 +7,16 @@ public class AIMariSpritForm : AIComponent
     [SerializeField] private GameObject wordPrefab;
     [SerializeField] private int numWords;
     [SerializeField] private AudioClip bgm;
+    [SerializeField] private int[] wordCadence;
+    private static readonly int[][] cadenceMapping = new int[][]
+    {
+        new int[] { 2 },
+        new int[] { 2 },
+        new int[] { 1, 3 },
+        new int[] { 0, 2, 4 },
+        new int[] { 0, 1, 3, 4 },
+        new int[] { 0, 1, 2, 3, 4 },
+    };
     private void OnEnable()
     {
         caster.OnSpiritMode += OnSpiritForm;
@@ -42,7 +52,6 @@ public class AIMariSpritForm : AIComponent
         "Agartha",
         "Evil",
         "Eye",
-        "Save Me",
         "Hurt",
         "Hurricane",
         "Torrential",
@@ -59,6 +68,9 @@ public class AIMariSpritForm : AIComponent
         "Goodbye",
         "Resolve",
         "Determination",
+        "Pouring",
+        "Endless",
+        "Always"
     };
 
     private void OnSpiritForm()
@@ -100,11 +112,11 @@ public class AIMariSpritForm : AIComponent
 
     private Vector2[] focusPositions = new Vector2[]
     {
-        new Vector2(0, 1),
-        new Vector2(2.5f, 1),
-        new Vector2(4, 1.5f),
-        new Vector2(-4, 1.5f),
-        new Vector2(-2.5f, 1),
+        new Vector2(-4, 3f),
+        new Vector2(-2.5f, 2),
+        new Vector2(0, 1f),
+        new Vector2(2.5f, 2),
+        new Vector2(4, 3f),
     };
 
     private IEnumerator SpiritFormCR(Dictionary<string, List<WordRotator>> words)
@@ -112,31 +124,78 @@ public class AIMariSpritForm : AIComponent
         AudioManager.instance.StopBGM();
         yield return new WaitForSeconds(2f);
         AudioManager.instance.PlayBGM(bgm);
-        int positionIndex = -1;
+        int positionIndex = 1;
+        int cadenceIndex = -1;
+        var focusedWords = new List<List<WordRotator>>();
+        var staggerYielder = new WaitForSeconds(0.25f);
+        float delay = 0.15f;
         while (words.Count > 0)
         {
+            // TODO: stop player from typing after death
             if (Battlefield.instance.Player.BStatus == Caster.BattleStatus.SpiritMode)
                 yield break;
-            string text = RandomUtils.RandomU.instance.Choice(words.Keys);
-            var wordList = words[text];
-            var word = wordList[0];
-            Vector2 focusPosition;
-            if(++positionIndex >= focusPositions.Length)
+            if (++cadenceIndex >= wordCadence.Length)
             {
-                positionIndex = -1;
-                focusPosition = RandomUtils.RandomU.instance.Choice(focusPositions);
+                cadenceIndex = 0;
             }
-            else
+
+            int cadence = wordCadence[cadenceIndex];
+            var mapping = cadenceMapping[cadence];
+            focusedWords.Clear();
+            float focusTime = 0;
+            for (int i = 0; i < cadence; i++)
             {
-                focusPosition = focusPositions[positionIndex];
+                string text = RandomUtils.RandomU.instance.Choice(words.Keys);
+                if (text == null)
+                    break;
+                var wordList = words[text];
+                var word = wordList[0];
+                Vector2 focusPosition;
+                if(cadence == 1 || i >= mapping.Length)
+                {
+                    if (++positionIndex >= focusPositions.Length)
+                    {
+                        positionIndex = -1;
+                        focusPosition = RandomUtils.RandomU.instance.Choice(focusPositions);
+                    }
+                    else
+                    {
+                        focusPosition = focusPositions[positionIndex];
+                    }
+                }
+                else
+                {
+                    focusPosition = focusPositions[mapping[i]];
+                }
+                focusTime += 1.25f + 0.25f * text.Length;
+                word.Focus(focusTime, focusPosition, i == 0, 5 - i);
+                focusTime -= 0.25f;
+                words.Remove(text);
+                focusedWords.Add(wordList);
+                yield return staggerYielder;
             }
-            word.FocusPending(0.4f, focusPosition);
-            yield return new WaitWhile(() => word.isActiveAndEnabled);
-            for (int i = 1; i < wordList.Count; i++)
+
+
+            for (int i = 0; i < focusedWords.Count; i++)
             {
-                wordList[i].FadePending();
+                var allWords = focusedWords[i];
+                var word = allWords[0];
+                if (word.PendingFocus)
+                {
+                    yield return new WaitWhile(() => word.PendingFocus);
+                }
+                word.SetTarget();
+                yield return new WaitWhile(() => word.isActiveAndEnabled);
+                for (int j = 1; j < allWords.Count; j++)
+                {
+                    allWords[j].FadePending();
+                }
             }
-            words.Remove(text);
+            if(delay > 0)
+            {
+                yield return new WaitForSeconds(delay + (float)(0.1 * RandomUtils.RandomU.instance.RandomDouble()));
+            }
+            delay -= 0.01f;
         }
         caster.Damage(9999);
         SpellFxManager.instance.PlayDamageNumber(999, caster);
