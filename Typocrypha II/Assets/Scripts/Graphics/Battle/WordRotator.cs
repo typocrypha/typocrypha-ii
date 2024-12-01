@@ -59,7 +59,7 @@ public class WordRotator : MonoBehaviour, IInputHandler
 
     private void DoFade()
     {
-        SetSortingOrder(-1);
+        SetSortingOrder(-6);
         pendingFade = false;
         // Maybe replace with shatter effect?
         text.DOFade(0, 0.75f);
@@ -161,7 +161,7 @@ public class WordRotator : MonoBehaviour, IInputHandler
             DoFade();
             return;
         }
-        SetSortingOrder(0);
+        SetSortingOrder(-5);
         activeTweens.Add(transform.DOMoveX(-goal, time).SetEase(Ease.InOutSine).OnComplete(MoveRight));
         if (!skipColor)
         {
@@ -174,7 +174,7 @@ public class WordRotator : MonoBehaviour, IInputHandler
         transform.position = new Vector3(transform.position.x, transform.position.y + Mathf.Lerp(-1f, 2.5f, height));
         float scaleMod = Mathf.Lerp(0.2f, 0.95f, height);
         transform.localScale = new Vector3(scaleMod, scaleMod, 1);
-        goal = Mathf.Lerp(1.5f, 4, height);
+        goal = Mathf.Lerp(1.5f, 5, height);
         brightColor = text.color = Color.Lerp(new Color(0.75f, 0.75f, 0.75f, 0), new Color(1, 1, 1, 0), height);
         brightColor.a = 1;
         time *= Random.Range(0.95f, 1.05f);

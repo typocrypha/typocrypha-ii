@@ -119,11 +119,11 @@ public class AIMariSpritForm : AIComponent
 
     private Vector2[] focusPositions = new Vector2[]
     {
-        new Vector2(-4, 3f),
-        new Vector2(-2.5f, 2),
-        new Vector2(0, 1f),
-        new Vector2(2.5f, 2),
-        new Vector2(4, 3f),
+        new Vector2(-5, 2.25f),
+        new Vector2(-3f, 1.25f),
+        new Vector2(0, 0.25f),
+        new Vector2(3f, 1.25f),
+        new Vector2(5, 2.25f),
     };
 
     private IEnumerator SpiritFormCR(Dictionary<string, List<WordRotator>> words)
