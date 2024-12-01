@@ -78,7 +78,7 @@ public class WordRotator : MonoBehaviour, IInputHandler
         transform.DOMove(focusPosition, centerTime).SetEase(Ease.InOutCubic);
         if (activeWord)
         {
-            text.DOColor(new Color(1, 0.6666667f, 0, 1), 0.1f);
+            text.DOColor(new Color(1, 0.6666667f, 0, 1), 0.1f).OnComplete(SetTarget);
         }
         else
         {
