@@ -78,7 +78,7 @@ public class WordRotator : MonoBehaviour, IInputHandler
         transform.DOMove(focusPosition, centerTime).SetEase(Ease.InOutCubic);
         if (activeWord)
         {
-            text.DOColor(new Color(1, 0.6666667f, 0, 1), 0.1f);
+            text.DOColor(new Color(1, 0.6666667f, 0, 1), 0.1f).OnComplete(SetTarget);
         }
         else
         {
@@ -113,6 +113,8 @@ public class WordRotator : MonoBehaviour, IInputHandler
         StartCoroutine(FocusedCR(focusTime));
     }
 
+    private bool failed = false;
+
     private IEnumerator FocusedCR(float timeAllowed)
     {
         float time = 0;
@@ -122,6 +124,14 @@ public class WordRotator : MonoBehaviour, IInputHandler
         timerText.gameObject.SetActive(true);
         while (time < timeAllowed)
         {
+            if (failed)
+            {
+                failed = false;
+                timerText.color = Color.red;
+                timerText.DOColor(Color.white, 0.5f).SetEase(Ease.InQuad);
+                time += (0.33f * Settings.GameplaySpeed);
+                AudioManager.instance.PlaySFX(failClip);
+            }
             if(index >= text.text.Length)
             {
                 success = true;
@@ -206,6 +216,7 @@ public class WordRotator : MonoBehaviour, IInputHandler
         }
         else
         {
+            failed = true;
             return false;
         }
     }

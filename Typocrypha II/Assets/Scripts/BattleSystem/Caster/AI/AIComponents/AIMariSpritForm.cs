@@ -19,6 +19,7 @@ public class AIMariSpritForm : AIComponent
     };
     [SerializeField] private GameObject standardVisuals;
     [SerializeField] private GameObject spiritFormVisuals;
+    [SerializeField] private GameObject spiritFormBG;
 
 
     private void OnEnable()
@@ -85,6 +86,7 @@ public class AIMariSpritForm : AIComponent
         caster.ui.gameObject.SetActive(false);
         AllyBattleBoxManager.instance.HideCharacter();
         SpellCooldownManager.instance.Hide();
+        BackgroundManager.instance.SetBackground(spiritFormBG);
         // TODO form change sequence
         standardVisuals.SetActive(false);
         spiritFormVisuals.SetActive(true);
@@ -187,11 +189,14 @@ public class AIMariSpritForm : AIComponent
             {
                 var allWords = focusedWords[i];
                 var word = allWords[0];
-                if (word.PendingFocus)
+                if (i > 0)
                 {
-                    yield return new WaitWhile(() => word.PendingFocus);
+                    if (word.PendingFocus)
+                    {
+                        yield return new WaitWhile(() => word.PendingFocus);
+                    }
+                    word.SetTarget();
                 }
-                word.SetTarget();
                 yield return new WaitWhile(() => word.isActiveAndEnabled);
                 for (int j = 1; j < allWords.Count; j++)
                 {
