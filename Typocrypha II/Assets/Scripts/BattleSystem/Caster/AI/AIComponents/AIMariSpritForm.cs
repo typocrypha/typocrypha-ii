@@ -19,6 +19,7 @@ public class AIMariSpritForm : AIComponent
     };
     [SerializeField] private GameObject standardVisuals;
     [SerializeField] private GameObject spiritFormVisuals;
+    [SerializeField] private GameObject spiritFormBG;
 
 
     private void OnEnable()
@@ -85,6 +86,7 @@ public class AIMariSpritForm : AIComponent
         caster.ui.gameObject.SetActive(false);
         AllyBattleBoxManager.instance.HideCharacter();
         SpellCooldownManager.instance.Hide();
+        BackgroundManager.instance.SetBackground(spiritFormBG);
         // TODO form change sequence
         standardVisuals.SetActive(false);
         spiritFormVisuals.SetActive(true);
