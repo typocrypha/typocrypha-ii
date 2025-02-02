@@ -3,31 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class WordRotator : MonoBehaviour, IInputHandler
+public class WordRotator : BattleWord
 {
-    private const float centerTime = 0.5f;
     private const float dimAmount = 0.3f;
     private static readonly Color dimColor = new Color(dimAmount, dimAmount, dimAmount, 0);
-    [SerializeField] private TMPro.TextMeshPro text;
-    [SerializeField] private TMPro.TextMeshPro timerText;
-    [SerializeField] private FXText.TMProColor colorEffect;
-    [SerializeField] private FXText.TMProShake shakeEffect;
-    [SerializeField] private AudioClip successClip;
-    [SerializeField] private AudioClip failClip;
-    [SerializeField] private AudioClip focusClip;
 
     private float goal = 3;
     private float time = 0.6f;
     private Color brightColor;
     private bool skipColor = false;
-    public bool PendingFocus { get; private set; } = false;
     private bool pendingFade = false;
-    private float focusTime = 2f;
-    private readonly List<Tween> activeTweens = new List<Tween>();
-    
-
-    public PauseHandle PH { get; } = new PauseHandle();
-    public event System.Action OnComplete;
 
     public void Play(string word)
     {
@@ -66,101 +51,9 @@ public class WordRotator : MonoBehaviour, IInputHandler
         transform.DOScale(0, 0.75f);
     }
 
-    public void Focus(float focusTime, Vector2 focusPosition, bool activeWord, int wordIndex)
-    {
-        foreach(var tween in activeTweens)
-        {
-            tween.Kill();
-        }
-        PendingFocus = true;
-        this.focusTime = focusTime;
-        SetSortingOrder(2 + wordIndex);
-        transform.DOMove(focusPosition, centerTime).SetEase(Ease.InOutCubic);
-        if (activeWord)
-        {
-            text.DOColor(new Color(1, 0.6666667f, 0, 1), 0.1f).OnComplete(SetTarget);
-        }
-        else
-        {
-            text.DOColor(Color.white, 0.1f);
-        }
-        transform.DOScale(new Vector2(2, 2), centerTime).SetEase(Ease.InOutCubic).OnComplete(OnFocused);
-        AudioManager.instance.PlaySFX(focusClip);
-    }
-
     public void FadePending()
     {
         pendingFade = true;
-    }
-
-    public void SetTarget()
-    {
-        colorEffect.enabled = true;
-        shakeEffect.enabled = true;
-        InputManager.Instance.StartInput(this);
-        var pause = Typocrypha.Keyboard.instance.PH.UnpauseOverride();
-        void TimerComplete()
-        {
-            InputManager.Instance.CompleteInput();
-            Typocrypha.Keyboard.instance.PH.Pause(pause);
-        }
-        OnComplete += TimerComplete;
-    }
-
-    private void OnFocused()
-    {
-        PendingFocus = false;
-        StartCoroutine(FocusedCR(focusTime));
-    }
-
-    private bool failed = false;
-
-    private IEnumerator FocusedCR(float timeAllowed)
-    {
-        float time = 0;
-        var endOfFrameYielder = new WaitForEndOfFrame();
-        bool success = false;
-        timerText.text = Mathf.FloorToInt(timeAllowed).ToString();
-        timerText.gameObject.SetActive(true);
-        while (time < timeAllowed)
-        {
-            if (failed)
-            {
-                failed = false;
-                timerText.color = Color.red;
-                timerText.DOColor(Color.white, 0.5f).SetEase(Ease.InQuad);
-                time += (0.33f * Settings.GameplaySpeed);
-                AudioManager.instance.PlaySFX(failClip);
-            }
-            if(index >= text.text.Length)
-            {
-                success = true;
-                break;
-            }
-            yield return endOfFrameYielder;
-            time += Time.deltaTime / Settings.GameplaySpeed;
-            timerText.text = Mathf.FloorToInt(timeAllowed - time).ToString();
-        }
-        timerText.gameObject.SetActive(false);
-        shakeEffect.done = true;
-        if (success)
-        {
-            AudioManager.instance.PlaySFX(successClip);
-        }
-        else
-        {
-            AudioManager.instance.PlaySFX(failClip);
-            colorEffect.defaultColor = Color.red;
-            float attackTime = 0.25f;
-            transform.DOMove(Battlefield.instance.Player.transform.position + new Vector3(0, 0.5f), attackTime).SetEase(Ease.InOutCubic);
-            transform.DOScale(Vector2.zero, attackTime).SetEase(Ease.InOutCubic);
-            yield return new WaitForSeconds(attackTime);
-            Battlefield.instance.Player.Damage(12);
-            SpellFxManager.instance.PlayDamageNumber(12, Battlefield.instance.Player);
-        }
-        colorEffect.done = true;
-        gameObject.SetActive(false);
-        OnComplete?.Invoke();
     }
 
     public void MoveLeft()
@@ -190,46 +83,4 @@ public class WordRotator : MonoBehaviour, IInputHandler
         time *= Random.Range(0.95f, 1.05f);
         StartCoroutine(RunAnimation(Random.Range(0.1f, (time * 4) + 0.1f)));
     }
-
-    private void SetSortingOrder(int order)
-    {
-        text.renderer.sortingOrder = order;
-        timerText.renderer.sortingOrder = order;
-    }
-
-    public void Focus() { }
-
-    public void Unfocus() { }
-
-    private int index;
-    public bool? CheckInput(char inputChar)
-    {
-        if (index >= text.text.Length)
-            return null;
-        if(char.ToLower(inputChar) == char.ToLower(text.text[index]))
-        {
-            index++;
-            colorEffect.ind[1] = index;
-            shakeEffect.ind[0]++;
-            shakeEffect.ind[1]++;
-            return true;
-        }
-        else
-        {
-            failed = true;
-            return false;
-        }
-    }
-
-    public void Submit()
-    {
-        return;
-    }
-
-    public void Clear()
-    {
-        return;
-    }
-
-
 }
