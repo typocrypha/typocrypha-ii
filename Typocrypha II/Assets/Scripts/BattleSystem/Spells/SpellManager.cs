@@ -233,7 +233,12 @@ public class SpellManager : MonoBehaviour
                 }
                 // Wait for all of the animations to finish
                 foreach (var cr in crList)
-                    yield return cr;
+                {
+                    if(cr != null)
+                    {
+                        yield return cr;
+                    }
+                }
                 // Apply callbacks after the effect is finished
                 caster.OnAfterSpellEffectResolved?.Invoke(spell, caster, hitTarget);
                 if (HasPrompts)
