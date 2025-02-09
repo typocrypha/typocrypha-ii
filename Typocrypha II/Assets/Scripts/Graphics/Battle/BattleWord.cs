@@ -5,7 +5,31 @@ using UnityEngine;
 
 public class BattleWord : MonoBehaviour, IInputHandler
 {
+    public enum FocusPosition
+    {
+        LeftFar,
+        LeftClose,
+        Center,
+        RightClose,
+        RightFar,
+    }
     private const float centerTime = 0.5f;
+    private static readonly Vector2[] focusPositions = new Vector2[]
+    {
+        new Vector2(-5, 2.25f),
+        new Vector2(-3f, 1.25f),
+        new Vector2(0, 0.25f),
+        new Vector2(3f, 1.25f),
+        new Vector2(5, 2.25f),
+    };
+    public static Vector2 GetFocusPosition(FocusPosition position)
+    {
+        int index = (int)position;
+        if (index < 0 || index >= focusPositions.Length)
+            return Vector2.zero;
+        return focusPositions[index];
+    }
+
     [SerializeField] protected TMPro.TextMeshPro text;
     [SerializeField] protected TMPro.TextMeshPro timerText;
     [SerializeField] protected FXText.TMProColor colorEffect;
@@ -26,6 +50,11 @@ public class BattleWord : MonoBehaviour, IInputHandler
     public void Focus() { }
 
     public void Unfocus() { }
+
+    public void SetText(string word)
+    {
+        text.text = word;
+    }
 
     public void SetTarget()
     {
