@@ -1041,8 +1041,11 @@ public class DialogScriptParser
 
     private T LoadAsset<T>(string assetName, string folderPath) where T : UnityEngine.Object
     {
-        string path = AssetDatabase.FindAssets(assetName, AssetDatabase.GetSubFolders(folderPath))[0];
-        path = AssetDatabase.GUIDToAssetPath(path);
-        return AssetDatabase.LoadAssetAtPath<T>(path);
+        var assetPaths = AssetDatabase.FindAssets(assetName, new string[] { folderPath });
+        if(assetPaths.Length <= 0)
+        {
+            throw new System.Exception($"No asset named {assetName} could be found in {folderPath}");
+        }
+        return AssetDatabase.LoadAssetAtPath<T>(AssetDatabase.GUIDToAssetPath(assetPaths[0]));
     }
 }
