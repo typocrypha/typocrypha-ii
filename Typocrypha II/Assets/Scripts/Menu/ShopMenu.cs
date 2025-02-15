@@ -89,7 +89,6 @@ public class ShopMenu : MonoBehaviour
         foreach (var go in landingExclusiveUI) go.SetActive(true);
         firstLandingSelection.InitializeSelection();
         currentMode = PurchaseMode.None;
-        ToggleGradient(false);
     }
 
     private void OpenPurchase()
@@ -323,7 +322,7 @@ public class ShopMenu : MonoBehaviour
     private void ToggleGradient(bool isVisible)
     {
         const float duration = 0f;
-        float posY = isVisible ? 0f : 100f;
+        float posY = isVisible ? -50f : 100f;
 
         DOTween.Kill("GradientTween");
         DOTween.Sequence()

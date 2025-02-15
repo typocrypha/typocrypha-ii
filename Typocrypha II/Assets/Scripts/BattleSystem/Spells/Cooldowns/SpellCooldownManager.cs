@@ -69,6 +69,11 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
         canvas.enabled = false;
     }
 
+    public void Show()
+    {
+        canvas.enabled = true;
+    }
+
     public void InitializeEquippedWords()
     {
         foreach (var kvp in PlayerDataManager.Equipment.EquippedSpellWords)

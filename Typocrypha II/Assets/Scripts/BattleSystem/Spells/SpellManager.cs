@@ -233,9 +233,18 @@ public class SpellManager : MonoBehaviour
                 }
                 // Wait for all of the animations to finish
                 foreach (var cr in crList)
-                    yield return cr;
+                {
+                    if(cr != null)
+                    {
+                        yield return cr;
+                    }
+                }
                 // Apply callbacks after the effect is finished
                 caster.OnAfterSpellEffectResolved?.Invoke(spell, caster, hitTarget);
+                while (HasDelays)
+                {
+                    yield return StartCoroutine(delayRequests.Dequeue());
+                }
                 if (HasPrompts)
                 {
                     yield return PlayPrompts();
@@ -322,6 +331,15 @@ public class SpellManager : MonoBehaviour
         }
     }
 
+    private readonly Queue<IEnumerator> delayRequests = new Queue<IEnumerator>();
+
+    public void LogDelay(IEnumerator delay)
+    {
+        delayRequests.Enqueue(delay);
+    }
+
+    public bool HasDelays => delayRequests.Count > 0;
+
     public void LogInterruptCast(Spell spell, Caster caster, Battlefield.Position target, string messageOverride = null)
     {
         interrupts.Enqueue(new InterruptData(spell, caster, target, messageOverride, false));
@@ -392,7 +410,6 @@ public class SpellManager : MonoBehaviour
     }
 
     private readonly Queue<InterruptData> interrupts = new Queue<InterruptData>();
-    private readonly Queue<InterruptData> queuedCasts = new Queue<InterruptData>();
     private class InterruptData
     {
         public Spell spell;

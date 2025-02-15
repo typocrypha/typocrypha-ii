@@ -119,13 +119,13 @@ public class AIMariSpritForm : AIComponent
         StartCoroutine(SpiritFormCR(wordDict));
     }
 
-    private Vector2[] focusPositions = new Vector2[]
+    private BattleWord.FocusPosition[] focusPositions = new BattleWord.FocusPosition[]
     {
-        new Vector2(-4, 3f),
-        new Vector2(-2.5f, 2),
-        new Vector2(0, 1f),
-        new Vector2(2.5f, 2),
-        new Vector2(4, 3f),
+        BattleWord.FocusPosition.LeftFar,
+        BattleWord.FocusPosition.LeftClose,
+        BattleWord.FocusPosition.Center,
+        BattleWord.FocusPosition.RightClose,
+        BattleWord.FocusPosition.RightFar,
     };
 
     private IEnumerator SpiritFormCR(Dictionary<string, List<WordRotator>> words)
@@ -159,7 +159,7 @@ public class AIMariSpritForm : AIComponent
                     break;
                 var wordList = words[text];
                 var word = wordList[0];
-                Vector2 focusPosition;
+                BattleWord.FocusPosition focusPosition;
                 if(cadence == 1 || i >= mapping.Length)
                 {
                     if (++positionIndex >= focusPositions.Length)
@@ -177,7 +177,7 @@ public class AIMariSpritForm : AIComponent
                     focusPosition = focusPositions[mapping[i]];
                 }
                 focusTime += 1.25f + 0.25f * text.Length;
-                word.Focus(focusTime, focusPosition, i == 0, 5 - i);
+                word.Focus(focusTime, BattleWord.GetFocusPosition(focusPosition), i == 0, 5 - i);
                 focusTime -= 0.25f;
                 words.Remove(text);
                 focusedWords.Add(wordList);
