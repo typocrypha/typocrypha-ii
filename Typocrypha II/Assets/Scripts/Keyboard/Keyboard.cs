@@ -140,6 +140,10 @@ namespace Typocrypha
                 foreach (var c in Input.inputString) // Play no input sfx
                 {
                     char input = char.ToLower(c);
+                    if (!AllowRepeatInput(input))
+                    {
+                        continue;
+                    }
                     if (keyMap.ContainsKey(input))
                     {
                         AudioManager.instance.PlaySFX(noInputSfx);
@@ -158,7 +162,7 @@ namespace Typocrypha
             foreach (var c in Input.inputString) // Add letters to cast bar.
             {
                 char input = char.ToLower(c);
-                if (input == '\r')
+                if (input == '\r' || !AllowRepeatInput(input))
                     continue;
                 if (keyMap.ContainsKey(input))
                 {
@@ -194,6 +198,22 @@ namespace Typocrypha
             {
                 InputManager.Instance.Submit();
             }
+        }
+
+        bool AllowRepeatInput(char input)
+        {
+            if (char.IsLetterOrDigit(input))
+            {
+                try
+                {
+                    if (!Input.GetKeyDown(input.ToString()))
+                    {
+                        return false;
+                    }
+                }
+                catch { }
+            }
+            return true;
         }
 
         /// <summary>
