@@ -28,10 +28,10 @@ Narrator: You turn away from the notification screen.
 
 
 >playsfx,SFXDoorKnock
-Narrator: \*KNOCK\*{pm} \*KNOCK\*{pm} \*KNOCK[a][b]\* 
+NarratorSilent: \*KNOCK\*{pm} \*KNOCK\*{pm} \*KNOCK[a]\* 
 
 
-???: Delivery[c]!
+???: Delivery[b]!
 
 
 Ayin(ohfuck): !!
@@ -41,7 +41,7 @@ Ayin(nervous): {c,whisper}(Ugh,{ps} I’m not feeling it,{pm} maybe I can just i
 
 
 >playsfx,SFXDoorKnock
-Narrator: \*KNOCK\*{pm} \*KNOCK\* 
+NarratorSilent: \*KNOCK\*{pm} \*KNOCK\* 
 
 
 ???: Super duper important delivery! 
@@ -70,6 +70,7 @@ Adelai: Ayin!
 Ayin(surprised): A-Adelai?{ps} Why are you-
 
 
+>setexpr,Ayin,surprisedbad
 >playsfx,SFXSpellCrushHit
 
 
@@ -79,10 +80,13 @@ Narrator: [screen-shake,2,0.5] Adelai tackles you with a tight hug.
 Narrator: She stays like that for a long moment before finally letting go.
 
 
+>setexpr,Ayin,nervous
+
+
 Adelai(caring): Well,{pm} you didn’t answer any of my messages... 
 
 
-Adelai(teasing):[d] Bet you couldn’t tell it was me,{ps} right?
+Adelai(teasing):[c] Bet you couldn’t tell it was me,{ps} right?
 
 
 Ayin(sheepish): Uh,{pl} y-yeah...
@@ -95,8 +99,6 @@ Ayin(uncomfortable): ...
 
 
 Narrator: As the freshness of the unexpected meeting begins to dissipate,{pm} Adelai changes her tone as well.
-
-
 
 
 Adelai(serious): Ayin...
@@ -153,13 +155,13 @@ Narrator: “The team that successfully locates the First Barrier will be reward
 Narrator: “Assignment for Ayin A. -{pl} Leader for Scouting Team Z.”
 
 
-Ayin(surprised): Leader!{pm} Me?
+Ayin(surprisedbad): Leader!?{pm} Me?
 
 
 Adelai(bffs4ever): Pretty cool,{ps} right?
 
 
-Ayin(uncomfortable): N-no!{pm} How did I even end up as the leader...
+Ayin(uncomfortable): N-No!{pm} How did I even end up as the leader...
 
 
 Adelai(teasing): Well you did take out a bunch of Demons during the Seven Stars attack,{ps} remember?
@@ -180,7 +182,7 @@ Ayin(squint): And why is that a good thing?
 Ayin: Won’t I be sent deep into the Ruins?
 
 
-Adelai(interested): W-Well,{pm} it’s at least not a combat role...
+Adelai(interested): W-Well,{pm} it’s at least not a primary combat role...
 
 
 Adelai(teasing): And if you run into a bunch of Demons,{pm} you can just run away!
@@ -189,7 +191,7 @@ Adelai(teasing): And if you run into a bunch of Demons,{pm} you can just run awa
 Adelai(interested): Err,{pm} well maybe not just run away,{pm} but there would probably be another path right?
 
 
-Adelai(ifonly): A-and,{ps} you have 25 other teams also looking,{pm} so...
+Adelai(ifonly): A-And,{ps} you have 25 other teams also looking,{pm} so...
 
 
 >stopbgm
@@ -213,31 +215,25 @@ Ayin(uncomfortable): But you just said-
 Narrator: Without letting you finish, Adelai places something into your hand.
 
 
->embedimage,CGTrackerBeaconPlaceholder[e].png
+>embedimage,CGTrackerBeaconPlaceholder[d],2
 
 
 Adelai(serious): It’s the locator beacon from the briefing.
 
 
-Adelai(frustrateddistant): I...{pm} wanted to be on the scouting team with you,{pm} but my request was denied...
+Adelai(frustrateddistant): I...{pm} wanted to be on the scouting team with you,{pm} but I was put on the main attack team instead...
 
 
-Adelai: I got put on the main attack team -{pl} the one that will come in to destroy the First Barrier.
+Adelai: So I can’t go with you into the Ruins...
 
 
-Adelai: I promise you,{pm} I will be there to protect you.
+Adelai(serious): But!{pm} If you find the First Barrier and activate that beacon...
 
 
->setexpr,Ayin,serious
+Adelai: I PROMISE you,{pm} I’ll come there to get you out.
 
 
-Adelai (interested): I was assigned to the main attack teams -{pl} the ones who will come in and destroy the First Barrier once the scouting teams find it.
-
-
-Adelai(frustrateddistant): I wanted to be on the scouting team with you,{pm} but my request was...{pl}denied.
-
-
-Adelai: So this is the only way I can protect you...
+Adelai(defeated): That’s the only thing I can do to protect you...
 
 
 Ayin(nervous): Adelai,{pm} I-I can’t do this...
@@ -270,7 +266,7 @@ Adelai(teasing): And your grade was a historical moment for the class!
 Adelai: The first{pl} perfect{pl} zero!
 
 
-Ayin(ohfuck): O-Oh yeah...
+Ayin(ohfuck): O-{ps}Oh yeah...
 
 
 Adelai(serious): But...!
@@ -294,7 +290,7 @@ Ayin(uncomfortable): I just got lucky nobody found me...
 Narrator: There’s a moment of silence,{pm} before Adelai’s caring expression suddenly turns upset.
 
 
-Adelai(serious): Ayin,{pm} you’ve been studying and working hard at the Academy for 4 years now![f]
+Adelai(serious): Ayin,{pm} you’ve been studying and working hard at the Academy for 4 years now![e]
 
 
 Adelai(frustrateddistant): Sure your grades aren’t the highest...
@@ -321,10 +317,10 @@ Adelai(caring): You have to do this,{ps} Ayin.
 >setexpr,Ayin,serious
 
 
-Adelai(ifonly): For Agartha,{pm} for yourself,{pm} and...
+Adelai(frustrated): For Agartha,{pm} for yourself,{pm} and...
 
 
-Narrator: Adelai pauses,{pm} rethinking her words.
+Adelai: .{pl}.{pl}.
 
 
 Adelai(serious): You have to help set us free,{pm} Ayin.
@@ -336,7 +332,7 @@ Adelai(caring): So please,{pm} I know you’re scared,{pm} but can’t you trust
 Narrator: You flash back to all of your time with Adelai.
 
 
-Narrator: All of the times Adelai has helped you study and supported you when you were down.
+Narrator: All of the times Adelai has supported you when you were down.
 
 
 Narrator: Even when you didn’t believe in yourself,{pm} Adelai did.
@@ -351,9 +347,8 @@ Narrator: You tighten your grip.
 >endt
 
 
-[a]need to turn off voice blips
-[b]need to make separate character
-[c]in lower pitched adelai voice
-[d]also in lower pitch voice
-[e]placeholder image
-[f]music?
+[a]need to make separate character
+[b]in lower pitched adelai voice
+[c]also in lower pitch voice
+[d]placeholder image
+[e]music?
