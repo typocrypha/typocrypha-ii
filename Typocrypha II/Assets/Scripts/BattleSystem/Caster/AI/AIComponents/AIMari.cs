@@ -59,6 +59,7 @@ public class AIMari : AIComponent, IPromptProvider
     private void OnStunned()
     {
         state = State.EyeOfTheStorm;
+        Rule.ActiveRule = null;
     }
 
     private void OnUnStunned()

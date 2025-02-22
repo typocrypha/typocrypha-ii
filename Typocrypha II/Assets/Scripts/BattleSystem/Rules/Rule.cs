@@ -22,7 +22,8 @@ public abstract class Rule
         }
     }
 
-    public string displayName;
+    public abstract string DisplayName { get; }
+
     public delegate bool ApplyRule(RootWordEffect effect, Caster caster, Caster target);
     public virtual bool ApplyToEffect(RootWordEffect effect, Caster caster, Caster target) => false;
     public virtual int CooldownModifier(SpellWord word) => 0;

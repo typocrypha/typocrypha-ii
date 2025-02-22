@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class RuleFriendshipFrog : Rule
 {
+    public override string DisplayName => "Friendship Frog";
+
     public override bool ApplyToEffect(RootWordEffect effect, Caster caster, Caster target)
     {
         if (caster.HasTag("Frog") || GetEnemyCount() < 2)

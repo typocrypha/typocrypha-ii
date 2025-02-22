@@ -16,6 +16,6 @@ public class DebugShowRule : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        text.text = "Rule: " + Rule.ActiveRule?.displayName ?? "none";
+        text.text = "Rule: " + Rule.ActiveRule?.DisplayName ?? "none";
     }
 }
