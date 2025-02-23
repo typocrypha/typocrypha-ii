@@ -80,6 +80,7 @@ public class AIMariSpritForm : AIComponent
 
     private void OnSpiritForm()
     {
+        Rule.ActiveRule = null;
         Battlefield.instance.PH.Pause(PauseSources.Misc);
         Typocrypha.Keyboard.instance.PH.Pause(PauseSources.Misc);
         TargetReticle.instance.PH.Pause(PauseSources.Misc);
