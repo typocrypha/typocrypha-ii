@@ -72,6 +72,7 @@ public class Caster : MonoBehaviour
     /// </summary>
     public HitFn OnAfterHitResolved { get; set; }
     public System.Action OnSpiritMode { get; set; }
+    public System.Action<Caster> OnDeath { get; set; }
     public System.Action<Battlefield.Position> OnNoTargetHit { get; set; }
     public System.Action OnStunned { get; set; }
     public System.Action OnUnstunned { get; set; }
@@ -126,6 +127,7 @@ public class Caster : MonoBehaviour
                     break;
                 case BattleStatus.Dead:
                     ui?.gameObject.SetActive(false);
+                    OnDeath?.Invoke(this);
                     break;
                 case BattleStatus.Fled:
                     ui?.gameObject.SetActive(false);

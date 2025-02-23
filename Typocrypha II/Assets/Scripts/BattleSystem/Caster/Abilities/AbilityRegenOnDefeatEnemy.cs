@@ -24,20 +24,35 @@ public class AbilityRegenOnDefeatEnemy : CasterAbility
     private void OnBeforeSpellEffectCast(RootWordEffect effect, Caster caster, Caster target, Damage.DamageModifier mod)
     {
         target.OnSpiritMode += OnTargetSpiritMode;
+        target.OnDeath += OnTargetDeath;
     }
 
     private void OnTargetSpiritMode()
     {
-        if(self != null && self.Health < self.Stats.MaxHP)
+        Regen();
+    }
+
+    private void OnTargetDeath(Caster target)
+    {
+        if(target.Stats.MaxSP <= 0)
         {
-            int amountHealed = Math.Min(Mathf.RoundToInt(self.Stats.MaxHP * percentage), self.Stats.MaxHP - self.Health);
-            self.Heal(amountHealed);
-            SpellFxManager.instance.PlayDamageNumber(-amountHealed, Battlefield.instance.GetSpaceScreenSpace(self.FieldPos));
+            Regen();
         }
     }
 
     private void OnAfterSpellEffectCast(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults data)
     {
         target.OnSpiritMode -= OnTargetSpiritMode;
+        target.OnDeath -= OnTargetDeath;
+    }
+
+    private void Regen()
+    {
+        if (self != null && self.Health < self.Stats.MaxHP)
+        {
+            int amountHealed = Math.Min(Mathf.RoundToInt(self.Stats.MaxHP * percentage), self.Stats.MaxHP - self.Health);
+            self.Heal(amountHealed);
+            SpellFxManager.instance.PlayDamageNumber(-amountHealed, Battlefield.instance.GetSpaceScreenSpace(self.FieldPos));
+        }
     }
 }
