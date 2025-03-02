@@ -95,7 +95,8 @@ public class TransitionManager : MonoBehaviour
     {
         loadingScreenCanvas.enabled = true;
         // Play loading screen ON
-        LoadingScreen loadingScreen = loadingScreenOverride ?? defaultLoadingScreen;
+        var loadingScreen = loadingScreenOverride ?? defaultLoadingScreen;
+        loadingScreen.gameObject.SetActive(true);
         loadingScreen.Progress = 0;
         yield return loadingScreen.StartLoading();
         if (save)
@@ -162,6 +163,7 @@ public class TransitionManager : MonoBehaviour
             //yield return null;
         }
         loadingScreenCanvas.enabled = false;
+        loadingScreen.gameObject.SetActive(false);
     }
 
     [System.Serializable]
