@@ -389,10 +389,10 @@ Adrestia[1,1]: Cursed Humans,{ps} was this your doing!?
 Adelai[0,2]: Wha-!?
 
 
->castSpell,SWORD,1,2,0,1,The Demon Attacks Adelai![b]
+>castSpell,SWORD,1,2,0,1,The Demon Attacks Adelai!
 
 
-Adelai[0,2](frustrated):[c] AAAAH!
+Adelai[0,2](frustrated):[b] AAAAH!
 
 
 >removechar,Adelai
@@ -420,7 +420,7 @@ Adrestia[1,1]: Face my VENGEANCE!
 >end
 
 
-//When Ayin at 50% health[d]:
+//When Ayin at 50% health[c]:
 >start,ACT I-4-6-AyinLow
 
 
@@ -436,7 +436,7 @@ Ayin[0,1]: Haa...{pm} Haa...
 Ayin[0,1]: St-Stay back!
 
 
->addchar,Adelai,0,0,left,base,frustrated[e]
+>addchar,Adelai,0,0,left,base,frustrated[d]
 
 
 Adelai[0,2]: Ugh...
@@ -466,10 +466,10 @@ Ayin[0,1]:{c,whisper}(I’m sorry Adelai...){c}
 >stopbgm,immediate
 
 
->setAlly,AllyIllyiaActI-18[f],Kaia,true,base,commanding
+>setAlly,AllyIllyiaActI-18[e],Kaia,true,base,commanding
 
 
->castSpell,RAILGUN,0,1,1,2,A sudden blast strikes the Demon!
+>castSpell,RAILGUN,0,1,1,2,??? casts RAILGUN!
 
 
 Adrestia[1,1]: Kh-!{pm} More Humans!?
@@ -526,7 +526,7 @@ Kaia[0,2](confident): Your scheme has failed!
 Adrestia[1,1]: Our...{pm}scheme!?
 
 
-Adrestia[1,1]: Grr...
+Adrestia[1,1]: Grr...[f]
 
 
 >castSpell,RUN,1,2,0,1,The Demon Retreats!
@@ -534,8 +534,8 @@ Adrestia[1,1]: Grr...
 
 >end
 [a]static prompt
-[b]BUG: says 'notarget'
-[c]need scuffed adelai sprite
-[d]temp event - pending full adrestria battle design
-[e]pending adelai scuffed sprite
-[f]need to create kaia caster ally prefab
+[b]need scuffed adelai sprite
+[c]temp event - pending full adrestria battle design
+[d]pending adelai scuffed sprite
+[e]need to create kaia caster ally prefab
+[f]textbox overlaps with spell popup
