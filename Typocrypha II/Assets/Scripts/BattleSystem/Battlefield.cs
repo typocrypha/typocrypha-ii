@@ -184,6 +184,10 @@ public class Battlefield : MonoBehaviour, IPausable
             {
                 actor.PH.Pause(PauseSources.Parent);
             }
+            else if (ATBManager.instance.ProcessingActions)
+            {
+                actor.PH.Pause(PauseSources.ATB);
+            }
         }
         Casters.Add(caster);
     }
