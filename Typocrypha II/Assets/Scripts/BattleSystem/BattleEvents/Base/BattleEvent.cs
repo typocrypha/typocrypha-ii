@@ -25,6 +25,9 @@ public class BattleEvent : MonoBehaviour, IPausable
 
     public Logic logic = Logic.And;
     public bool repeat = false;
+    public string ID => id;
+    [SerializeField] private string id;
+
     BattleEventCondition[] conditions; // All conditions to check.
     BattleEventFunction[] functions; // All functions to run.
     bool done = false; // Has battle event been executed?
@@ -73,7 +76,7 @@ public class BattleEvent : MonoBehaviour, IPausable
     }
 
     // Execute all functions.
-    void RunAll()
+    public void RunAll()
     {
         foreach(var func in functions)
             func.Run();

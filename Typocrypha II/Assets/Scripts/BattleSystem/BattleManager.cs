@@ -31,6 +31,18 @@ public class BattleManager : MonoBehaviour, IPausable
                 e.PH.Unpause(sources);
         }
     }
+
+    public void TriggerBattleEvent(string id)
+    {
+        foreach(var e in currEvents)
+        {
+            if(e.ID == id)
+            {
+                e.RunAll();
+            }
+        }
+    }
+
     #endregion
 
     public static BattleManager instance = null;
