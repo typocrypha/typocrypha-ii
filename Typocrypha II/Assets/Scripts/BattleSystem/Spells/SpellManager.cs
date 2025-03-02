@@ -13,6 +13,7 @@ public class SpellManager : MonoBehaviour
     private const float runLogTime = 0.5f;
     public static SpellManager instance;
     public SpellWord counterWord;
+    public event Action OnAfterCastResolved;
     [SerializeField] private SpellWord runWord;
     [SerializeField] private SpellWord runAllWord;
 
@@ -285,6 +286,7 @@ public class SpellManager : MonoBehaviour
         {
             SpellCooldownManager.instance.DoOverheat();
         }
+        OnAfterCastResolved?.Invoke();
         PostCastFX(caster);
     }
 

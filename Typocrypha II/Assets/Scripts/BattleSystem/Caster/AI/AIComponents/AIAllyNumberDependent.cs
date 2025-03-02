@@ -14,8 +14,10 @@ public class AIAllyNumberDependent : AIComponent
     [SerializeField] private int aloneLoopIndex;
     [SerializeField] private int oneAllyLoopIndex;
     [SerializeField] private int multipleAlliesLoopIndex;
+    [SerializeField] private bool cancelInProgressSpells;
 
     SpellList lastSpellList = null;
+    int lastNumAllies = -1;
     int spellIndex = -1;
 
     // Start is called before the first frame update
@@ -37,16 +39,36 @@ public class AIAllyNumberDependent : AIComponent
     {
         caster.OnAfterCastResolved -= SetNextSpell;
         caster.OnAfterCastResolved += SetNextSpell;
+        SpellManager.instance.OnAfterCastResolved -= RecalculateSpell;
+        SpellManager.instance.OnAfterCastResolved += RecalculateSpell;
     }
 
     private void OnDisable()
     {
         caster.OnAfterCastResolved -= SetNextSpell;
+        SpellManager.instance.OnAfterCastResolved -= RecalculateSpell;
+    }
+
+    private void OnDestroy()
+    {
+        if(SpellManager.instance != null)
+        {
+            SpellManager.instance.OnAfterCastResolved -= RecalculateSpell;
+        }
+    }
+
+    private void RecalculateSpell()
+    {
+        int numAllies = GetNumAllies(selfCaster);
+        if(numAllies != lastNumAllies)
+        {
+            SetNextSpell(null, selfCaster, true);
+        }
     }
 
     private void SetNextSpell(Spell spell, Caster self, bool hitTarget)
     {
-        int numAllies = GetNumAllies(self);
+        int numAllies = lastNumAllies = GetNumAllies(self);
         var spellList = GetSpellList(numAllies, out int loopIndex);
         if(spellList != lastSpellList)
         {
