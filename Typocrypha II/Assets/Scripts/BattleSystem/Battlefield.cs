@@ -90,7 +90,7 @@ public class Battlefield : MonoBehaviour, IPausable
     {
         get
         {
-            foreach(var caster in Casters)
+            foreach (var caster in Casters)
             {
                 if (caster.CasterState == Caster.State.Hostile)
                 {
@@ -123,15 +123,23 @@ public class Battlefield : MonoBehaviour, IPausable
         get
         {
             var ret = new List<Position>(3);
+            ret.AddRange(ValidReinforcementPositionsIterator);
+            return ret;
+        }
+    }
+    public int NumValidReinforcementPositions => ValidReinforcementPositionsIterator.Count();
+    private IEnumerable<Position> ValidReinforcementPositionsIterator
+    {
+        get
+        {
             for (int col = 0; col < field.Columns; col++)
             {
                 var pos = new Position(0, col);
                 if (IsEmpty(pos))
                 {
-                    ret.Add(pos);
+                    yield return pos;
                 }
             }
-            return ret;
         }
     }
     #endregion

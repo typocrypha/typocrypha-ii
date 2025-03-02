@@ -37,12 +37,19 @@ public abstract class BEConditionTimerBase : BattleEventCondition
     {
         done = false;
         float currTime = 0f;
+        var waitWhile = new WaitWhile(WaitWhile);
+        var fixedUpdate = new WaitForFixedUpdate();
         while (currTime < time)
         {
-            yield return new WaitWhile(() => battleEvent.PH.Paused);
-            yield return new WaitForFixedUpdate();
+            yield return waitWhile;
+            yield return fixedUpdate;
             currTime += UnityEngine.Time.fixedDeltaTime;
         }
         done = true;
+    }
+
+    protected virtual bool WaitWhile()
+    {
+        return battleEvent.PH.Paused;
     }
 }
