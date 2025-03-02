@@ -267,11 +267,6 @@ public class SpellManager : MonoBehaviour
                 PlayerDataManager.Equipment.UnlockWord(root);
             }
         }
-        if (specialMod == Damage.SpecialModifier.Critical)
-        {
-            SpellFxManager.instance.LogMessage("A critical hit!");
-            yield return SpellFxManager.instance.PlayMessages();
-        }
         if (HasPrompts)
         {
             yield return StartCoroutine(PlayPrompts());
