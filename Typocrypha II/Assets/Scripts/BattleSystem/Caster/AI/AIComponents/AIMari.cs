@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class AIMari : AIComponent, IPromptProvider
 {
+    [SerializeField] private Spell battleStartSpell;
     [SerializeField] private Spell cycleStartSpell;
     [SerializeField] private SpellList cycle1Spells;
     [SerializeField] private SpellList cycle2Spells;
@@ -90,7 +91,7 @@ public class AIMari : AIComponent, IPromptProvider
     {
         ++cycleIndex;
         state = State.PreparingStorm;
-        ChangeSpell(cycleStartSpell);
+        ChangeSpell(cycleIndex == 0 ? battleStartSpell : cycleStartSpell);
     }
 
     private void ChangeToCurrentStormSpell()

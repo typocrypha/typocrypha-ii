@@ -22,6 +22,7 @@ namespace Typocrypha
                 return;
             }
             key.ClearOutput();
+            key.SetDisplay(' ');
             caster.OnSpiritMode -= Remove;
             caster.OnSpiritMode += Remove;
         }
