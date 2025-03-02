@@ -37,7 +37,11 @@ public abstract class BEConditionTimerBase : BattleEventCondition
     {
         done = false;
         float currTime = 0f;
-        var waitWhile = new WaitWhile(WaitWhile);
+        bool WaitWhileInternal()
+        {
+            return WaitWhile(currTime);
+        }
+        var waitWhile = new WaitWhile(WaitWhileInternal);
         var fixedUpdate = new WaitForFixedUpdate();
         while (currTime < time)
         {
@@ -48,7 +52,7 @@ public abstract class BEConditionTimerBase : BattleEventCondition
         done = true;
     }
 
-    protected virtual bool WaitWhile()
+    protected virtual bool WaitWhile(float currTime)
     {
         return battleEvent.PH.Paused;
     }
