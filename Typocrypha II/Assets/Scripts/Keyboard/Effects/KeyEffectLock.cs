@@ -27,6 +27,12 @@ namespace Typocrypha
             caster.OnSpiritMode += Remove;
         }
 
+        public override void ResetEffect()
+        {
+            caster.OnSpiritMode -= Remove;
+            base.ResetEffect();
+        }
+
         public override void OnPress() 
         {
             if(sfxOverride != null)
