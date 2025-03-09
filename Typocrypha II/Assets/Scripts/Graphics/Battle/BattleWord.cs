@@ -18,7 +18,7 @@ public class BattleWord : MonoBehaviour, IInputHandler
     {
         new Vector2(-5, 2.25f),
         new Vector2(-3f, 1.25f),
-        new Vector2(0, 0.25f),
+        new Vector2(0, 0.5f),
         new Vector2(3f, 1.25f),
         new Vector2(5, 2.25f),
     };
