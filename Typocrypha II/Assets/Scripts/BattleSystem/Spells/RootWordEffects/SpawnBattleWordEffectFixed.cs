@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class SpawnBattleWordEffectFixed : SpawnBattleWordEffect
 {
-    [SerializeField] private WordData[] data;
-
-    protected override IReadOnlyList<WordData> GetWordData()
+    [SerializeField] private List<BattleWord.SequenceData> sequenceData;
+    [SerializeField] private GameObject prefab;
+    protected override IReadOnlyList<BattleWord.SequenceData> GetSequenceData(Caster caster, out GameObject defaultPrefab)
     {
-        return data;
+        defaultPrefab = prefab;
+        return sequenceData;
     }
 }

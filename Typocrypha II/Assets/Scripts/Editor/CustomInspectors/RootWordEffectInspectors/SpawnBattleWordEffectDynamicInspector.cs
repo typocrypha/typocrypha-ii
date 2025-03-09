@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(SpawnBattleWordEffectFixed), true)]
-public class SpawnBattleWordEffectFixedInspector : RootWordEffectInspector
+[CustomEditor(typeof(SpawnBattleWordEffectDynamic), true)]
+public class SpawnBattleWordEffectDynamicInspector : RootWordEffectInspector
 {
     public override bool IsChild => true;
 
@@ -12,8 +12,7 @@ public class SpawnBattleWordEffectFixedInspector : RootWordEffectInspector
     {
         base.OnInspectorGUI();
         EditorUtils.Separator();
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("sequenceData"), true);
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("prefab"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("key"));
         serializedObject.ApplyModifiedProperties();
         if (GUI.changed)
             EditorUtility.SetDirty(target);

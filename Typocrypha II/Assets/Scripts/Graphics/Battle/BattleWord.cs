@@ -183,4 +183,18 @@ public class BattleWord : MonoBehaviour, IInputHandler
         text.renderer.sortingOrder = order;
         timerText.renderer.sortingOrder = order;
     }
+
+    [System.Serializable]
+    public class WordData
+    {
+        public FocusPosition position;
+        public GameObject prefabOverride;
+        public string text;
+    }
+
+    [System.Serializable]
+    public class SequenceData
+    {
+        public List<WordData> words;
+    }
 }
