@@ -31,13 +31,13 @@ public class BattleWord : MonoBehaviour, IInputHandler
     }
 
     [SerializeField] protected TMPro.TextMeshPro text;
-    [SerializeField] protected TMPro.TextMeshPro timerText;
     [SerializeField] protected FXText.TMProColor colorEffect;
     [SerializeField] protected FXText.TMProShake shakeEffect;
 
     [SerializeField] private AudioClip successClip;
     [SerializeField] private AudioClip failClip;
     [SerializeField] private AudioClip focusClip;
+    [SerializeField] private AnimationCurve scaleEasing;
 
     protected readonly List<Tween> activeTweens = new List<Tween>();
 
@@ -105,15 +105,14 @@ public class BattleWord : MonoBehaviour, IInputHandler
         float time = 0;
         var endOfFrameYielder = new WaitForEndOfFrame();
         bool success = false;
-        timerText.text = Mathf.FloorToInt(timeAllowed).ToString();
-        timerText.gameObject.SetActive(true);
         while (time < timeAllowed)
         {
             if (failed)
             {
                 failed = false;
-                timerText.color = Color.red;
-                timerText.DOColor(Color.white, 0.5f).SetEase(Ease.InQuad);
+                var originalColor = colorEffect.defaultColor;
+                colorEffect.defaultColor = Color.red;
+                DOTween.To(() => colorEffect.defaultColor, (c) => colorEffect.defaultColor = c, originalColor, 0.2f).SetEase(Ease.InQuad).Play();
                 time += (0.33f * Settings.GameplaySpeed);
                 AudioManager.instance.PlaySFX(failClip);
             }
@@ -124,9 +123,9 @@ public class BattleWord : MonoBehaviour, IInputHandler
             }
             yield return endOfFrameYielder;
             time += Time.deltaTime / Settings.GameplaySpeed;
-            timerText.text = Mathf.FloorToInt(timeAllowed - time).ToString();
+            float scaleFactor = Mathf.Lerp(2, 3.5f, scaleEasing.Evaluate(time / timeAllowed));
+            transform.localScale = new Vector3(scaleFactor, scaleFactor, 1);
         }
-        timerText.gameObject.SetActive(false);
         shakeEffect.done = true;
         if (success)
         {
@@ -181,7 +180,6 @@ public class BattleWord : MonoBehaviour, IInputHandler
     protected void SetSortingOrder(int order)
     {
         text.renderer.sortingOrder = order;
-        timerText.renderer.sortingOrder = order;
     }
 
     [System.Serializable]
