@@ -4,9 +4,9 @@ using UnityEngine;
 
 public abstract class SpawnBattleWordEffect : RootWordEffect
 {
-    private const float baseWordTime = 1.25f;
-    private const float letterTime = 0.25f;
-    private const float multiWordTimerDelta = -0.25f;
+    private const float baseWordTime = 1.2f;
+    private const float letterTime = 0.2f;
+    private const float multiWordTimerDelta = -0.75f;
     private static readonly WaitForSeconds staggerYielder = new WaitForSeconds(0.25f);
 
     private Caster self;
@@ -55,9 +55,8 @@ public abstract class SpawnBattleWordEffect : RootWordEffect
                 var prefab = data.prefabOverride != null ? data.prefabOverride : defaultPrefab;
                 var word = Instantiate(prefab, parent).GetComponent<BattleWord>(); // TODO: use pooling
                 word.SetText(data.text);
-                focusTime += baseWordTime + (letterTime * data.text.Length);
+                focusTime += baseWordTime + (letterTime * data.text.Length) + (multiWordTimerDelta * i);
                 word.Focus(focusTime, BattleWord.GetFocusPosition(data.position), i == 0, 5 - i);
-                focusTime += multiWordTimerDelta;
                 focusedWords.Add(word);
                 yield return staggerYielder;
             }
