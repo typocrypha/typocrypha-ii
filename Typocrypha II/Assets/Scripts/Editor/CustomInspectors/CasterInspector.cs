@@ -24,8 +24,6 @@ public class CasterInspector : Editor
         data.DisplayName = EditorGUILayout.TextField(new GUIContent("Display Name"), data.DisplayName);
         data.CasterState = EditorUtils.EnumPopup(new GUIContent("Caster State"), data.CasterState);
         data.IsMoveable = EditorGUILayout.Toggle(new GUIContent("Movable"), data.IsMoveable);
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("researchKeyOverride"));
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("researchAmount"));
         #endregion
 
         #region Spawning GUI
