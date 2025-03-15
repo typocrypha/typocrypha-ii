@@ -52,10 +52,9 @@ public class DecodePopup : InteractivePopup
 
     protected override void Setup(string header, string dataKey, float time)
     {
-        Completed = false;
+/*        Completed = false;
         LastPromptSuccess = true;
         headerText.text = header;
-        var data = PlayerDataManager.instance.researchData.GetData(dataKey);
         realText = data.unlockedWord.internalName;
         Prompt = ObscureWord(data).ToString();
         Resize(Prompt.Length);
@@ -64,7 +63,7 @@ public class DecodePopup : InteractivePopup
         obscureIndex = 0;
         ResetBubbles();
         gameObject.SetActive(true);
-        InputManager.Instance.StartInput(this);
+        InputManager.Instance.StartInput(this);*/
     }
 
     private void ResetBubbles()

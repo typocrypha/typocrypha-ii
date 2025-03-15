@@ -22,7 +22,6 @@ public class PlayerDataManager : MonoBehaviour
     #endregion
 
     [SerializeField] private PlayerEquipment equipment;
-    public ResearchData researchData;
     public ShopData ShopData => shopData;
     [SerializeField] private ShopData shopData;
     public int currency;
