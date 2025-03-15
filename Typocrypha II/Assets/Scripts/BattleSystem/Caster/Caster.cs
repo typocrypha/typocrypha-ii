@@ -265,12 +265,6 @@ public class Caster : MonoBehaviour
 
     #region Research + Scouter
 
-    public string ResearchKey => string.IsNullOrWhiteSpace(researchKeyOverride) ? DisplayName : researchKeyOverride;
-    [SerializeField] private string researchKeyOverride;
-
-    public float ResearchAmount => researchAmount;
-    [SerializeField] private float researchAmount = 0.1f;
-
     private ScouterData scouterData;
     public ScouterData ScouterData => scouterData ?? (scouterData = GetComponent<ScouterData>());
 
