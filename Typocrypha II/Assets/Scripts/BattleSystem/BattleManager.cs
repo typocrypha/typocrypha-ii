@@ -34,9 +34,10 @@ public class BattleManager : MonoBehaviour, IPausable
 
     public void TriggerBattleEvent(string id)
     {
+        var idLower = id.ToLower();
         foreach(var e in currEvents)
         {
-            if(e.ID == id)
+            if(e.ID.ToLower() == idLower)
             {
                 e.RunAll();
             }

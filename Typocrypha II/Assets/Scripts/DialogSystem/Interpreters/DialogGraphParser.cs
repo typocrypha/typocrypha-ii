@@ -199,7 +199,7 @@ public class DialogGraphParser : GraphParser
                     return null;
                 }
             }
-            else if(currNode is RemoveCharacterMulti removeMultiNode)
+            else if (currNode is RemoveCharacterMulti removeMultiNode)
             {
                 var args = new List<CharacterData>(MultiCharacterControlNode.MaxArgs);
                 var currView = DialogManager.instance.DialogView;
@@ -312,6 +312,10 @@ public class DialogGraphParser : GraphParser
             else if (currNode is ClearReinforcementsNode clearReinforcementsNode)
             {
                 BattleManager.instance.ClearReinforcements();
+            }
+            else if (currNode is TriggerBattleEventNode battleEventNode)
+            {
+                BattleManager.instance.TriggerBattleEvent(battleEventNode.battleEventId);
             }
             else if (currNode is EmbedImage embedImageNode)
             {
