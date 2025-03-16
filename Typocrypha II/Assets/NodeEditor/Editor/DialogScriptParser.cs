@@ -684,6 +684,7 @@ public class DialogScriptParser
                 throw new System.Exception($"Incorrect number of args for battle event node ({args.Length - 1}). Expected at least 1");
             }
             battleEventNode.battleEventId = args[1];
+            nodes.Add(battleEventNode);
         }
         else
         {
