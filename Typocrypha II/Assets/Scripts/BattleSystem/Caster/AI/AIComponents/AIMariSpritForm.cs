@@ -83,6 +83,7 @@ public class AIMariSpritForm : AIComponent
         Rule.ActiveRule = null;
         Battlefield.instance.PH.Pause(PauseSources.Misc);
         Typocrypha.Keyboard.instance.PH.Pause(PauseSources.Misc);
+        Typocrypha.Keyboard.instance.Clear();
         TargetReticle.instance.PH.Pause(PauseSources.Misc);
         caster.ui.gameObject.SetActive(false);
         AllyBattleBoxManager.instance.HideCharacter();
