@@ -93,7 +93,8 @@ public class DialogScriptParser
         {"clearSpells", typeof(ClearEquippedSpellsNode) },
         {"addSpell", typeof(AddEquippedSpellsNode) },
         {"addSpells", typeof(AddEquippedSpellsNode) },
-        {"wait", typeof(PauseNode) }
+        {"wait", typeof(PauseNode) },
+        {"battleEvent", typeof(TriggerBattleEventNode) },
     };
 
     // Generic node ID map. types that have entries in this map and the nodeMap can be created without additional parsing code
@@ -674,6 +675,15 @@ public class DialogScriptParser
             }
 
             nodes.Add(waitNode);
+        }
+        else if(nodeType == typeof(TriggerBattleEventNode))
+        {
+            var battleEventNode = CreateNode(canvas, TriggerBattleEventNode.ID) as TriggerBattleEventNode;
+            if (args.Length < 2)
+            {
+                throw new System.Exception($"Incorrect number of args for battle event node ({args.Length - 1}). Expected at least 1");
+            }
+            battleEventNode.battleEventId = args[1];
         }
         else
         {
