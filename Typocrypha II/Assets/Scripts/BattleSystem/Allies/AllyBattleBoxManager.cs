@@ -19,6 +19,7 @@ public class AllyBattleBoxManager : MonoBehaviour
     public CharacterData BattleAllyData { get; private set; }
     private string battleAllyPose = "";
     private string battleAllyExpr = "";
+    private bool disableBattleAllyUI = false;
 
     public void SetBattleAllyData(CharacterData data, string expr = "", string pose = "")
     {
@@ -119,8 +120,15 @@ public class AllyBattleBoxManager : MonoBehaviour
         return joinTweenInfo.WaitForCompletion();
     }
 
+    public void SetBattleAllyEnabled(bool allyEnabled)
+    {
+        disableBattleAllyUI = !allyEnabled;
+    }
+
     public YieldInstruction ShowBattleAlly()
     {
+        if (disableBattleAllyUI)
+            return null;
         return AddCharacter(BattleAllyData, battleAllyExpr, battleAllyPose);
     }
 

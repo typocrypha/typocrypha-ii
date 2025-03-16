@@ -210,13 +210,14 @@ Mari[1,1]: H-{pm}Humans...[c]
 Mari[1,1]: I will not...{pm} L-{ps}Let this stop me...
 
 
-Mari[1,1]: KH-!{pm}[shake,0.8,5] AAAAAAAAAAAAHH!
+Mari[1,1]: KH-!{pm}[shake,0.8,5] AAAAAAAAAAAAHH!{pl}[next]
 
 
 >playsfx,SFXVRBootup
 >
 >fade,out,1,1,1,1[d]
 >clear
+>battleEvent,MariFormChange
 >wait,1
 >fade,in,2,1,1,1
 
@@ -242,8 +243,9 @@ Mari[1,1]: By m-m-{ps}myyy will,{pm} I condemnnn theeee...
 
 Mari[1,1]: SUFFOCATE IN YOUR GREED AND AVARICE!!!!!
 
-
+>clear
 >castSpell,HEAL,0,1,0,1,The storm engulfs you...
+>battleEvent,MariSpawnWords
 
 
 >playbgm,BGMBattleAdrestiaDraft1
@@ -256,7 +258,8 @@ Clarke[0,1]: Magical Spell Storm incoming!
 
 
 >playsfx,SFXBootup
-Clarke[0,1]: Switching Typocrypha to {c,ui-terms}FULL INTERCEPTOR MODE{c}.{pm}.{pm}.
+Clarke[0,1]: Switching Typocrypha to {c,ui-terms}FULL INTERCEPTOR MODE{c}.{pm}.{pm}.[next]
+>battleEvent,MariTransitionUI
 
 
 Clarke[0,1]: ENGAGE!

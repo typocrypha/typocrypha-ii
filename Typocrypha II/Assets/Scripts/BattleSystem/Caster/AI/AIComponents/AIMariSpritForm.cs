@@ -21,18 +21,16 @@ public class AIMariSpritForm : AIComponent
     [SerializeField] private GameObject spiritFormVisuals;
     [SerializeField] private GameObject spiritFormBG;
 
-
-    private void OnEnable()
+    private static readonly BattleWord.FocusPosition[] focusPositions = new BattleWord.FocusPosition[]
     {
-        caster.OnSpiritMode += OnSpiritForm;
-    }
+        BattleWord.FocusPosition.LeftFar,
+        BattleWord.FocusPosition.LeftClose,
+        BattleWord.FocusPosition.Center,
+        BattleWord.FocusPosition.RightClose,
+        BattleWord.FocusPosition.RightFar,
+    };
 
-    private void OnDisable()
-    {
-        caster.OnSpiritMode -= OnSpiritForm;
-    }
-
-    private string[] wordList = new[]
+    private readonly string[] wordList = new[]
     {
         "Revenge",
         "Birthright",
@@ -78,31 +76,31 @@ public class AIMariSpritForm : AIComponent
         "Always"
     };
 
-    private void OnSpiritForm()
+    public void ChangeToSpiritForm()
     {
-        Rule.ActiveRule = null;
-        Battlefield.instance.PH.Pause(PauseSources.Misc);
-        Typocrypha.Keyboard.instance.PH.Pause(PauseSources.Misc);
         Typocrypha.Keyboard.instance.Clear();
-        TargetReticle.instance.PH.Pause(PauseSources.Misc);
-        caster.ui.gameObject.SetActive(false);
-        AllyBattleBoxManager.instance.HideCharacter();
-        SpellCooldownManager.instance.Hide();
-        BackgroundManager.instance.SetBackground(spiritFormBG);
-        // TODO form change sequence
+        Rule.ActiveRule = null; // may need to move to placement
         standardVisuals.SetActive(false);
         spiritFormVisuals.SetActive(true);
+        caster.ui.gameObject.SetActive(false);
+        BackgroundManager.instance.SetBackground(spiritFormBG);
         // TODO: something better than this
-        foreach(var enemy in Battlefield.instance.Enemies)
+        foreach (var enemy in Battlefield.instance.Enemies)
         {
-            if(enemy == caster)
+            if (enemy == caster)
             {
                 continue;
             }
-            SpellFxManager.instance.PlayDamageNumber(999, enemy);
             enemy.Damage(999);
             enemy.gameObject.SetActive(false);
         }
+    }
+
+    public void SpawnBattleWords()
+    {
+        Battlefield.instance.PH.Pause(PauseSources.Misc);
+        Typocrypha.Keyboard.instance.PH.Pause(PauseSources.Misc);
+        TargetReticle.instance.PH.Pause(PauseSources.Misc);
         var wordDict = new Dictionary<string, List<WordRotator>>(numWords);
         for (int i = 0; i < numWords; i++)
         {
@@ -121,20 +119,16 @@ public class AIMariSpritForm : AIComponent
         StartCoroutine(SpiritFormCR(wordDict));
     }
 
-    private BattleWord.FocusPosition[] focusPositions = new BattleWord.FocusPosition[]
+    public void TransitionUI()
     {
-        BattleWord.FocusPosition.LeftFar,
-        BattleWord.FocusPosition.LeftClose,
-        BattleWord.FocusPosition.Center,
-        BattleWord.FocusPosition.RightClose,
-        BattleWord.FocusPosition.RightFar,
-    };
+        AllyBattleBoxManager.instance.HideCharacter();
+        AllyBattleBoxManager.instance.SetBattleAllyEnabled(false);
+        SpellCooldownManager.instance.Hide();
+    }
 
     private IEnumerator SpiritFormCR(Dictionary<string, List<WordRotator>> words)
     {
-        AudioManager.instance.StopBGM();
-        yield return new WaitForSeconds(2f);
-        AudioManager.instance.PlayBGM(bgm);
+        yield return new WaitWhile(() => !DialogManager.instance.IsPaused());
         int positionIndex = 1;
         int cadenceIndex = -1;
         var focusedWords = new List<List<WordRotator>>();
@@ -149,7 +143,6 @@ public class AIMariSpritForm : AIComponent
             {
                 cadenceIndex = 0;
             }
-
             int cadence = wordCadence[cadenceIndex];
             var mapping = cadenceMapping[cadence];
             focusedWords.Clear();
