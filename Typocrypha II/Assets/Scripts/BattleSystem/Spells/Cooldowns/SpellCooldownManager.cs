@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -43,7 +44,10 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
     public GameObject cooldownPrefab; // Prefab for single cooldown UI object.
     public Transform cooldownTr; // Object that contains all cooldown UI.
     [SerializeField] private OverheatManager overheatManager;
-    [SerializeField] private Canvas canvas;
+    [SerializeField] private TweenInfo joinLeaveTweenInfo;
+    [SerializeField] private RectTransform offscreenPos;
+    [SerializeField] private RectTransform onscreenPos;
+    [SerializeField] private RectTransform cooldownBox;
 
     public void Awake()
     {
@@ -66,12 +70,17 @@ public class SpellCooldownManager : MonoBehaviour, IPausable
 
     public void Hide()
     {
-        canvas.enabled = false;
+        PlayJoinLeaveTween(offscreenPos);
     }
 
     public void Show()
     {
-        canvas.enabled = true;
+        PlayJoinLeaveTween(onscreenPos);
+    }
+
+    private void PlayJoinLeaveTween(RectTransform target)
+    {
+        joinLeaveTweenInfo.Start(cooldownBox.DOAnchorPosX(target.anchoredPosition.x, joinLeaveTweenInfo.Time), true);
     }
 
     public void InitializeEquippedWords()
