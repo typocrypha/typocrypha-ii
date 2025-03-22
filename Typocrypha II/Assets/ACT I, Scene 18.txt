@@ -210,16 +210,24 @@ Mari[1,1]: H-{pm}Humans...[c]
 Mari[1,1]: I will not...{pm} L-{ps}Let this stop me...
 
 
-Mari[1,1]: KH-!{pm}[shake,0.8,5] AAAAAAAAAAAAHH!{pl}[next]
+Mari[1,1]: KH-!
+
+
 
 
 >playsfx,SFXVRBootup
->
->fade,out,1,1,1,1[d]
+Mari[1,1]:[shake,0.8,5] AAAAAAAAAAAAHH![next]
+>fade,out,3,1,1,1[d]
+
+
+
+
+
+
+>wait,1
 >clear
 >battleEvent,MariFormChange
->wait,1
->fade,in,2,1,1,1
+>fade,in,4,1,1,1
 
 
 Ayin[0,1]: Haa...{pm} Haa...{pm}
@@ -232,10 +240,10 @@ Ayin[0,1]: I-Is it over?
 Mari[1,1]: C-{ps}Curssssed...{pm} HuuUUuumanssss...
 
 
-Mari[1,1]: I...{pm} M-{ps}Mari of the ssssstorm...
+Mari[1,1]: I...{pm} M-{ps}Mari of the...{pm}the ssssstorm...
 
 
-Mari[1,1]: By m-m-{ps}myyy will,{pm} I condemnnn theeee...
+Mari[1,1]: By m-{ps}m-{ps}myyy will,{pm} I condemnnn theeee...
 
 
 >stopbgm,immediate
@@ -243,12 +251,13 @@ Mari[1,1]: By m-m-{ps}myyy will,{pm} I condemnnn theeee...
 
 Mari[1,1]: SUFFOCATE IN YOUR GREED AND AVARICE!!!!!
 
+
 >clear
->castSpell,HEAL,0,1,0,1,The storm engulfs you...
+//>castSpell,HEAL,0,1,0,1,The storm engulfs you…
 >battleEvent,MariSpawnWords
 
 
->playbgm,BGMBattleAdrestiaDraft1
+>playbgm,BGMBattleAdrestiaDraft1,immediate
 
 
 Clarke[0,1]: WARNING!{pm} WARNING!
