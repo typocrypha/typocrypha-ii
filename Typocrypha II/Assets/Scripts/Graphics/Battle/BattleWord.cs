@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ColorTweener = DG.Tweening.Core.TweenerCore<UnityEngine.Color, UnityEngine.Color, DG.Tweening.Plugins.Options.ColorOptions>;
 
 public class BattleWord : MonoBehaviour, IInputHandler
 {
@@ -100,19 +101,25 @@ public class BattleWord : MonoBehaviour, IInputHandler
 
     private bool failed = false;
 
+    private Color GetColorEffectColor() => colorEffect.defaultColor;
+    private void SetColorEffectColor(Color c) => colorEffect.defaultColor = c;
+
     private IEnumerator FocusedCR(float timeAllowed)
     {
         float time = 0;
         var endOfFrameYielder = new WaitForEndOfFrame();
         bool success = false;
+        ColorTweener colorTween = null;
+        void ClearColorTween() => colorTween = null;
+        var originalColor = colorEffect.defaultColor;
         while (time < timeAllowed)
         {
             if (failed)
             {
                 failed = false;
-                var originalColor = colorEffect.defaultColor;
                 colorEffect.defaultColor = Color.red;
-                DOTween.To(() => colorEffect.defaultColor, (c) => colorEffect.defaultColor = c, originalColor, 0.2f).SetEase(Ease.InQuad).Play();
+                colorTween?.Kill();
+                colorTween = DOTween.To(GetColorEffectColor, SetColorEffectColor, originalColor, 0.2f).SetEase(Ease.InQuad).Play().OnComplete(ClearColorTween);
                 time += (0.33f * Settings.GameplaySpeed);
                 AudioManager.instance.PlaySFX(failClip);
             }
