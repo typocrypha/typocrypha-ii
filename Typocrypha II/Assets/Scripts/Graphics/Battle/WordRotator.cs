@@ -64,7 +64,7 @@ public class WordRotator : BattleWord
             DoFade();
             return;
         }
-        SetSortingOrder(-5);
+        SetSortingOrder(-3);
         activeTweens.Add(transform.DOMoveX(-goal, time).SetEase(Ease.InOutSine).OnComplete(MoveRight));
         if (!skipColor)
         {
@@ -74,10 +74,10 @@ public class WordRotator : BattleWord
 
     private void SetHeight(float height)
     {
-        transform.position = new Vector3(transform.position.x, transform.position.y + Mathf.Lerp(-1f, 2.5f, height));
-        float scaleMod = Mathf.Lerp(0.2f, 0.95f, height);
+        transform.position = new Vector3(transform.position.x, transform.position.y + Mathf.Lerp(-2f, 2.5f, height));
+        float scaleMod = Mathf.Lerp(0.25f, 0.95f, height);
         transform.localScale = new Vector3(scaleMod, scaleMod, 1);
-        goal = Mathf.Lerp(1.5f, 5, height);
+        goal = Mathf.Lerp(2f, 5, height);
         brightColor = text.color = Color.Lerp(new Color(0.75f, 0.75f, 0.75f, 0), new Color(1, 1, 1, 0), height);
         brightColor.a = 1;
         time *= Random.Range(0.95f, 1.05f);
