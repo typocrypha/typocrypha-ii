@@ -1,119 +1,104 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿//using System.Collections;
+//using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using System;
+using System.Linq;
+using System.Collections.Generic;
 
 /// <summary>
 /// Manages interfacing with TIPS database.
 /// </summary>
-public class TIPSManager : MonoBehaviour, IPausable
+public class TIPSManager : MonoBehaviour
 {
-    #region IPausable
-    PauseHandle ph;
-    public PauseHandle PH { get => ph; }
+    public static TIPSManager Instance = null;
 
-    public void OnPause(bool b)
-    {
-        enabled = !b;
-    }
-    #endregion
-    public static TIPSManager instance = null;
-    public TIPSEntryData currSearchable; // Current dialog line's searchable term.
+    private TIPSEntryData currSearchable; // Current dialog line's searchable term.
     public TIPSEntryData CurrSearchable
     {
         get => currSearchable;
-        set
-        {
-            currSearchable = value;
-            //if (currSearchable == null)
-            //{
-            //    TIPSTab.GetComponent<SpriteRenderer>().color = Color.white;
-            //}
-            //else
-            //{
-            //    TIPSTab.GetComponent<SpriteRenderer>().color = Color.blue;
-            //}
-        }
+        set => currSearchable = value;
     }
-    public GameObject TIPSTab; // TIPS tab to notify when new entries are added.
-    public GameObject TIPSMenu; // TIPS menu object.
-    public Transform TIPSContent; // Content panel for attaching entries to.
-    public InputField TIPSsearch; // TIPS search bar.
 
-    static TIPSEntryData[] allTIPS; // List of all TIPS entries.
-    GameObject currEntry; // Currently displayed entry.
+    [SerializeField] public TIPSBundle allTIPS;
+
+    public IReadOnlyDictionary<string, TIPSEntryData> UnlockedEntries => unlockedEntries;
+    private readonly Dictionary<string, TIPSEntryData> unlockedEntries = new Dictionary<string, TIPSEntryData>();
 
     void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
         }
         else
         {
             Destroy(gameObject);
             return;
         }
-        ph = new PauseHandle(OnPause);
-
-        if (allTIPS == null)
-        {
-            var ab = AssetBundle.LoadFromFile(System.IO.Path.Combine(Application.streamingAssetsPath, "tips"));
-            allTIPS = ab.LoadAllAssets<TIPSEntryData>();
-        }
     }
 
-    void Update()
+    public bool EntryExists(string title)
     {
-        if (DialogManager.instance.PH.Paused || DialogManager.instance.isBattle)
-            return;
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            TIPSMenu.SetActive(!TIPSMenu.activeSelf);
-            PauseManager.instance.PauseAll(TIPSMenu.activeSelf, PauseSources.TIPS);
-            if (TIPSMenu.activeSelf) // Turning TIPS menu on.
-            {
-                PH.Unpause(PauseSources.Self); // Unpause self.
-                if (CurrSearchable != null)
-                    TIPSsearch.text = CurrSearchable.searchTerms.Items[0];
-                else
-                    TIPSsearch.text = "";
-            }
-        }
+        return allTIPS.entries.ContainsKey(title);
+    }
+
+    public TIPSEntryData GetEntry(string title)
+    {
+        Debug.Assert(EntryExists(title));
+        return allTIPS.entries[title];
+    }
+
+    public bool TryGetEntry(string title, out TIPSEntryData match)
+    {
+        return allTIPS.entries.TryGetValue(title, out match);
+    }
+
+    public bool EntryIsUnlocked(string title)
+    {
+        return unlockedEntries.ContainsKey(title);
     }
 
     /// <summary>
-    /// Open an entry based on a search term.
+    /// Register entry to collection of unlocked entries.
+    /// Will do nothing if entry already unlocked or doesn't exist
     /// </summary>
-    /// <param name="term">Search term.</param>
-    public void OpenEntry(string term)
+    /// <param name="title"> Title of entry to be added. </param>
+    public void UnlockEntry(string title)
     {
-        if (currEntry != null) Destroy(currEntry);
-        // IF NOT FOUND, THEN DISPLAY DEFAULT NONE FOUND
-        foreach(var entry in allTIPS)
-        {
-            if (entry.searchTerms.Contains(term))
-            {
-                currEntry = Instantiate(entry.entryPrefab, TIPSContent);
-            }
-        }
-        TIPSsearch.interactable = false; // Deselect input field.
-        TIPSsearch.interactable = true;
+        if (!EntryExists(title)) return;
+        if (EntryIsUnlocked(title)) return;
+        unlockedEntries.Add(title, allTIPS.entries[title]);
     }
 
     /// <summary>
-    /// Signal with TIPS tab that a new entry has been discovered (or turn off).
+    /// Search unlocked entries by title.
     /// </summary>
-    /// <param name="on">Whether to turn signal on or off.</param>
-    public void SignalEntry(bool on)
+    /// <param name="titlePartial"> Substring to match title against. </param>
+    /// <returns> Array of matching entries. </returns>
+    public TIPSEntryData[] GetUnlockedEntriesWithPartialTitle(string titlePartial)
     {
-        if (on)
-        {
-            TIPSTab.GetComponent<SpriteRenderer>().color = Color.blue;
-        }
-        else
-        {
-            TIPSTab.GetComponent<SpriteRenderer>().color = Color.white;
-        }
+        return unlockedEntries
+            .Select(p => p.Value)
+            .Where(e => e.MatchTitlePartial(titlePartial))
+            .ToArray();
+    }
+
+    /// <summary>
+    /// Combines the player action of searching and unlocking
+    /// </summary>
+    /// <param name="query"></param>
+    /// <returns></returns>
+    public TIPSEntryData[] HandlePlayerQuery(string query)
+    {
+        UnlockEntry(query);
+        return GetUnlockedEntriesWithPartialTitle(query);
+    }
+
+    public TIPSEntryData[] FilterEntriesByPath(string entryPath)
+    {
+        return allTIPS.entries
+            .Select(p => p.Value)
+            .Where(e => e.EntryPath == entryPath)
+            .ToArray();
     }
 }

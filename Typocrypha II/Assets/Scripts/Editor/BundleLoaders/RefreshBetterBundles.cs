@@ -12,5 +12,6 @@ public class RefreshBetterBundles
         CasterTagBundleLoader.LoadCasterTagBundles();
         PrefabBundleLoader.LoadPrefabBundles();
         BadgeBundleLoader.LoadSpellBundles();
+        TIPSBundleLoader.LoadTIPSBundles();
     }
 }
