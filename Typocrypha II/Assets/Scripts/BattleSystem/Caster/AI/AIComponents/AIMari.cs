@@ -16,21 +16,23 @@ public class AIMari : AIComponent, IBattleWordProvider
     [SerializeField] private List<BattleWord.SequenceData> cycle3Prompts;
     [SerializeField] private GameObject battleWordPrefab;
 
-    private int cycleIndex = -1;
+    private int cycleIndex;
     private int spellIndex;
-    private State state;
+    private State state = State.BattleStart;
 
     private enum State
     {
         PreparingStorm,
         Storming,
         EyeOfTheStorm,
+        BattleStart,
     }
 
     protected override void Awake()
     {
         base.Awake();
-        EnterPreparingStormState();
+        state = State.BattleStart;
+        ChangeSpell(cycleStartSpell);
     }
 
     private void OnEnable()
@@ -71,6 +73,12 @@ public class AIMari : AIComponent, IBattleWordProvider
 
     private void AfterCastResolved(Spell spell, Caster self, bool hitTarget)
     {
+        if(spell.Count > 0 && spell[0].Key == battleStartSpell[0].Key)
+        {
+            state = State.PreparingStorm;
+        }
+        if (state == State.BattleStart)
+            return;
         if(state == State.PreparingStorm)
         {
             EnterStormingState();
@@ -92,7 +100,7 @@ public class AIMari : AIComponent, IBattleWordProvider
     {
         ++cycleIndex;
         state = State.PreparingStorm;
-        ChangeSpell(cycleIndex == 0 ? battleStartSpell : cycleStartSpell);
+        ChangeSpell(cycleStartSpell);
     }
 
     private void ChangeToCurrentStormSpell()
