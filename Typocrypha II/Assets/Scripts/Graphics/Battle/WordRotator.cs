@@ -77,7 +77,7 @@ public class WordRotator : BattleWord
         transform.position = new Vector3(transform.position.x, transform.position.y + Mathf.Lerp(-2f, 2.5f, height));
         float scaleMod = Mathf.Lerp(0.25f, 0.95f, height);
         transform.localScale = new Vector3(scaleMod, scaleMod, 1);
-        goal = Mathf.Lerp(2f, 5, height);
+        goal = Mathf.Lerp(2.25f, 5f, height);
         brightColor = text.color = Color.Lerp(new Color(0.75f, 0.75f, 0.75f, 0), new Color(1, 1, 1, 0), height);
         brightColor.a = 1;
         time *= Random.Range(0.95f, 1.05f);
