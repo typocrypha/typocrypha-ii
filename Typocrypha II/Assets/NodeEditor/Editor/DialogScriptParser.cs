@@ -960,9 +960,14 @@ public class DialogScriptParser
     // Get character data asset from alias (null if character doesn't exist).
     CharacterData GetCharacterData(string alias)
     {
-        if (!allCharacterData.Any(c => c.aliases.Contains(alias))) return null;
-        var cdata = allCharacterData.Single(c => c.aliases.Contains(alias)); // Find character data.
-        return AssetDatabase.LoadAssetAtPath<CharacterData>("Assets/ScriptableObjects/CharacterData/" + cdata.name + ".asset");
+        foreach(var data in allCharacterData)
+        {
+            if(data.mainAlias == alias || data.aliases.Contains(alias))
+            {
+                return AssetDatabase.LoadAssetAtPath<CharacterData>("Assets/ScriptableObjects/CharacterData/" + data.name + ".asset");
+            }
+        }
+        return null;
     }
 
     // Creates node and shifts position.
