@@ -4,80 +4,89 @@
 >setbg,Sprite,BgBarrierMari
 
 
->addchar,Ayin,0,0,left,serious
+>addchar,Ayin,0,0,left,damagedscuffed,distressed
 
 
 >stopbgm
 
 
-Narrator: Before you is a large crater where the snake demon Mari once stood.
+Narrator: Before you is a large crater where the Demon once stood.
 
 
-Narrator: Mari, Pillar of the Obscurai, is no more.
+Narrator: Mari Urraca,{pm} Pillar of the Obscurai,{pm} is no more.
 
 
 >playbgm,BGMMenacing
 
 
-Ayin(nervous): Ha... Ha...
+Ayin(eyesclosed): ^shake^Haa...{pl} Haa...|shake|
 
 
-Ayin(nervoussmile): H-Hey, everyone, we did it...
+Narrator: Bruised and battered,{pm} you slowly collect yourself.
 
 
-Narrator: You turn to look at your friends, but they’re in no shape to respond.
+Ayin[basescuffed](uncomfortable): Oof...
+
+
+Ayin(nervoussmile): H-{ps}Hey,{pm} everyone,{pm} we did it...
+
+
+Narrator: You turn to look at your friends,{pm} but they’re in no shape to respond.
 
 
 Narrator: You see Dahlia in the distance weakly tending to Esaias’s wounds.
 
 
-Narrator: Illyia  still stands, if only barely - held up solely by her strong will.
+Narrator: Illyia still stands,{pm} if only barely -{pm} held up solely by her strong will.
 
 
-Narrator: You want to join them yourself, but instead fall to your knees in exhaustion.
+Narrator: You move to join them yourself,{pm} but instead fall to your knees in exhaustion.
 
 
-Narrator: They seem to be waving at you, but you can’t really tell.
+Narrator: They seem to be waving at you,{pm} but you can’t really tell.
 
 
-Ayin: H-Hey! Don’t worry I’m... I’m O-OK. 
+Ayin: H-{ps}Hey!{pm} Don’t worry I’m-{pm}I’m O-{ps}OK. 
 
 
 Ayin(nervous): I’m coming now...
 
 
-Narrator: Thump... Thump...
+>stopbgm
 
 
-Narrator: At first you think it’s your heartbeat, but then you feel it - an overwhelming magical presence.
+Narrator: Thump...{pm} Thump...
+
+
+Narrator: At first you think it’s your heartbeat,{pm} but then you feel it -{pm} an overwhelming magical presence coming from behind.
 
 
 >setexpr,Ayin,surprisedbad
 
 
-Narrator: And it’s right behind you - the same demon which started this whole thing.
+Narrator: You turn to see what it is.
 
 
->stopbgm
-
-
->addchar,Adrestria,0,0,right
+>addchar,Adrestia,0,0,right,normal
 >playbgm,BGMCurse
 
 
-Adrestria: Cursed humans! You shall pay for what you have done!
+Adrestia: Mari...
 
 
-Adrestria: I may have been too late to save Mari... 
+Adrestia: C-{ps}Cursed Humans!{pm} You shall PAY for what you have done!!!
 
 
-Adrestria: But I will not allow you to progress any further!
+Narrator: The Demon who attacked Seven Stars Station...
 
 
-Narrator: You try to lift your arm to cast a spell, but your Typocrypha is so heavy...
+Narrator: The one who started this war is here.
 
 
-Narrator: You think you hear a voice calling you - probably your party.
+Narrator: You try to lift your arm to cast a spell,{pm} but your Typocrypha is so heavy...
+
+
+Narrator: You think you hear a voice calling you -{pm} probably your party.
 
 
 Narrator: You’re sad that you won’t be able to be with them anymore.
@@ -90,13 +99,15 @@ Narrator: And you’re especially sad that you may never see-
 >addchar,Adelai,0,0,left,serious
 
 
-Adelai: LASER!
+>playsfx,SFXCast
+Adelai: {c,ui-terms}LASER!{c}
 
 
-Adrestria: Agh-!
+>playsfx,SFXDamageNumber
+Adrestia: Agh-!
 
 
-Ayin(surprised): A-Adelai!?
+Ayin(surprised): A-{ps}Adelai!?
 
 
 >playbgm,BGMBattleNormal2
@@ -108,16 +119,18 @@ Adelai: Stand back Ayin.
 >addchar,Kaia,0,0,left,zealous
 
 
-Kaia: INCINERATE!
+>playsfx,SFXCast
+Kaia: {c,ui-terms}INCINERATE!{c}
 
 
-Adrestria: Gh-! You again!?
+>playsfx,SFXEnemyHitWeakCrit
+Adrestia: Gh-!{pm} You again!?
 
 
-Kaia(commanding): Officer Adelai, fall back with the wounded.
+Kaia(commanding): Officer Adelai,{pm} fall back with the wounded.
 
 
-Adelai(frustrated): But general, I can help!
+Adelai(frustrated): But general,{pm} I can help!
 
 
 Kaia: No. 
@@ -129,35 +142,36 @@ Kaia(confident): This one is mine.
 Narrator: Adelai hesitates only for a moment before taking you on her shoulders and heading towards the rear.
 
 
->removechar,Ayin
->removechar,Adelai
+>removecharmulti,Ayin,Adelai
 
 
-Kaia(normal): Gloam Knight Adrestria. 
+Kaia(normal): Gloam Knight Adrestia. 
 
 
 Kaia: I see you’ve decided to stop killing innocents and come down here for a real fight.
 
 
-Kaia(confident): I, for one, am happy I get this chance at revenge.
-
-
-Adrestria: ...!?
-
-
-Adrestria: Revenge...?
-
-
-Adrestria: What do YOU know of revenge, human?
-
-
-Adrestria: After what you have done to us...
-
-
-Adrestria: I’m going to make you pay for your crimes!!
+Kaia(confident): I,{pm} for one,{pm} am happy I get this chance at {c,highlight}revenge{c}.
 
 
 >stopbgm
+
+
+Adrestia: ...!?
+
+
+Adrestia: {c,highlight}Revenge{c}...?
+
+
+Adrestia: What do YOU know of revenge,{pm} Human?
+
+
+Adrestia: After what you have done to us...
+
+
+Adrestia: ^shake^rrrRRRAAAAAAGGHH!!!|shake|
+
+
 
 
 >endt
