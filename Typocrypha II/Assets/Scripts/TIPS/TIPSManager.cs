@@ -94,11 +94,11 @@ public class TIPSManager : MonoBehaviour
         return GetUnlockedEntriesWithPartialTitle(query);
     }
 
-    public TIPSEntryData[] FilterEntriesByPath(string entryPath)
+    public TIPSEntryData[] FilterEntriesByFolder(string parent)
     {
         return allTIPS.entries
             .Select(p => p.Value)
-            .Where(e => e.EntryPath == entryPath)
+            .Where(e => e.Parent == parent)
             .ToArray();
     }
 }

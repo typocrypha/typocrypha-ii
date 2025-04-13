@@ -18,11 +18,14 @@ public class TIPSEntryData : ScriptableObject
      * public GameObject entryPrefab; // Prefab object for the entry.
      * 
      ***/
-
-    public const string TIPSFolder = @"Assets/ScriptableObjects/TIPS";
-
+    [Header("Validated Properties")]
     public string Title;
-    public string EntryPath;
+    public string Parent;
+    public bool IsFolder;
+
+
+    [Header("Manual Properties")]
+    [Space(10)]
     [Multiline(10)] public string EntryText;
 
     public void OnEnable()
@@ -42,16 +45,18 @@ public class TIPSEntryData : ScriptableObject
 
     public void OnValidate()
     {
+        // My path
         var projectPath = AssetDatabase.GetAssetPath(this);
         if (string.IsNullOrEmpty(projectPath)) return;
 
-        if (string.IsNullOrEmpty(Title))
-        {
-            var fileName = Path.GetFileNameWithoutExtension(projectPath);
-            Title = fileName;
-        }
+        // Update title
+        Title = Path.GetFileNameWithoutExtension(projectPath);
 
-        var relativePath = projectPath.Replace(TIPSFolder, "");
-        EntryPath = Path.GetDirectoryName(relativePath).Replace("\\", "/");
+        // Update parent folder name
+        var fullParent = new FileInfo(projectPath).DirectoryName;
+        Parent = Path.GetFileNameWithoutExtension(fullParent);
+
+        // Check my path for matching directory
+        IsFolder = new DirectoryInfo(Path.Combine(fullParent, Title)).Exists;
     }
 }
