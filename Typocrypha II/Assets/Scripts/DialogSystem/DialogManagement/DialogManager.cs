@@ -51,6 +51,7 @@ public class DialogManager : MonoBehaviour, IPausable
     private DialogView lastView; // Previously displayed dialog view.
     [HideInInspector] public IDialogBox dialogBox; // Latest displayed dialog box.
     [HideInInspector] public int dialogCounter = 0; // Number of dialog lines passed.
+    public event System.Action OnHideComplete;
 
     public bool ReadyToContinue { get; set; } = true;
     public string LocationText
@@ -128,9 +129,14 @@ public class DialogManager : MonoBehaviour, IPausable
     /// May load save if applicable.
     /// </summary>
     /// <param name="graph">Graph object to start.</param>
-    public void StartDialog(DialogCanvas graph, bool reset)
+    public void StartDialog(DialogCanvas graph, bool reset, System.Action onHideComplete = null)
     {
         graphParser.Graph = graph;
+        if(onHideComplete != null)
+        {
+            OnHideComplete -= onHideComplete;
+            OnHideComplete += onHideComplete;
+        }
         StartDialog(reset, false);
     }
 
@@ -264,6 +270,8 @@ public class DialogManager : MonoBehaviour, IPausable
         {
             PH.Pause(PauseSources.Self);
             onComplete?.Invoke();
+            OnHideComplete?.Invoke();
+            OnHideComplete = null;
             return;
         }
         StartCoroutine(HideView(endType, onComplete));
@@ -301,6 +309,8 @@ public class DialogManager : MonoBehaviour, IPausable
         ReadyToContinue = true;
         PH.Pause(PauseSources.Self);
         onComplete?.Invoke();
+        OnHideComplete?.Invoke();
+        OnHideComplete = null;
     }
 
     private void HideViewInstant()

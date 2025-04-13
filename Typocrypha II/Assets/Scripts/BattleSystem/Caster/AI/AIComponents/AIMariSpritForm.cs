@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Gameflow;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +9,8 @@ public class AIMariSpritForm : AIComponent
     [SerializeField] private int numWords;
     [SerializeField] private AudioClip bgm;
     [SerializeField] private int[] wordCadence;
+    [SerializeField] private DialogCanvas defeatScene;
+
     private static readonly int[][] cadenceMapping = new int[][]
     {
         new int[] { 2 },
@@ -204,8 +207,6 @@ public class AIMariSpritForm : AIComponent
             }
             delay -= 0.01f;
         }
-        caster.Damage(9999);
-        SpellFxManager.instance.PlayDamageNumber(999, caster);
-        Battlefield.instance.PH.Unpause(PauseSources.Misc);
+        DialogManager.instance.StartDialog(defeatScene, true, BattleManager.instance.NextWave);
     }
 }
