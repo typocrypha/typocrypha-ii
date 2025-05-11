@@ -7,9 +7,12 @@ public class VNPlusTIPSController : MonoBehaviour
 {
     public PauseHandle PH { get; private set; } = null;
 
-    [Header("References")]
-    [SerializeField] RectTransform rectChat, rectTIPS;
-    [SerializeField] TIPSCastBar searchbar;
+    [Header("External References")]
+    [SerializeField] RectTransform rectChat;
+    [Header("Internal References")]
+    [SerializeField] RectTransform rectTIPS;
+    [SerializeField] GameObject canvasTIPS;
+    [SerializeField] TIPSNavigator navigator;
 
     [Header("Settings")]
     [SerializeField] float tweenDuration = 0.5f;
@@ -17,27 +20,43 @@ public class VNPlusTIPSController : MonoBehaviour
     private bool isOpen = false;
     private Sequence sequenceOpenClose;
 
-    void Update()
+    private void Awake()
     {
-        if (sequenceOpenClose == null || !sequenceOpenClose.IsPlaying())
+        canvasTIPS.SetActive(false);
+        navigator.OnExit += CloseTIPS;
+    }
+
+    private void OnDestroy()
+    {
+        navigator.OnExit -= CloseTIPS;
+    }
+
+    private void Update()
+    {
+        if (sequenceOpenClose != null && sequenceOpenClose.IsPlaying()) return;
+
+        if (!Input.GetKeyDown(KeyCode.Tab)) return;
         {
             var mgr = DialogManager.instance;
-            if (!isOpen && mgr && mgr.ReadyToContinue && Input.GetKeyDown(KeyCode.Tab))
+            if (!isOpen && mgr && mgr.ReadyToContinue)
             {
-                isOpen = true;
-                PauseManager.instance.PauseAll(true, PauseSources.TIPS, PH, true);
-                OpenTIPS().OnComplete(OnOpenComplete);
+                OpenTIPS();
             }
-            else if (isOpen && (Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.Escape)))
+            else if (isOpen)
             {
-                isOpen = false;
-                searchbar.enabled = false;
-                CloseTIPS().OnComplete(OnCloseComplete);
+                CloseTIPS();
             }
         }
     }
 
-    private Sequence OpenTIPS()
+    public void OpenTIPS()
+    {
+        isOpen = true;
+        PauseManager.instance.PauseAll(true, PauseSources.TIPS, PH, true);
+        SequenceOpenTIPS().OnComplete(OnOpenComplete);
+    }
+
+    private Sequence SequenceOpenTIPS()
     {
         var defaultEase = DOTween.defaultEaseType;
         DOTween.defaultEaseType = Ease.InOutExpo;
@@ -45,7 +64,7 @@ public class VNPlusTIPSController : MonoBehaviour
         DOTween.Complete("TIPS");
         sequenceOpenClose = DOTween.Sequence().SetId("TIPS").
             Append(rectChat.DOScaleX(0, tweenDuration).From(1)).
-            AppendCallback(()=>rectTIPS.gameObject.SetActive(true)).
+            AppendCallback(()=> canvasTIPS.SetActive(true)).
             Append(rectTIPS.DOScaleX(1, tweenDuration).From(0));
 
         DOTween.defaultEaseType = defaultEase;
@@ -54,10 +73,17 @@ public class VNPlusTIPSController : MonoBehaviour
 
     private void OnOpenComplete()
     {
-        searchbar.enabled = true;
+        navigator.enabled = true;
     }
 
-    private Sequence CloseTIPS()
+    public void CloseTIPS()
+    {
+        isOpen = false;
+        navigator.enabled = false;
+        SequenceCloseTIPS().OnComplete(OnCloseComplete);
+    }
+
+    private Sequence SequenceCloseTIPS()
     {
         var defaultEase = DOTween.defaultEaseType;
         DOTween.defaultEaseType = Ease.InOutExpo;
@@ -65,7 +91,7 @@ public class VNPlusTIPSController : MonoBehaviour
         DOTween.Complete("TIPS");
         sequenceOpenClose = DOTween.Sequence().SetId("TIPS").
             Append(rectTIPS.DOScaleX(0, tweenDuration).From(1)).
-            AppendCallback(() => rectTIPS.gameObject.SetActive(false)).
+            AppendCallback(() => canvasTIPS.SetActive(false)).
             Append(rectChat.DOScaleX(1, tweenDuration).From(0));
 
         DOTween.defaultEaseType = defaultEase;

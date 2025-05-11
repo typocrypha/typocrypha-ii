@@ -1,30 +1,38 @@
 ﻿//using System.Collections;
 //using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using Typocrypha;
+using UnityEngine.Events;
 
 public class TIPSCastBar : CastBar
 {
+    public UnityEvent_string OnSearchCast;
+    public UnityEvent OnValidKeyPressed;
+    [SerializeField] AudioClip typeSfx;
 
     private void Update()
     {
-        var validInput = CheckInput(Input.inputString);
-        if (validInput.HasValue)
+        ProcessInput(Input.inputString);
+
+        if (Input.GetKeyDown(KeyCode.Return))
         {
-            //if (validInput.Value) HasFocus = true;
-
+            Submit();
+            Clear();
         }
+    }
 
-        //if (HasFocus && Input.GetKeyDown(KeyCode.Space)) Submit();
-        //if (HasFocus && Input.GetKeyDown(KeyCode.DownArrow))
-        //{
-
-        //}
+    public void ProcessInput(string input)
+    {
+        var validInput = CheckInput(input);
+        if (validInput.HasValue && validInput.Value)
+        {
+            AudioManager.instance.PlaySFX(typeSfx);
+            OnValidKeyPressed.Invoke();
+        }
     }
 
     public override void Submit()
     {
-        throw new System.NotImplementedException();
+        OnSearchCast.Invoke(Text);
     }
 }

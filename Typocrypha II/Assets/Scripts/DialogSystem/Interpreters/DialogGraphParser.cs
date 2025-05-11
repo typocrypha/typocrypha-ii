@@ -83,8 +83,6 @@ public class DialogGraphParser : GraphParser
                         voice.Add(cd.talk_sfx);
                     }
                 }
-                // Set TIPS search.
-                //TIPSManager.instance.CurrSearchable = cNode.tipsData;
                 // Get proper display name.
                 string displayName = (cNode.displayName.Trim().Length == 0)
                                    ? cNode.characterName
