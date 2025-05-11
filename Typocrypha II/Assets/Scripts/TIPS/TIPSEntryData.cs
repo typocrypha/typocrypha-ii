@@ -22,6 +22,7 @@ public class TIPSEntryData : ScriptableObject
     public string Title;
     public string Parent;
     public bool IsFolder;
+    public bool CreateFolder;
 
 
     [Header("Manual Properties")]
@@ -58,5 +59,13 @@ public class TIPSEntryData : ScriptableObject
 
         // Check my path for matching directory
         IsFolder = new DirectoryInfo(Path.Combine(fullParent, Title)).Exists;
+
+        if (!IsFolder && CreateFolder)
+        {
+            Directory.CreateDirectory(Path.Combine(fullParent, Title));
+            AssetDatabase.Refresh();
+        }
+
+        CreateFolder = false;
     }
 }
