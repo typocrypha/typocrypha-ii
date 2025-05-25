@@ -27,7 +27,7 @@ public class TIPSEntryData : ScriptableObject
 
     [Header("Manual Properties")]
     [Space(10)]
-    [Multiline(10)] public string EntryText;
+    [Multiline(10)] public string Content;
 
     public void OnEnable()
     {

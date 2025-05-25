@@ -1,8 +1,5 @@
-﻿//using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using DG.Tweening;
-using System.IO;
 
 public class TIPSTopicStack : MonoBehaviour
 {
@@ -22,7 +19,7 @@ public class TIPSTopicStack : MonoBehaviour
     private void Start()
     {
         foreach (var p in panels) p.OnButtonPressed += OpenFolderEntry;
-        panelTop.LoadEntriesInFolder("TIPS");
+        panelTop.LoadEntriesInFolder("Root");
     }
 
     private void OnDestroy()
