@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using DG.Tweening;
+using System;
 
 public class TIPSTopicStack : MonoBehaviour
 {
@@ -7,24 +8,36 @@ public class TIPSTopicStack : MonoBehaviour
     [SerializeField] private TIPSTopicPanel panelTop, panelSub, panelAux;
     [SerializeField] Vector2 auxOffsetPosition = new Vector2(-16, 16);
 
+    public enum Layer { Top = 0, Sub = 1, Aux = 2 };
+    public Layer currentLayer = Layer.Top;
+
+    public Action<TIPSEntryData> OnButtonSelected;
+
     private TIPSTopicPanel[] _panels;
     private TIPSTopicPanel[] panels => _panels != null ? _panels : _panels = new TIPSTopicPanel[] { panelTop, panelSub, panelAux };
 
-    public enum Layer { Top = 0, Sub = 1, Aux = 2 };
-    public Layer currentLayer = Layer.Top;
+    private TIPSEntryData latestOpenedEntry;
 
     public TIPSTopicPanel GetPanel(Layer layer) => panels[(int)layer];
     public TIPSTopicPanel GetCurrentPanel() => GetPanel(currentLayer);
 
     private void Start()
     {
-        foreach (var p in panels) p.OnButtonPressed += OpenFolderEntry;
+        foreach (var p in panels)
+        {
+            p.OnButtonPressed += StepIntoEntry;
+            p.OnButtonSelected += OnButtonSelected;
+        }
         panelTop.LoadEntriesInFolder("Root");
     }
 
     private void OnDestroy()
     {
-        foreach (var p in panels) p.OnButtonPressed -= OpenFolderEntry;
+        foreach (var p in panels)
+        {
+            p.OnButtonPressed -= StepIntoEntry;
+            p.OnButtonSelected -= OnButtonSelected;
+        }
     }
 
     public Sequence JumpToLayer(Layer target, float duration = 0.33f)
@@ -69,20 +82,39 @@ public class TIPSTopicStack : MonoBehaviour
         GetPanel(currentLayer).SelectTopicPageTop();
     }
 
-    private void OpenFolderEntry(TIPSEntryData entry)
+    private void StepIntoEntry(TIPSEntryData entry)
     {
         if (!entry.IsFolder) return;
         StepToNextLayer();
-        GetCurrentPanel().LoadEntriesInFolder(entry.Title);
+        var current = GetCurrentPanel();
+        current.LoadEntriesInFolder(entry.Title);
+        current.SelectTopicPageTop();
+        
+        latestOpenedEntry = entry;
     }
 
-    [ContextMenu("Exit Folder")]
-    public void ExitFolderEntry()
+    public void JumpToEntry(TIPSEntryData entry)
+    {
+        JumpToLayer((Layer)entry.Depth);
+        var current = GetCurrentPanel();
+        current.LoadEntriesInFolder(entry.Parent);
+        current.SelectEntry(entry.Title);
+
+        if (currentLayer == Layer.Aux)
+        {
+            panelSub.LoadEntriesInFolder(entry.SplitPath[(int)Layer.Sub]);
+        }
+
+        latestOpenedEntry = entry;
+    }
+
+    public void StepOutToParent()
     {
         if (currentLayer == Layer.Top) return;
 
         StepToPreviousLayer();
-        GetPanel(currentLayer).SelectTopicLastPressed();
+        GetPanel(currentLayer).SelectEntry(latestOpenedEntry.Title);
+        latestOpenedEntry = TIPSManager.Instance.GetEntry(latestOpenedEntry.Parent);
     }
 
 //#if UNITY_EDITOR

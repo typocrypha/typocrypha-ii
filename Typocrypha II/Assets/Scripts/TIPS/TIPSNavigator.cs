@@ -35,6 +35,11 @@ public class TIPSNavigator : MonoBehaviour
         FocusOnTopics();
     }
 
+    private void Start()
+    {
+        topicStack.OnButtonSelected += DisplayEntry;
+    }
+
     private void Update()
     {
         if (CurrentFocus == Focus.searchbar && Input.GetAxisRaw("Vertical") != 0)
@@ -50,15 +55,11 @@ public class TIPSNavigator : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (CurrentFocus == Focus.topics && topicStack.currentLayer > TIPSTopicStack.Layer.Top)
+            if (topicStack.currentLayer > TIPSTopicStack.Layer.Top)
             {
-                topicStack.ExitFolderEntry();
+                topicStack.StepOutToParent();
             }
-            else if (CurrentFocus == Focus.topics && topicStack.currentLayer == TIPSTopicStack.Layer.Top)
-            {
-                OnExit.Invoke();
-            }
-            else if (CurrentFocus == Focus.searchbar)
+            else if (topicStack.currentLayer == TIPSTopicStack.Layer.Top)
             {
                 OnExit.Invoke();
             }
@@ -112,10 +113,11 @@ public class TIPSNavigator : MonoBehaviour
     protected virtual void OnMatchExact(TIPSEntryData entry)
     {
         AudioManager.instance.PlaySFX(sfxSearchGood);
-        //navigate to page
-        //select matching button
+        topicStack.JumpToEntry(entry);
+    }
 
-        //placeholder, this should be done by selecting the button
+    protected virtual void DisplayEntry(TIPSEntryData entry)
+    {
         entryPanel.SetTitle(entry.Title);
         entryPanel.SetContent(entry.Content);
     }
