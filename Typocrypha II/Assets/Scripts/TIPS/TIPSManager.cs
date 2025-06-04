@@ -63,7 +63,7 @@ public class TIPSManager : MonoBehaviour
     /// Will do nothing if entry already unlocked or doesn't exist
     /// </summary>
     /// <param name="title"> Title of entry to be added. </param>
-    public void UnlockEntry(string title)
+    public void UnlockEntryIfApplicable(string title)
     {
         if (!EntryExists(title)) return;
         if (EntryIsUnlocked(title)) return;
@@ -84,14 +84,16 @@ public class TIPSManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Combines the player action of searching and unlocking
+    /// Combines the player action of entry lookup and unlocking.
     /// </summary>
-    /// <param name="query"></param>
-    /// <returns></returns>
-    public TIPSEntryData[] HandlePlayerQuery(string query)
+    /// <param name="query"> Title search term. </param>
+    /// <param name="partialMatches"> Entries matching query. </param>
+    /// <returns> Matching entry or null. </returns>
+    public TIPSEntryData HandlePlayerQuery(string query, out TIPSEntryData[] partialMatches)
     {
-        UnlockEntry(query);
-        return GetUnlockedEntriesWithPartialTitle(query);
+        UnlockEntryIfApplicable(query);
+        partialMatches = GetUnlockedEntriesWithPartialTitle(query);
+        return partialMatches.FirstOrDefault(e => e.MatchTitleExact(query));
     }
 
     public TIPSEntryData[] FilterEntriesByFolder(string parent)

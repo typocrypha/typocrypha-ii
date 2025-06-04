@@ -11,6 +11,7 @@ public class TIPSNavigator : MonoBehaviour
     [Header("Internal References")]
     [SerializeField] protected TIPSCastBar searchbar;
     [SerializeField] protected TIPSTopicStack topicStack;
+    [SerializeField] protected TIPSEntryPanel entryPanel;
     [SerializeField] protected AudioClip sfxSearchBad;
     [SerializeField] protected AudioClip sfxSearchGood;
 
@@ -34,6 +35,11 @@ public class TIPSNavigator : MonoBehaviour
         FocusOnTopics();
     }
 
+    private void Start()
+    {
+        topicStack.OnButtonSelected += DisplayEntry;
+    }
+
     private void Update()
     {
         if (CurrentFocus == Focus.searchbar && Input.GetAxisRaw("Vertical") != 0)
@@ -41,7 +47,7 @@ public class TIPSNavigator : MonoBehaviour
             FocusOnTopics();
         }
 
-        if (CurrentFocus == Focus.topics && new Regex("[A-Za-z]+").IsMatch(Input.inputString))
+        if (CurrentFocus == Focus.topics && new Regex("[A-Za-z\b]+").IsMatch(Input.inputString))
         {
             FocusOnSearchbar();
             searchbar.ProcessInput(Input.inputString);
@@ -49,17 +55,11 @@ public class TIPSNavigator : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            Debug.Log(CurrentFocus);
-
-            if (CurrentFocus == Focus.topics && topicStack.currentLayer > TIPSTopicStack.Layer.Top)
+            if (topicStack.currentLayer > TIPSTopicStack.Layer.Top)
             {
-                topicStack.ExitFolderEntry();
+                topicStack.StepOutToParent();
             }
-            else if (CurrentFocus == Focus.topics && topicStack.currentLayer == TIPSTopicStack.Layer.Top)
-            {
-                OnExit.Invoke();
-            }
-            else if (CurrentFocus == Focus.searchbar)
+            else if (topicStack.currentLayer == TIPSTopicStack.Layer.Top)
             {
                 OnExit.Invoke();
             }
@@ -88,25 +88,18 @@ public class TIPSNavigator : MonoBehaviour
             return;
         }
 
-        var matches = TIPSManager.Instance.HandlePlayerQuery(input);
-        if (matches.Length == 0)
+        var exactMatch = TIPSManager.Instance.HandlePlayerQuery(input, out var allMatches);
+        if (allMatches.Length == 0)
             OnMatchNone();
-        else if (matches.Length == 1 && matches[0].MatchTitleExact(input))
-            OnMatchExact(matches[0]);
+        else if (exactMatch != null)
+            OnMatchExact(exactMatch);
         else
-            OnMatchPartial(matches);
+            OnMatchPartial(allMatches);
     }
 
     protected virtual void OnMatchNone()
     {
         AudioManager.instance.PlaySFX(sfxSearchBad);
-    }
-
-    protected virtual void OnMatchExact(TIPSEntryData entry)
-    {
-        AudioManager.instance.PlaySFX(sfxSearchGood);
-        //navigate to page
-        //navigate to matching button
     }
 
     protected virtual void OnMatchPartial(TIPSEntryData[] entries)
@@ -115,6 +108,18 @@ public class TIPSNavigator : MonoBehaviour
         //navigate to top layer
         //populate buttons with matching entries
         //navigate to first button
+    }
+
+    protected virtual void OnMatchExact(TIPSEntryData entry)
+    {
+        AudioManager.instance.PlaySFX(sfxSearchGood);
+        topicStack.JumpToEntry(entry);
+    }
+
+    protected virtual void DisplayEntry(TIPSEntryData entry)
+    {
+        entryPanel.SetTitle(entry.Title);
+        entryPanel.SetContent(entry.Content);
     }
 
 }

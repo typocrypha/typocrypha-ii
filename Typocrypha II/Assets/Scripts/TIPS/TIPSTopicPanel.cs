@@ -10,6 +10,7 @@ using UnityEngine.EventSystems;
 public class TIPSTopicPanel : MonoBehaviour
 {
     public Action<TIPSEntryData> OnButtonPressed;
+    public Action<TIPSEntryData> OnButtonSelected;
 
     [SerializeField] TextMeshProUGUI uguiTitle, uguiPage;
     [SerializeField] CanvasGroup canvasGroup;
@@ -18,7 +19,6 @@ public class TIPSTopicPanel : MonoBehaviour
     private const int PAGE_SIZE = 7;
     private IList<TIPSEntryData> currTopics;
     private int currPage;
-    private MenuButton lastPressed;
 
     public int GetButtonCount(int topicSize, int pageNum) => Mathf.Min(topicSize - pageNum * PAGE_SIZE, PAGE_SIZE);
     public int GetButtonCount() => GetButtonCount(currTopics.Count, currPage);
@@ -53,12 +53,14 @@ public class TIPSTopicPanel : MonoBehaviour
             var button = buttonContainer.GetChild(i).GetComponent<MenuButton>();
             var entry = currTopics[i + page * PAGE_SIZE];
             button.SetText(entry.Title);
+            button.gameObject.name = entry.Title;
             button.button.onClick.RemoveAllListeners();
+            button.onSelect.RemoveAllListeners();
 
             if (entry.IsFolder)
             {
                 button.button.onClick.AddListener(() => OnButtonPressed(entry));
-                button.button.onClick.AddListener(() => lastPressed = button);
+                button.onSelect.AddListener(() => OnButtonSelected(entry));
             }
 
             button.gameObject.SetActive(true);
@@ -84,9 +86,16 @@ public class TIPSTopicPanel : MonoBehaviour
         if (lastButton) lastButton.Select();
     }
 
-    public void SelectTopicLastPressed()
+    public void SelectEntry(string title)
     {
-        lastPressed.Select();
+        foreach (Transform child in buttonContainer)
+        {
+            if (child.gameObject.name == title)
+            {
+                child.GetComponent<MenuButton>().Select();
+                return;
+            }
+        }
     }
 
     [ContextMenu("Navigate Previous")]
@@ -112,6 +121,5 @@ public class TIPSTopicPanel : MonoBehaviour
         var entries = TIPSManager.Instance.FilterEntriesByFolder(folder);
         SetTopics(entries);
         LoadPageContent(0, folder);
-        SelectTopicPageTop();
     }
 }

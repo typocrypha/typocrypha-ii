@@ -21,13 +21,18 @@ public class TIPSEntryData : ScriptableObject
     [Header("Validated Properties")]
     public string Title;
     public string Parent;
+    public string RelativePath;
     public bool IsFolder;
     public bool CreateFolder;
 
 
     [Header("Manual Properties")]
     [Space(10)]
-    [Multiline(10)] public string EntryText;
+    [Multiline(10)] public string Content;
+
+    public const string BASE_ASSET_PATH = "ScriptableObjects/TIPS";
+    public string[] SplitPath => RelativePath.Split('\\');
+    public int Depth => RelativePath.Split('\\').Length - 1;
 
     public void OnEnable()
     {
@@ -67,5 +72,8 @@ public class TIPSEntryData : ScriptableObject
         }
 
         CreateFolder = false;
+
+        var pathToTIPS = Path.Combine(Application.dataPath, BASE_ASSET_PATH);
+        RelativePath = fullParent.Substring(pathToTIPS.Length);
     }
 }
