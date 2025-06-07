@@ -33,7 +33,7 @@ public class VNPlusTIPSController : MonoBehaviour
 
     private void Update()
     {
-        if (sequenceOpenClose != null && sequenceOpenClose.IsPlaying()) return;
+        if (sequenceOpenClose != null && sequenceOpenClose.IsActive() && sequenceOpenClose.IsPlaying()) return;
 
         if (!Input.GetKeyDown(KeyCode.Tab)) return;
         {
