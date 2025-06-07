@@ -93,7 +93,7 @@ namespace Typocrypha
             {
                 cursor.gameObject.SetActive(true);
             }
-            cursor.transform.position = ActiveLetters[pos].transform.position;
+            cursor.transform.localPosition = ActiveLetters[pos].transform.localPosition;
             cursor.SetDelay(0.2f, show);
         }
 

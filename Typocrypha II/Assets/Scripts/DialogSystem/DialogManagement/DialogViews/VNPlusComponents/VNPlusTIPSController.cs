@@ -53,7 +53,7 @@ public class VNPlusTIPSController : MonoBehaviour
     {
         isOpen = true;
         PauseManager.instance.PauseAll(true, PauseSources.TIPS, PH, true);
-        SequenceOpenTIPS().OnComplete(OnOpenComplete);
+        SequenceOpenTIPS().Play();
     }
 
     private Sequence SequenceOpenTIPS()
@@ -64,16 +64,18 @@ public class VNPlusTIPSController : MonoBehaviour
         DOTween.Complete("TIPS");
         sequenceOpenClose = DOTween.Sequence().SetId("TIPS").
             Append(rectChat.DOScaleX(0, tweenDuration).From(1)).
-            AppendCallback(()=> canvasTIPS.SetActive(true)).
+            AppendCallback(ShowTIPSCanvas).
             Append(rectTIPS.DOScaleX(1, tweenDuration).From(0));
 
         DOTween.defaultEaseType = defaultEase;
         return sequenceOpenClose;
     }
 
-    private void OnOpenComplete()
+    private void ShowTIPSCanvas()
     {
+        canvasTIPS.SetActive(true);
         navigator.enabled = true;
+        navigator.InitializeFocus();
     }
 
     public void CloseTIPS()

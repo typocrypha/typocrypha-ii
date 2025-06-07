@@ -30,24 +30,36 @@ public class TIPSNavigator : MonoBehaviour
         if (searchbar) searchbar.OnSearchCast.AddListener(HandleSearchInput);
     }
 
-    private void OnEnable()
-    {
-        FocusOnTopics();
-    }
-
     private void Start()
     {
         topicStack.OnButtonSelected += DisplayEntry;
     }
 
+    public void InitializeFocus()
+    {
+        searchbar.PH.Unpause(PauseSources.TIPS);
+        FocusOnSearchbar();
+    }
+
     private void Update()
     {
-        if (CurrentFocus == Focus.searchbar && Input.GetAxisRaw("Vertical") != 0)
+        if (CurrentFocus == Focus.searchbar)
         {
-            FocusOnTopics();
+            if(Input.GetAxisRaw("Vertical") != 0)
+            {
+                FocusOnTopics();
+            }
+            else if (Input.GetKeyDown(KeyCode.Return))
+            {
+                searchbar.Submit();
+            }
+            else
+            {
+                searchbar.ProcessInput(Input.inputString);
+            }
         }
 
-        if (CurrentFocus == Focus.topics && new Regex("[A-Za-z\b]+").IsMatch(Input.inputString))
+        if ((CurrentFocus == Focus.topics || CurrentFocus == Focus.content) && new Regex("[A-Za-z\b]+").IsMatch(Input.inputString))
         {
             FocusOnSearchbar();
             searchbar.ProcessInput(Input.inputString);
@@ -68,14 +80,14 @@ public class TIPSNavigator : MonoBehaviour
 
     public void FocusOnSearchbar()
     {
-        searchbar.enabled = true;
+        searchbar.Focus();
         CurrentFocus = Focus.searchbar;
         currentEventSystem.SetSelectedGameObject(null);
     }
 
     public void FocusOnTopics()
     {
-        searchbar.enabled = false;
+        searchbar.Unfocus();
         CurrentFocus = Focus.topics;
         topicStack.SelectFirstTopic();
     }
