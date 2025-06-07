@@ -59,14 +59,12 @@ public class TIPSTopicPanel : MonoBehaviour
             var entry = currTopics[i + page * PAGE_SIZE];
             button.SetText(entry.Title);
             button.gameObject.name = entry.Title;
+
+            // Setup listeners
             button.button.onClick.RemoveAllListeners();
             button.onSelect.RemoveAllListeners();
-
-            if (entry.IsFolder)
-            {
-                button.button.onClick.AddListener(() => OnButtonPressed(entry));
-                button.onSelect.AddListener(() => OnButtonSelected(entry));
-            }
+            button.button.onClick.AddListener(() => OnButtonPressed(entry));
+            button.onSelect.AddListener(() => OnButtonSelected(entry));
 
             button.gameObject.SetActive(true);
         }
