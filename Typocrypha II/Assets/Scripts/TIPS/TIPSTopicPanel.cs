@@ -20,6 +20,11 @@ public class TIPSTopicPanel : MonoBehaviour
     private IList<TIPSEntryData> currTopics;
     private int currPage;
 
+    private void Start()
+    {
+        SetButtonNavigationExplicit();
+    }
+
     public int GetButtonCount(int topicSize, int pageNum) => Mathf.Min(topicSize - pageNum * PAGE_SIZE, PAGE_SIZE);
     public int GetButtonCount() => GetButtonCount(currTopics.Count, currPage);
 
@@ -121,5 +126,17 @@ public class TIPSTopicPanel : MonoBehaviour
         var entries = TIPSManager.Instance.FilterEntriesByFolder(folder);
         SetTopics(entries);
         LoadPageContent(0, folder);
+    }
+    private void SetButtonNavigationExplicit()
+    {
+        var buttons = buttonContainer.GetComponentsInChildren<MenuButton>();
+        for (int i = 0; i < buttons.Length; i++)
+        {
+            var nav = buttons[i].button.navigation;
+            nav.mode = UnityEngine.UI.Navigation.Mode.Explicit;
+            nav.selectOnUp = i > 0 ? buttons[i - 1].button : null;
+            nav.selectOnDown = i < buttons.Length - 1 ? buttons[i + 1].button : null;
+            buttons[i].button.navigation = nav;
+        }
     }
 }
