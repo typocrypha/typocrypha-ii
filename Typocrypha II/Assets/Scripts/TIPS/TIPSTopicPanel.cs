@@ -14,9 +14,9 @@ public class TIPSTopicPanel : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI uguiTitle, uguiPage;
     [SerializeField] CanvasGroup canvasGroup;
-    [SerializeField] Transform buttonContainer;
+    [SerializeField] private List<MenuButton> buttons;
 
-    private const int PAGE_SIZE = 7;
+    private int PageSize => buttons.Count;
     private IList<TIPSEntryData> currTopics;
     private int currPage;
 
@@ -25,10 +25,10 @@ public class TIPSTopicPanel : MonoBehaviour
         SetButtonNavigationExplicit();
     }
 
-    public int GetButtonCount(int topicSize, int pageNum) => Mathf.Min(topicSize - pageNum * PAGE_SIZE, PAGE_SIZE);
+    public int GetButtonCount(int topicSize, int pageNum) => Mathf.Min(topicSize - pageNum * PageSize, PageSize);
     public int GetButtonCount() => GetButtonCount(currTopics.Count, currPage);
 
-    public int GetPageCount(int topicSize) => (topicSize - 1) / PAGE_SIZE;
+    public int GetPageCount(int topicSize) => (topicSize - 1) / PageSize;
     public int GetPageCount() => GetPageCount(currTopics.Count);
 
     public void DisplayTitle(string title) => uguiTitle.text = title;
@@ -46,17 +46,17 @@ public class TIPSTopicPanel : MonoBehaviour
         if (page < 0 || page > pageCount) return;
 
         //Disable buttons
-        foreach (Transform child in buttonContainer)
+        foreach (var button in buttons)
         {
-            child.gameObject.SetActive(false);
+            button.gameObject.SetActive(false);
         }
 
         //Initialize buttons
         var buttonCount = GetButtonCount(currTopics.Count, page);
         for (int i = 0; i < buttonCount; i++)
         {
-            var button = buttonContainer.GetChild(i).GetComponent<MenuButton>();
-            var entry = currTopics[i + page * PAGE_SIZE];
+            var button = buttons[i];;
+            var entry = currTopics[i + page * PageSize];
             button.SetText(entry.Title);
             button.gameObject.name = entry.Title;
 
@@ -77,25 +77,29 @@ public class TIPSTopicPanel : MonoBehaviour
 
     public void SelectTopicPageTop()
     {
-        var firstButton = buttonContainer.GetComponentInChildren<MenuButton>();
         EventSystem.current.SetSelectedGameObject(null);
-        if (firstButton) firstButton.Select();
+        if (buttons.Count > 0)
+        {
+            buttons[0].Select();
+        }
     }
 
     public void SelectTopicPageBottom()
     {
-        var lastButton = buttonContainer.GetChild(GetButtonCount()-1).GetComponent<MenuButton>();
         EventSystem.current.SetSelectedGameObject(null);
-        if (lastButton) lastButton.Select();
+        if (buttons.Count > 0)
+        {
+            buttons[buttons.Count - 1].Select();
+        }
     }
 
     public void SelectEntry(string title)
     {
-        foreach (Transform child in buttonContainer)
+        foreach (var button in buttons)
         {
-            if (child.gameObject.name == title)
+            if (button.gameObject.name == title)
             {
-                child.GetComponent<MenuButton>().Select();
+                button.Select();
                 return;
             }
         }
@@ -127,13 +131,12 @@ public class TIPSTopicPanel : MonoBehaviour
     }
     private void SetButtonNavigationExplicit()
     {
-        var buttons = buttonContainer.GetComponentsInChildren<MenuButton>();
-        for (int i = 0; i < buttons.Length; i++)
+        for (int i = 0; i < buttons.Count; i++)
         {
             var nav = buttons[i].button.navigation;
             nav.mode = UnityEngine.UI.Navigation.Mode.Explicit;
             nav.selectOnUp = i > 0 ? buttons[i - 1].button : null;
-            nav.selectOnDown = i < buttons.Length - 1 ? buttons[i + 1].button : null;
+            nav.selectOnDown = i < buttons.Count - 1 ? buttons[i + 1].button : null;
             buttons[i].button.navigation = nav;
         }
     }
