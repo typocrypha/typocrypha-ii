@@ -9,6 +9,8 @@ public class TIPSCastBar : CastBar
     public UnityEvent_string OnSearchCast;
     [SerializeField] AudioClip typeSfx;
 
+    protected override int VisualKeywordDelimiterIndex => delimiterIndexSpace;
+
     public void ProcessInput(string input)
     {
         var validInput = CheckInput(input);

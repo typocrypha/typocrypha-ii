@@ -34,8 +34,12 @@ namespace Typocrypha
         protected string Prompt { get; set; } = string.Empty;
 
         protected int pos = 0; // Cursor position.
-        readonly Regex alpha = new Regex("^[A-Za-z]"); // Matches alphabetic strings.
+        readonly Regex alpha = new Regex("^[A-Za-z]"); // Matches alphabetic strings.\
+        protected const int delimiterIndexSpace = 1;
+        protected const int delimiterIndexDash = 0;
         public static char[] KeywordDelimiters { get; } = new char[] { '–', ' ', '-' };
+        protected char VisualKeywordDelimiter => KeywordDelimiters[VisualKeywordDelimiterIndex];
+        protected virtual int VisualKeywordDelimiterIndex => delimiterIndexDash;
         protected virtual char SpaceChar => ' ';
 
         protected virtual void Awake()
@@ -133,10 +137,10 @@ namespace Typocrypha
         {
             if (inputChar == SpaceChar) // Space. Don't allow space on first character.
             {
-                if (pos > 0 && sb[pos - 1] != KeywordDelimiters[0]) // Ignore multiple spaces.
+                if (pos > 0 && sb[pos - 1] != VisualKeywordDelimiter) // Ignore multiple spaces.
                 {
-                    sb.Append(KeywordDelimiters[0]);
-                    SetLetter(pos++, KeywordDelimiters[0]);
+                    sb.Append(VisualKeywordDelimiter);
+                    SetLetter(pos++, VisualKeywordDelimiter);
                 }
                 return true;
             }
