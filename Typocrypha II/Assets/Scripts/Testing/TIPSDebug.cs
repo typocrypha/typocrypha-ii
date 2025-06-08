@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿#if UNITY_EDITOR
 using UnityEngine;
 
 public class TIPSDebug : MonoBehaviour
@@ -14,3 +13,5 @@ public class TIPSDebug : MonoBehaviour
         }
     }
 }
+
+#endif

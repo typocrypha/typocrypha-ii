@@ -44,8 +44,7 @@ public class TIPSManager : MonoBehaviour
 
     public TIPSEntryData GetEntry(string title)
     {
-        Debug.Assert(EntryExists(title));
-        return allTIPS.entries[title];
+        return EntryExists(title) ? allTIPS.entries[title] : null;
     }
 
     public bool TryGetEntry(string title, out TIPSEntryData match)

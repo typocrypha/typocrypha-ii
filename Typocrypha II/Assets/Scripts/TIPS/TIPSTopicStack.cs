@@ -16,7 +16,7 @@ public class TIPSTopicStack : MonoBehaviour
     private TIPSTopicPanel[] _panels;
     private TIPSTopicPanel[] panels => _panels != null ? _panels : _panels = new TIPSTopicPanel[] { panelTop, panelSub, panelAux };
 
-    private TIPSEntryData latestOpenedEntry;
+    private TIPSEntryData latestFolderEntered;
 
     public TIPSTopicPanel GetPanel(Layer layer) => panels[(int)layer];
     public TIPSTopicPanel GetCurrentPanel() => GetPanel(currentLayer);
@@ -89,7 +89,7 @@ public class TIPSTopicStack : MonoBehaviour
         var current = GetCurrentPanel();
         current.LoadEntriesInFolder(entry.Title);
         current.SelectTopicPageTop();
-        latestOpenedEntry = current.TopEntry ?? entry;
+        latestFolderEntered = entry;
     }
 
     public void JumpToEntry(TIPSEntryData entry)
@@ -104,7 +104,7 @@ public class TIPSTopicStack : MonoBehaviour
             panelSub.LoadEntriesInFolder(entry.Categorization[(int)Layer.Sub]);
         }
 
-        latestOpenedEntry = entry;
+        latestFolderEntered = TIPSManager.Instance.GetEntry(entry.Parent);
     }
 
     public void StepOutToParent()
@@ -112,8 +112,8 @@ public class TIPSTopicStack : MonoBehaviour
         if (currentLayer == Layer.Top) return;
 
         StepToPreviousLayer();
-        GetPanel(currentLayer).SelectEntry(latestOpenedEntry.Parent);
-        latestOpenedEntry = TIPSManager.Instance.GetEntry(latestOpenedEntry.Parent);
+        GetPanel(currentLayer).SelectEntry(latestFolderEntered.Title);
+        latestFolderEntered = TIPSManager.Instance.GetEntry(latestFolderEntered.Parent);
     }
 
 //#if UNITY_EDITOR

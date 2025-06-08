@@ -51,30 +51,24 @@ public class TIPSEntryData : ScriptableObject
 
     public void OnValidate()
     {
-        // My path
-        var projectPath = AssetDatabase.GetAssetPath(this);
-        if (string.IsNullOrEmpty(projectPath)) return;
-
-        // Update title
-        Title = Path.GetFileNameWithoutExtension(projectPath);
-
-        // Update parent folder name
-        var fullParent = new FileInfo(projectPath).DirectoryName;
-        Parent = Path.GetFileNameWithoutExtension(fullParent);
-
+        // Important paths
+        var pathToEntry = AssetDatabase.GetAssetPath(this);
+        var pathToParent = new FileInfo(pathToEntry).DirectoryName;
         var pathToTIPS = Path.Combine(Application.dataPath, BASE_ASSET_PATH) + "/";
-        RelativePath = fullParent.Substring(Mathf.Min(pathToTIPS.Length, fullParent.Length));
-        Depth = RelativePath.Length > 0 ? Categorization.Length - 1 : -1;
 
-        // Check my path for matching directory
-        IsFolder = new DirectoryInfo(Path.Combine(fullParent, Title)).Exists;
-
+        // Handle folder fields
+        IsFolder = new DirectoryInfo(Path.Combine(pathToParent, Title)).Exists;
         if (!IsFolder && CreateFolder)
         {
-            Directory.CreateDirectory(Path.Combine(fullParent, Title));
+            Directory.CreateDirectory(Path.Combine(pathToParent, Title));
             AssetDatabase.Refresh();
         }
-
         CreateFolder = false;
+
+        // Update other validated fields
+        Title = Path.GetFileNameWithoutExtension(pathToEntry);
+        Parent = Path.GetFileNameWithoutExtension(pathToParent);
+        RelativePath = pathToParent.Substring(Mathf.Min(pathToTIPS.Length, pathToParent.Length));
+        Depth = Categorization.Length - 1;
     }
 }
