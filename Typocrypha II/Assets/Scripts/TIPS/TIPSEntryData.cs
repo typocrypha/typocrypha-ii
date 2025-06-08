@@ -22,6 +22,7 @@ public class TIPSEntryData : ScriptableObject
     public string Title;
     public string Parent;
     public string RelativePath;
+    public int Depth;
     public bool IsFolder;
     public bool CreateFolder;
 
@@ -31,8 +32,7 @@ public class TIPSEntryData : ScriptableObject
     [Multiline(10)] public string Content;
 
     public const string BASE_ASSET_PATH = "ScriptableObjects/TIPS";
-    public string[] SplitPath => RelativePath.Split('\\');
-    public int Depth => RelativePath.Split('\\').Length - 1;
+    public string[] Categorization => RelativePath.Split('\\');
 
     public void OnEnable()
     {
@@ -62,6 +62,10 @@ public class TIPSEntryData : ScriptableObject
         var fullParent = new FileInfo(projectPath).DirectoryName;
         Parent = Path.GetFileNameWithoutExtension(fullParent);
 
+        var pathToTIPS = Path.Combine(Application.dataPath, BASE_ASSET_PATH) + "/";
+        RelativePath = fullParent.Substring(Mathf.Min(pathToTIPS.Length, fullParent.Length));
+        Depth = RelativePath.Length > 0 ? Categorization.Length - 1 : -1;
+
         // Check my path for matching directory
         IsFolder = new DirectoryInfo(Path.Combine(fullParent, Title)).Exists;
 
@@ -72,8 +76,5 @@ public class TIPSEntryData : ScriptableObject
         }
 
         CreateFolder = false;
-
-        var pathToTIPS = Path.Combine(Application.dataPath, BASE_ASSET_PATH);
-        RelativePath = fullParent.Substring(pathToTIPS.Length);
     }
 }

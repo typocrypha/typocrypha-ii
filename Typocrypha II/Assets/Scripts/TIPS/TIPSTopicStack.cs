@@ -102,7 +102,7 @@ public class TIPSTopicStack : MonoBehaviour
 
         if (currentLayer == Layer.Aux)
         {
-            panelSub.LoadEntriesInFolder(entry.SplitPath[(int)Layer.Sub]);
+            panelSub.LoadEntriesInFolder(entry.Categorization[(int)Layer.Sub]);
         }
 
         latestOpenedEntry = entry;
@@ -113,7 +113,7 @@ public class TIPSTopicStack : MonoBehaviour
         if (currentLayer == Layer.Top) return;
 
         StepToPreviousLayer();
-        GetPanel(currentLayer).SelectEntry(latestOpenedEntry.Title);
+        GetPanel(currentLayer).SelectEntry(latestOpenedEntry.Parent);
         latestOpenedEntry = TIPSManager.Instance.GetEntry(latestOpenedEntry.Parent);
     }
 
