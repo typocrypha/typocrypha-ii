@@ -17,6 +17,7 @@ public class TIPSTopicPanel : MonoBehaviour
     [SerializeField] private List<MenuButton> buttons;
 
     private int PageSize => buttons.Count;
+    public TIPSEntryData TopEntry => currTopics.Count > 0 ? currTopics[0] : null;
     private IList<TIPSEntryData> currTopics;
     private int currPage;
 

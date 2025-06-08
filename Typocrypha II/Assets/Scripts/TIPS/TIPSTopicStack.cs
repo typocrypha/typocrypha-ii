@@ -89,8 +89,7 @@ public class TIPSTopicStack : MonoBehaviour
         var current = GetCurrentPanel();
         current.LoadEntriesInFolder(entry.Title);
         current.SelectTopicPageTop();
-        
-        latestOpenedEntry = entry;
+        latestOpenedEntry = current.TopEntry ?? entry;
     }
 
     public void JumpToEntry(TIPSEntryData entry)
