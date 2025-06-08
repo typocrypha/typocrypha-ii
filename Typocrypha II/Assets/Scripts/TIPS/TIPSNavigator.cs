@@ -47,7 +47,7 @@ public class TIPSNavigator : MonoBehaviour
         {
             if(Input.GetAxisRaw("Vertical") != 0)
             {
-                FocusOnTopics();
+                FocusOnTopics(true);
             }
             else if (Input.GetKeyDown(KeyCode.Return))
             {
@@ -85,11 +85,14 @@ public class TIPSNavigator : MonoBehaviour
         currentEventSystem.SetSelectedGameObject(null);
     }
 
-    public void FocusOnTopics()
+    public void FocusOnTopics(bool selectTop)
     {
         searchbar.Unfocus();
         CurrentFocus = Focus.topics;
-        topicStack.SelectFirstTopic();
+        if (selectTop)
+        {
+            topicStack.SelectFirstTopic();
+        }
     }
 
     protected virtual void HandleSearchInput(string input)
@@ -125,6 +128,7 @@ public class TIPSNavigator : MonoBehaviour
     protected virtual void OnMatchExact(TIPSEntryData entry)
     {
         AudioManager.instance.PlaySFX(sfxSearchGood);
+        FocusOnTopics(false);
         topicStack.JumpToEntry(entry);
     }
 
