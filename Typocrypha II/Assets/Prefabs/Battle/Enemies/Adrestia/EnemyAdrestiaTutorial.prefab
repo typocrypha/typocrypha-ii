@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &5103624858185999474
+--- !u!114 &6874161840330382124
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,31 +9,33 @@ MonoBehaviour:
   m_GameObject: {fileID: 1458538806797991721}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15605c31a6d511b48875068012ccfd84, type: 3}
+  m_Script: {fileID: 11500000, guid: 835baf281159a54489857e1ad90951f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  statusEffectPrefab: {fileID: 7537913540207467755, guid: 82a6568171b89044b86d919f798768cb,
-    type: 3}
---- !u!114 &8744935009120603625
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1458538806797991721}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd040ddd038f4974d9140bd7b812d476, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  startIndex: 0
-  loopIndex: 1
-  spells:
+  parrySpell:
+    items:
+    - {fileID: 11400000, guid: b3de7b8351f85ce4cb316bfa0d3328e2, type: 2}
+    castTimeOverride: -1
+  riposteSpell:
+    items:
+    - {fileID: 11400000, guid: 7daf7f7e29c1caf44b8ed8d0719ef176, type: 2}
+    castTimeOverride: -1
+  normalSpells:
     items:
     - items:
-      - {fileID: 11400000, guid: 3935ffa5c619bb545a7d151a89df76e0, type: 2}
+      - {fileID: 11400000, guid: 3d35f5c67835c734db91be2fe7b97278, type: 2}
+      - {fileID: 11400000, guid: f0c5f523181b0a74aa9e44009d75b1c7, type: 2}
+      castTimeOverride: 5
     - items:
-      - {fileID: 11400000, guid: 123d4e54a6fb2a24f862ac5a744e37ae, type: 2}
+      - {fileID: 11400000, guid: 29fa3a1db638b7b41bd0cdccfa674339, type: 2}
+      - {fileID: 11400000, guid: f0c5f523181b0a74aa9e44009d75b1c7, type: 2}
+      castTimeOverride: 5
+    - items:
+      - {fileID: 11400000, guid: 29fa3a1db638b7b41bd0cdccfa674339, type: 2}
+      - {fileID: 11400000, guid: f0c5f523181b0a74aa9e44009d75b1c7, type: 2}
+      - {fileID: 11400000, guid: 3d35f5c67835c734db91be2fe7b97278, type: 2}
+      castTimeOverride: 10
+  warningSfx: {fileID: 8300000, guid: 4c433996f9db37940b831d99882cfcca, type: 3}
 --- !u!1001 &5217329619165361773
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -99,6 +101,36 @@ PrefabInstance:
     - target: {fileID: 6654746797852412231, guid: b4ccfe1feff202d4d88e955be3df3fd1,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6654746797852412230, guid: b4ccfe1feff202d4d88e955be3df3fd1,
+        type: 3}
+      propertyPath: tags.statMod.maxHP._value
+      value: 400
+      objectReference: {fileID: 0}
+    - target: {fileID: 6654746797852412230, guid: b4ccfe1feff202d4d88e955be3df3fd1,
+        type: 3}
+      propertyPath: tags.statMod.maxStagger._value
+      value: 99
+      objectReference: {fileID: 0}
+    - target: {fileID: 6654746797852412230, guid: b4ccfe1feff202d4d88e955be3df3fd1,
+        type: 3}
+      propertyPath: tags.statMod.def._value
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6654746797852412230, guid: b4ccfe1feff202d4d88e955be3df3fd1,
+        type: 3}
+      propertyPath: tags.statMod.luck._value
+      value: -13
+      objectReference: {fileID: 0}
+    - target: {fileID: 6654746797852412230, guid: b4ccfe1feff202d4d88e955be3df3fd1,
+        type: 3}
+      propertyPath: tags.statMod.atk._value
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6654746797852412230, guid: b4ccfe1feff202d4d88e955be3df3fd1,
+        type: 3}
+      propertyPath: tags.statMod.spd._value
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
