@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using ATB3;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,6 +22,18 @@ public abstract class AIComponent : MonoBehaviour
         caster.Spell = spell;
         caster.ChargeTime = spell.CastTime;
         caster.Charge = 0;
+    }
+
+    protected void InsertCast(Battlefield.Position spellTargetPosition, Spell spellToCast, System.Action onComplete, string messageOverride = null)
+    {
+        var spell = spellToCast;
+        var targetPos = spellTargetPosition;
+        bool topLevel = !ATBManager.instance.ProcessingActions;
+        Coroutine CastFn()
+        {
+            return SpellManager.instance.Cast(spell, caster, targetPos, messageOverride, topLevel);
+        }
+        ATBManager.instance.InsertSolo(new ATBManager.ATBAction() { Actor = GetComponent<ATBActor>(), Action = CastFn, OnComplete = onComplete });
     }
 
     /// <summary>
