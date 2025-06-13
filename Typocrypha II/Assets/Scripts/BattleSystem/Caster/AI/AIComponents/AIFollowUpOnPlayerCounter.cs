@@ -7,10 +7,16 @@ public class AIFollowUpOnPlayerCounter : AIComponent
 {
     [SerializeField] private Spell followUpSpell;
     [SerializeField] private List<Caster> targetFilter;
-    protected override void Awake()
+
+    protected override void AddListeners()
     {
-        base.Awake();
+        RemoveListeners();
         Battlefield.instance.Player.OnCounterOther += FollowUp;
+    }
+
+    protected override void RemoveListeners()
+    {
+        Battlefield.instance.Player.OnCounterOther -= FollowUp;
     }
 
     private void FollowUp(Caster counterCaster, Caster countered, bool fullCounter)

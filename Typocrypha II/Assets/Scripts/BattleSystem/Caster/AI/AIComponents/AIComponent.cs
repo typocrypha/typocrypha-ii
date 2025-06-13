@@ -14,7 +14,25 @@ public abstract class AIComponent : MonoBehaviour
 
     protected virtual void Awake()
     {
-        InitializeBase();
+        caster = GetComponent<Caster>();
+        // Init targeting position
+        caster.TargetPos = Battlefield.instance.Player.FieldPos;
+        AddListeners();
+    }
+
+    private void OnDestroy()
+    {
+        RemoveListeners();
+    }
+
+    protected virtual void AddListeners()
+    {
+
+    }
+
+    protected virtual void RemoveListeners()
+    {
+
     }
 
     protected void ChangeSpell(Spell spell)
@@ -34,15 +52,5 @@ public abstract class AIComponent : MonoBehaviour
             return SpellManager.instance.Cast(spell, caster, targetPos, messageOverride, topLevel);
         }
         ATBManager.instance.InsertSolo(new ATBManager.ATBAction() { Actor = GetComponent<ATBActor>(), Action = CastFn, OnComplete = onComplete });
-    }
-
-    /// <summary>
-    /// Initializes the caster and AI refs, and sets the targeting position to the player
-    /// </summary>
-    protected void InitializeBase()
-    {
-        caster = GetComponent<Caster>();
-        // Init targeting position
-        caster.TargetPos = Battlefield.instance.Player.FieldPos;
     }
 }

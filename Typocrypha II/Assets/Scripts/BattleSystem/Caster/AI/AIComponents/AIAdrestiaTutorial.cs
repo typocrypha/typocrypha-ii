@@ -20,25 +20,14 @@ public class AIAdrestiaTutorial : AIComponent
         StartCoroutine(ParryCR());
     }
 
-    private void OnEnable()
-    {
-        RemoveListeners();
-        AddListeners();
-    }
-
-    private void AddListeners()
+    protected override void AddListeners()
     {
         RemoveListeners();
         caster.OnAfterCastResolved += AfterCastResolved;
         caster.OnCountered += OnCountered;
     }
 
-    private void OnDisable()
-    {
-        RemoveListeners();
-    }
-
-    private void RemoveListeners()
+    protected override void RemoveListeners()
     {
         caster.OnAfterCastResolved -= AfterCastResolved;
         caster.OnCountered -= OnCountered;
