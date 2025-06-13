@@ -117,7 +117,10 @@ namespace GUIUtils
                 if (index >= list.count || list.count <= 0)//Fixes error if .doGUI removes an element from the list
                     return;
                 EditorGUI.PropertyField(rect, prop.GetArrayElementAtIndex(index), GUIContent.none);
-                prop.serializedObject.ApplyModifiedProperties();
+                if (GUI.changed)
+                {
+                    prop.serializedObject.ApplyModifiedProperties();
+                }
             };
         }
         public RListGUIProperty(SerializedProperty prop, GUIContent label, ElementHeight height) : this(prop, label)

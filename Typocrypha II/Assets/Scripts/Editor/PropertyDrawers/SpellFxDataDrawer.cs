@@ -7,15 +7,12 @@ using GUIUtils;
 [CustomPropertyDrawer(typeof(SpellFxData))]
 public class SpellFxDataDrawer : PropertyDrawer
 {
-    protected RListGUIProperty rList = null;
-    protected void InitList(SerializedProperty property)
+    protected RListGUIProperty GetRList(SerializedProperty property)
     {
-        rList = new RListGUIProperty(property.FindPropertyRelative("effectPackets"), new GUIContent("Sfx/Vfx"));
+        return new RListGUIProperty(property.FindPropertyRelative("effectPackets"), new GUIContent("Sfx/Vfx"));
     }
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
-        if (rList == null)
-            InitList(property);
         switch (property.FindPropertyRelative("effectType").enumValueIndex)
         {
             case (int)SpellFxData.EffectType.None:
@@ -23,9 +20,9 @@ public class SpellFxDataDrawer : PropertyDrawer
             case (int)SpellFxData.EffectType.Single:
                 return EditorGUIUtility.singleLineHeight * 2 + 1;               
             case (int)SpellFxData.EffectType.Sequence:
-                return rList.Height;
+                return GetRList(property).Height;
             case (int)SpellFxData.EffectType.Parallel:
-                return rList.Height;
+                return GetRList(property).Height;
             case (int)SpellFxData.EffectType.Prefab:
                 return EditorGUIUtility.singleLineHeight * 2 + 1;
         }
@@ -33,9 +30,6 @@ public class SpellFxDataDrawer : PropertyDrawer
     }
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
-        if (rList == null)
-            InitList(property);
-
         // Using BeginProperty / EndProperty on the parent property means that
         // prefab override logic works on the entire property.
         EditorGUI.BeginProperty(position, label, property);
@@ -51,14 +45,18 @@ public class SpellFxDataDrawer : PropertyDrawer
                 EditorGUI.PropertyField(UIRect, property.FindPropertyRelative("effectPackets").GetArrayElementAtIndex(0));
                 break;
             case (int)SpellFxData.EffectType.Sequence:
-                rList.DoList(UIRect);
+                GetRList(property).DoList(UIRect);
                 break;
             case (int)SpellFxData.EffectType.Parallel:
-                rList.DoList(UIRect);
+                GetRList(property).DoList(UIRect);
                 break;
             case (int)SpellFxData.EffectType.Prefab:
                 EditorGUI.PropertyField(UIRect, property.FindPropertyRelative("effectPrefab"));
                 break;
+        }
+        if (GUI.changed)
+        {
+            property.serializedObject.ApplyModifiedProperties();
         }
         EditorGUI.EndProperty();
     }

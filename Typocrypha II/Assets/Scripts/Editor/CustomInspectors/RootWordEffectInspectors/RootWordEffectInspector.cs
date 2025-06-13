@@ -20,7 +20,9 @@ public class RootWordEffectInspector : Editor
         {
             serializedObject.ApplyModifiedProperties();
             if (GUI.changed)
+            {
                 EditorUtility.SetDirty(target);
+            }
         }
     }
 }
