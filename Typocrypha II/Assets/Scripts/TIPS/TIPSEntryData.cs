@@ -34,11 +34,6 @@ public class TIPSEntryData : ScriptableObject
     public const string BASE_ASSET_PATH = "ScriptableObjects/TIPS";
     public string[] Categorization => RelativePath.Split('\\');
 
-    public void OnEnable()
-    {
-        OnValidate();
-    }
-
     public bool MatchTitlePartial(string query)
     {
         return Title?.IndexOf(query, StringComparison.OrdinalIgnoreCase) > -1;
@@ -52,7 +47,9 @@ public class TIPSEntryData : ScriptableObject
     public void OnValidate()
     {
         // Important paths
-        var pathToEntry = AssetDatabase.GetAssetPath(this);
+        var pathToEntry = AssetDatabase.GetAssetPath(GetInstanceID());
+        if (string.IsNullOrEmpty(pathToEntry)) return;
+
         var pathToParent = new FileInfo(pathToEntry).DirectoryName;
         var pathToTIPS = Path.Combine(Application.dataPath, BASE_ASSET_PATH) + "/";
 
