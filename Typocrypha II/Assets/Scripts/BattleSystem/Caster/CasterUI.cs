@@ -28,8 +28,14 @@ public class CasterUI : MonoBehaviour
     public UnityEvent onScouterHide;
     public UnityEvent onDamageReceived;
 
-    [SerializeField] SpriteRenderer sprite;
-    [SerializeField] CanvasGroup ui;
+    [SerializeField] private SpriteRenderer sprite;
+    [SerializeField] private CanvasGroup ui;
+    [SerializeField] private HighlightCounterable highlightCounterable;
+
+    public void SetTextColor(Color color)
+    {
+        highlightCounterable.SetDefaultColor(color);
+    }
 
     public CasterUI SetDimmable(bool dimmable)
     {

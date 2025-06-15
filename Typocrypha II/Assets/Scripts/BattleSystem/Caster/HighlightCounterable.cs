@@ -17,6 +17,11 @@ public class HighlightCounterable : MonoBehaviour
     private bool countered = false;
     private string[] spellWords = Array.Empty<string>();
 
+    public void SetDefaultColor(Color color)
+    {
+        CounterableHighlight.defaultColor = color;
+    }
+
     public void UpdateCounteredState(bool state)
     {
         if (countered == state)

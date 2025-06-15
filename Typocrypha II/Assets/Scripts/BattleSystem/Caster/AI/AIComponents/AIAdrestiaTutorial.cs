@@ -7,6 +7,8 @@ public class AIAdrestiaTutorial : AIComponent
 {
     [SerializeField] private Spell parrySpell;
     [SerializeField] private Spell riposteSpell;
+    [SerializeField] private Spell callAlliesSpell;
+    [SerializeField] private Spell enrageAlliesSpell;
     [SerializeField] private SpellList normalSpells;
     [SerializeField] private AudioClip warningSfx;
 
@@ -17,7 +19,7 @@ public class AIAdrestiaTutorial : AIComponent
     {
         base.Awake();
         ChangeSpell(normalSpells[RandomUtils.RandomU.instance.RandomInt(0, normalSpells.Count)]);
-        StartCoroutine(ParryCR());
+        PrepareParry();
     }
 
     protected override void AddListeners()
@@ -38,21 +40,34 @@ public class AIAdrestiaTutorial : AIComponent
         if (fullCounter)
         {
             SetSpell();
+            if(Battlefield.instance.ValidReinforcementPositions.Count > 0)
+            {
+                InsertCast(caster.FieldPos, callAlliesSpell, null, $"{caster.DisplayName} summons an ally!");
+            }
+            else
+            {
+                InsertCast(caster.FieldPos, enrageAlliesSpell, null, $"{caster.DisplayName}'s allies were filled with vengeance!");
+            }
+
         }
     }
 
     private void AfterCastResolved(Spell s, Caster caster, bool hitTarget)
     {
+        if (s == callAlliesSpell)
+            return;
         SetSpell();
     }
 
     private void SetSpell()
     {
+        CancelParry();
         ChangeSpell(normalSpells[RandomUtils.RandomU.instance.RandomInt(0, normalSpells.Count)]);
-        if (parryCR != null)
-        {
-            StopCoroutine(parryCR);
-        }
+        PrepareParry();
+    }
+
+    private void PrepareParry()
+    {
         parryCR = StartCoroutine(ParryCR());
     }
 
@@ -65,37 +80,62 @@ public class AIAdrestiaTutorial : AIComponent
         float goalTime = Mathf.Max(1f, (float)RandomUtils.RandomU.instance.RandomDouble() * Mathf.Min(timeLeft, 3));
         var actor = caster.GetComponent<ATB3.ATBActor>();
         var waitForEndOfFrame = new WaitForEndOfFrame();
+        var waitForUnPause = new WaitWhile(actor.PH.IsPaused);
         bool playWarning = true;
         while (time < goalTime)
         {
-            if (!actor.PH.Paused)
+            yield return waitForUnPause;
+            time += Time.deltaTime;
+            if (playWarning && goalTime - time < 0.33f)
             {
-                time += Time.deltaTime;
-                if(playWarning && goalTime - time < 0.25f)
-                {
-                    AudioManager.instance.PlaySFX(warningSfx);
-                    playWarning = false;
-                }
+                AudioManager.instance.PlaySFX(warningSfx);
+                playWarning = false;
             }
             yield return waitForEndOfFrame;
         }
-        tempSpell = caster.Spell;
-        caster.Spell = parrySpell;
-        caster.OnBeforeHitResolved -= Parry;
-        caster.OnBeforeHitResolved += Parry;
+        yield return waitForUnPause;
+        StartParry();
         time = 0;
-        goalTime = Math.Min((caster.ChargeTime - caster.Charge) - 0.1f, 1.5f);
+        goalTime = Math.Min((caster.ChargeTime - caster.Charge) - 0.1f, 1f + (float)RandomUtils.RandomU.instance.RandomDouble() * 0.25f);
         while (time < goalTime)
         {
-            if (!actor.PH.Paused)
-            {
-                time += Time.deltaTime;
-            }
+            yield return waitForUnPause;
+            time += Time.deltaTime;
             yield return waitForEndOfFrame;
         }
-        caster.Spell = tempSpell;
+        yield return waitForUnPause;
+        EndParry();
+        PrepareParry();
+    }
+
+    private void StartParry()
+    {
+        tempSpell = caster.Spell;
+        caster.Spell = parrySpell;
+        caster.ui.SetTextColor(Color.red);
         caster.OnBeforeHitResolved -= Parry;
-        parryCR = StartCoroutine(ParryCR());
+        caster.OnBeforeHitResolved += Parry;
+    }
+
+    private void EndParry()
+    {
+        caster.ui.SetTextColor(Color.white);
+        if(tempSpell != null)
+        {
+            caster.Spell = tempSpell;
+            tempSpell = null;
+        }
+        caster.OnBeforeHitResolved -= Parry;
+    }
+
+    private void CancelParry()
+    {
+        if (parryCR != null)
+        {
+            StopCoroutine(parryCR);
+            parryCR = null;
+            EndParry();
+        }
     }
 
     private void Parry(RootWordEffect effect, Caster caster, Caster target, RootCastData spellData, CastResults data)
