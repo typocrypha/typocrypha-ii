@@ -23,7 +23,7 @@ public class TIPSTopicPanel : MonoBehaviour
 
     private void Start()
     {
-        SetButtonNavigationExplicit();
+        SetButtonNavigation();
     }
 
     public int GetButtonCount(int topicSize, int pageNum) => Mathf.Min(topicSize - pageNum * PageSize, PageSize);
@@ -34,7 +34,7 @@ public class TIPSTopicPanel : MonoBehaviour
 
     public void DisplayTitle(string title) => uguiTitle.text = title;
 
-    public void DisplayPageNum(int cur, int max) => uguiPage.text = $"{cur+1}/{max+1}";
+    public void DisplayPageNum(int cur, int max) => uguiPage.text = $"{cur + 1}/{max + 1}";
 
     public void SetTopics(IList<TIPSEntryData> topics)
     {
@@ -56,7 +56,7 @@ public class TIPSTopicPanel : MonoBehaviour
         var buttonCount = GetButtonCount(currTopics.Count, page);
         for (int i = 0; i < buttonCount; i++)
         {
-            var button = buttons[i];;
+            var button = buttons[i]; ;
             var entry = currTopics[i + page * PageSize];
             button.SetText(entry.Title);
             button.gameObject.name = entry.Title;
@@ -74,7 +74,7 @@ public class TIPSTopicPanel : MonoBehaviour
         DisplayPageNum(currPage = page, pageCount);
     }
 
-    public TweenerCore<float, float, FloatOptions> DOFade (float target, float duration) => canvasGroup.DOFade(target, duration);
+    public TweenerCore<float, float, FloatOptions> DOFade(float target, float duration) => canvasGroup.DOFade(target, duration);
 
     public void SelectTopicPageTop()
     {
@@ -107,12 +107,13 @@ public class TIPSTopicPanel : MonoBehaviour
     }
 
     [ContextMenu("Navigate Previous")]
-    public void PrevPage(bool selectLastTopic)
+    public void PrevPage()
     {
         if (currPage <= 0) return;
 
         LoadPageContent(currPage - 1);
-        if (selectLastTopic) SelectTopicPageBottom(); else SelectTopicPageTop();
+        SelectTopicPageBottom();
+        //if (selectLastTopic) SelectTopicPageBottom(); else SelectTopicPageTop();
     }
 
     [ContextMenu("Navigate Next")]
@@ -130,8 +131,17 @@ public class TIPSTopicPanel : MonoBehaviour
         SetTopics(entries);
         LoadPageContent(0, folder);
     }
-    private void SetButtonNavigationExplicit()
+    private void SetButtonNavigation()
     {
+        //navigation previous page
+        var pageUpHandler = buttons[0].gameObject.AddComponent<MoveEventHandler>();
+        pageUpHandler.SetTrigger(MoveDirection.Up).SetResponse(PrevPage);
+
+        //navigate next page
+        var pageDownHandler = buttons[buttons.Count - 1].gameObject.AddComponent<MoveEventHandler>();
+        pageDownHandler.SetTrigger(MoveDirection.Down).SetResponse(NextPage);
+
+        //navigation within a page
         for (int i = 0; i < buttons.Count; i++)
         {
             var nav = buttons[i].button.navigation;

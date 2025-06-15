@@ -4,8 +4,20 @@ using UnityEngine.Events;
 
 public class MoveEventHandler : MonoBehaviour, IMoveHandler
 {
-    public MoveDirection[] DirectionalTriggers = new MoveDirection[] { MoveDirection.None };
-    public UnityEvent Response;
+    public MoveDirection[] DirectionalTriggers { get; private set; } = default;
+    public UnityEvent Response = new UnityEvent();
+
+    public MoveEventHandler SetTrigger(params MoveDirection[] directions)
+    {
+        DirectionalTriggers = directions;
+        return this;
+    }
+
+    public MoveEventHandler SetResponse(params UnityAction[] actions)
+    {
+        foreach (var act in actions) Response.AddListener(act);
+        return this;
+    }
 
     public void OnMove(AxisEventData eventData)
     {
