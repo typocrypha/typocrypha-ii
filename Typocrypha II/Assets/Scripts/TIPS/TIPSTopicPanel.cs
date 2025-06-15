@@ -88,9 +88,9 @@ public class TIPSTopicPanel : MonoBehaviour
     public void SelectTopicPageBottom()
     {
         EventSystem.current.SetSelectedGameObject(null);
-        if (buttons.Count > 0)
+        for (int i = 0; i < buttons.Count; ++i)
         {
-            buttons[buttons.Count - 1].Select();
+            if (buttons[i].gameObject.activeSelf) buttons[i].Select();
         }
     }
 
@@ -109,17 +109,24 @@ public class TIPSTopicPanel : MonoBehaviour
     [ContextMenu("Navigate Previous")]
     public void PrevPage()
     {
-        if (currPage <= 0) return;
+        if (currPage <= 0)
+        {
+            SelectTopicPageTop();
+            return;
+        }
 
         LoadPageContent(currPage - 1);
         SelectTopicPageBottom();
-        //if (selectLastTopic) SelectTopicPageBottom(); else SelectTopicPageTop();
     }
 
     [ContextMenu("Navigate Next")]
     public void NextPage()
     {
-        if (currPage >= GetPageCount()) return;
+        if (currPage >= GetPageCount())
+        {
+            SelectTopicPageBottom();
+            return;
+        }
 
         LoadPageContent(currPage + 1);
         SelectTopicPageTop();
@@ -133,22 +140,25 @@ public class TIPSTopicPanel : MonoBehaviour
     }
     private void SetButtonNavigation()
     {
-        //navigation previous page
-        var pageUpHandler = buttons[0].gameObject.AddComponent<MoveEventHandler>();
-        pageUpHandler.SetTrigger(MoveDirection.Up).SetResponse(PrevPage);
-
-        //navigate next page
-        var pageDownHandler = buttons[buttons.Count - 1].gameObject.AddComponent<MoveEventHandler>();
-        pageDownHandler.SetTrigger(MoveDirection.Down).SetResponse(NextPage);
-
-        //navigation within a page
         for (int i = 0; i < buttons.Count; i++)
         {
+            //navigation within a page
             var nav = buttons[i].button.navigation;
             nav.mode = UnityEngine.UI.Navigation.Mode.Explicit;
             nav.selectOnUp = i > 0 ? buttons[i - 1].button : null;
             nav.selectOnDown = i < buttons.Count - 1 ? buttons[i + 1].button : null;
             buttons[i].button.navigation = nav;
+
+            //navigation to previous page
+            var prevHandler = buttons[i].gameObject.AddComponent<MoveEventHandler>();
+            prevHandler.AddListeners(PrevPage).EnableTrigger(MoveDirection.Left);
+            if (i == 0) prevHandler.EnableTrigger(MoveDirection.Up);
+
+            //navigation to next page
+            var nextHandler = buttons[i].gameObject.AddComponent<MoveEventHandler>();
+            nextHandler.AddListeners(NextPage).EnableTrigger(MoveDirection.Right);
+            if (i == buttons.Count - 1) nextHandler.EnableTrigger(MoveDirection.Down);
         }
+
     }
 }

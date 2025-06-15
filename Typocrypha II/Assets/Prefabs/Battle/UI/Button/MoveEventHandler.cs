@@ -1,19 +1,20 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
+using System.Collections.Generic;
 
 public class MoveEventHandler : MonoBehaviour, IMoveHandler
 {
-    public MoveDirection[] DirectionalTriggers { get; private set; } = default;
+    public Dictionary<MoveDirection, bool> DirectionalTriggers { get; private set; } = new Dictionary<MoveDirection, bool>();
     public UnityEvent Response = new UnityEvent();
 
-    public MoveEventHandler SetTrigger(params MoveDirection[] directions)
+    public MoveEventHandler EnableTrigger(params MoveDirection[] directions)
     {
-        DirectionalTriggers = directions;
+        foreach (var d in directions) DirectionalTriggers[d] = true;
         return this;
     }
 
-    public MoveEventHandler SetResponse(params UnityAction[] actions)
+    public MoveEventHandler AddListeners(params UnityAction[] actions)
     {
         foreach (var act in actions) Response.AddListener(act);
         return this;
@@ -22,6 +23,6 @@ public class MoveEventHandler : MonoBehaviour, IMoveHandler
     public void OnMove(AxisEventData eventData)
     {
         foreach (var trigger in DirectionalTriggers)
-          if (eventData.moveDir == trigger) Response.Invoke();
+            if (eventData.moveDir == trigger.Key && trigger.Value) Response.Invoke();
     }
 }
