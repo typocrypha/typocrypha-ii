@@ -147,4 +147,16 @@ public class AllyBattleBoxManager : MonoBehaviour
         CurrentChar.SetPose(pose);
     }
 
+    public void ShakeBattleBox()
+    {
+        var rect = CurrentChar.MainRect;
+        DOTween.Complete("ShakeAllyBox");
+        DOTween.Sequence()
+            .SetId("ShakeAllyBox")
+            .Append(rect.DOAnchorPosX(5, 0.075f).SetRelative(true))
+            .Append(rect.DOAnchorPosX(-10, 0.075f).SetRelative(true))
+            .Append(rect.DOAnchorPosX(10, 0.075f).SetRelative(true))
+            .Append(rect.DOAnchorPosX(-5, 0.075f).SetRelative(true));
+    }
+
 }
