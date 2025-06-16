@@ -37,23 +37,23 @@ public class AIMari : AIComponent, IBattleWordProvider
 
     private void OnEnable()
     {
-        RemoveListeners();
         AddListeners();
-    }
-
-    private void AddListeners()
-    {
-        caster.OnAfterCastResolved += AfterCastResolved;
-        caster.OnStunned += OnStunned;
-        caster.OnUnstunned += OnUnStunned;
     }
 
     private void OnDisable()
     {
         RemoveListeners();
     }
-    
-    private void RemoveListeners()
+
+    protected override void AddListeners()
+    {
+        RemoveListeners();
+        caster.OnAfterCastResolved += AfterCastResolved;
+        caster.OnStunned += OnStunned;
+        caster.OnUnstunned += OnUnStunned;
+    }
+
+    protected override void RemoveListeners()
     {
         caster.OnAfterCastResolved -= AfterCastResolved;
         caster.OnStunned -= OnStunned;
