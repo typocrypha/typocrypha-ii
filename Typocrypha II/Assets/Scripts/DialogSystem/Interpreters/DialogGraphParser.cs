@@ -294,6 +294,7 @@ public class DialogGraphParser : GraphParser
                     if (caster != null)
                     {
                         var msgOverride = string.IsNullOrEmpty(castNode.messageOverride) ? null : castNode.messageOverride;
+                        spellManager.OnAfterCastResolved += OnAfterCastNodeCast;
                         StartCoroutine(WaitOnRoutine(spellManager.Cast(castNode.GetSpell(), caster, new Battlefield.Position(castNode.targetPos), msgOverride), loading));
                         return null;
                     }
@@ -330,6 +331,18 @@ public class DialogGraphParser : GraphParser
         }
         //Recursively move to next
         return NextDialog(true, loading);
+    }
+
+    private void OnAfterCastNodeCast()
+    {
+        if(ATB3.ATBManager.instance != null)
+        {
+            ATB3.ATBManager.instance.ResetUI();
+        }
+        if(SpellManager.instance != null)
+        {
+            SpellManager.instance.OnAfterCastResolved -= OnAfterCastNodeCast;
+        }
     }
 
     IEnumerator WaitOnFunc(System.Func<bool> isComplete, bool loading)
