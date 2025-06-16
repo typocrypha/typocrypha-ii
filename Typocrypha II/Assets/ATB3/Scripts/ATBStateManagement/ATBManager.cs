@@ -131,6 +131,13 @@ namespace ATB3
                     actor.isCast = false;
                     actor.PH.Unpause(PauseSources.ATB);
                 }
+                foreach (var caster in Battlefield.instance.Casters)
+                {
+                    if(caster.ui != null)
+                    {
+                        caster.ui.ShowUI(true);
+                    }
+                }
                 BattleManager.instance.PauseBattleEvents(false, PauseSources.ATB);
                 PauseManager.instance.PH.Unpause(PauseSources.ATB);
                 BattleDimmer.instance.SetDimmer(false); // Dim End
