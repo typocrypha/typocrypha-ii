@@ -42,11 +42,11 @@ public class AIAdrestiaTutorial : AIComponent
             SetSpell();
             if(Battlefield.instance.ValidReinforcementPositions.Count > 0)
             {
-                InsertCast(caster.FieldPos, callAlliesSpell, null, $"{caster.DisplayName} summons an ally!");
+                QueueCast(caster.FieldPos, callAlliesSpell, null, $"{caster.DisplayName} summons an ally!");
             }
             else
             {
-                InsertCast(caster.FieldPos, enrageAlliesSpell, null, $"{caster.DisplayName}'s allies were filled with vengeance!");
+                QueueCast(caster.FieldPos, enrageAlliesSpell, null, $"{caster.DisplayName}'s allies were filled with vengeance!");
             }
 
         }
@@ -54,7 +54,7 @@ public class AIAdrestiaTutorial : AIComponent
 
     private void AfterCastResolved(Spell s, Caster caster, bool hitTarget)
     {
-        if (s == callAlliesSpell)
+        if (s == callAlliesSpell || s == enrageAlliesSpell)
             return;
         SetSpell();
     }
@@ -143,6 +143,6 @@ public class AIAdrestiaTutorial : AIComponent
         data.Effectiveness = Reaction.Block;
         data.Damage = 0;
         data.StaggerDamage = 0;
-        InsertCast(caster.FieldPos, riposteSpell, null);
+        InsertCast(caster.FieldPos, riposteSpell);
     }
 }

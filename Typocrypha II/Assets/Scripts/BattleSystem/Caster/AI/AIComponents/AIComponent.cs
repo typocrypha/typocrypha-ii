@@ -42,15 +42,30 @@ public abstract class AIComponent : MonoBehaviour
         caster.Charge = 0;
     }
 
-    protected void InsertCast(Battlefield.Position spellTargetPosition, Spell spellToCast, System.Action onComplete, string messageOverride = null)
+    protected void InsertCast(Battlefield.Position spellTargetPosition, Spell spellToCast, System.Action onComplete = null, string messageOverride = null)
+    {
+        var castFn = GetCastFunction(spellTargetPosition, spellToCast, messageOverride);
+        ATBManager.instance.InsertSolo(new ATBManager.ATBAction() { Actor = GetComponent<ATBActor>(), Action = castFn, OnComplete = onComplete });
+    }
+
+    protected void QueueCast(Battlefield.Position spellTargetPosition, Spell spellToCast, System.Action onComplete = null, string messageOverride = null)
+    {
+        var castFn = GetCastFunction(spellTargetPosition, spellToCast, messageOverride);
+        ATBManager.instance.QueueSolo(new ATBManager.ATBAction() { Actor = GetComponent<ATBActor>(), Action = castFn, OnComplete = onComplete });
+    }
+
+    private System.Func<Coroutine> GetCastFunction(Battlefield.Position spellTargetPosition, Spell spellToCast, string messageOverride)
     {
         var spell = spellToCast;
         var targetPos = spellTargetPosition;
         bool topLevel = !ATBManager.instance.ProcessingActions;
         Coroutine CastFn()
         {
+            // Cancel if stunned, dead/fled, or countered
+            if (caster.Stunned || caster.IsDeadOrFled || caster.Countered)
+                return null;
             return SpellManager.instance.Cast(spell, caster, targetPos, messageOverride, topLevel);
         }
-        ATBManager.instance.InsertSolo(new ATBManager.ATBAction() { Actor = GetComponent<ATBActor>(), Action = CastFn, OnComplete = onComplete });
+        return CastFn;
     }
 }
