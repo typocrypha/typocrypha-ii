@@ -82,7 +82,13 @@ namespace ATB3
             if (action.IsValid)
             {
                 action.Actor.PH.Unpause(PauseSources.ATB);
-                StartCoroutine(DoSoloCR(action));
+                var routine = action.Action.Invoke();
+                if(routine == null)
+                {
+                    ExitSolo(action);
+                    return;
+                }
+                StartCoroutine(ExitSoloAfterActionComplete(action, routine));
             }
             else
             {
@@ -90,13 +96,9 @@ namespace ATB3
             }
         }
 
-        private IEnumerator DoSoloCR(ATBAction action)
+        private IEnumerator ExitSoloAfterActionComplete(ATBAction action, Coroutine routine)
         {
-            var routine = action.Action.Invoke();
-            if(routine != null)
-            {
-                yield return routine;
-            }
+            yield return routine;
             ExitSolo(action);
         }
 
@@ -133,7 +135,6 @@ namespace ATB3
                 PauseManager.instance.PH.Unpause(PauseSources.ATB);
                 BattleDimmer.instance.SetDimmer(false); // Dim End
             }
-
             else // Otherwise, give solo to next in queue
             {
                 // Pause previous solo actor

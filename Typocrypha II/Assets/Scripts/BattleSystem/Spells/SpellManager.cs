@@ -282,21 +282,6 @@ public class SpellManager : MonoBehaviour
             SpellCooldownManager.instance.DoOverheat();
         }
         OnAfterCastResolved?.Invoke();
-        PostCastFX(caster);
-    }
-
-    public void PostCastFX(Caster caster)
-    {
-        if (ATB3.ATBManager.instance.OnLastAction)
-        {
-            // BattleDim: undim all
-            BattleDimmer.instance.SetDimmer(false);
-        }
-        // Show caster UI
-        if(caster.ui != null)
-        {
-            caster.ui.ShowUI(true);
-        }
     }
 
     private IEnumerator CastAndCounterCR(Spell spell, Caster caster, Battlefield.Position target, Func<Caster, bool> pred, string castMessageOverride, bool isTopLevel)

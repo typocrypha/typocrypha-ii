@@ -44,7 +44,7 @@ public class BattleDimmer : MonoBehaviour
     /// </summary>
     /// <param name="casters">A collection of casters to make dimmable.</param>
     /// <param name="showUI">Whether to hide caster UI.</param>
-    public void DimCasters(IEnumerable<Caster> casters, bool showUI = true)
+    public void DimCasters(IEnumerable<Caster> casters, bool showUI)
     {
         if (casters == null) return;
 

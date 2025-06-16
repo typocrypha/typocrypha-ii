@@ -32,24 +32,20 @@ namespace ATB3
                 if (enteredSpiritMode)
                 {
                     caster.Charge = 0;
-                    SpellManager.instance.PostCastFX(caster);
                     return null;
                 }
                 if (caster.IsDeadOrFled)
                 {
-                    SpellManager.instance.PostCastFX(caster);
                     return null;
                 }
                 if (caster.Stunned)
                 {
                     Source.PerformTransition(ATBStateID.Stunned);
-                    SpellManager.instance.PostCastFX(caster);
                     return null;
                 }
                 if (caster.Countered)
                 {
                     caster.OnAfterCastResolved?.Invoke(caster.Spell, caster, false);
-                    SpellManager.instance.PostCastFX(caster);
                     return null;
                 }
                 Owner.GetComponent<Animator>().SetTrigger("Cast");
