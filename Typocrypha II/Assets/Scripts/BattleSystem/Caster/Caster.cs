@@ -229,7 +229,7 @@ public class Caster : MonoBehaviour
             ui?.onStunProgressChanged.Invoke(value);
         } 
     }
-    public bool Countered => Spell.Countered;
+    public bool Countered => Spell?.Countered ?? false;
     public bool Running => Spell.IsRun;
     public Spell Spell
     {
