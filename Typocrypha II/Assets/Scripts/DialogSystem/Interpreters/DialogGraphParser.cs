@@ -70,9 +70,10 @@ public class DialogGraphParser : GraphParser
             if (currNode is DialogNode)
             {
                 var cNode = currNode as DialogNode;
-                List<CharacterData> cds = new List<CharacterData>();
+
                 var charNames = cNode.characterName.Split(new char[] { '|' }, new char[] { '\\' });
-                List<AudioClip> voice = new List<AudioClip>();
+                var cds = new List<CharacterData>(charNames.Length);
+                var voice = new List<AudioClip>(charNames.Length);
                 foreach (var charName in charNames)
                 {
                     // Get speaking SFX if valid name.
