@@ -17,11 +17,7 @@ public class ApplyRuleEffect : RootWordEffect
 
     public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.DamageModifier mod, RootCastResults prevResults = null)
     {
-        var results = new CastResults(caster, target, 0)
-        {
-            DisplayDamage = false,
-            Miss = false,
-        };
+        var results = InitializeCastResults(caster, target, mod);
         if(ruleType == RuleEnum.RemoveRule)
         {
             Rule.ActiveRule = null;

@@ -8,10 +8,7 @@ public class IntimidateEffect : RootWordEffect
 
     public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.DamageModifier mod, RootCastResults prevResults = null)
     {
-        var results = new CastResults(caster, target)
-        {
-            DisplayDamage = false
-        };
+        var results = InitializeCastResults(caster, target, mod);
 
         if (target.HasTag("Melancholy"))
         {

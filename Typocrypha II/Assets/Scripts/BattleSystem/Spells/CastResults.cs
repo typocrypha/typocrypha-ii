@@ -8,6 +8,7 @@ public class CastResults
     public Caster target;
     public RootWordEffect effect;
 
+    public List<SpellFxData> AnimationData { get; } = new List<SpellFxData>();
     public bool DisplayDamage { get; set; } = true;
     public bool Miss { get; set; } = false;
     public bool IsCrit => Mod == global::Damage.SpecialModifier.Critical;

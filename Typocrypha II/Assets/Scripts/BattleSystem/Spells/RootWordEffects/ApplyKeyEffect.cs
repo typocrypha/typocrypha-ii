@@ -4,11 +4,7 @@ public abstract class ApplyKeyEffect : RootWordEffect
 {    
     public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.DamageModifier mod, RootCastResults prevResults = null)
     {
-        var results = new CastResults(caster, target)
-        {
-            Mod = mod.specialModifier,
-            DisplayDamage = false,
-        };
+        var results = InitializeCastResults(caster, target, mod);
         Damage.StandardHitCheck(results, this, caster, target);
         if (!target.IsPlayer)
         {

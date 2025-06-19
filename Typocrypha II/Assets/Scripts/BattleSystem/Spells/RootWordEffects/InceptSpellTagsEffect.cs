@@ -11,12 +11,7 @@ public class InceptSpellTagsEffect : RootWordEffect
     public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.DamageModifier mod, RootCastResults prevResults = null)
     {
         target.OnBeforeSpellEffectCast += InceptTag;
-        CastResults results = new CastResults(caster, target)
-        {
-            Miss = false,
-            DisplayDamage = false
-        };
-        return results;
+        return InitializeCastResults(caster, target, mod);
     }
 
     public void InceptTag(RootWordEffect effect, Caster caster, Caster target, Damage.DamageModifier mod)

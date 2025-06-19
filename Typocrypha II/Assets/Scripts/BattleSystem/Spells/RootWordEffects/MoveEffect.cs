@@ -18,8 +18,7 @@ public class MoveEffect : RootWordEffect
 
     public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.DamageModifier mod, RootCastResults prevResults = null)
     {
-        var results = new CastResults(caster, target);
-        results.DisplayDamage = false;
+        var results = InitializeCastResults(caster, target, mod);
         var viablePositions = new List<Battlefield.Position>(positions);
         viablePositions.RemoveAll((p) => !p.IsLegal || p == target.FieldPos);
         if(validSpaceFilter == Filter.OnlyUnoccupied)

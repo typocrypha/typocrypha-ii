@@ -8,11 +8,10 @@ public class StunEffect : RootWordEffect
 
     public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.DamageModifier mod, RootCastResults prevResults = null)
     {
-        CastResults results = new CastResults(caster, target);
+        var results = InitializeCastResults(caster, target, mod);
         Damage.StandardHitCheck(results, this, caster, target);
         Damage.StandardElements(results, this, caster, target);
         results.StaggerDamage = target.Stagger;
-        results.DisplayDamage = false;
         Damage.ApplyStandard(results, this, caster, target, spellData);
         return results;
     }

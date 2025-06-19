@@ -10,10 +10,7 @@ public class EyeOfTheStormEffect : RootWordEffect
         {
             return null;
         }
-        var results = new CastResults(caster, target, target.Health)
-        {
-            Miss = false,
-        };
+        var results = InitializeCastResults(caster, target, mod, target.Health);
         if (target.HasTag("FireBody"))
         {
             Typocrypha.Keyboard.instance.ApplyEffectRandom("KeyEffectBurning", caster, 3);

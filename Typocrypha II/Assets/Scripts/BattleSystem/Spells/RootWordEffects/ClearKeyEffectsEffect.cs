@@ -4,6 +4,6 @@
     public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.DamageModifier mod, RootCastResults prevResults = null)
     {
         Typocrypha.Keyboard.instance.ClearKeyEffects();
-        return new CastResults(caster, target) { DisplayDamage = false, };
+        return InitializeCastResults(caster, target, mod);
     }
 }

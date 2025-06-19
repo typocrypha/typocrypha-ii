@@ -15,11 +15,7 @@ public abstract class SpawnBattleWordEffect : RootWordEffect
     {
         self = caster;
         SpellManager.instance.LogDelay(Play(caster, caster.transform));
-        return new CastResults(caster, target)
-        {
-            DisplayDamage = false,
-            Miss = false,
-        };
+        return InitializeCastResults(caster, target, mod);
     }
 
     protected abstract IReadOnlyList<BattleWord.SequenceData> GetSequenceData(Caster caster, out GameObject defaultPrefab);

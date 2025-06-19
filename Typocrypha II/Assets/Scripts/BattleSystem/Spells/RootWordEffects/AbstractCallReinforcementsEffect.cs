@@ -14,8 +14,7 @@ public abstract class AbstractCallReinforcementsEffect : RootWordEffect
         var validPositions = Battlefield.instance.ValidReinforcementPositions;
         if (validPositions.Count <= 0)
             return null;
-        CastResults results = new CastResults(caster, target);
-        results.DisplayDamage = false;
+        var results = InitializeCastResults(caster, target, mod);
         if (RandomUtils.RandomU.instance.RandomDouble() < 0.01 && !tags.Contains("AlwaysHit"))
         {
             results.Miss = true;

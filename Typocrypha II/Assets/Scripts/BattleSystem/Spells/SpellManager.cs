@@ -224,8 +224,15 @@ public class SpellManager : MonoBehaviour
                         targetCaster.OnAfterHitResolved?.Invoke(effect, caster, targetCaster, spellData, castResults);
                         caster.OnAfterSpellEffectCast?.Invoke(effect, caster, targetCaster, spellData, castResults);
                         // Play Effects
-                        var fx = new SpellFxData[] { root.leftMod?.fx, effect.fx, root.rightMod?.fx };
-                        crList.Add(SpellFxManager.instance.Play(fx, castResults, targetSpace, casterSpace));
+                        if(root.leftMod != null)
+                        {
+                            castResults.AnimationData.Insert(0, root.leftMod.fx);
+                        }
+                        if(root.rightMod != null)
+                        {
+                            castResults.AnimationData.Add(root.rightMod.fx);
+                        }
+                        crList.Add(SpellFxManager.instance.Play(castResults, targetSpace, casterSpace));
                         // Log the results of this target
                         effectResults.Add(castResults);
                         // Wait for delay between targets

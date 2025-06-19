@@ -7,6 +7,6 @@ public class SkipEffect : RootWordEffect
     public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.DamageModifier mod, RootCastResults prevResults = null)
     {
         TransitionManager.instance.TransitionToNextScene();
-        return new CastResults(caster, target);
+        return InitializeCastResults(caster, target, mod);
     }
 }

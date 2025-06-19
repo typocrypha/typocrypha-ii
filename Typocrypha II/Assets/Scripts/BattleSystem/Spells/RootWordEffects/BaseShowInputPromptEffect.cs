@@ -18,11 +18,7 @@ public abstract class BaseShowInputPromptEffect : RootWordEffect
             yield return SpellFxManager.instance.PlayFullPopup(failResults, Battlefield.instance.GetSpaceScreenSpace(target.FieldPos), Battlefield.instance.GetSpaceScreenSpace(caster.FieldPos));
         }
         SpellManager.instance.LogPromptPopup(Title, Prompt, Time, OnPromptComplete);
-        return new CastResults(caster, target)
-        {
-            DisplayDamage = false,
-            Miss = false,
-        };
+        return InitializeCastResults(caster, target, mod);
     }
 
     protected virtual void Initialize(Caster caster, Caster target, RootCastData spellData, Damage.SpecialModifier mod, RootCastResults prevResults) { }

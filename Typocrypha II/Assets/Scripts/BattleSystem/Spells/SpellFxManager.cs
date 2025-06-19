@@ -92,14 +92,14 @@ public class SpellFxManager : MonoBehaviour
     {
         return PlayText(pos, "Countered!", Color.green, popTime);
     }
-    public Coroutine Play(SpellFxData[] fxData, CastResults data, Vector2 targetPos, Vector2 casterPos)
+    public Coroutine Play(CastResults data, Vector2 targetPos, Vector2 casterPos)
     {
         // For some unknown reason, getting the animator within the coroutine instead of passing it in always gets null
         var targetAnim = data.target?.GetComponent<Animator>();
-        return StartCoroutine(PlayCR(fxData, targetAnim, data, targetPos, casterPos));
+        return StartCoroutine(PlayCR(data, targetAnim, targetPos, casterPos));
     }
     /// <summary> A coroutine to play multiple spell effects in a row to facilitate Modifier Fx with crList </summary>
-    private IEnumerator PlayCR(SpellFxData[] fxData, Animator targetAnim, CastResults data, Vector2 targetPos, Vector2 casterPos)
+    private IEnumerator PlayCR(CastResults data, Animator targetAnim, Vector2 targetPos, Vector2 casterPos)
     {
         var pos = targetPos;
 
@@ -145,20 +145,17 @@ public class SpellFxManager : MonoBehaviour
         #endregion 
 
 
-        foreach (var fx in fxData)
+        foreach (var fx in data.AnimationData)
         {
-            if (fx != null)
+            if (data.DisplayDamage && (data.WillDealDamage || data.Effectiveness == Reaction.Repel && data.Damage > 0))
             {
-                if (data.DisplayDamage && (data.WillDealDamage || data.Effectiveness == Reaction.Repel && data.Damage > 0))
+                CameraManager.instance.Shake(shakeIntensity, shakeDuration, shakeDamper);
+                if (data.target.IsPlayer || (data.Effectiveness == Reaction.Repel && data.caster.IsPlayer))
                 {
-                    CameraManager.instance.Shake(shakeIntensity, shakeDuration, shakeDamper);
-                    if (data.target.IsPlayer || (data.Effectiveness == Reaction.Repel && data.caster.IsPlayer))
-                    {
-                        damageGlitchController.Play();
-                    }
+                    damageGlitchController.Play();
                 }
-                yield return StartCoroutine(fx.Play(pos));
             }
+            yield return StartCoroutine(fx.Play(pos));
         }
         yield return StartCoroutine(PlayPopupCr(data, pos, casterPos));
     }

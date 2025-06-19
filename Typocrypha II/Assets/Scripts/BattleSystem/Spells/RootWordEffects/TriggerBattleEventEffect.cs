@@ -9,10 +9,7 @@ public class TriggerBattleEventEffect : RootWordEffect
 
     public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.DamageModifier mod, RootCastResults prevResults = null)
     {
-        CastResults results = new CastResults(caster, target);
-        results.Miss = false;
-        results.DisplayDamage = false;
         BattleManager.instance.TriggerBattleEvent(id);
-        return results;
+        return InitializeCastResults(caster, target, mod);
     }
 }

@@ -11,8 +11,9 @@ public class DamageEffect : RootWordEffect
 
     public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.DamageModifier mod, RootCastResults prevResults = null)
     {
-        if (formula == Damage.FormulaType.Custom)
-            return customFormula.Apply(this, caster, target, mod, spellData, prevResults);
-        return Damage.PresetFormulae[formula](this, caster, target, mod, spellData);
+        var results = formula == Damage.FormulaType.Custom ? customFormula.Apply(this, caster, target, mod, spellData, prevResults)
+            : Damage.PresetFormulae[formula](this, caster, target, mod, spellData);
+        results.AnimationData.Add(fx);
+        return results;
     }
 }

@@ -10,10 +10,7 @@ public class AddTagsEffect : RootWordEffect
 
     public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.DamageModifier mod, RootCastResults prevResults = null)
     {
-        CastResults results = new CastResults(caster, target)
-        {
-            DisplayDamage = false
-        };
+        var results = InitializeCastResults(caster, target, mod);
         bool success = false;
         foreach (var t in casterTagsToAdd)
         {
