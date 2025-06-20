@@ -15,12 +15,6 @@ public abstract class AbstractCallReinforcementsEffect : RootWordEffect
         if (validPositions.Count <= 0)
             return null;
         var results = InitializeCastResults(caster, target, mod);
-        if (RandomUtils.RandomU.instance.RandomDouble() < 0.01 && !tags.Contains("AlwaysHit"))
-        {
-            results.Miss = true;
-            LogMessage("But nobody came!");
-            return results;
-        }
         results.Miss = false;
         int numReinforcements = System.Math.Min(validPositions.Count, number);
         var data = new List<BattleManager.ReinforcementData>(numReinforcements);
