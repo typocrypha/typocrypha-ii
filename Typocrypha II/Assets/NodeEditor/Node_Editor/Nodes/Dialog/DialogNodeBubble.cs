@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using NodeEditorFramework;
 using NodeEditorFramework.Utilities;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace Gameflow
 {
@@ -29,9 +32,10 @@ namespace Gameflow
             NameGUI();
             TextGUI();
             
-            GUILayout.Space(50);
-            //gridPosition = RTEditorGUI.RectField(new Rect(20, 140, MinSize.x - 65, 20), "Rect", rectVal);
-
+            #if UNITY_EDITOR
+            gridPosition = EditorGUILayout.Vector2IntField("Grid Pos", gridPosition);
+            absolutePosition = EditorGUILayout.Vector2Field("Absolute Pos", absolutePosition);
+            #endif
             //Don't know why this code needs to be here exactly, but it makes everything nicer? maybe add to some static stuff?
             GUILayout.BeginHorizontal();
             RTEditorGUI.labelWidth = 90;
