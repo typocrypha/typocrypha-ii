@@ -18,6 +18,7 @@ public class TargetData
         AlliesAndSelf,
         SpiritModeAlliesAndSelf,
         EveryoneExceptSelf,
+        SpritModeAllies,
     }
 
     public BoolMatrix2D pattern = new BoolMatrix2D(2, 3);
@@ -86,13 +87,17 @@ public class TargetData
                 }
             }
         }
-        else if (type == Type.SpiritModeAlliesAndSelf)
+        else if (type == Type.SpritModeAllies || type == Type.SpiritModeAlliesAndSelf)
         {
             var caster = Battlefield.instance.GetCaster(casterPos);
             if (caster != null)
             {
                 GetAllies(caster, casterPos, ref ret, IsSpiritMode);
-                ret.Add(casterPos);
+                // Add self if appropriate
+                if (type == Type.SpiritModeAlliesAndSelf)
+                {
+                    ret.Add(casterPos);
+                }
             }
         }
         else if(type == Type.EveryoneExceptSelf)

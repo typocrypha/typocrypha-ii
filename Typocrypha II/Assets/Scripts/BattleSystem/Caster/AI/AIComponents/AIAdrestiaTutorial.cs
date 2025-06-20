@@ -8,6 +8,7 @@ public class AIAdrestiaTutorial : AIComponent
     [SerializeField] private Spell parrySpell;
     [SerializeField] private Spell riposteSpell;
     [SerializeField] private Spell callAlliesSpell;
+    [SerializeField] private Spell clearAndCallAlliesSpell;
     [SerializeField] private Spell enrageAlliesSpell;
     [SerializeField] private SpellList normalSpells;
     [SerializeField] private AudioClip warningSfx;
@@ -37,19 +38,26 @@ public class AIAdrestiaTutorial : AIComponent
 
     private void OnCountered(Caster arg1, bool fullCounter)
     {
-        if (fullCounter)
+        if (!fullCounter)
         {
-            SetSpell();
-            if(Battlefield.instance.ValidReinforcementPositions.Count > 0)
-            {
-                QueueCast(caster.FieldPos, callAlliesSpell, null, $"{caster.DisplayName} summons an ally!");
-            }
-            else
-            {
-                QueueCast(caster.FieldPos, enrageAlliesSpell, null, $"{caster.DisplayName}'s allies were filled with vengeance!");
-            }
-
+            return;
         }
+        SetSpell();
+        if (Battlefield.instance.ValidReinforcementPositions.Count > 0)
+        {
+            QueueCast(caster.FieldPos, callAlliesSpell, null, $"{caster.DisplayName} summons an ally!");
+            return;
+        }
+        // Check for clearable allies
+        foreach (var caster in Battlefield.instance.Casters)
+        {
+            if (caster.CasterState == caster.CasterState && caster.BStatus == Caster.BattleStatus.SpiritMode)
+            {
+                QueueCast(caster.FieldPos, clearAndCallAlliesSpell, null, $"{caster.DisplayName} summons an ally!");
+                return;
+            }
+        }
+        QueueCast(caster.FieldPos, enrageAlliesSpell, null, $"{caster.DisplayName}'s allies were filled with vengeance!");
     }
 
     private void AfterCastResolved(Spell s, Caster caster, bool hitTarget)
