@@ -327,6 +327,11 @@ public class DialogBox : MonoBehaviour, IDialogBox
 
     private bool ShouldAutoContinue(out float delay)
     {
+        if (DialogManager.instance.Auto)
+        {
+            delay = 0;
+            return true;
+        }
         if (Settings.AutoContinue)
         {
             delay = defaultAutoContinueDelay / Settings.TextScrollSpeed;

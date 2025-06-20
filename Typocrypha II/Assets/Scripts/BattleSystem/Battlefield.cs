@@ -22,31 +22,19 @@ public class Battlefield : MonoBehaviour, IPausable
     {
         //Typocrypha.Keyboard.instance.CastingEnabled = !b;
         //SpellCooldownManager.instance.PH.Pause = b
-        if (b)
+        foreach (var actor in Actors)
         {
-            foreach (var actor in Actors)
+            if (actor == null)
             {
-                if (actor != null)
-                {
-                    actor.PH.Pause(PauseSources.Parent);
-                }
+                continue;
             }
-        }
-        else
-        {
-            if (!ATBManager.instance.ProcessingActions)
+            if (b)
             {
-                foreach (var actor in Actors)
-                {
-                    if (actor != null)
-                    {
-                        actor.PH.Unpause(PauseSources.Parent);
-                    }
-                }
+                actor.PH.Pause(PauseSources.Parent);
             }
             else
             {
-                ATBManager.instance.SoloActor.PH.Unpause(PauseSources.Parent);
+                actor.PH.Unpause(PauseSources.Parent);
             }
         }
     }

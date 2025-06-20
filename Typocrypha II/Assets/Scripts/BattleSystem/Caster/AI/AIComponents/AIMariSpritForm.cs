@@ -207,6 +207,6 @@ public class AIMariSpritForm : AIComponent
             }
             delay -= 0.01f;
         }
-        DialogManager.instance.StartDialog(defeatScene, true, BattleManager.instance.NextWave);
+        DialogManager.instance.StartDialog(defeatScene, true, false, BattleManager.instance.NextWave);
     }
 }

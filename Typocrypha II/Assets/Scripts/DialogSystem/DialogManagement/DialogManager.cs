@@ -37,6 +37,7 @@ public class DialogManager : MonoBehaviour, IPausable
     [SerializeField] private List<DialogView> allViews; // All dialog views (VN, CHAT, etc)
     public UnityEvent onNextDialog; // Event called when a new dialog line is started.
     public UnityEvent onSkip; // Event called when user manually skips text scroll.
+    public bool Auto { get; private set; }
     public DialogView DialogView
     {
         get => dialogView;
@@ -102,6 +103,10 @@ public class DialogManager : MonoBehaviour, IPausable
             StartDialog(false, false);
         }
 #endif
+        if (Auto)
+        {
+            return;
+        }
         // Check if submit key is pressed
         if (!Loading && ReadyToContinue && dialogBox != null && DialogView.ReadyToContinue && (Input.GetKeyDown(KeyCode.Space) || Settings.AutoContinue))
         {
@@ -129,8 +134,9 @@ public class DialogManager : MonoBehaviour, IPausable
     /// May load save if applicable.
     /// </summary>
     /// <param name="graph">Graph object to start.</param>
-    public void StartDialog(DialogCanvas graph, bool reset, System.Action onHideComplete = null)
+    public void StartDialog(DialogCanvas graph, bool reset, bool autoDialog, System.Action onHideComplete = null)
     {
+        Auto = autoDialog;
         graphParser.Graph = graph;
         if(onHideComplete != null)
         {
@@ -146,7 +152,7 @@ public class DialogManager : MonoBehaviour, IPausable
     private void StartDialog(bool reset, bool loading)
     {
         PH.Unpause(PauseSources.Self);
-        if (isBattle)
+        if (isBattle && !Auto)
         {
             BattleManager.instance.PH.Pause(PauseSources.Dialog);
         }
@@ -304,7 +310,10 @@ public class DialogManager : MonoBehaviour, IPausable
             {
                 yield return new WaitForSeconds(0.5f);
             }
-            BattleManager.instance.PH.Unpause(PauseSources.Dialog);
+            if (!Auto)
+            {
+                BattleManager.instance.PH.Unpause(PauseSources.Dialog);
+            }
         }
         ReadyToContinue = true;
         PH.Pause(PauseSources.Self);

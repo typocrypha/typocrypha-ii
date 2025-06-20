@@ -255,7 +255,7 @@ public class BattleManager : MonoBehaviour, IPausable
         if (waveData.openingScene != null)
         {
             // Play opening scene
-            DialogManager.instance.StartDialog(waveData.openingScene, true);
+            DialogManager.instance.StartDialog(waveData.openingScene, true, false);
         }
         FirstWaveStarted = true;
         PH.Unpause(PauseSources.Self); // Will remain paused if dialog scene
