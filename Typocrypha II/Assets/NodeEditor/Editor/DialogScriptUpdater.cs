@@ -121,7 +121,8 @@ public class DialogScriptUpdater : EditorWindow
 
         //export
         GUI.enabled = enableExport;
-        if (GUILayout.Button("Export Selected", LargeButton))
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("Export TXT", LargeButton))
         {
             for (int i = 0; i < fileResults.Count; ++i)
             {
@@ -133,7 +134,7 @@ public class DialogScriptUpdater : EditorWindow
                         fileResults[i].Id,
                         $"{ fileResults[i].Name}.txt",
                         Path.Combine(Application.dataPath, exportLocation),
-                        toggleParse ? ParseOnExport : null as Action<string>);
+                        toggleParse ? ParseAsDialogScript : null as Action<string>);
                 }
                 catch (Exception e)
                 {
@@ -141,6 +142,27 @@ public class DialogScriptUpdater : EditorWindow
                 }
             }
         }
+        if (GUILayout.Button("Export CSV", LargeButton))
+        {
+            for (int i = 0; i < fileResults.Count; ++i)
+            {
+                if (!fileSelection[i]) continue;
+
+                try
+                {
+                    ExportSpreadsheet(
+                        fileResults[i].Id,
+                        $"{ fileResults[i].Name}.csv",
+                        Path.Combine(Application.dataPath, exportLocation),
+                        toggleParse ? ParseAsTIPSBundle : null as Action<string>);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError(e);
+                }
+            }
+        }
+        GUILayout.EndHorizontal();
         GUI.enabled = true;
     }
 
@@ -163,9 +185,9 @@ public class DialogScriptUpdater : EditorWindow
         return GoogleDriveFiles.List(query, new List<string> { "files(id,name,modifiedTime)" });
     }
 
-    static void ExportDocument(string id, string fileName, string exportPath, Action<string> OnDone = null)
+    static void ExportFile(string id, string fileName, string exportPath, string mimeType, Action<string> OnDone = null)
     {
-        var request = GoogleDriveFiles.Export(id, "text/plain");
+        var request = GoogleDriveFiles.Export(id, mimeType);
         request.Send().OnDone += file =>
         {
             if (request.IsError)
@@ -182,15 +204,30 @@ public class DialogScriptUpdater : EditorWindow
             }
             Debug.Log($"Exported to {path}");
             AssetDatabase.Refresh();
-            OnDone.Invoke(path);
+            OnDone?.Invoke(path);
         };
     }
 
-    static void ParseOnExport(string filePath)
+    static void ExportDocument(string id, string fileName, string exportPath, Action<string> OnDone = null)
+    {
+        ExportFile(id, fileName, exportPath, "text/plain", OnDone);
+    }
+
+    static void ExportSpreadsheet(string id, string fileName, string exportPath, Action<string> OnDone = null)
+    {
+        ExportFile(id, fileName, exportPath, "text/csv", OnDone);
+    }
+
+    static void ParseAsDialogScript(string filePath)
     {
         if (filePath.StartsWith(Application.dataPath))
             filePath = $"Assets{filePath.Substring(Application.dataPath.Length)}";
 
         new DialogScriptParser().GenerateCanvas(AssetDatabase.LoadAssetAtPath<TextAsset>(filePath), true);
+    }
+
+    static void ParseAsTIPSBundle(string filePath)
+    {
+        // TODO
     }
 }
