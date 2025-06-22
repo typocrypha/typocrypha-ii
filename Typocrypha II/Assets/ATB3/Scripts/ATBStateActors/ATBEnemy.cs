@@ -35,14 +35,24 @@ namespace ATB3
             chargeCRObj = StartCoroutine(ChargeCR());
         }
 
+        private bool CanCharge()
+        {
+            return !IsPausedOrCasting() && IsCurrentState(ATBStateID.Charge);
+        }
+
         // Incrementally charges next spell
         IEnumerator ChargeCR()
         {
+            var chargeYielder = new WaitUntil(CanCharge);
+            var timeYielder = new WaitForFixedUpdate();
             do
             {
                 // Charge while in charge state
-                do yield return new WaitForFixedUpdate();
-                while (PH.Paused || !IsCurrentState(ATBStateID.Charge));
+                if (!CanCharge())
+                {
+                    yield return chargeYielder;
+                }
+                yield return timeYielder;
                 Caster.Charge += Time.fixedDeltaTime * Settings.GameplaySpeed * Caster.Stats.CastingSpeedMod;
             }
             while (Caster.Charge < Caster.ChargeTime);

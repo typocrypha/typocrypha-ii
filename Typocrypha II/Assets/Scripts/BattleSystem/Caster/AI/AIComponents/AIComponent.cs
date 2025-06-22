@@ -64,6 +64,9 @@ public abstract class AIComponent : MonoBehaviour
             // Cancel if stunned, dead/fled, or countered
             if (caster.Stunned || caster.IsDeadOrFled || caster.Countered)
                 return null;
+            var actor = caster.GetComponent<ATBActor>();
+            if (actor != null)
+                actor.isCast = true;
             return SpellManager.instance.Cast(spell, caster, targetPos, messageOverride, topLevel);
         }
         return CastFn;

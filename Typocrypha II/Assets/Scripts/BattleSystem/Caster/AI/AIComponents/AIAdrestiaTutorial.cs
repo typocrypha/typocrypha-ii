@@ -88,11 +88,14 @@ public class AIAdrestiaTutorial : AIComponent
         float goalTime = Mathf.Max(1f, (float)RandomUtils.RandomU.instance.RandomDouble() * Mathf.Min(timeLeft, 3));
         var actor = caster.GetComponent<ATB3.ATBActor>();
         var waitForEndOfFrame = new WaitForEndOfFrame();
-        var waitForUnPause = new WaitWhile(actor.PH.IsPaused);
+        var waitForUnPause = new WaitWhile(actor.IsPausedOrCasting);
         bool playWarning = true;
         while (time < goalTime)
         {
-            yield return waitForUnPause;
+            if (actor.IsPausedOrCasting())
+            {
+                yield return waitForUnPause;
+            }
             time += Time.deltaTime;
             if (playWarning && goalTime - time < 0.33f)
             {
@@ -101,17 +104,26 @@ public class AIAdrestiaTutorial : AIComponent
             }
             yield return waitForEndOfFrame;
         }
-        yield return waitForUnPause;
+        if (actor.IsPausedOrCasting())
+        {
+            yield return waitForUnPause;
+        }
         StartParry();
         time = 0;
         goalTime = Math.Min((caster.ChargeTime - caster.Charge) - 0.1f, 1f + (float)RandomUtils.RandomU.instance.RandomDouble() * 0.25f);
         while (time < goalTime)
         {
-            yield return waitForUnPause;
+            if (actor.IsPausedOrCasting())
+            {
+                yield return waitForUnPause;
+            }
             time += Time.deltaTime;
             yield return waitForEndOfFrame;
         }
-        yield return waitForUnPause;
+        if (actor.IsPausedOrCasting())
+        {
+            yield return waitForUnPause;
+        }
         EndParry();
         PrepareParry();
     }

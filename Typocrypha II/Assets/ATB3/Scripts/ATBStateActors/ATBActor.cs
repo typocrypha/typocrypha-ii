@@ -33,6 +33,8 @@ namespace ATB3
         }
         #endregion
 
+        public bool IsPausedOrCasting() => PH.Paused || isCast;
+
         [HideInInspector]
         public bool isCast; // Is the actor in cast sequence? Isn't unset until all chains are finished.
 
