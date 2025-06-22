@@ -76,6 +76,8 @@ public class AIAdrestiaTutorial : AIComponent
 
     private void PrepareParry()
     {
+        if (caster.IsDeadOrFled)
+            return;
         parryCR = StartCoroutine(ParryCR());
     }
 
