@@ -198,8 +198,14 @@ public class SpellManager : MonoBehaviour
                 // Log the effect of each effect
                 var effectResults = new List<CastResults>();
                 crList.Clear();
-                foreach (var t in targets)
+                for (int targetIndex = 0; targetIndex < targets.Count; targetIndex++)
                 {
+                    // Wait for delay between targets if applicable
+                    if (targetIndex > 0)
+                    {
+                        yield return new WaitForSeconds(delayBetweenTargets);
+                    }
+                    Battlefield.Position t = targets[targetIndex];
                     var targetCaster = Battlefield.instance.GetCaster(t);
                     var targetSpace = Battlefield.instance.GetSpaceScreenSpace(t);
                     if (targetCaster == null || targetCaster.BStatus == Caster.BattleStatus.Dead || targetCaster.BStatus == Caster.BattleStatus.Fled)
@@ -235,8 +241,6 @@ public class SpellManager : MonoBehaviour
                         crList.Add(SpellFxManager.instance.Play(castResults, targetSpace, casterSpace));
                         // Log the results of this target
                         effectResults.Add(castResults);
-                        // Wait for delay between targets
-                        yield return new WaitForSeconds(delayBetweenTargets);
                     }
                 }
                 // Wait for all of the animations to finish
