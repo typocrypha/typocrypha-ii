@@ -62,7 +62,7 @@ public abstract class AIComponent : MonoBehaviour
         Coroutine CastFn()
         {
             // Cancel if stunned, dead/fled, or countered
-            if (caster.Stunned || caster.IsDeadOrFled || caster.Countered)
+            if (caster.Stunned || caster.IsDeadOrFled)
                 return null;
             var actor = caster.GetComponent<ATBActor>();
             if (actor != null)

@@ -10,7 +10,6 @@ public class AIAdrestiaTutorial : AIComponent
     [SerializeField] private Spell callAlliesSpell;
     [SerializeField] private Spell clearAndCallAlliesSpell;
     [SerializeField] private Spell enrageAlliesSpell;
-    [SerializeField] private Spell triggerAlliesSpell;
     [SerializeField] private SpellList normalSpells;
     [SerializeField] private AudioClip warningSfx;
 
@@ -43,7 +42,6 @@ public class AIAdrestiaTutorial : AIComponent
         {
             return;
         }
-        SetSpell();
         if (Battlefield.instance.ValidReinforcementPositions.Count > 0)
         {
             QueueCast(caster.FieldPos, callAlliesSpell, null, $"{caster.DisplayName} summons an ally!");
@@ -69,7 +67,7 @@ public class AIAdrestiaTutorial : AIComponent
         }
         if (allAlliesEnraged)
         {
-            QueueCast(caster.FieldPos, triggerAlliesSpell, null, $"{caster.DisplayName}'s allies retailiated with vengeance!");
+            SetSpell();
         }
         else
         {
@@ -79,7 +77,7 @@ public class AIAdrestiaTutorial : AIComponent
 
     private void AfterCastResolved(Spell s, Caster caster, bool hitTarget)
     {
-        if (s == callAlliesSpell || s == enrageAlliesSpell)
+        if (caster.BStatus == Caster.BattleStatus.SpiritMode)
             return;
         SetSpell();
     }
@@ -104,7 +102,8 @@ public class AIAdrestiaTutorial : AIComponent
         if (timeLeft <= 1)
             yield break;
         float time = 0;
-        float goalTime = Mathf.Max(1f, (float)RandomUtils.RandomU.instance.RandomDouble() * Mathf.Min(timeLeft, 3));
+        float hpFactor = Mathf.Min(1f, ((float)caster.Health / caster.Stats.MaxHP) * 2f);
+        float goalTime = Mathf.Max(1f * hpFactor, (float)RandomUtils.RandomU.instance.RandomDouble() * hpFactor * Mathf.Min(timeLeft, 3));
         var actor = caster.GetComponent<ATB3.ATBActor>();
         var waitForEndOfFrame = new WaitForEndOfFrame();
         var waitForUnPause = new WaitWhile(actor.IsPausedOrCasting);
