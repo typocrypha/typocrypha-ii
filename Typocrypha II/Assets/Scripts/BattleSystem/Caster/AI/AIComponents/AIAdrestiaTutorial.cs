@@ -28,12 +28,14 @@ public class AIAdrestiaTutorial : AIComponent
         RemoveListeners();
         caster.OnAfterCastResolved += AfterCastResolved;
         caster.OnCountered += OnCountered;
+        ATB3.ATBManager.instance.OnExitSolo += AfterATBSequence;
     }
 
     protected override void RemoveListeners()
     {
         caster.OnAfterCastResolved -= AfterCastResolved;
         caster.OnCountered -= OnCountered;
+        ATB3.ATBManager.instance.OnExitSolo -= AfterATBSequence;
     }
 
     private void OnCountered(Caster arg1, bool fullCounter)
@@ -77,9 +79,17 @@ public class AIAdrestiaTutorial : AIComponent
 
     private void AfterCastResolved(Spell s, Caster caster, bool hitTarget)
     {
-        if (caster.BStatus == Caster.BattleStatus.SpiritMode)
+        if (caster.BStatus == Caster.BattleStatus.SpiritMode || caster.Countered)
             return;
         SetSpell();
+    }
+
+    private void AfterATBSequence()
+    {
+        if (caster.Countered)
+        {
+            SetSpell();
+        }
     }
 
     private void SetSpell()
@@ -103,7 +113,7 @@ public class AIAdrestiaTutorial : AIComponent
             yield break;
         float time = 0;
         float hpFactor = Mathf.Min(1f, ((float)caster.Health / caster.Stats.MaxHP) * 2f);
-        float goalTime = Mathf.Max(1f * hpFactor, (float)RandomUtils.RandomU.instance.RandomDouble() * hpFactor * Mathf.Min(timeLeft, 3));
+        float goalTime = Mathf.Max(Mathf.Min(0.25f, 1f * hpFactor), (float)RandomUtils.RandomU.instance.RandomDouble() * hpFactor * Mathf.Min(timeLeft, 3));
         var actor = caster.GetComponent<ATB3.ATBActor>();
         var waitForEndOfFrame = new WaitForEndOfFrame();
         var waitForUnPause = new WaitWhile(actor.IsPausedOrCasting);

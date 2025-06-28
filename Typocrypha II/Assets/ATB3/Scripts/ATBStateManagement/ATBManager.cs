@@ -16,6 +16,8 @@ namespace ATB3
         public static ATBManager instance;
         public bool HasReadyAllies => Battlefield.instance.Actors.Any(a => a is ATBAlly ally && (ally.allyMenu?.CanCast ?? false));
 
+        public event System.Action OnExitSolo;
+
         private void Awake()
         {
             if (instance != null)
@@ -134,6 +136,8 @@ namespace ATB3
                 ResetUI();
                 BattleManager.instance.PauseBattleEvents(false, PauseSources.ATB);
                 PauseManager.instance.PH.Unpause(PauseSources.ATB);
+                OnExitSolo?.Invoke();
+
             }
             else // Otherwise, give solo to next in queue
             {
