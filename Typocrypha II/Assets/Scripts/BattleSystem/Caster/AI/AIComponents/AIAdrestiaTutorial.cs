@@ -10,6 +10,7 @@ public class AIAdrestiaTutorial : AIComponent
     [SerializeField] private Spell callAlliesSpell;
     [SerializeField] private Spell clearAndCallAlliesSpell;
     [SerializeField] private Spell enrageAlliesSpell;
+    [SerializeField] private Spell triggerAlliesSpell;
     [SerializeField] private SpellList normalSpells;
     [SerializeField] private AudioClip warningSfx;
 
@@ -49,15 +50,31 @@ public class AIAdrestiaTutorial : AIComponent
             return;
         }
         // Check for clearable allies
-        foreach (var caster in Battlefield.instance.Casters)
+        foreach (var other in Battlefield.instance.Casters)
         {
-            if (caster.CasterState == caster.CasterState && caster.BStatus == Caster.BattleStatus.SpiritMode)
+            if (other != caster && other.CasterState == caster.CasterState && other.BStatus == Caster.BattleStatus.SpiritMode)
             {
                 QueueCast(caster.FieldPos, clearAndCallAlliesSpell, null, $"{caster.DisplayName} summons an ally!");
                 return;
             }
         }
-        QueueCast(caster.FieldPos, enrageAlliesSpell, null, $"{caster.DisplayName}'s allies were filled with vengeance!");
+        bool allAlliesEnraged = true;
+        foreach (var other in Battlefield.instance.Casters)
+        {
+            if (other != caster && other.CasterState == caster.CasterState && !other.HasTag("Enraged"))
+            {
+                allAlliesEnraged = false;
+                break;
+            }
+        }
+        if (allAlliesEnraged)
+        {
+            QueueCast(caster.FieldPos, triggerAlliesSpell, null, $"{caster.DisplayName}'s allies retailiated with vengeance!");
+        }
+        else
+        {
+            QueueCast(caster.FieldPos, enrageAlliesSpell, null, $"{caster.DisplayName}'s allies were filled with vengeance!");
+        }
     }
 
     private void AfterCastResolved(Spell s, Caster caster, bool hitTarget)
