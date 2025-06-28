@@ -52,7 +52,7 @@ public class BattleDimmer : MonoBehaviour
         {
             if (!c || !c.ui) continue;
             dimmedUIs.Add(c.ui);
-            c.ui.SetDimmable(true).ShowUI(showUI);
+            c.ui.SetDimmable(true);//.ShowUI(showUI);
         }
     }
 
