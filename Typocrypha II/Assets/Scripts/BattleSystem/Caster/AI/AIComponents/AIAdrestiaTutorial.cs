@@ -69,12 +69,9 @@ public class AIAdrestiaTutorial : AIComponent
         }
         if (allAlliesEnraged)
         {
-            SetSpell();
+            return;
         }
-        else
-        {
-            QueueCast(caster.FieldPos, enrageAlliesSpell, null, $"{caster.DisplayName}'s allies were filled with vengeance!");
-        }
+        QueueCast(caster.FieldPos, enrageAlliesSpell, null, $"{caster.DisplayName}'s allies were filled with vengeance!");
     }
 
     private void AfterCastResolved(Spell s, Caster caster, bool hitTarget)
