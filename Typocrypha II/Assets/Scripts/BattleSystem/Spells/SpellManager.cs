@@ -44,12 +44,12 @@ public class SpellManager : MonoBehaviour
     /// Cast the spell's effect with a given caster at a given target position, and then Cancels 
     /// Returns the case coroutine (in case the end of casting must be waited on)
     /// </summary>
-    public Coroutine CastAndCounter(Spell spell, Caster caster, Battlefield.Position target, string castMessageOverride = null, bool isTopLevel = true)
+    public Coroutine CastAndCounter(Spell spell, Caster caster, Battlefield.Position target, string castMessage = null, bool isTopLevel = true)
     {
         var targetCaster = Battlefield.instance.GetCaster(target);
         if (targetCaster == null)
-            return StartCoroutine(CastCR(spell, caster, target, castMessageOverride, isTopLevel));
-        return StartCoroutine(CastAndCounterCR(spell, caster, target, (c) => c == targetCaster, castMessageOverride, isTopLevel));
+            return StartCoroutine(CastCR(spell, caster, target, castMessage, isTopLevel));
+        return StartCoroutine(CastAndCounterCR(spell, caster, target, (c) => c == targetCaster, castMessage, isTopLevel));
     }
     /// <summary> Modify the root words by the modifiers and return the modified roots </summary>
     public List<RootWord> Modify(Spell spell)
@@ -74,7 +74,7 @@ public class SpellManager : MonoBehaviour
         return roots;
     }
     /// <summary> Cast the spell effects and play the associated fx</summary>
-    private IEnumerator CastCR(Spell spell, Caster caster, Battlefield.Position target, string castMessageOverride, bool isTopLevel)
+    private IEnumerator CastCR(Spell spell, Caster caster, Battlefield.Position target, string castMessage, bool isTopLevel)
     {
         // BattleDim : Dim everyone except caster
         BattleDimmer.instance.DimCasters(Battlefield.instance.Casters.Where(c => c != caster), false);
@@ -101,20 +101,20 @@ public class SpellManager : MonoBehaviour
             {
                 if(spell[0] is RootWord root && root.effects.Count > 0 && root.effects[0].pattern.Target(caster.FieldPos, target).Count > 1)
                 {
-                    SpellFxManager.instance.LogMessage(castMessageOverride ?? $"{caster.DisplayName} and crew ran away!", spell.Icon);
+                    SpellFxManager.instance.LogMessage(castMessage ?? $"{caster.DisplayName} and crew ran away!", spell.Icon);
                 }
                 else
                 {
-                    SpellFxManager.instance.LogMessage(castMessageOverride ?? $"{caster.DisplayName} ran away!", spell.Icon, runLogTime);
+                    SpellFxManager.instance.LogMessage(castMessage ?? $"{caster.DisplayName} ran away!", spell.Icon, runLogTime);
                 }
             }
             else if(spell.Count == 1 && SpellWord.CompareKeys(spell[0], runAllWord))
             {
-                SpellFxManager.instance.LogMessage(castMessageOverride ?? $"{caster.DisplayName} and crew ran away!", spell.Icon);
+                SpellFxManager.instance.LogMessage(castMessage ?? $"{caster.DisplayName} and crew ran away!", spell.Icon);
             }
-            else if(castMessageOverride != string.Empty)
+            else if(!string.IsNullOrEmpty(castMessage))
             {
-                SpellFxManager.instance.LogMessage(castMessageOverride ?? $"{caster.DisplayName} casts {spell.ToDisplayString()}", spell.Icon);
+                SpellFxManager.instance.LogMessage(castMessage, spell.Icon);
             }
 
             yield return SpellFxManager.instance.PlayMessages();
