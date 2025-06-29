@@ -6,7 +6,6 @@ public class CastResults
 {
     public Caster caster;
     public Caster target;
-    public RootWordEffect effect;
 
     public List<SpellFxData> AnimationData { get; } = new List<SpellFxData>();
     public bool DisplayDamage { get; set; } = true;
