@@ -101,6 +101,7 @@ public class SpellFxManager : MonoBehaviour
     /// <summary> A coroutine to play multiple spell effects in a row to facilitate Modifier Fx with crList </summary>
     private IEnumerator PlayCR(CastResults data, Animator targetAnim, Vector2 targetPos, Vector2 casterPos)
     {
+        bool playSpellAnimation = true;
         var pos = targetPos;
 
         #region Miss
@@ -140,23 +141,27 @@ public class SpellFxManager : MonoBehaviour
         else if (data.Effectiveness == Reaction.Block)
         {
             yield return StartCoroutine(blockFx.Play(targetPos));
+            playSpellAnimation = false;
         }
 
         #endregion 
 
-
-        foreach (var fx in data.AnimationData)
+        if (playSpellAnimation)
         {
-            if (data.DisplayDamage && (data.WillDealDamage || data.Effectiveness == Reaction.Repel && data.Damage > 0))
+            foreach (var fx in data.AnimationData)
             {
-                CameraManager.instance.Shake(shakeIntensity, shakeDuration, shakeDamper);
-                if (data.target.IsPlayer || (data.Effectiveness == Reaction.Repel && data.caster.IsPlayer))
+                if (data.DisplayDamage && (data.WillDealDamage || data.Effectiveness == Reaction.Repel && data.Damage > 0))
                 {
-                    damageGlitchController.Play();
+                    CameraManager.instance.Shake(shakeIntensity, shakeDuration, shakeDamper);
+                    if (data.target.IsPlayer || (data.Effectiveness == Reaction.Repel && data.caster.IsPlayer))
+                    {
+                        damageGlitchController.Play();
+                    }
                 }
+                yield return StartCoroutine(fx.Play(pos));
             }
-            yield return StartCoroutine(fx.Play(pos));
         }
+
         yield return StartCoroutine(PlayPopupCr(data, pos, casterPos));
     }
 
