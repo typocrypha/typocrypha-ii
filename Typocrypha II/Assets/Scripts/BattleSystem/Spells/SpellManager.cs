@@ -47,9 +47,48 @@ public class SpellManager : MonoBehaviour
     public Coroutine CastAndCounter(Spell spell, Caster caster, Battlefield.Position target, string castMessage = null, bool isTopLevel = true)
     {
         var targetCaster = Battlefield.instance.GetCaster(target);
+        // Can't counter if no target
         if (targetCaster == null)
-            return StartCoroutine(CastCR(spell, caster, target, castMessage, isTopLevel));
-        return StartCoroutine(CastAndCounterCR(spell, caster, target, (c) => c == targetCaster, castMessage, isTopLevel));
+        {
+            return Cast(spell, caster, target, castMessage, isTopLevel);
+        }
+        // Counter
+        void Counter()
+        {
+            if (targetCaster.Spell == null || targetCaster.Stunned || targetCaster == caster)
+                return;
+            var remainingWords = new List<SpellWord>(targetCaster.Spell.Count);
+            int remainingRoots = 0;
+            foreach(var word in targetCaster.Spell)
+            {
+                if (spell.Contains(word))
+                {
+                    continue; // Countered word
+                }
+                remainingWords.Add(word);
+                if (word is RootWord)
+                {
+                    ++remainingRoots;
+                }
+            }
+            // No words were countered, continue to next target
+            if (remainingWords.Count == targetCaster.Spell.Count)
+                return;
+            // Full counter (no remaining roots)
+            bool fullCounter = remainingRoots <= 0;
+            if (fullCounter)
+            {
+                targetCaster.Spell = new Spell(counterWord);
+            }
+            else // Partial counter
+            {
+                targetCaster.Spell = new Spell(remainingWords);
+            }
+            SpellFxManager.instance.CounterFx(targetCaster.FieldPos);
+            targetCaster.OnCountered?.Invoke(targetCaster, fullCounter);
+            caster.OnCounterOther?.Invoke(caster, targetCaster, fullCounter);
+        }
+        return StartCoroutine(CastCR(spell, caster, target, castMessage, isTopLevel, Counter));
     }
     /// <summary> Modify the root words by the modifiers and return the modified roots </summary>
     public List<RootWord> Modify(Spell spell)
@@ -74,7 +113,7 @@ public class SpellManager : MonoBehaviour
         return roots;
     }
     /// <summary> Cast the spell effects and play the associated fx</summary>
-    private IEnumerator CastCR(Spell spell, Caster caster, Battlefield.Position target, string castMessage, bool isTopLevel)
+    private IEnumerator CastCR(Spell spell, Caster caster, Battlefield.Position target, string castMessage, bool isTopLevel, Action onComplete = null)
     {
         // BattleDim : Dim everyone except caster
         BattleDimmer.instance.DimCasters(Battlefield.instance.Casters.Where(c => c != caster), false);
@@ -293,35 +332,7 @@ public class SpellManager : MonoBehaviour
             SpellCooldownManager.instance.DoOverheat();
         }
         OnAfterCastResolved?.Invoke();
-    }
-
-    private IEnumerator CastAndCounterCR(Spell spell, Caster caster, Battlefield.Position target, Func<Caster, bool> pred, string castMessageOverride, bool isTopLevel)
-    {
-        yield return StartCoroutine(CastCR(spell, caster, target, castMessageOverride, isTopLevel));
-        var cancelTargets = Battlefield.instance.Casters.Where(pred);
-        foreach (var cancelTarget in cancelTargets)
-        {
-            if (cancelTarget.Spell == null || cancelTarget.Stunned || cancelTarget == caster)
-                continue;
-            var remainingWords = cancelTarget.Spell.Where((word) => !spell.Contains(word));
-            // No words were countered, continue to next target
-            if (remainingWords.Count() == cancelTarget.Spell.Count)
-                continue;
-            // Full counter (no remaining roots)
-            bool fullCounter = remainingWords.Count((w) => w is RootWord) <= 0;
-            if (fullCounter)
-            {
-                cancelTarget.Spell = new Spell(counterWord);
-
-            }
-            else // Partial counter
-            {
-                cancelTarget.Spell = new Spell(remainingWords);
-            }
-            SpellFxManager.instance.CounterFx(cancelTarget.FieldPos);
-            cancelTarget.OnCountered?.Invoke(cancelTarget, fullCounter);
-            caster.OnCounterOther?.Invoke(caster, cancelTarget, fullCounter);
-        }
+        onComplete?.Invoke();
     }
 
     private readonly Queue<IEnumerator> delayRequests = new Queue<IEnumerator>();
