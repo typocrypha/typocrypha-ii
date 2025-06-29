@@ -8,7 +8,7 @@ public class WordFx : MonoBehaviour
 {
     private const float moveTime = 0.4f;
     private const float startingScale = 1.1f;
-    private const float endingScale = 0.2f;
+    private const float endingScale = 0.33f;
     [SerializeField] private TMPro.TextMeshProUGUI text;
     [SerializeField] private AnimationCurve scaleEase;
     public void Play(SpellWord word, CastResults results, TweenCallback onComplete = null)
