@@ -238,7 +238,7 @@ public class SpellManager : MonoBehaviour
                         {
                             castResults.AnimationData.Add(root.rightMod.fx);
                         }
-                        crList.Add(SpellFxManager.instance.Play(castResults, targetSpace, casterSpace));
+                        crList.Add(SpellFxManager.instance.Play(castResults, root, targetSpace, casterSpace));
                         // Log the results of this target
                         effectResults.Add(castResults);
                     }

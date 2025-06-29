@@ -19,6 +19,6 @@ public class BadgeEffectRegenerateOnWaveStart : BadgeEffectOnWaveStart
         var results = new CastResults(player, player, -healAmount);
         results.AnimationData.Add(animation);
         var space = Battlefield.instance.GetSpaceScreenSpace(player.FieldPos);
-        return SpellFxManager.instance.Play(results, space, space);
+        return SpellFxManager.instance.Play(results, null, space, space);
     }
 }

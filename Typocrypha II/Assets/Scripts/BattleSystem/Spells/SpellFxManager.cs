@@ -39,6 +39,8 @@ public class SpellFxManager : MonoBehaviour
     [SerializeField] private MaterialController damageGlitchController;
     [Header("Log Fields")]
     [SerializeField] private BattleLog logger;
+    [Header("Word Fx")]
+    [SerializeField] private GameObject wordFxPrefab;
 
     private PrefabPool<TextPopup> textPopupPool;
     private PrefabPool<TextPopup> damagePopupPool;
@@ -92,14 +94,14 @@ public class SpellFxManager : MonoBehaviour
     {
         return PlayText(pos, "Countered!", Color.green, popTime);
     }
-    public Coroutine Play(CastResults data, Vector2 targetPos, Vector2 casterPos)
+    public Coroutine Play(CastResults data, SpellWord word, Vector2 targetPos, Vector2 casterPos)
     {
         // For some unknown reason, getting the animator within the coroutine instead of passing it in always gets null
         var targetAnim = data.target?.GetComponent<Animator>();
-        return StartCoroutine(PlayCR(data, targetAnim, targetPos, casterPos));
+        return StartCoroutine(PlayCR(data, word, targetAnim, targetPos, casterPos));
     }
     /// <summary> A coroutine to play multiple spell effects in a row to facilitate Modifier Fx with crList </summary>
-    private IEnumerator PlayCR(CastResults data, Animator targetAnim, Vector2 targetPos, Vector2 casterPos)
+    private IEnumerator PlayCR(CastResults data, SpellWord word, Animator targetAnim, Vector2 targetPos, Vector2 casterPos)
     {
         bool playSpellAnimation = true;
         var pos = targetPos;
@@ -117,6 +119,19 @@ public class SpellFxManager : MonoBehaviour
             yield break;
         }
         #endregion
+
+        if (word != null && data.AnimationData.Count > 0 && data.AnimationData[0].effectType != SpellFxData.EffectType.None)
+        {
+            var wordFx = Instantiate(wordFxPrefab, popupCanvas.transform).GetComponent<WordFx>();
+            bool completed = false;
+            void Complete()
+            {
+                completed = true;
+                Destroy(wordFx.gameObject);
+            }
+            wordFx.Play(word, data, Complete);
+            yield return new WaitUntil(() => completed);
+        }
 
         #region Special Reaction Graphics
 
