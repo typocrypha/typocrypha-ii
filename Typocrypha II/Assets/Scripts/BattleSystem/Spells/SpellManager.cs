@@ -35,9 +35,9 @@ public class SpellManager : MonoBehaviour
     /// Cast the spell's effect with a given caster at a given target position 
     /// Returns the cast coroutine (in case the end of casting must be waited on)
     /// </summary>
-    public Coroutine Cast(Spell spell, Caster caster, Battlefield.Position target, string castMessageOverride = null, bool isTopLevel = true)
+    public Coroutine Cast(Spell spell, Caster caster, Battlefield.Position target, string castMessage = null, bool isTopLevel = true)
     {
-        return StartCoroutine(CastCR(spell, caster, target, castMessageOverride, isTopLevel));
+        return StartCoroutine(CastCR(spell, caster, target, castMessage, isTopLevel));
     }
 
     /// <summary> 
