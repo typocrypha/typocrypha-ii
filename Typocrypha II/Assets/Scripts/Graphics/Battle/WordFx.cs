@@ -18,15 +18,17 @@ public class WordFx : MonoBehaviour
         if (results.caster is Player)
         {
             transform.position = Battlefield.instance.GetSpaceScreenSpace(results.target.FieldPos);
+            transform.localScale = new Vector3(startingScale, startingScale);
+            sequence.Append(transform.DOScale(new Vector3(endingScale, endingScale), moveTime).SetEase(scaleEase));
         }
         else
         {
             transform.position = Battlefield.instance.GetSpaceScreenSpace(results.caster.FieldPos);
             var endPos = Battlefield.instance.GetSpaceScreenSpace(results.target.FieldPos);
-            sequence.Join(transform.DOMove(endPos, moveTime));
+            sequence.Append(transform.DOMove(endPos, moveTime).SetEase(Ease.OutQuart));
+            transform.localScale = new Vector3(0.33f, 0.33f);
+            sequence.Join(transform.DOPunchScale(new Vector3(1.1f, 1.1f), moveTime, 0, 0).SetEase(Ease.OutQuart));
         }
-        transform.localScale = new Vector3(startingScale, startingScale);
-        sequence.Join(transform.DOScale(new Vector3(endingScale, endingScale), moveTime).SetEase(scaleEase));
         if (onComplete != null)
         {
             sequence.onComplete = onComplete;
