@@ -47,6 +47,7 @@ public class SpellFxManager : MonoBehaviour
     private PrefabPool<TextPopup> textPopupPool;
     private PrefabPool<TextPopup> damagePopupPool;
     private PrefabPool<ImagePopup> imagePopupPool;
+    private PrefabPool<WordFx> wordFxPool;
     private Queue<LogData> logData = new Queue<LogData>();
     /// <summary> Singleton implementation </summary>
     private void Awake()
@@ -67,6 +68,7 @@ public class SpellFxManager : MonoBehaviour
         textPopupPool = new PrefabPool<TextPopup>(textPopupPrefab, 10);
         damagePopupPool = new PrefabPool<TextPopup>(damagePopupPrefab, 10);
         imagePopupPool = new PrefabPool<ImagePopup>(imagePopupPrefab, 10);
+        wordFxPool = new PrefabPool<WordFx>(wordFxPrefab, 10);
     }
 
     public Coroutine PlayMessages()
@@ -125,12 +127,12 @@ public class SpellFxManager : MonoBehaviour
 
         if (word != null && data.AnimationData.Count > 0 && data.AnimationData[0].effectType != SpellFxData.EffectType.None)
         {
-            var wordFx = Instantiate(wordFxPrefab, popupCanvas.transform).GetComponent<WordFx>();
+            var wordFx = wordFxPool.Get(popupCanvas.transform);// Instantiate(wordFxPrefab, popupCanvas.transform).GetComponent<WordFx>();
             bool completed = false;
             void Complete()
             {
                 completed = true;
-                Destroy(wordFx.gameObject);
+                wordFxPool.Release(wordFx);
             }
             wordFx.Play(word, data, Complete);
             yield return new WaitUntil(() => completed);
