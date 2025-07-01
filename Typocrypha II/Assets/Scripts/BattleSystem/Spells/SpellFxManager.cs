@@ -96,14 +96,14 @@ public class SpellFxManager : MonoBehaviour
     {
         return PlayText(pos, "Countered!", Color.green, popTime);
     }
-    public Coroutine Play(CastResults data, SpellWord word, Vector2 targetPos, Vector2 casterPos)
+    public Coroutine Play(CastResults data, SpellWord word, Vector2 targetPos, Vector2 casterPos, System.Action onComplete = null)
     {
         // For some unknown reason, getting the animator within the coroutine instead of passing it in always gets null
         var targetAnim = data.target?.GetComponent<Animator>();
-        return StartCoroutine(PlayCR(data, word, targetAnim, targetPos, casterPos));
+        return StartCoroutine(PlayCR(data, word, targetAnim, targetPos, casterPos, onComplete));
     }
     /// <summary> A coroutine to play multiple spell effects in a row to facilitate Modifier Fx with crList </summary>
-    private IEnumerator PlayCR(CastResults data, SpellWord word, Animator targetAnim, Vector2 targetPos, Vector2 casterPos)
+    private IEnumerator PlayCR(CastResults data, SpellWord word, Animator targetAnim, Vector2 targetPos, Vector2 casterPos, System.Action onComplete)
     {
         bool playSpellAnimation = true;
         var pos = targetPos;
@@ -118,6 +118,7 @@ public class SpellFxManager : MonoBehaviour
                 targetAnim.SetTrigger("Idle");
             }
             yield return new WaitForSeconds(PlayText(targetPos, true, "Miss", Color.white, popTime));
+            onComplete?.Invoke();
             yield break;
         }
         #endregion
@@ -180,6 +181,7 @@ public class SpellFxManager : MonoBehaviour
         }
 
         yield return new WaitForSeconds(PlayResultsPopup(data, pos, casterPos));
+        onComplete?.Invoke();
     }
 
     #region Popup Effects

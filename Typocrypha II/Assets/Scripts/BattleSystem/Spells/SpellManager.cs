@@ -155,8 +155,10 @@ public class SpellManager : MonoBehaviour
             {
                 SpellFxManager.instance.LogMessage(castMessage, spell.Icon);
             }
-
-            yield return SpellFxManager.instance.PlayMessages();
+            if (SpellFxManager.instance.HasMessages)
+            {
+                yield return SpellFxManager.instance.PlayMessages();
+            }
         }
         var roots = Modify(spell);
         // Critical chance
@@ -220,7 +222,6 @@ public class SpellManager : MonoBehaviour
             }
         }
         var casterSpace = Battlefield.instance.GetSpaceScreenSpace(caster.FieldPos);
-        var crList = new List<Coroutine>();
         bool hitTarget = false;
         for (int rootIndex = 0; rootIndex < roots.Count; rootIndex++)
         {
@@ -236,7 +237,12 @@ public class SpellManager : MonoBehaviour
                 BattleDimmer.instance.UndimCasters(targets.Select(t=>Battlefield.instance.GetCaster(t)));
                 // Log the effect of each effect
                 var effectResults = new List<CastResults>();
-                crList.Clear();
+                int completedEffects = 0;
+                int numEffects = 0;
+                void OnEffectComplete()
+                {
+                    completedEffects++;
+                }
                 for (int targetIndex = 0; targetIndex < targets.Count; targetIndex++)
                 {
                     // Wait for delay between targets if applicable
@@ -254,8 +260,10 @@ public class SpellManager : MonoBehaviour
                         IEnumerator WaitForNoTargetCR()
                         {
                             yield return new WaitForSeconds(time);
+                            OnEffectComplete();
                         }
-                        crList.Add(StartCoroutine(WaitForNoTargetCR()));
+                        ++numEffects;
+                        StartCoroutine(WaitForNoTargetCR());
                     }
                     else
                     {
@@ -282,18 +290,17 @@ public class SpellManager : MonoBehaviour
                         {
                             castResults.AnimationData.Add(root.rightMod.fx);
                         }
-                        crList.Add(SpellFxManager.instance.Play(castResults, root, targetSpace, casterSpace));
+                        ++numEffects;
+                        SpellFxManager.instance.Play(castResults, root, targetSpace, casterSpace, OnEffectComplete);
                         // Log the results of this target
                         effectResults.Add(castResults);
                     }
                 }
                 // Wait for all of the animations to finish
-                foreach (var cr in crList)
+                if(completedEffects < numEffects)
                 {
-                    if(cr != null)
-                    {
-                        yield return cr;
-                    }
+                    bool AllEffectsComplete() => completedEffects >= numEffects;
+                    yield return new WaitUntil(AllEffectsComplete);
                 }
                 // Apply callbacks after the effect is finished
                 caster.OnAfterSpellEffectResolved?.Invoke(spell, caster, hitTarget);
