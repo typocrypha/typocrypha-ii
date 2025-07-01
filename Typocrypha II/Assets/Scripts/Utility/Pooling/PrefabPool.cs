@@ -6,19 +6,20 @@ public class PrefabPool<T> : IPool<T> where T : MonoBehaviour
 {
     private readonly GameObject prefab;
     private readonly Queue<T> pool;
+    private readonly Transform container;
 
-    public PrefabPool(GameObject prefab, int capacity)
+    public PrefabPool(GameObject prefab, Transform container, int capacity)
     {
         this.prefab = prefab;
+        this.container = container;
         pool = new Queue<T>(capacity);
     }
 
-    public T Get(Transform container)
+    public T Get()
     {
         if(pool.Count > 0)
         {
             var obj = pool.Dequeue();
-            obj.transform.SetParent(container);
             obj.gameObject.SetActive(true);
             return obj;
         }

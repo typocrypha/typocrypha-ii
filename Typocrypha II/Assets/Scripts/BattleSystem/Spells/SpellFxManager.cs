@@ -65,10 +65,10 @@ public class SpellFxManager : MonoBehaviour
 
     private void Initialize()
     {
-        textPopupPool = new PrefabPool<TextPopup>(textPopupPrefab, 10);
-        damagePopupPool = new PrefabPool<TextPopup>(damagePopupPrefab, 10);
-        imagePopupPool = new PrefabPool<ImagePopup>(imagePopupPrefab, 10);
-        wordFxPool = new PrefabPool<WordFx>(wordFxPrefab, 10);
+        textPopupPool = new PrefabPool<TextPopup>(textPopupPrefab, popupCanvas.transform, 10);
+        damagePopupPool = new PrefabPool<TextPopup>(damagePopupPrefab, popupCanvas.transform, 10);
+        imagePopupPool = new PrefabPool<ImagePopup>(imagePopupPrefab, popupCanvas.transform, 10);
+        wordFxPool = new PrefabPool<WordFx>(wordFxPrefab, popupCanvas.transform, 10);
     }
 
     public Coroutine PlayMessages()
@@ -127,7 +127,7 @@ public class SpellFxManager : MonoBehaviour
 
         if (word != null && data.AnimationData.Count > 0 && data.AnimationData[0].effectType != SpellFxData.EffectType.None)
         {
-            var wordFx = wordFxPool.Get(popupCanvas.transform);// Instantiate(wordFxPrefab, popupCanvas.transform).GetComponent<WordFx>();
+            var wordFx = wordFxPool.Get();
             bool completed = false;
             void Complete()
             {
@@ -219,7 +219,7 @@ public class SpellFxManager : MonoBehaviour
         // If damage should be displayed, display damage
         var damageColor = damage < 0 ? Color.green : Color.white;
         var numberText = Mathf.FloorToInt(Mathf.Abs(damage)).ToString();
-        var player = damagePopupPool.Get(popupCanvas.transform);
+        var player = damagePopupPool.Get();
         player.transform.position = targetPos;
         player.Play(numberText, damageColor, popTime, damagePopupPool);
         return popTimeStaggered;
@@ -259,7 +259,7 @@ public class SpellFxManager : MonoBehaviour
 
     public float PlayText(Vector2 position, bool isScreenSpace, string text, Color color, float time = popTime)
     {
-        var player = textPopupPool.Get(popupCanvas.transform);
+        var player = textPopupPool.Get();
         if (isScreenSpace)
         {
             player.transform.position = position;
@@ -274,7 +274,7 @@ public class SpellFxManager : MonoBehaviour
 
     public float PlayImage(Vector2 position, bool isScreenSpace, Sprite image, Color color, float time)
     {
-        var player = imagePopupPool.Get(popupCanvas.transform);
+        var player = imagePopupPool.Get();
         if (isScreenSpace)
         {
             player.transform.position = position;
