@@ -250,7 +250,12 @@ public class SpellManager : MonoBehaviour
                     if (targetCaster == null || targetCaster.BStatus == Caster.BattleStatus.Dead || targetCaster.BStatus == Caster.BattleStatus.Fled)
                     {
                         caster.OnNoTargetHit?.Invoke(t);
-                        crList.Add(SpellFxManager.instance.NoTargetFx(targetSpace));
+                        float time = SpellFxManager.instance.NoTargetFx(targetSpace);
+                        IEnumerator WaitForNoTargetCR()
+                        {
+                            yield return new WaitForSeconds(time);
+                        }
+                        crList.Add(StartCoroutine(WaitForNoTargetCR()));
                     }
                     else
                     {

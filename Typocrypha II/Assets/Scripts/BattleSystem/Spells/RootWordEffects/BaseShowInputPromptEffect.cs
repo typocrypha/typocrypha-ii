@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 public abstract class BaseShowInputPromptEffect : RootWordEffect
 {
@@ -15,7 +16,11 @@ public abstract class BaseShowInputPromptEffect : RootWordEffect
                 yield break;
             }
             var failResults = onFail.Cast(caster, target, new RootCastData(new Spell(), new List<RootWord>(), 0), mod);
-            yield return SpellFxManager.instance.PlayFullPopup(failResults, Battlefield.instance.GetSpaceScreenSpace(target.FieldPos), Battlefield.instance.GetSpaceScreenSpace(caster.FieldPos));
+            float waitTime = SpellFxManager.instance.PlayResultsPopup(failResults, Battlefield.instance.GetSpaceScreenSpace(target.FieldPos), Battlefield.instance.GetSpaceScreenSpace(caster.FieldPos));
+            if(waitTime > 0)
+            {
+                yield return new WaitForSeconds(waitTime);
+            }
         }
         SpellManager.instance.LogPromptPopup(Title, Prompt, Time, OnPromptComplete);
         return InitializeCastResults(caster, target, mod);
