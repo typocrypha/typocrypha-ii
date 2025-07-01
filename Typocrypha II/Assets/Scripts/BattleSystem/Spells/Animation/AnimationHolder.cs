@@ -22,13 +22,18 @@ public class AnimationHolder : MonoBehaviour
     public void AnimationComplete()
     {
         completed = true;
+
+    }
+
+    public void OnComplete()
+    {
         onComplete?.Invoke();
         onComplete = null;
     }
 
-    public void Play(AnimationClip clip, Vector2 pos, float speed, System.Action onComplete)
+    public void Play(AnimationClip clip, Vector2 pos, float speed, System.Action onFinished)
     {
-        this.onComplete = onComplete;
+        this.onComplete = onFinished;
         transform.position = pos;
         //Set animation speed
         animator.speed = speed;
