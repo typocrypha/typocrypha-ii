@@ -52,7 +52,7 @@ public class AbilityRegenOnDefeatEnemy : CasterAbility
         {
             int amountHealed = Math.Min(Mathf.RoundToInt(self.Stats.MaxHP * percentage), self.Stats.MaxHP - self.Health);
             self.Heal(amountHealed);
-            SpellFxManager.instance.PlayDamageNumber(-amountHealed, Battlefield.instance.GetSpaceScreenSpace(self.FieldPos));
+            SpellFxManager.instance.PlayDamageNumber(-amountHealed, self);
         }
     }
 }
