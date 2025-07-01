@@ -196,7 +196,7 @@ public class SpellFxManager : MonoBehaviour
             return 0;
         bool playEffect = false;
         // If damage should be displayed, display damage
-        if (data.DisplayDamage)
+        if (data.DisplayDamage && data.Effectiveness != Reaction.Block)
         {
             PlayDamageNumber(data.Damage, targetPos);
             playEffect = true;
