@@ -29,7 +29,8 @@ public class SpellFxManager : MonoBehaviour
     [SerializeField] private GameObject textPopupPrefab;
     [SerializeField] private GameObject damagePopupPrefab;
     [SerializeField] private GameObject imagePopupPrefab;
-    [SerializeField] private Canvas popupCanvas;
+    [SerializeField] private Transform spellResultsContainer;
+    [SerializeField] private Transform textContainer;
     [Header("Effectiveness Sprites")]
     [SerializeField] private Sprite weakSprite = null;
     [SerializeField] private Sprite resistSprite = null;
@@ -43,6 +44,7 @@ public class SpellFxManager : MonoBehaviour
     [SerializeField] private BattleLog logger;
     [Header("Word Fx")]
     [SerializeField] private GameObject wordFxPrefab;
+    [SerializeField] private Transform wordFxContainer;
 
     private PrefabPool<TextPopup> textPopupPool;
     private PrefabPool<TextPopup> damagePopupPool;
@@ -65,10 +67,10 @@ public class SpellFxManager : MonoBehaviour
 
     private void Initialize()
     {
-        textPopupPool = new PrefabPool<TextPopup>(textPopupPrefab, popupCanvas.transform, 10);
-        damagePopupPool = new PrefabPool<TextPopup>(damagePopupPrefab, popupCanvas.transform, 10);
-        imagePopupPool = new PrefabPool<ImagePopup>(imagePopupPrefab, popupCanvas.transform, 10);
-        wordFxPool = new PrefabPool<WordFx>(wordFxPrefab, popupCanvas.transform, 10);
+        textPopupPool = new PrefabPool<TextPopup>(textPopupPrefab, textContainer, 10);
+        damagePopupPool = new PrefabPool<TextPopup>(damagePopupPrefab, spellResultsContainer, 10);
+        imagePopupPool = new PrefabPool<ImagePopup>(imagePopupPrefab, spellResultsContainer, 10);
+        wordFxPool = new PrefabPool<WordFx>(wordFxPrefab, wordFxContainer, 10);
     }
 
     public Coroutine PlayMessages()
