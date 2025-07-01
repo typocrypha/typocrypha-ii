@@ -28,14 +28,14 @@ public class SpellFxData
         if (effectType == EffectType.Single)
         {
             AudioManager.instance.PlaySFX(effectPackets[0].sfx);
-            yield return new WaitUntilAnimComplete(AnimationPlayer.instance.Play(effectPackets[0].clip, pos));
+            yield return new WaitUntil(AnimationPlayer.instance.Play(effectPackets[0].clip, pos));
         }           
         else if (effectType == EffectType.Sequence)
         {
             foreach (var packet in effectPackets)
             {
                 AudioManager.instance.PlaySFX(packet.sfx);
-                yield return new WaitUntilAnimComplete(AnimationPlayer.instance.Play(packet.clip, pos));
+                yield return new WaitUntil(AnimationPlayer.instance.Play(packet.clip, pos));
             }
                 
         }
@@ -47,7 +47,7 @@ public class SpellFxData
                 AnimationPlayer.instance.Play(effectPackets[i].clip, pos);
             }
             if (effectPackets.Count > 0)
-                yield return new WaitUntilAnimComplete(AnimationPlayer.instance.Play(effectPackets[0].clip, pos));
+                yield return new WaitUntil(AnimationPlayer.instance.Play(effectPackets[0].clip, pos));
         }
         else if(effectType == EffectType.Prefab)
         {

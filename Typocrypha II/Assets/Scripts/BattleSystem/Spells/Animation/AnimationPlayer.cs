@@ -10,62 +10,38 @@ public class AnimationPlayer : MonoBehaviour
 	[SerializeField] private GameObject animationHolderPrefab; // object prefab that holds the animations
     [SerializeField] private Canvas animationCanvas;
 
+    private PrefabPool<AnimationHolder> animationHolderPool;
+
     void Awake() {
 		
 		if (instance == null)
         {
             instance = this;
+            Initialize();
         }          
 		else Destroy (gameObject); // avoid multiple copies
 	}
+
+    private void Initialize()
+    {
+        animationHolderPool = new PrefabPool<AnimationHolder>(animationHolderPrefab, animationCanvas.transform, 10);
+    }
 	
     //Plays any one-shot animation clip and returns the play time as a float
-    public CompletionData Play(AnimationClip clip, Vector2 pos, float speed = 1f)
+    public System.Func<bool> Play(AnimationClip clip, Vector2 pos, float speed = 1f)
     {
         if (clip == null)
         {
-            Debug.LogWarning("Null animation clip, returning empty completion data");
-            return new CompletionData();
+            Debug.LogError("Animation player was requested to play null animation clip");
+            return () => true;
         }
         //Create animation holder
-        GameObject display = Instantiate(animationHolderPrefab, animationCanvas.transform);
-        display.transform.position = pos;
-        //Set animation speed
-        var animator = display.GetComponent<Animator>();
-        animator.speed = speed;
-        //Override animation clip
-        var overrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);       
-        overrideController["OneShot"] = clip;
-        animator.runtimeAnimatorController = overrideController;
-        animator.Play("OneShot", 0, 0f);
-        //Set and return completion data
-        CompletionData data = display.GetComponent<AnimationHolder>().completionData;
-        data.time = (clip.length * 1/speed);
-        return data;
-    }
-
-    //Contains a time and a completion trigger
-    public class CompletionData
-    {
-        public float time = 0;
-        public bool keepPlaying = true;
-    }
-}
-
-//Wait until the given CompletionData's time has elapsed, or the end trigger is set, whichever comes first
-public class WaitUntilAnimComplete : CustomYieldInstruction
-{
-    AnimationPlayer.CompletionData data;
-    private float elapsedTime = 0;
-    public override bool keepWaiting
-    {
-        get
+        var animationHolder = animationHolderPool.Get();
+        void Release()
         {
-            return data.keepPlaying && ((elapsedTime += Time.deltaTime) < data.time);
+            animationHolderPool.Release(animationHolder);
         }
-    }
-    public WaitUntilAnimComplete(AnimationPlayer.CompletionData data)
-    {
-        this.data = data;
+        animationHolder.Play(clip, pos, speed, Release);
+        return animationHolder.IsCompleted;
     }
 }

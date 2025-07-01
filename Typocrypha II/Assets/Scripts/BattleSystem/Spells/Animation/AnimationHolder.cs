@@ -2,11 +2,38 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AnimationHolder : MonoBehaviour {
+public class AnimationHolder : MonoBehaviour 
+{
+    private const string oneShotStateName = "OneShot";
 
-    public AnimationPlayer.CompletionData completionData = new AnimationPlayer.CompletionData();
+    [SerializeField] private Animator animator;
+
+    public bool IsCompleted() => completed;
+    private bool completed = false;
+    private AnimatorOverrideController overrideController;
+    private System.Action onComplete;
+
+    private void Awake()
+    {
+        overrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);
+        animator.runtimeAnimatorController = overrideController;
+    }
+
     public void AnimationComplete()
     {
-        completionData.keepPlaying = false;
+        completed = true;
+        onComplete?.Invoke();
+        onComplete = null;
+    }
+
+    public void Play(AnimationClip clip, Vector2 pos, float speed, System.Action onComplete)
+    {
+        this.onComplete = onComplete;
+        transform.position = pos;
+        //Set animation speed
+        animator.speed = speed;
+        completed = false;
+        overrideController[oneShotStateName] = clip;
+        animator.Play(oneShotStateName, 0, 0f);
     }
 }
