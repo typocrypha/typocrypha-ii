@@ -6,7 +6,7 @@ using Typocrypha;
 [RequireComponent(typeof(ATB3.ATBPlayer))]
 public class Player : Caster, IPausable
 {
-    private const float castFailTextTime = 0.6f;
+    private const float castFailTextTime = 1.05f;
     #region IPausable
     public PauseHandle PH { get; } = new PauseHandle();
 

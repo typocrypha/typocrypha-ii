@@ -5,9 +5,10 @@ using UnityEngine;
 [RequireComponent(typeof(SpellManager))]
 public class SpellFxManager : MonoBehaviour
 {
-    public const float popTime = 0.4f;
-    public const float popTimeStaggered = popTime * staggerCoefficient;
-    private const float staggerCoefficient = 0.9f;
+    public const float popTime = 0.7f;
+    private const float popTimeStaggered = popTime + staggerOffset;
+    private const float staggerOffset = -0.34f;
+    private const float minYieldTime = 0f;
     #region Damage Shake
     protected const float shakeIntensity = 0.125f;
     protected const float shakeDuration = 0.5f;
@@ -223,7 +224,7 @@ public class SpellFxManager : MonoBehaviour
         var numberText = Mathf.FloorToInt(Mathf.Abs(damage)).ToString();
         var player = damagePopupPool.Get();
         player.transform.position = targetPos;
-        player.Play(numberText, damageColor, popTime, damagePopupPool);
+        player.Play(numberText, damageColor, popTime, DisplayPopup.Animation.FloatUp, damagePopupPool);
         return popTimeStaggered;
     }
 
@@ -270,8 +271,8 @@ public class SpellFxManager : MonoBehaviour
         {
             player.transform.position = CameraManager.instance.Camera.WorldToScreenPoint(position);
         }
-        player.Play(text, color, time, textPopupPool);
-        return time * staggerCoefficient;
+        player.Play(text, color, time, DisplayPopup.Animation.FloatUp, textPopupPool);
+        return Mathf.Max(minYieldTime, time + staggerOffset);
     }
 
     public float PlayImage(Vector2 position, bool isScreenSpace, Sprite image, Color color, float time)
@@ -285,8 +286,8 @@ public class SpellFxManager : MonoBehaviour
         {
             player.transform.position = CameraManager.instance.Camera.WorldToScreenPoint(position);
         }
-        player.Play(image, color, time, imagePopupPool);
-        return time * staggerCoefficient;
+        player.Play(image, color, time, DisplayPopup.Animation.FloatUp, imagePopupPool);
+        return Mathf.Max(minYieldTime, time + staggerOffset);
     }
 
     #endregion
