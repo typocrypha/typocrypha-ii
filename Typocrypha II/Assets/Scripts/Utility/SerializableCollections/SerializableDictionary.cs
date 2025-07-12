@@ -7,9 +7,20 @@ using UnityEditor;
 // MUST BE INHERITED WITH TEMPLATE VARIABLES SET: generic classes are not serialized
 public class SerializableDictionary<TKey, TValue> : ISerializationCallbackReceiver, IDictionary<TKey, TValue>, IEnumerable<KeyValuePair<TKey, TValue>>
 {
-    private Dictionary<TKey, TValue> _dictionary = new Dictionary<TKey, TValue>(); // Internal dictionary interface
     [SerializeField] private List<TKey> _keys = new List<TKey>(); // Serlializable list of keys; Keys and values match up 1-to-1
     [SerializeField] private List<TValue> _values = new List<TValue>(); // Serlializable list of values
+
+    protected Dictionary<TKey, TValue> _dictionary; // Internal dictionary interface
+
+    public SerializableDictionary()
+    {
+        InitializeDictionary();
+    }
+
+    protected virtual void InitializeDictionary()
+    {
+        _dictionary = new Dictionary<TKey, TValue>();
+    }
 
     #region Dictionary Implementation
     public int Count
@@ -72,6 +83,7 @@ public class SerializableDictionary<TKey, TValue> : ISerializationCallbackReceiv
     {
         _keys.Clear();
         _values.Clear();
+        InitializeDictionary();
         foreach (var kvp in _dictionary)
         {
             _keys.Add(kvp.Key);
@@ -82,7 +94,7 @@ public class SerializableDictionary<TKey, TValue> : ISerializationCallbackReceiv
     // Convert lists back into dictionary
     public void OnAfterDeserialize()
     {
-        _dictionary = new Dictionary<TKey, TValue>();
+        InitializeDictionary();
         for (int i = 0; i != System.Math.Min(_keys.Count, _values.Count); ++i)
         {
             try
