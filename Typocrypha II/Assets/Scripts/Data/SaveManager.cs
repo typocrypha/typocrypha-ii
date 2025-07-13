@@ -127,10 +127,10 @@ public class SaveManager : MonoBehaviour
 
     private void SaveCampaign(int saveIndex)
     {
-        SaveFile(GetCampaignSaveData(), SaveFilePath(saveIndex));
+        SaveFile(CreateCampaignSaveData(), SaveFilePath(saveIndex));
     }
 
-    private static CampaignSaveData GetCampaignSaveData()
+    private static CampaignSaveData CreateCampaignSaveData()
     {
         var data = new CampaignSaveData();
         var transitionManager = TransitionManager.instance;
@@ -152,7 +152,7 @@ public class SaveManager : MonoBehaviour
     {
         loadedCampaignIndex = saveIndex;
         var data = LoadFile<CampaignSaveData>(SaveFilePath(saveIndex));
-        LoadCampaignData(data);
+        ApplyCampaignData(data);
     }
 
     [System.Diagnostics.Conditional("DEBUG")]
@@ -165,7 +165,7 @@ public class SaveManager : MonoBehaviour
         LoadCampaign(debugSaveFile);
     }
 
-    private void LoadCampaignData(CampaignSaveData data)
+    private void ApplyCampaignData(CampaignSaveData data)
     {
         TransitionManager.instance.LoadIndex(data.currentSceneName, data.currentSceneIndex);
         var dataManager = PlayerDataManager.instance;
@@ -185,10 +185,10 @@ public class SaveManager : MonoBehaviour
 
     public void SaveGlobalData()
     {
-        SaveFile(GetGlobalSaveData(), GlobalSaveFilePath());
+        SaveFile(CreateGlobalSaveData(), GlobalSaveFilePath());
     }
 
-    private GlobalSaveData GetGlobalSaveData()
+    private GlobalSaveData CreateGlobalSaveData()
     {
         var equipment = PlayerDataManager.Equipment;
         // Get Unlocked Spell Words
@@ -216,10 +216,10 @@ public class SaveManager : MonoBehaviour
         {
             SaveFile(new GlobalSaveData(), GlobalSaveFilePath());
         }
-        LoadGlobalData(LoadFile<GlobalSaveData>(GlobalSaveFilePath()));
+        ApplyGlobalSaveData(LoadFile<GlobalSaveData>(GlobalSaveFilePath()));
     }
 
-    private void LoadGlobalData(GlobalSaveData data)
+    private void ApplyGlobalSaveData(GlobalSaveData data)
     {
         var equipment = PlayerDataManager.Equipment;
         // Unlocked spells
