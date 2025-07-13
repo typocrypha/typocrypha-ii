@@ -5,7 +5,7 @@ using UnityEditor;
 
 // Serializable dictionary wrapper (native Dictionary serialization not yet available)
 // MUST BE INHERITED WITH TEMPLATE VARIABLES SET: generic classes are not serialized
-public class SerializableDictionary<TKey, TValue> : ISerializationCallbackReceiver, IDictionary<TKey, TValue>, IEnumerable<KeyValuePair<TKey, TValue>>
+public class SerializableDictionary<TKey, TValue> : ISerializationCallbackReceiver, IDictionary<TKey, TValue>, IEnumerable<KeyValuePair<TKey, TValue>>, IReadOnlyDictionary<TKey,TValue>
 {
     [SerializeField] private List<TKey> _keys = new List<TKey>(); // Serlializable list of keys; Keys and values match up 1-to-1
     [SerializeField] private List<TValue> _values = new List<TValue>(); // Serlializable list of values
@@ -64,6 +64,11 @@ public class SerializableDictionary<TKey, TValue> : ISerializationCallbackReceiv
     public ICollection<TValue> Values => _dictionary.Values;
 
     public bool IsReadOnly => false;
+
+    IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys => Keys;
+
+    IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values => Values;
+
     #endregion
 
     #region IEnumarable Implementation
