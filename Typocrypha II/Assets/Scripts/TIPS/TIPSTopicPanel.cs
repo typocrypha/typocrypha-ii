@@ -134,7 +134,7 @@ public class TIPSTopicPanel : MonoBehaviour
 
     public void LoadEntriesInFolder(string folder)
     {
-        var entries = TIPSManager.Instance.FilterEntriesByFolder(folder);
+        var entries = TIPSManager.Instance.FilterEntries(folder, true);
         SetTopics(entries);
         LoadPageContent(0, folder);
     }

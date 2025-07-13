@@ -1,7 +1,4 @@
-﻿//using System.Collections;
-//using System.Collections.Generic;
-using UnityEngine;
-using System;
+﻿using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -22,7 +19,7 @@ public class TIPSManager : MonoBehaviour
     [SerializeField] public TIPSBundle allTIPS;
 
     public IReadOnlyDictionary<string, TIPSEntryData> UnlockedEntries => unlockedEntries;
-    private readonly Dictionary<string, TIPSEntryData> unlockedEntries = new Dictionary<string, TIPSEntryData>();
+    private readonly TIPSBundle.TIPSDictionary unlockedEntries = new TIPSBundle.TIPSDictionary();
 
     void Awake()
     {
@@ -66,7 +63,8 @@ public class TIPSManager : MonoBehaviour
     {
         if (!EntryExists(title)) return;
         if (EntryIsUnlocked(title)) return;
-        unlockedEntries.Add(title, allTIPS.entries[title]);
+        unlockedEntries.Add(allTIPS.entries[title].Title, allTIPS.entries[title]);
+        UnlockEntryIfApplicable(allTIPS.entries[title].Parent);
     }
 
     /// <summary>
@@ -95,9 +93,10 @@ public class TIPSManager : MonoBehaviour
         return partialMatches.FirstOrDefault(e => e.MatchTitleExact(query));
     }
 
-    public TIPSEntryData[] FilterEntriesByFolder(string parent)
+    public TIPSEntryData[] FilterEntries(string parent, bool unlockedOnly)
     {
-        return allTIPS.entries
+        var tipsDictionary = unlockedOnly ? unlockedEntries : allTIPS.entries;
+        return tipsDictionary
             .Select(p => p.Value)
             .Where(e => e.Parent == parent)
             .ToArray();

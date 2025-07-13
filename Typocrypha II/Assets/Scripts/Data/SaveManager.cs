@@ -25,6 +25,7 @@ public class GlobalSaveData
     public List<string> unlockedSpellWords = new List<string>();
     public List<string> unlockedBadgeWords = new List<string>();
     public List<int> badgeUpgradeLevels = new List<int>();
+    public List<string> unlockedTIPSEntries = new List<string>();
 }
 
 /// <summary>
@@ -207,6 +208,12 @@ public class SaveManager : MonoBehaviour
             data.unlockedBadgeWords.Add(badge.Key);
             data.badgeUpgradeLevels.Add(equipment.GetUpgradeLevel(badge));
         }
+        // Unlocked TIPS Entries
+        foreach (var entry in TIPSManager.Instance.UnlockedEntries.Values)
+        {
+            data.unlockedTIPSEntries.Add(entry.Title);
+        }
+
         return data;
     }
 
@@ -241,6 +248,11 @@ public class SaveManager : MonoBehaviour
                 equipment.UnlockBadge(badge);
                 equipment.SetUpgradeLevel(badge, data.badgeUpgradeLevels[i]);
             }
+        }
+        // Unlocked TIPS Entries
+        foreach (var title in data.unlockedTIPSEntries)
+        {
+            TIPSManager.Instance.UnlockEntryIfApplicable(title);
         }
     }
 }

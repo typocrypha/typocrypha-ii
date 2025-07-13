@@ -112,7 +112,9 @@ public class TIPSTopicStack : MonoBehaviour
         if (currentLayer == Layer.Top) return;
 
         StepToPreviousLayer();
-        GetPanel(currentLayer).SelectEntry(latestFolderEntered.Title);
+        var current = GetCurrentPanel();
+        current.LoadEntriesInFolder(latestFolderEntered.Parent);
+        current.SelectEntry(latestFolderEntered.Title);
         latestFolderEntered = TIPSManager.Instance.GetEntry(latestFolderEntered.Parent);
     }
 
