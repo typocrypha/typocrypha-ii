@@ -7,7 +7,7 @@ public class SpellFxManager : MonoBehaviour
 {
     public const float popTime = 0.7f;
     private const float popTimeStaggered = popTime + staggerOffset;
-    private const float staggerOffset = -0.34f;
+    private const float staggerOffset = -0.6f;
     private const float minYieldTime = 0f;
     #region Damage Shake
     protected const float shakeIntensity = 0.125f;
@@ -184,8 +184,11 @@ public class SpellFxManager : MonoBehaviour
                 yield return StartCoroutine(fx.Play(pos));
             }
         }
-
-        yield return new WaitForSeconds(PlayResultsPopup(data, pos, casterPos));
+        float resultsWaitTime = PlayResultsPopup(data, pos, casterPos);
+        if (resultsWaitTime > 0)
+        {
+            yield return new WaitForSeconds(resultsWaitTime);
+        }
         onComplete?.Invoke();
     }
 
