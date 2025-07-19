@@ -128,7 +128,7 @@ public class SpellFxManager : MonoBehaviour
         }
         #endregion
 
-        if (word != null && data.AnimationData.Count > 0 && data.AnimationData[0].effectType != SpellFxData.EffectType.None)
+        if (word != null && data.WordFx != null)
         {
             var wordFx = wordFxPool.Get();
             bool completed = false;

@@ -13,6 +13,11 @@ public class WordFx : MonoBehaviour
     [SerializeField] private AnimationCurve scaleEase;
     public void Play(SpellWord word, CastResults results, TweenCallback onComplete = null)
     {
+        if(results.WordFx.AnimationType == WordFxDefinition.AnimType.None)
+        {
+            onComplete?.Invoke();
+            return;
+        }
         text.text = word.DisplayName;
         var sequence = DOTween.Sequence();
         if (results.caster is Player)

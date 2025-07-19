@@ -12,6 +12,7 @@ public class RootWordEffectInspector : Editor
     {
         var effect = target as RootWordEffect;
         EditorGUILayout.PropertyField(serializedObject.FindProperty("fx"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("wordFx"));
         EditorUtils.Separator();
         EditorGUILayout.PropertyField(serializedObject.FindProperty("pattern"));
         EditorUtils.Separator();

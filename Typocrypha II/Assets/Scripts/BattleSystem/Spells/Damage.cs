@@ -67,7 +67,7 @@ public static class Damage
 
     public static CastResults Standard(DamageEffect effect, Caster caster, Caster target, DamageModifier mod, RootCastData spellData)
     {
-        var results = new CastResults(caster, target, 1);
+        var results = effect.InitializeCastResults(caster, target, mod, 1);
         StandardHitCheck(results, effect, caster, target);
         StandardAtkDef(results, effect, caster, target);
         StandardElements(results, effect, caster, target);
@@ -82,10 +82,8 @@ public static class Damage
 
     public static CastResults StandardHeal(DamageEffect effect, Caster caster, Caster target, DamageModifier mod, RootCastData spellData)
     {
-        var results = new CastResults(caster, target, 1)
-        {
-            Miss = effect.tags.Contains("AlwaysMiss"),
-        };
+        var results = effect.InitializeCastResults(caster, target, mod, 1);
+        results.Miss = effect.tags.Contains("AlwaysMiss");
         StandardElements(results, effect, caster, target);
         StandardSpecialMod(results, effect, caster, target, mod.specialModifier);
         results.StaggerDamage = 0;

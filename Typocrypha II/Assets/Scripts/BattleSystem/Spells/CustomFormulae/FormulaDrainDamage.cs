@@ -11,7 +11,7 @@ public class FormulaDrainDamage : CustomFormula
     {
         if (prevResults == null || prevResults.Count <= 0)
             return null;
-        var results = new CastResults(caster, target);
+        var results = effect.InitializeCastResults(caster, target, mod);
         results.Damage = 0;
         foreach (var r in prevResults.LastEffect)
         {

@@ -20,7 +20,7 @@ public class FormulaAntiTags : CustomFormula
         CastResults results;
         if (hasTag)
         {
-            results = new CastResults(caster, target, 1);
+            results = effect.InitializeCastResults(caster, target, mod, 1);
             Damage.StandardHitCheck(results, effect, caster, target);
             Damage.StandardAtkDef(results, effect, caster, target);
             results.Effectiveness = Reaction.Weak;

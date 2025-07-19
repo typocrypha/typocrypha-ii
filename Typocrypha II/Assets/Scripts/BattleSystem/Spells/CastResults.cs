@@ -7,6 +7,7 @@ public class CastResults
     public Caster caster;
     public Caster target;
 
+    public WordFxDefinition WordFx { get; set; }
     public List<SpellFxData> AnimationData { get; } = new List<SpellFxData>();
     public bool DisplayDamage { get; set; } = true;
     public bool Miss { get; set; } = false;
