@@ -95,11 +95,11 @@ public class SpellFxManager : MonoBehaviour
     }
     public float NoTargetFx(Vector2 pos)
     {
-        return PlayText(pos, true, "No Target", Color.red, popTime);
+        return PlayText(pos, true, "No Target", Color.red);
     }
     public float CounterFx(Battlefield.Position pos)
     {
-        return PlayText(pos, "Countered!", Color.green, popTime);
+        return PlayText(pos, "Countered!", Color.green, DisplayPopup.Animation.SlamIn, popTime + 0.1f);
     }
     public Coroutine Play(CastResults data, SpellWord word, Vector2 targetPos, Vector2 casterPos, System.Action onComplete = null)
     {
@@ -122,7 +122,7 @@ public class SpellFxManager : MonoBehaviour
                 yield return new WaitForSeconds(0.25f);
                 targetAnim.SetTrigger("Idle");
             }
-            yield return new WaitForSeconds(PlayText(targetPos, true, "Miss", Color.white, popTime));
+            yield return new WaitForSeconds(PlayText(targetPos, true, "Miss", Color.white));
             onComplete?.Invoke();
             yield break;
         }
@@ -209,7 +209,7 @@ public class SpellFxManager : MonoBehaviour
         playEffect |= PlayReaction(data.Effectiveness, targetPos, casterPos) > 0;
         if (data.Stun)
         {
-            PlayText(data.DisplayDamage ? targetPos + stunOffset : targetPos, true, "Stun!", Color.red, popTime);
+            PlayText(data.DisplayDamage ? targetPos + stunOffset : targetPos, true, "Stun!", Color.red);
             playEffect = true;
         }
         return playEffect ? popTimeStaggered : 0;
@@ -258,12 +258,12 @@ public class SpellFxManager : MonoBehaviour
         return PlayImage(targetPos + reactionOffset, true, sprite, Color.white, popTime);
     }
 
-    public float PlayText(Battlefield.Position pos, string text, Color color, float time = popTime)
+    public float PlayText(Battlefield.Position pos, string text, Color color, DisplayPopup.Animation anim = DisplayPopup.Animation.FloatUp, float time = popTime)
     {
-        return PlayText(Battlefield.instance.GetSpaceScreenSpace(pos), true, text, color, time);
+        return PlayText(Battlefield.instance.GetSpaceScreenSpace(pos), true, text, color, anim, time);
     }
 
-    public float PlayText(Vector2 position, bool isScreenSpace, string text, Color color, float time = popTime)
+    public float PlayText(Vector2 position, bool isScreenSpace, string text, Color color, DisplayPopup.Animation anim = DisplayPopup.Animation.FloatUp, float time = popTime)
     {
         var player = textPopupPool.Get();
         if (isScreenSpace)
@@ -274,7 +274,7 @@ public class SpellFxManager : MonoBehaviour
         {
             player.transform.position = CameraManager.instance.Camera.WorldToScreenPoint(position);
         }
-        player.Play(text, color, time, DisplayPopup.Animation.FloatUp, textPopupPool);
+        player.Play(text, color, time, anim, textPopupPool);
         return Mathf.Max(minYieldTime, time + staggerOffset);
     }
 

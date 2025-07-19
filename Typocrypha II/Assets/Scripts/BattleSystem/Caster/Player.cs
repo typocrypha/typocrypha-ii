@@ -48,7 +48,7 @@ public class Player : Caster, IPausable
             if(cooldowns.IsOnCooldown(spell, out var wordOnCooldown))
             {
                 AudioManager.instance.PlaySFX(castFailureSfx);
-                SpellFxManager.instance.PlayText(new Vector2(0f, -2f), false, $"{wordOnCooldown.BaseName} on Cooldown", Color.red, castFailTextTime);
+                SpellFxManager.instance.PlayText(new Vector2(0f, -2f), false, $"{wordOnCooldown.BaseName} on Cooldown", Color.red, DisplayPopup.Animation.FloatUp, castFailTextTime);
                 OnCastFail?.Invoke();
                 return SpellParser.ParseResults.OnCooldown;
             }
@@ -69,23 +69,23 @@ public class Player : Caster, IPausable
             AudioManager.instance.PlaySFX(castFailureSfx);
             if(results == SpellParser.ParseResults.EmptySpell)
             {
-                SpellFxManager.instance.PlayText(new Vector2(0f, -2f), false, $"Empty Spell", Color.red, castFailTextTime);
+                SpellFxManager.instance.PlayText(new Vector2(0f, -2f), false, $"Empty Spell", Color.red, DisplayPopup.Animation.FloatUp, castFailTextTime);
             }
             else if(results == SpellParser.ParseResults.DuplicateWord)
             {
-                SpellFxManager.instance.PlayText(new Vector2(0f, -2f), false, $"Duplicate Word: {problemWord.ToUpper()}", Color.red, castFailTextTime);
+                SpellFxManager.instance.PlayText(new Vector2(0f, -2f), false, $"Duplicate Word: {problemWord.ToUpper()}", Color.red, DisplayPopup.Animation.FloatUp, castFailTextTime);
             }
             else if(results == SpellParser.ParseResults.TypoFailure)
             {
-                SpellFxManager.instance.PlayText(new Vector2(0f, -2f), false, $"Invalid Word: {problemWord.ToUpper()}", Color.red, castFailTextTime);
+                SpellFxManager.instance.PlayText(new Vector2(0f, -2f), false, $"Invalid Word: {problemWord.ToUpper()}", Color.red, DisplayPopup.Animation.FloatUp, castFailTextTime);
             }
             else if(results == SpellParser.ParseResults.TooManyRoots)
             {
-                SpellFxManager.instance.PlayText(new Vector2(0f, -2f), false, $"Too Many Words!", Color.red, castFailTextTime);
+                SpellFxManager.instance.PlayText(new Vector2(0f, -2f), false, $"Too Many Words!", Color.red, DisplayPopup.Animation.FloatUp, castFailTextTime);
             }
             else
             {
-                SpellFxManager.instance.PlayText(new Vector2(0f, -2f), false, $"Invalid Spell", Color.red, castFailTextTime);
+                SpellFxManager.instance.PlayText(new Vector2(0f, -2f), false, $"Invalid Spell", Color.red, DisplayPopup.Animation.FloatUp, castFailTextTime);
             }
             OnCastFail?.Invoke();
         }

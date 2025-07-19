@@ -9,6 +9,7 @@ public abstract class DisplayPopup : MonoBehaviour
     {
         ShowHide,
         FloatUp,
+        SlamIn,
     }
     [SerializeField] private CanvasGroup group;
     [SerializeField] private TweenInfo showHideTween;
@@ -24,16 +25,23 @@ public abstract class DisplayPopup : MonoBehaviour
         if (anim == Animation.FloatUp)
         {
             float modTime = (time / Settings.UISpeed);
-            TargetTransform.DOMoveY(TargetTransform.position.y + 50, modTime).SetEase(Ease.OutQuint);
-            group.DOFade(0, modTime).SetEase(Ease.InCubic);
+            TargetTransform.DOMoveY(TargetTransform.position.y + 65, modTime).SetEase(Ease.OutQuint);
+            group.DOFade(0, modTime * 0.45f).SetEase(Ease.InCubic).SetDelay(modTime * 0.55f);
             yield return new WaitForSeconds(modTime);
         }
-        else
+        else if(anim == Animation.ShowHide)
         {
             yield return new WaitForSeconds(time / Settings.UISpeed);
             showHideTween.Start(group.DOFade(0, showHideTween.Time));
             showHideTween.Start(TargetTransform.transform.DOScale(0, showHideTween.Time), false);
             yield return showHideTween.WaitForCompletion();
+        }
+        else if(anim == Animation.SlamIn)
+        {
+            float modTime = (time / Settings.UISpeed);
+            TargetTransform.DOPunchScale(new Vector3(0.25f, 0.25f), modTime * 0.5f, 10);
+            group.DOFade(0, modTime * 0.45f).SetEase(Ease.InCubic).SetDelay(modTime * 0.55f);
+            yield return new WaitForSeconds(modTime);
         }
         onComplete?.Invoke();
     }
