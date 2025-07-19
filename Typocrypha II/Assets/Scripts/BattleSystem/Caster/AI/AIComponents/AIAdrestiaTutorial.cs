@@ -110,7 +110,7 @@ public class AIAdrestiaTutorial : AIComponent
             yield break;
         float time = 0;
         float hpFactor = Mathf.Min(1f, ((float)caster.Health / caster.Stats.MaxHP) * 2f);
-        float goalTime = Mathf.Max(Mathf.Max(0.25f, 1f * hpFactor), (float)RandomUtils.RandomU.instance.RandomDouble() * hpFactor * Mathf.Min(timeLeft, 3));
+        float goalTime = Mathf.Max(Mathf.Max(0.33f, 1f * hpFactor), (float)RandomUtils.RandomU.instance.RandomDouble() * hpFactor * Mathf.Min(timeLeft, 3));
         var actor = caster.GetComponent<ATB3.ATBActor>();
         var waitForEndOfFrame = new WaitForEndOfFrame();
         var waitForUnPause = new WaitWhile(actor.IsPausedOrCasting);
