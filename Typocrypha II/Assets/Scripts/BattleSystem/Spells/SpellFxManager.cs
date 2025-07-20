@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 [RequireComponent(typeof(SpellManager))]
 public class SpellFxManager : MonoBehaviour
@@ -179,6 +180,10 @@ public class SpellFxManager : MonoBehaviour
                     if (data.target.IsPlayer || (data.Effectiveness == Reaction.Repel && data.caster.IsPlayer))
                     {
                         damageGlitchController.Play();
+                    }
+                    else
+                    {
+                        data.target.transform.DOPunchScale(new Vector3(-0.15f, -0.2f), 0.5f, 0, 0);
                     }
                 }
                 yield return StartCoroutine(fx.Play(pos));
