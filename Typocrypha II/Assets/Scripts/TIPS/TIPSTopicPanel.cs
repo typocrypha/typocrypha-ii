@@ -21,7 +21,7 @@ public class TIPSTopicPanel : MonoBehaviour
     private IList<TIPSEntryData> currTopics;
     private int currPage;
 
-    private void Start()
+    private void Awake()
     {
         SetButtonNavigation();
     }
@@ -64,8 +64,8 @@ public class TIPSTopicPanel : MonoBehaviour
             // Setup listeners
             button.button.onClick.RemoveAllListeners();
             button.onSelect.RemoveAllListeners();
-            button.button.onClick.AddListener(() => OnButtonPressed(entry));
-            button.onSelect.AddListener(() => OnButtonSelected(entry));
+            button.button.onClick.AddListener(() => OnButtonPressed?.Invoke(entry));
+            button.onSelect.AddListener(() => OnButtonSelected?.Invoke(entry));
 
             button.gameObject.SetActive(true);
         }

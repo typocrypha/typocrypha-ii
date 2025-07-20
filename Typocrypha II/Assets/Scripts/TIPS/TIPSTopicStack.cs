@@ -21,7 +21,7 @@ public class TIPSTopicStack : MonoBehaviour
     public TIPSTopicPanel GetPanel(Layer layer) => panels[(int)layer];
     public TIPSTopicPanel GetCurrentPanel() => GetPanel(currentLayer);
 
-    private void Start()
+    private void Awake()
     {
         foreach (var p in panels)
         {

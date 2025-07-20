@@ -28,10 +28,6 @@ public class TIPSNavigator : MonoBehaviour
     {
         currentEventSystem = EventSystem.current;
         if (searchbar) searchbar.OnSearchCast.AddListener(HandleSearchInput);
-    }
-
-    private void Start()
-    {
         topicStack.OnButtonSelected += DisplayEntry;
     }
 
