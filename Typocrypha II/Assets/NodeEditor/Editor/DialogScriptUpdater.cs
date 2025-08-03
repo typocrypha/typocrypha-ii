@@ -228,6 +228,6 @@ public class DialogScriptUpdater : EditorWindow
 
     static void ParseAsTIPSBundle(string filePath)
     {
-        // TODO
+        TIPSBundleParser.Parse(filePath);
     }
 }

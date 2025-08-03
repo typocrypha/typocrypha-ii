@@ -33,6 +33,7 @@ public class TIPSEntryData : ScriptableObject
 
     public const string BASE_ASSET_PATH = "ScriptableObjects/TIPS";
     public string[] Categorization => RelativePath.Split('\\');
+    public static string PathToTIPS => Path.Combine(Application.dataPath, BASE_ASSET_PATH);
 
     public bool MatchTitlePartial(string query)
     {
@@ -51,7 +52,6 @@ public class TIPSEntryData : ScriptableObject
         if (string.IsNullOrEmpty(pathToEntry)) return;
 
         var pathToParent = new FileInfo(pathToEntry).DirectoryName;
-        var pathToTIPS = Path.Combine(Application.dataPath, BASE_ASSET_PATH) + "/";
 
         // Handle folder fields
         IsFolder = new DirectoryInfo(Path.Combine(pathToParent, Title)).Exists;
@@ -65,7 +65,7 @@ public class TIPSEntryData : ScriptableObject
         // Update other validated fields
         Title = Path.GetFileNameWithoutExtension(pathToEntry);
         Parent = Path.GetFileNameWithoutExtension(pathToParent);
-        RelativePath = pathToParent.Substring(Mathf.Min(pathToTIPS.Length, pathToParent.Length));
+        RelativePath = pathToParent.Substring(Mathf.Min(PathToTIPS.Length, pathToParent.Length));
         Depth = Categorization.Length - 1;
     }
 }

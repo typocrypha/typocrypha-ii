@@ -25,6 +25,7 @@ public class TIPSBundleParserWindow : EditorWindow
 
         GUILayout.EndVertical();
 
+        if (!csvFile) return;
         string assetPath = AssetDatabase.GetAssetPath(csvFile.GetInstanceID());
         if (assetPath != null && GUILayout.Button("Build TIPS", GUILayout.Width(120f)))
         {

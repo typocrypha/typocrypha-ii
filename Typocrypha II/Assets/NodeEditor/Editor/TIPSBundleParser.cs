@@ -1,6 +1,8 @@
-﻿using System.IO;
-using UnityEditor;
+﻿#if UNITY_EDITOR
+
+using System.IO;
 using UnityEngine;
+using UnityEditor;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 
@@ -13,19 +15,32 @@ public class TIPSBundleParser {
         using (var reader = new CsvReader(filePath))
         {
             var entries = new List<TIPSEntryData>();
-
+            bool firstRow = true;
             foreach (string[] values in reader.RowEnumerator)
             {
+                if (firstRow)
+                {
+                    firstRow = false;
+                    continue;
+                }
+
+                if (values[3] == "") continue; //no name
+
                 string entryPath = string.Join("/", TIPS_ROOT_PATH, values[0], values[1], values[2], $"{values[3]}.asset");
                 entryPath = Regex.Replace(entryPath, "/+", "/");
-                Debug.Log(entryPath);
+                var entry = (TIPSEntryData)AssetDatabase.LoadAssetAtPath(entryPath, typeof(TIPSEntryData));
+                //if (entry) Debug.Log(entryPath + " will be overwritten.");
+                //if (entry) continue; // debug skip existing data
 
-                //var entry = ScriptableObject.CreateInstance<TIPSEntryData>();
-                //entries.Add(entry);
+                entry = ScriptableObject.CreateInstance<TIPSEntryData>();
+                var parentDirectory = Path.Combine(Path.GetDirectoryName(Application.dataPath), Path.GetDirectoryName(entryPath));
+                if (!Directory.Exists(parentDirectory)) Directory.CreateDirectory(parentDirectory);
+                AssetDatabase.CreateAsset(entry, entryPath);
+                entry.Content = values[4];
             }
         }
+        TIPSBundleLoader.LoadTIPSBundles();
     }
-
 }
 
 // https://stackoverflow.com/questions/769621/dealing-with-commas-in-a-csv-file
@@ -117,3 +132,5 @@ public static class Csv
     private const string ESCAPED_QUOTE = "\"\"";
     private static char[] CHARACTERS_THAT_MUST_BE_QUOTED = { ',', '"', '\n' };
 }
+
+#endif
