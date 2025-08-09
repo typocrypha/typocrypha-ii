@@ -10,6 +10,7 @@ public delegate string MacroSubDel(string[] opt);
 // event class for text macro substitions
 public static class TextMacros 
 {
+	public const string macroTIPs = "tips";
 	public static readonly char[] macroDelim = new char[2] { '{', '}' }; // Macro delimiters
 	// for substituting macros
 	private static readonly Dictionary<string, MacroSubDel> macroMap = new Dictionary<string, MacroSubDel>
@@ -20,6 +21,7 @@ public static class TextMacros
 		{"ps", MacroPauseShort},
 		{"pm", MacroPauseMed},
 		{"pl", MacroPauseLong},
+		{macroTIPs, MacroTips},
 		{"tl", MacroTranslate},
 		{"translate", MacroTranslate},
 		{"languageName", MacroTranslatedLanguage},
@@ -77,12 +79,18 @@ public static class TextMacros
 	// input: [0]: string, color name (must be implemented in Unity rich tags)
 	//             if argument is empty, subsitutes the closing tag '|color|'
 	static string MacroColor(string[] opt) {
-		if (opt.Length != 0 && opt [0] != null && opt[0] != "") {
-			return "^color," + opt[0] + "^";
-		} else {
+        if (opt.Length <= 0 || string.IsNullOrEmpty(opt[0]))
 			return "|color|";
-		}
+		return "^color," + opt[0] + "^";
 	}
+
+	private static readonly string[] tipsColorArgs = new string[] { DialogParser.colorTIPs };
+	private static string MacroTips(string[] opt)
+    {
+		if (opt.Length <= 0 || string.IsNullOrEmpty(opt[0]))
+			return string.Empty;
+		return MacroColor(tipsColorArgs) + opt[0] + MacroColor(Array.Empty<string>());
+    }
 
 	static string MacroTranslate(string[] opt) {
         char[] op = opt[0].ToCharArray(); //char array is faster than StringBuilder here because mutations are simple

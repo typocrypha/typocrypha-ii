@@ -11,6 +11,7 @@ using UnityEngine;
 /// </summary>
 public class DialogParser : MonoBehaviour
 {
+    public const string colorTIPs = "tipsEntry";
     public static DialogParser instance = null;
 
 	public static readonly char[] optDelim = new char[1] { ',' }; // Option delimiter
@@ -22,6 +23,7 @@ public class DialogParser : MonoBehaviour
         {"evil-eye", new Color32(255, 0, 66, 255) },
         {"whisper", new Color32(200, 200, 200, 220) },
         {"highlight", new Color32(255, 132, 12, 255) },
+        {colorTIPs, new Color32(255, 132, 12, 255) },
         {"ayin", new Color32(176, 167, 255, 255) },
         {"illyia", new Color32(199, 1, 38, 255) },
         {"dahlia", new Color32(128, 151, 224, 255) },
