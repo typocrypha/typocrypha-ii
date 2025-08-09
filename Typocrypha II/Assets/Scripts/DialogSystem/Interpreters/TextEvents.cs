@@ -139,12 +139,10 @@ public class TextEvents : MonoBehaviour, IPausable
     Coroutine ScreenShake(string[] opt, DialogBox box)
     {
         CameraManager.instance.Shake(float.Parse(opt[0]), float.Parse(opt[1]));
-        if (DialogManager.instance.DialogView is DialogViewVNPlus)
+        if (DialogManager.instance.DialogView is DialogViewVNPlus vnplusView)
         {
             var ppu = Screen.height / (CameraManager.instance.defaultCameraSize * 2);
-            (DialogManager.instance.DialogView as DialogViewVNPlus).Shake(
-                float.Parse(opt[0]) * ppu * 0.25f, //TODO: fix magic number
-                float.Parse(opt[1]));
+            vnplusView.Shake(float.Parse(opt[0]) * ppu * 0.25f, float.Parse(opt[1])); //TODO: fix magic number
         }
         return null;
     }
