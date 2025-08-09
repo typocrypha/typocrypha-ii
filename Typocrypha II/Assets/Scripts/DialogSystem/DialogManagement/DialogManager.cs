@@ -19,7 +19,7 @@ public class DialogManager : MonoBehaviour, IPausable
     public void OnPause(bool b)
     {
         enabled = !b; // Disable input checking.
-        if (dialogBox != null) dialogBox.PH.SimpleParentPause(b); // Pause dialog box scrolling.
+        if (ActiveDialogBox != null) ActiveDialogBox.PH.SimpleParentPause(b); // Pause dialog box scrolling.
         TextEvents.instance.PH.SimpleParentPause(b); // Pause text events.
     }
     #endregion
@@ -38,6 +38,8 @@ public class DialogManager : MonoBehaviour, IPausable
     public UnityEvent onNextDialog; // Event called when a new dialog line is started.
     public UnityEvent onSkip; // Event called when user manually skips text scroll.
     public bool Auto { get; private set; }
+    public DialogBox ActiveDialogBox { get; private set; } // Latest displayed dialog box.
+    public int DialogCounter { get; private set; } = 0; // Number of dialog lines passed.
     public DialogView DialogView
     {
         get => dialogView;
@@ -50,8 +52,6 @@ public class DialogManager : MonoBehaviour, IPausable
     }
     private DialogView dialogView; // Currently displayed dialog view.
     private DialogView lastView; // Previously displayed dialog view.
-    [HideInInspector] public IDialogBox dialogBox; // Latest displayed dialog box.
-    [HideInInspector] public int dialogCounter = 0; // Number of dialog lines passed.
     public event System.Action OnHideComplete;
 
     public bool ReadyToContinue { get; set; } = true;
@@ -108,15 +108,15 @@ public class DialogManager : MonoBehaviour, IPausable
             return;
         }
         // Check if submit key is pressed
-        if (!Loading && ReadyToContinue && dialogBox != null && DialogView.ReadyToContinue && (Input.GetKeyDown(KeyCode.Space) || Settings.AutoContinue))
+        if (!Loading && ReadyToContinue && ActiveDialogBox != null && DialogView.ReadyToContinue && (Input.GetKeyDown(KeyCode.Space) || Settings.AutoContinue))
         {
-            if (dialogBox.IsDone)
+            if (ActiveDialogBox.IsDone)
             {
                 NextDialog(true, false); // If dialog is done, go to next dialog
             }
             else if (!Settings.AutoContinue)
             {
-                dialogBox.DumpText(); // Otherwise, skip text scroll and dump current text
+                ActiveDialogBox.DumpText(); // Otherwise, skip text scroll and dump current text
             }
         }
     }
@@ -161,21 +161,21 @@ public class DialogManager : MonoBehaviour, IPausable
         {
             ResetDialog();
         }
-        if (isBattle || dialogCounter <= 0) // Start from beginning of scene if no save file load (can't save in middle of battle).
+        if (isBattle || DialogCounter <= 0) // Start from beginning of scene if no save file load (can't save in middle of battle).
         {
-            dialogCounter = -1;
+            DialogCounter = -1;
             NextDialog(true, loading);
         }
         else // Otherwise, go to saved position.
         {
-            graphParser.SkipTo(dialogCounter);
+            graphParser.SkipTo(DialogCounter);
             NextDialog(false, loading);
         }
     }
 
     private void ResetDialog()
     {
-        dialogCounter = 0;
+        DialogCounter = 0;
         if(DialogView != null)
         {
             HideViewInstant();
@@ -194,7 +194,7 @@ public class DialogManager : MonoBehaviour, IPausable
         DialogItem dialogItem = graphParser.NextDialog(next, loading);
         if (dialogItem == null) return;
         // Remove certain old text effects from previous box
-        if ((dialogBox as DialogBox) != null) DisableOldTextEffects(dialogBox); 
+        DisableOldTextEffects(ActiveDialogBox); 
         // Get and display proper view.
         DialogView view = GetView(dialogItem.GetView());
         if (view != DialogView)
@@ -221,19 +221,20 @@ public class DialogManager : MonoBehaviour, IPausable
 
     private void PlayNextDialog(DialogItem dialogItem)
     {
-        dialogBox = DialogView.PlayDialog(dialogItem); // Play Dialog
+        ActiveDialogBox = DialogView.PlayDialog(dialogItem); // Play Dialog
         onNextDialog.Invoke();
-        dialogCounter++;
+        DialogCounter++;
     }
 
     /// <summary>
     /// Disable certain text effects on dialog box to reduce visual noise
     /// </summary>
     /// <param name="box">Box to disable text effects</param>
-    void DisableOldTextEffects(IDialogBox box)
+    private void DisableOldTextEffects(DialogBox box)
     {
-        var dbox = box as DialogBox;
-        var effects = dbox.GetComponents<FXText.TMProEffect>();
+        if (box == null)
+            return;
+        var effects = box.GetComponents<FXText.TMProEffect>();
         // Disable all movement based effects
         foreach (var effect in effects)
         {

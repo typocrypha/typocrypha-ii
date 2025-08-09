@@ -6,19 +6,9 @@ using UnityEngine.UI;
 using TMPro;
 
 /// <summary>
-/// Interface with general dialog box functionality.
-/// </summary>
-public interface IDialogBox : IPausable
-{
-    bool Scroll { get; set; }
-    bool IsDone { get; }
-    void DumpText();
-}
-
-/// <summary>
 /// A single dialog box.
 /// </summary>
-public class DialogBox : MonoBehaviour, IDialogBox
+public class DialogBox : MonoBehaviour, IPausable
 {
     #region IPausable
     /// <summary>

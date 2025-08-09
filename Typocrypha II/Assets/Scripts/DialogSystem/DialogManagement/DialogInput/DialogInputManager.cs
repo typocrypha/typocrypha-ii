@@ -42,8 +42,8 @@ public class DialogInputManager : MonoBehaviour
     // Wait for end of text scroll to display dialog input display.
     IEnumerator WaitForText(DialogInputItem data)
     {
-        yield return new WaitWhile(() => DialogManager.instance.dialogBox.IsDone); // COULD HAVE SYNCHRO ISSUES
-        yield return new WaitUntil(() => DialogManager.instance.dialogBox.IsDone); // THAT IS, SPEEDRUN TECH
+        yield return new WaitWhile(() => DialogManager.instance.ActiveDialogBox.IsDone); // COULD HAVE SYNCHRO ISSUES
+        yield return new WaitUntil(() => DialogManager.instance.ActiveDialogBox.IsDone); // THAT IS, SPEEDRUN TECH
         DialogManager.instance.PH.Pause(PauseSources.Misc); // Disable player skipping dialog.
         DialogManager.instance.DialogView.DisplayInput(data); // Display dialog.
     }

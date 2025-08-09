@@ -55,7 +55,7 @@ public class DialogSpacebar : MonoBehaviour
         if (DialogManager.instance.PH.Paused) newState = State.blocked;
         else
         {
-            if (DialogManager.instance.dialogBox.IsDone) newState = State.next;
+            if (DialogManager.instance.ActiveDialogBox.IsDone) newState = State.next;
             else newState = State.skip;
         }
         if (newState != CurrState) CurrState = newState;

@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Interface for multiple dialog boxes scrolling at once.
 /// </summary>
-public class DialogBox_Multi : DialogBox, IDialogBox
+public class DialogBox_Multi : DialogBox
 {
     public List<DialogBox> boxes = new List<DialogBox>();
 
