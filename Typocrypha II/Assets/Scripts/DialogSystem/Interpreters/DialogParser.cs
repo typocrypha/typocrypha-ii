@@ -68,24 +68,24 @@ public class DialogParser : MonoBehaviour
 
     public void Parse(DialogItem dialogItem, DialogBox dialogBox, bool createEvents = true)
     {
-        dialogItem.text = Parse(dialogItem.text, dialogBox.gameObject, dialogBox.dialogText, dialogItem.TextEventList, dialogItem.FXTextList, createEvents);
+        dialogItem.text = Parse(dialogItem.text, dialogBox.gameObject, dialogBox.DialogText, dialogItem.TextEventList, dialogItem.FXTextList, out dialogItem.tipsEntries, createEvents);
     }
 
     // Parse without text events
-    public string Parse(string line, GameObject fxContainer, TextMeshProUGUI textUI, List<MonoBehaviour> textEffects)
+    public string Parse(string line, GameObject fxContainer, TextMeshProUGUI textUI, List<MonoBehaviour> textEffects, out List<string> tipsEntries)
     {
-        return Parse(line, fxContainer, textUI, null, textEffects, false);
+        return Parse(line, fxContainer, textUI, null, textEffects, out tipsEntries, false);
     }
 
     // Parses a line of text removing, creating text FX and parsing text events.
     // Text event creation is optional, in which case false should be passed in the create events arg
-	public string Parse(string line, GameObject fxContainer, TextMeshProUGUI textUI, List<TextEvent> textEvents, List<MonoBehaviour> textEffects, bool createEvents = true)
+	public string Parse(string line, GameObject fxContainer, TextMeshProUGUI textUI, List<TextEvent> textEvents, List<MonoBehaviour> textEffects, out List<string> tipsEntries, bool createEvents = true)
     {
         // Clear output lists
         textEvents?.Clear();
         textEffects.Clear();
         // Initialize text (substitute macros) Regex.Replace(line, @"<.*?>", ""); // Remove rich text tags
-        string text = TextMacros.SubstituteMacros(line);
+        string text = TextMacros.SubstituteMacros(line, out tipsEntries);
         // Initialize parsing vars
         var parsed = new StringBuilder(text.Length);
 		bool tag = false; // Are we parsing a tag?

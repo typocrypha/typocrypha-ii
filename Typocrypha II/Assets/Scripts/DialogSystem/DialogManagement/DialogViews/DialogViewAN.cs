@@ -47,7 +47,7 @@ public class DialogViewAN : DialogView
         }
         activeDialogBoxes.Add(dialogBox);
         dialogBox.ContinueIndicator = continueIndicator;
-        dialogBox.dialogText.alignment = dialogItem.AlignmentOptions;
+        dialogBox.DialogText.alignment = dialogItem.AlignmentOptions;
         if(ANLayout.childAlignment != dialogItem.LayoutSetting)
         {
             ANLayout.childAlignment = dialogItem.LayoutSetting;

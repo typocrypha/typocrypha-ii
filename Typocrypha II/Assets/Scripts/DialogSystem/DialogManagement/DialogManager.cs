@@ -39,6 +39,15 @@ public class DialogManager : MonoBehaviour, IPausable
     public UnityEvent onSkip; // Event called when user manually skips text scroll.
     public bool Auto { get; private set; }
     public DialogBox ActiveDialogBox { get; private set; } // Latest displayed dialog box.
+    public IReadOnlyList<string> ActiveTIPsEntries
+    {
+        get
+        {
+            if (ActiveDialogBox == null)
+                return System.Array.Empty<string>();
+            return ActiveDialogBox.TIPsEntries;
+        }
+    }
     public int DialogCounter { get; private set; } = 0; // Number of dialog lines passed.
     public DialogView DialogView
     {

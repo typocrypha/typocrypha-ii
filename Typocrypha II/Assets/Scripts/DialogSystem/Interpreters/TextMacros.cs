@@ -5,7 +5,7 @@ using System.Text;
 using UnityEngine;
 
 // represents a macro substitution function
-public delegate string MacroSubDel(string[] opt);
+public delegate string MacroSubDel(string[] opt, List<string> tipsEntries);
 
 // event class for text macro substitions
 public static class TextMacros 
@@ -36,9 +36,12 @@ public static class TextMacros
 		{'z', 'j' }, {'.', ',' }, {',', '.' }
 	};
 
-	public static string SubstituteMacros(string text)
+	public static string SubstituteMacros(string text) => SubstituteMacros(text, out _);
+
+	public static string SubstituteMacros(string text, out List<string> tipsEntries)
 	{
 		var builder = new StringBuilder(text.Length * 2);
+		tipsEntries = new List<string>();
 		for (int i = 0; i < text.Length;)
 		{
 			if (text[i] == macroDelim[0])
@@ -47,7 +50,7 @@ public static class TextMacros
 				int endPos = text.IndexOf(macroDelim[1], startPos, DialogParser.escapeChar);
 				string[] macro = text.Substring(startPos, endPos - startPos).Split(DialogParser.optDelim, DialogParser.escapeChar);
 				string[] opt = macro.Skip(1).Take(macro.Length - 1).ToArray();
-				builder.Append(ApplyMacro(macro[0], opt));
+				builder.Append(ApplyMacro(macro[0], opt, tipsEntries));
 				i = endPos + 1;
 			}
 			else
@@ -58,11 +61,11 @@ public static class TextMacros
 		return builder.ToString();
 	}
 
-	public static string ApplyMacro(string macroName, string[] args)
+	public static string ApplyMacro(string macroName, string[] args, List<string> tipsEntries)
     {
 		if(macroMap.TryGetValue(macroName, out var macro))
         {
-			return macro(args);
+			return macro(args, tipsEntries);
         }
 		Debug.LogError($"Invalid text macro: {macroName}. Returning empty string");
 		return string.Empty;
@@ -70,7 +73,7 @@ public static class TextMacros
 
     // Substitutes appropriate entry from temporary string-object database
     // input: variable name
-    static string MacroVariable(string[] opt)
+    static string MacroVariable(string[] opt, List<string> tipsEntries)
     {
         return PlayerDataManager.instance.GetObj(opt[0])?.ToString() ?? string.Empty;
     }
@@ -78,21 +81,25 @@ public static class TextMacros
 	// substitutes in appropriate color tag (TMProColor)
 	// input: [0]: string, color name (must be implemented in Unity rich tags)
 	//             if argument is empty, subsitutes the closing tag '|color|'
-	static string MacroColor(string[] opt) {
+	static string MacroColor(string[] opt, List<string> tipsEntries) {
         if (opt.Length <= 0 || string.IsNullOrEmpty(opt[0]))
 			return "|color|";
 		return "^color," + opt[0] + "^";
 	}
 
 	private static readonly string[] tipsColorArgs = new string[] { DialogParser.colorTIPs };
-	private static string MacroTips(string[] opt)
+	private static string MacroTips(string[] opt, List<string> tipsEntries)
     {
 		if (opt.Length <= 0 || string.IsNullOrEmpty(opt[0]))
 			return string.Empty;
-		return MacroColor(tipsColorArgs) + opt[0] + MacroColor(Array.Empty<string>());
+		if(tipsEntries != null)
+        {
+			tipsEntries.Add(opt[0]);
+		}
+		return MacroColor(tipsColorArgs, tipsEntries) + opt[0] + MacroColor(Array.Empty<string>(), tipsEntries);
     }
 
-	static string MacroTranslate(string[] opt) {
+	static string MacroTranslate(string[] opt, List<string> tipsEntries) {
         char[] op = opt[0].ToCharArray(); //char array is faster than StringBuilder here because mutations are simple
         for(int i = 0; i < op.Length; ++i) {
             if (translationMap.ContainsKey(op[i]) && char.IsLower(op[i]))
@@ -103,11 +110,11 @@ public static class TextMacros
         return new string (op);
     }
 
-	static string MacroTranslatedLanguage(string[] opt) {
+	static string MacroTranslatedLanguage(string[] opt, List<string> tipsEntries) {
 		return "Ihsuik";
 	}
 
-	static string MacroPause(string[] opt)
+	static string MacroPause(string[] opt, List<string> tipsEntries)
 	{
 		if (opt.Length <= 0)
 			return string.Empty;
@@ -115,17 +122,17 @@ public static class TextMacros
 	}
 
 	private const string pauseShort = "[pause,0.1]";
-	static string MacroPauseShort(string[] opt)
+	static string MacroPauseShort(string[] opt, List<string> tipsEntries)
 	{
 		return pauseShort;
 	}
 	private const string pauseMed = "[pause,0.2]";
-	static string MacroPauseMed(string[] opt)
+	static string MacroPauseMed(string[] opt, List<string> tipsEntries)
 	{
 		return pauseMed;
 	}
 	private const string pauseLong = "[pause,0.3]";
-	static string MacroPauseLong(string[] opt)
+	static string MacroPauseLong(string[] opt, List<string> tipsEntries)
 	{
 		return pauseLong;
 	}

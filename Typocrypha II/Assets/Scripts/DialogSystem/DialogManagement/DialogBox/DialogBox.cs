@@ -41,8 +41,9 @@ public class DialogBox : MonoBehaviour, IPausable
         set => continueIndicator = value;
     }
 
-    public TextMeshProUGUI dialogText; // Text display component
-    public bool resizeTextBox = true; // Should dialog box resize itself?
+    public TextMeshProUGUI DialogText => dialogText;
+    [SerializeField] private TextMeshProUGUI dialogText; // Text display component
+    [SerializeField] private bool resizeTextBox = true; // Should dialog box resize itself?
     [SerializeField] private bool shrinkToFit = false;
     [SerializeField] private bool resolveContinueIndicatorConflicts = false;
     [SerializeField] private float textPad = 16f; // Padding between text rect and dialog box rect.
@@ -51,8 +52,18 @@ public class DialogBox : MonoBehaviour, IPausable
     [SerializeField] private CanvasGroup canvasGroup = null;
     [SerializeField] FXText.TMProColor hideText; // Allows for hiding parts of text (for scrolling)
     [SerializeField] private bool scroll = true;
-    DialogItem dialogItem; // Dialog line data
-    Coroutine scrollCR; // Coroutine that scrolls the text
+
+    public IReadOnlyList<string> TIPsEntries
+    {
+        get
+        {
+            if (dialogItem == null || dialogItem.tipsEntries == null)
+                return System.Array.Empty<string>();
+            return dialogItem.tipsEntries;
+        }
+    }
+    private DialogItem dialogItem; // Dialog line data
+    private Coroutine scrollCR; // Coroutine that scrolls the text
     private AudioClip[] textBlips = new AudioClip[2];
     private bool started = false;
     private bool resetTextBlips = false;

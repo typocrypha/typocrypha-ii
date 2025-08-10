@@ -12,7 +12,7 @@ public class HistoryDialog : MonoBehaviour
     {
         Cleanup();        
         // Set text
-        text.text = DialogParser.instance.Parse(data.ToString(), gameObject, text, textEffects);
+        text.text = DialogParser.instance.Parse(data.ToString(), gameObject, text, textEffects, out _);
     }
 
     public void Cleanup()
