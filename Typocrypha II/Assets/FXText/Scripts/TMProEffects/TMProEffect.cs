@@ -200,7 +200,12 @@ namespace FXText
         public static void Cleanup(GameObject fxContainer, TMProEffect ignore = null)
         {
             // Remove old text effects.
-            var fxTexts = fxContainer.GetComponents<TMProEffect>();
+            Cleanup(fxContainer.GetComponents<TMProEffect>(), ignore);
+        }
+
+        public static void Cleanup(IEnumerable<TMProEffect> fxTexts, TMProEffect ignore = null)
+        {
+            // Remove old text effects.
             foreach (var fxText in fxTexts)
             {
                 if (fxText != ignore)
