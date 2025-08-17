@@ -183,7 +183,7 @@ public class SpellFxManager : MonoBehaviour
                     }
                     else
                     {
-                        data.target.transform.DOPunchScale(new Vector3(-0.15f, -0.2f), 0.5f, 0, 0);
+                        data.target.transform.DOPunchScale(new Vector3(-0.1f, -0.133f), 0.5f, 0, 0);
                     }
                 }
                 yield return StartCoroutine(fx.Play(pos));
