@@ -34,7 +34,7 @@ namespace FXText
             get;
         }
 
-        List<TMProEffect> allEffects; // All effects on this text.
+        private readonly List<TMProEffect> allEffects = new List<TMProEffect>(); // All effects on this text.
         private readonly SharedMemory sharedMemory = new SharedMemory();
 
         protected const int vertsInQuad = 4; // Number of vertices in a single text quad.
@@ -44,7 +44,8 @@ namespace FXText
         {
             firstUpdate = false;
             // Get all other TMProEffect components to determine priority
-            allEffects = GetComponents<TMProEffect>().Where(a => a != null).OrderBy(a => a.Priority).ToList();
+            allEffects.Clear();
+            allEffects.AddRange(GetComponents<TMProEffect>().Where(IsNotNull).OrderBy(GetPriority));
             sharedMemory.EnsureCapacity(allEffects.Count);
         }
         private void Start()
@@ -60,13 +61,13 @@ namespace FXText
             if (allEffects.Count <= 0)
                 return;
             // All effects managed by highest priority instance
-            allEffects.RemoveAll(a => a == null);
+            allEffects.RemoveAll(IsNull);
             if (allEffects[allEffects.Count - 1] == this)
             {
                 UpdateMesh(text, allEffects, sharedMemory);
                 sharedMemory.Clear();
             }
-            allEffects.RemoveAll(a => a.done);
+            allEffects.RemoveAll(IsDone);
         }
 
         /// <summary>
@@ -214,6 +215,11 @@ namespace FXText
                 }
             }
         }
+
+        private static bool IsNull(TMProEffect effect) => effect == null;
+        private static bool IsNotNull(TMProEffect effect) => effect != null;
+        private static bool IsDone(TMProEffect effect) => effect.done;
+        private static int GetPriority(TMProEffect effect) => effect.Priority;
 
         private class SharedMemory
         {
