@@ -8,14 +8,17 @@ using System.Collections.Generic;
 
 public class TIPSBundleParser {
 
-    const string TIPS_ROOT_PATH = "Assets/ScriptableObjects/TIPS/Root/";
+    const string TIPS_ROOT_PATH = "ScriptableObjects/TIPS/Root";
 
-    public static void Parse(string filePath)
+    public static void Parse(string filePath, bool fullRebuild = true)
     {
         using (var reader = new CsvReader(filePath))
         {
             var entries = new List<TIPSEntryData>();
             bool firstRow = true;
+
+            if (fullRebuild) ClearEntries();
+
             foreach (string[] values in reader.RowEnumerator)
             {
                 if (firstRow)
@@ -28,18 +31,25 @@ public class TIPSBundleParser {
 
                 string entryPath = string.Join("/", TIPS_ROOT_PATH, values[0], values[1], values[2], $"{values[3]}.asset");
                 entryPath = Regex.Replace(entryPath, "/+", "/");
-                var entry = (TIPSEntryData)AssetDatabase.LoadAssetAtPath(entryPath, typeof(TIPSEntryData));
-                //if (entry) Debug.Log(entryPath + " will be overwritten.");
-                //if (entry) continue; // debug skip existing data
 
-                entry = ScriptableObject.CreateInstance<TIPSEntryData>();
-                var parentDirectory = Path.Combine(Path.GetDirectoryName(Application.dataPath), Path.GetDirectoryName(entryPath));
+                var parentDirectory = Path.Combine(Application.dataPath, Path.GetDirectoryName(entryPath));
                 if (!Directory.Exists(parentDirectory)) Directory.CreateDirectory(parentDirectory);
-                AssetDatabase.CreateAsset(entry, entryPath);
+                if (!Directory.Exists(entryPath)) Directory.CreateDirectory(entryPath);
+
+                var entry = ScriptableObject.CreateInstance<TIPSEntryData>();
+                AssetDatabase.CreateAsset(entry, "Assets/" + entryPath);
                 entry.Content = values[4];
             }
         }
         TIPSBundleLoader.LoadTIPSBundles();
+    }
+
+    public static void ClearEntries()
+    {
+        var root = Path.Combine(Application.dataPath, TIPS_ROOT_PATH);
+        Directory.Delete(root, true);
+        Directory.CreateDirectory(root);
+        AssetDatabase.Refresh();
     }
 }
 

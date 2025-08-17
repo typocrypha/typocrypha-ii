@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using NodeEditorFramework;
-using System.IO;
 
 public class TIPSBundleParserWindow : EditorWindow
 {
@@ -32,6 +30,11 @@ public class TIPSBundleParserWindow : EditorWindow
             const string assetPathPrefix = "Assets";
             var fullPath = Application.dataPath + assetPath.Substring(assetPathPrefix.Length);
             TIPSBundleParser.Parse(fullPath);
+        }
+
+        if (GUILayout.Button("Clear All Entries", GUILayout.Width(120f)))
+        {
+            TIPSBundleParser.ClearEntries();
         }
     }
 }

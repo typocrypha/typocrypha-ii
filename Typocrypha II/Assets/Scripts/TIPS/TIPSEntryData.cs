@@ -50,8 +50,10 @@ public class TIPSEntryData : ScriptableObject
         // Important paths
         var pathToEntry = AssetDatabase.GetAssetPath(GetInstanceID());
         if (string.IsNullOrEmpty(pathToEntry)) return;
+        Title = Path.GetFileNameWithoutExtension(pathToEntry);
 
         var pathToParent = new FileInfo(pathToEntry).DirectoryName;
+        Parent = Path.GetFileNameWithoutExtension(pathToParent);
 
         // Handle folder fields
         IsFolder = new DirectoryInfo(Path.Combine(pathToParent, Title)).Exists;
@@ -63,8 +65,6 @@ public class TIPSEntryData : ScriptableObject
         CreateFolder = false;
 
         // Update other validated fields
-        Title = Path.GetFileNameWithoutExtension(pathToEntry);
-        Parent = Path.GetFileNameWithoutExtension(pathToParent);
         RelativePath = pathToParent.Substring(Mathf.Min(PathToTIPS.Length, pathToParent.Length));
         Depth = Categorization.Length - 1;
     }

@@ -1,6 +1,4 @@
 ﻿using UnityEditor;
-using System.Linq;
-using System.IO;
 
 // ensure class initializer is called whenever scripts recompile
 [InitializeOnLoad]
@@ -30,6 +28,7 @@ public static class TIPSBundleLoader
             var incomingEntries = AssetUtils.LoadAllAssetsInDirectoryRecursive<TIPSEntryData>(bundle.assetPath);
             foreach (var entry in incomingEntries)
             {
+                entry.OnValidate();
                 if (!bundle.entries.ContainsKey(entry.Title))
                     bundle.entries.Add(entry.Title, entry);
             }
