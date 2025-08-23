@@ -1,63 +1,76 @@
-﻿>start,ACT I-1
+﻿>start,ACT I-1-TIPS
 
 
 >stopbgm
 +an
->playbgm,BGMExposition
+>playbgm,BGMBirdPeople
 
 
-NarratorSilent[middle](center): It has been 21 years since {c,ui-terms}Agartha{c} went into lockdown.
+>addchar,Huginn,0,0,right
+>addchar,Muninn,0,0,right
 
 
-NarratorSilent[middle](center): A city of a million people,{pm} cutoff from the outside world.
+Muninn(left): {c,muninn}21 years ago,{pm} EVIL DEMONS appeared in the magical flying city of AGARTHA.{c}
 
 
-NarratorSilent[middle](center): On the {c,ui-terms}Coil{c},{pl} their stories echo chaotically within Agartha’s sealed infosphere.
+Muninn(left): {c,muninn}Led by their dark master -{ps} the enigmatic EVIL EYE -{ps} the DEMONS went on a rampage,{pm} forcing the fair city of AGARTHA into lockdown to prevent the malice from spreading.{c}
 
 
-NarratorSilent[middle](center): They collect noise and corruption,{pm} eventually turning into {c,ui-terms}Demons{c} -{pl} apparitions formed from forsaken myths and legends.
+Muninn(left): {c,muninn}To combat this threat,{ps} the technology conglomerate OSTANES was tasked to create the ultimate weapon...{c}
+
+
+Muninn(left): {c,muninn}The{c} {c,ui-terms}TYPOCRYPHA{c}{c,muninn}:{pm} An amalgamate of the mechanical “TYPE” of scientific syntax and the mystical “APOCRYPHA” of stories that should not exist.{c}
+
+
+Muninn(left): {c,muninn}With this,{ps} the people of AGARTHA were able to seal away the DEMON threat into the RUINS beneath Agartha...{c}
+
+
+>stopbgm,immediate
+
+
+Huginn(right): {c,huginn}...but it didn’t really work~{c}
+
+
+Muninn(left): {c,muninn}And the lockdown was never broken,{ps} the looming gaze of the EVIL EYE still permeating every inch of the city to this day.{c}
+
+
+>clear
+>playbgm,BGMBattleSecondHand
+
+
+Muninn(left): {c,muninn}Now,{ps} we follow the stories of the youths destined to break us free from this curse...{c}
+
+
+Huginn(right): {c,huginn}That means you!{c}
+
+
+Muninn(left): {c,muninn}So,{pm} it’s time for you to wake up...{c}
+
+
+>stopbgm,linear,2
+>clear
+
+
+Narrator[middle](center): ...Ayin...
 
 
 >clear
 
 
-NarratorSilent[middle](center): Every day,{pm} the Demons grow in power,{pm} fed from the apocryphal information flowing from the Coil.
+Narrator[middle](center): ...Ayin...!
 
 
-NarratorSilent[middle](center): Deep in the underground {c,ui-terms}Ruins{c} they lay in wait,{pm} biding their time in a nest of magi-fiber cable.
-
-
-NarratorSilent[middle](center): The Demons cannot be killed,{pm} but their source can be destroyed.
-
-
-NarratorSilent[middle](center): The One That Observes -{pl} that malevolent sight that brings into existence...
-
-
->clear
-
-
-NarratorSilent[middle](center): DESTROY THE EVIL EYE.
-
-
->clear
-NarratorSilent[middle](center): DESTROY THE EVIL EYE.
-
-
->clear
-NarratorSilent[middle](center): ^shake^DESTROY THE E-|shake|
-
-
->stopbgm
 >clear
 
 
 >playsfx,SFXCall
-NarratorSilent[middle](center): ...!
+NarratorSilent[middle](center): BEEP!{ps} BEEP!
 
 
 +vnplus
 >setbg,Sprite,BgPlayerBedroom
 >setlocation,Ayin’s Room
+>setdatetime,10/22/2033
 >addchar,Ayin,0,0,left,nervous[a]
 
 
@@ -67,10 +80,10 @@ Ayin(surprised): H-{ps}Huh!?
 Narrator: You wake up to the sound of the alarm on your {c,ui-terms}Typocrypha{c}.
 
 
-Narrator: A hologram of Clarke -{pm} the Typocrypha’s “Personalized AI Clerk” -{pm} blips into existence.
-
-
 >addchar,Clarke,0,0,right
+
+
+Narrator: A hologram of Clarke -{pm} the Typocrypha’s “Personalized AI Clerk” -{pm} blips into existence.
 
 
 Clarke: Good morning,{pm} Ayin!
@@ -91,28 +104,10 @@ Ayin(nervous): Thanks Clarke...
 Clarke: While you were asleep,{pm} I took the liberty of downloading the most recent Typocrypha software update from the Coil.
 
 
-Clarke: The most notable new feature that I recommend you try out is the {c,ui-terms}TIPS{c} feature.
+Clarke: The most notable new feature that I recommend you try out when you have time is the {c,ui-terms}TIPS{c} feature.
 
 
-Clarke: Why don’t you try it out now?
-
-
-Clarke: To access {c,ui-terms}TIPS{c},{pm} press the ___ key!
-
-
-Clarke: TIPS TUTORIAL PLACEHOLDER
-
-
-Clarke: With {c,ui-terms}TIPS{c},{pm} you can always feel like you’re connected on the Coil!
-
-
-Clarke: Anytime you see {c,ui-terms}highlighted{c} words,{pm} try looking them up!
-
-
-Clarke: Oh,{pm} and don’t worry if you miss something,{pm} {c,ui-terms}TIPS will remember all of the terms you’ve encountered in the past.{c}
-
-
-Ayin(squint): Hmm,{pm} I see.
+Ayin(squint): Mmm...
 
 
 >setexpr,Ayin,surprised
@@ -121,7 +116,7 @@ Clarke:!!
 
 
 >setexpr,Ayin,normal
-Clarke: You have new messages from {c,ui-terms}Adelai Steiner[b]{c}!
+Clarke: You have new messages from {c,ui-terms}Adelai Steiner{c}!
 
 
 +chat
@@ -134,13 +129,12 @@ Clarke: You have new messages from {c,ui-terms}Adelai Steiner[b]{c}!
 
 >addchar,Adelai,0,0 // Set adelai to online
 Narrator: “Adelai is online”
->playbgm,BGMChatHouse
 
 
-Adelai(3:55pm)[right]: Ayin!!!! Wanna get pho?[c]
+Adelai(3:55pm)[right]: Ayin!!!! Wanna get pho?[b]
 
 
-Adelai(3:55pm[d])[right]: Ayin?
+Adelai(3:55pm[c])[right]: Ayin?
 
 
 Adelai(3:55pm)[right]: Hello????
@@ -183,7 +177,7 @@ Ayin(3:57pm)[left]: it’s a classic
 Adelai(3:57pm)[right]: Yeah, I know. 
 
 
-Adelai(3:57pm)[right]: But come on! It’s almost :pho: o’clock so get up!
+Adelai(3:57pm)[right]: But come on! It’s pho-time so get up!
 
 
 Adelai(3:58pm)[right]: If we don’t get going soon, I won’t make it back in time for my curfew!
@@ -243,8 +237,7 @@ Narrator: “Ayin is offline”
 >stopbgm
 
 
->end
+>endt
 [a]should be sleeping
-[b]first non-tutorial TIPS-able entry
-[c]can we have chat message already be on when view opens?
-[d]have mixed feelings on timestamps now
+[b]can we have chat message already be on when view opens?
+[c]have mixed feelings on timestamps now
