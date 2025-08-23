@@ -62,10 +62,12 @@ public abstract class GraphParser : MonoBehaviour
                     PlayerDataManager.Equipment.UnlockBadge(word);
                 }
             }
+            return true;
         }
         if (node is ShopUnlockNode shopUnlockNode)
         {
             PlayerDataManager.instance.ShopData.UnlockShopCodes(shopUnlockNode.unlockCodes);
+            return true;
         }
         if (node is SetBackgroundNode setBgNode)
         {
