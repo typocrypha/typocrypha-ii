@@ -4,6 +4,7 @@ using System;
 
 public class TIPSTopicStack : MonoBehaviour
 {
+    public const string rootFolderName = "Root";
     [SerializeField] private RectTransform panelContainer;
     [SerializeField] private TIPSTopicPanel panelTop, panelSub, panelAux;
     [SerializeField] Vector2 auxOffsetPosition = new Vector2(-16, 16);
@@ -28,7 +29,7 @@ public class TIPSTopicStack : MonoBehaviour
             p.OnButtonPressed += StepIntoEntry;
             p.OnButtonSelected += OnButtonSelected;
         }
-        panelTop.LoadEntriesInFolder("Root");
+        panelTop.LoadEntriesInFolder(rootFolderName);
     }
 
     private void OnDestroy()
@@ -38,6 +39,16 @@ public class TIPSTopicStack : MonoBehaviour
             p.OnButtonPressed -= StepIntoEntry;
             p.OnButtonSelected -= OnButtonSelected;
         }
+    }
+
+    public void Refresh()
+    {
+        if (latestFolderEntered == null)
+        {
+            panelTop.LoadEntriesInFolder(rootFolderName);
+            return;
+        }
+        GetCurrentPanel().LoadEntriesInFolder(latestFolderEntered.Title);
     }
 
     public Sequence JumpToLayer(Layer target, float duration = 0.33f)

@@ -37,6 +37,11 @@ public class TIPSNavigator : MonoBehaviour
         FocusOnSearchbar();
     }
 
+    public void Refresh()
+    {
+        topicStack.Refresh();
+    }
+
     private void Update()
     {
         if (CurrentFocus == Focus.searchbar)

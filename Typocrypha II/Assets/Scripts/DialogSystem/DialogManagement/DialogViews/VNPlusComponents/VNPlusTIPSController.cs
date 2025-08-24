@@ -53,6 +53,7 @@ public class VNPlusTIPSController : MonoBehaviour
     {
         isOpen = true;
         PauseManager.instance.PauseAll(true, PauseSources.TIPS, PH, true);
+        navigator.Refresh();
         SequenceOpenTIPS().Play();
     }
 
