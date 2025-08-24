@@ -55,4 +55,10 @@ public static class SaveDataTools
         file.currency = 100000;
         SaveManager.SaveFile(file, path);
     }
+
+    [MenuItem("Tools/Save Data/Open Save Data Folder")]
+    public static void OpenSaveDataFolder()
+    {
+        EditorUtility.RevealInFinder(Application.persistentDataPath);
+    }
 }
