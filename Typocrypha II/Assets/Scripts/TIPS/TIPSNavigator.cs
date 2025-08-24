@@ -17,18 +17,20 @@ public class TIPSNavigator : MonoBehaviour
 
     public Action OnExit;
 
-    public enum Focus { searchbar = 0, topics = 1, content = 2 }
+    public enum Focus { searchbar = 0, topics = 1}
 
     public Focus CurrentFocus { get; private set; }
 
     private EventSystem currentEventSystem;
+    private TIPSEntryData currentEntry;
+    private int contentPage;
 
 
     private void Awake()
     {
         currentEventSystem = EventSystem.current;
         if (searchbar) searchbar.OnSearchCast.AddListener(HandleSearchInput);
-        topicStack.OnButtonSelected += DisplayEntry;
+        topicStack.OnButtonSelected += DisplayEntryOnSelect;
     }
 
     public void InitializeFocus()
@@ -60,12 +62,28 @@ public class TIPSNavigator : MonoBehaviour
             }
         }
 
-        if ((CurrentFocus == Focus.topics || CurrentFocus == Focus.content) && new Regex("[A-Za-z\b]+").IsMatch(Input.inputString))
+        if (CurrentFocus == Focus.topics)
         {
-            FocusOnSearchbar();
-            searchbar.ProcessInput(Input.inputString);
+            if (new Regex("[A-Za-z\b]+").IsMatch(Input.inputString))
+            {
+                FocusOnSearchbar();
+                searchbar.ProcessInput(Input.inputString);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+                {
+                    DisplayEntryPagePrev();
+                }
+                else
+                {
+                    DisplayEntryPageNext();
+                }
+            }
         }
 
+        // Navigate out of stack and back to visual novel
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (topicStack.currentLayer > TIPSTopicStack.Layer.Top)
@@ -133,10 +151,27 @@ public class TIPSNavigator : MonoBehaviour
         topicStack.JumpToEntry(entry);
     }
 
-    protected virtual void DisplayEntry(TIPSEntryData entry)
+    protected virtual void DisplayEntryOnSelect(TIPSEntryData entry)
     {
-        entryPanel.SetTitle(entry.Title);
-        entryPanel.SetContent(entry.Content);
+        DisplayEntry(entryPanel, currentEntry = entry, contentPage = 0);
+    }
+
+    protected virtual void DisplayEntryPageNext()
+    {
+        DisplayEntry(entryPanel, currentEntry, ++contentPage);
+    }
+
+    protected virtual void DisplayEntryPagePrev()
+    {
+        DisplayEntry(entryPanel, currentEntry, --contentPage);
+    }
+
+    protected static void DisplayEntry(TIPSEntryPanel panel, TIPSEntryData entry, int page)
+    {
+        panel.SetTitle(entry.Title);
+
+        var paginatedContent = Regex.Split(entry.Content, "{br}");
+        panel.SetContent(paginatedContent[page % paginatedContent.Length].Trim());
     }
 
 }

@@ -37,8 +37,8 @@ public class TIPSBundleParser {
                 if (!Directory.Exists(entryPath)) Directory.CreateDirectory(entryPath);
 
                 var entry = ScriptableObject.CreateInstance<TIPSEntryData>();
-                AssetDatabase.CreateAsset(entry, "Assets/" + entryPath);
                 entry.Content = values[4];
+                AssetDatabase.CreateAsset(entry, "Assets/" + entryPath);
             }
         }
         TIPSBundleLoader.LoadTIPSBundles();
