@@ -95,6 +95,7 @@ public class DialogScriptParser
         {"addSpells", typeof(AddEquippedSpellsNode) },
         {"wait", typeof(PauseNode) },
         {"battleEvent", typeof(TriggerBattleEventNode) },
+        {"tips", typeof(TIPsEntryUnlockNode) },
     };
 
     // Generic node ID map. types that have entries in this map and the nodeMap can be created without additional parsing code
@@ -685,6 +686,24 @@ public class DialogScriptParser
             }
             battleEventNode.battleEventId = args[1];
             nodes.Add(battleEventNode);
+        }
+        else if (nodeType == typeof(TIPsEntryUnlockNode))
+        {
+            var tipsEntryNode = CreateNode(canvas, TIPsEntryUnlockNode.Id) as TIPsEntryUnlockNode;
+            if (args.Length < 2)
+            {
+                throw new System.Exception($"Incorrect number of args for tips entry unlock node ({args.Length - 1}). Expected at least 2");
+            }
+            tipsEntryNode.entry1 = args[1];
+            if (args.Length >= 3)
+            {
+                tipsEntryNode.entry2 = args[2];
+            }
+            if (args.Length >= 4)
+            {
+                tipsEntryNode.entry3 = args[3];
+            }
+            nodes.Add(tipsEntryNode);
         }
         else
         {

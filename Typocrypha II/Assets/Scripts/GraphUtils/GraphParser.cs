@@ -69,6 +69,16 @@ public abstract class GraphParser : MonoBehaviour
             PlayerDataManager.instance.ShopData.UnlockShopCodes(shopUnlockNode.unlockCodes);
             return true;
         }
+        if (node is TIPsEntryUnlockNode tipsEntryUnlockNode)
+        {
+            foreach(var entry in tipsEntryUnlockNode.Entries)
+            {
+                if (!string.IsNullOrEmpty(entry))
+                {
+                    TIPSManager.Instance.UnlockEntryIfApplicable(entry);
+                }
+            }
+        }
         if (node is SetBackgroundNode setBgNode)
         {
             if (setBgNode.bgType == SetBackgroundNode.BgType.Sprite)
