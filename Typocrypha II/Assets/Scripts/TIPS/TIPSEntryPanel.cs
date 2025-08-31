@@ -6,6 +6,8 @@ public class TIPSEntryPanel : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI title;
     [SerializeField] TextMeshProUGUI content;
+    [SerializeField] TextMeshProUGUI page;
+    [SerializeField] DialogContinueIndicator paginationIndicator;
 
     private readonly List<MonoBehaviour> dummy = new List<MonoBehaviour>();
 
@@ -27,4 +29,21 @@ public class TIPSEntryPanel : MonoBehaviour
                 createEvents:false
             );
     }
+
+    public void ShowPaginationIndicator()
+    {
+        paginationIndicator.Activate();
+    }
+
+    public void HidePaginationIndicator()
+    {
+        paginationIndicator.StopAnimation();
+    }
+
+    public void ReverseIndicator(bool onLastPage)
+    {
+        paginationIndicator.transform.localScale = new Vector2 (1, onLastPage ? -1 : 1);
+    }
+
+    public void DisplayPageNum(int cur, int max) => page.text = $"{cur}/{max}";
 }

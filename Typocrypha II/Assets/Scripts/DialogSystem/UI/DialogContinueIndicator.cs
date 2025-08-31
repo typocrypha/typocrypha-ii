@@ -73,7 +73,7 @@ public class DialogContinueIndicator : MonoBehaviour
             .SetLoops(-1, LoopType.Yoyo);
     }
 
-    private void StopAnimation()
+    public void StopAnimation()
     {
         if (activeMoveTween != null)
         {

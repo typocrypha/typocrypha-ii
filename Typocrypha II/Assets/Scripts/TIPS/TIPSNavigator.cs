@@ -17,7 +17,7 @@ public class TIPSNavigator : MonoBehaviour
 
     public Action OnExit;
 
-    public enum Focus { searchbar = 0, topics = 1}
+    public enum Focus { searchbar = 0, topics = 1 }
 
     public Focus CurrentFocus { get; private set; }
 
@@ -48,7 +48,7 @@ public class TIPSNavigator : MonoBehaviour
     {
         if (CurrentFocus == Focus.searchbar)
         {
-            if(Input.GetAxisRaw("Vertical") != 0)
+            if (Input.GetAxisRaw("Vertical") != 0)
             {
                 FocusOnTopics(true);
             }
@@ -168,10 +168,22 @@ public class TIPSNavigator : MonoBehaviour
 
     protected static void DisplayEntry(TIPSEntryPanel panel, TIPSEntryData entry, int page)
     {
-        panel.SetTitle(entry.Title);
-
         var paginatedContent = Regex.Split(entry.Content, "{br}");
-        panel.SetContent(paginatedContent[page % paginatedContent.Length].Trim());
+        var pageIndex = (page % paginatedContent.Length + paginatedContent.Length) % paginatedContent.Length;
+
+        panel.SetTitle(entry.Title);
+        panel.SetContent(paginatedContent[pageIndex].Trim());
+        panel.DisplayPageNum(pageIndex + 1, paginatedContent.Length);
+
+        if (paginatedContent.Length > 1)
+        {
+            panel.ShowPaginationIndicator();
+            panel.ReverseIndicator(pageIndex == paginatedContent.Length - 1);
+        }
+        else
+        {
+            panel.HidePaginationIndicator();
+        }
     }
 
 }
