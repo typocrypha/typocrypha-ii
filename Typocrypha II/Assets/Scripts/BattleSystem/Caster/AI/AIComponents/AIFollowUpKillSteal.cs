@@ -39,9 +39,9 @@ public class AIFollowUpKillSteal : AIComponent
         }
         foreach (var enemy in Battlefield.instance.Enemies)
         {
-            if (enemy.IsDeadOrFled || enemy.BStatus == Caster.BattleStatus.SpiritMode)
+            if (enemy.IsDeadOrFled || enemy.BStatus == Caster.BattleStatus.SpiritMode || enemy.FieldPos == Battlefield.instance.Player.TargetPos)
                 continue;
-            if (RandomUtils.RandomU.instance.RandomDouble() < 0.05)
+            if (RandomUtils.RandomU.instance.RandomDouble() < 0.075)
             {
                 AllyBattleBoxManager.instance.ShakeBattleBox();
                 //InsertCast(enemy.FieldPos, followUpSpell, null, string.Empty);
