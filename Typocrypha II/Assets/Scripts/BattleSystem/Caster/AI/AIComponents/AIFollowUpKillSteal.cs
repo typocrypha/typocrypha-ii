@@ -32,7 +32,6 @@ public class AIFollowUpKillSteal : AIComponent
             if(enemy.Health <= threshold)
             {
                 AllyBattleBoxManager.instance.ShakeBattleBox();
-                //InsertCast(enemy.FieldPos, followUpSpell, null, string.Empty);
                 InsertCast(enemy.FieldPos, RandomUtils.RandomU.instance.Choice(followUpSpells), null);
                 return;
             }
@@ -44,7 +43,6 @@ public class AIFollowUpKillSteal : AIComponent
             if (RandomUtils.RandomU.instance.RandomDouble() < 0.075)
             {
                 AllyBattleBoxManager.instance.ShakeBattleBox();
-                //InsertCast(enemy.FieldPos, followUpSpell, null, string.Empty);
                 InsertCast(enemy.FieldPos, RandomUtils.RandomU.instance.Choice(followUpSpells), null);
                 return;
             }
