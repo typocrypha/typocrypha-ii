@@ -41,7 +41,7 @@ public class TIPSTopicStack : MonoBehaviour
         }
     }
 
-    public void Refresh()
+    public void RefreshCurrentFolder()
     {
         if (latestFolderEntered == null)
         {

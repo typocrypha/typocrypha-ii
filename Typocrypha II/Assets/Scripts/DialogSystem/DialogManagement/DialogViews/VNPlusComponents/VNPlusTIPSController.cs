@@ -53,7 +53,6 @@ public class VNPlusTIPSController : MonoBehaviour
     {
         isOpen = true;
         PauseManager.instance.PauseAll(true, PauseSources.TIPS, PH, true);
-        navigator.Refresh();
         SequenceOpenTIPS().Play();
     }
 
@@ -76,7 +75,7 @@ public class VNPlusTIPSController : MonoBehaviour
     {
         canvasTIPS.SetActive(true);
         navigator.enabled = true;
-        navigator.InitializeFocus();
+        navigator.InitializeView();
     }
 
     public void CloseTIPS()

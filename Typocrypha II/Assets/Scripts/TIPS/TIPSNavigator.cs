@@ -5,10 +5,13 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Text.RegularExpressions;
 using System;
+using TMPro;
+using System.Linq;
 
 public class TIPSNavigator : MonoBehaviour
 {
     [Header("Internal References")]
+    [SerializeField] protected TextMeshProUGUI searchHint;
     [SerializeField] protected TIPSCastBar searchbar;
     [SerializeField] protected TIPSTopicStack topicStack;
     [SerializeField] protected TIPSEntryPanel entryPanel;
@@ -33,15 +36,18 @@ public class TIPSNavigator : MonoBehaviour
         topicStack.OnButtonSelected += DisplayEntryOnSelect;
     }
 
-    public void InitializeFocus()
+    public void InitializeView()
     {
-        searchbar.PH.Unpause(PauseSources.TIPS);
-        FocusOnSearchbar();
+        InitializeSearchbar();
+        topicStack.RefreshCurrentFolder();
     }
 
-    public void Refresh()
+    private void InitializeSearchbar()
     {
-        topicStack.Refresh();
+        searchbar.PH.Unpause(PauseSources.TIPS);
+        searchbar.Clear();
+        FocusOnSearchbar();
+        SearchbarShowHint();
     }
 
     private void Update()
@@ -56,9 +62,10 @@ public class TIPSNavigator : MonoBehaviour
             {
                 searchbar.Submit();
             }
-            else
+            else if (!string.IsNullOrEmpty(Input.inputString))
             {
                 searchbar.ProcessInput(Input.inputString);
+                SearchbarShowHint();
             }
         }
 
@@ -95,6 +102,14 @@ public class TIPSNavigator : MonoBehaviour
                 OnExit.Invoke();
             }
         }
+    }
+
+    public void SearchbarShowHint()
+    {
+        string activeEntry = DialogManager.instance.ActiveTIPsEntries.FirstOrDefault() ?? string.Empty;
+        searchHint.text = activeEntry.StartsWith(searchbar.Text, StringComparison.InvariantCultureIgnoreCase)
+            ? activeEntry
+            : string.Empty;
     }
 
     public void FocusOnSearchbar()
