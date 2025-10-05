@@ -32,7 +32,7 @@ public class TIPSEntryData : ScriptableObject
     [Multiline(10)] public string Content;
 
     public const string BASE_ASSET_PATH = "ScriptableObjects/TIPS";
-    public string[] Categorization => RelativePath.Split('\\');
+    public string[] Categorization => RelativePath.Trim('\\'). Split('\\');
     public static string PathToTIPS => Path.Combine(Application.dataPath, BASE_ASSET_PATH);
 
     public bool MatchTitlePartial(string query)
