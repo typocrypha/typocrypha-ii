@@ -25,6 +25,27 @@ namespace RandomUtils
         public int RandomInt(int min, int max) => rand.Next(min, max);
         /// <summary> Generate a double in between 0.0 (inclusive) and 1 (exclusive) </summary>
         public double RandomDouble() => rand.NextDouble();
+        public bool RandomBool() => rand.Next(2) == 1;
+
+        #endregion
+
+        #region Utility Functions
+
+        /// <summary>
+        /// Returns true if a generated double is less than the success chance
+        /// Shortcuts if successchance is <= 0 or >= 1, and does not generate a number
+        /// </summary>
+        /// <param name="successChance">Range: 0.0 - 1.0 </param>
+        /// <returns></returns>
+        public bool RollSuccess(double successChance)
+        {
+            if (successChance <= 0)
+                return false;
+            if (successChance >= 1)
+                return true;
+            return RandomDouble() < successChance;
+        }
+
         #endregion
 
         #region Random Choice from a collection (With options for weighting)
