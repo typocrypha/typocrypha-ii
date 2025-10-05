@@ -1,5 +1,37 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &9050216342376580135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6673564152387512629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ed03fdb1761e8b40b0cf7efdc754017, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackingSpells:
+  - items:
+    - {fileID: 11400000, guid: 2b6421f45a0cae946b6424a92eb51aed, type: 2}
+    castTimeOverride: 0
+  - items:
+    - {fileID: 11400000, guid: 2a9b4b794a076314481d2a063aace461, type: 2}
+    castTimeOverride: 0
+  - items:
+    - {fileID: 11400000, guid: 688dc6f9c4387044c91074fc3d94f833, type: 2}
+    castTimeOverride: 0
+  healSpell:
+    items:
+    - {fileID: 11400000, guid: f14650fe0a3b2ed4bac601fd49b63597, type: 2}
+    castTimeOverride: -1
+  clearKeyEffectsSpell:
+    items:
+    - {fileID: 11400000, guid: 0b35c42bc0c806f4684f5e4889ef0068, type: 2}
+    castTimeOverride: -1
+  baseChargeTime: 5
+  chargeTimeVariance: 2
 --- !u!1001 &5680429254519739132
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10,7 +42,7 @@ PrefabInstance:
     - target: {fileID: 1317781670869629897, guid: 16309cf42915d9e4dad64552e00d723a,
         type: 3}
       propertyPath: m_Name
-      value: AllyDahlia
+      value: AllyDahliaActI-18
       objectReference: {fileID: 0}
     - target: {fileID: 1317781670869629901, guid: 16309cf42915d9e4dad64552e00d723a,
         type: 3}
@@ -132,5 +164,71 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1317781670869629890, guid: 16309cf42915d9e4dad64552e00d723a,
+        type: 3}
+      propertyPath: tags.statMod.atk.statRange.min
+      value: -20
+      objectReference: {fileID: 0}
+    - target: {fileID: 1317781670869629890, guid: 16309cf42915d9e4dad64552e00d723a,
+        type: 3}
+      propertyPath: tags.statMod.atk.statRange.max
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 1317781670869629890, guid: 16309cf42915d9e4dad64552e00d723a,
+        type: 3}
+      propertyPath: tags.statMod.def.statRange.min
+      value: -20
+      objectReference: {fileID: 0}
+    - target: {fileID: 1317781670869629890, guid: 16309cf42915d9e4dad64552e00d723a,
+        type: 3}
+      propertyPath: tags.statMod.def.statRange.max
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 1317781670869629890, guid: 16309cf42915d9e4dad64552e00d723a,
+        type: 3}
+      propertyPath: tags.statMod.spd.statRange.min
+      value: -20
+      objectReference: {fileID: 0}
+    - target: {fileID: 1317781670869629890, guid: 16309cf42915d9e4dad64552e00d723a,
+        type: 3}
+      propertyPath: tags.statMod.spd.statRange.max
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 1317781670869629890, guid: 16309cf42915d9e4dad64552e00d723a,
+        type: 3}
+      propertyPath: tags.statMod.acc.statRange.min
+      value: -20
+      objectReference: {fileID: 0}
+    - target: {fileID: 1317781670869629890, guid: 16309cf42915d9e4dad64552e00d723a,
+        type: 3}
+      propertyPath: tags.statMod.acc.statRange.max
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 1317781670869629890, guid: 16309cf42915d9e4dad64552e00d723a,
+        type: 3}
+      propertyPath: tags.statMod.evade.statRange.min
+      value: -20
+      objectReference: {fileID: 0}
+    - target: {fileID: 1317781670869629890, guid: 16309cf42915d9e4dad64552e00d723a,
+        type: 3}
+      propertyPath: tags.statMod.evade.statRange.max
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 1317781670869629890, guid: 16309cf42915d9e4dad64552e00d723a,
+        type: 3}
+      propertyPath: tags.statMod.luck.statRange.min
+      value: -20
+      objectReference: {fileID: 0}
+    - target: {fileID: 1317781670869629890, guid: 16309cf42915d9e4dad64552e00d723a,
+        type: 3}
+      propertyPath: tags.statMod.luck.statRange.max
+      value: 20
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 16309cf42915d9e4dad64552e00d723a, type: 3}
+--- !u!1 &6673564152387512629 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1317781670869629897, guid: 16309cf42915d9e4dad64552e00d723a,
+    type: 3}
+  m_PrefabInstance: {fileID: 5680429254519739132}
+  m_PrefabAsset: {fileID: 0}
