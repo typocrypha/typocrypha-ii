@@ -59,7 +59,7 @@ public static class Damage
     private static CastResults StandardHealApplied(DamageEffect effect, Caster caster, Caster target, DamageModifier mod, RootCastData spellData)
     {
         var results = StandardHeal(effect, caster, target, mod, spellData);
-        ApplyStandard(results, effect, caster, target, spellData);
+        ApplyStandardHeal(results, effect, caster, target, spellData);
         return results;
     }
 
@@ -323,6 +323,16 @@ public static class Damage
         ApplyDamage(results, effect, caster, target);
         ApplyStaggerDamage(results, effect, caster, target);
         ApplyKeyboardEffects(results, effect, caster, target);
+    }
+
+    public static void ApplyStandardHeal(CastResults results, RootWordEffect effect, Caster caster, Caster target, RootCastData spellData)
+    {
+        target.OnBeforeHitResolved?.Invoke(effect, caster, target, spellData, results);
+        if (results.Miss)
+            return;
+        if (ApplyReflect(results, effect, caster, target, spellData))
+            return;
+        target.Heal(Mathf.FloorToInt(-results.Damage));
     }
 
     public static bool ApplyReflect(CastResults results, RootWordEffect effect, Caster caster, Caster target, RootCastData spellData)
