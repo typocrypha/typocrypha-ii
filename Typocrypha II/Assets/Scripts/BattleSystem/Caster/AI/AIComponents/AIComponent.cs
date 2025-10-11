@@ -42,7 +42,7 @@ public abstract class AIComponent : MonoBehaviour
         caster.Charge = 0;
     }
 
-    protected void CastAtRandomTarget(IEnumerable<Caster> targets, IReadOnlyList<Spell> spellOptions)
+    protected void CastAtRandomTarget(IEnumerable<Caster> targets, IReadOnlyList<Spell> spellOptions, bool canCounter = false)
     {
         var enemyChoices = new List<Caster>(targets);
         enemyChoices.RemoveAll(IsNotValidTarget);
@@ -50,7 +50,7 @@ public abstract class AIComponent : MonoBehaviour
             return;
         var target = RandomUtils.RandomU.instance.Choice(enemyChoices);
         AllyBattleBoxManager.instance.ShakeBattleBox();
-        QueueCast(target.FieldPos, RandomUtils.RandomU.instance.Choice(spellOptions), null);
+        QueueCast(target.FieldPos, RandomUtils.RandomU.instance.Choice(spellOptions), canCounter, null);
     }
 
     private static bool IsNotValidTarget(Caster caster)
@@ -58,22 +58,23 @@ public abstract class AIComponent : MonoBehaviour
         return caster.IsDeadOrFled || caster.BStatus == Caster.BattleStatus.SpiritMode;
     }
 
-    protected void InsertCast(Battlefield.Position spellTargetPosition, Spell spellToCast, System.Action onComplete = null, string messageOverride = null)
+    protected void InsertCast(Battlefield.Position spellTargetPosition, Spell spellToCast, bool canCounter = false, System.Action onComplete = null, string messageOverride = null)
     {
-        var castFn = GetCastFunction(spellTargetPosition, spellToCast, messageOverride);
+        var castFn = GetCastFunction(spellTargetPosition, spellToCast, canCounter, messageOverride);
         ATBManager.instance.InsertSolo(new ATBManager.ATBAction() { Actor = GetComponent<ATBActor>(), Action = castFn, OnComplete = onComplete });
     }
 
-    protected void QueueCast(Battlefield.Position spellTargetPosition, Spell spellToCast, System.Action onComplete = null, string messageOverride = null)
+    protected void QueueCast(Battlefield.Position spellTargetPosition, Spell spellToCast, bool canCounter = false, System.Action onComplete = null, string messageOverride = null)
     {
-        var castFn = GetCastFunction(spellTargetPosition, spellToCast, messageOverride);
+        var castFn = GetCastFunction(spellTargetPosition, spellToCast, canCounter, messageOverride);
         ATBManager.instance.QueueSolo(new ATBManager.ATBAction() { Actor = GetComponent<ATBActor>(), Action = castFn, OnComplete = onComplete });
     }
 
-    private System.Func<Coroutine> GetCastFunction(Battlefield.Position spellTargetPosition, Spell spellToCast, string messageOverride)
+    private System.Func<Coroutine> GetCastFunction(Battlefield.Position spellTargetPosition, Spell spellToCast, bool canCounter, string messageOverride)
     {
         var spell = spellToCast;
         var targetPos = spellTargetPosition;
+        var counter = canCounter;
         bool topLevel = !ATBManager.instance.ProcessingActions;
         Coroutine CastFn()
         {
@@ -83,6 +84,10 @@ public abstract class AIComponent : MonoBehaviour
             var actor = caster.GetComponent<ATBActor>();
             if (actor != null)
                 actor.isCast = true;
+            if (counter)
+            {
+                return SpellManager.instance.CastAndCounter(spell, caster, targetPos, messageOverride, topLevel);
+            }
             return SpellManager.instance.Cast(spell, caster, targetPos, messageOverride, topLevel);
         }
         return CastFn;

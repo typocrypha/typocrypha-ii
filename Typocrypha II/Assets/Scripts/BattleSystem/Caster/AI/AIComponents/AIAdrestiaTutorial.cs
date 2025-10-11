@@ -46,7 +46,7 @@ public class AIAdrestiaTutorial : AIComponent
         }
         if (Battlefield.instance.ValidReinforcementPositions.Count > 0)
         {
-            QueueCast(caster.FieldPos, callAlliesSpell, null, $"{caster.DisplayName} summons an ally!");
+            QueueCast(caster.FieldPos, callAlliesSpell, false, null, $"{caster.DisplayName} summons an ally!");
             return;
         }
         // Check for clearable allies
@@ -54,7 +54,7 @@ public class AIAdrestiaTutorial : AIComponent
         {
             if (other != caster && other.CasterState == caster.CasterState && other.BStatus == Caster.BattleStatus.SpiritMode)
             {
-                QueueCast(caster.FieldPos, clearAndCallAlliesSpell, null, $"{caster.DisplayName} summons an ally!");
+                QueueCast(caster.FieldPos, clearAndCallAlliesSpell, false, null, $"{caster.DisplayName} summons an ally!");
                 return;
             }
         }
@@ -71,7 +71,7 @@ public class AIAdrestiaTutorial : AIComponent
         {
             return;
         }
-        QueueCast(caster.FieldPos, enrageAlliesSpell, null, $"{caster.DisplayName}'s allies were filled with vengeance!");
+        QueueCast(caster.FieldPos, enrageAlliesSpell, false, null, $"{caster.DisplayName}'s allies were filled with vengeance!");
     }
 
     private void AfterCastResolved(Spell s, Caster caster, bool hitTarget)

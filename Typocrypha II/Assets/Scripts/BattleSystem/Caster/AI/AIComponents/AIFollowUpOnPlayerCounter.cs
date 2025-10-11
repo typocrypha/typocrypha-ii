@@ -7,6 +7,7 @@ public class AIFollowUpOnPlayerCounter : AIComponent
 {
     [SerializeField] private Spell followUpSpell;
     [SerializeField] private List<Caster> targetFilter;
+    [SerializeField] private bool canCounter = true;
 
     protected override void AddListeners()
     {
@@ -24,7 +25,7 @@ public class AIFollowUpOnPlayerCounter : AIComponent
         if (!fullCounter || caster.IsDeadOrFled || !PassesFilter(countered))
             return;
         AllyBattleBoxManager.instance.ShakeBattleBox();
-        InsertCast(countered.FieldPos, followUpSpell, null, string.Empty);
+        InsertCast(countered.FieldPos, followUpSpell, canCounter, null, string.Empty);
     }
 
     private bool PassesFilter(Caster countered)

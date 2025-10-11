@@ -29,13 +29,13 @@ public class AIIllyiaTeamwork : AIAllyRandomTimer
             if (enemy.Health <= threshold && enemy.ChargeNormalized >= 0.9f)
             {
                 AllyBattleBoxManager.instance.ShakeBattleBox();
-                QueueCast(enemy.FieldPos, RandomUtils.RandomU.instance.Choice(followUpSpells), null);
+                QueueCast(enemy.FieldPos, RandomUtils.RandomU.instance.Choice(followUpSpells), true);
                 return;
             }
         }
         if (RandomUtils.RandomU.instance.RollSuccess(0.2))
         {
-            CastAtRandomTarget(Battlefield.instance.Enemies, followUpSpells);
+            CastAtRandomTarget(Battlefield.instance.Enemies, followUpSpells, true);
         }
     }
 
@@ -43,6 +43,6 @@ public class AIIllyiaTeamwork : AIAllyRandomTimer
     {
         if (!hitTarget || !RandomUtils.RandomU.instance.RollSuccess(0.1))
             return;
-        CastAtRandomTarget(Battlefield.instance.Enemies, followUpSpells);
+        CastAtRandomTarget(Battlefield.instance.Enemies, followUpSpells, true);
     }
 }

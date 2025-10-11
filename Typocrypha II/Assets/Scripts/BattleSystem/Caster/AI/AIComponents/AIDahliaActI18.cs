@@ -14,16 +14,16 @@ public class AIDahliaActI18 : AIAllyRandomTimer
         if (RandomUtils.RandomU.instance.RollSuccess((1 - ((double)player.Health / player.Stats.MaxHP)) * 2))
         {
             AllyBattleBoxManager.instance.ShakeBattleBox();
-            QueueCast(player.FieldPos, healSpell, null);
+            QueueCast(player.FieldPos, healSpell, true);
             return;
         }
         if (Typocrypha.Keyboard.instance.allEffects.Count >= RandomUtils.RandomU.instance.RandomInt(1, 8))
         {
             AllyBattleBoxManager.instance.ShakeBattleBox();
-            QueueCast(player.FieldPos, clearKeyEffectsSpell, null);
+            QueueCast(player.FieldPos, clearKeyEffectsSpell, true);
             return;
         }
-        CastAtRandomTarget(Battlefield.instance.Enemies, attackingSpells);
+        CastAtRandomTarget(Battlefield.instance.Enemies, attackingSpells, true);
     }
 
 
