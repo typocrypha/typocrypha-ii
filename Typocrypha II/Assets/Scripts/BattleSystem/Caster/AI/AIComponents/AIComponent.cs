@@ -42,6 +42,22 @@ public abstract class AIComponent : MonoBehaviour
         caster.Charge = 0;
     }
 
+    protected void CastAtRandomTarget(IEnumerable<Caster> targets, IReadOnlyList<Spell> spellOptions)
+    {
+        var enemyChoices = new List<Caster>(targets);
+        enemyChoices.RemoveAll(IsNotValidTarget);
+        if (enemyChoices.Count <= 0)
+            return;
+        var target = RandomUtils.RandomU.instance.Choice(enemyChoices);
+        AllyBattleBoxManager.instance.ShakeBattleBox();
+        InsertCast(target.FieldPos, RandomUtils.RandomU.instance.Choice(spellOptions), null);
+    }
+
+    private static bool IsNotValidTarget(Caster caster)
+    {
+        return caster.IsDeadOrFled || caster.BStatus == Caster.BattleStatus.SpiritMode;
+    }
+
     protected void InsertCast(Battlefield.Position spellTargetPosition, Spell spellToCast, System.Action onComplete = null, string messageOverride = null)
     {
         var castFn = GetCastFunction(spellTargetPosition, spellToCast, messageOverride);

@@ -261,6 +261,7 @@ public class Caster : MonoBehaviour
         }
     }
     float charge; // Charge amount (seconds) for enemies
+    public float ChargeNormalized => charge / ChargeTime;
     #endregion
 
     #region Research + Scouter
