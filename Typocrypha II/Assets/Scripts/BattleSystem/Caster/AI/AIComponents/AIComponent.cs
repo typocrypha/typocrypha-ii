@@ -50,7 +50,7 @@ public abstract class AIComponent : MonoBehaviour
             return;
         var target = RandomUtils.RandomU.instance.Choice(enemyChoices);
         AllyBattleBoxManager.instance.ShakeBattleBox();
-        InsertCast(target.FieldPos, RandomUtils.RandomU.instance.Choice(spellOptions), null);
+        QueueCast(target.FieldPos, RandomUtils.RandomU.instance.Choice(spellOptions), null);
     }
 
     private static bool IsNotValidTarget(Caster caster)

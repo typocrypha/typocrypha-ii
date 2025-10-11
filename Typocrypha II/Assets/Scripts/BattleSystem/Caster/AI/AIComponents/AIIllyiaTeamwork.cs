@@ -29,7 +29,7 @@ public class AIIllyiaTeamwork : AIAllyRandomTimer
             if (enemy.Health <= threshold && enemy.ChargeNormalized >= 0.9f)
             {
                 AllyBattleBoxManager.instance.ShakeBattleBox();
-                InsertCast(enemy.FieldPos, RandomUtils.RandomU.instance.Choice(followUpSpells), null);
+                QueueCast(enemy.FieldPos, RandomUtils.RandomU.instance.Choice(followUpSpells), null);
                 return;
             }
         }
