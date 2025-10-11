@@ -296,9 +296,6 @@ namespace Typocrypha
             }
         }
 
-        /// <summary>
-        /// Removes all key effects and stops overheat
-        /// </summary>
         public void ClearKeyEffects()
         {
             foreach(var key in allEffects.Keys.ToArray())
@@ -307,6 +304,9 @@ namespace Typocrypha
             }
         }
 
+        /// <summary>
+        /// Removes all key effects and stops overheat
+        /// </summary>
         public void Clear()
         {
             ClearKeyEffects();
