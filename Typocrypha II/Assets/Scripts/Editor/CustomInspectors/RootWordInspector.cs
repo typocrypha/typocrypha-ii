@@ -59,8 +59,6 @@ public class RootWordInspector : SpellWordInspector
     {
         // Icon field
         var word = target as RootWord;
-        word.icon = EditorUtils.ObjectField(new GUIContent("Icon"), word.icon, false);
-        EditorUtils.Separator();
         base.OnInspectorGUI();
         rList.DoLayoutList();
         if (GUI.changed)

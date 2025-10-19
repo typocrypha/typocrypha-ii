@@ -20,6 +20,8 @@ public class SpellWordInspector : Editor
             }
         }
         EditorUtils.Separator();
+        word.icon = EditorUtils.ObjectField(new GUIContent("Icon"), word.icon, false);
+        EditorUtils.Separator();
         EditorGUILayout.LabelField(new GUIContent("Description"), EditorUtils.BoldCentered);
         word.description = EditorGUILayout.TextArea(word.description, new GUIStyle(GUI.skin.textArea) { wordWrap = true }, GUILayout.MinHeight(EditorGUIUtility.singleLineHeight * 2));
         EditorGUILayout.LabelField(new GUIContent("Flavor Text"), EditorUtils.BoldCentered);
