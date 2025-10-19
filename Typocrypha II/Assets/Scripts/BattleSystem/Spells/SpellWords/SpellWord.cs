@@ -18,6 +18,7 @@ public abstract class SpellWord : ScriptableObject
     public string Key => internalName.ToLower();
     public string internalName;
     public string description;
+    public string flavorText;
     public float cost;
     public int cooldown = 3;
     public Category category;
