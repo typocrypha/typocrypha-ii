@@ -211,7 +211,7 @@ public class SaveManager : MonoBehaviour
         // Unlocked TIPS Entries
         foreach (var entry in TIPSManager.Instance.UnlockedEntries.Values)
         {
-            data.unlockedTIPSEntries.Add(entry.Title);
+            data.unlockedTIPSEntries.Add(entry.ID);
         }
 
         return data;

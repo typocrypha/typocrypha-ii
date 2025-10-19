@@ -12,54 +12,50 @@ using UnityEditor;
 [System.Serializable]
 public class TIPSEntryData : ScriptableObject
 {
-    /*** Old Stuff
-     * 
-     * public NameSet searchTerms; // Set of all searchable terms.
-     * public GameObject entryPrefab; // Prefab object for the entry.
-     * 
-     ***/
     [Header("Validated Properties")]
-    public string Title;
+    public string ID;
     public string Parent;
     public string RelativePath;
     public int Depth;
     public bool IsFolder;
     public bool CreateFolder;
 
-
     [Header("Manual Properties")]
     [Space(10)]
-    [Multiline(10)] public string Content;
+    [TextArea(10, 3)] public string Content;
+    [TextArea(5, 3)] public string Footer;
 
     public const string BASE_ASSET_PATH = "ScriptableObjects/TIPS";
     public string[] Categorization => RelativePath.Trim('\\'). Split('\\');
     public static string PathToTIPS => Path.Combine(Application.dataPath, BASE_ASSET_PATH);
 
+    public virtual string Title => ID;
+
     public bool MatchTitlePartial(string query)
     {
-        return Title?.IndexOf(query, StringComparison.OrdinalIgnoreCase) > -1;
+        return ID?.IndexOf(query, StringComparison.OrdinalIgnoreCase) > -1;
     }
 
     public bool MatchTitleExact(string query)
     {
-        return string.Equals(Title, query, StringComparison.OrdinalIgnoreCase);
+        return string.Equals(ID, query, StringComparison.OrdinalIgnoreCase);
     }
 
-    public void OnValidate()
+    public virtual void OnValidate()
     {
         // Important paths
         var pathToEntry = AssetDatabase.GetAssetPath(GetInstanceID());
         if (string.IsNullOrEmpty(pathToEntry)) return;
-        Title = Path.GetFileNameWithoutExtension(pathToEntry);
+        ID = Path.GetFileNameWithoutExtension(pathToEntry);
 
         var pathToParent = new FileInfo(pathToEntry).DirectoryName;
         Parent = Path.GetFileNameWithoutExtension(pathToParent);
 
         // Handle folder fields
-        IsFolder = new DirectoryInfo(Path.Combine(pathToParent, Title)).Exists;
+        IsFolder = new DirectoryInfo(Path.Combine(pathToParent, ID)).Exists;
         if (!IsFolder && CreateFolder)
         {
-            Directory.CreateDirectory(Path.Combine(pathToParent, Title));
+            Directory.CreateDirectory(Path.Combine(pathToParent, ID));
             AssetDatabase.Refresh();
         }
         CreateFolder = false;

@@ -29,8 +29,8 @@ public static class TIPSBundleLoader
             foreach (var entry in incomingEntries)
             {
                 entry.OnValidate();
-                if (!bundle.entries.ContainsKey(entry.Title))
-                    bundle.entries.Add(entry.Title, entry);
+                if (!bundle.entries.ContainsKey(entry.ID))
+                    bundle.entries.Add(entry.ID, entry);
             }
             EditorUtility.SetDirty(bundle);
         }

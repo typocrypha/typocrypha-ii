@@ -63,7 +63,7 @@ public class TIPSManager : MonoBehaviour
     {
         if (!EntryExists(title)) return;
         if (EntryIsUnlocked(title)) return;
-        unlockedEntries.Add(allTIPS.entries[title].Title, allTIPS.entries[title]);
+        unlockedEntries.Add(allTIPS.entries[title].ID, allTIPS.entries[title]);
         UnlockEntryIfApplicable(allTIPS.entries[title].Parent);
     }
 

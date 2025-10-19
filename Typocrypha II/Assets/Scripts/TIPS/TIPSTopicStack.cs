@@ -48,7 +48,7 @@ public class TIPSTopicStack : MonoBehaviour
             panelTop.LoadEntriesInFolder(rootFolderName);
             return;
         }
-        GetCurrentPanel().LoadEntriesInFolder(latestFolderEntered.Title);
+        GetCurrentPanel().LoadEntriesInFolder(latestFolderEntered.ID);
     }
 
     public Sequence JumpToLayer(Layer target, float duration = 0.33f)
@@ -98,7 +98,7 @@ public class TIPSTopicStack : MonoBehaviour
         if (!entry.IsFolder) return;
         StepToNextLayer();
         var current = GetCurrentPanel();
-        current.LoadEntriesInFolder(entry.Title);
+        current.LoadEntriesInFolder(entry.ID);
         current.SelectTopicPageTop();
         latestFolderEntered = entry;
     }
@@ -108,7 +108,7 @@ public class TIPSTopicStack : MonoBehaviour
         JumpToLayer((Layer)entry.Depth);
         var current = GetCurrentPanel();
         current.LoadEntriesInFolder(entry.Parent);
-        current.SelectEntry(entry.Title);
+        current.SelectEntry(entry.ID);
 
         if (currentLayer == Layer.Aux)
         {
@@ -125,7 +125,7 @@ public class TIPSTopicStack : MonoBehaviour
         StepToPreviousLayer();
         var current = GetCurrentPanel();
         current.LoadEntriesInFolder(latestFolderEntered.Parent);
-        current.SelectEntry(latestFolderEntered.Title);
+        current.SelectEntry(latestFolderEntered.ID);
         latestFolderEntered = TIPSManager.Instance.GetEntry(latestFolderEntered.Parent);
     }
 

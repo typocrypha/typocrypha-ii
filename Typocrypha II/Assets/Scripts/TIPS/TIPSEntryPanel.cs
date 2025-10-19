@@ -6,6 +6,7 @@ public class TIPSEntryPanel : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI title;
     [SerializeField] TextMeshProUGUI content;
+    [SerializeField] TextMeshProUGUI footer;
     [SerializeField] TextMeshProUGUI page;
     [SerializeField] DialogContinueIndicator paginationIndicator;
 
@@ -15,6 +16,7 @@ public class TIPSEntryPanel : MonoBehaviour
     {
         title.text = text;
     }
+
     public void SetContent(string text)
     {
         FXText.TMProEffect.Cleanup(dummy);
@@ -28,6 +30,11 @@ public class TIPSEntryPanel : MonoBehaviour
                 tipsEntries: out var _,
                 createEvents:false
             );
+    }
+
+    public void SetFooter(string text)
+    {
+        footer.text = text;
     }
 
     public void ShowPaginationIndicator()

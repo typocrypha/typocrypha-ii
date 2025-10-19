@@ -58,8 +58,8 @@ public class TIPSTopicPanel : MonoBehaviour
         {
             var button = buttons[i]; ;
             var entry = currTopics[i + page * PageSize];
-            button.SetText(entry.Title);
-            button.gameObject.name = entry.Title;
+            button.SetText(entry.ID);
+            button.gameObject.name = entry.ID;
 
             // Setup listeners
             button.button.onClick.RemoveAllListeners();
