@@ -22,6 +22,7 @@ public abstract class SpellWord : ScriptableObject
     public int cooldown = 3;
     public Category category;
     public SpellWord synonymOf;
+    public Sprite icon; // Icon displayed when charging up spell.
 
     public bool IsSynonym => synonymOf != null;
     public bool IsDebug => Key == "debug" || IsSynonym && synonymOf.Key == "debug";
