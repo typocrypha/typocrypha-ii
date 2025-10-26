@@ -104,12 +104,32 @@ public class DialogManager : MonoBehaviour, IPausable
         }
     }
 
+#if DEBUG
+    private int skipCount;
+#endif
+
     void Update()
     {
 #if DEBUG
         if (!isBattle && Input.GetKeyDown(KeyCode.S))
         {
             StartDialog(false, false);
+        }
+        if(!Loading && ReadyToContinue && ActiveDialogBox != null && DialogView.ReadyToContinue && Input.GetKey(KeyCode.Space) && Input.GetKey(KeyCode.LeftShift))
+        {
+            if(++skipCount > 5)
+            {
+                skipCount = 0;
+                if (ActiveDialogBox.IsDone)
+                {
+                    NextDialog(true, false); // If dialog is done, go to next dialog
+                }
+                else
+                {
+                    ActiveDialogBox.DumpText(); // Otherwise, skip text scroll and dump current text
+                }
+            }
+
         }
 #endif
         if (Auto)
