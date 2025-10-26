@@ -14,7 +14,7 @@
 Narrator: Demons are pouring out of the station.
 
 
-Narrator: This does not look good...
+Narrator: This doesn’t look good...
 
 
 Ayin: A-Adelai!
@@ -35,7 +35,7 @@ Adelai(normal): I’ll be right here beside you!
 Demon[1,1]: Hey!{pm} What are Human soldiers doing here!?
 
 
-Ayin[0,1]: A D-Demon!?
+Ayin[0,1]: A r-real Demon!?
 
 
 Adelai[0,2]: Just remember your training,{ps} Ayin!
@@ -225,7 +225,7 @@ Adelai(teasing): Shouldn’t you use more Spells than just {c,ui-terms}SWORD{c} 
 Ayin(concerned): B-But,{ps} that’s all Clarke told me to cast...
 
 
-Adelai(serious): What.
+Adelai(serious): What...
 
 
 Adelai(caring): ...OH!{pm} Ayin,{pm} you still have your Typocrypha on Training mode!
@@ -324,7 +324,7 @@ Adelai(serious)[0,2]: Pro-tip:{pm} If you see a Spell you can normally cast not 
 
 
 >end
-//Round 5: Demon-Wave Tactics
+//Round 5: Demon-Wave Tactics[b]
 //Opening Dialog:
 >start,ACT I-4-5-Opening
 
@@ -389,23 +389,25 @@ Adrestia[1,1]: Cursed Humans,{ps} was this your doing!?
 Adelai[0,2]: Wha-!?
 
 
->castSpell,SWORD,1,2,0,1,The Demon Attacks Adelai!
+>castSpell,SWORD,1,2,0,1,The Masked Demon Attacks Adelai!
+>setpose,Adelai,injuredscuffed
+>setexpr,Adelai,pained
 
 
-Adelai[0,2](frustrated):[b] AAAAH!
-
-
->removechar,Adelai
->clearAlly,false
+Adelai[0,2]: Gh-!!
 
 
 Ayin[0,1]: A-Adelai!!
 
 
-Adrestia[1,1]: I feel the pain and suffering of my people...
+Adelai[0,2](optimistic): I-I’m OK...
+Adelai[0,2](grim): {c,whisper}(This Demon is tough...){c}
 
 
-Adrestia[1,1]: ...and that pain shall become my blade!
+Adelai[0,2]: Stay on your toes,{pm} Ayin!
+
+
+Adrestia[1,1]: You humans think you can keep pushing us around...
 
 
 >stopbgm,immediate
@@ -417,10 +419,10 @@ Adrestia[1,1]: Face my VENGEANCE!
 >playbgm,BGMBattleAdrestiaDraft1
 
 
->end
+>end[c]
 
 
-//When Ayin at 50% health[c]:
+//When Ayin at 50% health:
 >start,ACT I-4-6-AyinLow
 
 
@@ -433,19 +435,17 @@ Adrestia[1,1]: This is the END!
 Ayin[0,1]: Haa...{pm} Haa...
 
 
-Ayin[0,1]: St-Stay back!
+Ayin[0,1]: St-Stay back...!
 
 
->addchar,Adelai,0,0,left,base,frustrated[d]
+>setpose,Adelai,injuredscuffed
+>setexpr,Adelai,grim
 
 
-Adelai[0,2]: Ugh...
+Adelai[0,2]: .{pl}.{pl}.
 
 
-Ayin[0,1]: Adelai!{pm} Are you OK?
-
-
-Adelai(frustrateddistant)[0,2]: A-Ayin?{pm} You need to...{pm}run...
+Adelai[0,2](prep): A-Ayin,{pm} you need to run.
 
 
 Ayin[0,1]: N-No,{pm} Adelai I-I-I can’t!
@@ -466,7 +466,7 @@ Ayin[0,1]:{c,whisper}(I’m sorry Adelai...){c}
 >stopbgm,immediate
 
 
->setAlly,AllyIllyiaActI-18[e],Kaia,true,base,commanding
+>setAlly,AllyIllyiaActI-18[d],Kaia,true,base,commanding
 
 
 >castSpell,RAILGUN,0,1,1,2,??? casts RAILGUN!
@@ -481,10 +481,7 @@ Adrestia[1,1]: Kh-!{pm} More Humans!?
 Kaia[0,2]: Stand back citizens!
 
 
-Kaia[0,2](confident): AEIOU will handle it from-
-
-
-Kaia[0,2](commanding): Wait,{pm} Adelai!?
+Kaia[0,2](confident): AEIOU will handle it from here!
 
 
 >addchar,Adelai,0,0,left,base,serious
@@ -496,10 +493,10 @@ Adelai[0,2](serious): G-General Kaia!
 >addchar,Kaia,0,0,left,base,normal
 
 
-Kaia[0,2](normal): Fall back,{pm} Adelai.{pm} You’re wounded.
+Kaia[0,2](confident): You’ve done well holding out this long,{pm} Adelai.
 
 
-Kaia[0,2](confident): We’ll take it from here.
+Kaia[0,2](normal): Now it’s time for you to fall back.
 
 
 >addchar,Adelai,0,0,left,base,serious
@@ -526,7 +523,7 @@ Kaia[0,2](confident): Your scheme has failed!
 Adrestia[1,1]: Our...{pm}scheme!?
 
 
-Adrestia[1,1]: Grr...[f]
+Adrestia[1,1]: Grr...[e]
 
 
 >castSpell,RUN,1,2,0,1,The Demon Retreats!
@@ -534,8 +531,7 @@ Adrestia[1,1]: Grr...[f]
 
 >end
 [a]static prompt
-[b]need scuffed adelai sprite
-[c]temp event - pending full adrestria battle design
-[d]pending adelai scuffed sprite
-[e]need to create kaia caster ally prefab
-[f]textbox overlaps with spell popup
+[b]add more dialog around adelai locking in and showing off her military prowess
+[c]adelai's pose shouldnt reset to normal from battle
+[d]need to create kaia caster ally prefab
+[e]textbox overlaps with spell popup
