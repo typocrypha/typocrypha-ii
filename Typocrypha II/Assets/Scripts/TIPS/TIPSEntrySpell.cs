@@ -10,7 +10,7 @@ using UnityEngine;
 public class TIPSEntrySpell : TIPSEntryData
 {
     public SpellWord spell;
-    public override string Title => ID + $"<sprite name={spell.icon.name}>";
+    public override string Title => spell.icon ? $"{ID} <sprite name={spell.icon.name}>" : ID;
 
     public override void OnValidate()
     {

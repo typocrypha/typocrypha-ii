@@ -5,19 +5,18 @@ using UnityEngine;
 using UnityEditor;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using System.Linq;
 
 public class TIPSBundleParser {
 
     const string TIPS_ROOT_PATH = "ScriptableObjects/TIPS/Root";
 
-    public static void Parse(string filePath, bool fullRebuild = true)
+    public static void Parse(string filePath)
     {
         using (var reader = new CsvReader(filePath))
         {
             var entries = new List<TIPSEntryData>();
             bool firstRow = true;
-
-            if (fullRebuild) ClearEntries();
 
             foreach (string[] values in reader.RowEnumerator)
             {
@@ -33,14 +32,41 @@ public class TIPSBundleParser {
                 entryPath = Regex.Replace(entryPath, "/+", "/");
 
                 var parentDirectory = Path.Combine(Application.dataPath, Path.GetDirectoryName(entryPath));
-                if (!Directory.Exists(parentDirectory)) Directory.CreateDirectory(parentDirectory);
-                if (!Directory.Exists(entryPath)) Directory.CreateDirectory(entryPath);
+                Directory.CreateDirectory(parentDirectory);
 
                 var entry = ScriptableObject.CreateInstance<TIPSEntryData>();
                 entry.Content = values[4];
                 AssetDatabase.CreateAsset(entry, "Assets/" + entryPath);
             }
         }
+        TIPSBundleLoader.LoadTIPSBundles();
+    }
+
+    public static void Parse(SpellWordBundle bundle)
+    {
+        SpellWord[] roots = bundle.words.Select(p => p.Value).Where(p => !p.IsSynonym).ToArray();
+        SpellWord[] synonyms = bundle.words.Select(p => p.Value).Where(p => p.IsSynonym).ToArray();
+
+        var spellsDirectory = Path.Combine(Application.dataPath, TIPS_ROOT_PATH, "Spells");
+        Directory.CreateDirectory(spellsDirectory);
+
+        foreach (var root in roots)
+        {
+            var entry = ScriptableObject.CreateInstance<TIPSEntrySpell>();
+            entry.spell = root;
+            var path = string.Join("/", "Assets", TIPS_ROOT_PATH, "Spells", root.name + ".asset");
+            AssetDatabase.CreateAsset(entry, path);
+        }
+
+        foreach (var synonym in synonyms)
+        {
+            var entry = ScriptableObject.CreateInstance<TIPSEntrySpell>();
+            entry.spell = synonym;
+            var path = string.Join("/", "Assets", TIPS_ROOT_PATH, "Spells", synonym.synonymOf.internalName, synonym.name + ".asset");
+            Directory.CreateDirectory(Path.GetDirectoryName(path));
+            AssetDatabase.CreateAsset(entry, path);
+        }
+
         TIPSBundleLoader.LoadTIPSBundles();
     }
 
