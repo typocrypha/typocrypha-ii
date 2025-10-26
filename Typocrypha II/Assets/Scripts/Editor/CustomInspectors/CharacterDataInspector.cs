@@ -35,6 +35,7 @@ public class CharacterDataInspector : Editor
         }
         PoseMapGUI("Poses", data.poses);
         data.defaultFacingDirection = EditorUtils.EnumPopup(new GUIContent("Facing Direction"), data.defaultFacingDirection);
+        data.ignoreYOffset = EditorGUILayout.ToggleLeft(new GUIContent("Ignore Y Offset"), data.ignoreYOffset);
         EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
         if (data.expressions == null)
         {
