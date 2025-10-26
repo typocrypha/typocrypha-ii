@@ -29,6 +29,7 @@ public class CharacterData : ScriptableObject
     public Color characterHighlightColorLeft = Color.white;
     public Color characterHighlightColorRight = Color.white;
     public FacingDirection defaultFacingDirection = FacingDirection.Left;
+    public bool ignoreYOffset = false;
 
     [System.Serializable]
     public class PoseData

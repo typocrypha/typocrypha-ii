@@ -275,7 +275,7 @@ public class VNPlusCharacter : MonoBehaviour
         float heightDiff = targetHeight > 0f ? poseImage.rectTransform.sizeDelta.y - targetHeight
                                              : poseImage.rectTransform.sizeDelta.y - mainRect.sizeDelta.y;
 
-        float intensity = characterYOffsetIntensityCurve.Evaluate(currentPivot.y < 0.75f ? 1f : (heightDiff / poseImage.rectTransform.sizeDelta.y));
+        float intensity = characterYOffsetIntensityCurve.Evaluate(data.ignoreYOffset ? 1f : (heightDiff / poseImage.rectTransform.sizeDelta.y));
 
         return heightDiff > 0f ? poseImage.rectTransform.sizeDelta.y * (1.0f - currentPivot.y) * intensity : 0f;
     }   
