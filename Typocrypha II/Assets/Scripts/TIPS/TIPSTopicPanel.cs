@@ -19,6 +19,7 @@ public class TIPSTopicPanel : MonoBehaviour
     private int PageSize => buttons.Count;
     public TIPSEntryData TopEntry => currTopics.Count > 0 ? currTopics[0] : null;
     private IList<TIPSEntryData> currTopics;
+    private string currFolder;
     private int currPage;
 
     private void Awake()
@@ -36,9 +37,12 @@ public class TIPSTopicPanel : MonoBehaviour
 
     public void DisplayPageNum(int cur, int max) => uguiPage.text = $"{cur + 1}/{max + 1}";
 
-    public void SetTopics(IList<TIPSEntryData> topics)
+    public void SetCurrentFolder(string folder)
     {
-        currTopics = topics;
+        if (currFolder == folder) return;
+
+        currFolder = folder;
+        currTopics = TIPSManager.Instance.FilterEntries(folder, true);
     }
 
     public void LoadPageContent(int page = 0, string title = null)
@@ -94,16 +98,14 @@ public class TIPSTopicPanel : MonoBehaviour
         }
     }
 
-    public void SelectEntry(string title)
+    public void SelectEntry(TIPSEntryData entry)
     {
-        foreach (var button in buttons)
-        {
-            if (button.gameObject.name == title)
-            {
-                button.Select();
-                return;
-            }
-        }
+        SetCurrentFolder(entry.Parent);
+        int page = currTopics.IndexOf(entry) / PageSize;
+        int offset = currTopics.IndexOf(entry) % PageSize;
+
+        LoadEntriesInFolder(entry.Parent, page);
+        buttons[offset].Select();
     }
 
     [ContextMenu("Navigate Previous")]
@@ -132,12 +134,12 @@ public class TIPSTopicPanel : MonoBehaviour
         SelectTopicPageTop();
     }
 
-    public void LoadEntriesInFolder(string folder)
+    public void LoadEntriesInFolder(string folder, int page = 0)
     {
-        var entries = TIPSManager.Instance.FilterEntries(folder, true);
-        SetTopics(entries);
-        LoadPageContent(0, folder);
+        SetCurrentFolder(folder);
+        LoadPageContent(page, folder);
     }
+
     private void SetButtonNavigation()
     {
         for (int i = 0; i < buttons.Count; i++)

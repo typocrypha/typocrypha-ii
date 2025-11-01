@@ -107,8 +107,7 @@ public class TIPSTopicStack : MonoBehaviour
     {
         JumpToLayer((Layer)entry.Depth);
         var current = GetCurrentPanel();
-        current.LoadEntriesInFolder(entry.Parent);
-        current.SelectEntry(entry.ID);
+        current.SelectEntry(entry);
 
         if (currentLayer == Layer.Aux)
         {
@@ -124,8 +123,7 @@ public class TIPSTopicStack : MonoBehaviour
 
         StepToPreviousLayer();
         var current = GetCurrentPanel();
-        current.LoadEntriesInFolder(latestFolderEntered.Parent);
-        current.SelectEntry(latestFolderEntered.ID);
+        current.SelectEntry(latestFolderEntered);
         latestFolderEntered = TIPSManager.Instance.GetEntry(latestFolderEntered.Parent);
     }
 
