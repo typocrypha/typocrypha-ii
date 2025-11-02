@@ -138,7 +138,7 @@ public class TIPSNavigator : MonoBehaviour
         }
 
         var exactMatch = TIPSManager.Instance.HandlePlayerQuery(input, out var allMatches);
-        if (allMatches.Length == 0)
+        if (allMatches.Length == 0 && exactMatch == null)
             OnMatchNone();
         else if (exactMatch != null)
             OnMatchExact(exactMatch);

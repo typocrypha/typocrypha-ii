@@ -79,6 +79,19 @@ public class TIPSManager : MonoBehaviour
             .Where(e => e.MatchTitlePartial(titlePartial))
             .ToArray();
     }
+    
+    /// <summary>
+     /// Search unlocked entries by alias.
+     /// </summary>
+     /// <param name="query"> String to match alias against. </param>
+     /// <returns> Array of matching entries. </returns>
+    public TIPSEntryData GetUnlockedEntryWithExactAlias(string query)
+    {
+        return unlockedEntries
+            .Select(p => p.Value)
+            .Where(e => e.MatchAliasExact(query))
+            .FirstOrDefault();
+    }
 
     /// <summary>
     /// Combines the player action of entry lookup and unlocking.
@@ -89,7 +102,10 @@ public class TIPSManager : MonoBehaviour
     public TIPSEntryData HandlePlayerQuery(string query, out TIPSEntryData[] partialMatches)
     {
         UnlockEntryIfApplicable(query);
+        var aliasMatch = GetUnlockedEntryWithExactAlias(query);
         partialMatches = GetUnlockedEntriesWithPartialTitle(query);
+
+        if (aliasMatch) return aliasMatch;
         return partialMatches.FirstOrDefault(e => e.MatchTitleExact(query));
     }
 

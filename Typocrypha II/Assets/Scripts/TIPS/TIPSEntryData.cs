@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Collections.Generic;
 //using System.Collections;
 //using System.Collections.Generic;
 using UnityEngine;
@@ -21,9 +22,9 @@ public class TIPSEntryData : ScriptableObject
     public bool CreateFolder;
 
     [Header("Manual Properties")]
-    [Space(10)]
     [TextArea(10, 3)] public string Content;
     [TextArea(5, 3)] public string Footer;
+    public List<string> Aliases;
 
     public const string BASE_ASSET_PATH = "ScriptableObjects/TIPS";
     public string[] Categorization => RelativePath.Trim('\\'). Split('\\');
@@ -39,6 +40,15 @@ public class TIPSEntryData : ScriptableObject
     public bool MatchTitleExact(string query)
     {
         return string.Equals(ID, query, StringComparison.OrdinalIgnoreCase);
+    }
+
+    public bool MatchAliasExact(string query)
+    {
+        foreach (var alias in Aliases)
+        {
+            if (string.Equals(alias, query, StringComparison.OrdinalIgnoreCase)) return true;
+        }
+        return false;
     }
 
     public virtual void OnValidate()
