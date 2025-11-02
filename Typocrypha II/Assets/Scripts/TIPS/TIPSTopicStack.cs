@@ -123,6 +123,14 @@ public class TIPSTopicStack : MonoBehaviour
 
         StepToPreviousLayer();
         var current = GetCurrentPanel();
+
+        if (latestFolderEntered == null)
+        {
+            panelTop.LoadEntriesInFolder(rootFolderName);
+            SelectFirstTopic();
+            return;
+        }
+
         current.SelectEntry(latestFolderEntered);
         latestFolderEntered = TIPSManager.Instance.GetEntry(latestFolderEntered.Parent);
     }

@@ -155,8 +155,11 @@ public class TIPSNavigator : MonoBehaviour
     {
         AudioManager.instance.PlaySFX(sfxSearchGood);
         //navigate to top layer
+        topicStack.JumpToLayer(TIPSTopicStack.Layer.Sub);
         //populate buttons with matching entries
+        topicStack.GetCurrentPanel().LoadEntries(entries);
         //navigate to first button
+        FocusOnTopics(true);
     }
 
     protected virtual void OnMatchExact(TIPSEntryData entry)
