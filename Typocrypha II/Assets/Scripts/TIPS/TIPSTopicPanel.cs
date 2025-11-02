@@ -134,6 +134,13 @@ public class TIPSTopicPanel : MonoBehaviour
         SelectTopicPageTop();
     }
 
+    public void LoadEntries(IList<TIPSEntryData> entries)
+    {
+        currFolder = "Search";
+        currTopics = entries;
+        LoadPageContent(0, currFolder);
+    }
+
     public void LoadEntriesInFolder(string folder, int page = 0)
     {
         SetCurrentFolder(folder);
