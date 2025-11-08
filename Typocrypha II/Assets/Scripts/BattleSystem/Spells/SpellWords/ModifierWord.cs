@@ -19,6 +19,8 @@ public class ModifierWord : SpellWord
         PostWord,
     }
 
+    public override int Power => 0;
+
     public SpellFxData fx;
     public Direction direction;
     [SubSO("Sp. Effect")]

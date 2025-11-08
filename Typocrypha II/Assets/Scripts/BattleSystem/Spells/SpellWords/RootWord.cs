@@ -13,7 +13,21 @@ public class RootWord : SpellWord
     public ModifierWord rightMod;
     #endregion
 
+    public override int Power
+    {
+        get
+        {
+            int power = 0;
+            foreach(var effect in effects)
+            {
+                power += effect.Power;
+            }
+            return power;
+        }
+    }
+
     public List<RootWordEffect> effects = new List<RootWordEffect>();
+
     public override SpellWord Clone()
     {
         var clone = Instantiate(this);

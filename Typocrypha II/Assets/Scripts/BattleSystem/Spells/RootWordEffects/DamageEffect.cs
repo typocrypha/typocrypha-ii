@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class DamageEffect : RootWordEffect
 {
+    public override int Power => power;
+
     public Damage.FormulaType formula;
     [SubSO("Formula")]
     public CustomFormula customFormula;

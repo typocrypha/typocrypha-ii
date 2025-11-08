@@ -28,6 +28,8 @@ public abstract class SpellWord : ScriptableObject
     public bool IsSynonym => synonymOf != null;
     public bool IsDebug => Key == "debug" || IsSynonym && synonymOf.Key == "debug";
 
+    public abstract int Power { get; }
+
     public static bool CompareKeys(SpellWord w1, SpellWord w2) => w1.Key == w2.Key;
 
     public abstract SpellWord Clone();

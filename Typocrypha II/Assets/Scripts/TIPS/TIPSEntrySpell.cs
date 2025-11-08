@@ -21,7 +21,7 @@ public class TIPSEntrySpell : TIPSEntryData
         string style = "<color=#AAAAAA><indent=16><size=14>";
         Content = string.Join("\n", spell.description, style , spell.flavorText);
 
-        string power = $"Power: TODO";
+        string power = $"Power: {spell.Power}";
         string timer = "<sprite name=timer_icon_v2>";
         string cooldown = "Cooldown: " + string.Concat(System.Linq.Enumerable.Repeat(timer, spell.cooldown));
         string root = $"Root Word: {spell.BaseName}";
