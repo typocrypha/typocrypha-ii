@@ -10,6 +10,7 @@ using System.Linq;
 public class TIPSBundleParser {
 
     const string TIPS_ROOT_PATH = "ScriptableObjects/TIPS/Root";
+    const string TIPS_DEMONS_PATH = "ScriptableObjects/TIPS/Root/Demons";
     const string TIPS_SPELLS_PATH = "ScriptableObjects/TIPS/Root/Spells";
 
     public static void Parse(string filePath)
@@ -43,6 +44,22 @@ public class TIPSBundleParser {
         TIPSBundleLoader.LoadTIPSBundles();
     }
 
+    public static void Parse(CasterBundle bundle)
+    {
+        var demonsDirectory = Path.Combine(Application.dataPath, TIPS_ROOT_PATH, "Demons");
+        Directory.CreateDirectory(demonsDirectory);
+
+        foreach (var pair in bundle.prefabs)
+        {
+            var entry = ScriptableObject.CreateInstance<TIPSEntryDemon>();
+            entry.prefabEnemy = pair.Value;
+            var path = string.Join("/", "Assets", TIPS_ROOT_PATH, "Demons", pair.Key + ".asset");
+            AssetDatabase.CreateAsset(entry, path);
+        }
+
+        TIPSBundleLoader.LoadTIPSBundles();
+    }
+
     public static void Parse(SpellWordBundle bundle)
     {
         SpellWord[] roots = bundle.words.Select(p => p.Value).Where(p => !p.IsSynonym).ToArray();
@@ -71,17 +88,25 @@ public class TIPSBundleParser {
         TIPSBundleLoader.LoadTIPSBundles();
     }
 
-    public static void ClearSpellEntries()
+    public static void ClearAllEntries()
     {
-        var root = Path.Combine(Application.dataPath, TIPS_SPELLS_PATH);
+        var root = Path.Combine(Application.dataPath, TIPS_ROOT_PATH);
         Directory.Delete(root, true);
         Directory.CreateDirectory(root);
         AssetDatabase.Refresh();
     }
 
-    public static void ClearEntries()
+    public static void ClearCasterEntries()
     {
-        var root = Path.Combine(Application.dataPath, TIPS_ROOT_PATH);
+        var root = Path.Combine(Application.dataPath, TIPS_DEMONS_PATH);
+        Directory.Delete(root, true);
+        Directory.CreateDirectory(root);
+        AssetDatabase.Refresh();
+    }
+
+    public static void ClearSpellEntries()
+    {
+        var root = Path.Combine(Application.dataPath, TIPS_SPELLS_PATH);
         Directory.Delete(root, true);
         Directory.CreateDirectory(root);
         AssetDatabase.Refresh();

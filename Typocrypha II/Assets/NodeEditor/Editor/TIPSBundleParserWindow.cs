@@ -5,6 +5,7 @@ public class TIPSBundleParserWindow : EditorWindow
 {
     public TextAsset csvFile;
     public SpellWordBundle spellBundle;
+    public CasterBundle casterBundle;
 
     private const float BUTTON_WIDTH = 160f;
 
@@ -25,6 +26,11 @@ public class TIPSBundleParserWindow : EditorWindow
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
+        GUILayout.Label("Caster Bundle");
+        casterBundle = EditorGUILayout.ObjectField(casterBundle, typeof(CasterBundle), false) as CasterBundle;
+        GUILayout.EndHorizontal();
+
+        GUILayout.BeginHorizontal();
         GUILayout.Label("Spell Bundle");
         spellBundle = EditorGUILayout.ObjectField(spellBundle, typeof(SpellWordBundle), false) as SpellWordBundle;
         GUILayout.EndHorizontal();
@@ -42,19 +48,31 @@ public class TIPSBundleParserWindow : EditorWindow
             }
         }
 
+        if (casterBundle && GUILayout.Button("Build Caster Entries", GUILayout.Width(BUTTON_WIDTH)))
+        {
+            TIPSBundleParser.Parse(casterBundle);
+        }
+
         if (spellBundle && GUILayout.Button("Build Spellword Entries", GUILayout.Width(BUTTON_WIDTH)))
         {
             TIPSBundleParser.Parse(spellBundle);
         }
 
-        if (GUILayout.Button("Clear Spellword Entries", GUILayout.Width(BUTTON_WIDTH)))
-        {
-            TIPSBundleParser.ClearSpellEntries();
-        }
+        GUILayout.Space(10);
 
         if (GUILayout.Button("Clear All Entries", GUILayout.Width(BUTTON_WIDTH)))
         {
-            TIPSBundleParser.ClearEntries();
+            TIPSBundleParser.ClearAllEntries();
+        }
+
+        if (GUILayout.Button("Clear Caster Entries", GUILayout.Width(BUTTON_WIDTH)))
+        {
+            TIPSBundleParser.ClearCasterEntries();
+        }
+
+        if (GUILayout.Button("Clear Spellword Entries", GUILayout.Width(BUTTON_WIDTH)))
+        {
+            TIPSBundleParser.ClearSpellEntries();
         }
     }
 }
