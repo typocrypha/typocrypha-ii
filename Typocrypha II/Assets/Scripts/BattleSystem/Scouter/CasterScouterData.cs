@@ -7,9 +7,11 @@ public class CasterScouterData : ScouterData
 {
     [SerializeField] private Caster caster;
     [SerializeField] private SpriteRenderer casterImage;
-    [TextArea(2,4)]
+    [TextArea(2,4)] 
+    [Header("Scouter Text / TIPs Description Text")]
     [SerializeField] private string flavorText;
     [TextArea(2, 8)]
+    [Header("TIPs Flavor Text")]
     [SerializeField] private string loreText;
 
     public string TIPsFlavorText => loreText;
