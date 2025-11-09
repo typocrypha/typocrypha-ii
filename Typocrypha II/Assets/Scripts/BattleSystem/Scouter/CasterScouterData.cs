@@ -9,8 +9,11 @@ public class CasterScouterData : ScouterData
     [SerializeField] private SpriteRenderer casterImage;
     [TextArea(2,4)]
     [SerializeField] private string flavorText;
-    public override string Description => flavorText;
+    [TextArea(2, 8)]
+    [SerializeField] private string loreText;
 
+    public string TIPsFlavorText => loreText;
+    public override string Description => flavorText;
     public override Sprite Image => casterImage.sprite;
 
     private CasterUI ui = null;

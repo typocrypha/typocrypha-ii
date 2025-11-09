@@ -3,36 +3,37 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-// ensure class initializer is called whenever scripts recompile
-[InitializeOnLoad]
-public static class PrefabBundleLoader
+public class CasterBundleLoader : MonoBehaviour
 {
     public static string path = "Assets/ScriptableObjects/Bundles";
     // register an event handler when the class is initialized
-    static PrefabBundleLoader()
+    static CasterBundleLoader()
     {
-        EditorApplication.playModeStateChanged += LoadPrefabBundles;
-        LoadPrefabBundles(PlayModeStateChange.ExitingPlayMode);
+        EditorApplication.playModeStateChanged += LoadCasterBundles;
+        LoadCasterBundles(PlayModeStateChange.ExitingPlayMode);
     }
 
-    private static void LoadPrefabBundles(PlayModeStateChange state)
+    private static void LoadCasterBundles(PlayModeStateChange state)
     {
         if (state != PlayModeStateChange.ExitingEditMode || !AutoRefreshBetterBundles.IsEnabled)
             return;
-        LoadPrefabBundles();
+        LoadCasterBundles();
     }
 
-    public static void LoadPrefabBundles()
+    public static void LoadCasterBundles()
     {
-        var prefabBundles = AssetUtils.LoadAllAssetsInDirectory<PrefabBundle>(path);
+        var prefabBundles = AssetUtils.LoadAllAssetsInDirectory<CasterBundle>(path);
         foreach (var bundle in prefabBundles)
         {
             bundle.prefabs.Clear();
             var prefabs = AssetUtils.LoadAllAssetsInDirectoryRecursive<GameObject>(bundle.assetPath);
             foreach (var prefab in prefabs)
             {
-                if (!bundle.prefabs.ContainsKey(prefab.name))
-                    bundle.prefabs.Add(prefab.name, prefab);
+                var caster = prefab.GetComponent<Caster>();
+                if (caster == null || string.IsNullOrEmpty(caster.DisplayName))
+                    continue;
+                if (!bundle.prefabs.ContainsKey(caster.DisplayName))
+                    bundle.prefabs.Add(caster.DisplayName, prefab);
             }
             if (bundle != null)
                 EditorUtility.SetDirty(bundle);
