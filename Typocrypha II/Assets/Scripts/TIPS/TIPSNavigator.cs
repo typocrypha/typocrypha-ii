@@ -193,6 +193,7 @@ public class TIPSNavigator : MonoBehaviour
         panel.SetContent(paginatedContent[pageIndex].Trim());
         panel.SetFooter(entry.Footer);
         panel.DisplayPageNum(pageIndex + 1, paginatedContent.Length);
+        panel.SetImage(entry is TIPSEntryDemon ? (entry as TIPSEntryDemon).GetSprite() : null);
 
         if (paginatedContent.Length > 1)
         {

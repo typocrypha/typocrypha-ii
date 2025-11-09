@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class TIPSEntryPanel : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class TIPSEntryPanel : MonoBehaviour
     [SerializeField] TextMeshProUGUI footer;
     [SerializeField] TextMeshProUGUI page;
     [SerializeField] DialogContinueIndicator paginationIndicator;
+    [SerializeField] Image image;
 
     private readonly List<MonoBehaviour> dummy = new List<MonoBehaviour>();
 
@@ -36,6 +38,13 @@ public class TIPSEntryPanel : MonoBehaviour
     {
         footer.text = text;
     }
+
+    public void SetImage(Sprite sprite)
+    {
+        image.sprite = sprite;
+        image.gameObject.SetActive(sprite != null);
+    }
+        
 
     public void ShowPaginationIndicator()
     {
