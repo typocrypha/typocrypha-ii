@@ -47,6 +47,11 @@ public class TIPSBundleParserWindow : EditorWindow
             TIPSBundleParser.Parse(spellBundle);
         }
 
+        if (GUILayout.Button("Clear Spellword Entries", GUILayout.Width(BUTTON_WIDTH)))
+        {
+            TIPSBundleParser.ClearSpellEntries();
+        }
+
         if (GUILayout.Button("Clear All Entries", GUILayout.Width(BUTTON_WIDTH)))
         {
             TIPSBundleParser.ClearEntries();

@@ -10,6 +10,7 @@ using System.Linq;
 public class TIPSBundleParser {
 
     const string TIPS_ROOT_PATH = "ScriptableObjects/TIPS/Root";
+    const string TIPS_SPELLS_PATH = "ScriptableObjects/TIPS/Root/Spells";
 
     public static void Parse(string filePath)
     {
@@ -68,6 +69,14 @@ public class TIPSBundleParser {
         }
 
         TIPSBundleLoader.LoadTIPSBundles();
+    }
+
+    public static void ClearSpellEntries()
+    {
+        var root = Path.Combine(Application.dataPath, TIPS_SPELLS_PATH);
+        Directory.Delete(root, true);
+        Directory.CreateDirectory(root);
+        AssetDatabase.Refresh();
     }
 
     public static void ClearEntries()
