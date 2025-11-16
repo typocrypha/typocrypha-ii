@@ -23,19 +23,6 @@ public static class BadgeBundleLoader
 
     public static void LoadSpellBundles()
     {
-        var spellBundles = AssetUtils.LoadAllAssetsInDirectory<BadgeBundle>(path);
-        foreach (var bundle in spellBundles)
-        {
-            bundle.badges.Clear();
-            var words = AssetUtils.LoadAllAssetsInDirectoryRecursive<BadgeWord>(bundle.assetPath);
-            foreach (var word in words)
-            {
-                if (!bundle.badges.ContainsKey(word.Key))
-                    bundle.badges.Add(word.Key, word);
-            }
-            if (bundle != null)
-                EditorUtility.SetDirty(bundle);
-        }
-        AssetDatabase.SaveAssets();
+        BetterBundleLoaderUtils.LoadBundles<BadgeBundle, BadgeWord>(path);
     }
 }

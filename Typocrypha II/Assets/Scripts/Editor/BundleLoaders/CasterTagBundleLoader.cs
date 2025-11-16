@@ -23,19 +23,6 @@ public static class CasterTagBundleLoader
 
     public static void LoadCasterTagBundles()
     {
-        var spellBundles = AssetUtils.LoadAllAssetsInDirectory<CasterTagBundle>(path);
-        foreach (var bundle in spellBundles)
-        {
-            bundle.tags.Clear();
-            var words = AssetUtils.LoadAllAssetsInDirectoryRecursive<CasterTag>(bundle.assetPath);
-            foreach (var word in words)
-            {
-                if (!bundle.tags.ContainsKey(word.internalName))
-                    bundle.tags.Add(word.internalName, word);
-            }
-            if (bundle != null)
-                EditorUtility.SetDirty(bundle);
-        }
-        AssetDatabase.SaveAssets();
+        BetterBundleLoaderUtils.LoadBundles<CasterTagBundle, CasterTag>(path);
     }
 }

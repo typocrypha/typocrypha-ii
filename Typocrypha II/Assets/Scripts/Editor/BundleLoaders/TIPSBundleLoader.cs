@@ -21,19 +21,11 @@ public static class TIPSBundleLoader
 
     public static void LoadTIPSBundles()
     {
-        var bundles = AssetUtils.LoadAllAssetsInDirectory<TIPSBundle>(path);
-        foreach (var bundle in bundles)
-        {
-            bundle.entries.Clear();
-            var incomingEntries = AssetUtils.LoadAllAssetsInDirectoryRecursive<TIPSEntryData>(bundle.assetPath);
-            foreach (var entry in incomingEntries)
-            {
-                entry.OnValidate();
-                if (!bundle.entries.ContainsKey(entry.ID))
-                    bundle.entries.Add(entry.ID, entry);
-            }
-            EditorUtility.SetDirty(bundle);
-        }
-        AssetDatabase.SaveAssets();
+        BetterBundleLoaderUtils.LoadBundles<TIPSBundle, TIPSEntryData>(path, ValidateTIPSEntry);
+    }
+
+    private static void ValidateTIPSEntry(TIPSEntryData entry)
+    {
+        entry.OnValidate();
     }
 }
