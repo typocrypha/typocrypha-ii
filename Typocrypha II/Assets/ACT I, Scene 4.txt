@@ -277,10 +277,10 @@ Adelai(serious)[0,2]: No time to explain!{pm} Just keep typing!!
 Adelai[0,2](bffs4ever): See,{pm} you’re doing fine!
 
 
-Adelai[0,2](normal): You should also start looking out for opportunities to {c,ui-terms}Counter{c} enemy Spells!
+Adelai[0,2](normal): You should also start looking out for opportunities to {c,highlight}Counter{c} enemy Spells!
 
 
-Ayin[0,1]: {c,ui-terms}Counter{c}?
+Ayin[0,1]: {c,highlight}Counter{c}?
 
 
 Adelai(normal)[0,2]: Whenever you see an enemy casting a {c,ui-terms}Spell{c} that you also have,{pm} try hitting them with it!
@@ -292,7 +292,7 @@ Adelai[0,2]: Like those Tanukis!
 Tanuki[1,1]: Feel the pointy wrath of my {c,highlight}LANCE{c} Spell!
 
 
-Adelai[0,2]: When they start charging up a {c,highlight}LANCE{c} Spell,{pm} use your own {c,ui-terms}LANCE{c} to counter them!
+Adelai[0,2]: When they start charging up a {c,highlight}LANCE{c} Spell,{pm} use your own {c,ui-terms}LANCE{c} to {c,highlight}Counter{c} them!
 
 
 Adelai(serious)[0,2]: Your Typocrypha should highlight those opportunities in {c,highlight}Orange{c},{pm} so just keep a lookout!
@@ -314,17 +314,37 @@ Adelai(serious)[0,2]: Your Typocrypha should highlight those opportunities in {c
 Adelai(normal)[0,2]: Good job,{pm} Ayin!
 
 
-Adelai[0,2]: Whenever you {c,ui-terms}Counter{c} a Demon,{pm} it’ll make them {c,ui-terms}stop casting their current Spell!{c}
+Adelai[0,2]: Whenever you {c,highlight}Counter{c} a Demon,{pm} it’ll make them {c,ui-terms}stop casting their current Spell!{c}
 
 
-Adelai[0,2]: By {c,ui-terms}Countering{c},{pm} you can greatly reduce the amount of damage you take.
-
-
-Adelai(serious)[0,2]: But, if you see a {c,ui-terms}Spell you can normally cast not highlighted in{c} {c,highlight}Orange{c},{pm} it probably means the {c,ui-terms}Spell is on Cooldown!{c}
+Adelai[0,2]: By {c,highlight}Countering{c},{pm} you can greatly reduce the amount of damage you take.
 
 
 >end
-//Round 5: Demon-Wave Tactics[b]
+//Round 4.5: Getting Serious
+>start,ACT I-4-4p5-Opening
+
+
++bubble
+
+
+>addchar,Adelai,0,0,right
+
+
+Adelai(normal)[0,2]: Alright,{pm} looks like you’ve gotten warmed up!
+
+
+Adelai(serious)[0,2]: But you’re going to need some help for these next guys.
+
+
+Adelai[0,2]: Your Spells won’t do much damage to them,{pm} but you can still {c,highlight}Counter{c} them!
+
+
+Adelai[0,2]: So why don’t you just focus on {c,highlight}Countering{c} them:{pm} {c,ui-terms}I’ll attack in the opening!{c}
+
+
+>end
+//Round 5: Demon-Wave Tactics
 //Opening Dialog:
 >start,ACT I-4-5-Opening
 
@@ -339,6 +359,9 @@ Adelai(normal)[0,2]: Alright,{pm} I think this is the last of them!
 
 
 Adelai[0,2]: They’ll start swarming us out of desperation,{pm} so just keep taking them down!
+
+
+Adelai(serious)[0,2]: And remember,{pm} I’ll always have your back!
 
 
 >end
@@ -386,28 +409,39 @@ Adelai[0,2]: Hurry up!
 Adrestia[1,1]: Cursed Humans,{ps} was this your doing!?
 
 
-Adelai[0,2]: Wha-!?
+Adelai[0,2]: ...!
 
 
->castSpell,SWORD,1,2,0,1,The Masked Demon Attacks Adelai!
->setpose,Adelai,injuredscuffed
->setexpr,Adelai,grim
+>setpose,Adelai,action
+>setexpr,Adelai,getittogether
+Adelai[0,2]: Ayin,{pm} stay back!
 
 
-Adelai[0,2]: Gh-!!
+Ayin[0,1]: A-{ps}Adelai...?
 
 
-Ayin[0,1]: A-Adelai!!
+Adelai[0,2]: {c,whisper}A humanoid Demon,{pm} just like in the reports...{c}
 
 
-Adelai[0,2](optimistic): I-I’m OK...
-Adelai[0,2](grim): {c,whisper}(This Demon is tough...){c}
+Adelai[0,2](damage): This Demon is stronger than anything you’ve seen.
 
 
-Adelai[0,2]: Stay on your toes,{pm} Ayin!
+Ayin[0,1]: What!?
 
 
-Adrestia[1,1]: You humans think you can keep pushing us around...
+Adelai[0,2]: So I need you to trust me,{pm} OK?
+
+
+Adelai[0,2](leaveittome): If you can keep {c,highlight}Countering{c} it,{pm} we might have a shot.
+
+
+Ayin[0,1]: I-{ps}I...
+
+
+Adelai[0,2](getittogether): Ayin,{pm} you have to focus!
+
+
+Adrestia[1,1]: You Humans think you can keep pushing us around...
 
 
 >stopbgm,immediate
@@ -419,7 +453,7 @@ Adrestia[1,1]: Face my VENGEANCE!
 >playbgm,BGMBattleAdrestiaDraft1
 
 
->end[c]
+>end[b]
 
 
 //When Ayin at 50% health:
@@ -438,17 +472,27 @@ Ayin[0,1]: Haa...{pm} Haa...
 Ayin[0,1]: St-Stay back...!
 
 
+Adelai[0,2]: Ayin!
+
+
+>castSpell,SWORD,1,2,0,1,Adelai jumps in front of the Spell![c]
 >setpose,Adelai,injured
 >setexpr,Adelai,grim
 
 
-Adelai[0,2]: .{pl}.{pl}.
+Adelai[0,2]: Gh-!
 
 
-Adelai[0,2](prep): A-Ayin,{pm} you need to run.
+Ayin[0,1]: ADELAI!!
 
 
-Ayin[0,1]: N-No,{pm} Adelai I-I-I can’t!
+Adelai[0,2](prep): I’m sorry A-{ps}Ayin...
+
+
+Adelai[0,2]: You need to run...
+
+
+Ayin[0,1]: N-No,{pm} Adelai I-I-{ps}I can’t!
 
 
 Ayin[0,1]: I can’t just leave you...
@@ -531,7 +575,7 @@ Adrestia[1,1]: Grr...[e]
 
 >end
 [a]static prompt
-[b]add more dialog around adelai locking in and showing off her military prowess
-[c]adelai's pose shouldnt reset to normal from battle
+[b]adelai's pose shouldnt reset to normal from battle
+[c]to add cool animation of Adelai taking the hit for Ayin
 [d]need to create kaia caster ally prefab
 [e]textbox overlaps with spell popup
