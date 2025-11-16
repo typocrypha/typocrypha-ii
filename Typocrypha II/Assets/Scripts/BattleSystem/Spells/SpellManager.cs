@@ -113,7 +113,7 @@ public class SpellManager : MonoBehaviour
         return roots;
     }
     /// <summary> Cast the spell effects and play the associated fx</summary>
-    private IEnumerator CastCR(Spell spell, Caster caster, Battlefield.Position target, string castMessage, bool isTopLevel, Action onComplete = null)
+    private IEnumerator CastCR(Spell spell, Caster caster, Battlefield.Position target, string castMessage, bool isTopLevel, Action extraEffects = null)
     {
         // BattleDim : Dim everyone except caster
         BattleDimmer.instance.DimCasters(Battlefield.instance.Casters.Where(c => c != caster), false);
@@ -337,6 +337,7 @@ public class SpellManager : MonoBehaviour
         {
             Debug.LogError("TODO: add message unlock code here");
         }
+        extraEffects?.Invoke();
         // Apply callbacks after the whole cast is finished
         caster.OnAfterCastResolved?.Invoke(spell, caster, hitTarget);
         if (SpellCooldownManager.instance.Overheated)
@@ -344,7 +345,6 @@ public class SpellManager : MonoBehaviour
             SpellCooldownManager.instance.DoOverheat();
         }
         OnAfterCastResolved?.Invoke();
-        onComplete?.Invoke();
     }
 
     private readonly Queue<IEnumerator> delayRequests = new Queue<IEnumerator>();

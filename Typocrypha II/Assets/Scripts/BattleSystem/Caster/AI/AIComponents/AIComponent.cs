@@ -42,18 +42,32 @@ public abstract class AIComponent : MonoBehaviour
         caster.Charge = 0;
     }
 
-    protected void CastAtRandomTarget(IEnumerable<Caster> targets, IReadOnlyList<Spell> spellOptions, bool canCounter = false)
+    protected bool CastAtRandomTarget(IEnumerable<Caster> targets, IReadOnlyList<Spell> spellOptions, bool canCounter = false)
     {
         var enemyChoices = new List<Caster>(targets);
         enemyChoices.RemoveAll(IsNotValidTarget);
         if (enemyChoices.Count <= 0)
-            return;
+            return false;
         var target = RandomUtils.RandomU.instance.Choice(enemyChoices);
         AllyBattleBoxManager.instance.ShakeBattleBox();
         QueueCast(target.FieldPos, RandomUtils.RandomU.instance.Choice(spellOptions), canCounter, null);
+        return true;
     }
 
-    private static bool IsNotValidTarget(Caster caster)
+    protected bool CastAtRandomTarget(IEnumerable<Caster> targets, Spell spell, bool canCounter = false, System.Action<Caster> onTargetSelected = null)
+    {
+        var enemyChoices = new List<Caster>(targets);
+        enemyChoices.RemoveAll(IsNotValidTarget);
+        if (enemyChoices.Count <= 0)
+            return false;
+        var target = RandomUtils.RandomU.instance.Choice(enemyChoices);
+        onTargetSelected?.Invoke(target);
+        AllyBattleBoxManager.instance.ShakeBattleBox();
+        QueueCast(target.FieldPos, spell, canCounter, null);
+        return true;
+    }
+
+    protected virtual bool IsNotValidTarget(Caster caster)
     {
         return caster.IsDeadOrFled || caster.BStatus == Caster.BattleStatus.SpiritMode;
     }

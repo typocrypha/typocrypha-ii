@@ -53,7 +53,10 @@ public class StatusRemoveAfterHitOrCast : StatusEffect
     {
         base.Initialize();
         affected.OnAfterHitResolved += OnAfterHit;
-        affected.OnAfterSpellEffectResolved += OnAfterCastResolved;
+        if (removeFromCasts)
+        {
+            affected.OnAfterSpellEffectResolved += OnAfterCastResolved;
+        }
     }
 
     public override void Cleanup()
