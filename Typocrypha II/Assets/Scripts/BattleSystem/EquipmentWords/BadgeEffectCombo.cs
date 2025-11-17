@@ -82,6 +82,8 @@ public class BadgeEffectCombo : BadgeEffect
 
     public bool CanFollowUp(Caster player)
     {
+        if (SpellCooldownManager.instance.Overheated)
+            return false;
         if (combo < comboThreshold)
             return false;
         int comboScore = combo - comboThreshold;

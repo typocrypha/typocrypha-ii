@@ -161,6 +161,34 @@ public class SpellManager : MonoBehaviour
             }
         }
         var roots = Modify(spell);
+        if (caster.IsPlayer)
+        {
+            if (PlayerDataManager.Equipment.TryGetEquippedBadgeEffect<BadgeEffectCombo>(out var comboEffect) && comboEffect.CanFollowUp(caster))
+            {
+                int comboDepth = 1;
+                IEnumerator OnComboPopupComplete(bool popupSuccess)
+                {
+                    if (popupSuccess && caster is Player player)
+                    {
+                        roots.AddRange(Modify(castPopup.Spell));
+                        if (comboEffect.CanFollowUp(caster))
+                        {
+                            LogInteractivePopup(castPopup, $"Combo Spell x{++comboDepth}!", string.Empty, 6 / comboDepth, OnComboPopupComplete);
+                            if (HasPrompts)
+                            {
+                                return PlayPrompts();
+                            }
+                        }
+                    }
+                    return null;
+                }
+                LogInteractivePopup(castPopup, "Combo Spell!", string.Empty, 5, OnComboPopupComplete);
+            }
+            if (HasPrompts)
+            {
+                yield return StartCoroutine(PlayPrompts());
+            }
+        }
         // Critical chance
         var specialMod = Damage.SpecialModifier.None;
         if (roots.Any((r) => r.effects.Any((e) => e.CanCrit)))
@@ -202,25 +230,7 @@ public class SpellManager : MonoBehaviour
                 yield return StartCoroutine(PlayPrompts());
             }
         }
-        if (caster.IsPlayer && !SpellCooldownManager.instance.Overheated)
-        {
-            if (PlayerDataManager.Equipment.TryGetEquippedBadgeEffect<BadgeEffectCombo>(out var comboEffect) && comboEffect.CanFollowUp(caster))
-            {
-                IEnumerator OnComboPopupComplete(bool popupSuccess)
-                {
-                    if (popupSuccess && caster is Player player)
-                    {
-                        player.InsertCast(castPopup.Spell, target, string.Empty);
-                    }
-                    return null;
-                }
-                LogInteractivePopup(castPopup, "Combo Spell!", string.Empty, 5, OnComboPopupComplete);
-            }
-            if (HasPrompts)
-            {
-                yield return StartCoroutine(PlayPrompts());
-            }
-        }
+
         var casterSpace = Battlefield.instance.GetSpaceScreenSpace(caster.FieldPos);
         bool hitTarget = false;
         for (int rootIndex = 0; rootIndex < roots.Count; rootIndex++)
