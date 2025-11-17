@@ -48,6 +48,7 @@ public class EquipmentMenu : MonoBehaviour, IPausable
         equipmentNotice.SetActive(true);
         skipFrame = true;
         Typocrypha.Keyboard.instance.DisableInactiveSfx = false;
+        SaveManager.instance.Save();
         PauseManager.instance.PauseAll(false, PauseSources.Equipment, PH, true);
     }
 
