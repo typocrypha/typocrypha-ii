@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class RuleFriendshipFrog : Rule
 {
-    public override string DisplayName => "Friendship Frog";
+    private const string ruleName = "Friendship Frog";
+    public override string DisplayName => ruleName;
 
     public override bool ApplyToEffect(RootWordEffect effect, Caster caster, Caster target)
     {
@@ -16,7 +17,12 @@ public class RuleFriendshipFrog : Rule
         return true;
     }
 
-    private int GetEnemyCount()
+    public static bool ProtectsCaster(Caster caster)
+    {
+        return ActiveRule != null && ActiveRule.DisplayName == ruleName && caster.HasTag("Frog") && GetEnemyCount() > 1;
+    }
+
+    private static int GetEnemyCount()
     {
         int enemyCount = 0;
         foreach (var caster in Battlefield.instance.Casters)
