@@ -1,6 +1,5 @@
 ﻿using UnityEditor;
 using System.Linq;
-using System.IO;
 
 // ensure class initializer is called whenever scripts recompile
 [InitializeOnLoad]
@@ -24,5 +23,18 @@ public static class BadgeBundleLoader
     public static void LoadSpellBundles()
     {
         BetterBundleLoaderUtils.LoadBundles<BadgeBundle, BadgeWord>(path);
+    }
+
+    public static BadgeBundle GetBadgeBundle(string name = null)
+    {
+        var bundles = AssetUtils.LoadAllAssetsInDirectory<BadgeBundle>(path);
+        if (string.IsNullOrEmpty(name))
+            return bundles.FirstOrDefault();
+        foreach(var bundle in bundles)
+        {
+            if (bundle.name.ToLower() == name)
+                return bundle;
+        }
+        return null;
     }
 }

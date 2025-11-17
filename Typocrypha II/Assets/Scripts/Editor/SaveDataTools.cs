@@ -24,6 +24,26 @@ public static class SaveDataTools
         ResetGlobalSaveData();
     }
 
+    [MenuItem("Tools/Save Data/Unlock/Unlock All Badges")]
+    public static void UnlockAllBadges()
+    {
+        var file = SaveManager.LoadFile<GlobalSaveData>(SaveManager.GlobalSaveFilePath());
+        if (file == null)
+            return;
+        var bundle = BadgeBundleLoader.GetBadgeBundle();
+        if (bundle == null)
+        {
+            Debug.LogError("Null badge bundle. Cannot unlock all badges");
+            return;
+        }
+        file.unlockedBadgeWords.Clear();
+        foreach (var kvp in bundle.badges)
+        {
+            file.unlockedBadgeWords.Add(kvp.Value.Key);
+        }
+        SaveManager.SaveFile(file, SaveManager.GlobalSaveFilePath());
+    }
+
     [MenuItem("Tools/Save Data/Unlock/Unlock All Shop Codes")]
     public static void UnlockAllShopCodes()
     {
