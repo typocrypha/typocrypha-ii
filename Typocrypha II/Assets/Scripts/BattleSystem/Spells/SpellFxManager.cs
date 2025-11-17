@@ -16,8 +16,8 @@ public class SpellFxManager : MonoBehaviour
     protected const float shakeDamper = 5f;
     #endregion
     public static SpellFxManager instance;
-    private static readonly Vector2 reactionOffset = new Vector2(0, -80);
-    private static readonly Vector2 stunOffset = new Vector2(0, 80);
+    private static readonly Vector2 belowOffset = new Vector2(0, -80);
+    private static readonly Vector2 aboveOffset = new Vector2(0, 80);
 
     public bool HasMessages { get => logData.Count > 0; }
 
@@ -203,21 +203,30 @@ public class SpellFxManager : MonoBehaviour
     {
         if (data == null)
             return 0;
-        bool playEffect = false;
+        int belowEffects = 0;
+        int aboveEffects = 0;
         // If damage should be displayed, display damage
         if (data.DisplayDamage && data.Effectiveness != Reaction.Block)
         {
             PlayDamageNumber(data.Damage, targetPos);
-            playEffect = true;
+            aboveEffects++;
         }
         // Effectiveness popup
-        playEffect |= PlayReaction(data.Effectiveness, targetPos, casterPos) > 0;
+        if(PlayReaction(data.Effectiveness, targetPos, casterPos) > 0)
+        {
+            belowEffects++;
+        }
+        if (data.IsCrit)
+        {
+            PlayText(targetPos + (aboveOffset * aboveEffects), true, "Critical!", Color.red);
+            aboveEffects++;
+        }
         if (data.Stun)
         {
-            PlayText(data.DisplayDamage ? targetPos + stunOffset : targetPos, true, "Stun!", Color.red);
-            playEffect = true;
+            PlayText(targetPos + (aboveOffset * aboveEffects), true, "Stun!", Color.red);
+            aboveEffects++;
         }
-        return playEffect ? popTimeStaggered : 0;
+        return (aboveEffects > 0 || belowEffects > 0) ? popTimeStaggered : 0;
     }
 
     public float PlayDamageNumber(float damage, Caster target)
@@ -260,7 +269,7 @@ public class SpellFxManager : MonoBehaviour
 
     private float PlayReaction(Sprite sprite, Vector2 targetPos)
     {
-        return PlayImage(targetPos + reactionOffset, true, sprite, Color.white, popTime);
+        return PlayImage(targetPos + belowOffset, true, sprite, Color.white, popTime);
     }
 
     public float PlayText(Battlefield.Position pos, string text, Color color, DisplayPopup.Animation anim = DisplayPopup.Animation.FloatUp, float time = popTime)
