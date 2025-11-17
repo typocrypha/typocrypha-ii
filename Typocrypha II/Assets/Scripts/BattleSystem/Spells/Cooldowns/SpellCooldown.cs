@@ -18,18 +18,19 @@ public class SpellCooldown : MonoBehaviour
     [SerializeField] private Color onColor; // Color when on cooldown.
     [SerializeField] private Color offColor; // Color when off cooldown.
     [SerializeField] private Color bonusColor; // Color when bonus cooldown
+    [SerializeField] private GameObject overflowUI;
+    [SerializeField] private TMPro.TextMeshProUGUI overflowNumberText;
     [Header("Fixed Use Fields")]
     [SerializeField] private GameObject fixedUseUI;
     [SerializeField] private TMPro.TextMeshProUGUI fixedUseNumberText;
 
-    public int MaxCooldown => icons.Length;
     public int FullCooldown
     {
         get => fullCooldown;
         set
         {
             fullCooldown = value;
-            for (int i = 0; i < MaxCooldown; i++)
+            for (int i = 0; i < icons.Length; i++)
             {
                 icons[i].gameObject.SetActive(i < fullCooldown);
                 icons[i].color = offColor;
@@ -43,14 +44,26 @@ public class SpellCooldown : MonoBehaviour
         get => cooldown;
         private set
         {
-            cooldown = Mathf.Clamp(value, 0, MaxCooldown);
-            // Bonus Cooldown!
-            if(cooldown > FullCooldown)
+            cooldown = System.Math.Max(value, 0);
+            // Large Bonus Cooldown!
+            if(cooldown > icons.Length)
             {
-                for (int i = 0; i < MaxCooldown; i++)
+                foreach(var icon in icons)
+                {
+                    icon.gameObject.SetActive(false);
+                }
+                overflowNumberText.text = cooldown.ToString();
+                overflowUI.SetActive(true);
+            }
+            else if(cooldown > FullCooldown)
+            {
+                // Bonus Cooldown!
+                overflowUI.SetActive(false);
+                for (int i = 0; i < icons.Length; i++)
                 {
                     if(i < FullCooldown)
                     {
+                        icons[i].gameObject.SetActive(true);
                         icons[i].color = onColor;
                     }
                     else if(i < cooldown)
@@ -67,11 +80,13 @@ public class SpellCooldown : MonoBehaviour
             else
             {
                 // Normal Cooldown
+                overflowUI.SetActive(false);
                 for (int i = 0; i < FullCooldown; i++)
                 {
                     icons[i].color = i < cooldown ? onColor : offColor;
+                    icons[i].gameObject.SetActive(true);
                 }
-                for (int i = FullCooldown; i < MaxCooldown; i++)
+                for (int i = FullCooldown; i < icons.Length; i++)
                 {
                     icons[i].gameObject.SetActive(false);
                 }
