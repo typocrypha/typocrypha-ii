@@ -7,7 +7,7 @@ public class AIEsaiasMark : AIAllyRandomTimer
 {
     [SerializeField] private Spell followUpSpell;
     [SerializeField] private float cooldownSeconds;
-    private HashSet<Caster> alreadyTargeted = new HashSet<Caster>();
+    [SerializeField] private double randomAttackChance = 0.33;
     private bool onCooldown;
     private Coroutine cooldownCR;
 
@@ -18,8 +18,6 @@ public class AIEsaiasMark : AIAllyRandomTimer
         Battlefield.instance.Player.OnWaveStart += OnWaveStart;
     }
 
-
-
     protected override void RemoveListeners()
     {
         Battlefield.instance.Player.OnAfterCastResolved -= FollowUp;
@@ -28,26 +26,21 @@ public class AIEsaiasMark : AIAllyRandomTimer
 
     private Coroutine OnWaveStart(Caster arg)
     {
-        alreadyTargeted.Clear();
         onCooldown = false;
-        if(cooldownCR != null)
-        {
-            StopCoroutine(cooldownCR);
-            cooldownCR = null;
-        }
+        StopCooldownCR();
         return null;
     }
 
     protected override void DoAction()
     {
-        if (!RandomUtils.RandomU.instance.RollSuccess(0.33))
+        if (!RandomUtils.RandomU.instance.RollSuccess(randomAttackChance))
             return;
-        CastAtRandomTarget(Battlefield.instance.Enemies, followUpSpell, true, MarkTargeted);
+        CastAtRandomTarget(Battlefield.instance.Enemies, followUpSpell, true);
     }
 
     protected override bool IsNotValidTarget(Caster caster)
     {
-        return base.IsNotValidTarget(caster) || alreadyTargeted.Contains(caster) || caster.Health <= 10;
+        return base.IsNotValidTarget(caster) || caster.Health <= 10 || caster.HasTag("Targeted");
     }
 
     private void FollowUp(Spell s, Caster caster, bool hitTarget)
@@ -57,12 +50,11 @@ public class AIEsaiasMark : AIAllyRandomTimer
         var target = Battlefield.instance.GetCaster(caster.TargetPos);
         if (target == null || IsNotValidTarget(target))
             return;
-        if((target.Countered || target.Stunned) && RandomUtils.RandomU.instance.RollSuccess(0.9))
+        if((target.Countered || target.Stunned))
         {
             AllyBattleBoxManager.instance.ShakeBattleBox();
-            MarkTargeted(target);
             onCooldown = true;
-            QueueCast(target.FieldPos, followUpSpell, true, StartCooldown);
+            InsertCast(target.FieldPos, followUpSpell, true, StartCooldown);
         }
     }
 
@@ -87,14 +79,8 @@ public class AIEsaiasMark : AIAllyRandomTimer
             if (actor.IsPausedOrCasting())
                 yield return null;
             time += Time.deltaTime;
+            yield return null;
         }
         onCooldown = false;
-    }
-
-    private void MarkTargeted(Caster target)
-    {
-        if (alreadyTargeted.Contains(target))
-            return;
-        alreadyTargeted.Add(target);
     }
 }
