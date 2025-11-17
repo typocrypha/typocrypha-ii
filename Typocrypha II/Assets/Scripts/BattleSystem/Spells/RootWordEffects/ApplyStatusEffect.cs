@@ -13,18 +13,21 @@ public class ApplyStatusEffect : RootWordEffect
     public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.DamageModifier mod, RootCastResults prevResults = null)
     {
         var results = InitializeCastResults(caster, target, mod);
-        Damage.StandardHitCheck(results, this, caster, target);
-        if(mod.specialModifier == Damage.SpecialModifier.CritBlock)
+        if (mod.specialModifier == Damage.SpecialModifier.CritBlock)
         {
-            results.Miss = true;
+            results.Miss = false;
+            results.Effectiveness = Reaction.Block;
             return results;
         }
+        Damage.StandardHitCheck(results, this, caster, target);
         if (results.Miss)
             return results;
         results.Effectiveness = Damage.GetReaction(this, caster, target, out float mult);
-        results.DisplayDamage = false;
+        if (results.Effectiveness == Reaction.Block)
+            return results;
         if (Damage.ApplyReflect(results, this, caster, target, spellData))
             return results;
+        // Actually apply effect
         var baseEffect = Effect;
         if(target.GetStatusEffect(baseEffect.casterTag) != null)
         {
