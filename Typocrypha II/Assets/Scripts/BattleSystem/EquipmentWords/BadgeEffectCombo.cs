@@ -11,7 +11,7 @@ public class BadgeEffectCombo : BadgeEffect
     private int missCounter = 0;
     public override void Equip(Player player)
     {
-        ResetCombo();
+        combo = 0;
         player.OnAfterCastResolved -= AfterCastResolved;
         player.OnAfterCastResolved += AfterCastResolved;
         player.OnCastFail -= ResetCombo;
