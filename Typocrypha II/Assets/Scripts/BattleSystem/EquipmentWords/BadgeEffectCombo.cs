@@ -11,11 +11,11 @@ public class BadgeEffectCombo : BadgeEffect
     private int missCounter = 0;
     public override void Equip(Player player)
     {
-        combo = 0;
+        ResetCombo();
         player.OnAfterCastResolved -= AfterCastResolved;
         player.OnAfterCastResolved += AfterCastResolved;
-        player.OnCastFail -= ResetCombo;
-        player.OnCastFail += ResetCombo;
+        player.OnCastFail -= BreakCombo;
+        player.OnCastFail += BreakCombo;
         player.OnPromptComplete -= OnPromptComplete;
         player.OnPromptComplete += OnPromptComplete;
         player.OnAfterHitResolved -= OnAfterHitResolved;
@@ -27,15 +27,15 @@ public class BadgeEffectCombo : BadgeEffect
     {
         if((caster.CasterState == Caster.State.Hostile || caster.CasterState == Caster.State.Neutral) && data.WillDealDamage)
         {
-            ResetCombo();
+            BreakCombo();
         }
     }
 
     public override void Unequip(Player player)
     {
-        ResetCombo();
+        BreakCombo();
         player.OnAfterCastResolved -= AfterCastResolved;
-        player.OnCastFail -= ResetCombo;
+        player.OnCastFail -= BreakCombo;
         player.OnPromptComplete -= OnPromptComplete;
         player.OnAfterHitResolved -= OnAfterHitResolved;
         player.RemoveActiveAbilities(Caster.ActiveAbilities.Combo);
@@ -49,7 +49,7 @@ public class BadgeEffectCombo : BadgeEffect
         }
         else
         {
-            ResetCombo();
+            BreakCombo();
         }
     }
 
@@ -61,7 +61,7 @@ public class BadgeEffectCombo : BadgeEffect
         }
         else
         {
-            ResetCombo();
+            BreakCombo();
         }
     }
 
@@ -72,6 +72,12 @@ public class BadgeEffectCombo : BadgeEffect
     }
 
     private void ResetCombo()
+    {
+        combo = 0;
+        missCounter = 0;
+    }
+
+    private void BreakCombo()
     {
         if (combo == 0)
             return;
