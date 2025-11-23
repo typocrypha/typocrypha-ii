@@ -132,7 +132,7 @@ public class SpellManager : MonoBehaviour
                         roots.AddRange(Modify(castPopup.Spell));
                         if (comboEffect.CanFollowUp(caster))
                         {
-                            LogInteractivePopup(castPopup, $"Combo Spell x{++comboDepth}!", string.Empty, 6 / comboDepth, OnComboPopupComplete);
+                            LogInteractivePopup(castPopup, $"Combo Spell x{++comboDepth}!", string.Empty, Mathf.Max(6f / comboDepth, 0.1f), OnComboPopupComplete);
                             if (HasPrompts)
                             {
                                 return PlayPrompts();
