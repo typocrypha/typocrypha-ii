@@ -39,8 +39,6 @@ public class TIPSTopicPanel : MonoBehaviour
 
     public void SetCurrentFolder(string folder)
     {
-        if (currFolder == folder) return;
-
         currFolder = folder;
         currTopics = TIPSManager.Instance.FilterEntries(folder, true);
     }
