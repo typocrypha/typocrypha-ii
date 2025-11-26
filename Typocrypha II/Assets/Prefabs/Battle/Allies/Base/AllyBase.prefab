@@ -1,40 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1641892382805828221
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4283240279973909708}
-  m_Layer: 5
-  m_Name: Indicator
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &4283240279973909708
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1641892382805828221}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 6405583009786731905}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &6405583009786731909
 GameObject:
   m_ObjectHideFlags: 0
@@ -51,7 +16,7 @@ GameObject:
   - component: {fileID: 5886312805885437096}
   - component: {fileID: 4146542355923742540}
   m_Layer: 5
-  m_Name: AllyBaseAuto
+  m_Name: AllyBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -69,7 +34,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4757666588493846191}
-  - {fileID: 4283240279973909708}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -136,9 +100,6 @@ MonoBehaviour:
   _displayName: Ally0
   _moveable: 1
   _type: 3
-  _casterClass: 2
-  researchKeyOverride: 
-  researchAmount: 0.1
   tags:
     tags:
       _items: []
@@ -167,41 +128,41 @@ MonoBehaviour:
       staggerTime: 0
       atk:
         statRange:
-          min: -10
-          max: 10
+          min: -20
+          max: 20
         overflow: 0
         _value: 0
       def:
         statRange:
-          min: -10
-          max: 10
+          min: -20
+          max: 20
         overflow: 0
         _value: 0
       spd:
         statRange:
-          min: -10
-          max: 10
+          min: -20
+          max: 20
         overflow: 0
         _value: 0
       acc:
         statRange:
-          min: -10
-          max: 10
+          min: -20
+          max: 20
         overflow: 0
         _value: 0
       evade:
         statRange:
-          min: -10
-          max: 10
+          min: -20
+          max: 20
         overflow: 0
         _value: 0
       luck:
         statRange:
-          min: -10
-          max: 10
+          min: -20
+          max: 20
         overflow: 0
         _value: 0
-  ui: {fileID: 0}
+  ui: {fileID: 6401271917613143849}
 --- !u!114 &6405583009786731919
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -216,7 +177,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isCast: 0
   allyMenu: {fileID: 0}
-  menuPrompt: {fileID: 1641892382805828221}
+  menuPrompt: {fileID: 0}
   mpMax: 10
   mpChargeTime: 1
 --- !u!114 &5886312805885437096
@@ -464,3 +425,15 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 387461812972811896}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6401271917613143849 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6752418199134150993, guid: f15913804a48d56499b0d447213baf94,
+    type: 3}
+  m_PrefabInstance: {fileID: 387461812972811896}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5542d7a916fb7e4f8f04e9a9aeb5ed2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

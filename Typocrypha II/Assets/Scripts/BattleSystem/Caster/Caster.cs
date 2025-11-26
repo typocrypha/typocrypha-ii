@@ -420,10 +420,6 @@ public class Caster : MonoBehaviour
 
     protected virtual void Awake()
     {
-        if (ui == null) 
-        {
-            ui = GetComponentInChildren<CasterUI>();
-        }
         tags.RecalculateAggregate();
         foreach (var tag in tags)
         {

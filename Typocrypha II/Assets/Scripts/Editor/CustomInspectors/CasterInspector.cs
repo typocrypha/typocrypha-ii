@@ -26,15 +26,9 @@ public class CasterInspector : Editor
         data.IsMoveable = EditorGUILayout.Toggle(new GUIContent("Movable"), data.IsMoveable);
         #endregion
 
-        #region Spawning GUI
-        //EditorGUILayout.BeginHorizontal();
-        //if (data.overrideSpawnAnim = EditorGUILayout.ToggleLeft(new GUIContent("Set Spawn Anim"), data.overrideSpawnAnim, GUILayout.Width(togglewidth)))
-        //    data.spawnAnim = EditorGUILayout.ObjectField(GUIContent.none, data.spawnAnim, typeof(AnimationClip), false, GUILayout.Width(refWidth)) as AnimationClip;
-        //EditorGUILayout.EndHorizontal();
-        //EditorGUILayout.BeginHorizontal();
-        //if (data.overrideSpawnSfx = EditorGUILayout.ToggleLeft(new GUIContent("Set Spawn Sfx"), data.overrideSpawnSfx, GUILayout.Width(togglewidth)))
-        //    data.spawnSfx = EditorGUILayout.ObjectField(GUIContent.none, data.spawnSfx, typeof(AudioClip), false, GUILayout.Width(refWidth)) as AudioClip;
-        //EditorGUILayout.EndHorizontal()
+        #region Unity GUI
+        EditorUtils.Separator();
+        data.ui = EditorUtils.ObjectField(data.ui, true);
         EditorUtils.Separator();
         #endregion
 
