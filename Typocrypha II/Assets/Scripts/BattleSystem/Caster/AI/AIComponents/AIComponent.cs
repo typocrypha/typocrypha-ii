@@ -42,22 +42,15 @@ public abstract class AIComponent : MonoBehaviour
         caster.Charge = 0;
     }
 
-    protected bool CastAtRandomTarget(IEnumerable<Caster> targets, IReadOnlyList<Spell> spellOptions, bool canCounter = false)
+    public bool CastAtRandomTarget(IEnumerable<Caster> targets, IReadOnlyList<Spell> spells, bool canCounter, System.Func<Caster, float> weightFn = null, System.Action<Caster> onTargetSelected = null)
     {
-        var enemyChoices = new List<Caster>(targets);
-        enemyChoices.RemoveAll(IsNotValidTarget);
-        if (enemyChoices.Count <= 0)
-            return false;
-        var target = RandomUtils.RandomU.instance.Choice(enemyChoices);
-        AllyBattleBoxManager.instance.ShakeBattleBox();
-        QueueCast(target.FieldPos, RandomUtils.RandomU.instance.Choice(spellOptions), canCounter, null);
-        return true;
+        return CastAtRandomTarget(targets, RandomUtils.RandomU.instance.Choice(spells), canCounter, weightFn, onTargetSelected);
     }
 
-    protected bool CastAtRandomTarget(IEnumerable<Caster> targets, Spell spell, bool canCounter = false, System.Action<Caster> onTargetSelected = null)
+    protected bool CastAtRandomTarget(IEnumerable<Caster> targets, Spell spell, bool canCounter, System.Func<Caster, float> weightFn = null, System.Action<Caster> onTargetSelected = null)
     {
-        var enemyChoices = new List<Caster>(targets);
-        enemyChoices.RemoveAll(IsNotValidTarget);
+        var enemyChoices = weightFn == null ? new RandomUtils.WeightedSet<Caster>(targets) : new RandomUtils.WeightedSet<Caster>(targets, weightFn);
+        enemyChoices.RemoveWhere(IsNotValidTarget);
         if (enemyChoices.Count <= 0)
             return false;
         var target = RandomUtils.RandomU.instance.Choice(enemyChoices);

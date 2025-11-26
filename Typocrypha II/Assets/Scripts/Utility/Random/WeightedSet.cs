@@ -35,6 +35,11 @@ namespace RandomUtils
             foreach (var item in items)
                 this.items.Add(item, weight);
         }
+        public WeightedSet(IEnumerable<T> items, System.Func<T,float> weightFn)
+        {
+            foreach (var item in items)
+                this.items.Add(item, weightFn(item));
+        }
         public WeightedSet(IEnumerable<T> items, IEnumerable<float> weights)
         {
             IEnumerator<float> e = weights.GetEnumerator();
