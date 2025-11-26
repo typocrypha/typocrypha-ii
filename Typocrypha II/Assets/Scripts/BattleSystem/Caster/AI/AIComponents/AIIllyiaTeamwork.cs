@@ -22,9 +22,9 @@ public class AIIllyiaTeamwork : AIAllyRandomTimer
     {
         foreach (var enemy in Battlefield.instance.Enemies)
         {
-            if (enemy.IsDeadOrFled)
+            if (enemy.IsDeadOrFled || enemy.IsSpiritMode)
                 continue;
-            if (enemy.BStatus == Caster.BattleStatus.SpiritMode)
+            if (enemy.FieldPos == Battlefield.instance.Player.TargetPos)
                 continue;
             if (enemy.Health <= threshold && enemy.ChargeNormalized >= 0.9f)
             {
@@ -35,14 +35,24 @@ public class AIIllyiaTeamwork : AIAllyRandomTimer
         }
         if (RandomUtils.RandomU.instance.RollSuccess(0.2))
         {
-            CastAtRandomTarget(Battlefield.instance.Enemies, followUpSpells, true);
+            CastAtRandomTarget(Battlefield.instance.Enemies, followUpSpells, true, AvoidPlayerTargetWeight);
         }
+    }
+
+    private static float AvoidPlayerTargetWeight(Caster caster)
+    {
+        return caster.FieldPos == Battlefield.instance.Player.TargetPos ? 1 : 6;
+    }
+
+    private static float FollowPlayerTargetWeight(Caster caster)
+    {
+        return caster.FieldPos == Battlefield.instance.Player.TargetPos ? 9 : 1;
     }
 
     private void FollowUp(Spell s, Caster caster, bool hitTarget)
     {
         if (!hitTarget || !RandomUtils.RandomU.instance.RollSuccess(0.1))
             return;
-        CastAtRandomTarget(Battlefield.instance.Enemies, followUpSpells, true);
+        CastAtRandomTarget(Battlefield.instance.Enemies, followUpSpells, true, FollowPlayerTargetWeight);
     }
 }
