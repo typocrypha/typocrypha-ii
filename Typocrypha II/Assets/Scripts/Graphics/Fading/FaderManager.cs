@@ -97,7 +97,7 @@ public class FaderManager : MonoBehaviour, IPausable
     public void FadeTargets(Spell spell, Battlefield.Position fieldPos, Battlefield.Position targetPos)
     {
         FadeAll(0.5f, Color.black);
-        foreach (var target in spell.AllTargets(fieldPos, targetPos).Where((a) => a != null))
+        foreach (var target in spell.AllTargets(fieldPos, targetPos))
         {
             var fader = target.GetComponent<FaderGroup>();
             if(fader != null)

@@ -146,7 +146,7 @@ public class Spell : IList<SpellWord>, IEquatable<Spell>
     public IEnumerable<Caster> AllTargets(Battlefield.Position casterPos, Battlefield.Position targetPos)
     {
         var roots = SpellManager.instance.Modify(this);
-        var targets = new HashSet<Battlefield.Position>();
+        var seenPositions = new HashSet<Battlefield.Position>();
         foreach(var root in roots)
         {
             foreach(var effect in root.effects)
@@ -154,14 +154,19 @@ public class Spell : IList<SpellWord>, IEquatable<Spell>
                 var pattern = effect.pattern.Target(casterPos, targetPos);
                 foreach(var space in pattern)
                 {
-                    if (!targets.Contains(space))
+                    if (seenPositions.Contains(space))
                     {
-                        targets.Add(space);
+                        continue;
+                    }
+                    seenPositions.Add(space);
+                    var caster = Battlefield.instance.GetCaster(space);
+                    if (caster != null)
+                    {
+                        yield return caster;
                     }
                 }
             }
         }
-        return targets.Select(Battlefield.instance.GetCaster);
     }
 
     #region IList implementation
