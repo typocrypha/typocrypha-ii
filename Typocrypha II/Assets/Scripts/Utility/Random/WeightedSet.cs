@@ -30,7 +30,7 @@ namespace RandomUtils
 
         #region Constructors
         public WeightedSet() { }
-        public WeightedSet(IEnumerable<T> items, float weight = 0)
+        public WeightedSet(IEnumerable<T> items, float weight = 1)
         {
             foreach (var item in items)
                 this.items.Add(item, weight);
