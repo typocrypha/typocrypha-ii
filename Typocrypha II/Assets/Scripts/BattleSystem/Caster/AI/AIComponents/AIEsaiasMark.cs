@@ -35,7 +35,12 @@ public class AIEsaiasMark : AIAllyRandomTimer
     {
         if (!RandomUtils.RandomU.instance.RollSuccess(randomAttackChance))
             return;
-        CastAtRandomTarget(Battlefield.instance.Enemies, followUpSpell, true);
+        CastAtRandomTarget(Battlefield.instance.Enemies, followUpSpell, true, FollowPlayerTargetWeight);
+    }
+
+    private static float FollowPlayerTargetWeight(Caster caster)
+    {
+        return caster.FieldPos == Battlefield.instance.Player.TargetPos ? 9 : 1;
     }
 
     protected override bool IsNotValidTarget(Caster caster)
