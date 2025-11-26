@@ -24,10 +24,8 @@ public class TargetData
     public BoolMatrix2D pattern = new BoolMatrix2D(2, 3);
     public Type type = Type.TargetedPattern;
 
-    public List<Battlefield.Position> Target(Battlefield.Position casterPos, Battlefield.Position targetPos)
+    public IEnumerable<Battlefield.Position> Target(Battlefield.Position casterPos, Battlefield.Position targetPos)
     {
-        var ret = new List<Battlefield.Position>(6);
-
         #region Pattern-Based Targeting
 
         if (PatternApplies(type))
@@ -56,10 +54,10 @@ public class TargetData
             for (int row = 0; row < targets.Rows; ++row)
                 foreach (int col in colRange)
                     if (targets[row, col])
-                        ret.Add(new Battlefield.Position(row, col + colShift));
+                        yield return new Battlefield.Position(row, col + colShift);
             #endregion
 
-            return ret;
+            yield break;
         }
 
         #endregion
@@ -68,22 +66,25 @@ public class TargetData
 
         if (type == Type.Self)
         {
-            ret.Add(casterPos);
+            yield return casterPos;
         }
         else if (type == Type.Target)
         {
-            ret.Add(targetPos);
+            yield return targetPos;
         }
         else if (type == Type.Allies || type == Type.AlliesAndSelf)
         {
             var caster = Battlefield.instance.GetCaster(casterPos);
             if(caster != null)
             {
-                GetAllies(caster, casterPos, ref ret, null);
+                foreach(var ally in GetAllies(caster, casterPos, null))
+                {
+                    yield return ally;
+                }
                 // Add self if appropriate
                 if (type == Type.AlliesAndSelf)
                 {
-                    ret.Add(casterPos);
+                    yield return casterPos;
                 }
             }
         }
@@ -92,11 +93,14 @@ public class TargetData
             var caster = Battlefield.instance.GetCaster(casterPos);
             if (caster != null)
             {
-                GetAllies(caster, casterPos, ref ret, IsSpiritMode);
+                foreach (var ally in GetAllies(caster, casterPos, IsSpiritMode))
+                {
+                    yield return ally;
+                }
                 // Add self if appropriate
                 if (type == Type.SpiritModeAlliesAndSelf)
                 {
-                    ret.Add(casterPos);
+                    yield return casterPos;
                 }
             }
         }
@@ -108,19 +112,17 @@ public class TargetData
                 {
                     if (row == casterPos.Row && col == casterPos.Col)
                         continue;
-                    ret.Add(new Battlefield.Position(row, col));
+                    yield return new Battlefield.Position(row, col);
                 }
             }
         }
 
         #endregion
-
-        return ret;
     }
 
     private bool IsSpiritMode(Caster caster) => caster.BStatus == Caster.BattleStatus.SpiritMode;
 
-    private void GetAllies(Caster caster, Battlefield.Position casterPos, ref List<Battlefield.Position> ret, System.Predicate<Caster> filter)
+    private IEnumerable<Battlefield.Position> GetAllies(Caster caster, Battlefield.Position casterPos, System.Predicate<Caster> filter)
     {
         // Logic for player, allies, and enemies. Other states have no defined allies
         if (caster.IsPlayer)
@@ -131,19 +133,19 @@ public class TargetData
                     continue;
                 if (ally.IsDeadOrFled || (filter != null && !filter(ally)))
                     continue;
-                ret.Add(ally.FieldPos);
+                yield return ally.FieldPos;
             }
         }
         else if (caster.CasterState == Caster.State.Ally)
         {
-            ret.Add(Battlefield.instance.Player.FieldPos);
+            yield return Battlefield.instance.Player.FieldPos;
             foreach (var ally in Battlefield.instance.Casters)
             {
                 if (ally.CasterState != Caster.State.Ally)
                     continue;
                 if (ally.IsDeadOrFled || ally.FieldPos == casterPos || (filter != null && !filter(ally)))
                     continue;
-                ret.Add(ally.FieldPos);
+                yield return ally.FieldPos;
             }
         }
         else if (caster.CasterState == Caster.State.Hostile)
@@ -154,7 +156,7 @@ public class TargetData
                     continue;
                 if (enemy.IsDeadOrFled || enemy.FieldPos == casterPos || (filter != null && !filter(enemy)))
                     continue;
-                ret.Add(enemy.FieldPos);
+                yield return enemy.FieldPos;
             }
         }
     }

@@ -151,8 +151,7 @@ public class Spell : IList<SpellWord>, IEquatable<Spell>
         {
             foreach(var effect in root.effects)
             {
-                var pattern = effect.pattern.Target(casterPos, targetPos);
-                foreach(var space in pattern)
+                foreach(var space in effect.pattern.Target(casterPos, targetPos))
                 {
                     if (seenPositions.Contains(space))
                     {

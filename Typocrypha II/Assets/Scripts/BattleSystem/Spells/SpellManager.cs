@@ -97,7 +97,7 @@ public class SpellManager : MonoBehaviour
         {
             if(spell.Count == 1 && SpellWord.CompareKeys(spell[0], runWord))
             {
-                if(spell[0] is RootWord root && root.effects.Count > 0 && root.effects[0].pattern.Target(caster.FieldPos, target).Count > 1)
+                if(spell[0] is RootWord root && root.effects.Count > 0 && root.effects[0].pattern.Target(caster.FieldPos, target).Count() > 1)
                 {
                     SpellFxManager.instance.LogMessage(castMessage ?? $"{caster.DisplayName} and crew ran away!", spell.Icon);
                 }
@@ -192,6 +192,7 @@ public class SpellManager : MonoBehaviour
 
         var casterSpace = Battlefield.instance.GetSpaceScreenSpace(caster.FieldPos);
         bool hitTarget = false;
+        var targets = new List<Battlefield.Position>(6);
         for (int rootIndex = 0; rootIndex < roots.Count; rootIndex++)
         {
             var root = roots[rootIndex];
@@ -201,7 +202,8 @@ public class SpellManager : MonoBehaviour
             foreach (var effect in root.effects)
             {
                 // Get the effect's targets
-                var targets = effect.pattern.Target(caster.FieldPos, target);
+                targets.Clear();
+                targets.AddRange(effect.pattern.Target(caster.FieldPos, target));
                 // BattleDim: undim all targets
                 BattleDimmer.instance.UndimCasters(targets.Select(t=>Battlefield.instance.GetCaster(t)));
                 // Log the effect of each effect
