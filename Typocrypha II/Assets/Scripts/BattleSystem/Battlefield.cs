@@ -103,6 +103,70 @@ public class Battlefield : MonoBehaviour, IPausable
         }
     }
 
+    public IEnumerable<Caster> GetEnemies(Caster caster, Position casterPos, System.Predicate<Caster> filter)
+    {
+        // Logic for player, allies, and enemies. Other states have no defined allies
+        if (caster.IsPlayer || caster.CasterState != Caster.State.Ally)
+        {
+            foreach (var enemy in Enemies)
+            {
+                if (enemy.IsDeadOrFled || (filter != null && !filter(enemy)))
+                    continue;
+                yield return enemy;
+            }
+        }
+        else if (caster.CasterState == Caster.State.Hostile)
+        {
+            foreach (var enemy in Casters)
+            {
+                if (enemy.CasterState == Caster.State.Hostile)
+                    continue;
+                if (enemy.IsDeadOrFled || (filter != null && !filter(enemy)))
+                    continue;
+                yield return enemy;
+            }
+        }
+    }
+
+    public IEnumerable<Caster> GetAllies(Caster caster, Position casterPos, System.Predicate<Caster> filter)
+    {
+        // Logic for player, allies, and enemies. Other states have no defined allies
+        if (caster.IsPlayer)
+        {
+            foreach (var ally in Casters)
+            {
+                if (ally.CasterState != Caster.State.Ally)
+                    continue;
+                if (ally.IsDeadOrFled || (filter != null && !filter(ally)))
+                    continue;
+                yield return ally;
+            }
+        }
+        else if (caster.CasterState == Caster.State.Ally)
+        {
+            yield return Player;
+            foreach (var ally in Casters)
+            {
+                if (ally.CasterState != Caster.State.Ally)
+                    continue;
+                if (ally.IsDeadOrFled || ally.FieldPos == casterPos || (filter != null && !filter(ally)))
+                    continue;
+                yield return ally;
+            }
+        }
+        else if (caster.CasterState == Caster.State.Hostile)
+        {
+            foreach (var enemy in Casters)
+            {
+                if (enemy.CasterState != Caster.State.Hostile)
+                    continue;
+                if (enemy.IsDeadOrFled || enemy.FieldPos == casterPos || (filter != null && !filter(enemy)))
+                    continue;
+                yield return enemy;
+            }
+        }
+    }
+
     #region List Accessor Properties
     public List<ATBActor> Actors { get; } = new List<ATBActor>(6);
     public List<Caster> Casters { get; } = new List<Caster>(6);

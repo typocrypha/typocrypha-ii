@@ -19,6 +19,7 @@ public class TargetData
         SpiritModeAlliesAndSelf,
         EveryoneExceptSelf,
         SpritModeAllies,
+        SmartTarget,
     }
 
     public BoolMatrix2D pattern = new BoolMatrix2D(2, 3);
@@ -77,9 +78,9 @@ public class TargetData
             var caster = Battlefield.instance.GetCaster(casterPos);
             if(caster != null)
             {
-                foreach(var ally in GetAllies(caster, casterPos, null))
+                foreach(var ally in Battlefield.instance.GetAllies(caster, casterPos, null))
                 {
-                    yield return ally;
+                    yield return ally.FieldPos;
                 }
                 // Add self if appropriate
                 if (type == Type.AlliesAndSelf)
@@ -93,9 +94,9 @@ public class TargetData
             var caster = Battlefield.instance.GetCaster(casterPos);
             if (caster != null)
             {
-                foreach (var ally in GetAllies(caster, casterPos, IsSpiritMode))
+                foreach (var ally in Battlefield.instance.GetAllies(caster, casterPos, CasterFilters.IsSpiritMode))
                 {
-                    yield return ally;
+                    yield return ally.FieldPos;
                 }
                 // Add self if appropriate
                 if (type == Type.SpiritModeAlliesAndSelf)
@@ -116,51 +117,37 @@ public class TargetData
                 }
             }
         }
+        else if (type == Type.SmartTarget)
+        {
+            var targetCaster = Battlefield.instance.GetCaster(targetPos);
+            if(targetCaster != null && !targetCaster.IsDeadOrFled && !targetCaster.IsSpiritMode)
+            {
+                yield return targetPos;
+                yield break;
+            }
+            var caster = Battlefield.instance.GetCaster(casterPos);
+            if (caster == null)
+            {
+                yield return targetPos;
+                yield break;
+            }
+            Caster smartTarget = null;
+            foreach (var enemy in Battlefield.instance.GetEnemies(caster, casterPos, CasterFilters.IsNotSpiritMode))
+            {
+                if (smartTarget == null)
+                {
+                    smartTarget = enemy;
+                }
+                else if (enemy.Health < smartTarget.Health)
+                {
+                    smartTarget = enemy;
+                }
+            }
+            yield return smartTarget != null ? smartTarget.FieldPos : targetPos;
+        }
 
         #endregion
     }
 
-    private bool IsSpiritMode(Caster caster) => caster.BStatus == Caster.BattleStatus.SpiritMode;
-
-    private IEnumerable<Battlefield.Position> GetAllies(Caster caster, Battlefield.Position casterPos, System.Predicate<Caster> filter)
-    {
-        // Logic for player, allies, and enemies. Other states have no defined allies
-        if (caster.IsPlayer)
-        {
-            foreach (var ally in Battlefield.instance.Casters)
-            {
-                if (ally.CasterState != Caster.State.Ally)
-                    continue;
-                if (ally.IsDeadOrFled || (filter != null && !filter(ally)))
-                    continue;
-                yield return ally.FieldPos;
-            }
-        }
-        else if (caster.CasterState == Caster.State.Ally)
-        {
-            yield return Battlefield.instance.Player.FieldPos;
-            foreach (var ally in Battlefield.instance.Casters)
-            {
-                if (ally.CasterState != Caster.State.Ally)
-                    continue;
-                if (ally.IsDeadOrFled || ally.FieldPos == casterPos || (filter != null && !filter(ally)))
-                    continue;
-                yield return ally.FieldPos;
-            }
-        }
-        else if (caster.CasterState == Caster.State.Hostile)
-        {
-            foreach (var enemy in Battlefield.instance.Casters)
-            {
-                if (enemy.CasterState != Caster.State.Hostile)
-                    continue;
-                if (enemy.IsDeadOrFled || enemy.FieldPos == casterPos || (filter != null && !filter(enemy)))
-                    continue;
-                yield return enemy.FieldPos;
-            }
-        }
-    }
-
-    public static bool PatternApplies(Type type) => type == Type.TargetedPattern 
-        || type == Type.AbsolutePattern || type == Type.CasterCenteredPattern; 
+    public static bool PatternApplies(Type type) => type == Type.TargetedPattern || type == Type.AbsolutePattern || type == Type.CasterCenteredPattern; 
 }
