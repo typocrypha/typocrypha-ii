@@ -8,10 +8,12 @@ public class AllyBattleBoxManager : MonoBehaviour
 {
     public static AllyBattleBoxManager instance;
     [SerializeField] private VNPlusCharacter[] rightColumnCharas;
+    [SerializeField] private BattleAllyUI[] charaUI;
     [SerializeField] private RectTransform onScreenPos;
     [SerializeField] private RectTransform offScreenPos;
     [SerializeField] private TweenInfo joinTweenInfo;
 
+    public BattleAllyUI CurrentBattleUI => charaUI[rightColumnIndex];
     public bool HasActiveCharacter => !AllCharactersHidden && CurrentChar.Data != null;
     public VNPlusCharacter CurrentChar => rightColumnCharas[rightColumnIndex];
     private int rightColumnIndex = 0;
@@ -157,6 +159,11 @@ public class AllyBattleBoxManager : MonoBehaviour
             .Append(rect.DOAnchorPosX(-10, 0.075f).SetRelative(true))
             .Append(rect.DOAnchorPosX(10, 0.075f).SetRelative(true))
             .Append(rect.DOAnchorPosX(-5, 0.075f).SetRelative(true));
+    }
+
+    public void UpdateHp(float percentage)
+    {
+        CurrentBattleUI.UpdateHP(percentage);
     }
 
 }
