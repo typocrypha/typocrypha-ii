@@ -54,8 +54,10 @@ public class AllyBattleBoxManager : MonoBehaviour
         if(data == null)
         {
             CurrentChar.NameText = "No Ally";
+            CurrentBattleUI.SetEnabled(false);
             return;
         }
+        CurrentBattleUI.SetEnabled(true);
         CurrentChar.NameText = data.mainAlias;
         if (!string.IsNullOrEmpty(initialPose))
         {

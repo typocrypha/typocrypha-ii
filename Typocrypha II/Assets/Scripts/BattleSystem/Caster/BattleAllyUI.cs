@@ -6,6 +6,12 @@ public class BattleAllyUI : MonoBehaviour
 {
     [SerializeField] private ShadowBar shadow;
     [SerializeField] private FilledSlicedImage health;
+    [SerializeField] private GameObject ui;
+
+    public void SetEnabled(bool isEnabled)
+    {
+        ui.SetActive(isEnabled);
+    }
 
     public void UpdateHP(float percent)
     {
