@@ -3,7 +3,7 @@
 using UnityEngine;
 using DG.Tweening;
 
-public class VNPlusTIPSController : MonoBehaviour
+public class TIPSAnimationController : MonoBehaviour
 {
     public PauseHandle PH { get; private set; } = null;
 
