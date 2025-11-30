@@ -14,7 +14,8 @@ public class TIPSTopicPanel : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI uguiTitle, uguiPage;
     [SerializeField] CanvasGroup canvasGroup;
-    [SerializeField] private List<MenuButton> buttons;
+    [SerializeField] List<MenuButton> buttons;
+    [SerializeField] TIPSNavigator navigator;
 
     private int PageSize => buttons.Count;
     public TIPSEntryData TopEntry => currTopics.Count > 0 ? currTopics[0] : null;
@@ -111,7 +112,7 @@ public class TIPSTopicPanel : MonoBehaviour
     {
         if (currPage <= 0)
         {
-            SelectTopicPageTop();
+            navigator.FocusOnSearchbar();
             return;
         }
 
@@ -158,14 +159,18 @@ public class TIPSTopicPanel : MonoBehaviour
 
             //navigation to previous page
             var prevHandler = buttons[i].gameObject.AddComponent<MoveEventHandler>();
-            prevHandler.AddListeners(PrevPage).EnableTrigger(MoveDirection.Left);
-            if (i == 0) prevHandler.EnableTrigger(MoveDirection.Up);
+            prevHandler.AddListeners(PrevPage).EnableTriggers(MoveDirection.Left);
+            if (i == 0) prevHandler.EnableTriggers(MoveDirection.Up);
 
             //navigation to next page
             var nextHandler = buttons[i].gameObject.AddComponent<MoveEventHandler>();
-            nextHandler.AddListeners(NextPage).EnableTrigger(MoveDirection.Right);
-            if (i == buttons.Count - 1) nextHandler.EnableTrigger(MoveDirection.Down);
+            nextHandler.AddListeners(NextPage).EnableTriggers(MoveDirection.Right);
+            if (i == buttons.Count - 1) nextHandler.EnableTriggers(MoveDirection.Down);
         }
+    }
 
+    private void LeaveTopics()
+    {
+        if (currPage == 0) navigator.FocusOnSearchbar();
     }
 }

@@ -8,9 +8,15 @@ public class MoveEventHandler : MonoBehaviour, IMoveHandler
     public Dictionary<MoveDirection, bool> DirectionalTriggers { get; private set; } = new Dictionary<MoveDirection, bool>();
     public UnityEvent Response = new UnityEvent();
 
-    public MoveEventHandler EnableTrigger(params MoveDirection[] directions)
+    public MoveEventHandler EnableTriggers(params MoveDirection[] directions)
     {
         foreach (var d in directions) DirectionalTriggers[d] = true;
+        return this;
+    }
+
+    public MoveEventHandler DisableTriggers(params MoveDirection[] directions)
+    {
+        foreach (var d in directions) DirectionalTriggers[d] = false;
         return this;
     }
 

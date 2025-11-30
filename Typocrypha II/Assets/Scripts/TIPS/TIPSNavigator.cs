@@ -54,7 +54,7 @@ public class TIPSNavigator : MonoBehaviour
     {
         if (CurrentFocus == Focus.searchbar)
         {
-            if (Input.GetAxisRaw("Vertical") != 0)
+            if (Input.GetAxisRaw("Vertical") < 0 || Input.GetAxisRaw("Horizontal") > 0)
             {
                 FocusOnTopics(true);
             }
