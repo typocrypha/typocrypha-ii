@@ -28,6 +28,7 @@ public class TIPSNavigator : MonoBehaviour
     private TIPSEntryData currentEntry;
     private int contentPage;
 
+    private const string DEFAULT_SEARCH_HINT = "Type to search";
 
     private void Awake()
     {
@@ -61,6 +62,7 @@ public class TIPSNavigator : MonoBehaviour
             else if (Input.GetKeyDown(KeyCode.Return))
             {
                 searchbar.Submit();
+                SearchbarShowHint();
             }
             else if (!string.IsNullOrEmpty(Input.inputString))
             {
@@ -75,6 +77,7 @@ public class TIPSNavigator : MonoBehaviour
             {
                 FocusOnSearchbar();
                 searchbar.ProcessInput(Input.inputString);
+                SearchbarShowHint();
             }
 
             if (Input.GetKeyDown(KeyCode.Space))
@@ -104,12 +107,20 @@ public class TIPSNavigator : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Shows a hint in the searchbar depending on context
+    /// </summary>
     public void SearchbarShowHint()
     {
         string activeEntry = DialogManager.instance.ActiveTIPsEntries.FirstOrDefault() ?? string.Empty;
-        searchHint.text = activeEntry.StartsWith(searchbar.Text, StringComparison.InvariantCultureIgnoreCase)
-            ? activeEntry
-            : string.Empty;
+        string hintMessage = TIPSManager.Instance.EntryIsUnlocked(activeEntry) ? string.Empty : activeEntry;
+
+        searchHint.text = (string.IsNullOrEmpty(hintMessage) && string.IsNullOrEmpty(searchbar.Text))
+            ? DEFAULT_SEARCH_HINT
+            : hintMessage.StartsWith(searchbar.Text, StringComparison.InvariantCultureIgnoreCase)
+                ? hintMessage
+                : string.Empty;
+            
     }
 
     public void FocusOnSearchbar()
