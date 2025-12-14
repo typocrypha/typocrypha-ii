@@ -129,19 +129,6 @@ public class SpellFxManager : MonoBehaviour
         }
         #endregion
 
-        if (word != null && data.WordFx != null)
-        {
-            var wordFx = wordFxPool.Get();
-            bool completed = false;
-            void Complete()
-            {
-                completed = true;
-                wordFxPool.Release(wordFx);
-            }
-            wordFx.Play(word, data, Complete);
-            yield return new WaitUntil(() => completed);
-        }
-
         #region Special Reaction Graphics
 
         //Repel
@@ -195,6 +182,30 @@ public class SpellFxManager : MonoBehaviour
             yield return new WaitForSeconds(resultsWaitTime);
         }
         onComplete?.Invoke();
+    }
+
+    public Coroutine PlayTravelFX(RootWord word, Caster caster, Battlefield.Position targetPos)
+    {
+        if (word == null || word.effects.Count <= 0)
+            return null;
+        var def = word.effects[0].wordFx;
+        if (def == null)
+            return null;
+        return StartCoroutine(TravelFXCr(word, caster, targetPos, def));
+
+    }
+
+    private IEnumerator TravelFXCr(RootWord word, Caster caster, Battlefield.Position target, WordFxDefinition definition)
+    {
+        var wordFx = wordFxPool.Get();
+        bool completed = false;
+        void Complete()
+        {
+            completed = true;
+            wordFxPool.Release(wordFx);
+        }
+        wordFx.Play(word, caster, target, definition.AnimationType, Complete);
+        yield return new WaitUntil(() => completed);
     }
 
     #region Popup Effects

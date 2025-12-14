@@ -152,7 +152,6 @@ public class SpellManager : MonoBehaviour
         var specialMod = Damage.SpecialModifier.None;
         if (roots.Any((r) => r.effects.Any((e) => e.CanCrit)))
         {
-
             if (caster.IsPlayer)
             {
                 var player = caster;
@@ -199,6 +198,7 @@ public class SpellManager : MonoBehaviour
             var spellData = new RootCastData(spell, roots, rootIndex);
             // Log the effect of each effect
             var rootResults = new RootCastResults();
+            yield return SpellFxManager.instance.PlayTravelFX(root, caster, target);
             foreach (var effect in root.effects)
             {
                 // Get the effect's targets
