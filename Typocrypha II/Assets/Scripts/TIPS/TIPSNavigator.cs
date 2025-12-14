@@ -118,7 +118,7 @@ public class TIPSNavigator : MonoBehaviour
         searchHint.text = (string.IsNullOrEmpty(hintMessage) && string.IsNullOrEmpty(searchbar.Text))
             ? DEFAULT_SEARCH_HINT
             : hintMessage.StartsWith(searchbar.Text, StringComparison.InvariantCultureIgnoreCase)
-                ? hintMessage
+                ? hintMessage.ToUpper()
                 : string.Empty;
             
     }
