@@ -75,7 +75,7 @@ public class SpellManager : MonoBehaviour
     private IEnumerator CastCR(Spell spell, Caster caster, Battlefield.Position target, string castMessage, bool isTopLevel, Caster counterTarget)
     {
         // BattleDim : Dim everyone except caster
-        BattleDimmer.instance.DimCasters(Battlefield.instance.Casters.Where(c => c != caster), false);
+        BattleDimmer.instance.DimCasters(Battlefield.instance.Casters, caster);
         BattleDimmer.instance.UndimCaster(caster);
         // Hide caster's UI
         if(caster.ui != null)
@@ -205,7 +205,7 @@ public class SpellManager : MonoBehaviour
                 targets.Clear();
                 targets.AddRange(effect.pattern.Target(caster.FieldPos, target));
                 // BattleDim: undim all targets
-                BattleDimmer.instance.UndimCasters(targets.Select(t=>Battlefield.instance.GetCaster(t)));
+                BattleDimmer.instance.UndimCastersAtPositions(targets);
                 // Log the effect of each effect
                 var effectResults = new List<CastResults>();
                 int completedEffects = 0;

@@ -57,16 +57,29 @@ public class BattleDimmer : MonoBehaviour
     }
 
     /// <summary>
-    /// Disabler dimming effect on specified casters.
+    /// Enable dimming effect on specified casters.
     /// </summary>
-    /// <param name="casters">A collection of casters to make undimmable.</param>
-    public void UndimCasters(IEnumerable<Caster> casters)
+    /// <param name="casters">A collection of casters to make dimmable.</param>
+    public void DimCasters(IEnumerable<Caster> casters, Caster except)
     {
         if (casters == null) return;
 
         foreach (var c in casters)
         {
-            UndimCaster(c);
+            if (!c || !c.ui || c == except) continue;
+            dimmedUIs.Add(c.ui);
+            c.ui.SetDimmable(true);
+        }
+    }
+
+    public void UndimCastersAtPositions(IEnumerable<Battlefield.Position> positions)
+    {
+        foreach (var pos in positions)
+        {
+            var caster = Battlefield.instance.GetCaster(pos);
+            if (caster == null)
+                continue;
+            UndimCaster(caster);
         }
     }
 
