@@ -14,7 +14,7 @@ public class TIPSEntrySpell : TIPSEntryData
 
     protected override string GetId(string pathToEntry)
     {
-        return spell.TIPsEntryName;
+        return spell.TIPsEntryId;
     }
 
     public override void OnValidate()

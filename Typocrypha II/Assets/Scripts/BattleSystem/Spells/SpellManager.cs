@@ -299,10 +299,7 @@ public class SpellManager : MonoBehaviour
                 // Log the effects of this effect
                 rootResults.Add(effectResults);
             }
-            if (caster.IsPlayer && PlayerDataManager.instance != null)
-            {
-                TIPSManager.Instance.UnlockEntryIfApplicable(root.TIPsEntryName);
-            }
+            TIPSManager.Instance.UnlockEntryIfApplicable(root.TIPsEntryId);
         }
         if (HasPrompts)
         {

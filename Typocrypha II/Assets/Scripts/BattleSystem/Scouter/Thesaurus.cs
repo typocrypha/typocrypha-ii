@@ -17,7 +17,7 @@ public class Thesaurus : MonoBehaviour
     List<SpellWord> GetSynonymsOfBase(SpellWord word)
     {
         var tips = TIPSManager.Instance;
-        return SynonymBundle.words.Select(p => p.Value).Where(s => s.synonymOf == word && tips.EntryIsUnlocked(s.TIPsEntryName)).ToList();
+        return SynonymBundle.words.Select(p => p.Value).Where(s => s.synonymOf == word && tips.EntryIsUnlocked(s.TIPsEntryId)).ToList();
     }
 
     string FormatWordList(SpellWord baseWord, List<SpellWord> synonyms, int page)
