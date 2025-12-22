@@ -198,7 +198,11 @@ public class SpellManager : MonoBehaviour
             var spellData = new RootCastData(spell, roots, rootIndex);
             // Log the effect of each effect
             var rootResults = new RootCastResults();
-            yield return SpellFxManager.instance.PlayTravelFX(root, caster, target);
+            var travelCr = SpellFxManager.instance.PlayTravelFX(root, caster, target);
+            if(travelCr != null)
+            {
+                yield return travelCr;
+            }
             foreach (var effect in root.effects)
             {
                 // Get the effect's targets
