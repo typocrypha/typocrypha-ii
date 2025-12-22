@@ -22,7 +22,6 @@ public class CampaignSaveData
 [System.Serializable]
 public class GlobalSaveData
 {
-    public List<string> unlockedSpellWords = new List<string>();
     public List<string> unlockedBadgeWords = new List<string>();
     public List<int> badgeUpgradeLevels = new List<int>();
     public List<string> unlockedTIPSEntries = new List<string>();
@@ -194,13 +193,6 @@ public class SaveManager : MonoBehaviour
         var equipment = PlayerDataManager.Equipment;
         // Get Unlocked Spell Words
         var data = new GlobalSaveData();
-        foreach(var kvp in equipment.UnlockedSpellWords)
-        {
-            var word = kvp.Value;
-            if (word.IsDebug)
-                continue;
-            data.unlockedSpellWords.Add(word.Key);
-        }
         // Get Unlocked Badges
         foreach(var kvp in equipment.UnlockedBadgeWords)
         {
@@ -229,15 +221,6 @@ public class SaveManager : MonoBehaviour
     private void ApplyGlobalSaveData(GlobalSaveData data)
     {
         var equipment = PlayerDataManager.Equipment;
-        // Unlocked spells
-        equipment.ClearUnlockedSpells();
-        foreach(var key in data.unlockedSpellWords)
-        {
-            if(Lookup.TryGetSpellWord(key, out var word))
-            {
-                equipment.UnlockWord(word);
-            }
-        }
         // Unlocked badges
         equipment.ClearUnlockedBadges();
         for (int i = 0; i < data.unlockedBadgeWords.Count && i < data.badgeUpgradeLevels.Count; i++)

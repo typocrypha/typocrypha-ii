@@ -34,49 +34,49 @@ public class TIPSManager : MonoBehaviour
         }
     }
 
-    public bool EntryExists(string title)
+    public bool EntryExists(string id)
     {
-        return allTIPS.entries.ContainsKey(title);
+        return allTIPS.entries.ContainsKey(id);
     }
 
-    public TIPSEntryData GetEntry(string title)
+    public TIPSEntryData GetEntry(string id)
     {
-        return EntryExists(title) ? allTIPS.entries[title] : null;
+        return EntryExists(id) ? allTIPS.entries[id] : null;
     }
 
-    public bool TryGetEntry(string title, out TIPSEntryData match)
+    public bool TryGetEntry(string id, out TIPSEntryData match)
     {
-        return allTIPS.entries.TryGetValue(title, out match);
+        return allTIPS.entries.TryGetValue(id, out match);
     }
 
-    public bool EntryIsUnlocked(string title)
+    public bool EntryIsUnlocked(string id)
     {
-        return unlockedEntries.ContainsKey(title);
+        return unlockedEntries.ContainsKey(id);
     }
 
     /// <summary>
     /// Register entry to collection of unlocked entries.
     /// Will do nothing if entry already unlocked or doesn't exist
     /// </summary>
-    /// <param name="title"> Title of entry to be added. </param>
-    public void UnlockEntryIfApplicable(string title)
+    /// <param name="id"> Title of entry to be added. </param>
+    public void UnlockEntryIfApplicable(string id)
     {
-        if (!EntryExists(title)) return;
-        if (EntryIsUnlocked(title)) return;
-        unlockedEntries.Add(allTIPS.entries[title].ID, allTIPS.entries[title]);
-        UnlockEntryIfApplicable(allTIPS.entries[title].Parent);
+        if (!EntryExists(id)) return;
+        if (EntryIsUnlocked(id)) return;
+        unlockedEntries.Add(allTIPS.entries[id].ID, allTIPS.entries[id]);
+        UnlockEntryIfApplicable(allTIPS.entries[id].Parent);
     }
 
     /// <summary>
     /// Search unlocked entries by title.
     /// </summary>
-    /// <param name="titlePartial"> Substring to match title against. </param>
+    /// <param name="idPartial"> Substring to match title against. </param>
     /// <returns> Array of matching entries. </returns>
-    public TIPSEntryData[] GetUnlockedEntriesWithPartialTitle(string titlePartial)
+    public TIPSEntryData[] GetUnlockedEntriesWithPartialTitle(string idPartial)
     {
         return unlockedEntries
             .Select(p => p.Value)
-            .Where(e => e.MatchTitlePartial(titlePartial))
+            .Where(e => e.MatchTitlePartial(idPartial))
             .ToArray();
     }
     

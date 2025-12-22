@@ -16,6 +16,7 @@ public abstract class SpellWord : ScriptableObject
     public string DisplayName => internalName.ToUpper();
     public string BaseName => IsSynonym ? synonymOf.DisplayName : DisplayName;
     public string Key => internalName.ToLower();
+    public string TIPsEntryName => internalName;
     public string internalName;
     public string description;
     public string flavorText;

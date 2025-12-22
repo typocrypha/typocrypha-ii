@@ -8,8 +8,7 @@ using TMPro;
 
 public class Thesaurus : MonoBehaviour
 {
-
-    //[SerializeField] private SpellWordBundle SynonymBundle;
+    [SerializeField] private SpellWordBundle SynonymBundle;
     [SerializeField] private TMPro.TextMeshProUGUI DisplayText;
 
     const int SPELL_DISPLAY_LINES = 7;
@@ -17,8 +16,8 @@ public class Thesaurus : MonoBehaviour
 
     List<SpellWord> GetSynonymsOfBase(SpellWord word)
     {
-        //return SynonymBundle.words.Select(p => p.Value).Where(s => s.synonymOf == word).ToList(); //debug with whole synonym list
-        return PlayerDataManager.Equipment.UnlockedSpellWords.Select(p => p.Value).Where(s => s.synonymOf == word).ToList();
+        var tips = TIPSManager.Instance;
+        return SynonymBundle.words.Select(p => p.Value).Where(s => s.synonymOf == word && tips.EntryIsUnlocked(s.TIPsEntryName)).ToList();
     }
 
     string FormatWordList(SpellWord baseWord, List<SpellWord> synonyms, int page)

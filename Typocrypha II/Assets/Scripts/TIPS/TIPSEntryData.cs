@@ -51,12 +51,19 @@ public class TIPSEntryData : ScriptableObject
         return false;
     }
 
+    protected virtual string GetId(string pathToEntry)
+    {
+        if (string.IsNullOrEmpty(pathToEntry)) 
+            return string.Empty;
+        return Path.GetFileNameWithoutExtension(pathToEntry);
+    }
+
     public virtual void OnValidate()
     {
         // Important paths
         var pathToEntry = AssetDatabase.GetAssetPath(GetInstanceID());
         if (string.IsNullOrEmpty(pathToEntry)) return;
-        ID = Path.GetFileNameWithoutExtension(pathToEntry);
+        ID = GetId(pathToEntry);
 
         var pathToParent = new FileInfo(pathToEntry).DirectoryName;
         Parent = Path.GetFileNameWithoutExtension(pathToParent);

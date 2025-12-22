@@ -8,9 +8,6 @@ public class PlayerEquipment : MonoBehaviour
     public IReadOnlyDictionary<string, SpellWord> EquippedSpellWords => equippedSpellWords;
     private readonly Dictionary<string, SpellWord> equippedSpellWords = new Dictionary<string, SpellWord>();
 
-    public IReadOnlyDictionary<string, SpellWord> UnlockedSpellWords => unlockedSpellWords;
-    private readonly Dictionary<string, SpellWord> unlockedSpellWords = new Dictionary<string, SpellWord>();
-
     public IReadOnlyDictionary<BadgeWord.EquipmentSlot, BadgeWord> EquippedBadgeWords => equippedBadgeWords;
     private readonly Dictionary<BadgeWord.EquipmentSlot, BadgeWord> equippedBadgeWords = new Dictionary<BadgeWord.EquipmentSlot, BadgeWord>();
 
@@ -24,16 +21,8 @@ public class PlayerEquipment : MonoBehaviour
 
     private void Awake()
     {
-        UnlockDebugWords();
         EquipDebugWords();
         UnlockDebugBadges();
-        //EquipDebugBadges();
-    }
-
-    [Conditional("DEBUG")]
-    private void UnlockDebugWords()
-    {
-        UnlockWords(debugWords);
     }
 
     [Conditional("DEBUG")]
@@ -48,25 +37,6 @@ public class PlayerEquipment : MonoBehaviour
         foreach(var badge in debugBadgeWords)
         {
             UnlockBadge(badge);
-        }
-    }
-
-    public void UnlockWord(SpellWord word, bool equip = false)
-    {
-        if (!unlockedSpellWords.ContainsKey(word.Key))
-        {
-            unlockedSpellWords.Add(word.Key, word);
-        }
-        if (equip)
-        {
-            EquipWord(word);
-        }
-    }
-    public void UnlockWords(IEnumerable<SpellWord> words, bool equip = false)
-    {
-        foreach (var word in words)
-        {
-            UnlockWord(word, equip);
         }
     }
 
@@ -209,12 +179,6 @@ public class PlayerEquipment : MonoBehaviour
     {
         equippedSpellWords.Clear();
         EquipDebugWords();
-    }
-
-    public void ClearUnlockedSpells()
-    {
-        unlockedSpellWords.Clear();
-        UnlockDebugWords();
     }
 
     public void ClearUnlockedBadges()

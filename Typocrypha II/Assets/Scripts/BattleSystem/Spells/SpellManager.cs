@@ -301,7 +301,7 @@ public class SpellManager : MonoBehaviour
             }
             if (caster.IsPlayer && PlayerDataManager.instance != null)
             {
-                PlayerDataManager.Equipment.UnlockWord(root);
+                TIPSManager.Instance.UnlockEntryIfApplicable(root.TIPsEntryName);
             }
         }
         if (HasPrompts)
