@@ -120,8 +120,22 @@ public class SpellManager : MonoBehaviour
             }
         }
         var roots = Modify(spell);
+        var specialMod = Damage.SpecialModifier.None;
+        // Badge abilities (player caster)
         if (caster.IsPlayer)
         {
+            if (CanCrit(roots) && caster.HasActiveAbilities(Caster.ActiveAbilities.Critical) && BadgeEffectCritical.RollForCritical(caster))
+            {
+                IEnumerator OnCritPopupComplete(bool popupSuccess)
+                {
+                    if (popupSuccess)
+                    {
+                        specialMod = Damage.SpecialModifier.Critical;
+                    }
+                    return null;
+                }
+                LogInteractivePopup(critPopup, "Critical Chance!", "CRITICAL", 5, OnCritPopupComplete);
+            }
             if (PlayerDataManager.Equipment.TryGetEquippedBadgeEffect<BadgeEffectCombo>(out var comboEffect) && comboEffect.CanFollowUp(caster))
             {
                 int comboDepth = 1;
@@ -148,43 +162,20 @@ public class SpellManager : MonoBehaviour
                 yield return StartCoroutine(PlayPrompts());
             }
         }
-        // Critical chance
-        var specialMod = Damage.SpecialModifier.None;
-        if (roots.Any((r) => r.effects.Any((e) => e.CanCrit)))
+        // Badge abilities (hostile caster)
+        if (caster.CasterState == Caster.State.Hostile)
         {
-            if (caster.IsPlayer)
+            if (CanBlock(roots) && PlayerDataManager.Equipment.TryGetEquippedBadgeEffect<BadgeEffectCritBlock>(out var critBlockEffect) && critBlockEffect.RollForCritical(Battlefield.instance.Player))
             {
-                var player = caster;
-                if (player.HasActiveAbilities(Caster.ActiveAbilities.Critical) && BadgeEffectCritical.RollForCritical(player))
+                IEnumerator OnBlockPopupComplete(bool popupSuccess)
                 {
-                    IEnumerator OnCritPopupComplete(bool popupSuccess)
+                    if (popupSuccess)
                     {
-                        if (popupSuccess)
-                        {
-                            specialMod = Damage.SpecialModifier.Critical;
-                        }
-                        return null;
+                        specialMod = Damage.SpecialModifier.CritBlock;
                     }
-                    LogInteractivePopup(critPopup, "Critical Chance!", "CRITICAL", 5, OnCritPopupComplete);
+                    return null;
                 }
-            }
-            else if (caster.CasterState == Caster.State.Hostile)
-            {
-                if (PlayerDataManager.Equipment.TryGetEquippedBadgeEffect<BadgeEffectCritBlock>(out var critBlockEffect) && critBlockEffect.RollForCritical(Battlefield.instance.Player))
-                {
-                    IEnumerator OnBlockPopupComplete(bool popupSuccess)
-                    {
-                        if (popupSuccess)
-                        {
-                            specialMod = Damage.SpecialModifier.CritBlock;
-                        }
-                        return null;
-                    }
-                    LogInteractivePopup(critPopup, "Block Chance!", "BLOCK", 5, OnBlockPopupComplete);
-                }
-            }
-            if (HasPrompts)
-            {
+                LogInteractivePopup(critPopup, "Block Chance!", "BLOCK", 5, OnBlockPopupComplete);
                 yield return StartCoroutine(PlayPrompts());
             }
         }
@@ -313,6 +304,29 @@ public class SpellManager : MonoBehaviour
             SpellCooldownManager.instance.DoOverheat();
         }
         OnAfterCastResolved?.Invoke();
+    }
+
+    private bool CanCrit(List<RootWord> roots)
+    {
+        foreach (var root in roots)
+        {
+            foreach(var effect in root.effects)
+            {
+                if (effect.CanCrit)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    private bool CanBlock(List<RootWord> roots)
+    {
+        foreach (var root in roots)
+        {
+            if (!root.blockable)
+                return false;
+        }
+        return true;
     }
 
     private void Counter(IReadOnlyList<SpellWord> counterWords, Caster caster, Caster counterTarget)
