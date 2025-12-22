@@ -121,8 +121,7 @@ public class Caster : MonoBehaviour
                 case BattleStatus.SpiritMode:
                     ui?.onSpiritForm.Invoke();
                     ui?.onSpChanged.Invoke((float)sp / Stats.MaxSP);
-                    //if(tags.ContainsTag("Demon"))
-                    //    ui?.onNameChanged.Invoke(DisplayName + "(WISP)");
+                    TIPSManager.Instance.UnlockEntryIfApplicable(DisplayName);
                     OnSpiritMode?.Invoke();
                     break;
                 case BattleStatus.Dead:
