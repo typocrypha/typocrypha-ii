@@ -305,10 +305,6 @@ public class SpellManager : MonoBehaviour
         {
             yield return StartCoroutine(PlayPrompts());
         }
-        if(spell.Any((w) => w.Key == "unlock"))
-        {
-            Debug.LogError("TODO: add message unlock code here");
-        }
         Counter(roots, caster, counterTarget);
         // Apply callbacks after the whole cast is finished
         caster.OnAfterCastResolved?.Invoke(spell, caster, hitTarget);
