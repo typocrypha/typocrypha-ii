@@ -6,8 +6,8 @@ public class ApplyStatusEffect : RootWordEffect
 {
     public GameObject statusEffectPrefab;
     public bool canCrit = false;
-
-    public override bool CanCrit => canCrit;
+    
+    protected override bool CanCritInternal => canCrit;
     protected StatusEffect Effect => statusEffectPrefab.GetComponent<StatusEffect>();
 
     public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.DamageModifier mod, RootCastResults prevResults = null)

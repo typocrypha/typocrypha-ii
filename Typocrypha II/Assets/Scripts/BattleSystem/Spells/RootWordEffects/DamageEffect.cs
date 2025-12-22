@@ -6,6 +6,8 @@ public class DamageEffect : RootWordEffect
 {
     public override int Power => power;
 
+    protected override bool CanCritInternal => true;
+
     public Damage.FormulaType formula;
     [SubSO("Formula")]
     public CustomFormula customFormula;

@@ -6,8 +6,6 @@ public class AddTagsEffect : RootWordEffect
 {
     public CasterTag.TagSet casterTagsToAdd = new CasterTag.TagSet();
 
-    public override bool CanCrit => false;
-
     public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.DamageModifier mod, RootCastResults prevResults = null)
     {
         var results = InitializeCastResults(caster, target, mod);

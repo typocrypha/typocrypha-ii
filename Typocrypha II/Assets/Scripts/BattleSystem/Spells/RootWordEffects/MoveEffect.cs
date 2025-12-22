@@ -14,8 +14,6 @@ public class MoveEffect : RootWordEffect
     public Filter validSpaceFilter;
     public List<Battlefield.Position> positions;
 
-    public override bool CanCrit => false;
-
     public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.DamageModifier mod, RootCastResults prevResults = null)
     {
         var results = InitializeCastResults(caster, target, mod);

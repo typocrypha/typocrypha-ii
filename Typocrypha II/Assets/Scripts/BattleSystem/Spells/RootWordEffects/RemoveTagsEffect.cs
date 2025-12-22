@@ -6,8 +6,6 @@ public class RemoveTagsEffect : RootWordEffect
 {
     public CasterTag.TagSet casterTagsToRemove = new CasterTag.TagSet();
 
-    public override bool CanCrit => false;
-
     public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.DamageModifier mod, RootCastResults prevResults = null)
     {
         var results = InitializeCastResults(caster, target, mod);

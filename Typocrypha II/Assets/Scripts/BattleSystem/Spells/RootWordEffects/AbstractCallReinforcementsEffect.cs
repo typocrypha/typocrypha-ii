@@ -6,8 +6,6 @@ public abstract class AbstractCallReinforcementsEffect : RootWordEffect
 {
     public int number = 1;
 
-    public override bool CanCrit => false;
-
     public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.DamageModifier mod, RootCastResults prevResults = null)
     {
         Clear();

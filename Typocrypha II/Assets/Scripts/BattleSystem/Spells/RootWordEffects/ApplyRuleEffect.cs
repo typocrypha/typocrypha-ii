@@ -11,7 +11,6 @@ public class ApplyRuleEffect : RootWordEffect
         FriendshipFrog,
         StormingFury
     }
-    public override bool CanCrit => false;
 
     public RuleEnum ruleType;
 
