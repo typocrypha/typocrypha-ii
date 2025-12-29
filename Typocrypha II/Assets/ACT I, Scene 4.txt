@@ -228,7 +228,7 @@ Ayin(concerned): B-But,{ps} that’s all Clarke told me to cast...
 Adelai(serious): What...
 
 
-Adelai(caring): ...OH!{pm} Ayin,{pm} you still have your Typocrypha on Training mode!
+Adelai(caring): ...OH!{pm} Ayin,{pm} you still have your Typocrypha on Training Mode!
 
 
 Adelai: Here,{pm} let me just...
@@ -259,7 +259,7 @@ Clarke[0,1]: Unlocking high-power combat Spell {ps}{c,ui-terms}“HAMMER”{c}.{
 Ayin[0,1]: Woah!{pm} What does {c,ui-terms}HAMMER{c} do?
 
 
-Adelai(serious)[0,2]: No time to explain!{pm} Just keep typing!!
+Adelai(serious)[0,2]: No time to explain!{pm} Just keep typing!
 
 
 >end
@@ -340,7 +340,7 @@ Adelai(serious)[0,2]: But you’re going to need some help for these next guys.
 Adelai[0,2]: Your Spells won’t do much damage to them,{pm} but you can still {c,highlight}Counter{c} them!
 
 
-Adelai[0,2]: So why don’t you just focus on {c,highlight}Countering{c} them:{pm} {c,ui-terms}I’ll attack in the opening!{c}
+Adelai[0,2]: You just focus on {c,highlight}Countering{c} them:{pm} {c,ui-terms}I’ll attack in the opening!{c}
 
 
 >end
@@ -375,9 +375,6 @@ Adelai(serious)[0,2]: And remember,{pm} I’ll always have your back!
 >addchar,Adelai,0,0,right
 
 
->playbgm,BGMVictory
-
-
 Adelai(normal)[0,2]: There’s an opening!
 
 
@@ -396,7 +393,7 @@ Adelai[0,2]: Hurry up!
 >end
 
 
-//Round 6: The Masked Demon
+//Round 6: The Masked Demon[b]
 //Opening Dialog:
 >start,ACT I-4-6-Opening
 
@@ -406,56 +403,88 @@ Adelai[0,2]: Hurry up!
 >playbgm,BGMCurseIntro
 
 
+Narrator[1,1]: A Masked Demon appears in front of you!
+
+
 Adrestia[1,1]: Cursed Humans,{ps} was this your doing!?
 
 
 Adelai[0,2]: ...!
 
 
->setpose,Adelai,action
->setexpr,Adelai,getittogether
-Adelai[0,2]: Ayin,{pm} stay back!
+Adelai[0,2]: Looks like there’s just one more...
 
 
-Ayin[0,1]: A-{ps}Adelai...?
+Adelai[0,2](normal): We’ll take them down like all the others!
 
 
-Adelai[0,2]: {c,whisper}A humanoid Demon,{pm} just like in the reports...{c}
+Adrestia[1,1]: Like all the others...?
 
 
-Adelai[0,2](damage): This Demon is stronger than anything you’ve seen.
+Adrestia[1,1]: You Humans think you can keep pushing us around!?
 
 
-Ayin[0,1]: What!?
+>end
+//After Ayin counters Adrestia the first time:
+>start,ACT I-4-6-AdrestiaCounter
 
 
-Adelai[0,2]: So I need you to trust me,{pm} OK?
++bubble
+>addchar,Adelai,0,0,right
 
 
-Adelai[0,2](leaveittome): If you can keep {c,highlight}Countering{c} it,{pm} we might have a shot.
+Adrestia[1,1]: Kh-!
 
 
-Ayin[0,1]: I-{ps}I...
-
-
-Adelai[0,2](getittogether): Ayin,{pm} you have to focus!
-
-
-Adrestia[1,1]: You Humans think you can keep pushing us around...
+Adrestia[1,1]: No!{pm} I will NOT be stopped!
 
 
 >stopbgm,immediate
 
 
-Adrestia[1,1]: Face my VENGEANCE!
+Adrestia[1,1]: Prepare to face my VENGEANCE!
 
 
 >playbgm,BGMBattleAdrestiaDraft1
 
 
->end[b]
+>end
+//After Ayin is hit once:
+>start,ACT I-4-6-AyinHit
 
 
++bubble
+>addchar,Adelai,0,0,right
+
+
+>stopbgm,immediate
+
+
+Ayin[0,1]: GAAH-!
+
+
+Adelai[0,2]: AYIN!
+
+
+Ayin[0,1]: Haa...{pm} Haa...{pm} It h-{ps}hurts...
+
+
+Adelai[0,2]: Get behind me,{pm} Ayin!
+
+
+Adrestia[1,1]: You reap what you sow,{pm} Humans.
+
+
+Adrestia[1,1]: Now it’s time for you to face justice!
+
+
+Adelai[0,2]: Ayin,{pm} you need to run,{pm} NOW!
+
+
+Ayin[0,1]: I-{ps}I don’t know if I c-{ps}can...
+
+
+>end
 //When Ayin at 50% health:
 >start,ACT I-4-6-AyinLow
 
@@ -501,10 +530,7 @@ Ayin[0,1]: I can’t just leave you...
 Adelai[0,2]: .{pl}.{pl}.
 
 
-Ayin[0,1]:{c,whisper}(It’s over...{pm} I’m not strong enough...){c}
-
-
-Ayin[0,1]:{c,whisper}(I’m sorry Adelai...){c}
+Ayin[0,1]:{c,whisper}(It’s all over...){c}
 
 
 >stopbgm,immediate
@@ -575,7 +601,25 @@ Adrestia[1,1]: Grr...[e]
 
 >end
 [a]static prompt
-[b]adelai's pose shouldnt reset to normal from battle
+[b]pending updates to overall scene
+
+
+battle starts - adelai/ayin underestimate adrestia
+
+
+adrestia uses a normal spell and gets countered
+
+
+adrestia uses parry
+
+
+ayin gets chunked in one hit by adrestia
+
+
+adelai takes hits for ayin, who is injured and can't run
+
+
+just as all hope is lost, kaia arrives
 [c]to add cool animation of Adelai taking the hit for Ayin
 [d]need to create kaia caster ally prefab
 [e]textbox overlaps with spell popup
