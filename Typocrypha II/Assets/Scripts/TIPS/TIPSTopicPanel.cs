@@ -110,9 +110,14 @@ public class TIPSTopicPanel : MonoBehaviour
     [ContextMenu("Navigate Previous")]
     public void PrevPage()
     {
-        if (currPage <= 0)
+        if (currPage <= 0 && IsTopSelected())
         {
             navigator.FocusOnSearchbar();
+            return;
+        }
+        else if (currPage <= 0)
+        {
+            SelectTopicPageTop();
             return;
         }
 
@@ -159,20 +164,20 @@ public class TIPSTopicPanel : MonoBehaviour
 
             //navigation to previous page
             var prevHandler = buttons[i].gameObject.AddComponent<MoveEventHandler>();
-            //prevHandler.AddListeners(PrevPage).EnableTriggers(MoveDirection.Left);
-            //if (i == 0) prevHandler.EnableTriggers(MoveDirection.Up);
-            if (i == 0) prevHandler.AddListeners(PrevPage).EnableTriggers(MoveDirection.Up);
+            prevHandler.AddListeners(PrevPage).EnableTriggers(MoveDirection.Left);
+            if (i == 0) prevHandler.EnableTriggers(MoveDirection.Up);
+            //if (i == 0) prevHandler.AddListeners(PrevPage).EnableTriggers(MoveDirection.Up);
 
             //navigation to next page
             var nextHandler = buttons[i].gameObject.AddComponent<MoveEventHandler>();
-            //nextHandler.AddListeners(NextPage).EnableTriggers(MoveDirection.Right);
-            //if (i == buttons.Count - 1) nextHandler.EnableTriggers(MoveDirection.Down);
-            if (i == buttons.Count - 1) nextHandler.AddListeners(NextPage).EnableTriggers(MoveDirection.Down);
+            nextHandler.AddListeners(NextPage).EnableTriggers(MoveDirection.Right);
+            if (i == buttons.Count - 1) nextHandler.EnableTriggers(MoveDirection.Down);
+            //if (i == buttons.Count - 1) nextHandler.AddListeners(NextPage).EnableTriggers(MoveDirection.Down);
         }
     }
 
-    private void LeaveTopics()
+    private bool IsTopSelected()
     {
-        if (currPage == 0) navigator.FocusOnSearchbar();
+        return buttons.Count > 0 && EventSystem.current.currentSelectedGameObject == buttons[0].gameObject;
     }
 }

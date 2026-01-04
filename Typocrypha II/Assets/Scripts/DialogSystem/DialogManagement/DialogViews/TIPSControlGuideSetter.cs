@@ -17,8 +17,8 @@ public class TIPSControlGuideSetter : MonoBehaviour
 
     private string[] topics = new string[] {
         "",
-        "<sprite name=keyboard_arrow_left> Back",
-        "<sprite name=keyboard_arrow_right> Enter",
+        "<sprite name=keyboard_backspace> Back",
+        "<sprite name=keyboard_enter> Enter",
     };
 
     private void Start()

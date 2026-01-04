@@ -57,7 +57,7 @@ public class TIPSNavigator : MonoBehaviour
     {
         if (CurrentFocus == Focus.searchbar)
         {
-            if (Input.GetKeyDown(KeyCode.DownArrow))
+            if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.RightArrow))
             {
                 searchbar.Clear();
                 SearchbarShowHint();
@@ -95,15 +95,10 @@ public class TIPSNavigator : MonoBehaviour
                     DisplayEntryPageNext();
                 }
             }
-
-            if (Input.GetKeyDown(KeyCode.RightArrow))
-            {
-                currentEventSystem.currentSelectedGameObject.GetComponent<Button>()?.onClick.Invoke();
-            }
         }
 
         // Navigate out of stack and back to visual novel
-        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.Backspace))
+        if (Input.GetKeyDown(KeyCode.Backspace))
         {
             if (topicStack.currentLayer > TIPSTopicStack.Layer.Top)
             {
