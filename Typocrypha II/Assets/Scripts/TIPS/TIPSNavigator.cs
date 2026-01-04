@@ -7,18 +7,16 @@ using System.Text.RegularExpressions;
 using System;
 using TMPro;
 using System.Linq;
-using UnityEngine.UI;
 
 public class TIPSNavigator : MonoBehaviour
 {
     [Header("Internal References")]
-    [SerializeField] TextMeshProUGUI searchHint;
-    [SerializeField] TIPSCastBar searchbar;
-    [SerializeField] TIPSTopicStack topicStack;
-    [SerializeField] TIPSEntryPanel entryPanel;
-    [SerializeField] AudioClip sfxSearchBad;
-    [SerializeField] AudioClip sfxSearchGood;
-    [SerializeField] TIPSControlGuideSetter controlGuide;
+    [SerializeField] protected TextMeshProUGUI searchHint;
+    [SerializeField] protected TIPSCastBar searchbar;
+    [SerializeField] protected TIPSTopicStack topicStack;
+    [SerializeField] protected TIPSEntryPanel entryPanel;
+    [SerializeField] protected AudioClip sfxSearchBad;
+    [SerializeField] protected AudioClip sfxSearchGood;
 
     public Action OnExit;
 
@@ -57,10 +55,8 @@ public class TIPSNavigator : MonoBehaviour
     {
         if (CurrentFocus == Focus.searchbar)
         {
-            if (Input.GetKeyDown(KeyCode.DownArrow))
+            if (Input.GetAxisRaw("Vertical") < 0 || Input.GetAxisRaw("Horizontal") > 0)
             {
-                searchbar.Clear();
-                SearchbarShowHint();
                 FocusOnTopics(true);
             }
             else if (Input.GetKeyDown(KeyCode.Return))
@@ -77,7 +73,7 @@ public class TIPSNavigator : MonoBehaviour
 
         if (CurrentFocus == Focus.topics)
         {
-            if (new Regex("[A-Za-z]+").IsMatch(Input.inputString))
+            if (new Regex("[A-Za-z\b]+").IsMatch(Input.inputString))
             {
                 FocusOnSearchbar();
                 searchbar.ProcessInput(Input.inputString);
@@ -95,24 +91,19 @@ public class TIPSNavigator : MonoBehaviour
                     DisplayEntryPageNext();
                 }
             }
-
-            if (Input.GetKeyDown(KeyCode.RightArrow))
-            {
-                currentEventSystem.currentSelectedGameObject.GetComponent<Button>()?.onClick.Invoke();
-            }
         }
 
         // Navigate out of stack and back to visual novel
-        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.Backspace))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (topicStack.currentLayer > TIPSTopicStack.Layer.Top)
             {
                 topicStack.StepOutToParent();
             }
-            //else if (topicStack.currentLayer == TIPSTopicStack.Layer.Top)
-            //{
-            //    OnExit.Invoke();
-            //}
+            else if (topicStack.currentLayer == TIPSTopicStack.Layer.Top)
+            {
+                OnExit.Invoke();
+            }
         }
     }
 
@@ -137,7 +128,6 @@ public class TIPSNavigator : MonoBehaviour
         searchbar.Focus();
         CurrentFocus = Focus.searchbar;
         currentEventSystem.SetSelectedGameObject(null);
-        controlGuide.SetContextSearch();
     }
 
     public void FocusOnTopics(bool selectTop)
@@ -148,7 +138,6 @@ public class TIPSNavigator : MonoBehaviour
         {
             topicStack.SelectFirstTopic();
         }
-        controlGuide.SetContextTopics();
     }
 
     protected virtual void HandleSearchInput(string input)

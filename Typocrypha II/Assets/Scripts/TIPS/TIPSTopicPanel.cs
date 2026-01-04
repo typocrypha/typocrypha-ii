@@ -159,15 +159,13 @@ public class TIPSTopicPanel : MonoBehaviour
 
             //navigation to previous page
             var prevHandler = buttons[i].gameObject.AddComponent<MoveEventHandler>();
-            //prevHandler.AddListeners(PrevPage).EnableTriggers(MoveDirection.Left);
-            //if (i == 0) prevHandler.EnableTriggers(MoveDirection.Up);
-            if (i == 0) prevHandler.AddListeners(PrevPage).EnableTriggers(MoveDirection.Up);
+            prevHandler.AddListeners(PrevPage).EnableTriggers(MoveDirection.Left);
+            if (i == 0) prevHandler.EnableTriggers(MoveDirection.Up);
 
             //navigation to next page
             var nextHandler = buttons[i].gameObject.AddComponent<MoveEventHandler>();
-            //nextHandler.AddListeners(NextPage).EnableTriggers(MoveDirection.Right);
-            //if (i == buttons.Count - 1) nextHandler.EnableTriggers(MoveDirection.Down);
-            if (i == buttons.Count - 1) nextHandler.AddListeners(NextPage).EnableTriggers(MoveDirection.Down);
+            nextHandler.AddListeners(NextPage).EnableTriggers(MoveDirection.Right);
+            if (i == buttons.Count - 1) nextHandler.EnableTriggers(MoveDirection.Down);
         }
     }
 
