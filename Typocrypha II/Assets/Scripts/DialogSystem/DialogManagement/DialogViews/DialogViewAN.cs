@@ -66,6 +66,18 @@ public class DialogViewAN : DialogView
         }
     }
 
+    public Coroutine FadeBG(float target, float time, System.Action onComplete = null)
+    {
+        return StartCoroutine(FadeBGCR(target, time, onComplete));
+    }
+
+    private IEnumerator FadeBGCR(float target, float time, System.Action onComplete)
+    {
+        var fadeIn = background.DOFade(target, time);
+        yield return fadeIn.WaitForCompletion();
+        onComplete?.Invoke();
+    }
+
     public override IEnumerator PlayEnterAnimation()
     {
         var fadeIn = background.DOFade(1, 2);

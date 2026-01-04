@@ -96,6 +96,8 @@ public class DialogScriptParser
         {"wait", typeof(PauseNode) },
         {"battleEvent", typeof(TriggerBattleEventNode) },
         {"tips", typeof(TIPsEntryUnlockNode) },
+        {"hideanbg", typeof(HideANBackgroundNode) },
+        {"showanbg", typeof(ShowANBackgroundNode) },
     };
 
     // Generic node ID map. types that have entries in this map and the nodeMap can be created without additional parsing code
@@ -704,6 +706,26 @@ public class DialogScriptParser
                 tipsEntryNode.entry3 = args[3];
             }
             nodes.Add(tipsEntryNode);
+        }
+        else if (nodeType == typeof(HideANBackgroundNode))
+        {
+            var hideAnBGNode = CreateNode(canvas, HideANBackgroundNode.ID) as HideANBackgroundNode;
+            if (args.Length < 2)
+            {
+                throw new System.Exception($"Incorrect number of args for hide AN BG node ({args.Length - 1}). Expected at least 2");
+            }
+            hideAnBGNode.fadeTime = float.Parse(args[1]);
+            nodes.Add(hideAnBGNode);
+        }
+        else if (nodeType == typeof(ShowANBackgroundNode))
+        {
+            var showAnBGNode = CreateNode(canvas, ShowANBackgroundNode.ID) as ShowANBackgroundNode;
+            if (args.Length < 2)
+            {
+                throw new System.Exception($"Incorrect number of args for show AN BG node ({args.Length - 1}). Expected at least 2");
+            }
+            showAnBGNode.fadeTime = float.Parse(args[1]);
+            nodes.Add(showAnBGNode);
         }
         else
         {

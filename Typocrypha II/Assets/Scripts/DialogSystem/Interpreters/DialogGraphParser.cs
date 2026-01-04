@@ -329,6 +329,24 @@ public class DialogGraphParser : GraphParser
                 }
                 return null;
             }
+            else if (currNode is HideANBackgroundNode hideAnBgNode)
+            {
+                if(DialogManager.instance.DialogView is DialogViewAN anView)
+                {
+                    DialogManager.instance.ReadyToContinue = false;
+                    StartCoroutine(WaitOnRoutine(anView.FadeBG(0, hideAnBgNode.fadeTime), loading));
+                    return null;
+                }
+            }
+            else if (currNode is ShowANBackgroundNode showAnBgNode)
+            {
+                if (DialogManager.instance.DialogView is DialogViewAN anView)
+                {
+                    DialogManager.instance.ReadyToContinue = false;
+                    StartCoroutine(WaitOnRoutine(anView.FadeBG(1, showAnBgNode.fadeTime), loading));
+                    return null;
+                }
+            }
         }
         //Recursively move to next
         return NextDialog(true, loading);
