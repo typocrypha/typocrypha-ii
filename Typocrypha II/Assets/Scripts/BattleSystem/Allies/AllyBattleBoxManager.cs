@@ -6,6 +6,7 @@ using UnityEngine;
 // Note, currently doesn't support two columns, but could in the future
 public class AllyBattleBoxManager : MonoBehaviour
 {
+    private const string moveTweenId = "moveBattleBox";
     public static AllyBattleBoxManager instance;
     [SerializeField] private VNPlusCharacter[] rightColumnCharas;
     [SerializeField] private BattleAllyUI[] charaUI;
@@ -161,6 +162,17 @@ public class AllyBattleBoxManager : MonoBehaviour
             .Append(rect.DOAnchorPosX(-10, 0.075f).SetRelative(true))
             .Append(rect.DOAnchorPosX(10, 0.075f).SetRelative(true))
             .Append(rect.DOAnchorPosX(-5, 0.075f).SetRelative(true));
+    }
+
+    public void MoveBattleBox(Vector2 target, float time)
+    {
+        DOTween.Kill(moveTweenId);
+        CurrentChar.MainRect.DOAnchorPos(target, time).SetEase(Ease.OutQuint).SetId(moveTweenId);
+    }
+
+    public void ReturnBattleBox(float time)
+    {
+        MoveBattleBox(onScreenPos.anchoredPosition, time);
     }
 
     public void UpdateHp(float percentage)

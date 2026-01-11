@@ -140,6 +140,7 @@ public class Caster : MonoBehaviour
 
     public bool IsDeadOrFled => status == BattleStatus.Dead || status == BattleStatus.Fled;
     public bool IsSpiritMode => status == BattleStatus.SpiritMode;
+    public Caster Protector { get; set; }
 
     #endregion
 

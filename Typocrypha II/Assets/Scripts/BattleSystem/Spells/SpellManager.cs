@@ -14,6 +14,7 @@ public class SpellManager : MonoBehaviour
     public static SpellManager instance;
     public SpellWord counterWord;
     public event Action OnAfterCastResolved;
+    public event Action<Caster, Battlefield.Position> OnBeforeSpellTravelFx;
     [SerializeField] private SpellWord runWord;
     [SerializeField] private SpellWord runAllWord;
 
@@ -187,13 +188,15 @@ public class SpellManager : MonoBehaviour
         {
             var root = roots[rootIndex];
             var spellData = new RootCastData(spell, roots, rootIndex);
-            // Log the effect of each effect
             var rootResults = new RootCastResults();
+            // Play Travel Fx
+            OnBeforeSpellTravelFx?.Invoke(caster, target);
             var travelCr = SpellFxManager.instance.PlayTravelFX(root, caster, target);
             if(travelCr != null)
             {
                 yield return travelCr;
             }
+            // Apply Spell Effects
             foreach (var effect in root.effects)
             {
                 // Get the effect's targets
@@ -234,6 +237,10 @@ public class SpellManager : MonoBehaviour
                     else
                     {
                         hitTarget = true;
+                        if(targetCaster.Protector != null)
+                        {
+                            targetCaster = targetCaster.Protector;
+                        }
                         var damageMod = new Damage.DamageModifier() { specialModifier = specialMod };
                         // Apply the rule effect if necessary
                         Rule.ActiveRule?.ApplyToEffect(effect, caster, targetCaster);

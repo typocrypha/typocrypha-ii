@@ -28,7 +28,7 @@ public class AIAdelaiAdrestiaI4FullAuto : AIAllyRandomTimer
             spell.Add(RandomUtils.RandomU.instance.Choice(wordChoices));
             QueueCast(target.FieldPos, spell, true, null);
         }
-        else
+        else if(RandomUtils.RandomU.instance.RollSuccess(0.33))
         {
             QueueCast(target.FieldPos, defaultSpell, true, null);
         }
