@@ -54,11 +54,11 @@ namespace RandomUtils
         {
             return items[rand.Next(0, items.Length)];
         }
-        public T Choice<T>(IList<T> items)
+        public T Choice<T>(IReadOnlyList<T> items)
         {
             return items[rand.Next(0, items.Count)];
         }
-        public T Choice<T>(IList<T> items, out int index)
+        public T Choice<T>(IReadOnlyList<T> items, out int index)
         {
             index = rand.Next(0, items.Count);
             return items[index];
