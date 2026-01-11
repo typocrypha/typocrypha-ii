@@ -44,7 +44,7 @@ public class AIAdelaiAdrestiaI4 : AIFollowUpOnPlayerCounter
 
     private void GuardPlayer(Caster caster, Battlefield.Position target)
     {
-        if(Battlefield.instance.GetCaster(target) == Battlefield.instance.Player)
+        if(Battlefield.instance.GetCaster(target) == Battlefield.instance.Player && !caster.IsSpiritMode)
         {
             AllyBattleBoxManager.instance.MoveBattleBox(Battlefield.instance.GetSpace(target) + new Vector2(0, 100), 0.3f);
             moved = true;

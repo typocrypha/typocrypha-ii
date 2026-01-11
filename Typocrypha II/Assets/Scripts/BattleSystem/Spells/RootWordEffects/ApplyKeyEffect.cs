@@ -5,10 +5,8 @@ public abstract class ApplyKeyEffect : RootWordEffect
     public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.DamageModifier mod, RootCastResults prevResults = null)
     {
         var results = InitializeCastResults(caster, target, mod);
-        Damage.StandardHitCheck(results, this, caster, target);
         if (!target.IsPlayer)
         {
-            results.Effectiveness = Reaction.Block;
             return results;
         }
         if (mod.specialModifier == Damage.SpecialModifier.CritBlock)
@@ -16,6 +14,7 @@ public abstract class ApplyKeyEffect : RootWordEffect
             results.Miss = true;
             return results;
         }
+        Damage.StandardHitCheck(results, this, caster, target);
         if (results.Miss)
             return results;
         results.Effectiveness = Damage.GetReaction(this, caster, target, out float mult);

@@ -9,10 +9,12 @@ public class AIAdrestiaTutorial : AIComponent
     {
         Intro,
         Vengeance,
-        Full,
+        Bloodlust,
+        Hidden,
     }
     [SerializeField] private SpellList introSpells;
     [SerializeField] private Spell vengeanceSpell;
+    [SerializeField] private Spell vengeanceSpell2;
     [SerializeField] private Spell parrySpell;
     [SerializeField] private Spell riposteSpell;
     [SerializeField] private Spell callAlliesSpell;
@@ -25,6 +27,7 @@ public class AIAdrestiaTutorial : AIComponent
     private Spell tempSpell;
     private Coroutine parryCR;
     private Phase phase = Phase.Intro;
+    private int bloodlustCount = 0;
 
     protected override void Awake()
     {
@@ -37,6 +40,7 @@ public class AIAdrestiaTutorial : AIComponent
         RemoveListeners();
         caster.OnAfterCastResolved += AfterCastResolved;
         caster.OnCountered += OnCountered;
+        caster.OnUnstunned += OnUnstunned;
         ATB3.ATBManager.instance.OnExitSolo += AfterATBSequence;
         BattleManager.instance.OnBattleEventTriggered += OnBattleEventTriggered;
     }
@@ -45,6 +49,7 @@ public class AIAdrestiaTutorial : AIComponent
     {
         caster.OnAfterCastResolved -= AfterCastResolved;
         caster.OnCountered -= OnCountered;
+        caster.OnUnstunned -= OnUnstunned;
         ATB3.ATBManager.instance.OnExitSolo -= AfterATBSequence;
         BattleManager.instance.OnBattleEventTriggered -= OnBattleEventTriggered;
     }
@@ -58,6 +63,10 @@ public class AIAdrestiaTutorial : AIComponent
         if (phase == Phase.Intro)
         {
             return;
+        }
+        if(phase == Phase.Bloodlust)
+        {
+            bloodlustCount++;
         }
         if (Battlefield.instance.ValidReinforcementPositions.Count > 0)
         {
@@ -89,6 +98,16 @@ public class AIAdrestiaTutorial : AIComponent
         QueueCast(caster.FieldPos, enrageAlliesSpell, false, null, $"{caster.DisplayName}'s allies were filled with vengeance!");
     }
 
+    private void OnUnstunned()
+    {
+        if(phase == Phase.Vengeance)
+        {
+            phase = Phase.Hidden;
+            SetSpell();
+        }
+    }
+
+
     private void AfterCastResolved(Spell s, Caster caster, bool hitTarget)
     {
         if (caster.BStatus == Caster.BattleStatus.SpiritMode || caster.Countered)
@@ -96,16 +115,27 @@ public class AIAdrestiaTutorial : AIComponent
         if(phase == Phase.Vengeance)
         {
             caster.Stagger = caster.Stats.MaxStagger;
-            phase = Phase.Full;
+            phase = Phase.Bloodlust;
+        }
+        else if(phase == Phase.Bloodlust && bloodlustCount >= 3)
+        {
+            ChangeSpell(vengeanceSpell2);
+            CancelParry();
+            return;
         }
         SetSpell();
     }
 
     private void AfterATBSequence()
     {
-        if (phase == Phase.Intro)
+        if (phase == Phase.Intro || !caster.Countered)
             return;
-        if (caster.Countered)
+        if (phase == Phase.Bloodlust && bloodlustCount >= 3)
+        {
+            ChangeSpell(vengeanceSpell2);
+            CancelParry();
+        }
+        else
         {
             SetSpell();
         }

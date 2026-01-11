@@ -80,7 +80,21 @@ public class Battlefield : MonoBehaviour, IPausable
         {
             foreach (var caster in Casters)
             {
-                if (caster.CasterState == Caster.State.Hostile)
+                if (caster.CasterState == Caster.State.Hostile && !caster.IsDeadOrFled)
+                {
+                    yield return caster;
+                }
+            }
+        }
+    }
+
+    public IEnumerable<Caster> NonSpiritModeEnemies
+    {
+        get
+        {
+            foreach (var caster in Casters)
+            {
+                if (caster.CasterState == Caster.State.Hostile && !caster.IsDeadOrFled && !caster.IsSpiritMode)
                 {
                     yield return caster;
                 }
