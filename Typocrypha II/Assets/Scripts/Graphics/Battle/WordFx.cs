@@ -29,9 +29,9 @@ public class WordFx : MonoBehaviour
         else
         {
             transform.position = Battlefield.instance.GetSpaceScreenSpace(caster.FieldPos);
+            transform.localScale = new Vector3(0.33f, 0.33f);
             var endPos = Battlefield.instance.GetSpaceScreenSpace(targetPosition);
             sequence.Append(transform.DOMove(endPos, moveTime).SetEase(Ease.OutQuart));
-            transform.localScale = new Vector3(0.33f, 0.33f);
             sequence.Join(transform.DOPunchScale(new Vector3(1.1f, 1.1f), moveTime, 0, 0).SetEase(Ease.OutQuart));
         }
         if (onComplete != null)
