@@ -219,7 +219,7 @@ public class SpellManager : MonoBehaviour
                     Battlefield.Position t = targets[targetIndex];
                     var targetCaster = Battlefield.instance.GetCaster(t);
                     var targetSpace = Battlefield.instance.GetSpaceScreenSpace(t);
-                    if (targetCaster == null || targetCaster.BStatus == Caster.BattleStatus.Dead || targetCaster.BStatus == Caster.BattleStatus.Fled)
+                    if (targetCaster == null || targetCaster.IsDeadOrFled)
                     {
                         caster.OnNoTargetHit?.Invoke(t);
                         float time = SpellFxManager.instance.NoTargetFx(targetSpace);
