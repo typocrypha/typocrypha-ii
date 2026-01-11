@@ -32,18 +32,6 @@ public class BattleManager : MonoBehaviour, IPausable
         }
     }
 
-    public void TriggerBattleEvent(string id)
-    {
-        var idLower = id.ToLower();
-        foreach(var e in currEvents)
-        {
-            if(e.ID.ToLower() == idLower)
-            {
-                e.RunAll();
-            }
-        }
-    }
-
     #endregion
 
     public static BattleManager instance = null;
@@ -68,6 +56,8 @@ public class BattleManager : MonoBehaviour, IPausable
     private readonly List<BattleEvent> currEvents = new List<BattleEvent>();
     public bool FirstWaveStarted { get; private set; } = false;
     private int waveNum = 0;
+
+    public event System.Action<string> OnBattleEventTriggered;
 
     private void Awake()
     {
@@ -180,6 +170,19 @@ public class BattleManager : MonoBehaviour, IPausable
         {
             battleEvent.PH.SimpleParentPause(true);
         }
+    }
+
+    public void TriggerBattleEvent(string id)
+    {
+        var idLower = id.ToLower();
+        foreach (var e in currEvents)
+        {
+            if (e.ID.ToLower() == idLower)
+            {
+                e.RunAll();
+            }
+        }
+        OnBattleEventTriggered?.Invoke(id);
     }
 
     public void ClearReinforcements()

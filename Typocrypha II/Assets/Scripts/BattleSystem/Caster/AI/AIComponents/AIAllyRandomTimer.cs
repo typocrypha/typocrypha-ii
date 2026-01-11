@@ -4,6 +4,7 @@ using UnityEngine;
 
 public abstract class AIAllyRandomTimer : AIComponent
 {
+    private const float minTime = 0.25f;
     [SerializeField] private float baseChargeTime;
     [SerializeField] private float chargeTimeVariance;
 
@@ -24,6 +25,7 @@ public abstract class AIAllyRandomTimer : AIComponent
             return;
         OnUpdate();
     }
+
     protected virtual void OnUpdate()
     {
         if ((charge += (Time.deltaTime * Settings.GameplaySpeed)) >= goal)
@@ -39,14 +41,13 @@ public abstract class AIAllyRandomTimer : AIComponent
         float variance = (float)RandomUtils.RandomU.instance.RandomDouble() * chargeTimeVariance;
         if (RandomUtils.RandomU.instance.RandomBool())
         {
-            goal = baseChargeTime + variance;
+            goal = Mathf.Max(baseChargeTime + variance, minTime);
         }
         else
         {
-            goal = baseChargeTime - variance;
+            goal = Mathf.Max(baseChargeTime - variance, minTime);
         }
     }
-
 
     protected abstract void DoAction();
 }

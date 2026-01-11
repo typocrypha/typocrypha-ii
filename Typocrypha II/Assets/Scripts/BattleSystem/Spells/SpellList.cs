@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class SpellList : IList<Spell>
+public class SpellList : IList<Spell>, IReadOnlyList<Spell>
 {
     [SerializeField]
     private List<Spell> items = new List<Spell>();

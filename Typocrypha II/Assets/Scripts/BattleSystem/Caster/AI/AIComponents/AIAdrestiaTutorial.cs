@@ -5,6 +5,14 @@ using UnityEngine;
 
 public class AIAdrestiaTutorial : AIComponent
 {
+    private enum Phase
+    {
+        Intro,
+        Vengeance,
+        Full,
+    }
+    [SerializeField] private SpellList introSpells;
+    [SerializeField] private Spell vengeanceSpell;
     [SerializeField] private Spell parrySpell;
     [SerializeField] private Spell riposteSpell;
     [SerializeField] private Spell callAlliesSpell;
@@ -13,14 +21,15 @@ public class AIAdrestiaTutorial : AIComponent
     [SerializeField] private SpellList normalSpells;
     [SerializeField] private AudioClip warningSfx;
 
+
     private Spell tempSpell;
     private Coroutine parryCR;
+    private Phase phase = Phase.Intro;
 
     protected override void Awake()
     {
         base.Awake();
-        ChangeSpell(normalSpells[RandomUtils.RandomU.instance.RandomInt(0, normalSpells.Count)]);
-        PrepareParry();
+        ChangeSpellRandom(introSpells);
     }
 
     protected override void AddListeners()
@@ -29,6 +38,7 @@ public class AIAdrestiaTutorial : AIComponent
         caster.OnAfterCastResolved += AfterCastResolved;
         caster.OnCountered += OnCountered;
         ATB3.ATBManager.instance.OnExitSolo += AfterATBSequence;
+        BattleManager.instance.OnBattleEventTriggered += OnBattleEventTriggered;
     }
 
     protected override void RemoveListeners()
@@ -36,11 +46,16 @@ public class AIAdrestiaTutorial : AIComponent
         caster.OnAfterCastResolved -= AfterCastResolved;
         caster.OnCountered -= OnCountered;
         ATB3.ATBManager.instance.OnExitSolo -= AfterATBSequence;
+        BattleManager.instance.OnBattleEventTriggered -= OnBattleEventTriggered;
     }
 
     private void OnCountered(Caster arg1, bool fullCounter)
     {
         if (!fullCounter)
+        {
+            return;
+        }
+        if (phase == Phase.Intro)
         {
             return;
         }
@@ -83,16 +98,28 @@ public class AIAdrestiaTutorial : AIComponent
 
     private void AfterATBSequence()
     {
+        if (phase == Phase.Intro)
+            return;
         if (caster.Countered)
         {
             SetSpell();
         }
     }
 
+    private void OnBattleEventTriggered(string id)
+    {
+        if (id == "AdrestiaVengeance")
+        {
+            caster.Stagger = 1;
+            phase = Phase.Vengeance;
+            ChangeSpell(vengeanceSpell);
+        }
+    }
+
     private void SetSpell()
     {
         CancelParry();
-        ChangeSpell(normalSpells[RandomUtils.RandomU.instance.RandomInt(0, normalSpells.Count)]);
+        ChangeSpellRandom(normalSpells);
         PrepareParry();
     }
 

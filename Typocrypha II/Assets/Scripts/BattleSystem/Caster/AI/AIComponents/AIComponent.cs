@@ -35,6 +35,11 @@ public abstract class AIComponent : MonoBehaviour
 
     }
 
+    protected void ChangeSpellRandom(IReadOnlyList<Spell> spells)
+    {
+        ChangeSpell(RandomUtils.RandomU.instance.Choice(spells));
+    }
+
     protected void ChangeSpell(Spell spell)
     {
         caster.Spell = spell;
