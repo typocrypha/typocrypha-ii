@@ -93,6 +93,11 @@ public class AIAdrestiaTutorial : AIComponent
     {
         if (caster.BStatus == Caster.BattleStatus.SpiritMode || caster.Countered)
             return;
+        if(phase == Phase.Vengeance)
+        {
+            caster.Stagger = caster.Stats.MaxStagger;
+            phase = Phase.Full;
+        }
         SetSpell();
     }
 
