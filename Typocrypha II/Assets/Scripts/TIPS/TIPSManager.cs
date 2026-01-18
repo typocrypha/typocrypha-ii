@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 /// <summary>
 /// Manages interfacing with TIPS database.
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 public class TIPSManager : MonoBehaviour
 {
     public static TIPSManager Instance = null;
+    public PauseHandle PH { get; private set; } = null;
 
     private TIPSEntryData currSearchable; // Current dialog line's searchable term.
     public TIPSEntryData CurrSearchable
@@ -20,8 +22,11 @@ public class TIPSManager : MonoBehaviour
 
     public IReadOnlyDictionary<string, TIPSEntryData> UnlockedEntries => unlockedEntries;
     private readonly TIPSBundle.TIPSDictionary unlockedEntries = new TIPSBundle.TIPSDictionary();
+    
+    private GameObject lastSelected;
+    private EventSystem currentEventSystem;
 
-    void Awake()
+    private void Awake()
     {
         if (Instance == null)
         {
@@ -31,6 +36,26 @@ public class TIPSManager : MonoBehaviour
         {
             Destroy(gameObject);
             return;
+        }
+        currentEventSystem = EventSystem.current;
+        PH = new PauseHandle(OnPause);
+    }
+
+    private void OnPause(bool pause)
+    {
+        if (pause)
+        {
+            var currentSelected = currentEventSystem.currentSelectedGameObject;
+            if (currentSelected.layer == LayerMask.NameToLayer("TIPS"))
+            {
+                lastSelected = currentSelected;
+                currentEventSystem.SetSelectedGameObject(null);
+            }
+        }
+        else
+        {
+            if (lastSelected != null) currentEventSystem.SetSelectedGameObject(lastSelected);
+            lastSelected = null;
         }
     }
 
@@ -116,5 +141,10 @@ public class TIPSManager : MonoBehaviour
             .Select(p => p.Value)
             .Where(e => e.Parent == parent)
             .ToArray();
+    }
+
+    public void PauseAllForTIPS(bool pause)
+    {
+        PauseManager.instance.PauseAll(false, PauseSources.TIPS, PH, false);
     }
 }

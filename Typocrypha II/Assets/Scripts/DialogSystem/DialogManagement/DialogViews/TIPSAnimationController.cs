@@ -5,8 +5,6 @@ using DG.Tweening;
 
 public class TIPSAnimationController : MonoBehaviour
 {
-    public PauseHandle PH { get; private set; } = null;
-
     [Header("External References")]
     [SerializeField] RectTransform rectChat;
     [Header("Internal References")]
@@ -52,7 +50,7 @@ public class TIPSAnimationController : MonoBehaviour
     public void OpenTIPS()
     {
         isOpen = true;
-        PauseManager.instance.PauseAll(true, PauseSources.TIPS, PH, true);
+        TIPSManager.Instance.PauseAllForTIPS(true);
         SequenceOpenTIPS().Play();
     }
 
@@ -102,6 +100,6 @@ public class TIPSAnimationController : MonoBehaviour
 
     private void OnCloseComplete()
     {
-        PauseManager.instance.PauseAll(false, PauseSources.TIPS, PH, true);
+        TIPSManager.Instance.PauseAllForTIPS(false);
     }
 }
