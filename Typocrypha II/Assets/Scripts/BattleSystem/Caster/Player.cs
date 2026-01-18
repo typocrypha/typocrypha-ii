@@ -6,13 +6,12 @@ using Typocrypha;
 [RequireComponent(typeof(ATB3.ATBPlayer))]
 public class Player : Caster, IPausable
 {
-    private const float castFailTextTime = 1.05f;
     #region IPausable
     public PauseHandle PH { get; } = new PauseHandle();
 
     #endregion
 
-    [SerializeField] private AudioClip castFailureSfx;
+
     [SerializeField] private AudioClip castSuccessSfx;
 
     private ATB3.ATBPlayer atbPlayer;
@@ -47,8 +46,7 @@ public class Player : Caster, IPausable
             // Check cooldowns
             if(cooldowns.IsOnCooldown(spell, out var wordOnCooldown))
             {
-                AudioManager.instance.PlaySFX(castFailureSfx);
-                SpellFxManager.instance.PlayText(new Vector2(0f, -2f), false, $"{wordOnCooldown.BaseName} on Cooldown", Color.red, DisplayPopup.Animation.FloatUp, castFailTextTime);
+                SpellFxManager.instance.CastFailFx($"{wordOnCooldown.BaseName} on Cooldown");
                 OnCastFail?.Invoke();
                 return SpellParser.ParseResults.OnCooldown;
             }
@@ -66,26 +64,25 @@ public class Player : Caster, IPausable
         }
         else
         {
-            AudioManager.instance.PlaySFX(castFailureSfx);
             if(results == SpellParser.ParseResults.EmptySpell)
             {
-                SpellFxManager.instance.PlayText(new Vector2(0f, -2f), false, $"Empty Spell", Color.red, DisplayPopup.Animation.FloatUp, castFailTextTime);
+                SpellFxManager.instance.CastFailFx($"Empty Spell");
             }
             else if(results == SpellParser.ParseResults.DuplicateWord)
             {
-                SpellFxManager.instance.PlayText(new Vector2(0f, -2f), false, $"Duplicate Word: {problemWord.ToUpper()}", Color.red, DisplayPopup.Animation.FloatUp, castFailTextTime);
+                SpellFxManager.instance.CastFailFx($"Duplicate Word: {problemWord.ToUpper()}");
             }
             else if(results == SpellParser.ParseResults.TypoFailure)
             {
-                SpellFxManager.instance.PlayText(new Vector2(0f, -2f), false, $"Invalid Word: {problemWord.ToUpper()}", Color.red, DisplayPopup.Animation.FloatUp, castFailTextTime);
+                SpellFxManager.instance.CastFailFx($"Invalid Word: {problemWord.ToUpper()}");
             }
             else if(results == SpellParser.ParseResults.TooManyRoots)
             {
-                SpellFxManager.instance.PlayText(new Vector2(0f, -2f), false, $"Too Many Words!", Color.red, DisplayPopup.Animation.FloatUp, castFailTextTime);
+                SpellFxManager.instance.CastFailFx($"Too Many Words!");
             }
             else
             {
-                SpellFxManager.instance.PlayText(new Vector2(0f, -2f), false, $"Invalid Spell", Color.red, DisplayPopup.Animation.FloatUp, castFailTextTime);
+                SpellFxManager.instance.CastFailFx($"Invalid Spell");
             }
             OnCastFail?.Invoke();
         }

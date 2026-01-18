@@ -12,7 +12,14 @@ public class SpellCastBar : CastBar
             Debug.LogError("Player is not valid. Cannot cast");
             return;
         }
-        var results = player.CastString(Text.TrimEnd(KeywordDelimiters).Split(KeywordDelimiters));
+        string text = Text;
+        if(!string.IsNullOrEmpty(Prompt) && text != Prompt.ToLower())
+        {
+            SpellFxManager.instance.CastFailFx($"Cast {Prompt.ToUpper()}!");
+            Clear();
+            return;
+        }
+        var results = player.CastString(text.TrimEnd(KeywordDelimiters).Split(KeywordDelimiters));
         Clear(results != SpellParser.ParseResults.Valid);
     }
 }

@@ -79,6 +79,22 @@ namespace Typocrypha
             }
         }
 
+        public void SetPrompt(string prompt)
+        {
+            Prompt = prompt;
+            for (int i = 0; i < letters.Length; i++)
+            {
+                if(i < sb.Length)
+                {
+                    SetLetter(i, sb[i]);
+                }
+                else
+                {
+                    ClearLetter(i);
+                }
+            }
+        }
+
         protected virtual void HandleBackSpace()
         {
             ClearLetter(--pos);

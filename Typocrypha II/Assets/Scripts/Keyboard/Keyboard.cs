@@ -317,6 +317,34 @@ namespace Typocrypha
                 c.Value.Highlight = false;
             }
         }
+
+        public void EnablePrompting(bool enablePrompting, string promptOverride = null)
+        {
+            if (enablePrompting)
+            {
+                Battlefield.instance.Player.OnAfterCastResolved -= UpdatePrompt;
+                Battlefield.instance.Player.OnAfterCastResolved += UpdatePrompt;
+                if (string.IsNullOrEmpty(promptOverride))
+                {
+                    UpdatePrompt(null, null, false);
+                }
+                else
+                {
+                    castBar.SetPrompt(promptOverride);
+                }
+            }
+            else
+            {
+                Battlefield.instance.Player.OnAfterCastResolved -= UpdatePrompt;
+                castBar.SetPrompt(string.Empty);
+            }
+        }
+
+        private void UpdatePrompt(Spell s, Caster caster, bool hitTarget)
+        {
+            var spells = SpellCooldownManager.instance.GetSpells();
+            castBar.SetPrompt(spells.Count > 0 ? spells[0].DisplayName : string.Empty);
+        }
     }
 }
 

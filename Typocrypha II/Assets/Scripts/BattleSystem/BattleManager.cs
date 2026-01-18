@@ -164,6 +164,8 @@ public class BattleManager : MonoBehaviour, IPausable
 
     public void AddBattleEvent(BattleEvent battleEvent)
     {
+        if (battleEvent == null)
+            return;
         currEvents.Add(battleEvent);
         // Start it paused if the battleManager is in a paused state
         if (PH.Paused)

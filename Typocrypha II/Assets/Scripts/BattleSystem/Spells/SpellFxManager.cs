@@ -10,6 +10,7 @@ public class SpellFxManager : MonoBehaviour
     private const float popTimeStaggered = popTime + staggerOffset;
     private const float staggerOffset = -0.6f;
     private const float minYieldTime = 0f;
+    private const float castFailTextTime = 1.05f;
     #region Damage Shake
     protected const float shakeIntensity = 0.125f;
     protected const float shakeDuration = 0.5f;
@@ -47,6 +48,8 @@ public class SpellFxManager : MonoBehaviour
     [Header("Word Fx")]
     [SerializeField] private GameObject wordFxPrefab;
     [SerializeField] private Transform wordFxContainer;
+    [Header("Cast Fx")]
+    [SerializeField] private AudioClip castFailureSfx;
 
     private PrefabPool<TextPopup> textPopupPool;
     private PrefabPool<TextPopup> damagePopupPool;
@@ -102,6 +105,13 @@ public class SpellFxManager : MonoBehaviour
     {
         return PlayText(pos, "Countered!", Color.green, DisplayPopup.Animation.SlamIn, popTime + 0.1f);
     }
+
+    public float CastFailFx(string text)
+    {
+        AudioManager.instance.PlaySFX(castFailureSfx);
+        return PlayText(new Vector2(0f, -2f), false, text, Color.red, DisplayPopup.Animation.FloatUp, castFailTextTime);
+    }
+
     public Coroutine Play(CastResults data, SpellWord word, Vector2 targetPos, Vector2 casterPos, System.Action onComplete = null)
     {
         // For some unknown reason, getting the animator within the coroutine instead of passing it in always gets null
