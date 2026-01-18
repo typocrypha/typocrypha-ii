@@ -46,7 +46,7 @@ public class TIPSManager : MonoBehaviour
         if (pause)
         {
             var currentSelected = currentEventSystem.currentSelectedGameObject;
-            if (currentSelected.layer == LayerMask.NameToLayer("TIPS"))
+            if (currentSelected && currentSelected.layer == LayerMask.NameToLayer("TIPS"))
             {
                 lastSelected = currentSelected;
                 currentEventSystem.SetSelectedGameObject(null);
