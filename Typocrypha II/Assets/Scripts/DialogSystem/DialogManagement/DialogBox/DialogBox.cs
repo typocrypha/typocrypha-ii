@@ -289,10 +289,9 @@ public class DialogBox : MonoBehaviour, IPausable
             {
                 yield return new WaitForFixedUpdate();
             }
-            else // If scale is at 0, skip to next dialog event
+            else
             {
-                DumpText();
-                yield break;
+                break;
             }
             ++speechCounter;
         }
@@ -308,11 +307,14 @@ public class DialogBox : MonoBehaviour, IPausable
         }
         if (ShouldAutoContinue(out float autoDelay))
         {
+            // delay between dialogs
             yield return new WaitForSeconds(autoDelay);
+
             if (this.IsPaused())
             {
                 yield return new WaitWhile(this.IsPaused); // Wait on pause.
             }
+
             DialogManager.instance.NextDialog(true, false);
         }
         else if (ContinueIndicator != null)
@@ -328,23 +330,34 @@ public class DialogBox : MonoBehaviour, IPausable
 
     private bool ShouldAutoContinue(out float delay)
     {
+        // skip dialog quickly (for debugging purposes)
         if (DialogManager.instance.Auto)
         {
             delay = 0;
             return true;
         }
+
+        // autocontinue if setting is enabled
         if (Settings.AutoContinue)
         {
-            delay = defaultAutoContinueDelay / Settings.TextScrollSpeed;
+            delay = defaultAutoContinueDelay;
+
+            // provide time to read instant text
+            delay += Scroll ? 0 : dialogItem.text.Length * Settings.TextScrollDelay;
+
+            // scale to user preference
+            delay /= Settings.TextScrollSpeed;
             return true;
         }
 
-        if (dialogItem.text.Length > 0 && dialogItem.text[dialogItem.text.Length - 1] == '-')
+        // autocontinue dialog even if setting is disabled
+        if (dialogItem.text.EndsWith("-"))
         {
             delay = defaultDashContinueDelay;
             return true;
         }
         
+        // no autocontinue
         delay = 0;
         return false;
     }
