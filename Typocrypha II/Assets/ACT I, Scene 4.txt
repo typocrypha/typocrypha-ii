@@ -44,7 +44,10 @@ Adelai[0,2]: Just remember your training,{ps} Ayin!
 Adelai[0,2]: Use your {c,ui-terms}Typocrypha{c} to send those Demons back to the Ruins!
 
 
-Clarke[0,1]: Demon threat detected.{pm} Typing auto-prompt engaged.[a]
+Clarke[0,1]: Demon threat detected.{pm} Typing auto-prompt engaged.
+
+
+>battleEvent,EnablePrompt
 
 
 Clarke[0,1]: Please type in basic combat Spell{ps} {c,ui-terms}“SWORD”{c}{ps} and press {c,ui-terms}ENTER{c}.
@@ -246,6 +249,9 @@ Clarke[0,1]: Typocrypha Training mode disabled.
 Clarke[0,1]: Auto-prompt disabled.{pm} Please refer to the {c,ui-terms}Spell List{c} for available Spells to cast.
 
 
+>battleEvent,DisablePrompt
+
+
 >playsfx,SFXBootup
 
 
@@ -375,25 +381,22 @@ Adelai(serious)[0,2]: And remember,{pm} I’ll always have your back!
 >addchar,Adelai,0,0,right
 
 
-Adelai(normal)[0,2]: There’s an opening!
-
-
-Adelai[0,2]: C’mon,{pm} Ayin!
+Adelai(normal)[0,2]: Alright,{pm} good job Ayin!
 
 
 >stopbgm,ease,2
 
 
-Ayin[0,1]: *gasp*{pm} *gasp*{pm} Y-yeah.{pm} Just give me a sec...
+Ayin[0,1]: *gasp*{pm} *gasp*{pm} Y-{ps}yeah.
 
 
-Adelai[0,2]: Hurry up!
+Ayin[0,1]: We did it!
 
 
 >end
 
 
-//Round 6: The Masked Demon[b]
+//Round 6: The Masked Demon
 //Opening Dialog:
 >start,ACT I-4-6-Opening
 
@@ -403,25 +406,22 @@ Adelai[0,2]: Hurry up!
 >playbgm,BGMCurseIntro
 
 
-Narrator[1,1]: A Masked Demon appears in front of you!
+Adelai[0,2]: ...wait!
 
 
-Adrestia[1,1]: Cursed Humans,{ps} was this your doing!?
+Adelai[0,2]: Looks like there’s just one more.
 
 
-Adelai[0,2]: ...!
+Ayin[0,1]: They look strong...
 
 
-Adelai[0,2]: Looks like there’s just one more...
+Ayin[0,1]: Adelai,{pm} couldn’t we just run-
 
 
-Adelai[0,2](normal): We’ll take them down like all the others!
+Adelai[0,2](normal): Don’t worry Ayin!{pm} You can do this!
 
 
-Adrestia[1,1]: Like all the others...?
-
-
-Adrestia[1,1]: You Humans think you can keep pushing us around!?
+Ayin[0,1]: O-{ps}OK...
 
 
 >end
@@ -436,20 +436,14 @@ Adrestia[1,1]: You Humans think you can keep pushing us around!?
 Adrestia[1,1]: Kh-!
 
 
-Adrestia[1,1]: No!{pm} I will NOT be stopped!
+Adrestia[1,1]: Cursed Humans…
 
 
->stopbgm,immediate
-
-
-Adrestia[1,1]: Prepare to face my VENGEANCE!
-
-
->playbgm,BGMBattleAdrestiaDraft1
+>battleEvent,AdrestiaVengeance
 
 
 >end
-//After Ayin is hit once:
+//When Ayin at low hp (hit by Adrestia Vengence):
 >start,ACT I-4-6-AyinHit
 
 
@@ -472,39 +466,20 @@ Ayin[0,1]: Haa...{pm} Haa...{pm} It h-{ps}hurts...
 Adelai[0,2]: Get behind me,{pm} Ayin!
 
 
-Adrestia[1,1]: You reap what you sow,{pm} Humans.
+>battleEvent,AdelaiFullAuto
 
 
-Adrestia[1,1]: Now it’s time for you to face justice!
-
-
-Adelai[0,2]: Ayin,{pm} you need to run,{pm} NOW!
-
-
-Ayin[0,1]: I-{ps}I don’t know if I c-{ps}can...
+>playbgm,BGMParanoid
 
 
 >end
-//When Ayin at 50% health:
+//When Adelai at low health:
 >start,ACT I-4-6-AyinLow
 
 
 +bubble
 
 
-Adrestia[1,1]: This is the END!
-
-
-Ayin[0,1]: Haa...{pm} Haa...
-
-
-Ayin[0,1]: St-Stay back...!
-
-
-Adelai[0,2]: Ayin!
-
-
->castSpell,SWORD,1,2,0,1,Adelai jumps in front of the Spell![c]
 >setpose,Adelai,injured
 >setexpr,Adelai,grim
 
@@ -530,13 +505,13 @@ Ayin[0,1]: I can’t just leave you...
 Adelai[0,2]: .{pl}.{pl}.
 
 
-Ayin[0,1]:{c,whisper}(It’s all over...){c}
+Ayin[0,1]:{c,whisper}(It’s...{pm} all over...){c}
 
 
 >stopbgm,immediate
 
 
->setAlly,AllyIllyiaActI-18[d],Kaia,true,base,commanding
+>setAlly,AllyIllyiaActI-18[a],Kaia,true,base,commanding
 
 
 >castSpell,RAILGUN,0,1,1,2,??? casts RAILGUN!
@@ -593,33 +568,12 @@ Kaia[0,2](confident): Your scheme has failed!
 Adrestia[1,1]: Our...{pm}scheme!?
 
 
-Adrestia[1,1]: Grr...[e]
+Adrestia[1,1]: Grr...[b]
 
 
 >castSpell,RUN,1,2,0,1,The Demon Retreats!
 
 
 >end
-[a]static prompt
-[b]pending updates to overall scene
-
-
-battle starts - adelai/ayin underestimate adrestia
-
-
-adrestia uses a normal spell and gets countered
-
-
-adrestia uses parry
-
-
-ayin gets chunked in one hit by adrestia
-
-
-adelai takes hits for ayin, who is injured and can't run
-
-
-just as all hope is lost, kaia arrives
-[c]to add cool animation of Adelai taking the hit for Ayin
-[d]need to create kaia caster ally prefab
-[e]textbox overlaps with spell popup
+[a]need to create kaia caster ally prefab
+[b]textbox overlaps with spell popup
