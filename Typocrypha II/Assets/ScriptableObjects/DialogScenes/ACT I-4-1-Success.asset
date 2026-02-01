@@ -1,6 +1,108 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8762156886987164460
+--- !u!114 &-8290274092421708432
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
+  m_Name: From Previous
+  m_EditorClassIdentifier: 
+  body: {fileID: -1236922983223440849}
+  direction: 1
+  maxConnectionCount: 1
+  styleID: Gameflow
+  _connections:
+  - {fileID: 4636486783465161963}
+  side: 4
+  sidePosition: 30
+  sideOffset: 0
+--- !u!114 &-8013905956322992806
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
+  m_Name: From Previous
+  m_EditorClassIdentifier: 
+  body: {fileID: 366127573206589858}
+  direction: 1
+  maxConnectionCount: 1
+  styleID: Gameflow
+  _connections:
+  - {fileID: -5668928240604524237}
+  side: 4
+  sidePosition: 30
+  sideOffset: 0
+--- !u!114 &-5830596353782818047
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f5e563f8691e544bae09d8876e19413, type: 3}
+  m_Name: Set Dialog View
+  m_EditorClassIdentifier: 
+  position: {x: 190, y: 0}
+  dynamicConnectionPorts: []
+  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+  toNextOUT: {fileID: 1245487295409981901}
+  fromPreviousIN: {fileID: 1266937046521929552}
+  viewName: bubble
+--- !u!114 &-5725080104649715655
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
+  m_Name: From Previous
+  m_EditorClassIdentifier: 
+  body: {fileID: 733967096578211045}
+  direction: 1
+  maxConnectionCount: 1
+  styleID: Gameflow
+  _connections:
+  - {fileID: 610276642297924746}
+  side: 4
+  sidePosition: 30
+  sideOffset: 0
+--- !u!114 &-5668928240604524237
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
+  m_Name: To Next
+  m_EditorClassIdentifier: 
+  body: {fileID: -1236922983223440849}
+  direction: 2
+  maxConnectionCount: 0
+  styleID: Gameflow
+  _connections:
+  - {fileID: -8013905956322992806}
+  side: 2
+  sidePosition: 30
+  sideOffset: 0
+--- !u!114 &-3775352844884940387
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -12,40 +114,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 648e1859616c185439cc1cabbedf0a64, type: 3}
   m_Name: Bubble Dialog
   m_EditorClassIdentifier: 
-  position: {x: 380, y: 0}
+  position: {x: 960, y: 0}
   dynamicConnectionPorts: []
   backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: 2533787479790615357}
-  fromPreviousIN: {fileID: 641850269909314539}
+  toNextOUT: {fileID: 7148517902410750902}
+  fromPreviousIN: {fileID: -255357284741876601}
   characterName: Clarke
   displayName: 
-  text: "Cast successful.{pm} Spell {c,ui-terms}\u201CSWORD\u201D{c} going on {c,ui-terms}Cooldown{c}
-    for one(1) cast."
+  text: Spells on {c,ui-terms}Cooldown{c} cannot be used.
   tipsData: {fileID: 0}
   gridPosition: {x: 0, y: 1}
   absolutePosition: {x: -100, y: -100}
---- !u!114 &-8619021371162958190
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: From Previous
-  m_EditorClassIdentifier: 
-  body: {fileID: -4675119875588417495}
-  direction: 1
-  maxConnectionCount: 1
-  styleID: Gameflow
-  _connections:
-  - {fileID: 4444053841631599230}
-  side: 4
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &-8471068431338409940
+--- !u!114 &-3484589426248453910
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -57,16 +137,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
   m_Name: To Next
   m_EditorClassIdentifier: 
-  body: {fileID: 3956802472243242980}
+  body: {fileID: 913322962763604646}
   direction: 2
   maxConnectionCount: 0
   styleID: Gameflow
   _connections:
-  - {fileID: 641850269909314539}
+  - {fileID: 1266937046521929552}
   side: 2
   sidePosition: 30
   sideOffset: 0
---- !u!114 &-8153633764061757668
+--- !u!114 &-1761183704041768375
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -78,58 +158,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
   m_Name: From Previous
   m_EditorClassIdentifier: 
-  body: {fileID: 3602851672939477325}
+  body: {fileID: 4268229121793064301}
   direction: 1
   maxConnectionCount: 1
   styleID: Gameflow
   _connections:
-  - {fileID: 6727643657864127971}
+  - {fileID: 1245487295409981901}
   side: 4
   sidePosition: 30
   sideOffset: 0
---- !u!114 &-6344923044560063307
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: To Next
-  m_EditorClassIdentifier: 
-  body: {fileID: -4675119875588417495}
-  direction: 2
-  maxConnectionCount: 0
-  styleID: Gameflow
-  _connections:
-  - {fileID: 4314713780826109785}
-  side: 2
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &-5913029547867453455
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: From Previous
-  m_EditorClassIdentifier: 
-  body: {fileID: 3956802472243242980}
-  direction: 1
-  maxConnectionCount: 1
-  styleID: Gameflow
-  _connections:
-  - {fileID: 1030098610066489520}
-  side: 4
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &-5732562827391670061
+--- !u!114 &-1236922983223440849
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -141,84 +179,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 648e1859616c185439cc1cabbedf0a64, type: 3}
   m_Name: Bubble Dialog
   m_EditorClassIdentifier: 
-  position: {x: 670, y: 0}
+  position: {x: 1540, y: 0}
   dynamicConnectionPorts: []
   backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: -3768885260888307073}
-  fromPreviousIN: {fileID: 7602536145315481833}
+  toNextOUT: {fileID: -5668928240604524237}
+  fromPreviousIN: {fileID: -8290274092421708432}
   characterName: Clarke
   displayName: 
-  text: Casting a Spell causes it to go on {c,ui-terms}Cooldown{c}.
+  text: As such,{pm} {c,ui-terms}cycling through different Spells{c} is recommended
+    to ensure efficient casting.
   tipsData: {fileID: 0}
   gridPosition: {x: 0, y: 1}
   absolutePosition: {x: -100, y: -100}
---- !u!114 &-4744413050510677037
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: To Next
-  m_EditorClassIdentifier: 
-  body: {fileID: -485948542282287529}
-  direction: 2
-  maxConnectionCount: 0
-  styleID: Gameflow
-  _connections:
-  - {fileID: 5162125477037729155}
-  side: 2
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &-4675119875588417495
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 648e1859616c185439cc1cabbedf0a64, type: 3}
-  m_Name: Bubble Dialog
-  m_EditorClassIdentifier: 
-  position: {x: 1830, y: 0}
-  dynamicConnectionPorts: []
-  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: -6344923044560063307}
-  fromPreviousIN: {fileID: -8619021371162958190}
-  characterName: Clarke
-  displayName: 
-  text: Please refer to the {c,ui-terms}Spell List{c} in the {c,ui-terms}bottom left{c}
-    of your HUD for available Spells.
-  tipsData: {fileID: 0}
-  gridPosition: {x: 0, y: 1}
-  absolutePosition: {x: -100, y: -100}
---- !u!114 &-3768885260888307073
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: To Next
-  m_EditorClassIdentifier: 
-  body: {fileID: -5732562827391670061}
-  direction: 2
-  maxConnectionCount: 0
-  styleID: Gameflow
-  _connections:
-  - {fileID: 1195406194517963277}
-  side: 2
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &-2574211887825670875
+--- !u!114 &-1142753044224696912
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -230,16 +203,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
   m_Name: From Previous
   m_EditorClassIdentifier: 
-  body: {fileID: -485948542282287529}
+  body: {fileID: 6069406642949229969}
   direction: 1
   maxConnectionCount: 1
   styleID: Gameflow
   _connections:
-  - {fileID: 6461281204244712307}
+  - {fileID: 6915082512488945335}
   side: 4
   sidePosition: 30
   sideOffset: 0
---- !u!114 &-485948542282287529
+--- !u!114 &-529558284629739837
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
+  m_Name: From Previous
+  m_EditorClassIdentifier: 
+  body: {fileID: -470088264865342150}
+  direction: 1
+  maxConnectionCount: 1
+  styleID: Gameflow
+  _connections:
+  - {fileID: 7148517902410750902}
+  side: 4
+  sidePosition: 30
+  sideOffset: 0
+--- !u!114 &-470088264865342150
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -254,8 +248,8 @@ MonoBehaviour:
   position: {x: 1250, y: 0}
   dynamicConnectionPorts: []
   backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: -4744413050510677037}
-  fromPreviousIN: {fileID: -2574211887825670875}
+  toNextOUT: {fileID: 4636486783465161963}
+  fromPreviousIN: {fileID: -529558284629739837}
   characterName: Clarke
   displayName: 
   text: Casting a {c,ui-terms}different Spell{c} will {c,ui-terms}reduce the Spell
@@ -263,6 +257,27 @@ MonoBehaviour:
   tipsData: {fileID: 0}
   gridPosition: {x: 0, y: 1}
   absolutePosition: {x: -100, y: -100}
+--- !u!114 &-255357284741876601
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
+  m_Name: From Previous
+  m_EditorClassIdentifier: 
+  body: {fileID: -3775352844884940387}
+  direction: 1
+  maxConnectionCount: 1
+  styleID: Gameflow
+  _connections:
+  - {fileID: 7331157740465017567}
+  side: 4
+  sidePosition: 30
+  sideOffset: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -280,102 +295,18 @@ MonoBehaviour:
   savePath: Assets\ScriptableObjects\DialogScenes\ACT I-4-1-Success.asset
   livesInScene: 0
   nodes:
-  - {fileID: 5896882179244933575}
-  - {fileID: 3956802472243242980}
-  - {fileID: -8762156886987164460}
-  - {fileID: -5732562827391670061}
-  - {fileID: 6314817570336700324}
-  - {fileID: -485948542282287529}
-  - {fileID: 9169174793103538503}
-  - {fileID: -4675119875588417495}
-  - {fileID: 3066942498780175640}
-  - {fileID: 3602851672939477325}
+  - {fileID: 913322962763604646}
+  - {fileID: -5830596353782818047}
+  - {fileID: 4268229121793064301}
+  - {fileID: 733967096578211045}
+  - {fileID: -3775352844884940387}
+  - {fileID: -470088264865342150}
+  - {fileID: -1236922983223440849}
+  - {fileID: 366127573206589858}
+  - {fileID: 6069406642949229969}
+  - {fileID: 7474774781718057417}
   groups: []
---- !u!114 &641850269909314539
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: From Previous
-  m_EditorClassIdentifier: 
-  body: {fileID: -8762156886987164460}
-  direction: 1
-  maxConnectionCount: 1
-  styleID: Gameflow
-  _connections:
-  - {fileID: -8471068431338409940}
-  side: 4
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &1030098610066489520
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: To Next
-  m_EditorClassIdentifier: 
-  body: {fileID: 5896882179244933575}
-  direction: 2
-  maxConnectionCount: 0
-  styleID: Gameflow
-  _connections:
-  - {fileID: -5913029547867453455}
-  side: 2
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &1195406194517963277
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: From Previous
-  m_EditorClassIdentifier: 
-  body: {fileID: 6314817570336700324}
-  direction: 1
-  maxConnectionCount: 1
-  styleID: Gameflow
-  _connections:
-  - {fileID: -3768885260888307073}
-  side: 4
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &2533787479790615357
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: To Next
-  m_EditorClassIdentifier: 
-  body: {fileID: -8762156886987164460}
-  direction: 2
-  maxConnectionCount: 0
-  styleID: Gameflow
-  _connections:
-  - {fileID: 7602536145315481833}
-  side: 2
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &3066942498780175640
+--- !u!114 &366127573206589858
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -387,74 +318,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 648e1859616c185439cc1cabbedf0a64, type: 3}
   m_Name: Bubble Dialog
   m_EditorClassIdentifier: 
-  position: {x: 2120, y: 0}
+  position: {x: 1830, y: 0}
   dynamicConnectionPorts: []
   backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: 6727643657864127971}
-  fromPreviousIN: {fileID: 4314713780826109785}
+  toNextOUT: {fileID: 6915082512488945335}
+  fromPreviousIN: {fileID: -8013905956322992806}
   characterName: Clarke
   displayName: 
-  text: "Now,{pm} please type in basic combat Spell {ps}{c,ui-terms}\u201DLANCE\u201D{c}{ps}
-    and press {c,ui-terms}ENTER{c}."
+  text: Please refer to the {c,ui-terms}Spell List{c} in the {c,ui-terms}bottom left{c}
+    of your HUD for available Spells.
   tipsData: {fileID: 0}
   gridPosition: {x: 0, y: 1}
   absolutePosition: {x: -100, y: -100}
---- !u!114 &3602851672939477325
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0fc64b704248afd4a889e6a8984d17c9, type: 3}
-  m_Name: End And Hide
-  m_EditorClassIdentifier: 
-  position: {x: 2410, y: 0}
-  dynamicConnectionPorts: []
-  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  fromPreviousIN: {fileID: -8153633764061757668}
---- !u!114 &3956802472243242980
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f5e563f8691e544bae09d8876e19413, type: 3}
-  m_Name: Set Dialog View
-  m_EditorClassIdentifier: 
-  position: {x: 190, y: 0}
-  dynamicConnectionPorts: []
-  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: -8471068431338409940}
-  fromPreviousIN: {fileID: -5913029547867453455}
-  viewName: bubble
---- !u!114 &4314713780826109785
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: From Previous
-  m_EditorClassIdentifier: 
-  body: {fileID: 3066942498780175640}
-  direction: 1
-  maxConnectionCount: 1
-  styleID: Gameflow
-  _connections:
-  - {fileID: -6344923044560063307}
-  side: 4
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &4444053841631599230
+--- !u!114 &610276642297924746
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -466,16 +342,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
   m_Name: To Next
   m_EditorClassIdentifier: 
-  body: {fileID: 9169174793103538503}
+  body: {fileID: 4268229121793064301}
   direction: 2
   maxConnectionCount: 0
   styleID: Gameflow
   _connections:
-  - {fileID: -8619021371162958190}
+  - {fileID: -5725080104649715655}
   side: 2
   sidePosition: 30
   sideOffset: 0
---- !u!114 &5162125477037729155
+--- !u!114 &733967096578211045
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -484,19 +360,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: From Previous
+  m_Script: {fileID: 11500000, guid: 648e1859616c185439cc1cabbedf0a64, type: 3}
+  m_Name: Bubble Dialog
   m_EditorClassIdentifier: 
-  body: {fileID: 9169174793103538503}
-  direction: 1
-  maxConnectionCount: 1
-  styleID: Gameflow
-  _connections:
-  - {fileID: -4744413050510677037}
-  side: 4
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &5896882179244933575
+  position: {x: 670, y: 0}
+  dynamicConnectionPorts: []
+  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+  toNextOUT: {fileID: 7331157740465017567}
+  fromPreviousIN: {fileID: -5725080104649715655}
+  characterName: Clarke
+  displayName: 
+  text: Casting a Spell causes it to go on {c,ui-terms}Cooldown{c}.
+  tipsData: {fileID: 0}
+  gridPosition: {x: 0, y: 1}
+  absolutePosition: {x: -100, y: -100}
+--- !u!114 &913322962763604646
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -511,31 +389,8 @@ MonoBehaviour:
   position: {x: 0, y: 0}
   dynamicConnectionPorts: []
   backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: 1030098610066489520}
---- !u!114 &6314817570336700324
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 648e1859616c185439cc1cabbedf0a64, type: 3}
-  m_Name: Bubble Dialog
-  m_EditorClassIdentifier: 
-  position: {x: 960, y: 0}
-  dynamicConnectionPorts: []
-  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: 6461281204244712307}
-  fromPreviousIN: {fileID: 1195406194517963277}
-  characterName: Clarke
-  displayName: 
-  text: Spells on {c,ui-terms}Cooldown{c} cannot be used.
-  tipsData: {fileID: 0}
-  gridPosition: {x: 0, y: 1}
-  absolutePosition: {x: -100, y: -100}
---- !u!114 &6461281204244712307
+  toNextOUT: {fileID: -3484589426248453910}
+--- !u!114 &1245487295409981901
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -547,37 +402,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
   m_Name: To Next
   m_EditorClassIdentifier: 
-  body: {fileID: 6314817570336700324}
+  body: {fileID: -5830596353782818047}
   direction: 2
   maxConnectionCount: 0
   styleID: Gameflow
   _connections:
-  - {fileID: -2574211887825670875}
+  - {fileID: -1761183704041768375}
   side: 2
   sidePosition: 30
   sideOffset: 0
---- !u!114 &6727643657864127971
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
-  m_Name: To Next
-  m_EditorClassIdentifier: 
-  body: {fileID: 3066942498780175640}
-  direction: 2
-  maxConnectionCount: 0
-  styleID: Gameflow
-  _connections:
-  - {fileID: -8153633764061757668}
-  side: 2
-  sidePosition: 30
-  sideOffset: 0
---- !u!114 &7602536145315481833
+--- !u!114 &1266937046521929552
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -589,16 +423,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
   m_Name: From Previous
   m_EditorClassIdentifier: 
-  body: {fileID: -5732562827391670061}
+  body: {fileID: -5830596353782818047}
   direction: 1
   maxConnectionCount: 1
   styleID: Gameflow
   _connections:
-  - {fileID: 2533787479790615357}
+  - {fileID: -3484589426248453910}
   side: 4
   sidePosition: 30
   sideOffset: 0
---- !u!114 &9169174793103538503
+--- !u!114 &2415868212108986566
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
+  m_Name: To Next
+  m_EditorClassIdentifier: 
+  body: {fileID: 6069406642949229969}
+  direction: 2
+  maxConnectionCount: 0
+  styleID: Gameflow
+  _connections:
+  - {fileID: 7950426464004927126}
+  side: 2
+  sidePosition: 30
+  sideOffset: 0
+--- !u!114 &4268229121793064301
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -610,15 +465,160 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 648e1859616c185439cc1cabbedf0a64, type: 3}
   m_Name: Bubble Dialog
   m_EditorClassIdentifier: 
-  position: {x: 1540, y: 0}
+  position: {x: 380, y: 0}
   dynamicConnectionPorts: []
   backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  toNextOUT: {fileID: 4444053841631599230}
-  fromPreviousIN: {fileID: 5162125477037729155}
+  toNextOUT: {fileID: 610276642297924746}
+  fromPreviousIN: {fileID: -1761183704041768375}
   characterName: Clarke
   displayName: 
-  text: As such,{pm} {c,ui-terms}cycling through different Spells{c} is recommended
-    to ensure efficient casting.
+  text: "Cast successful.{pm} Spell {c,ui-terms}\u201CSWORD\u201D{c} going on {c,ui-terms}Cooldown{c}
+    for one(1) cast."
   tipsData: {fileID: 0}
   gridPosition: {x: 0, y: 1}
   absolutePosition: {x: -100, y: -100}
+--- !u!114 &4636486783465161963
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
+  m_Name: To Next
+  m_EditorClassIdentifier: 
+  body: {fileID: -470088264865342150}
+  direction: 2
+  maxConnectionCount: 0
+  styleID: Gameflow
+  _connections:
+  - {fileID: -8290274092421708432}
+  side: 2
+  sidePosition: 30
+  sideOffset: 0
+--- !u!114 &6069406642949229969
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 648e1859616c185439cc1cabbedf0a64, type: 3}
+  m_Name: Bubble Dialog
+  m_EditorClassIdentifier: 
+  position: {x: 2120, y: 0}
+  dynamicConnectionPorts: []
+  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+  toNextOUT: {fileID: 2415868212108986566}
+  fromPreviousIN: {fileID: -1142753044224696912}
+  characterName: Clarke
+  displayName: 
+  text: "Now,{pm} please type in basic combat Spell {ps}{c,ui-terms}\u201DLANCE\u201D{c}{ps}
+    and press {c,ui-terms}ENTER{c}."
+  tipsData: {fileID: 0}
+  gridPosition: {x: 0, y: 1}
+  absolutePosition: {x: -100, y: -100}
+--- !u!114 &6915082512488945335
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
+  m_Name: To Next
+  m_EditorClassIdentifier: 
+  body: {fileID: 366127573206589858}
+  direction: 2
+  maxConnectionCount: 0
+  styleID: Gameflow
+  _connections:
+  - {fileID: -1142753044224696912}
+  side: 2
+  sidePosition: 30
+  sideOffset: 0
+--- !u!114 &7148517902410750902
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
+  m_Name: To Next
+  m_EditorClassIdentifier: 
+  body: {fileID: -3775352844884940387}
+  direction: 2
+  maxConnectionCount: 0
+  styleID: Gameflow
+  _connections:
+  - {fileID: -529558284629739837}
+  side: 2
+  sidePosition: 30
+  sideOffset: 0
+--- !u!114 &7331157740465017567
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
+  m_Name: To Next
+  m_EditorClassIdentifier: 
+  body: {fileID: 733967096578211045}
+  direction: 2
+  maxConnectionCount: 0
+  styleID: Gameflow
+  _connections:
+  - {fileID: -255357284741876601}
+  side: 2
+  sidePosition: 30
+  sideOffset: 0
+--- !u!114 &7474774781718057417
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fc64b704248afd4a889e6a8984d17c9, type: 3}
+  m_Name: End And Hide
+  m_EditorClassIdentifier: 
+  position: {x: 2410, y: 0}
+  dynamicConnectionPorts: []
+  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+  fromPreviousIN: {fileID: 7950426464004927126}
+--- !u!114 &7950426464004927126
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3d338988a4691f43b8c0764bd85cf70, type: 3}
+  m_Name: From Previous
+  m_EditorClassIdentifier: 
+  body: {fileID: 7474774781718057417}
+  direction: 1
+  maxConnectionCount: 1
+  styleID: Gameflow
+  _connections:
+  - {fileID: 2415868212108986566}
+  side: 4
+  sidePosition: 30
+  sideOffset: 0

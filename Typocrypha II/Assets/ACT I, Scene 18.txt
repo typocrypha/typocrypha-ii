@@ -56,9 +56,8 @@ Dahlia[0,2]: Try not to get too beaten up!
 Illyia[0,2]: Out of the way!!!
 
 
-// Spell being cast is placeholder
 >clear
->castSpellAlly,PERISH,0,1,Illyia goes wild!
+>castSpellAlly,CLAYMORE-CLAYMORE,0,1
 
 
 Illyia[0,2](base,laughing): Phew!{pm} You OK,{ps} Leader?
@@ -149,7 +148,7 @@ Mari[1,1]: Annoying Human...
 
 
 >clear
->castSpell,HAMMER,1,2,0,1,Mari casts CYCLONE
+>castSpell,CYCLONE,1,2,0,1,Mari casts CYCLONE
 
 
 >setpose,Illyia,injuredscuffed
@@ -169,7 +168,7 @@ Esaias[0,2]: W-What...!
 
 
 >clear
->castSpell,LANCE,1,2,0,1,Mari casts ICICLE
+>castSpell,ICICLE,1,2,0,1,Mari casts ICICLE
 
 
 >setpose,Esaias,injured
@@ -192,7 +191,7 @@ Mari[1,1]: I,{pm} Mari Urraca,{ps} Pillar of the Obscurai,{pm} shall ensure the 
 >clear
 
 
->castSpell,HEAL,0,1,0,1,Mari traps Ayin in a TYPHOON[b]! 
+>castSpell,WINDTUNNEL,1,1,0,1,Mari traps Ayin in a TYPHOON[b]! 
 
 
 >crossfadebgm,BGMBattleDoppelganger
@@ -214,8 +213,6 @@ Mari[1,1]: I will not...{pm} L-{ps}Let this stop me...
 Mari[1,1]: KH-!
 
 
-
-
 >playsfx,SFXVRBootup
 Mari[1,1]:[shake,0.8,5] AAAAAAAAAAHH![next]
 >fade,out,3,1,1,1
@@ -223,7 +220,7 @@ Mari[1,1]:[shake,0.8,5] AAAAAAAAAAHH![next]
 
 >wait,1
 >clear
->battleEvent,MariFormChange
+>battleEvent,MariFormChange[d]
 >fade,in,4,1,1,1
 
 
@@ -231,7 +228,7 @@ Ayin[0,1]: Haa...{pm} Haa...{pm}
 
 
 Ayin[0,1]: I-Is it over?
->playbgm,BGMHowlingWind[d]
+>playbgm,BGMHowlingWind[e]
 
 
 Mari[1,1]: C-{ps}Curssssed...{pm} HuuUUuumanssss...
@@ -294,7 +291,7 @@ Ayin[0,1]: {c,whisper}(I can’t go on...){c}
 >stopbgm,immediate
 
 
-//Kaia snipes Mari
+//Kaia snipes Mari - TODO should also have a cool ray of light snipe effect
 >castSpellProxy,LANCE,0,1,Kaia,A sudden flash of light...
 
 
@@ -311,18 +308,15 @@ Mari[1,1]: Urgh...
 //TODO - Mari despawns
 
 
-+vnplus
->addchar,Ayin,0,0,left,basescuffed,surprisedbad
+Ayin[0,1]: Wh-What was that?
 
 
-Ayin: Wh-What was that?
-
-
-Ayin: Could it be...{pm} backup?
+Ayin[0,1]: Could it be...{pm} backup?
 
 
 >end
 [a]to fix
 [b]to have allies leave
 [c]should have new animation to show gravely injured
-[d]maybe use just bgm?
+[d]have spirit form start more minimal (i.e. maybe having sme aspects slightly transparent) and then increase in definition
+[e]maybe use just bgm?

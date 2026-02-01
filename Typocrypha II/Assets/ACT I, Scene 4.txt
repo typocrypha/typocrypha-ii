@@ -439,7 +439,7 @@ Adrestia[1,1]: Kh-!
 Adrestia[1,1]: Cursed Humans…
 
 
->battleEvent,AdrestiaVengeance
+>battleEvent,AdrestiaVengeance[a]
 
 
 >end
@@ -505,13 +505,16 @@ Ayin[0,1]: I can’t just leave you...
 Adelai[0,2]: .{pl}.{pl}.
 
 
-Ayin[0,1]:{c,whisper}(It’s...{pm} all over...){c}
+Ayin[0,1]:{c,whisper}(I couldn’t do anything...){c}
+
+
+Ayin[0,1]:{c,whisper}(...it’s all over...){c}
 
 
 >stopbgm,immediate
 
 
->setAlly,AllyIllyiaActI-18[a],Kaia,true,base,commanding
+>setAlly,AllyIllyiaActI-18[b],Kaia,true,base,commanding
 
 
 >castSpell,RAILGUN,0,1,1,2,??? casts RAILGUN!
@@ -568,12 +571,13 @@ Kaia[0,2](confident): Your scheme has failed!
 Adrestia[1,1]: Our...{pm}scheme!?
 
 
-Adrestia[1,1]: Grr...[b]
+Adrestia[1,1]: Grr...[c]
 
 
 >castSpell,RUN,1,2,0,1,The Demon Retreats!
 
 
 >end
-[a]need to create kaia caster ally prefab
-[b]textbox overlaps with spell popup
+[a]need special effect around Adrestia while charging "VENGEANCE"
+[b]need to create kaia caster ally prefab
+[c]textbox overlaps with spell popup
