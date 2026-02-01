@@ -17,6 +17,7 @@ public class TIPSEntrySpell : TIPSEntryData
         return spell.TIPsEntryId;
     }
 
+#if UNITY_EDITOR
     public override void OnValidate()
     {
         base.OnValidate();
@@ -24,7 +25,7 @@ public class TIPSEntrySpell : TIPSEntryData
         Content = spell.description;
 
         string style = "<color=#AAAAAA><indent=16><size=14>";
-        Content = string.Join("\n", spell.description, style , spell.flavorText);
+        Content = string.Join("\n", spell.description, style, spell.flavorText);
 
         string power = $"Power: {spell.Power}";
         string timer = "<sprite name=timer_icon_v2>";
@@ -32,4 +33,5 @@ public class TIPSEntrySpell : TIPSEntryData
         string root = $"Root Word: {spell.BaseName}";
         Footer = string.Join("\n", power, cooldown, root);
     }
+#endif
 }

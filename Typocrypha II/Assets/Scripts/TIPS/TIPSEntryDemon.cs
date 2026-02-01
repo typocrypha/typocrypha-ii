@@ -16,6 +16,7 @@ public class TIPSEntryDemon : TIPSEntryData
 
     const string footerStyle = "<color=#AAAAAA><size=14>";
 
+#if UNITY_EDITOR
     public override void OnValidate()
     {
         base.OnValidate();
@@ -30,4 +31,5 @@ public class TIPSEntryDemon : TIPSEntryData
         Content = string.Join("\n", hp, sp, stag, "", scouter.Description);
         Footer = footerStyle + scouter.TIPsFlavorText;
     }
+#endif
 }

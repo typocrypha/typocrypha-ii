@@ -4,7 +4,9 @@ using System.Collections.Generic;
 //using System.Collections;
 //using System.Collections.Generic;
 using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 /// <summary>
 /// Metadata on a TIPS entry.
@@ -58,6 +60,7 @@ public class TIPSEntryData : ScriptableObject
         return Path.GetFileNameWithoutExtension(pathToEntry);
     }
 
+#if UNITY_EDITOR
     public virtual void OnValidate()
     {
         // Important paths
@@ -81,4 +84,5 @@ public class TIPSEntryData : ScriptableObject
         RelativePath = pathToParent.Substring(Mathf.Min(PathToTIPS.Length, pathToParent.Length));
         Depth = Categorization.Length - 1;
     }
+#endif
 }
