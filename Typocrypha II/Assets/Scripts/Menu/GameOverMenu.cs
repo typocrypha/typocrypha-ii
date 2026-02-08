@@ -16,7 +16,12 @@ public class GameOverMenu : MonoBehaviour
     private Tween slowTween, backgroundTween, foregroundTween;
     private Sequence gameoverSequence;
 
-    public void Start()
+    private void Awake()
+    {
+        BattleManager.instance.OnGameOver.AddListener(PlayGameOverSequence);
+    }
+
+    public void InitGameOverSequence()
     {
         var defaultAutoPlay = DOTween.defaultAutoPlay;
         DOTween.defaultAutoPlay = AutoPlay.None;
@@ -52,14 +57,14 @@ public class GameOverMenu : MonoBehaviour
 
         DOTween.defaultAutoPlay = defaultAutoPlay;
         DOTween.defaultTimeScaleIndependent = false;
-
-        BattleManager.instance.OnGameOver.AddListener(PlayGameOverSequence);
     }
 
     private void PlayGameOverSequence()
     {
         BattleManager.instance.PH.Pause(PauseSources.GameOver);
         Battlefield.instance.PH.Pause(PauseSources.GameOver);
+
+        if (gameoverSequence == null) InitGameOverSequence();
         gameoverSequence.Restart();
     }
 
