@@ -189,6 +189,12 @@ public class BattleWord : MonoBehaviour, IInputHandler
         text.renderer.sortingOrder = order;
     }
 
+    public void Cancel()
+    {
+        StopAllCoroutines();
+        text.DOColor(Color.clear, 0.25f);
+    }
+
     [System.Serializable]
     public class WordData
     {

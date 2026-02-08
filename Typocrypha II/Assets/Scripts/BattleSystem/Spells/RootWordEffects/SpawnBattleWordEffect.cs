@@ -40,10 +40,22 @@ public abstract class SpawnBattleWordEffect : RootWordEffect
 
     private IEnumerator Play(Caster caster, Transform parent)
     {
+        var sequence = GetSequenceData(caster, out var defaultPrefab);
+        if (sequence.Count <= 0)
+            yield break;
         HideUI();
-        foreach(var sequenceData in GetSequenceData(caster, out var defaultPrefab))
+        int max = 0;
+        foreach(var sequenceData in sequence)
         {
-            var focusedWords = new List<BattleWord>(sequenceData.words.Count);
+            if(sequenceData.words.Count > max)
+            {
+                max = sequenceData.words.Count;
+            }
+        }
+        var focusedWords = new List<BattleWord>(max);
+        foreach(var sequenceData in sequence)
+        {
+            focusedWords.Clear();
             float focusTime = 0;
             for (int i = 0; i < sequenceData.words.Count; i++)
             {
@@ -68,6 +80,15 @@ public abstract class SpawnBattleWordEffect : RootWordEffect
                     word.SetTarget();
                 }
                 yield return new WaitWhile(() => word.isActiveAndEnabled);
+                if(Battlefield.instance.Player.IsDeadOrFled || Battlefield.instance.Player.IsSpiritMode)
+                {
+                    for (int j = i + 1; j < focusedWords.Count; ++j)
+                    {
+                        focusedWords[j].Cancel();
+                    }
+                    ShowUI();
+                    yield break;
+                }
             }
         }
 
