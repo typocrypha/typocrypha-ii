@@ -193,6 +193,11 @@ public class BattleWord : MonoBehaviour, IInputHandler
     {
         StopAllCoroutines();
         text.DOColor(Color.clear, 0.25f);
+        foreach (var tween in activeTweens)
+        {
+            tween.Kill();
+        }
+        activeTweens.Clear();
     }
 
     [System.Serializable]

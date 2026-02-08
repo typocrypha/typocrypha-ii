@@ -129,6 +129,15 @@ public class AIMariSpritForm : AIComponent
         SpellCooldownManager.instance.Hide();
     }
 
+    private void ShowUI()
+    {
+        Battlefield.instance.PH.Unpause(PauseSources.Misc);
+        Typocrypha.Keyboard.instance.PH.Unpause(PauseSources.Misc);
+        TargetReticle.instance.PH.Unpause(PauseSources.Misc);
+        AllyBattleBoxManager.instance.ShowCharacter();
+        SpellCooldownManager.instance.Show();
+    }
+
     private IEnumerator SpiritFormCR(Dictionary<string, List<WordRotator>> words)
     {
         yield return new WaitWhile(() => !DialogManager.instance.IsPaused());
@@ -182,7 +191,6 @@ public class AIMariSpritForm : AIComponent
                 yield return staggerYielder;
             }
 
-
             for (int i = 0; i < focusedWords.Count; i++)
             {
                 var allWords = focusedWords[i];
@@ -199,6 +207,18 @@ public class AIMariSpritForm : AIComponent
                 for (int j = 1; j < allWords.Count; j++)
                 {
                     allWords[j].FadePending();
+                }
+                if (Battlefield.instance.Player.IsDeadOrFled || Battlefield.instance.Player.IsSpiritMode)
+                {
+                    for (int j = i; j < focusedWords.Count; j++)
+                    {
+                        foreach(var otherWord in focusedWords[j])
+                        {
+                            otherWord.Cancel();
+                        }
+                    }
+                    ShowUI();
+                    yield break;
                 }
             }
             if(delay > 0)
