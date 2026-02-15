@@ -1,229 +1,123 @@
 ﻿>start,ACT I-23
 +vnplus
->setlocation,The First Barrier
->setbg,Sprite,BgBarrierMari
->addchar,Kaia,0,0,left
+>setbg,Sprite,BgObscurianRuins
+>addchar,Ayin,0,0,left,basescuffed,concerned
+>addchar,Adelai,0,0,right,base,serious
+>stopbgm
 
 
-Soldier: Typocrypha bootstrap,{pm} complete.
+Narrator: Hoisted over Adelai’s shoulder,{pm} the two of you retreat from the First Barrier.
 
 
-Soldier: Multiclass Spell layering protocols,{pm} complete.
+Ayin(surprisedbad): W-Wait!{pm} Everyone else-{pm} they’re still...
 
 
-Soldier: Magic energy 98%...{pm} 99%...{pm} 100% charged!
+Adelai: Don’t worry Ayin,{pm} we have other agents moving in to extract them. 
 
 
-Soldier: Removing safeguards...{pm} MW-Cannon ready to fire,{pm} general!
+Adelai(frustrated): We need to focus on...
 
 
-Kaia: FIRE!!
+>setexpr,Adelai,interested
+Narrator: Adelai suddenly stops to look at a group of agents.
 
 
-//TODO: giant explosion effect transitions to white screen
+>addchar,AEIOU Agent,0,0,right
 
 
+Narrator: They’ve set up a large cannon pointed at the First Barrier.
+
+
+Narrator: Adelai puts you down to confront them.
+
+
+Adelai(serious): Hey-{pm}Why are you preparing to fire the MW-Cannon?
+
+
+Adelai: General Kaia is still there fighting-
+
+
+AEIOU Agent: General’s orders:{pm} “Fire when ready.”
+
+
+AEIOU Agent: Fall back,{pm} agent Adelai.
+
+
+Adelai(frustrated): What!?
+
+
+>playsfx,SFXBootup
+AEIOU Agent: Begin MW-Cannon bootstrap protocol-
+
+
+Adelai(serious): Wait,{ps} you can’t-
+
+
+>playsfx,SFXCast
+AEIOU Agent: 98%...{ps} 99%...{ps} 100% charged!{pm} Spell sequence loaded-
+
+
+Adelai(frustrated): STOP-
+
+
+AEIOU Agent: FIRE!
+
+
+>playsfx,SFXEnter
+>fade,out,0,0,0,0
 +an
+>fade,in,1,1,1,1
 
 
-Narrator: You hear a terrible noise from behind.
+NarratorSilent[middle](center): A sudden flash.
 
 
-Narrator: An explosion shakes the Ruins and knocks you down...
+NarratorSilent[middle](center): All sound disappears.
 
 
-Narrator(left): ...down...
+NarratorSilent[middle](center): And then...
 
 
-Narrator(center): ...down...
+>fade,out,1,1,1,1
+>playsfx,SFXSpellFireHit
+>wait,2
+>clear
+>fade,in,4,1,1,1
 
 
-Narrator(right): ...down...
+NarratorSilent: A wave of force knocks you over.
+
+
+>playsfx,SFXSpellStabHit
+>fade,out,0.2,1,0,0
+>fade,in,0.3,1,0,0
+NarratorSilent: You feel a sharp pain as something hits your head.
+
+
+NarratorSilent: Your thoughts begin to...{pm} slow{ps}.{pm}.{pl}.
 
 
 >clear
 
 
-Narrator: ...you fall into complete sensory darkness...
+NarratorSilent(right): You look up at Adelai. 
 
 
-Narrator: What were you doing again?
+NarratorSilent(right): She doesn’t notice you at first-{pm}fixated and focused in the direction of the First Barrier.
 
 
-Narrator: Were you fighting?{pm} Did you win?
-
-
->addchar,Huginn,0,0,right
->addchar,Muninn,0,0,right
-
-
-Muninn(right): {c,muninn}Struggling to remember,{pm} young one?[a]{c}
-
-
-Huginn(right): {c,huginn}Hey,{pm} maybe we can help with that!{c}
-
-
->clear
->playbgm,BGMBirdPeople
-
-
-// TODO: screen shifts from white to black
-
-
-Muninn(right): {c,muninn}Once upon a time,{pm} you were born...{c}
-
-
-Huginn(right): {c,huginn}We’re starting all the way from there!?{c}
-
-
-Muninn(right): {c,muninn}History is important!{pm} Without it we are-{c}
-
-
-Narrator: ...nothing. 
-
-
-Narrator: You can’t remember much from back then.
-
-
-Narrator: What were your first memories?
-
-
-Narrator: Playing with Adelai as a child?
-
-
-Huginn(right): {c,huginn}We can go further than that!{c}
-
-
->clear
-
-
-Narrator: Right,{pm} another person in your life,{pm} before you ever met Adelai.
-
-
-Muninn(right): {c,muninn}Your other half.{c}
-
-
-Narrator: Niya...
-
-
-Narrator: You didn’t get along with Niya.
-
-
-Huginn(right): {c,huginn}Siblings,{pm} amiright?{c}
-
-
-Muninn(right): {c,muninn}.{pl}.{pl}.{pl}ahem.{c}
-
-
-Muninn(right): {c,muninn}You met your other half,{pm} also in darkness.{c}
-
-
-Muninn(right): {c,muninn}And in meeting,{pm} something was also lost,{pm} your-{c}
-
-
-Huginn(right): {c,huginn}Ugh,{pl} this is taking tooooo long!{c}
-
-
->clear
-Huginn(right): {c,huginn}Let’s skip to the good part!{c}
-
-
-Huginn(right): {c,huginn}So like,{pm} then you’re blasting through the Ruins.{c}
-
-
-Huginn(right): {c,huginn}You’re all like “SWORD!” and “HAMMER!”{c}
-
-
-Muninn(right): {c,muninn}A crude attempt to kill the undying Demons.{c}
-
-
-Narrator: It was self-defense.
-
-
-Narrator: It was the Sanitization Project.
-
-
-Narrator: You were drafted...{pm} You had no choice.
-
-
-Muninn(right): {c,muninn}And so you continued to stumble through the Ruins.{c} 
-
-
-Muninn(right): {c,muninn}...making no decisions and no “choices.”{c}
-
-
->clear
-
-
-Muninn(right): {c,muninn}At the adventure’s climax,{pm} you met poor Mari.{c}
-
-
-Huginn(right): {c,huginn}Poor,{pm} poor Mari...{c}
-
-
-Muninn(right): {c,muninn}The sky forever darkened.{c}
-
-
-Huginn(right): {c,huginn}Ooh,{pm} ooh,{pm} but next comes my favorite part...{c}
-
-
-Huginn(right): {c,huginn}KA-BOOOOOOM!{pm} Down goes the First Barrier!{c}
-
-
-Muninn(right): {c,muninn}The point of no return...{c}
-
-
-Narrator: You can’t return,{pm} not anymore.
-
-
-Narrator: That’s right,{pm} you remember now.
-
-
-Narrator: The First Barrier was destroyed,{pm} and you were retreating.
-
-
-Narrator: Adelai is carrying you over her shoulder and you’re moving towards the exit...
-
-
->clear
->stopbgm
-
-
-Narrator: ...no-{pm} you’re not moving towards the exit. 
-
-
-Narrator: Why aren’t you moving towards the exit?
-
-
-Narrator: You look up at Adelai. 
-
-
-Narrator: She doesn’t look back at you.
-
-
-Narrator: She instead looks deeper into the Ruins,{pm} entranced,{pm} fixated...
-
-
-Narrator: ...and a smile creeps onto her face...
-
-
-Muninn(right): {c,muninn}How many lives were lost?{c}
-
-
-Huginn(right): {c,huginn}It’s time to count ‘em up!{c}
-
-
-Narrator: And as unconsciousness takes you,{pm} you hear her say something...
+NarratorSilent(right): But as unconsciousness takes you,{pm} you think you hear her say something...
 
 
 >stopbgm
 >clear
->setbg,Sprite,CgAdelaiBarrier
->hideanbg,4
+>setbg,Sprite,CgAdelaiBarrierNoMouth
+>hideanbg,6
+>wait,1
+>showanbg,0
 
 
-NarratorSilent[middle](center): {c,adelai}Only two barriers left,{pm} Demons...{c}
+NarratorSilent[middle](center): {c,adelai}...forgive me...{c}
 
 
 >endt
-[a]narrator perspective confusing - maybe make narrator explicitly ayin for this section?
