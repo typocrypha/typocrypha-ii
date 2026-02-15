@@ -159,22 +159,21 @@ public class ShopMenu : MonoBehaviour
         {
             var buttonGO = purchaseButtonContainer.transform.GetChild(i).gameObject;
             buttonGO.SetActive(true);
-            var textUI = buttonGO.GetComponentInChildren<TextMeshProUGUI>();
             var menuButton = buttonGO.GetComponent<MenuButton>();
 
             //set text
             string nameText = badge.ToString();
-            string costText = badge.NextCost.ToString("C0");
+            string costText = $"${badge.NextCost}";
             const int maxTotalLength = 23;
             const int maxCostLength = 4;
             string result = $"{nameText} {costText.PadLeft(maxTotalLength - (nameText.Length + 1) - maxCostLength + costText.Length)}";
-            textUI.SetText(result);
+            menuButton.SetText(result);
 
             //set color
             bool canBuy = CanPurchaseOrUpgradeBadge(badge);
             menuButton.defaultColor = canBuy ? purchaseValidColor : purchaseInvalidColor;
             menuButton.selectedColor = canBuy ? purchaseValidSelectColor : purchaseInvalidSelectColor;
-            textUI.color = menuButton.defaultColor;
+            menuButton.ResetTextColor();
 
             //set callbacks
             menuButton.button.onClick.ReplaceAllListeners(()=>ItemButtonAction(badge, menuButton));

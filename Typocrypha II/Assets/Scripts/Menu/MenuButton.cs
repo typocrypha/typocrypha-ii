@@ -114,4 +114,9 @@ public class MenuButton : MonoBehaviour, ISelectHandler, IDeselectHandler, ISubm
     {
         text.text = newText;
     }
+
+    public void ResetTextColor()
+    {
+        text.color = defaultColor;
+    }
 }
