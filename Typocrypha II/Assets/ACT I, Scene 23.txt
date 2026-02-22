@@ -9,7 +9,7 @@
 Narrator: Hoisted over Adelai’s shoulder,{pm} the two of you retreat from the First Barrier.
 
 
-Ayin(surprisedbad): W-Wait!{pm} Everyone else-{pm} they’re still...
+Ayin(surprisedbad): W-Wait!{pm} Everyone is still back there!
 
 
 Adelai: Don’t worry Ayin,{pm} we have other agents moving in to extract them. 
@@ -31,10 +31,10 @@ Narrator: They’ve set up a large cannon pointed at the First Barrier.
 Narrator: Adelai puts you down to confront them.
 
 
-Adelai(serious): Hey-{pm}Why are you preparing to fire the MW-Cannon?
+Adelai(serious): Hey - {pm}Why are you preparing to fire the MW-Cannon?
 
 
-Adelai: General Kaia is still there fighting-
+Adelai: General Kaia is still there fighting!
 
 
 AEIOU Agent: General’s orders:{pm} “Fire when ready.”
@@ -66,58 +66,62 @@ AEIOU Agent: FIRE!
 >playsfx,SFXEnter
 >fade,out,0,0,0,0
 +an
+>playsfx,SFXFlash
 >fade,in,1,1,1,1
 
 
+
+
 NarratorSilent[middle](center): A sudden flash.
-
-
+>clear
 NarratorSilent[middle](center): All sound disappears.
-
-
-NarratorSilent[middle](center): And then...
+>clear
+NarratorSilent[middle](center): And then{pm}.{pm}.{pm}.
 
 
 >fade,out,1,1,1,1
->playsfx,SFXSpellFireHit
+>wait,0.5
+>playsfx,SFXSlowExplosion
 >wait,2
 >clear
 >fade,in,4,1,1,1
 
 
-NarratorSilent: A wave of force knocks you over.
+NarratorSilent[middle](left): A wave of force knocks you over.
 
 
 >playsfx,SFXSpellStabHit
 >fade,out,0.2,1,0,0
 >fade,in,0.3,1,0,0
-NarratorSilent: You feel a sharp pain as something hits your head.
+NarratorSilent[middle](left): You feel a sharp pain as something hits your head.
 
 
-NarratorSilent: Your thoughts begin to...{pm} slow{ps}.{pm}.{pl}.
+NarratorSilent[middle](left): Your thoughts begin to..{pm}.{pm} slow{pm}.{pm}.{pl}.
 
 
 >clear
 
 
-NarratorSilent(right): You look up at Adelai. 
+NarratorSilent[middle](right): You look up at Adelai. 
 
 
-NarratorSilent(right): She doesn’t notice you at first-{pm}fixated and focused in the direction of the First Barrier.
+NarratorSilent[middle](right): She doesn’t notice you at first - {pm}fixated and focused in the direction of the First Barrier.
 
 
-NarratorSilent(right): But as unconsciousness takes you,{pm} you think you hear her say something...
+NarratorSilent[middle](right): But as you fall unconscious,{pm} you think you hear her say something{pm}.{pm}.{pm}.
 
 
->stopbgm
 >clear
 >setbg,Sprite,CgAdelaiBarrierNoMouth
->hideanbg,6
+>hideanbg,4
 >wait,1
 >showanbg,0
 
 
 NarratorSilent[middle](center): {c,adelai}...forgive me...{c}
+
+
+>fade,out,2,1,1,1
 
 
 >endt
