@@ -39,23 +39,27 @@ public class TransitionManager : MonoBehaviour
     {
         SaveManager.instance.Save();
         SceneIndex = -1;
-        StartCoroutine(PlayLoadingScreen(titleSceneData.loadingScreenOverride, titleSceneData, titleSceneData.SceneName, false));
+        StartCoroutine(PlayLoadingScreen(titleSceneData.loadingScreenOverride, titleSceneData, titleSceneData.SceneName));
     }
 
     public void TransitionToNextScene()
+    {
+        TransitionToNextScene(true);
+    }
+
+    public void TransitionToNextScene(bool playLoading)
     {
         if (SceneIndex + 1 >= sceneData.Count)
         {
             Debug.LogError("Already at the last scene of the game!");
             return;
         }
-        TransitionToScene(SceneIndex + 1);
+        TransitionToScene(SceneIndex + 1, playLoading);
     }
 
-    public void TransitionToScene(int newIndex)
+    public void TransitionToScene(int newIndex, bool playLoading = true)
     {
-        if (SceneIndex == newIndex)
-            return;
+        if (SceneIndex == newIndex) return;
         var currScene = SceneIndex >= 0 ? sceneData[SceneIndex].SceneName : string.Empty;
         var nextSceneData = sceneData[newIndex];
         var nextScene = nextSceneData.SceneName;
@@ -64,7 +68,26 @@ public class TransitionManager : MonoBehaviour
             nextScene = string.Empty;
         }
         SceneIndex = newIndex;
-        StartCoroutine(PlayLoadingScreen(nextSceneData.loadingScreenOverride, nextSceneData, nextScene, true));
+        SaveManager.instance.Save();
+        if (playLoading) StartCoroutine(PlayLoadingScreen(nextSceneData.loadingScreenOverride, nextSceneData, nextScene));
+        else 
+        {
+            // Reset Camera
+            CameraManager.instance.ResetCamera();
+            if (nextSceneData.sceneData is BattleCanvas battleCanvas)
+            {
+                // Initialize Battle
+                BattleManager.instance.LoadBattle(battleCanvas);
+                BattleManager.instance.StartBattle();
+            }
+            else if (nextSceneData.sceneData is DialogCanvas dialogCanvas)
+            {
+                // Initialize Dialog
+                DialogManager.instance.LoadDialog(dialogCanvas, true);
+                DialogManager.instance.Loading = false;
+                DialogManager.instance.NextDialog(false, false);
+            }
+        }
     }
 
     public void Continue()
@@ -91,7 +114,7 @@ public class TransitionManager : MonoBehaviour
         loadedIndex = 0;
     }
 
-    private IEnumerator PlayLoadingScreen(LoadingScreen loadingScreenOverride, SceneData data, string sceneName, bool save)
+    private IEnumerator PlayLoadingScreen(LoadingScreen loadingScreenOverride, SceneData data, string sceneName)
     {
         loadingScreenCanvas.enabled = true;
         // Play loading screen ON
@@ -99,10 +122,6 @@ public class TransitionManager : MonoBehaviour
         loadingScreen.gameObject.SetActive(true);
         loadingScreen.Progress = 0;
         yield return loadingScreen.StartLoading();
-        if (save)
-        {
-            SaveManager.instance.Save();
-        }
         // Start loading screen idle
         // (if new scene) actually load scene
         if(sceneName != string.Empty)

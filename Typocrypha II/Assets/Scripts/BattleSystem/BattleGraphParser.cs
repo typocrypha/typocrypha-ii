@@ -28,7 +28,8 @@ public class BattleGraphParser : GraphParser
         if (currNode is GameflowEndNode)
         {
             // Transition to next scene regardless of which end node is used
-            TransitionManager.instance.TransitionToNextScene();
+            var playLoad = currNode is EndAndTransition;
+            TransitionManager.instance.TransitionToNextScene(playLoad);
             return null;
         }
         else if (currNode is VictoryScreenNode victoryNode)
