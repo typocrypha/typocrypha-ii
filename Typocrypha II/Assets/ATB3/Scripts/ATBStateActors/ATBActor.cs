@@ -48,6 +48,11 @@ namespace ATB3
             Setup();
         }
 
+        protected virtual void OnDestroy()
+        {
+            PH.Cleanup();
+        }
+
         // Call to do initial setup on actor
         public abstract void Setup();
 

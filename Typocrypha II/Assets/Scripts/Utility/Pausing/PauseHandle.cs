@@ -114,6 +114,15 @@ public class PauseHandle
         }
     }
 
+    public void Cleanup()
+    {
+        if (PauseManager.instance != null)
+        {
+            PauseManager.instance.AllPausable.Remove(this);
+        }
+        FreeFromParent();
+    }
+
     public PauseHandle()
     {
         if (PauseManager.instance != null)
@@ -133,10 +142,6 @@ public class PauseHandle
     // Remove self from list of all pause handles on destruction.
     ~PauseHandle()
     {
-        if (PauseManager.instance != null)
-        {
-            PauseManager.instance.AllPausable.Remove(this);
-        }
-        FreeFromParent();
+        Cleanup();
     }
 }

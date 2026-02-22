@@ -102,8 +102,9 @@ public class PauseManager : MonoBehaviour, IPausable
                     ph.Unpause(sources);
                 }
             }
-            catch (MissingReferenceException) // Check if object was destroyed.
+            catch (System.Exception e) // Check if object was destroyed.
             {
+                Debug.LogError($"PauseHandle exception: {e.Message}");
                 destroyed.Add(ph);
             }
         }

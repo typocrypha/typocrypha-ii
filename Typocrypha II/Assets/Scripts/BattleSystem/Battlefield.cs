@@ -316,7 +316,7 @@ public class Battlefield : MonoBehaviour, IPausable
         if (actor != null)
         {
             Actors.Remove(actor);
-            actor.PH.FreeFromParent();
+            actor.PH.Cleanup();
         }
         if (destroy)
         {

@@ -4,9 +4,8 @@ using UnityEngine;
 
 namespace ATB3
 {
-    public interface IATBStateMachine
+    public interface IATBStateMachine : IPausable
     {
-        PauseHandle PH { get;  }
         ATBStateID CurrentStateID { get; set; }
         IATBState CurrentATBState { get; }
 
