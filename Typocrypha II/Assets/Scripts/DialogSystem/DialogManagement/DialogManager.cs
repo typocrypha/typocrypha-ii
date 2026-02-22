@@ -111,10 +111,6 @@ public class DialogManager : MonoBehaviour, IPausable
     void Update()
     {
 #if DEBUG
-        if (!isBattle && Input.GetKeyDown(KeyCode.S))
-        {
-            StartDialog(false, false);
-        }
         if(!Loading && ReadyToContinue && ActiveDialogBox != null && DialogView.ReadyToContinue && Input.GetKey(KeyCode.Space) && Input.GetKey(KeyCode.LeftShift))
         {
             if(++skipCount > 5)
