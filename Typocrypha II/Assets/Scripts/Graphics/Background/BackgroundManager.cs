@@ -9,8 +9,6 @@ public class BackgroundManager : MonoBehaviour
     public SpriteRenderer bgsr; // Sprite renderer for the background.
     public GameObject bggo; // Gameobject background (for more complicated backgrounds).
 
-    static AssetBundle bgBundle; // Background sprite assets.
-
     public Bounds GetBounds() => bggo ? bggo.GetComponentInChildren<SpriteRenderer>().bounds : bgsr.bounds;
 
     void Awake()
@@ -24,9 +22,6 @@ public class BackgroundManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-
-        if (bgBundle == null) bgBundle = AssetBundle.LoadFromFile(
-            System.IO.Path.Combine(Application.streamingAssetsPath, "background"));
     }
 
     /// <summary>
