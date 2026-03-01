@@ -40,8 +40,10 @@ public class BackgroundManager : MonoBehaviour
     /// <param name="prefab">Prefab of background object.</param>
     public void SetBackground(GameObject prefab)
     {
+        if (bggo.name == prefab.name) return;
         if (bggo != null) Destroy(bggo);
         bggo = Instantiate(prefab, transform);
+        bggo.name = prefab.name;
         bgsr.sprite = null;
     }
 }

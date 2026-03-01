@@ -27,9 +27,10 @@ public class BattleGraphParser : GraphParser
         // Battle graph-specific functionality
         if (currNode is GameflowEndNode)
         {
+            // Use loading screen depending on node used
             // Transition to next scene regardless of which end node is used
-            var playLoad = currNode is EndAndTransition;
-            TransitionManager.instance.TransitionToNextScene(playLoad);
+            var skipLoading = currNode is SeamlessContinue;
+            TransitionManager.instance.TransitionToNextScene(skipLoading);
             return null;
         }
         else if (currNode is VictoryScreenNode victoryNode)

@@ -47,17 +47,17 @@ public class TransitionManager : MonoBehaviour
         TransitionToNextScene(true);
     }
 
-    public void TransitionToNextScene(bool playLoading)
+    public void TransitionToNextScene(bool skipLoading)
     {
         if (SceneIndex + 1 >= sceneData.Count)
         {
             Debug.LogError("Already at the last scene of the game!");
             return;
         }
-        TransitionToScene(SceneIndex + 1, playLoading);
+        TransitionToScene(SceneIndex + 1, skipLoading);
     }
 
-    public void TransitionToScene(int newIndex, bool playLoading = true)
+    public void TransitionToScene(int newIndex, bool skipLoading = false)
     {
         if (SceneIndex == newIndex) return;
         var currScene = SceneIndex >= 0 ? sceneData[SceneIndex].SceneName : string.Empty;
@@ -69,8 +69,7 @@ public class TransitionManager : MonoBehaviour
         }
         SceneIndex = newIndex;
         SaveManager.instance.Save();
-        if (playLoading) StartCoroutine(PlayLoadingScreen(nextSceneData.loadingScreenOverride, nextSceneData, nextScene));
-        else 
+        if (skipLoading)
         {
             // Reset Camera
             CameraManager.instance.ResetCamera();
@@ -87,6 +86,10 @@ public class TransitionManager : MonoBehaviour
                 DialogManager.instance.Loading = false;
                 DialogManager.instance.NextDialog(false, false);
             }
+        }
+        else
+        {
+            StartCoroutine(PlayLoadingScreen(nextSceneData.loadingScreenOverride, nextSceneData, nextScene));
         }
     }
 
