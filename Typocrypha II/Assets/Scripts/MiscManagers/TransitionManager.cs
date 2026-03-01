@@ -44,7 +44,7 @@ public class TransitionManager : MonoBehaviour
 
     public void TransitionToNextScene()
     {
-        TransitionToNextScene(true);
+        TransitionToNextScene(false);
     }
 
     public void TransitionToNextScene(bool skipLoading)
