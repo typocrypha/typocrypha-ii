@@ -1,14 +1,11 @@
-﻿//using System;
-//using System.Collections;
-//using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Text.RegularExpressions;
 using System;
 using TMPro;
 using System.Linq;
-using UnityEngine.UI;
 
+// Handles user inputs for TIPS menu
 public class TIPSNavigator : MonoBehaviour
 {
     [Header("Internal References")]
@@ -39,12 +36,18 @@ public class TIPSNavigator : MonoBehaviour
         topicStack.OnButtonSelected += DisplayEntryOnSelect;
     }
 
+    /// <summary>
+    /// Prepare the TIPS view.
+    /// </summary>
     public void InitializeView()
     {
         InitializeSearchbar();
         topicStack.RefreshCurrentFolder();
     }
 
+    /// <summary>
+    /// Prepare the searchbar.
+    /// </summary>
     private void InitializeSearchbar()
     {
         searchbar.PH.Unpause(PauseSources.TIPS);
@@ -55,9 +58,15 @@ public class TIPSNavigator : MonoBehaviour
 
     private void Update()
     {
+        /***
+         * Searchbar navigation
+         * 1. Down arrow to focus on topics
+         * 2. Return key to input search
+         * 3. Any letter key to modify search term
+         */
         if (CurrentFocus == Focus.searchbar)
         {
-            if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.RightArrow))
+            if (Input.GetKeyDown(KeyCode.DownArrow))
             {
                 searchbar.Clear();
                 SearchbarShowHint();
@@ -75,6 +84,12 @@ public class TIPSNavigator : MonoBehaviour
             }
         }
 
+        /***
+         * Topics navigation
+         * 1. Any letter key to focus on searchbar
+         * 2. Space or Shift+Space to cycle through entry pages
+         * 3. Backspace to navigate up a folder
+         */
         if (CurrentFocus == Focus.topics)
         {
             if (new Regex("[A-Za-z]+").IsMatch(Input.inputString))
@@ -83,8 +98,7 @@ public class TIPSNavigator : MonoBehaviour
                 searchbar.ProcessInput(Input.inputString);
                 SearchbarShowHint();
             }
-
-            if (Input.GetKeyDown(KeyCode.Space))
+            else if (Input.GetKeyDown(KeyCode.Space))
             {
                 if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
                 {
@@ -95,19 +109,13 @@ public class TIPSNavigator : MonoBehaviour
                     DisplayEntryPageNext();
                 }
             }
-        }
-
-        // Navigate out of stack and back to visual novel
-        if (Input.GetKeyDown(KeyCode.Backspace))
-        {
-            if (topicStack.currentLayer > TIPSTopicStack.Layer.Top)
+            else if (Input.GetKeyDown(KeyCode.Backspace))
             {
-                topicStack.StepOutToParent();
+                if (topicStack.currentLayer > TIPSTopicStack.Layer.Top)
+                {
+                    topicStack.StepOutToParent();
+                }
             }
-            //else if (topicStack.currentLayer == TIPSTopicStack.Layer.Top)
-            //{
-            //    OnExit.Invoke();
-            //}
         }
     }
 
@@ -127,6 +135,9 @@ public class TIPSNavigator : MonoBehaviour
             
     }
 
+    /// <summary>
+    /// Set the focus of the TIPS UI to the searchbar
+    /// </summary>
     public void FocusOnSearchbar()
     {
         searchbar.Focus();
@@ -135,6 +146,10 @@ public class TIPSNavigator : MonoBehaviour
         controlGuide.SetContextSearch();
     }
 
+
+    /// <summary>
+    /// Set the focus of the TIPS UI to the topics
+    /// </summary>
     public void FocusOnTopics(bool selectTop)
     {
         searchbar.Unfocus();
@@ -146,6 +161,12 @@ public class TIPSNavigator : MonoBehaviour
         controlGuide.SetContextTopics();
     }
 
+
+    /// <summary>
+    /// Compare TIPS entries against the search term and
+    /// respond differently depending on the number of matches.
+    /// </summary>
+    /// <param name="input"> The search term to look up. </param>
     protected virtual void HandleSearchInput(string input)
     {
         if (input.Length == 0)
@@ -163,11 +184,18 @@ public class TIPSNavigator : MonoBehaviour
             OnMatchPartial(allMatches);
     }
 
+    /// <summary>
+    /// Alert the player and do nothing.
+    /// </summary>
     protected virtual void OnMatchNone()
     {
         AudioManager.instance.PlaySFX(sfxSearchBad);
     }
 
+    /// <summary>
+    /// Pull up a list containing entries that matched the search.
+    /// </summary>
+    /// <param name="entries"> List of matching entries. </param>
     protected virtual void OnMatchPartial(TIPSEntryData[] entries)
     {
         AudioManager.instance.PlaySFX(sfxSearchGood);
@@ -179,6 +207,10 @@ public class TIPSNavigator : MonoBehaviour
         FocusOnTopics(true);
     }
 
+    /// <summary>
+    /// Navigate to the exact entry.
+    /// </summary>
+    /// <param name="entry"> Entry to navigate to. </param>
     protected virtual void OnMatchExact(TIPSEntryData entry)
     {
         AudioManager.instance.PlaySFX(sfxSearchGood);
@@ -186,21 +218,39 @@ public class TIPSNavigator : MonoBehaviour
         topicStack.JumpToEntry(entry);
     }
 
+    #region TODO: move out of navigator
+    /// <summary>
+    /// Update the entry view with the current selection.
+    /// </summary>
+    /// <param name="entry"> Entry currently selected. </param>
     protected virtual void DisplayEntryOnSelect(TIPSEntryData entry)
     {
         DisplayEntry(entryPanel, currentEntry = entry, contentPage = 0);
     }
 
+    /// <summary>
+    /// Display the next page of the current entry.
+    /// </summary>
     protected virtual void DisplayEntryPageNext()
     {
         DisplayEntry(entryPanel, currentEntry, ++contentPage);
     }
 
+
+    /// <summary>
+    /// Display the previous page of the current entry.
+    /// </summary>
     protected virtual void DisplayEntryPagePrev()
     {
         DisplayEntry(entryPanel, currentEntry, --contentPage);
     }
 
+    /// <summary>
+    /// Set the entry panel.
+    /// </summary>
+    /// <param name="panel"> View for entry data. </param>
+    /// <param name="entry"> Entry data source. </param>
+    /// <param name="page"> Current page to display. </param>
     protected static void DisplayEntry(TIPSEntryPanel panel, TIPSEntryData entry, int page)
     {
         var paginatedContent = Regex.Split(entry.Content, "{br}");
@@ -222,5 +272,5 @@ public class TIPSNavigator : MonoBehaviour
             panel.HidePaginationIndicator();
         }
     }
-
+    #endregion
 }
