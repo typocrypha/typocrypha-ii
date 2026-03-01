@@ -97,6 +97,7 @@ public class DialogManager : MonoBehaviour, IPausable
         graphParser = GetComponent<DialogGraphParser>();
     }
 
+#if DEBUG
     void Start()
     {
         if (startOnStart)
@@ -104,8 +105,6 @@ public class DialogManager : MonoBehaviour, IPausable
             StartDialog(false);
         }
     }
-
-#if DEBUG
     private int skipCount;
 #endif
 
