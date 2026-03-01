@@ -15,14 +15,18 @@ public class BattleGraphParser : GraphParser
     }
     /// <summary> Go through the graph, porcessing nodes until a dialog node is reached
     /// When reached, translate into a dialog item and return </summary>
-    public BattleWave NextWave()
+    public bool TryNextWave(out BattleWave wave)
     {
         currNode = Next();
-        if (currNode == null) return null;
+        if (currNode == null)
+        {
+            wave = null;
+            return false;
+        }
         // If shared node, go to next
         if (ProcessSharedNode(currNode))
         {
-            return NextWave();
+            return TryNextWave(out wave);
         }
         // Battle graph-specific functionality
         if (currNode is GameflowEndNode)
@@ -31,21 +35,23 @@ public class BattleGraphParser : GraphParser
             // Transition to next scene regardless of which end node is used
             var skipLoading = currNode is SeamlessContinue;
             TransitionManager.instance.TransitionToNextScene(skipLoading);
-            return null;
+            wave = null;
+            return false;
         }
         else if (currNode is VictoryScreenNode victoryNode)
         {
             BattleManager.instance.Victory(victoryNode);
-            return null;
+            wave = null;
+            return false;
         }
         else if(currNode is VictoryScreenUnlockNode unlockMessageNode)
         {
             RewardsManager.Instance.AddBonusEntry(unlockMessageNode.unlockedText, unlockMessageNode.reasonText, unlockMessageNode.descriptionText, unlockMessageNode.iconSprite, unlockMessageNode.priority, unlockMessageNode.clarkeMessage);
-            return NextWave();
+            return TryNextWave(out wave);
         }
         else if (currNode is BattleNodeWave waveNode)
         {
-            return new BattleWave()
+            wave = new BattleWave()
             {
                 waveTitle = waveNode.waveTitle,
                 waveNumberOverride = waveNode.waveNumberOverride,
@@ -58,8 +64,9 @@ public class BattleGraphParser : GraphParser
                 openingScene = waveNode.openingScene,
                 allowEquipment = waveNode.allowEquipement,
             };
+            return true;
         }
         //Recursively move to next
-        return NextWave();
+        return TryNextWave(out wave);
     }
 }

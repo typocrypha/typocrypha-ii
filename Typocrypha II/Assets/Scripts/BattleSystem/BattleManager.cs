@@ -134,6 +134,13 @@ public class BattleManager : MonoBehaviour, IPausable
         LoadBattle();
     }
 
+    public void SwitchBattle(BattleCanvas graph)
+    {
+        graphParser.Graph = graph;
+        graphParser.Init();
+        StartBattle();
+    }
+
     /// <summary>
     /// Start new battle graph. Uses graph set in parser by "LoadBattle"
     /// </summary>
@@ -196,9 +203,9 @@ public class BattleManager : MonoBehaviour, IPausable
     {
         PH.Pause(PauseSources.Self);
         ++waveNum;
-        CurrWave = graphParser.NextWave();
-        if (CurrWave == null) return;
-
+        if (!graphParser.TryNextWave(out var wave))
+            return;
+        CurrWave = wave;
         // Destroy battle events from previous wave
         foreach (var e in currEvents)
             Destroy(e.gameObject);

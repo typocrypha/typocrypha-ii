@@ -76,8 +76,7 @@ public class TransitionManager : MonoBehaviour
             if (nextSceneData.sceneData is BattleCanvas battleCanvas)
             {
                 // Initialize Battle
-                BattleManager.instance.LoadBattle(battleCanvas);
-                BattleManager.instance.StartBattle();
+                BattleManager.instance.SwitchBattle(battleCanvas);
             }
             else if (nextSceneData.sceneData is DialogCanvas dialogCanvas)
             {
