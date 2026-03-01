@@ -32,11 +32,8 @@ public class DialogManager : MonoBehaviour, IPausable
     }
 
     public static DialogManager instance = null;
-    public bool startOnStart = true; // Should dialog start when scene starts up? (should generally only be true for debugging)
-    public bool isBattle = false; // Is this a battle scene?
-    [SerializeField] private List<DialogView> allViews; // All dialog views (VN, CHAT, etc)
-    public UnityEvent onNextDialog; // Event called when a new dialog line is started.
-    public UnityEvent onSkip; // Event called when user manually skips text scroll.
+
+    public event System.Action OnHideComplete;
     public bool Auto { get; private set; }
     public DialogBox ActiveDialogBox { get; private set; } // Latest displayed dialog box.
     public IReadOnlyList<string> ActiveTIPsEntries
@@ -59,10 +56,6 @@ public class DialogManager : MonoBehaviour, IPausable
             dialogView = value;
         }
     }
-    private DialogView dialogView; // Currently displayed dialog view.
-    private DialogView lastView; // Previously displayed dialog view.
-    public event System.Action OnHideComplete;
-
     public bool ReadyToContinue { get; set; } = true;
     public string LocationText
     {
@@ -76,14 +69,21 @@ public class DialogManager : MonoBehaviour, IPausable
             }
         }
     }
+    private string location = "";
 
     public bool Loading { get; set; } = false;
     public bool IsLoading() => Loading;
 
-    private string location = "";
-    private DialogGraphParser graphParser; // Dialog graph currently playing.
-    private int skipCount;
+    [SerializeField] private bool startOnStart = true; // Should dialog start when scene starts up? (should generally only be true for debugging)
+    [SerializeField] private bool isBattle = false; // Is this a battle scene?
+    [SerializeField] private List<DialogView> allViews; // All dialog views (VN, CHAT, etc)
+    [SerializeField] private UnityEvent onNextDialog; // Event called when a new dialog line is started.
+    [SerializeField] UnityEvent onSkip; // Event called when user manually skips text scroll.
+    [SerializeField] private DialogGraphParser graphParser;
 
+    private DialogView dialogView; // Currently displayed dialog view.
+    private DialogView lastView; // Previously displayed dialog view.
+    private int skipCount;
 
     void Awake()
     {
@@ -98,7 +98,6 @@ public class DialogManager : MonoBehaviour, IPausable
         }
 
         ph = new PauseHandle(OnPause);
-        graphParser = GetComponent<DialogGraphParser>();
     }
 
 #if DEBUG
@@ -404,6 +403,11 @@ public class DialogManager : MonoBehaviour, IPausable
             lastView.gameObject.SetActive(false);
         }
         yield return ShowView(!hasLastView, callback); // callback will get called at the end of here
+    }
+
+    public void OnSkip()
+    {
+        onSkip?.Invoke();
     }
 }
 

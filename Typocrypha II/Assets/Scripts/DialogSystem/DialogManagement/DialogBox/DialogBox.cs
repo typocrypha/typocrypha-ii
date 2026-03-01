@@ -201,7 +201,7 @@ public class DialogBox : MonoBehaviour, IPausable
         {
             ContinueIndicator.Activate();
         }
-        DialogManager.instance.onSkip.Invoke();
+        DialogManager.instance.OnSkip();
     }
 
     /// <summary>
