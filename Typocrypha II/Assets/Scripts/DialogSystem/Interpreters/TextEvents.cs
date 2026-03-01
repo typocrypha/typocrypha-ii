@@ -178,7 +178,7 @@ public class TextEvents : MonoBehaviour, IPausable
     IEnumerator ContinueDialogCR(float delay)
     {
         yield return new WaitForSeconds(delay);
-        DialogManager.instance.NextDialog(true, false);
+        DialogManager.instance.NextDialog(true);
     }
 
 }

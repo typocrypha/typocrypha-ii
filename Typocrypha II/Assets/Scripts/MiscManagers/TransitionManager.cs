@@ -82,9 +82,7 @@ public class TransitionManager : MonoBehaviour
             else if (nextSceneData.sceneData is DialogCanvas dialogCanvas)
             {
                 // Initialize Dialog
-                DialogManager.instance.LoadDialog(dialogCanvas, true);
-                DialogManager.instance.Loading = false;
-                DialogManager.instance.NextDialog(false, false);
+                DialogManager.instance.StartDialog(dialogCanvas, false, false);
             }
         }
         else
@@ -188,8 +186,6 @@ public class TransitionManager : MonoBehaviour
         else if (data.sceneData is DialogCanvas dialogCanvas)
         {
             DialogManager.instance.Loading = false;
-            DialogManager.instance.NextDialog(false, false);
-            //yield return null;
         }
         loadingScreenCanvas.enabled = false;
         loadingScreen.gameObject.SetActive(false);

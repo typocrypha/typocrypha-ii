@@ -315,7 +315,7 @@ public class DialogBox : MonoBehaviour, IPausable
                 yield return new WaitWhile(this.IsPaused); // Wait on pause.
             }
 
-            DialogManager.instance.NextDialog(true, false);
+            DialogManager.instance.NextDialog(true);
         }
         else if (ContinueIndicator != null)
         {

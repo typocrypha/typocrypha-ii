@@ -79,6 +79,7 @@ public class DialogManager : MonoBehaviour, IPausable
     private string location = "";
     private DialogGraphParser graphParser; // Dialog graph currently playing.
     public bool Loading { get; set; } = false;
+    public bool IsLoading() => Loading;
 
     void Awake()
     {
@@ -100,7 +101,7 @@ public class DialogManager : MonoBehaviour, IPausable
     {
         if (startOnStart)
         {
-            StartDialog(false, false);
+            StartDialog(false);
         }
     }
 
@@ -110,15 +111,20 @@ public class DialogManager : MonoBehaviour, IPausable
 
     void Update()
     {
+        if (Auto)
+        {
+            return;
+        }
+        bool canContinue = !Loading && ReadyToContinue && ActiveDialogBox != null && DialogView != null && DialogView.ReadyToContinue;
 #if DEBUG
-        if(!Loading && ReadyToContinue && ActiveDialogBox != null && DialogView.ReadyToContinue && Input.GetKey(KeyCode.Space) && Input.GetKey(KeyCode.LeftShift))
+        if (canContinue && Input.GetKey(KeyCode.Space) && Input.GetKey(KeyCode.LeftShift))
         {
             if(++skipCount > 5)
             {
                 skipCount = 0;
                 if (ActiveDialogBox.IsDone)
                 {
-                    NextDialog(true, false); // If dialog is done, go to next dialog
+                    NextDialog(true); // If dialog is done, go to next dialog
                 }
                 else
                 {
@@ -128,16 +134,12 @@ public class DialogManager : MonoBehaviour, IPausable
 
         }
 #endif
-        if (Auto)
-        {
-            return;
-        }
         // Check if submit key is pressed
-        if (!Loading && ReadyToContinue && ActiveDialogBox != null && DialogView.ReadyToContinue && (Input.GetKeyDown(KeyCode.Space) || Settings.AutoContinue))
+        if (!Loading && ReadyToContinue && ActiveDialogBox != null && DialogView != null && DialogView.ReadyToContinue && (Input.GetKeyDown(KeyCode.Space) || Settings.AutoContinue))
         {
             if (ActiveDialogBox.IsDone)
             {
-                NextDialog(true, false); // If dialog is done, go to next dialog
+                NextDialog(true); // If dialog is done, go to next dialog
             }
             else if (!Settings.AutoContinue)
             {
@@ -151,7 +153,7 @@ public class DialogManager : MonoBehaviour, IPausable
     {
         Loading = true;
         graphParser.Graph = graph;
-        StartDialog(reset, true);
+        StartDialog(reset);
     }
 
     /// <summary>
@@ -168,13 +170,13 @@ public class DialogManager : MonoBehaviour, IPausable
             OnHideComplete -= onHideComplete;
             OnHideComplete += onHideComplete;
         }
-        StartDialog(reset, false);
+        StartDialog(reset);
     }
 
     /// <summary>
     /// Start new dialog graph. Implicitly uses graph already in parser.
     /// </summary>
-    private void StartDialog(bool reset, bool loading)
+    private void StartDialog(bool reset)
     {
         PH.Unpause(PauseSources.Self);
         if (isBattle && !Auto)
@@ -189,12 +191,12 @@ public class DialogManager : MonoBehaviour, IPausable
         if (isBattle || DialogCounter <= 0) // Start from beginning of scene if no save file load (can't save in middle of battle).
         {
             DialogCounter = -1;
-            NextDialog(true, loading);
+            NextDialog(true);
         }
         else // Otherwise, go to saved position.
         {
             graphParser.SkipTo(DialogCounter);
-            NextDialog(false, loading);
+            NextDialog(false);
         }
     }
 
@@ -214,9 +216,9 @@ public class DialogManager : MonoBehaviour, IPausable
     /// </summary>
     /// <param name="next">Should we immediately go to next line?
     /// i.e. if false, use current value of 'currNode' in 'DialogGraphParser'.</param>
-    public void NextDialog(bool next, bool loading)
+    public void NextDialog(bool next)
     {
-        DialogItem dialogItem = graphParser.NextDialog(next, loading);
+        DialogItem dialogItem = graphParser.NextDialog(next);
         if (dialogItem == null) return;
         // Remove certain old text effects from previous box
         DisableOldTextEffects(ActiveDialogBox); 
