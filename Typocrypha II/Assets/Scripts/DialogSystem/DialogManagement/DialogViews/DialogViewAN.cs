@@ -78,10 +78,18 @@ public class DialogViewAN : DialogView
         onComplete?.Invoke();
     }
 
-    public override IEnumerator PlayEnterAnimation()
+    public override IEnumerator PlayEnterAnimation(bool firstView)
     {
-        var fadeIn = background.DOFade(1, 2);
-        yield return fadeIn.WaitForCompletion();
+        if (firstView)
+        {
+            background.color = new Color(background.color.r, background.color.g, background.color.b, 1);
+            yield return new WaitForSeconds(LoadingScreenDefault.fadeTimeStaggered); // wait for loading screen
+        }
+        else
+        {
+            var fadeIn = background.DOFade(1, 2);
+            yield return fadeIn.WaitForCompletion();
+        }
     }
 
     public override IEnumerator PlayExitAnimation(DialogManager.EndType endType)

@@ -38,7 +38,7 @@ public class DialogViewLocation : DialogView
         }
     }
 
-    public override IEnumerator PlayEnterAnimation()
+    public override IEnumerator PlayEnterAnimation(bool firstView)
     {
         textGroup.alpha = 1;
         var fadeIn = background.DOFade(targetBgAlpha, 1);

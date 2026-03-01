@@ -293,7 +293,7 @@ public class DialogManager : MonoBehaviour, IPausable
             onComplete?.Invoke();
             return;
         }
-        StartCoroutine(ShowView(onComplete));
+        StartCoroutine(ShowView(false, onComplete));
     }
 
     public void Hide(EndType endType, System.Action onComplete)
@@ -309,7 +309,7 @@ public class DialogManager : MonoBehaviour, IPausable
         StartCoroutine(HideView(endType, onComplete));
     }
 
-    private IEnumerator ShowView(System.Action onComplete)
+    private IEnumerator ShowView(bool firstView, System.Action onComplete)
     {
         ReadyToContinue = false;
         if (ShouldHideAllyBox)
@@ -318,7 +318,7 @@ public class DialogManager : MonoBehaviour, IPausable
         }
         DialogView.SetLocationText(LocationText);
         DialogView.gameObject.SetActive(true);
-        yield return DialogView.PlayEnterAnimation();
+        yield return DialogView.PlayEnterAnimation(firstView);
         ReadyToContinue = true;
         onComplete?.Invoke();
     }
@@ -394,12 +394,13 @@ public class DialogManager : MonoBehaviour, IPausable
     private IEnumerator ChangeViews(System.Action callback)
     {
         ReadyToContinue = false;
-        if (lastView != null && !lastView.IsHidden)
+        bool hasLastView = lastView != null;
+        if (hasLastView && !lastView.IsHidden)
         {
             yield return lastView.PlayExitAnimation(EndType.None);
             lastView.gameObject.SetActive(false);
         }
-        yield return ShowView(callback); // callback will get called at the end of here
+        yield return ShowView(!hasLastView, callback); // callback will get called at the end of here
     }
 }
 

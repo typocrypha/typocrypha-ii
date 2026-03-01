@@ -9,6 +9,7 @@ using TMPro;
 public class LoadingScreenDefault : LoadingScreen
 {
     public const float fadeTime = 2f;
+    public const float fadeTimeStaggered = fadeTime * 0.75f;
 
     public override float Progress
     {

@@ -639,7 +639,7 @@ public class DialogViewVNPlus : DialogViewMessage<DialogItemVNPlus>
         gameObject.SetActive(e);
     }
 
-    public override IEnumerator PlayEnterAnimation()
+    public override IEnumerator PlayEnterAnimation(bool firstView)
     {
         contentRoot.localScale = new Vector3(contentRoot.localScale.x, 0, contentRoot.localScale.z);
         if (rightCharacterList.Count + leftCharacterList.Count > 0)

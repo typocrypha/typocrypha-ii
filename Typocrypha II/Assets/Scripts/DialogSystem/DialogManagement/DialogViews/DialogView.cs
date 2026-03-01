@@ -80,7 +80,7 @@ public abstract class DialogView : MonoBehaviour
     }
     protected virtual void SetDateTime(string dateTime) { }
 
-    public virtual IEnumerator PlayEnterAnimation()
+    public virtual IEnumerator PlayEnterAnimation(bool firstView)
     {
         yield break;
     }

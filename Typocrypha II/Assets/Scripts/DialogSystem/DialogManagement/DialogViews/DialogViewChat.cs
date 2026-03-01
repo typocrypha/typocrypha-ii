@@ -78,7 +78,7 @@ public class DialogViewChat : DialogViewMessage<DialogItemChat>
         return embeddedImagePrefab;
     }
 
-    public override IEnumerator PlayEnterAnimation()
+    public override IEnumerator PlayEnterAnimation(bool firstView)
     {
         contentRoot.localScale = new Vector3(contentRoot.localScale.x, 0, contentRoot.localScale.z);
         enterExitViewTween.Start(contentRoot.DOScaleY(1, enterExitViewTween.Time));
