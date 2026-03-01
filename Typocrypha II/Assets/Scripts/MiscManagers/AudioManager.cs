@@ -17,11 +17,11 @@ using System.Collections;
 public class AudioManager : MonoBehaviour
 {    
     public static AudioManager instance = null; // Global static instance.
-    public AudioSource[] bgm; // Audio sources for playing bgms. Should have 2 audio sources (for crossfading).
-    public AudioSource sfx; // Audio source for playing simple sfx.
+    [SerializeField] private AudioSource[] bgm; // Audio sources for playing bgms. Should have 2 audio sources (for crossfading).
+    [SerializeField] private AudioSource sfx; // Audio source for playing simple sfx.
     [SerializeField] private AudioSource[] textBlips; // Audio sources for playing text blip sfx. Number or sources should be divisible by 2
-
-    AssetBundle sfxBundle; // Asset bundle containing sfx clips.
+    [SerializeField] AudioClipBundle sfxBundle; // Better bundle containing sfx clips.
+    
     int bgmInd; // Index of in use bgm audio source.
     private Coroutine routineFadeIn;
     private Coroutine routineFadeOut;
@@ -37,16 +37,13 @@ public class AudioManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+            DontDestroyOnLoad(gameObject);
+            bgmInd = 0;
         } 
         else 
         {
             Destroy(gameObject);
-            return;
         }
-        DontDestroyOnLoad(gameObject);
-
-        sfxBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, "sfx"));
-        bgmInd = 0;
     }
 
     /// <summary>
@@ -173,14 +170,19 @@ public class AudioManager : MonoBehaviour
     /// Plays an sfx once.
     /// </summary>
     /// <param name="clipName">Name of clip in sfx asset bundle to play.</param>
-    public void PlaySFX(String clipName)
+    public void PlaySFX(string clipName)
     {
-        if (String.IsNullOrEmpty(clipName)) return;
+        if (string.IsNullOrEmpty(clipName))
+            return;
 
-        var clip = sfxBundle.LoadAsset<AudioClip>(clipName);
-
-        if (clip != null) sfx.PlayOneShot(clip);
-        else Debug.LogWarning($"Clip named \"{clipName}\" not found.");
+        if (sfxBundle.clips.TryGetValue(clipName, out var clip))
+        {
+            sfx.PlayOneShot(clip);
+        }
+        else
+        {
+            Debug.LogWarning($"Clip named \"{clipName}\" not found.");
+        }
     }
 
     public void PlayTextScrollSfx(AudioClip clip)

@@ -17,10 +17,10 @@ public static class BadgeBundleLoader
     {
         if (state != PlayModeStateChange.ExitingEditMode || !AutoRefreshBetterBundles.IsEnabled)
             return;
-        LoadSpellBundles();
+        LoadBadgeBundles();
     }
 
-    public static void LoadSpellBundles()
+    public static void LoadBadgeBundles()
     {
         BetterBundleLoaderUtils.LoadBundles<BadgeBundle, BadgeWord>(path);
     }
