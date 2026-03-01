@@ -76,10 +76,14 @@ public class DialogManager : MonoBehaviour, IPausable
             }
         }
     }
-    private string location = "";
-    private DialogGraphParser graphParser; // Dialog graph currently playing.
+
     public bool Loading { get; set; } = false;
     public bool IsLoading() => Loading;
+
+    private string location = "";
+    private DialogGraphParser graphParser; // Dialog graph currently playing.
+    private int skipCount;
+
 
     void Awake()
     {
@@ -105,7 +109,6 @@ public class DialogManager : MonoBehaviour, IPausable
             StartDialog(false);
         }
     }
-    private int skipCount;
 #endif
 
     void Update()
@@ -114,9 +117,9 @@ public class DialogManager : MonoBehaviour, IPausable
         {
             return;
         }
-        bool canContinue = !Loading && ReadyToContinue && ActiveDialogBox != null && DialogView != null && DialogView.ReadyToContinue;
-#if DEBUG
-        if (canContinue && Input.GetKey(KeyCode.Space) && Input.GetKey(KeyCode.LeftShift))
+        if (Loading || !ReadyToContinue || ActiveDialogBox == null || DialogView == null || !DialogView.ReadyToContinue)
+            return;
+        if (Input.GetKey(KeyCode.Space) && (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))) // Fast-forward
         {
             if(++skipCount > 5)
             {
@@ -132,10 +135,9 @@ public class DialogManager : MonoBehaviour, IPausable
             }
 
         }
-#endif
-        // Check if submit key is pressed
-        if (!Loading && ReadyToContinue && ActiveDialogBox != null && DialogView != null && DialogView.ReadyToContinue && (Input.GetKeyDown(KeyCode.Space) || Settings.AutoContinue))
+        else if ((Input.GetKeyDown(KeyCode.Space) || Settings.AutoContinue)) // Normal continue
         {
+            skipCount = 0;
             if (ActiveDialogBox.IsDone)
             {
                 NextDialog(true); // If dialog is done, go to next dialog
