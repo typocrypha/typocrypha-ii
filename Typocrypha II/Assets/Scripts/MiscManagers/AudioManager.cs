@@ -46,6 +46,20 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    private void StopFades()
+    {
+        if (routineFadeOut != null)
+        {
+            StopCoroutine(routineFadeOut);
+            routineFadeOut = null;
+        }
+        if (routineFadeIn != null)
+        {
+            StopCoroutine(routineFadeIn);
+            routineFadeIn = null;
+        }
+    }
+
     /// <summary>
     /// Starts playing audio clip from beginning.
     /// </summary>
@@ -55,14 +69,16 @@ public class AudioManager : MonoBehaviour
     {
         if (bgm[bgmInd].clip == clip && bgm[bgmInd].isPlaying)
             return;
+        StopFades();
+        PlayBGMInternal(clip, fadeCurve);
+    }
+
+    private void PlayBGMInternal(AudioClip clip, AnimationCurve fadeCurve)
+    {
         bgm[bgmInd].clip = clip;
         bgm[bgmInd].loop = true;
         if (fadeCurve != null && fadeCurve.keys.Length > 0)
         {
-            if(routineFadeIn != null)
-            {
-                StopCoroutine(routineFadeIn);
-            }
             routineFadeIn = StartCoroutine(FadeIn(fadeCurve, bgmInd));
         }
         else
@@ -99,12 +115,14 @@ public class AudioManager : MonoBehaviour
     /// <param name="fadeCurve">Volume curve.</param>
     public void StopBGM(AnimationCurve fadeCurve = null)
     {
+        StopFades();
+        StopBGMInternal(fadeCurve);
+    }
+
+    private void StopBGMInternal(AnimationCurve fadeCurve)
+    {
         if (fadeCurve != null && fadeCurve.keys.Length > 0)
         {
-            if (routineFadeOut != null)
-            {
-                StopCoroutine(routineFadeOut);
-            }
             routineFadeOut = StartCoroutine(FadeOut(fadeCurve, bgmInd));
         }
         else
@@ -150,9 +168,12 @@ public class AudioManager : MonoBehaviour
     /// <param name="fadeCurveOut">Volume curve to fade out with.</param>
     public void CrossfadeBGM(AudioClip clip, AnimationCurve fadeCurveIn = null, AnimationCurve fadeCurveOut = null)
     {
-        StopBGM(fadeCurveOut);
+        if (bgm[bgmInd].clip == clip && bgm[bgmInd].isPlaying)
+            return;
+        StopFades();
+        StopBGMInternal(fadeCurveOut);
         bgmInd = 1 - bgmInd; //switch active track
-        PlayBGM(clip, fadeCurveIn);
+        PlayBGMInternal(clip, fadeCurveIn);
     }
 
     /// <summary>
