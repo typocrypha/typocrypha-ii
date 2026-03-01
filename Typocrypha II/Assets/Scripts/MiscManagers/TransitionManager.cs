@@ -124,7 +124,11 @@ public class TransitionManager : MonoBehaviour
         var loadingScreen = loadingScreenOverride ?? defaultLoadingScreen;
         loadingScreen.gameObject.SetActive(true);
         loadingScreen.Progress = 0;
-        yield return loadingScreen.StartLoading();
+        var startLoadingCr = loadingScreen.StartLoading();
+        if(startLoadingCr != null)
+        {
+            yield return startLoadingCr;
+        }
         // Start loading screen idle
         // (if new scene) actually load scene
         if(sceneName != string.Empty)
@@ -147,7 +151,6 @@ public class TransitionManager : MonoBehaviour
                 DialogManager.instance.CleanUp();
             }
             var waitForFixed = new WaitForFixedUpdate();
-            // Internal progress will stop at 0.9 when done loading
             float progress = 0;
             while (progress < 1)
             {
@@ -172,7 +175,11 @@ public class TransitionManager : MonoBehaviour
             DialogManager.instance.LoadDialog(dialogCanvas, true);
         }
         // Finish loading
-        yield return loadingScreen.FinishLoading();
+        var finishLoadingCr = loadingScreen.FinishLoading();
+        if(finishLoadingCr != null)
+        {
+            yield return finishLoadingCr;
+        }
         // Start the scene
         if (data.sceneData is BattleCanvas)
         {
