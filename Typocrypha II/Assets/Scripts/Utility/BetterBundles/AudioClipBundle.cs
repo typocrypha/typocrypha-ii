@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Bundle/Audio")]
 public class AudioClipBundle : BetterBundle<AudioClip>
 {
-    public BadgeDictionary clips;
+    public ClipDictionary clips;
 
     public override void Add(AudioClip item)
     {
@@ -17,5 +17,5 @@ public class AudioClipBundle : BetterBundle<AudioClip>
         clips.Clear();
     }
 
-    [System.Serializable] public class BadgeDictionary : SerializableDictionary<string, AudioClip> { };
+    [System.Serializable] public class ClipDictionary : SerializableDictionary<string, AudioClip> { };
 }
