@@ -30,6 +30,7 @@ public class PauseManager : MonoBehaviour, IPausable
         {
             instance = this;
             PH = new PauseHandle(OnPause);
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -64,7 +65,7 @@ public class PauseManager : MonoBehaviour, IPausable
     private void SetPause(bool value)
     {
         pause = value;
-        PauseAll(value, PauseSources.PauseMenu); // Set pause state of all pausable scripts.
+        PauseAll(value, PauseSources.PauseMenu, false); // Set pause state of all pausable scripts.
         PauseMenu(value); // Display/hide pause menu.
     }
 
@@ -82,7 +83,7 @@ public class PauseManager : MonoBehaviour, IPausable
     }
 
     // Pause/Unpause all pausable scripts.
-    public void PauseAll(bool value, PauseSources sources, PauseHandle except = null, bool includePauseMenu = false)
+    public void PauseAll(bool value, PauseSources sources, bool includePauseMenu, params PauseHandle[] except)
     {
         List<PauseHandle> destroyed = new List<PauseHandle>(); // Destroyed pausables.
         foreach (var ph in AllPausable)
@@ -91,7 +92,7 @@ public class PauseManager : MonoBehaviour, IPausable
             {
                 if (!includePauseMenu && ph == PH) // Skip own pause handle
                     continue;
-                if (except != null && ph == except)
+                if (except != null && except.Contains(ph))
                     continue;
                 if (value)
                 {

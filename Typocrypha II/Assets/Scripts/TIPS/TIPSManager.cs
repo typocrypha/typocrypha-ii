@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 /// <summary>
 /// Manages interfacing with TIPS database.
 /// </summary>
-public class TIPSManager : MonoBehaviour
+public class TIPSManager : MonoBehaviour, IPausable
 {
     public static TIPSManager Instance = null;
     public PauseHandle PH { get; private set; } = null;
@@ -145,6 +145,6 @@ public class TIPSManager : MonoBehaviour
 
     public void PauseAllForTIPS(bool pause)
     {
-        PauseManager.instance.PauseAll(pause, PauseSources.TIPS, PH, false);
+        PauseManager.instance.PauseAll(pause, PauseSources.TIPS, false, PH);
     }
 }
