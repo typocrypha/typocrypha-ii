@@ -135,26 +135,14 @@ public class TIPSTopicStack : MonoBehaviour
         latestFolderEntered = TIPSManager.Instance.GetEntry(latestFolderEntered.Parent);
     }
 
-//#if UNITY_EDITOR
-
-//    [ContextMenu("Navigate Top")]
-//    public void NavigateTop()
-//    {
-//        JumpToLayer(Layer.Top);
-//    }
-
-//    [ContextMenu("Navigate Sub")]
-//    public void NavigateSub()
-//    {
-//        JumpToLayer(Layer.Sub);
-//    }
-
-//    [ContextMenu("Navigate Aux")]
-//    public void NavigateAux()
-//    {
-//        JumpToLayer(Layer.Aux);
-//    }
-
-//#endif
-
+    /// <summary>
+    /// Lists entries on the sub folder, used for partial search functionality.
+    /// </summary>
+    /// <param name="entries"> Entries to be listed. </param>
+    public void ShowEntriesOnSub(TIPSEntryData[] entries)
+    {
+        JumpToLayer(Layer.Sub);
+        GetCurrentPanel().LoadEntries(entries);
+        latestFolderEntered = null; // enable step out to root folder
+    }
 }

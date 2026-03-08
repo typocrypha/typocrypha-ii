@@ -199,11 +199,7 @@ public class TIPSNavigator : MonoBehaviour
     protected virtual void OnMatchPartial(TIPSEntryData[] entries)
     {
         AudioManager.instance.PlaySFX(sfxSearchGood);
-        //navigate to top layer
-        topicStack.JumpToLayer(TIPSTopicStack.Layer.Sub);
-        //populate buttons with matching entries
-        topicStack.GetCurrentPanel().LoadEntries(entries);
-        //navigate to first button
+        topicStack.ShowEntriesOnSub(entries);
         FocusOnTopics(true);
     }
 
