@@ -111,7 +111,7 @@ public class Scouter : MonoBehaviour, IPausable
 
     private bool ScouterKeyPressed()
     {
-        return Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.RightControl);
+        return Input.GetKeyDown(KeyCode.Tilde) || Input.GetKeyDown(KeyCode.Tilde);
     }
 
     private void ToggleScouter()
