@@ -58,6 +58,8 @@ public class TIPSNavigator : MonoBehaviour
 
     private void Update()
     {
+        if (TIPSManager.Instance.PH.IsPaused()) return;
+
         /***
          * Searchbar navigation
          * 1. Down arrow to focus on topics

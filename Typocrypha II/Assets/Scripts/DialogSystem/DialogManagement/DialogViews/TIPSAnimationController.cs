@@ -31,19 +31,17 @@ public class TIPSAnimationController : MonoBehaviour
 
     private void Update()
     {
+        if (TIPSManager.Instance.PH.IsPaused()) return;
         if (sequenceOpenClose != null && sequenceOpenClose.IsActive() && sequenceOpenClose.IsPlaying()) return;
-
         if (!Input.GetKeyDown(KeyCode.Tab)) return;
+
+        if (isOpen)
         {
-            var mgr = DialogManager.instance;
-            if (!isOpen && mgr && mgr.ReadyToContinue)
-            {
-                OpenTIPS();
-            }
-            else if (isOpen)
-            {
-                CloseTIPS();
-            }
+            CloseTIPS();
+        }
+        else if (DialogManager.instance?.ReadyToContinue ?? false)
+        {
+            OpenTIPS();
         }
     }
 
