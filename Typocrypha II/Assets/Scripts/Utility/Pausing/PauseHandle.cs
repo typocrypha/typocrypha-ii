@@ -129,6 +129,10 @@ public class PauseHandle
         {
             PauseManager.instance.AllPausable.Add(this);
         }
+        else
+        {
+            Debug.LogError("PH not hooked up");
+        }
     }
 
     /// <summary>

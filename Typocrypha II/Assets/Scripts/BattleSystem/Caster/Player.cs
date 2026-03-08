@@ -7,7 +7,7 @@ using Typocrypha;
 public class Player : Caster, IPausable
 {
     #region IPausable
-    public PauseHandle PH { get; } = new PauseHandle();
+    public PauseHandle PH { get; private set;  }
 
     #endregion
 
@@ -21,6 +21,7 @@ public class Player : Caster, IPausable
 
     protected override void Awake()
     {
+        PH = new PauseHandle();
         ui = Typocrypha.Keyboard.instance.PlayerUI;
         base.Awake();
         TargetPos = new Battlefield.Position(0, 1);

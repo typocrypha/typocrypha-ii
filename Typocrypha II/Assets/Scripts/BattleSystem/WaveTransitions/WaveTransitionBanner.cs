@@ -5,7 +5,7 @@ using TMPro;
 
 public class WaveTransitionBanner : MonoBehaviour, IPausable
 {
-    public PauseHandle PH { get; } = new PauseHandle();
+    public PauseHandle PH { get; private set; }
 
     [SerializeField] TextMeshProUGUI titleText;
     [SerializeField] TextMeshProUGUI numberText;
@@ -21,6 +21,10 @@ public class WaveTransitionBanner : MonoBehaviour, IPausable
     {
         get => numberText.text;
         set => numberText.text = value;
+    }
+    private void Awake()
+    {
+        PH = new PauseHandle();
     }
 
     public void ContinueAnimation()

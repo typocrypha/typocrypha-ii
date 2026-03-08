@@ -43,10 +43,15 @@ public class BattleWord : MonoBehaviour, IInputHandler
     protected readonly List<Tween> activeTweens = new List<Tween>();
 
     public event System.Action OnComplete;
-    public PauseHandle PH { get; } = new PauseHandle();
+    public PauseHandle PH { get; private set; }
 
     public bool PendingFocus { get; private set; } = false;
     private float focusTime = 2f;
+
+    private void Awake()
+    {
+        PH = new PauseHandle();
+    }
 
     public void Focus() { }
 
