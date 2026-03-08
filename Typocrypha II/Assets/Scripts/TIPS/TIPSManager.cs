@@ -145,6 +145,6 @@ public class TIPSManager : MonoBehaviour, IPausable
 
     public void PauseAllForTIPS(bool pause)
     {
-        PauseManager.instance.PauseAll(pause, PauseSources.TIPS, false, PH);
+        PauseManager.instance.PauseAll(pause, PauseSources.TIPS, false, PH, DialogHistory.instance.PH);
     }
 }

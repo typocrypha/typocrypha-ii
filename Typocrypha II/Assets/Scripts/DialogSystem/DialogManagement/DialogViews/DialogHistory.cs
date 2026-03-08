@@ -81,7 +81,7 @@ public class DialogHistory : MonoBehaviour, IPausable
                 }
             }
         }
-        else if (Input.GetKeyDown(KeyCode.Semicolon) && !DialogManager.instance.PH.Paused)
+        else if (Input.GetKeyDown(KeyCode.Semicolon) && (!DialogManager.instance.PH.Paused || !TIPSManager.Instance.PH.Paused))
         {
             Show();
         }
