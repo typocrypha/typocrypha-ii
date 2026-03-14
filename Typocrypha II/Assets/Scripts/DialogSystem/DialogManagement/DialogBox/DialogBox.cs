@@ -256,9 +256,13 @@ public class DialogBox : MonoBehaviour, IPausable
                 yield return new WaitWhile(this.IsPaused); // Wait on pause.
             }
             // Check text events at every position regardless of batch size
-            if (HasTextEvents() && dialogItem.TextEventList[0].pos <= pos)
+            while (dialogItem.TextEventList.Count > 0 && dialogItem.TextEventList[0].pos <= pos)
             {
-                yield return StartCoroutine(CheckEvents(pos));
+                var textEventRoutine = ProcessTextEvent();
+                if (textEventRoutine != null)
+                {
+                    yield return textEventRoutine;
+                }
                 if (this.IsPaused())
                 {
                     yield return new WaitWhile(this.IsPaused); // Wait on pause.
@@ -301,9 +305,18 @@ public class DialogBox : MonoBehaviour, IPausable
         {
             yield return new WaitWhile(this.IsPaused); // Wait on pause.
         }
-        if (HasTextEvents())
+        // Check text events at every position regardless of batch size
+        while (dialogItem.TextEventList.Count > 0)
         {
-            yield return StartCoroutine(CheckEvents(dialogItem.text.Length)); // Play events at end of text.
+            var textEventRoutine = ProcessTextEvent();
+            if (textEventRoutine != null)
+            {
+                yield return textEventRoutine;
+            }
+            if (this.IsPaused())
+            {
+                yield return new WaitWhile(this.IsPaused); // Wait on pause.
+            }
         }
         if (ShouldAutoContinue(out float autoDelay))
         {
@@ -322,10 +335,6 @@ public class DialogBox : MonoBehaviour, IPausable
             continueIndicator.Activate();
         }
         scrollCR = null;
-    }
-    private bool HasTextEvents()
-    {
-        return dialogItem.TextEventList.Count > 0;
     }
 
     private bool ShouldAutoContinue(out float delay)
@@ -362,27 +371,15 @@ public class DialogBox : MonoBehaviour, IPausable
         return false;
     }
 
-    // Checks for and plays text events
-    IEnumerator CheckEvents(int startPos)
+    private Coroutine ProcessTextEvent()
     {
-        while (HasTextEvents() && dialogItem.TextEventList[0].pos <= startPos)
+        var textEvent = dialogItem.TextEventList[0];
+        dialogItem.TextEventList.RemoveAt(0);
+        // Reset text blips if needed
+        if (textEvent.evt == TextEvents.pauseEvent)
         {
-            TextEvent te = dialogItem.TextEventList[0];
-            dialogItem.TextEventList.RemoveAt(0);
-            var textEventRoutine = TextEvents.instance.PlayEvent(te.evt, te.opt, this);
-            if(ShouldResetTextBlips(te.evt))
-            {
-                resetTextBlips = true;
-            }
-            if(textEventRoutine != null)
-            {
-                yield return textEventRoutine;
-            }
+            resetTextBlips = true;
         }
-    }
-
-    private static bool ShouldResetTextBlips(string evt)
-    {
-        return evt == TextEvents.pauseEvent;
+        return TextEvents.instance.PlayEvent(textEvent.evt, textEvent.opt, this);
     }
 }
