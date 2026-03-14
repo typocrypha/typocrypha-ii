@@ -68,7 +68,6 @@ public class DialogBox : MonoBehaviour, IPausable
     private Coroutine scrollCR; // Coroutine that scrolls the text
     private AudioClip[] textBlips = new AudioClip[2];
     private bool started = false;
-    private bool resetTextBlips = false;
     private float defaultWidth;
 
     /// <summary>
@@ -179,7 +178,6 @@ public class DialogBox : MonoBehaviour, IPausable
         hideText.ind[1] = dialogItem.text.Length;
         hideText.done = false;
         // Reset private vars
-        resetTextBlips = false;
         started = false;
         // Reset width
         textHolder.sizeDelta = new Vector2(defaultWidth, textHolder.sizeDelta.y);
@@ -246,7 +244,7 @@ public class DialogBox : MonoBehaviour, IPausable
     {
         started = true;
         int speechCounter = 0;
-        resetTextBlips = false;
+        bool resetTextBlips = false;
         if (this.IsPaused())
         {
             yield return Yielders.Paused(this, ref pauseYielder); // Wait on pause.
@@ -260,7 +258,7 @@ public class DialogBox : MonoBehaviour, IPausable
             // Check text events at every position regardless of batch size
             while (dialogItem.TextEventList.Count > 0 && dialogItem.TextEventList[0].pos <= pos)
             {
-                var textEventRoutine = ProcessTextEvent();
+                var textEventRoutine = ProcessTextEvent(ref resetTextBlips);
                 if (textEventRoutine != null)
                 {
                     yield return textEventRoutine;
@@ -310,7 +308,7 @@ public class DialogBox : MonoBehaviour, IPausable
         // Check text events at every position regardless of batch size
         while (dialogItem.TextEventList.Count > 0)
         {
-            var textEventRoutine = ProcessTextEvent();
+            var textEventRoutine = ProcessTextEvent(ref resetTextBlips);
             if (textEventRoutine != null)
             {
                 yield return textEventRoutine;
@@ -334,7 +332,7 @@ public class DialogBox : MonoBehaviour, IPausable
         }
         else if (ContinueIndicator != null)
         {
-            continueIndicator.Activate();
+            ContinueIndicator.Activate();
         }
         scrollCR = null;
     }
@@ -373,7 +371,7 @@ public class DialogBox : MonoBehaviour, IPausable
         return false;
     }
 
-    private Coroutine ProcessTextEvent()
+    private Coroutine ProcessTextEvent(ref bool resetTextBlips)
     {
         var textEvent = dialogItem.TextEventList[0];
         dialogItem.TextEventList.RemoveAt(0);
