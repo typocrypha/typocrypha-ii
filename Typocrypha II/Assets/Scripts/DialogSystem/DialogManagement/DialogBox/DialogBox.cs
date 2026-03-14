@@ -20,6 +20,8 @@ public class DialogBox : MonoBehaviour, IPausable
     public void OnPause(bool b)
     {
     }
+
+    private WaitWhile pauseYielder;
     #endregion
 
     #region Constants
@@ -247,13 +249,13 @@ public class DialogBox : MonoBehaviour, IPausable
         resetTextBlips = false;
         if (this.IsPaused())
         {
-            yield return new WaitWhile(this.IsPaused); // Wait on pause.
+            yield return Yielders.Paused(this, ref pauseYielder); // Wait on pause.
         }
         for (int pos = 0; pos < dialogItem.text.Length; ++pos)
         {
             if (this.IsPaused())
             {
-                yield return new WaitWhile(this.IsPaused); // Wait on pause.
+                yield return Yielders.Paused(this, ref pauseYielder); // Wait on pause.
             }
             // Check text events at every position regardless of batch size
             while (dialogItem.TextEventList.Count > 0 && dialogItem.TextEventList[0].pos <= pos)
@@ -265,7 +267,7 @@ public class DialogBox : MonoBehaviour, IPausable
                 }
                 if (this.IsPaused())
                 {
-                    yield return new WaitWhile(this.IsPaused); // Wait on pause.
+                    yield return Yielders.Paused(this, ref pauseYielder); // Wait on pause.
                 }
             }
             if (resetTextBlips)
@@ -291,7 +293,7 @@ public class DialogBox : MonoBehaviour, IPausable
             // Apply scroll delay if necessary
             if (Scroll)
             {
-                yield return new WaitForFixedUpdate();
+                yield return Yielders.FixedUpdate;
             }
             else
             {
@@ -303,7 +305,7 @@ public class DialogBox : MonoBehaviour, IPausable
         hideText.done = true;
         if (this.IsPaused())
         {
-            yield return new WaitWhile(this.IsPaused); // Wait on pause.
+            yield return Yielders.Paused(this, ref pauseYielder); // Wait on pause.
         }
         // Check text events at every position regardless of batch size
         while (dialogItem.TextEventList.Count > 0)
@@ -315,7 +317,7 @@ public class DialogBox : MonoBehaviour, IPausable
             }
             if (this.IsPaused())
             {
-                yield return new WaitWhile(this.IsPaused); // Wait on pause.
+                yield return Yielders.Paused(this, ref pauseYielder); // Wait on pause.
             }
         }
         if (ShouldAutoContinue(out float autoDelay))
@@ -325,7 +327,7 @@ public class DialogBox : MonoBehaviour, IPausable
 
             if (this.IsPaused())
             {
-                yield return new WaitWhile(this.IsPaused); // Wait on pause.
+                yield return Yielders.Paused(this, ref pauseYielder); // Wait on pause.
             }
 
             DialogManager.instance.NextDialog(true);
