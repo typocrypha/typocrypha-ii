@@ -33,11 +33,13 @@ public class TextEvents : MonoBehaviour, IPausable
     public void OnPause(bool b)
     {
     }
+
+    private WaitWhile pauseYielder;
     #endregion
 
     public static TextEvents instance = null;
     // Map of commands to text event handles.
-    public Dictionary<string, Func<string[], DialogBox, Coroutine>> textEventMap;
+    private Dictionary<string, Func<string[], DialogBox, Coroutine>> textEventMap;
 
     void Awake()
     {
@@ -77,6 +79,7 @@ public class TextEvents : MonoBehaviour, IPausable
         if (!textEventMap.TryGetValue(evt, out var textEvent))
         {
             Debug.LogException(new System.Exception("Bad text event parameters:" + evt));
+            return null;
         }
         return textEvent(opt, box);
     }
@@ -123,8 +126,11 @@ public class TextEvents : MonoBehaviour, IPausable
         float endTime = float.Parse(opt[0]);
         while (time < endTime && !box.IsDone)
         {
-            yield return new WaitWhile(this.IsPaused);
-            yield return new WaitForFixedUpdate();
+            if (this.IsPaused())
+            {
+                yield return Yielders.Paused(this, ref pauseYielder);
+            }
+            yield return Yielders.FixedUpdate;
             time += Time.fixedDeltaTime;
         }
     }
