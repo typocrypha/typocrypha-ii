@@ -100,7 +100,7 @@ public class DialogViewAN : DialogView
         var clear = Clear();
         if (clear != null)
         {
-            yield return new WaitForSeconds(0.5f + ((count - 1) * clearStagger));
+            yield return new WaitForSeconds((DialogBox.fadeTime + (count * clearStagger)) * 0.66f);
         }
         var fadeOut = background.DOFade(0, 2);
         yield return fadeOut.WaitForCompletion();
@@ -121,10 +121,7 @@ public class DialogViewAN : DialogView
         {
             var dialogBox = activeDialogBoxes[i];
             fadeCr = StartCoroutine(dialogBox.FadeText());
-            if(i < activeDialogBoxes.Count - 1)
-            {
-                yield return new WaitForSeconds(clearStagger);
-            }
+            yield return new WaitForSeconds(clearStagger);
         }
         yield return fadeCr;
         ClearLog();

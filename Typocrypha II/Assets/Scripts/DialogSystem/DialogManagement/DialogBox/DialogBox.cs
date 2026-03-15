@@ -374,7 +374,7 @@ public class DialogBox : MonoBehaviour, IPausable
         return TextEvents.instance.PlayEvent(textEvent.evt, textEvent.opt, this);
     }
 
-    private const float fadeTime = 1f;
+    public const float fadeTime = 0.75f;
 
     public IEnumerator FadeText()
     {
