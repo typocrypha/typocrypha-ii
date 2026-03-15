@@ -10,7 +10,7 @@ public abstract class DialogItem
     public string text; // Text of dialog.
     public List<AudioClip> voice; // Voice blip audio clips.
     public List<string> tipsEntries = null;
-    public List<MonoBehaviour> FXTextList { get; } = new List<MonoBehaviour>(); // List of all FXText effects.
+    public List<FXText.TMProEffect> FXTextList { get; } = new List<FXText.TMProEffect>(); // List of all FXText effects.
     public List<TextEvent> TextEventList { get; } = new List<TextEvent>(); // List of all Text events.
 
     public DialogItem(string text, List<AudioClip> voice)

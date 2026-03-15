@@ -96,12 +96,41 @@ public class DialogViewAN : DialogView
     {
         if (endType == DialogManager.EndType.SceneEnd)
             yield break;
-        ClearLog();
+        int count = activeDialogBoxes.Count;
+        var clear = Clear();
+        if (clear != null)
+        {
+            yield return new WaitForSeconds(0.5f + ((count - 1) * clearStagger));
+        }
         var fadeOut = background.DOFade(0, 2);
         yield return fadeOut.WaitForCompletion();
     }
 
-    public void ClearLog()
+    public override Coroutine Clear()
+    {
+        if (activeDialogBoxes.Count <= 0)
+            return null;
+        return StartCoroutine(ClearCR());
+    }
+
+    private const float clearStagger = 0.1f;
+    private IEnumerator ClearCR()
+    {
+        Coroutine fadeCr = null;
+        for (int i = 0; i < activeDialogBoxes.Count; i++)
+        {
+            var dialogBox = activeDialogBoxes[i];
+            fadeCr = StartCoroutine(dialogBox.FadeText());
+            if(i < activeDialogBoxes.Count - 1)
+            {
+                yield return new WaitForSeconds(clearStagger);
+            }
+        }
+        yield return fadeCr;
+        ClearLog();
+    }
+
+    private void ClearLog()
     {
         foreach(var dialogBox in activeDialogBoxes)
         {

@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using DG.Tweening;
 
 /// <summary>
 /// A single dialog box.
@@ -69,6 +70,7 @@ public class DialogBox : MonoBehaviour, IPausable
     private AudioClip[] textBlips = new AudioClip[2];
     private bool started = false;
     private float defaultWidth;
+    private readonly List<FXText.TMProEffect> nonScrollEffects = new List<FXText.TMProEffect>();
 
     /// <summary>
     /// Returns whether text is done scrolling or not.
@@ -98,7 +100,7 @@ public class DialogBox : MonoBehaviour, IPausable
         this.dialogItem = dialogItem;
         ResetDialogBox();
         // Parse dialog and set text
-        DialogParser.instance.Parse(dialogItem, this);
+        DialogParser.instance.Parse(dialogItem, dialogText, gameObject, nonScrollEffects);
         dialogText.text = dialogItem.text;
         // Update all effects manually
         hideText.UpdateAllEffects();
@@ -149,17 +151,6 @@ public class DialogBox : MonoBehaviour, IPausable
     }
 
     /// <summary>
-    /// Initializes dialogue box (parses tags) and starts text scroll.
-    /// Uses only text (no character name/speech effect/etc).
-    /// </summary>
-    /// <param name="dialogText">Dialog text to display.</param>
-    public void StartDialogBox(string dialogText)
-    {
-        DialogItem ditem = new DialogItemAN(dialogText, null);
-        SetupAndStartDialogBox(ditem);
-    }
-
-    /// <summary>
     /// Reset dialog box to default state.
     /// </summary>
     public void ResetDialogBox()
@@ -171,7 +162,7 @@ public class DialogBox : MonoBehaviour, IPausable
         // Remove old text
         dialogText.text = "";
         // Remove old text effects.
-        FXText.TMProEffect.Cleanup(gameObject, hideText);
+        FXText.TMProEffect.Cleanup(nonScrollEffects);
         // Hide all text.
         hideText.color = Color.clear;
         hideText.ind[0] = 0;
@@ -381,5 +372,38 @@ public class DialogBox : MonoBehaviour, IPausable
             resetTextBlips = true;
         }
         return TextEvents.instance.PlayEvent(textEvent.evt, textEvent.opt, this);
+    }
+
+    private const float fadeTime = 1f;
+
+    public IEnumerator FadeText()
+    {
+        bool hasColorEffect = false;
+        foreach (var effect in nonScrollEffects)
+        {
+            if (effect is FXText.TMProColor colorFx)
+            {
+                colorFx.done = false;
+                colorFx.UpdateAllEffects();
+                Color initialColor = colorFx.color;
+                float time = 0;
+                void Lerp(float t)
+                {
+                    time = t;
+                    colorFx.color = colorFx.color.WithAlpha(1 - t);
+                }
+                DOTween.To(() => time, Lerp, 1, fadeTime).OnComplete(() => colorFx.done = true);
+                hasColorEffect = true;
+            }
+        }
+        if (hasColorEffect)
+        {
+            yield return new WaitForSeconds(fadeTime);
+        }
+        else
+        {
+            dialogText.alpha = 1;
+            yield return dialogText.DOFade(0, fadeTime).WaitForCompletion();
+        }
     }
 }

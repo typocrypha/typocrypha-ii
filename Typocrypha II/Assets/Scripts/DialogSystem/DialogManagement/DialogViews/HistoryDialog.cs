@@ -6,7 +6,7 @@ using TMPro;
 public class HistoryDialog : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI text;
-    private readonly List<MonoBehaviour> textEffects = new List<MonoBehaviour>();
+    private readonly List<FXText.TMProEffect> textEffects = new List<FXText.TMProEffect>();
 
     public void SetData(DialogHistory.HistoryData data)
     {

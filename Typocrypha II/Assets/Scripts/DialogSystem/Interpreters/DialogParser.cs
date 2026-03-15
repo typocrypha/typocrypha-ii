@@ -66,20 +66,21 @@ public class DialogParser : MonoBehaviour
 		FXTextStack = new Stack<FXText.TMProEffect> ();
 	}
 
-    public void Parse(DialogItem dialogItem, DialogBox dialogBox, bool createEvents = true)
+    public void Parse(DialogItem dialogItem, TextMeshProUGUI text, GameObject fxContainer, List<FXText.TMProEffect> fxList, bool createEvents = true)
     {
-        dialogItem.text = Parse(dialogItem.text, dialogBox.gameObject, dialogBox.DialogText, dialogItem.TextEventList, dialogItem.FXTextList, out dialogItem.tipsEntries, createEvents);
+        dialogItem.text = Parse(dialogItem.text, fxContainer, text, dialogItem.TextEventList, dialogItem.FXTextList, out dialogItem.tipsEntries, createEvents);
+        fxList.AddRange(dialogItem.FXTextList);
     }
 
     // Parse without text events
-    public string Parse(string line, GameObject fxContainer, TextMeshProUGUI textUI, List<MonoBehaviour> textEffects, out List<string> tipsEntries)
+    public string Parse(string line, GameObject fxContainer, TextMeshProUGUI textUI, List<FXText.TMProEffect> textEffects, out List<string> tipsEntries)
     {
         return Parse(line, fxContainer, textUI, null, textEffects, out tipsEntries, false);
     }
 
     // Parses a line of text removing, creating text FX and parsing text events.
     // Text event creation is optional, in which case false should be passed in the create events arg
-	public string Parse(string line, GameObject fxContainer, TextMeshProUGUI textUI, List<TextEvent> textEvents, List<MonoBehaviour> textEffects, out List<string> tipsEntries, bool createEvents = true)
+	public string Parse(string line, GameObject fxContainer, TextMeshProUGUI textUI, List<TextEvent> textEvents, List<FXText.TMProEffect> textEffects, out List<string> tipsEntries, bool createEvents = true)
     {
         // Clear output lists
         textEvents?.Clear();

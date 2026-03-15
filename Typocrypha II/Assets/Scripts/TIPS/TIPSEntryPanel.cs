@@ -12,7 +12,7 @@ public class TIPSEntryPanel : MonoBehaviour
     [SerializeField] DialogContinueIndicator paginationIndicator;
     [SerializeField] Image image;
 
-    private readonly List<MonoBehaviour> dummy = new List<MonoBehaviour>();
+    private readonly List<FXText.TMProEffect> dummyTextFx = new List<FXText.TMProEffect>();
 
     public void SetTitle(string text)
     {
@@ -21,14 +21,14 @@ public class TIPSEntryPanel : MonoBehaviour
 
     public void SetContent(string text)
     {
-        FXText.TMProEffect.Cleanup(dummy);
+        FXText.TMProEffect.Cleanup(dummyTextFx);
         content.text = DialogParser.instance.Parse
             (
                 line: text,
                 fxContainer: gameObject,
                 textUI:content,
                 textEvents:null,
-                textEffects: dummy,
+                textEffects: dummyTextFx,
                 tipsEntries: out var _,
                 createEvents:false
             );

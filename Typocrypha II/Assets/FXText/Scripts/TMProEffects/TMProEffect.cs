@@ -198,22 +198,14 @@ namespace FXText
         /// <param name="vertexIndex">Starting vertex index for character</param>
         protected abstract void ApplyDefaultEffect(TMP_MeshInfo meshInfo, int vertexIndex);
 
-        public static void Cleanup(GameObject fxContainer, TMProEffect ignore = null)
-        {
-            // Remove old text effects.
-            Cleanup(fxContainer.GetComponents<TMProEffect>(), ignore);
-        }
-
-        public static void Cleanup(IEnumerable<MonoBehaviour> fxTexts, TMProEffect ignore = null)
+        public static void Cleanup(List<TMProEffect> fxTexts)
         {
             // Remove old text effects.
             foreach (var fxText in fxTexts)
             {
-                if (fxText != ignore)
-                {
-                    Destroy(fxText);
-                }
+                Destroy(fxText);
             }
+            fxTexts.Clear();
         }
 
         private static bool IsNull(TMProEffect effect) => effect == null;
