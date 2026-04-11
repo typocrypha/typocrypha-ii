@@ -6,16 +6,16 @@ public class TIPSTopicStack : MonoBehaviour
 {
     public const string rootFolderName = "Root";
     [SerializeField] private RectTransform panelContainer;
-    [SerializeField] private TIPSTopicPanel panelTop, panelSub, panelAux;
+    [SerializeField] private TIPSTopicPanel panelTop, panelSub, panelAux, panelEnd;
     [SerializeField] Vector2 auxOffsetPosition = new Vector2(-16, 16);
 
-    public enum Layer { Top = 0, Sub = 1, Aux = 2 };
+    public enum Layer { Top = 0, Sub = 1, Aux = 2, End = 3};
     public Layer currentLayer = Layer.Top;
 
     public Action<TIPSEntryData> OnButtonSelected;
 
     private TIPSTopicPanel[] _panels;
-    private TIPSTopicPanel[] panels => _panels != null ? _panels : _panels = new TIPSTopicPanel[] { panelTop, panelSub, panelAux };
+    private TIPSTopicPanel[] panels => _panels != null ? _panels : _panels = new TIPSTopicPanel[] { panelTop, panelSub, panelAux, panelEnd };
 
     private TIPSEntryData latestFolderEntered;
 
@@ -51,26 +51,33 @@ public class TIPSTopicStack : MonoBehaviour
         GetCurrentPanel().LoadEntriesInFolder(latestFolderEntered.ID);
     }
 
-    public Sequence JumpToLayer(Layer target, float duration = 0.33f)
+    /// <summary>
+    /// Determine alpha value of panel based on distance to the currently active panel
+    /// </summary>
+    /// <param name="panel">The panel whose alpha is to be determined. </param>
+    /// <returns> The alpha value of the panel. </returns>
+    private float GetFadeValue(Layer panel)
     {
         const float full = 1, near = 0.4f, far = 0.2f, none = 0f;
+        int distance = currentLayer - panel;
+        return distance == 0 ? full : distance == 1 ? near : distance == 2 ? far : none;
+    }
 
-        var topFade = target == Layer.Top ? full : target == Layer.Sub ? near : far;
-        var subFade = target == Layer.Top ? none : target == Layer.Sub ? full : near;
-        var auxFade = target == Layer.Aux ? full : none;
-
+    public Sequence JumpToLayer(Layer target, float duration = 0.33f)
+    {
         currentLayer = target;
 
         return DOTween.Sequence()
-            .Join(panelTop.DOFade(topFade, duration))
-            .Join(panelSub.DOFade(subFade, duration))
-            .Join(panelAux.DOFade(auxFade, duration))
+            .Join(panelTop.DOFade(GetFadeValue(Layer.Top), duration))
+            .Join(panelSub.DOFade(GetFadeValue(Layer.Sub), duration))
+            .Join(panelAux.DOFade(GetFadeValue(Layer.Aux), duration))
+            .Join(panelEnd.DOFade(GetFadeValue(Layer.End), duration))
             .Join(panelContainer.DOAnchorPos(auxOffsetPosition * (int)target, duration));
     }
 
     public void StepToLayer(Layer target, float duration = 0.33f)
     {
-        if (target < Layer.Top || target > Layer.Aux) return;
+        if (target < Layer.Top || target > Layer.End) return;
 
         var stepMultiple = DOTween.Sequence();
         var direction = target > currentLayer ? 1 : -1;
@@ -109,9 +116,9 @@ public class TIPSTopicStack : MonoBehaviour
         var current = GetCurrentPanel();
         current.SelectEntry(entry);
 
-        if (currentLayer == Layer.Aux)
+        for (int i = 0; i < (int)currentLayer; i++)
         {
-            panelSub.LoadEntriesInFolder(entry.Categorization[(int)Layer.Sub]);
+            panels[i].LoadEntriesInFolder(entry.Categorization[i]);
         }
 
         latestFolderEntered = TIPSManager.Instance.GetEntry(entry.Parent);
