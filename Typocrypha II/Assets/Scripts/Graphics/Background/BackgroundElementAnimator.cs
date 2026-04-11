@@ -140,7 +140,7 @@ public class BackgroundElementAnimator : MonoBehaviour
         public AnimationType animationType;
         public MovementAxis movementOrScaleAxis;
         [Tooltip("Also used for the target fade value")]
-        [Range(0.0f, 1000.0f)] public float targetScale;
+        [Range(-10f, 10f)] public float targetScale;
         [Range(-10f, 10f)] public float targetPositionOffset;
         [Range(0f, 360f)] public float targetRotation;
 
