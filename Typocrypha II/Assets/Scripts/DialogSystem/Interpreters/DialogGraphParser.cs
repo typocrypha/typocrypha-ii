@@ -263,7 +263,7 @@ public class DialogGraphParser : GraphParser
             }
             else if (currNode is ClearNode clearNode)
             {
-                var clearRoutine = DialogManager.instance.DialogView.Clear();
+                var clearRoutine = DialogManager.instance.DialogView.Clear(clearNode.instant);
                 if (clearRoutine != null)
                 {
                     StartCoroutine(WaitOnRoutine(clearRoutine));

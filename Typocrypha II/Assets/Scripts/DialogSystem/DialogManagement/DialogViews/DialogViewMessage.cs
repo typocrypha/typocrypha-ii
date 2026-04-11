@@ -174,7 +174,7 @@ public abstract class DialogViewMessage<T> : DialogView where T : DialogItemMess
         ClearLog();
     }
 
-    public override Coroutine Clear()
+    public override Coroutine Clear(bool instant)
     {
         ClearLog();
         return null;

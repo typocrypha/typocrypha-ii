@@ -161,8 +161,15 @@ public class DialogViewBubble : DialogView
         }
     }
 
-    public override Coroutine Clear()
+    public override Coroutine Clear(bool instant)
     {
+        if (!IsBoxShowing)
+            return null;
+        if (instant)
+        {
+            GetBoxFromGrid(lastBoxPosition).transform.localScale = Vector2.zero;
+            return null;
+        }
         return StartCoroutine(HideCurrentBox());
     }
 

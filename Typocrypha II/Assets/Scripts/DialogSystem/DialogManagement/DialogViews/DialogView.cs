@@ -54,7 +54,7 @@ public abstract class DialogView : MonoBehaviour
     /// <summary>
     /// Clears all dialog boxes from the current view
     /// </summary>
-    public virtual Coroutine Clear()
+    public virtual Coroutine Clear(bool instant)
     {
         CleanUp();
         return null;

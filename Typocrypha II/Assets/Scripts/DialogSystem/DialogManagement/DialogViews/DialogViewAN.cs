@@ -97,7 +97,7 @@ public class DialogViewAN : DialogView
         if (endType == DialogManager.EndType.SceneEnd)
             yield break;
         int count = activeDialogBoxes.Count;
-        var clear = Clear();
+        var clear = Clear(false);
         if (clear != null)
         {
             yield return new WaitForSeconds((DialogBox.fadeTime + (count * clearStagger)) * 0.66f);
@@ -106,10 +106,15 @@ public class DialogViewAN : DialogView
         yield return fadeOut.WaitForCompletion();
     }
 
-    public override Coroutine Clear()
+    public override Coroutine Clear(bool instant)
     {
         if (activeDialogBoxes.Count <= 0)
             return null;
+        if (instant)
+        {
+            ClearLog();
+            return null;
+        }
         return StartCoroutine(ClearCR());
     }
 

@@ -45,6 +45,8 @@ public class DialogScriptParser
     private const string spriteBgPath = "Assets/Graphics/Sprites/Backgrounds";
     private const string prefabBgPath = "Assets/Prefabs/Backgrounds";
 
+    private const string clearInstant = "clearInstant";
+
     // Dialog view labels.
     Dictionary<string, System.Type> viewMap => SetDialogViewNode.viewMap;
 
@@ -89,6 +91,7 @@ public class DialogScriptParser
         {"setAlly", typeof(SetAllyNode) },
         {"clearAlly", typeof(SetAllyNode) },
         {"clear", typeof(ClearNode) },
+        {clearInstant, typeof(ClearNode) },
         {"clearReinforcements", typeof(ClearReinforcementsNode) },
         {"clearSpells", typeof(ClearEquippedSpellsNode) },
         {"addSpell", typeof(AddEquippedSpellsNode) },
@@ -104,7 +107,6 @@ public class DialogScriptParser
     // This should only be done with nodes that have no arguments
     readonly Dictionary<System.Type, string> nodeIDMap = new Dictionary<System.Type, string>
     {
-        {typeof(ClearNode), ClearNode.ID },
         {typeof(ClearReinforcementsNode), ClearReinforcementsNode.ID },
         {typeof(ClearEquippedSpellsNode), ClearEquippedSpellsNode.ID },
         {typeof(EndAndTransition), EndAndTransition.ID },
@@ -399,6 +401,12 @@ public class DialogScriptParser
             var node = CreateNode(canvas, SetPose.ID) as SetPose;
             node.characterData = GetCharacterData(args[1]);
             node.pose = args[2];
+            nodes.Add(node);
+        }
+        else if (nodeType == typeof(ClearNode))
+        {
+            var node = CreateNode(canvas, ClearNode.ID) as ClearNode;
+            node.instant = args[0] == clearInstant;
             nodes.Add(node);
         }
         else if (nodeType == typeof(PlayBgm))
