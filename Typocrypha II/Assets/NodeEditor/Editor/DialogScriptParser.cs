@@ -45,7 +45,7 @@ public class DialogScriptParser
     private const string spriteBgPath = "Assets/Graphics/Sprites/Backgrounds";
     private const string prefabBgPath = "Assets/Prefabs/Backgrounds";
 
-    private const string clearInstant = "clearInstant";
+    private const string clearInstant = "clearinstant";
 
     // Dialog view labels.
     Dictionary<string, System.Type> viewMap => SetDialogViewNode.viewMap;
