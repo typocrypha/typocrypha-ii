@@ -2,7 +2,7 @@
 
 
 +vnplus
->setbg,Sprite,BgObscurianRuins
+>setbg,Sprite,BgDeepObscurianRuins
 >setlocation,Ruins
 >stopbgm
 
@@ -26,13 +26,17 @@ Ayin(ohfuck): I-Illyia?{pm} I...
 Narrator: Your breathing quickens.{pm} It’s happening again.
 
 
-Ayin: ^shake^I,{pm} I can’t...|shake|
+Ayin[damaged](eyesclosed): ^shake^I,{pm} I can’t...|shake|
 
 
 Illyia(pissed): Woah,{ps} don’t go losing it on me!
 
 
-Ayin(uncomfortable): I’m sorry,{ps} I can’t anymore.{pm} I-
+Ayin: I’m sorry,{ps} I can’t anymore.{pm} I-
+
+
+>setpose,Ayin,base
+>setexpr,Ayin,surprisedbad
 
 
 Narrator: Illyia lifts you up by the shoulders{ps} (quite easily){ps} and starts shaking you.
@@ -48,6 +52,7 @@ Illyia(serious): Breathe!
 
 
 >stopbgm,ease,1.5
+>setexpr,Ayin,nervous
 
 
 Narrator: Illyia stares right at you,{pm} but behind her fierce visage,{pm} you sense a surprising warmth.
