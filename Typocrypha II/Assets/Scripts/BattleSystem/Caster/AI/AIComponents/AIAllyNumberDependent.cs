@@ -15,10 +15,12 @@ public class AIAllyNumberDependent : AIComponent
     [SerializeField] private int oneAllyLoopIndex;
     [SerializeField] private int multipleAlliesLoopIndex;
     [SerializeField] private bool cancelInProgressSpells;
+    [SerializeField] private string triggerBattleEventOnAloneId;
 
     SpellList lastSpellList = null;
     int lastNumAllies = -1;
     int spellIndex = -1;
+    bool aloneEventTriggered = false;
 
     // Start is called before the first frame update
     protected override void Awake()
@@ -62,6 +64,11 @@ public class AIAllyNumberDependent : AIComponent
         int numAllies = GetNumAllies(selfCaster);
         if(numAllies != lastNumAllies)
         {
+            if (numAllies == 0 && !aloneEventTriggered && !string.IsNullOrEmpty(triggerBattleEventOnAloneId))
+            {
+                BattleManager.instance.TriggerBattleEvent(triggerBattleEventOnAloneId);
+                aloneEventTriggered = true;
+            }
             SetNextSpell(null, selfCaster, true);
         }
     }
