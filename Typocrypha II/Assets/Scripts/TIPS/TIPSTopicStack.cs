@@ -58,9 +58,9 @@ public class TIPSTopicStack : MonoBehaviour
     /// <returns> The alpha value of the panel. </returns>
     private float GetFadeValue(Layer panel)
     {
-        const float full = 1, near = 0.4f, far = 0.2f, none = 0f;
+        const float NEAR = 1, FAR = 0.5f, NONE = 0f;
         int distance = currentLayer - panel;
-        return distance == 0 ? full : distance == 1 ? near : distance == 2 ? far : none;
+        return distance == 0 ? NEAR : distance == 1 ? FAR : NONE;
     }
 
     public Sequence JumpToLayer(Layer target, float duration = 0.33f)
