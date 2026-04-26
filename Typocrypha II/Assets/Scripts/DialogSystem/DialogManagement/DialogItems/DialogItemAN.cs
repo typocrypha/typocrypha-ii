@@ -9,6 +9,7 @@ public class DialogItemAN : DialogItem
 {
     public TMPro.TextAlignmentOptions AlignmentOptions { get; }
     public TextAnchor LayoutSetting { get; }
+    public List<DialogItemAN> QueuedItems { get; } = new List<DialogItemAN>();
 
     public DialogItemAN(string text, List<AudioClip> voice, TMPro.TextAlignmentOptions textAlignment = TMPro.TextAlignmentOptions.Left, TextAnchor layout = TextAnchor.UpperLeft) : base(text, voice) 
     {

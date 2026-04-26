@@ -10,16 +10,22 @@ public abstract class GraphParser : MonoBehaviour
 
     protected virtual BaseNode Next()
     {
-        if (currNode is BaseNodeOUT outNode)
+        return Next(currNode);
+    }
+
+    protected BaseNode Next(BaseNode node)
+    {
+        if (node is BaseNodeOUT outNode)
         {
             return outNode.Next;
         }
-        else if (currNode is GameflowBranchNode branchNode)
+        else if (node is GameflowBranchNode branchNode)
         {
             return Branch(branchNode);
         }
         return null;
     }
+
     protected virtual BaseNode Branch(GameflowBranchNode b)
     {
         string value = string.Empty;
@@ -44,6 +50,20 @@ public abstract class GraphParser : MonoBehaviour
             }
         }
         return b.toDefaultBranch.connection(0).body as BaseNode;
+    }
+
+    protected IEnumerable<BaseNode> LookAhead()
+    {
+        var curr = currNode;
+        while (true)
+        {
+            curr = Next(curr);
+            if(curr == null)
+            {
+                yield break;
+            }
+            yield return curr;
+        }
     }
 
     protected bool ProcessSharedNode(Node node)

@@ -31,4 +31,12 @@ public class PrefabPool<T> : IPool<T> where T : MonoBehaviour
         pool.Enqueue(obj);
         obj.gameObject.SetActive(false);
     }
+
+    public void Release(IEnumerable<T> objs)
+    {
+        foreach(var obj in objs)
+        {
+            Release(obj);
+        }
+    }
 }

@@ -223,7 +223,7 @@ public class DialogManager : MonoBehaviour, IPausable
         // Remove certain old text effects from previous box
         DisableOldTextEffects(ActiveDialogBox); 
         // Get and display proper view.
-        DialogView view = GetView(dialogItem.GetView());
+        var view = GetView(dialogItem.GetView());
         if (view != DialogView)
         {
             DialogView = view;
@@ -280,6 +280,8 @@ public class DialogManager : MonoBehaviour, IPausable
 
     private DialogView GetView(System.Type type)
     {
+        if (type == null)
+            return DialogView;
         return allViews.Find(v => v.GetType() == type);
     }
 

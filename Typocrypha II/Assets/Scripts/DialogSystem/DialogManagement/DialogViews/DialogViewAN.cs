@@ -17,42 +17,56 @@ public class DialogViewAN : DialogView
 
     public override bool DeactivateOnEndSceneHide => false;
 
-    private readonly List<DialogBox> dialogBoxPool = new List<DialogBox>(maxMessages);
+    private PrefabPool<DialogBox> dialogBoxPool;
     private readonly List<DialogBox> activeDialogBoxes = new List<DialogBox>(maxMessages);
+    private readonly Queue<DialogBox> queuedDialogBoxes = new Queue<DialogBox>(maxMessages);
 
     private void Awake()
     {
-        background.color = Color.clear;    
+        background.color = Color.clear;
+        dialogBoxPool = new PrefabPool<DialogBox>(dialogBoxPrefab, ANContent, maxMessages);
     }
 
     public override DialogBox PlayDialog(DialogItem data)
     {
+        if (data is DialogItemQueued)
+        {
+            if(queuedDialogBoxes.Count <= 0)
+            {
+                Debug.LogError("Tried to dequeue AN dialog box with empty queue");
+                return null;
+            }
+            var queuedDialogBox = queuedDialogBoxes.Dequeue();
+            queuedDialogBox.StartDialogScroll();
+            return queuedDialogBox;
+        }
         if (!IsDialogItemCorrectType(data, out DialogItemAN dialogItem))
             return null;
-        if(activeDialogBoxes.Count >= maxMessages)
+        if(activeDialogBoxes.Count + dialogItem.QueuedItems.Count >= maxMessages)
         {
             ClearLog();
         }
-        DialogBox dialogBox;
-        if (dialogBoxPool.Count > 0)
-        {
-            dialogBox = dialogBoxPool[dialogBoxPool.Count - 1];
-            dialogBoxPool.RemoveAt(dialogBoxPool.Count - 1);
-            dialogBox.transform.SetAsLastSibling();
-            dialogBox.gameObject.SetActive(true);
-        }
-        else
-        {
-            dialogBox = Instantiate(dialogBoxPrefab, ANContent).GetComponent<DialogBox>();
-        }
-        activeDialogBoxes.Add(dialogBox);
-        dialogBox.ContinueIndicator = continueIndicator;
-        dialogBox.DialogText.alignment = dialogItem.AlignmentOptions;
-        if(ANLayout.childAlignment != dialogItem.LayoutSetting)
+        if (ANLayout.childAlignment != dialogItem.LayoutSetting)
         {
             ANLayout.childAlignment = dialogItem.LayoutSetting;
         }
-        dialogBox.SetupAndStartDialogBox(dialogItem);
+        var dialogBox = CreateDialogBox(dialogItem);
+        foreach(var item in dialogItem.QueuedItems)
+        {
+            queuedDialogBoxes.Enqueue(CreateDialogBox(item));
+        }
+        dialogBox.StartDialogScroll();
+        return dialogBox;
+    }
+
+    private DialogBox CreateDialogBox(DialogItemAN dialogItem)
+    {
+        var dialogBox = dialogBoxPool.Get();
+        dialogBox.transform.SetAsLastSibling();
+        activeDialogBoxes.Add(dialogBox);
+        dialogBox.ContinueIndicator = continueIndicator;
+        dialogBox.DialogText.alignment = dialogItem.AlignmentOptions;
+        dialogBox.SetupDialogBox(dialogItem);
         return dialogBox;
     }
 
@@ -134,11 +148,7 @@ public class DialogViewAN : DialogView
 
     private void ClearLog()
     {
-        foreach(var dialogBox in activeDialogBoxes)
-        {
-            dialogBox.gameObject.SetActive(false);
-            dialogBoxPool.Add(dialogBox);
-        }
+        dialogBoxPool.Release(activeDialogBoxes);
         activeDialogBoxes.Clear();
     }
 
