@@ -14,8 +14,9 @@ public class DialogViewVN : DialogView
     private SpriteRenderer mcSprite; // Holds mc's sprite
     private SpriteRenderer codecSprite; // Holds codec call sprites (right side)
 
-    private void Awake()
+    public override void Initialize()
     {
+        base.Initialize();
         GameObject obj = Instantiate(dialogBoxPrefab, transform, false);
         dialogBox = obj.GetComponent<DialogBox>();
         nameText = obj.transform.Find("NameText").GetComponent<Text>();

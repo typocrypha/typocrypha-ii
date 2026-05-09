@@ -15,8 +15,9 @@ public class DialogViewLocation : DialogView
     [SerializeField] private DialogContinueIndicator continueIndicator;
     [SerializeField] private float targetBgAlpha = 1;
 
-    private void Awake()
+    public override void Initialize()
     {
+        base.Initialize();
         background.color = Color.clear;
         dialogBox.ContinueIndicator = continueIndicator;
     }

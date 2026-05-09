@@ -96,8 +96,11 @@ public class DialogManager : MonoBehaviour, IPausable
             Destroy(this);
             return;
         }
-
         ph = new PauseHandle(OnPause);
+        foreach (var view in allViews)
+        {
+            view.Initialize();
+        }
     }
 
 #if DEBUG

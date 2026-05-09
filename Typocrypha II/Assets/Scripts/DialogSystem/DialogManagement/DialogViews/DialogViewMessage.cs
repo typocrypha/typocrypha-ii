@@ -26,8 +26,9 @@ public abstract class DialogViewMessage<T> : DialogView where T : DialogItemMess
 
     public override bool ShowImmediately => false;
 
-    private void Awake()
+    public override void Initialize()
     {
+        base.Initialize();
         originalMessageAnchorPosY = messageContainer.anchoredPosition.y;
     }
 

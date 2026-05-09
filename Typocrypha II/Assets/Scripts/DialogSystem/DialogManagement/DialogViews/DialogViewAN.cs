@@ -21,8 +21,9 @@ public class DialogViewAN : DialogView
     private readonly List<DialogBox> activeDialogBoxes = new List<DialogBox>(maxMessages);
     private readonly Queue<DialogBox> queuedDialogBoxes = new Queue<DialogBox>(maxMessages);
 
-    private void Awake()
+    public override void Initialize()
     {
+        base.Initialize();
         background.color = Color.clear;
         dialogBoxPool = new PrefabPool<DialogBox>(dialogBoxPrefab, ANContent, maxMessages);
     }

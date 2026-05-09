@@ -23,6 +23,8 @@ public abstract class DialogView : MonoBehaviour
     public virtual bool ShowImmediately => true;
     public virtual bool DeactivateOnEndSceneHide => true;
 
+    public virtual void Initialize() { }
+
     /// <summary>
     /// Enable/Disable this dialog view. Does not disable others.
     /// </summary>
