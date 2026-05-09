@@ -27,10 +27,11 @@ public class DialogViewBubble : DialogView
 
     protected bool IsBoxShowing => lastBoxPosition != nullGridPos;
 
-    private void Awake()
+    public override void Initialize()
     {
+        base.Initialize();
         initialPositions.Clear();
-        foreach(var box in dialogBoxGrid)
+        foreach (var box in dialogBoxGrid)
         {
             initialPositions.Add(box.GetComponent<RectTransform>().anchoredPosition);
         }
