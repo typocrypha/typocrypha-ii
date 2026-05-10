@@ -68,7 +68,7 @@ public class TIPSNavigator : MonoBehaviour
          */
         if (CurrentFocus == Focus.searchbar)
         {
-            if (Input.GetKeyDown(KeyCode.DownArrow))
+            if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.RightArrow))
             {
                 searchbar.Clear();
                 SearchbarShowHint();
