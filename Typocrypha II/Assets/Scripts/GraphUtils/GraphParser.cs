@@ -195,10 +195,17 @@ public abstract class GraphParser : MonoBehaviour
                 }
             }
             var battlefield = Battlefield.instance;
-            if (battlefield != null && setAllyNode.prefab != null)
+            if (battlefield != null)
             {
-                var newAlly = Instantiate(setAllyNode.prefab).GetComponent<Caster>();
-                battlefield.Add(newAlly, new Battlefield.Position(1, 2));
+                if(setAllyNode.prefab != null)
+                {
+                    var newAlly = Instantiate(setAllyNode.prefab).GetComponent<Caster>();
+                    battlefield.Add(newAlly, new Battlefield.Position(1, 2));
+                }
+                else
+                {
+                    battlefield.Remove(new Battlefield.Position(1, 2), true);
+                }
             }
             return true;
         }

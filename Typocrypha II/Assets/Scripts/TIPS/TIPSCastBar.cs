@@ -2,12 +2,16 @@
 //using System.Collections.Generic;
 using UnityEngine;
 using Typocrypha;
-using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class TIPSCastBar : CastBar
 {
     public UnityEvent_string OnSearchCast;
     [SerializeField] AudioClip typeSfx;
+    [SerializeField] Image frame;
+
+    [SerializeField] Color colorDefault;
+    [SerializeField] Color colorFocus;
 
     protected override int VisualKeywordDelimiterIndex => delimiterIndexSpace;
 
@@ -24,5 +28,17 @@ public class TIPSCastBar : CastBar
     {
         OnSearchCast.Invoke(Text);
         Clear();
+    }
+
+    public override void Focus()
+    {
+        frame.color = colorFocus;
+        base.Focus();
+    }
+
+    public override void Unfocus()
+    {
+        frame.color = colorDefault;
+        base.Unfocus();
     }
 }

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class TIPSTopicPanel : MonoBehaviour
 {
@@ -15,7 +16,10 @@ public class TIPSTopicPanel : MonoBehaviour
     [SerializeField] TextMeshProUGUI uguiTitle, uguiPage;
     [SerializeField] CanvasGroup canvasGroup;
     [SerializeField] List<MenuButton> buttons;
+    [SerializeField] List<Image> icons;
+    [SerializeField] Sprite iconFolder, iconFile;
     [SerializeField] TIPSNavigator navigator;
+
 
     private int PageSize => buttons.Count;
     public TIPSEntryData TopEntry => currTopics.Count > 0 ? currTopics[0] : null;
@@ -59,10 +63,13 @@ public class TIPSTopicPanel : MonoBehaviour
         var buttonCount = GetButtonCount(currTopics.Count, page);
         for (int i = 0; i < buttonCount; i++)
         {
-            var button = buttons[i]; ;
             var entry = currTopics[i + page * PageSize];
-            button.SetText(entry.ID);
+            var button = buttons[i];
+            var icon = icons[i];
+
             button.gameObject.name = entry.ID;
+            button.SetText(entry.ID);
+            icon.sprite = entry.IsFolder ? iconFolder : iconFile;
 
             // Setup listeners
             button.button.onClick.RemoveAllListeners();
