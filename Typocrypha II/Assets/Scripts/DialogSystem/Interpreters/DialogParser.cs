@@ -18,6 +18,7 @@ public class DialogParser : MonoBehaviour
     public static readonly char[] escapeChar = new char[1] { '\\' }; // Escape character
     private static readonly char[] fxTextDelim = new char[2] { '^', '|' }; // FXText delimiters
     private static readonly char[] textEventDelim = new char[2] { '[' , ']' }; // TextEvent delimiters
+    private static readonly char[] richTextDelim = new char[2] { '<' , '>' }; // Rich text delimiters
     private static readonly Dictionary<string, Color32> colorMap = new Dictionary<string, Color32> {
         {"ui-terms", new Color32(5, 171, 255, 255) },
         {"evil-eye", new Color32(255, 0, 66, 255) },
@@ -86,21 +87,26 @@ public class DialogParser : MonoBehaviour
         // Initialize parsing vars
         var parsed = new StringBuilder(text.Length);
 		bool tag = false; // Are we parsing a tag?
+        int effectIndex = 0;
 		for (int i = 0; i < text.Length; ++i)
         {
 			char c = text [i];
-			if (c == fxTextDelim[0]) // FXTextEffect start tag
+            if(c == richTextDelim[0])
+            {
+                i = ParseRichTextTag(i, text, parsed);
+            }
+			else if (c == fxTextDelim[0]) // FXTextEffect start tag
             { 
 				tag = !tag;
                 if (tag)
                 {
-                    ParseEffectStart(i + 1, text, parsed, fxContainer, textUI, ref effectStack);
+                    ParseEffectStart(i + 1, effectIndex, text, fxContainer, textUI, ref effectStack);
                 }
 			}
             else if (c == fxTextDelim[1]) // FXTextEffect end tag
             { 
 				tag = !tag;
-                if (tag && TryParseEffectEnd(i + 1, text, parsed, ref effectStack, out var effect))
+                if (tag && TryParseEffectEnd(i + 1, effectIndex, text, ref effectStack, out var effect))
                 {
                     textEffects.Add(effect);
                 }
@@ -114,6 +120,7 @@ public class DialogParser : MonoBehaviour
                 if(c == escapeChar[0])
                 {
                     parsed.Append(text[++i]);
+                    effectIndex++;
                 }
 				else if(c == '’')
                 {
@@ -123,6 +130,7 @@ public class DialogParser : MonoBehaviour
                 {
 					parsed.Append (c);
 				}
+                effectIndex++;
 			}
 		}
         return parsed.ToString();
@@ -135,14 +143,14 @@ public class DialogParser : MonoBehaviour
     /// <param name="text">Total raw text of dialog.</param>
     /// <param name="parsed">Currently parsed dialog.</param>
     /// <param name="dialogBox">Dialogbox component reference.</param>
-    private void ParseEffectStart(int startPos, string text, StringBuilder parsed, GameObject fxContainer, TextMeshProUGUI textUI, ref Stack<FXText.TMProEffect> effectStack)
+    private void ParseEffectStart(int startPos, int effectIndex, string text, GameObject fxContainer, TextMeshProUGUI textUI, ref Stack<FXText.TMProEffect> effectStack)
     {
         effectStack = effectStack ?? new Stack<FXText.TMProEffect>();
         int endPos = text.IndexOf (fxTextDelim[0], startPos) - 1;
         var args = text.Substring(startPos, endPos - startPos + 1).Split(optDelim);
         var fx = fxContainer.AddComponent(fxTextMap[args[0]]) as FXText.TMProEffect;
         fx.text = textUI; // Set text component reference
-        fx.ind = new List<int> {parsed.Length, -1 }; // Set start position: End position set by ParseEffectEnd
+        fx.ind = new List<int> {effectIndex, -1 }; // Set start position: End position set by ParseEffectEnd
         fx.Priority = -10; // Set to low priority
         effectStack.Push(fx); // Add to stack
         // Hardcoded check for color effect (extra parameter)
@@ -153,7 +161,7 @@ public class DialogParser : MonoBehaviour
     }
 
 	// Parses an effect's ending tag, and matches with top of effect stack
-	private bool TryParseEffectEnd(int startPos, string text, StringBuilder parsed, ref Stack<FXText.TMProEffect> effectStack, out FXText.TMProEffect effect) 
+	private bool TryParseEffectEnd(int startPos, int effectIndex, string text, ref Stack<FXText.TMProEffect> effectStack, out FXText.TMProEffect effect) 
     {
         effectStack = effectStack ?? new Stack<FXText.TMProEffect>();
 		int endPos = text.IndexOf (fxTextDelim[1], startPos) - 1;
@@ -172,7 +180,7 @@ public class DialogParser : MonoBehaviour
             effect = null;
             return false;
         }
-        top.ind[1] = parsed.Length;
+        top.ind[1] = effectIndex;
         effect = top;
         return true;
     }
@@ -190,6 +198,14 @@ public class DialogParser : MonoBehaviour
         }
 		return endPos;
 	}
+
+    // Parses a Text Event
+    int ParseRichTextTag(int startPos, string text, StringBuilder parsed)
+    {
+        int endPos = text.IndexOf(richTextDelim[1], startPos);
+        parsed.Append(text.Substring(startPos, endPos - startPos + 1));
+        return endPos;
+    }
 
     /// <summary>
     /// Substiutes macros in (curly braces).
