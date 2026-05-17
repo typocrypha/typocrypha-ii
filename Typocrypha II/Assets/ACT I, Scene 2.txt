@@ -3,6 +3,7 @@
 
 >setbg,Sprite,BgTypocrypho
 >setlocation,Typocry-Pho
+>setdatetime,10/22/33
 
 
 >playbgm,BGMRestaurantAmbience,linear,1
@@ -23,7 +24,7 @@ Narrator: You’re waiting for Adelai at TypocryPho Noodle House and Snack Bar.
 Narrator: She’s late.
 
 
-Ayin(nervous): . {pl}. {pl}.
+Ayin(nervous): .{pl}.{pl}.
 
 
 Ayin(serious): Clarke,{pm} any updates from Adelai?
@@ -106,7 +107,7 @@ Ayin(normal): That’s pretty cool,{pm} I guess.
 Clarke: Yes it is!
 
 
-Clarke: {c,ui-terms}TIPS{c} contains information on just about everything!{pl} People,{pm} places,{pm} technology...
+Clarke: {c,ui-terms}TIPS{c} contains information on just about everything!{pl} Spells,{pm} places,{pm} technology...
 
 
 >stopbgm,linear,2
@@ -173,7 +174,7 @@ Adelai(normal): Thanks Ayin!
 Adelai(caring): You should treat yourself to a large sometimes!
 
 
-Ayin(nervoussmile): Well,{ps} money’s been kind of tight so...
+Ayin(nervoussmile): Well,{pm} money’s been kind of tight so...
 
 
 Adelai(interested): Ah,{pl} right...
@@ -206,7 +207,7 @@ Ayin(normal): I’ve brought it up before,{pm} but he always dodges the subject.
 Adelai(normal): Well,{pm} let me know if he ever changes his mind! 
 
 
-Adelai(frustrateddistant): I guess I could try and put a good word in with my dad.
+Adelai(frustrateddistant): I <i>guess</i> I could try and put a good word in with my dad.
 
 
 Narrator: You have mixed feelings about exploiting the fact that Adelai’s dad is the CEO of Ostanes.
@@ -299,7 +300,8 @@ Adelai(teasing): And speaking of waiting around,{pm} our food’s taking a while
 Adelai(normal): Maybe I’ll go ask-
 
 
->setexpr,Adelai,serious
+>setpose,Adelai,action
+>setexpr,Adelai,damage
 >setpose,Ayin,damaged
 >setexpr,Ayin,distressed
 
@@ -343,7 +345,7 @@ Narrator: The alarm continues on a shrill loop...
 >removechar,Clarke
 
 
-Adelai(serious): Ayin?{pm} Are you OK?
+Adelai(getittogether): Ayin?{pm} Are you OK?
 
 
 Ayin: I-{pm}I... 
@@ -358,7 +360,7 @@ Narrator: Your arms start to feel numb and tingly.
 Ayin[damaged](eyesclosed): ^shake^H-{ps}Haa....{pl} I’m s-{ps}sorry,{pm} I c-c-{ps}can’t...|shake|
 
 
-Adelai: Ayin,{pm} look at me! 
+Adelai[base](serious): Ayin,{pm} look at me! 
 
 
 Adelai(caring): Breathe.{pm} Breathe Ayin.
@@ -370,7 +372,7 @@ Ayin(distressed): ^shake^Haaa...{pl} Haa...|shake|
 Narrator: Adelai takes your hand into hers -{pm} you focus just on that warmth. 
 
 
-NarratorSilent: . {pl}. {pl}. 
+Narrator: .{pl}.{pl}. 
 
 
 Adelai: Have you calmed down a bit?
@@ -394,7 +396,7 @@ Narrator: You nod wordlessly,{pm} and Adelai smiles back.
 Adelai(serious): C’mon,{pm} that explosion sounded close to here. 
 
 
-Adelai(serious): We better evacuate, too.
+Adelai(serious): We better evacuate,{ps} too.
 
 
 >endt

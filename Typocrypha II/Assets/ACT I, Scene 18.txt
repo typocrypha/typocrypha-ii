@@ -15,33 +15,6 @@ Dahlia[0,2]: Everyone stay close!{pm} We can do this!
 
 
 >end
-//Ayin gets to low health for the first time (<30%):
->start,ACT-I-18-1-AyinWeak
-+bubble
-
-
->addchar,Dahlia,0,0,right,action,yell
-
-
-Dahlia[0,2]: {c,ui-terms}SUTURE{c}!
-
-
->clear
-
-
->castSpellName,SUTURE,1,1,Dahlia[a]
-
-
-Ayin[0,1]: Thanks,{ps} Dahlia!
-
-
-Dahlia[0,2]: Don’t thank me just yet:{pm} {c,ui-terms}SUTURE{c} has a ridiculously long cooldown. 
-
-
-Dahlia[0,2]: Try not to get too beaten up!
-
-
->end
 //After getting halfway (30 seconds):
 
 
@@ -60,10 +33,7 @@ Illyia[0,2]: Out of the way!!!
 >castSpellAlly,CLAYMORE-CLAYMORE,0,1
 
 
-Illyia[0,2](base,laughing): Phew!{pm} You OK,{ps} Leader?
-
-
-Ayin[0,1]: Yeah!{pm} Thanks,{ps} Illyia!
+Illyia[0,2](base,laughing): Hah!{pm} Eat that Demons!
 
 
 >end
@@ -89,7 +59,7 @@ Illyia[0,2]: Finish the rest!
 +bubble
 
 
->crossfadebgm,BGMVictory
+>crossfadebgm,BGMVictory2025
 
 
 >addchar,Esaias,0,0,right,base,normal
@@ -191,7 +161,7 @@ Mari[1,1]: I,{pm} Mari Urraca,{ps} Pillar of the Obscurai,{pm} shall ensure the 
 >clear
 
 
->castSpell,WINDTUNNEL,1,1,0,1,Mari traps Ayin in a TYPHOON[b]! 
+>castSpell,WINDTUNNEL,1,1,0,1,Mari traps Ayin in a TYPHOON[a]! 
 
 
 >crossfadebgm,BGMBattleMari
@@ -204,7 +174,7 @@ Mari[1,1]: I,{pm} Mari Urraca,{ps} Pillar of the Obscurai,{pm} shall ensure the 
 >stopbgm
 
 
-Mari[1,1]: H-{pm}Humans...[c]
+Mari[1,1]: H-{pm}Humans...[b]
 
 
 Mari[1,1]: I will not...{pm} L-{ps}Let this stop me...
@@ -284,6 +254,5 @@ Mari[1,1]: Gh-!
 
 
 >end
-[a]to fix
-[b]to have allies leave
-[c]should have new animation to show gravely injured
+[a]to have allies leave
+[b]should have new animation to show gravely injured
