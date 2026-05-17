@@ -363,6 +363,7 @@ public class BattleManager : MonoBehaviour, IPausable
     {
         Battlefield.instance.Remove(1, 1, true); //removes player if already exists
         AudioManager.instance.StopBGM();
+        AllyBattleBoxManager.instance.ResetBattleBoxes();
         LoadBattle();
         StartBattle();
     }

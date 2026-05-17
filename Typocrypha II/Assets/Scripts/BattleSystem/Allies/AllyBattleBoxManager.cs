@@ -24,6 +24,19 @@ public class AllyBattleBoxManager : MonoBehaviour
     private string battleAllyExpr = "";
     private bool disableBattleAllyUI = false;
 
+    public void ResetBattleBoxes()
+    {
+        rightColumnIndex = 0;
+        for (int i = 0; i < rightColumnCharas.Length; i++)
+        {
+            rightColumnCharas[i].Data = null;
+        }
+        rightColumnCharas[0].MainRect.anchoredPosition = onScreenPos.anchoredPosition;
+        rightColumnCharas[1].MainRect.anchoredPosition = offScreenPos.anchoredPosition;
+        AllCharactersHidden = false;
+        SetBattleAllyEnabled(true);
+    }
+
     public void SetBattleAllyData(CharacterData data, string expr = "", string pose = "")
     {
         BattleAllyData = data;
