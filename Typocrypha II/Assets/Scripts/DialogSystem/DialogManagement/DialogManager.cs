@@ -67,6 +67,10 @@ public class DialogManager : MonoBehaviour, IPausable
             {
                 DialogView.SetLocationText(value);
             }
+            else
+            {
+                Debug.LogError($"Attempted to set location text to {value} but there is no active dialog view");
+            }
         }
     }
     private string location = "";
