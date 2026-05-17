@@ -268,7 +268,14 @@ public class DialogGraphParser : GraphParser
         }
         else if (currNode is SetDateTimeTextNode setDateTimeTextNode)
         {
-            DialogManager.instance.DialogView.SetDateTimeText(setDateTimeTextNode.text);
+            if (DialogManager.instance.DialogView != null)
+            {
+                DialogManager.instance.DialogView.SetDateTimeText(setDateTimeTextNode.text);
+            }
+            else
+            {
+                Debug.LogError("Attempted to set datetime with no active view. SetDateTimeTextNode will be skipped");
+            }
         }
         else if (currNode is ClearNode clearNode)
         {
