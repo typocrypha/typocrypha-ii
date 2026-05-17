@@ -44,6 +44,7 @@ public class BattleWord : MonoBehaviour, IInputHandler
 
     public event System.Action OnComplete;
     public PauseHandle PH { get; private set; }
+    private WaitWhile waitWhilePaused;
 
     public bool PendingFocus { get; private set; } = false;
     private float focusTime = 2f;
@@ -51,6 +52,7 @@ public class BattleWord : MonoBehaviour, IInputHandler
     private void Awake()
     {
         PH = new PauseHandle();
+        waitWhilePaused = Yielders.Paused(this, ref waitWhilePaused);
     }
 
     public void Focus() { }
@@ -119,6 +121,7 @@ public class BattleWord : MonoBehaviour, IInputHandler
         var originalColor = colorEffect.defaultColor;
         while (time < timeAllowed)
         {
+            yield return waitWhilePaused;
             if (failed)
             {
                 failed = false;
@@ -150,7 +153,9 @@ public class BattleWord : MonoBehaviour, IInputHandler
             float attackTime = 0.25f;
             transform.DOMove(Battlefield.instance.Player.transform.position + new Vector3(0, 0.5f), attackTime).SetEase(Ease.InOutCubic);
             transform.DOScale(Vector2.zero, attackTime).SetEase(Ease.InOutCubic);
+            yield return waitWhilePaused;
             yield return new WaitForSeconds(attackTime);
+            yield return waitWhilePaused;
             Battlefield.instance.Player.Damage(12);
             SpellFxManager.instance.PlayDamageNumber(12, Battlefield.instance.Player);
         }

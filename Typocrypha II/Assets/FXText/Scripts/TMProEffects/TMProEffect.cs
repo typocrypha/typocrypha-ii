@@ -76,10 +76,10 @@ namespace FXText
         static void UpdateMesh(TMP_Text text, List<TMProEffect> allEffects, SharedMemory sharedMemory)
         {
             // Iterate through each character
-            for (int charIndex = 0; charIndex < text.textInfo.characterCount && charIndex < text.text.Length; ++charIndex)
+            for (int charIndex = 0; charIndex < text.textInfo.characterCount; ++charIndex)
             {
                 // Skip characters that aren't affected by effects
-                if (SkipCharacters(text.text[charIndex])) continue;
+                if (SkipCharacters(text.textInfo.characterInfo[charIndex].character)) continue;
                 // Get mesh info for current character
                 int meshIndex = text.textInfo.characterInfo[charIndex].materialReferenceIndex;
                 int vertexIndex = text.textInfo.characterInfo[charIndex].vertexIndex;
