@@ -82,7 +82,7 @@ public class DialogParser : MonoBehaviour
         textEvents?.Clear();
         textEffects.Clear();
         Stack<FXText.TMProEffect> effectStack = null;
-        // Initialize text (substitute macros) Regex.Replace(line, @"<.*?>", ""); // Remove rich text tags
+        // Initialize text (substitute macros)
         string text = TextMacros.SubstituteMacros(line, out tipsEntries);
         // Initialize parsing vars
         var parsed = new StringBuilder(text.Length);
