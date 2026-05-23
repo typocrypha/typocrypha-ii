@@ -42,12 +42,25 @@ public class ShopMenu : MonoBehaviour
     [Header("Badges")]
     [SerializeField] private BadgeBundle allBadges;
 
+    [Header("Clarke")]
+    [SerializeField] private Image clarkeImage;
+    [SerializeField] private Transform clarkeTransform;
+    [SerializeField] private Transform clarkeLeftTransform;
+    [SerializeField] private Transform clarkeCenterTransform;
+    [SerializeField] private RectTransform clarkeDialogRT;
+    [SerializeField] private Vector2 leftDialogPos;
+    [SerializeField] private Vector2 centerDialogPos;
+    [SerializeField] private GameObject leftArrow;
+    [SerializeField] private GameObject topArrow;
+
 
     private enum PurchaseMode { None, Buy, Upgrade }
     private PurchaseMode currentMode = PurchaseMode.None;
 
     private NumberFormatInfo formatInfo;
 
+    private enum ClarkePosition { Left, Center }
+    private ClarkePosition currentClarkePositiion = ClarkePosition.Left;
 
     public static IEnumerable<BadgeWord> FilterBadges(IEnumerable<BadgeWord> badges, System.Func<BadgeWord, bool> predicate)
     {
@@ -66,7 +79,7 @@ public class ShopMenu : MonoBehaviour
 
     private void Start()
     {
-        if (openOnStart) OpenLanding();
+        if (openOnStart) OpenLanding(false);
 
         // create buttons as needed
         while (purchaseButtonContainer.transform.childCount < allBadges.badges.Count)
@@ -82,8 +95,9 @@ public class ShopMenu : MonoBehaviour
         firstPurchaseSelection.onSelect.AddListener(() => ScrollToButton(firstPurchaseSelection.transform as RectTransform));
     }
 
-    public void OpenLanding()
+    public void OpenLanding(bool animateClarke = true)
     {
+        SetClarkePosition(ClarkePosition.Left, animateClarke);
         gameObject.SetActive(true);
         foreach (var go in purchaseExclusiveUI) go.SetActive(false);
         foreach (var go in landingExclusiveUI) go.SetActive(true);
@@ -93,6 +107,7 @@ public class ShopMenu : MonoBehaviour
 
     private void OpenPurchase()
     {
+        SetClarkePosition(ClarkePosition.Center);
         gameObject.SetActive(true);
         foreach (var go in landingExclusiveUI) go.SetActive(false);
         foreach (var go in purchaseExclusiveUI) go.SetActive(true);
@@ -164,7 +179,7 @@ public class ShopMenu : MonoBehaviour
             //set text
             string nameText = badge.ToString();
             string costText = $"${badge.NextCost}";
-            const int maxTotalLength = 23;
+            const int maxTotalLength = 18;
             const int maxCostLength = 4;
             string result = $"{nameText} {costText.PadLeft(maxTotalLength - (nameText.Length + 1) - maxCostLength + costText.Length)}";
             menuButton.SetText(result);
@@ -259,6 +274,10 @@ public class ShopMenu : MonoBehaviour
 
     public void PrintMain(string text)
     {
+        clarkeDialogRT.anchoredPosition = currentClarkePositiion == ClarkePosition.Left ? leftDialogPos : centerDialogPos;
+        leftArrow.SetActive(currentClarkePositiion == ClarkePosition.Left);
+        topArrow.SetActive(currentClarkePositiion == ClarkePosition.Center);
+
         ItemDescriptionLeft.transform.gameObject.SetActive(false);
         ItemDescriptionRight.transform.gameObject.SetActive(false);
         MainDialogText.transform.parent.gameObject.SetActive(true);
@@ -328,5 +347,19 @@ public class ShopMenu : MonoBehaviour
             .SetId("GradientTween")
             .Append(gradientTop.DOAnchorPosY(posY, duration))
             .Append(gradientBottom.DOAnchorPosY(-posY, duration));
+    }
+
+    private void SetClarkePosition(ClarkePosition pos, bool animate = true)
+    {
+        currentClarkePositiion = pos;
+        var target = pos == ClarkePosition.Left ? clarkeLeftTransform.position : clarkeCenterTransform.position;
+        if (!animate)
+        {
+            clarkeTransform.position = target;
+        }
+        else
+        {
+            clarkeTransform.DOMove(target, 0.5f).SetEase(Ease.InOutBack);
+        }
     }
 }
