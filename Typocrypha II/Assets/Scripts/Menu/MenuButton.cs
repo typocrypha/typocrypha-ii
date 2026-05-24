@@ -23,7 +23,7 @@ public class MenuButton : MonoBehaviour, ISelectHandler, IDeselectHandler, ISubm
     [SerializeField] private Sprite selectedSprite;
     [SerializeField] private Sprite deselectedSprite;
     [SerializeField] private KeyCode[] shortcutKeys = default;
-    public bool SkipSelectSfxOnce { get; set; }
+    private bool SkipSfx { get; set; }
 
     private EventSystem currentES;
 
@@ -53,8 +53,13 @@ public class MenuButton : MonoBehaviour, ISelectHandler, IDeselectHandler, ISubm
 
     public void InitializeSelection()
     {
-        SkipSelectSfxOnce = true;
+        if(currentES.currentSelectedGameObject == gameObject)
+        {
+            currentES.SetSelectedGameObject(null);
+        }
+        SkipSfx = true;
         button.Select();
+        SkipSfx = false;
     }
 
     public void Select()
@@ -64,16 +69,12 @@ public class MenuButton : MonoBehaviour, ISelectHandler, IDeselectHandler, ISubm
 
     public void OnSelect(BaseEventData eventData)
     {
-        ToggleHighlight(true);
-        if (SkipSelectSfxOnce)
+        if (!SkipSfx && selectSFX != null)
         {
-            SkipSelectSfxOnce = false;
-        }
-        else
-        {
-            if (selectSFX) AudioManager.instance.PlaySFX(selectSFX);
+            AudioManager.instance.PlaySFX(selectSFX);
         }
         onSelect.Invoke();
+        ToggleHighlight(true);
     }
 
     public void OnDeselect(BaseEventData eventData)
