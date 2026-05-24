@@ -17,6 +17,7 @@ public class TitleMenu : MonoBehaviour
     private void Start()
     {
         AudioManager.instance.PlayBGM(titleBGM);
+        PauseManager.instance.PH.Pause(PauseSources.Title);
         settings.OnClose += Initialize;
         Initialize();
     }
@@ -44,6 +45,7 @@ public class TitleMenu : MonoBehaviour
         EventSystem.current.enabled = false;
         SaveManager.instance.LoadCampaign();
         AudioManager.instance.StopBGM(fadeOutCurve);
+        ActivatePauseMenu();
         TransitionManager.instance.Continue();
     }
 
@@ -57,7 +59,8 @@ public class TitleMenu : MonoBehaviour
         EventSystem.current.enabled = false;
         SaveManager.instance.NewGame();
         AudioManager.instance.StopBGM(fadeOutCurve);
-        TransitionManager.instance.TransitionToScene(0);
+        ActivatePauseMenu();
+        TransitionManager.instance.TransitionToScene(0, false);
     }
 
     public void Quit()
@@ -68,5 +71,10 @@ public class TitleMenu : MonoBehaviour
     public void Settings()
     {
         settings.Open();
+    }
+
+    private void ActivatePauseMenu()
+    {
+        PauseManager.instance.PH.Unpause(PauseSources.Title);
     }
 }

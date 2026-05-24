@@ -29,7 +29,7 @@ public class PauseManager : MonoBehaviour, IPausable
         if (instance == null)
         {
             instance = this;
-            PH = new PauseHandle(OnPause);
+            PH = new PauseHandle(OnPause, true);
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -41,6 +41,7 @@ public class PauseManager : MonoBehaviour, IPausable
     private void Start()
     {
         settings.OnClose += Initialize;
+        PH.Pause(PauseSources.Title);
     }
 
     private void Initialize()
@@ -151,7 +152,8 @@ public class PauseManager : MonoBehaviour, IPausable
 
     public void MainMenu()
     {
-        PH.Pause(PauseSources.Self);
+        PH.Pause(PauseSources.Title);
+        PauseMenu(false);
         EventSystem.current.enabled = false;
         TransitionManager.instance.TransitionToMainMenu();
     }
@@ -161,4 +163,11 @@ public class PauseManager : MonoBehaviour, IPausable
         PH.Pause(PauseSources.Self);
         settings.Open();
     }
+
+    public void Cleanup()
+    {
+        AllPausable.RemoveAll(IsNotPersistent);
+    }
+
+    private static bool IsNotPersistent(PauseHandle ph) => !ph.Persistent;
 }

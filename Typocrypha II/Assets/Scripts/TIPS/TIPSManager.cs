@@ -38,7 +38,7 @@ public class TIPSManager : MonoBehaviour, IPausable
             return;
         }
         currentEventSystem = EventSystem.current;
-        PH = new PauseHandle(OnPause);
+        PH = new PauseHandle(OnPause, true);
     }
 
     private void OnPause(bool pause)
