@@ -85,7 +85,7 @@ public class PauseManager : MonoBehaviour, IPausable
     // Pause/Unpause all pausable scripts.
     public void PauseAll(bool value, PauseSources sources, bool includePauseMenu, params PauseHandle[] except)
     {
-        List<PauseHandle> destroyed = new List<PauseHandle>(); // Destroyed pausables.
+        List<PauseHandle> destroyed = null; // Destroyed pausables.
         foreach (var ph in AllPausable)
         {
             try
@@ -106,10 +106,15 @@ public class PauseManager : MonoBehaviour, IPausable
             catch (System.Exception e) // Check if object was destroyed.
             {
                 Debug.LogError($"PauseHandle exception: {e.Message}");
+                destroyed = destroyed ?? new List<PauseHandle>();
                 destroyed.Add(ph);
             }
         }
-        foreach (var ph in destroyed) AllPausable.Remove(ph);
+        if(destroyed != null)
+        {
+            foreach (var ph in destroyed) 
+                AllPausable.Remove(ph);
+        }
     }
 
     // Open/Close pause menu
