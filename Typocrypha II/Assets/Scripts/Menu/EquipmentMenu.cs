@@ -16,6 +16,7 @@ public class EquipmentMenu : MonoBehaviour, IPausable
     [SerializeField] private EquipmentMenuSlot[] slots;
     [SerializeField] private BadgeSelectorMenu badgeSelector;
     [SerializeField] private ShopMenu shopMenu;
+    [SerializeField] private ClarkeShopTransition shopTransition;
 
     private EquipmentMenuSlot inMenuSlot;
     private bool skipFrame = false;
@@ -76,7 +77,7 @@ public class EquipmentMenu : MonoBehaviour, IPausable
     public void OpenShopMenu()
     {
         PH.Pause(PauseSources.Self);
-        shopMenu.OpenLanding();
+        shopTransition.PlayIntroAnimation(() => shopMenu.OpenLanding());
     }
 
     public void OnCloseShopMenu()
