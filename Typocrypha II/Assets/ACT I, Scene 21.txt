@@ -5,7 +5,7 @@
 >setbg,Sprite,BgBarrierMari
 
 
->addchar,Ayin,0,0,left,damagedscuffed,distressed
+>addchar,Ayin,0,0,left,damagedscuffed,eyesclosed
 
 
 >stopbgm
@@ -79,16 +79,22 @@ Adrestia: Cursed Humans!{pm} You shall ^shake^PAY|shake| for what you have done.
 Narrator: The Masked Demon who attacked Seven Stars Station...
 
 
-Narrator: You go for your Typocrypha,{pm} but get no response.
+Narrator: You go for your Typocrypha.{pm}.{pm}.
 
 
 >addchar,Clarke,0,0,left
 
 
-Clarke: ER-R-ROR...{ps} SPELL CIR-{ps}CIRCUIT OVERLOAD.
+Clarke: ER-R-ROR.{ps}.{ps}.{ps} SPELL CIR-{ps}CIRCUIT OVERLOAD.
 
 
-Ayin: Nononono not now!
+Clarke: FORCED SHUTDOWN.{pm}.{pm}.
+
+
+>removechar,Clarke
+
+
+Ayin: ^shake^Nononono not now!|shake|
 
 
 Narrator: You think you hear a voice calling you -{pm} probably your team.
@@ -118,7 +124,7 @@ Ayin(surprised): A-{ps}Adelai!?
 >playbgm,BGMBattleNormal2
 
 
-Adelai: Stand back Ayin.
+Adelai: Stand back,{ps} Ayin.
 
 
 >addchar,Kaia,0,0,left,zealous
@@ -141,10 +147,13 @@ Adelai(frustrated): But General,{pm} I can help!
 Kaia: No. 
 
 
-Kaia(confident): This one is mine. 
+Kaia(confident): This one is mine.
 
 
-Narrator: Adelai hesitates only for a moment{pm} before taking you on her shoulders and heading towards the rear.
+>setexpr,Adelai,serious
+
+
+Narrator: Adelai hesitates only a moment{pm} before taking you on her shoulders and heading towards the rear.
 
 
 >removecharmulti,Ayin,Adelai

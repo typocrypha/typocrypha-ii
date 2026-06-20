@@ -20,6 +20,8 @@ public enum PauseSources
     DialogHistory = 512,
     TIPS = 1024,
     Equipment = 2048,
+    Title = 4096,
+    Loading = 8192,
 }
 
 /// <summary>
@@ -28,6 +30,7 @@ public enum PauseSources
 /// </summary>
 public class PauseHandle
 {
+    public bool Persistent { get; }
     OnPauseDel onPause; // Function called when paused/unpaused.
     private PauseSources pauseSources;
     private PauseHandle parent;
@@ -123,8 +126,9 @@ public class PauseHandle
         FreeFromParent();
     }
 
-    public PauseHandle()
+    public PauseHandle(bool persistent = false)
     {
+        Persistent = persistent;
         if (PauseManager.instance != null)
         {
             PauseManager.instance.AllPausable.Add(this);
@@ -138,7 +142,7 @@ public class PauseHandle
     /// <summary>
     /// Initialize pause handle.
     /// </summary>
-    public PauseHandle(OnPauseDel opd) : this()
+    public PauseHandle(OnPauseDel opd, bool persistent = false) : this(persistent)
     {
         onPause = opd;
     }

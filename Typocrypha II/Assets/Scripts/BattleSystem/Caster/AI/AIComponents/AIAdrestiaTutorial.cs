@@ -154,8 +154,15 @@ public class AIAdrestiaTutorial : AIComponent
     private void SetSpell()
     {
         CancelParry();
-        ChangeSpellRandom(normalSpells);
-        PrepareParry();
+        if(phase == Phase.Intro)
+        {
+            ChangeSpellRandom(introSpells);
+        }
+        else
+        {
+            ChangeSpellRandom(normalSpells);
+            PrepareParry();
+        }
     }
 
     private void PrepareParry()

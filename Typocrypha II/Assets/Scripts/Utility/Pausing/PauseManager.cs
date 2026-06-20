@@ -29,7 +29,7 @@ public class PauseManager : MonoBehaviour, IPausable
         if (instance == null)
         {
             instance = this;
-            PH = new PauseHandle(OnPause);
+            PH = new PauseHandle(OnPause, true);
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -41,6 +41,7 @@ public class PauseManager : MonoBehaviour, IPausable
     private void Start()
     {
         settings.OnClose += Initialize;
+        PH.Pause(PauseSources.Title);
     }
 
     private void Initialize()
@@ -85,7 +86,7 @@ public class PauseManager : MonoBehaviour, IPausable
     // Pause/Unpause all pausable scripts.
     public void PauseAll(bool value, PauseSources sources, bool includePauseMenu, params PauseHandle[] except)
     {
-        List<PauseHandle> destroyed = new List<PauseHandle>(); // Destroyed pausables.
+        List<PauseHandle> destroyed = null; // Destroyed pausables.
         foreach (var ph in AllPausable)
         {
             try
@@ -106,10 +107,15 @@ public class PauseManager : MonoBehaviour, IPausable
             catch (System.Exception e) // Check if object was destroyed.
             {
                 Debug.LogError($"PauseHandle exception: {e.Message}");
+                destroyed = destroyed ?? new List<PauseHandle>();
                 destroyed.Add(ph);
             }
         }
-        foreach (var ph in destroyed) AllPausable.Remove(ph);
+        if(destroyed != null)
+        {
+            foreach (var ph in destroyed) 
+                AllPausable.Remove(ph);
+        }
     }
 
     // Open/Close pause menu
@@ -146,7 +152,8 @@ public class PauseManager : MonoBehaviour, IPausable
 
     public void MainMenu()
     {
-        PH.Pause(PauseSources.Self);
+        PH.Pause(PauseSources.Title);
+        PauseMenu(false);
         EventSystem.current.enabled = false;
         TransitionManager.instance.TransitionToMainMenu();
     }
@@ -156,4 +163,11 @@ public class PauseManager : MonoBehaviour, IPausable
         PH.Pause(PauseSources.Self);
         settings.Open();
     }
+
+    public void Cleanup()
+    {
+        AllPausable.RemoveAll(IsNotPersistent);
+    }
+
+    private static bool IsNotPersistent(PauseHandle ph) => !ph.Persistent;
 }

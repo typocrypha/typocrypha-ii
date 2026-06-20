@@ -38,7 +38,7 @@ public class FaderManager : MonoBehaviour, IPausable
             return;
         }
         DontDestroyOnLoad(gameObject);
-        ph = new PauseHandle(OnPause);
+        ph = new PauseHandle(OnPause, true);
         allFaders = new List<Fader>();
     }
 

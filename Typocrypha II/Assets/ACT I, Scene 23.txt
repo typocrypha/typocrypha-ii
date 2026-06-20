@@ -17,61 +17,53 @@ Ayin(surprisedbad): W-Wait!{pm} Everyone is still back there!
 Adelai: Don’t worry Ayin,{pm} the other agents have already started extracting them. 
 
 
-Adelai(frustrated): We need to focus on...
+Adelai(frustrated): We need to focus on-
 
 
->setexpr,Adelai,interested
-Narrator: Adelai suddenly stops to look at a group of agents.
+>playsfx,SFXCall
+>setexpr,Adelai,serious
+>setexpr,Ayin,nervous
+>addchar,Clarke,0,0,right
 
 
->addchar,AEIOU Agent,0,0,right
+Clarke: ANNOUNCEMENT:{pm} MW-CANNON CHARGING PERCENTAGE AT 95%.
 
 
-Narrator: They’ve set up a large device pointed at the First Barrier.
+>playbgm,BGMCurseIntro,immediate
 
 
-Narrator: Adelai puts you down to confront them.
+Clarke: ALL AGENTS STAND CLEAR OF THE FIRST BARRIER.
 
 
-Adelai(serious): Hey - {pm}Why are you preparing to fire the MW Cannon?
+Adelai[action](damage): ^shake^Shit!|shake|{pm} They’re firing the MW-Cannon!
 
 
-Adelai: General Kaia is still there fighting!
+Ayin(surprisedbad): Wh-{ps}What does that mean!?{pm} What do we-
 
 
-AEIOU Agent: General’s orders - {pm}“Fire when ready.”
+>playsfx,SFXCall
+Clarke: MW-CANNON CHARGING PERCENTAGE AT 98%.
 
 
-AEIOU Agent: Fall back,{pm} agent Adelai.
+Adelai(getittogether): GET DOWN!
 
 
-Adelai(frustrated): What!?
+Ayin[damagedscuffed](eyesclosed): ...!!
 
 
->playsfx,SFXBootup
-AEIOU Agent: Begin MW Cannon bootstrap protocol-
+>playsfx,SFXCall
+Clarke: MW-CANNON CHARGING PERCENTAGE AT 100%!
 
 
-Adelai(serious): Wait,{ps} you can’t-
+Clarke: FIRE!
 
 
->playsfx,SFXCast
-AEIOU Agent: 98%...{ps} 99%...{ps} 100% charged!{pm} Spell sequence loaded-
-
-
-Adelai(frustrated): STOP-
-
-
-AEIOU Agent: FIRE!
-
-
+>stopbgm,immediate
 >playsfx,SFXEnter
 >fade,out,0,0,0,0
 +an
 >playsfx,SFXFlash
 >fade,in,1,1,1,1
-
-
 
 
 NarratorSilent[middle](center): A sudden flash.
@@ -98,29 +90,35 @@ NarratorSilent[middle](left): A wave of force knocks you over.
 NarratorSilent[middle](left): You feel a sharp pain as something hits your head.
 
 
-NarratorSilent[middle](left): Your thoughts begin to..{pm}.{pm} slow{pm}.{pm}.{pl}.
+NarratorSilent[middle](left): Your thoughts begin to..{pm}.{pm} slow{pm}.{pl}.{pl}.
 
 
 >clear
 
 
-NarratorSilent[middle](right): You look up at Adelai. 
+NarratorSilent[middle](right): You look up at Adelai,{pm} but she doesn’t look back. 
 
 
-NarratorSilent[middle](right): She doesn’t notice you at first - {pm}fixated and focused in the direction of the First Barrier.
+NarratorSilent[middle](right): She’s fixated and focused in the direction of the First Barrier.
 
 
-NarratorSilent[middle](right): You start to fall unconscious,{pm} as smoke and flames rage around you{pl}.{pl}.{pl}.
+NarratorSilent[middle](right): You start to fall unconscious,{pm} as smoke and flames rage around you.{pl}.{pl}.
 
 
 >clear
 >setbg,Sprite,CgAdelaiBarrierNoMouth
->hideanbg,4
->wait,1
+>playbgm,BGMScaryCrescendo,immediate
+>hideanbg,8
+>wait,2
+>stopbgm,immediate
 >showanbg,0
 
 
->fade,out,4,0,0,0
+NarratorSilent[middle](center): {c,adelai}Only two barriers left,{pm} Demons...{c}
+
+
+>fade,out,3,0,0,0
+>wait,2
 
 
 >endt

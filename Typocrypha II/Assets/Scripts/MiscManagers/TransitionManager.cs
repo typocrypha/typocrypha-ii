@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Events;
 using Gameflow;
 
 /// <summary>
@@ -39,7 +38,7 @@ public class TransitionManager : MonoBehaviour
     {
         SaveManager.instance.Save();
         SceneIndex = -1;
-        StartCoroutine(PlayLoadingScreen(titleSceneData.loadingScreenOverride, titleSceneData, titleSceneData.SceneName));
+        PlayLoadingScreen(titleSceneData.loadingScreenOverride, titleSceneData, titleSceneData.SceneName);
     }
 
     public void TransitionToNextScene()
@@ -57,7 +56,7 @@ public class TransitionManager : MonoBehaviour
         TransitionToScene(SceneIndex + 1, skipLoading);
     }
 
-    public void TransitionToScene(int newIndex, bool skipLoading = false)
+    public void TransitionToScene(int newIndex, bool skipLoading)
     {
         if (SceneIndex == newIndex) return;
         var currScene = SceneIndex >= 0 ? sceneData[SceneIndex].SceneName : string.Empty;
@@ -86,13 +85,13 @@ public class TransitionManager : MonoBehaviour
         }
         else
         {
-            StartCoroutine(PlayLoadingScreen(nextSceneData.loadingScreenOverride, nextSceneData, nextScene));
+            PlayLoadingScreen(nextSceneData.loadingScreenOverride, nextSceneData, nextScene);
         }
     }
 
     public void Continue()
     {
-        TransitionToScene(loadedIndex);
+        TransitionToScene(loadedIndex, false);
     }
 
     public void LoadIndex(string savedName, int savedIndex)
@@ -114,7 +113,14 @@ public class TransitionManager : MonoBehaviour
         loadedIndex = 0;
     }
 
-    private IEnumerator PlayLoadingScreen(LoadingScreen loadingScreenOverride, SceneData data, string sceneName)
+    private void PlayLoadingScreen(LoadingScreen loadingScreenOverride, SceneData data, string sceneName)
+    {
+        PauseManager.instance.PH.Pause(PauseSources.Loading);
+        PauseManager.instance.Cleanup();
+        StartCoroutine(PlayLoadingScreenCR(loadingScreenOverride, data, sceneName));
+    }
+
+    private IEnumerator PlayLoadingScreenCR(LoadingScreen loadingScreenOverride, SceneData data, string sceneName)
     {
         loadingScreenCanvas.enabled = true;
         // Play loading screen ON
@@ -188,6 +194,7 @@ public class TransitionManager : MonoBehaviour
         }
         loadingScreenCanvas.enabled = false;
         loadingScreen.gameObject.SetActive(false);
+        PauseManager.instance.PH.Unpause(PauseSources.Loading);
     }
 
     [System.Serializable]
