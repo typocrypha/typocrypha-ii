@@ -38,10 +38,24 @@ public class DialogBox : MonoBehaviour, IPausable
     public bool PlaySpeechOnSpaces { get; set; } = defaultPlaySpeechOnSpaces;
 
     public CanvasGroup CanvasGroup => canvasGroup;
-    public DialogContinueIndicator ContinueIndicator 
+    public DialogContinueIndicator ContinueIndicator
     {
         get => continueIndicator;
-        set => continueIndicator = value;
+        set
+        {
+            if (continueIndicator != null)
+            {
+                continueIndicator.PH.FreeFromParent();
+            }
+
+            continueIndicator = value;
+
+            if (continueIndicator != null && ph != null)
+            {
+                continueIndicator.PH.SetParent(ph);
+                continueIndicator.PH.PauseIfParentPaused();
+            }
+        }
     }
 
     public TextMeshProUGUI DialogText => dialogText;
@@ -88,6 +102,11 @@ public class DialogBox : MonoBehaviour, IPausable
         ph = new PauseHandle(OnPause);
         ph.SetParent(DialogManager.instance);
         ph.PauseIfParentPaused();
+        if (continueIndicator != null)
+        {
+            continueIndicator.PH.SetParent(ph);
+            continueIndicator.PH.PauseIfParentPaused();
+        }
         if (textHolder != null)
         {
             defaultWidth = textHolder.sizeDelta.x;
