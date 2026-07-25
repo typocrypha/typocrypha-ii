@@ -16,6 +16,7 @@ namespace Gameflow
         public override Vector2 MinSize { get { return new Vector2(250, 60); } }
 
         public AudioClip bgm;
+        public string eventRef;
         public AnimationCurve fadeCurve = AnimationCurve.Linear(0,0,1,1);
 
         #region Tooltip Strings
@@ -25,6 +26,7 @@ namespace Gameflow
 
         private const float CURVE_HEIGHT = 75f;
 #if UNITY_EDITOR
+
         public override void NodeGUI()
         {
             GUILayout.BeginVertical(new GUIStyle());
@@ -33,6 +35,7 @@ namespace Gameflow
             GUILayout.BeginVertical("Box");
             EditorGUIUtility.labelWidth = 65f;
             bgm = EditorGUILayout.ObjectField(new GUIContent("BGM", tooltipBgm), bgm, typeof(AudioClip), false) as AudioClip;
+            eventRef = EditorGUILayout.DelayedTextField(eventRef);
             GUILayout.EndVertical();
             #endregion
 
