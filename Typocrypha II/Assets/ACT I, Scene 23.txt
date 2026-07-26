@@ -35,10 +35,14 @@ Clarke: ANNOUNCEMENT:{pm} MW-CANNON CHARGING PERCENTAGE AT 95%.
 Clarke: ALL AGENTS STAND CLEAR OF THE FIRST BARRIER.
 
 
-Adelai[action](damage): ^shake^Shit!|shake|{pm} They’re firing the MW-Cannon!
+Adelai[action](getittogether): ^shake^Shit!|shake|{pm} They’re firing the MW-Cannon NOW?!
 
 
-Ayin(surprisedbad): Wh-{ps}What does that mean!?{pm} What do we-
+>setexpr,Adelai,damage
+Narrator: A flash of futile realization comes over Adelai’s face.
+
+
+Ayin(surprisedbad): Wh-What do we-
 
 
 >playsfx,SFXCall
@@ -70,7 +74,7 @@ NarratorSilent[middle](center): A sudden flash.
 >clear
 NarratorSilent[middle](center): All sound disappears.
 >clear
-NarratorSilent[middle](center): And then{pm}.{pm}.{pm}.
+NarratorSilent[middle](center): And then{pl}.{pl}.{pl}.
 
 
 >fade,out,1,1,1,1
@@ -81,7 +85,7 @@ NarratorSilent[middle](center): And then{pm}.{pm}.{pm}.
 >fade,in,4,1,1,1
 
 
-NarratorSilent[middle](left): A wave of force knocks you over.
+NarratorSilent[middle](left): An intense shockwave knocks you over.
 
 
 >playsfx,SFXSpellStabHit
@@ -90,35 +94,42 @@ NarratorSilent[middle](left): A wave of force knocks you over.
 NarratorSilent[middle](left): You feel a sharp pain as something hits your head.
 
 
-NarratorSilent[middle](left): Your thoughts begin to..{pm}.{pm} slow{pm}.{pl}.{pl}.
+NarratorSilent[middle](center): {c,whisper}Th-Thump,{pl} Th-Thump.{c}
+
+
+NarratorSilent[middle](left): Every throb sends a trickle of blood down your forehead,{pm} and your{pm} thoughts{pl} begin{pl} to{pl}.{pl}.{pl}.{pl} s{ps}l{ps}o{ps}w{pl}.{pl}.{pl}.
 
 
 >clear
 
 
-NarratorSilent[middle](right): You look up at Adelai,{pm} but she doesn’t look back. 
+NarratorSilent[middle](right): You look up and see Adelai standing in front of you,{pm} staring deep into the flames{pl}.{pl}.{pl}.
 
 
-NarratorSilent[middle](right): She’s fixated and focused in the direction of the First Barrier.
+NarratorSilent[middle](right): ...and as if sensing your gaze,{pm} she turns her head back to you{pl}.{pl}.{pl}.
 
 
-NarratorSilent[middle](right): You start to fall unconscious,{pm} as smoke and flames rage around you.{pl}.{pl}.
-
-
->clear
 >setbg,Sprite,CgAdelaiBarrierNoMouth
->playbgm,BGMScaryCrescendo,immediate
->hideanbg,8
->wait,2
->stopbgm,immediate
->showanbg,0
+>hideanbg,4
 
 
-NarratorSilent[middle](center): {c,adelai}Only two barriers left,{pm} Demons...{c}
+>clear
+
+
+NarratorSilent[middle](right): {c,ayin} A-{ps}Adelai...?{c}
+
+
+NarratorSilent[middle](right): She doesn’t respond to your weak call.
+
+
+NarratorSilent[middle](right): With the furious flames reflecting in her eyes...
+
+
+NarratorSilent[middle](right): ...the darkness finally takes you{pl}.{pl}.{pl}.
 
 
 >fade,out,3,0,0,0
->wait,2
+>wait,3
 
 
 >endt
