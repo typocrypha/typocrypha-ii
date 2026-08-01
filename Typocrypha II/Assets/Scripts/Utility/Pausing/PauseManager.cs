@@ -41,7 +41,6 @@ public class PauseManager : MonoBehaviour, IPausable
     private void Start()
     {
         settings.OnClose += Initialize;
-        PH.Pause(PauseSources.Title);
     }
 
     private void Initialize()
