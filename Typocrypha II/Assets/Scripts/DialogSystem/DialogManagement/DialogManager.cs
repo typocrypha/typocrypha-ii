@@ -87,7 +87,7 @@ public class DialogManager : MonoBehaviour, IPausable
 
     private DialogView dialogView; // Currently displayed dialog view.
     private DialogView lastView; // Previously displayed dialog view.
-    private int skipCount;
+    private float skipTime;
 
     void Awake()
     {
@@ -127,9 +127,10 @@ public class DialogManager : MonoBehaviour, IPausable
             return;
         if (Input.GetKey(KeyCode.Space) && (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))) // Fast-forward
         {
-            if(++skipCount > 5)
+            skipTime += Time.deltaTime;
+            if(skipTime > 0.033f)
             {
-                skipCount = 0;
+                skipTime = 0;
                 if (ActiveDialogBox.IsDone)
                 {
                     NextDialog(true); // If dialog is done, go to next dialog
@@ -143,7 +144,7 @@ public class DialogManager : MonoBehaviour, IPausable
         }
         else if ((Input.GetKeyDown(KeyCode.Space) || Settings.AutoContinue)) // Normal continue
         {
-            skipCount = 0;
+            skipTime = 0;
             if (ActiveDialogBox.IsDone)
             {
                 NextDialog(true); // If dialog is done, go to next dialog
