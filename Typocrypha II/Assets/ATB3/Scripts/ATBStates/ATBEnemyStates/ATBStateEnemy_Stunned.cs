@@ -6,6 +6,7 @@ namespace ATB3
 {
     public class ATBStateEnemy_Stunned : ATBState<ATBEnemy>
     {
+        private static readonly int stunHash = Animator.StringToHash("Stun");
         private float timer = 0.0f;
         private float stuntime = 5;
 
@@ -13,8 +14,7 @@ namespace ATB3
         public override void OnEnter()
         {
             stuntime = Owner.Caster.Stats.StaggerTime;
-            //Debug.Log("ENEMY " + this.Owner.actorName + " has ENTERED the STUNNED state!");
-            Owner.GetComponent<Animator>().SetTrigger("Stun");
+            SetAnimation(stunHash);
             Owner.Caster.StunProgress = 0;
             timer = 0.0f;
         }

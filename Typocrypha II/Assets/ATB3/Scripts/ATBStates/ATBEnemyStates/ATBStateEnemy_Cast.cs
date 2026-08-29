@@ -5,6 +5,7 @@ namespace ATB3
 {
     public class ATBStateEnemy_Cast : ATBState<ATBEnemy>
     {
+        private static readonly int castHash = Animator.StringToHash("Cast");
         // Call upon entering given state
         public override void OnEnter()
         {
@@ -48,7 +49,7 @@ namespace ATB3
                     caster.OnAfterCastResolved?.Invoke(caster.Spell, caster, false);
                     return null;
                 }
-                Owner.GetComponent<Animator>().SetTrigger("Cast");
+                Source.SetAnimation(castHash);
                 return SpellManager.instance.Cast(caster.Spell, caster, targetPos, null, topLevel);
             }
             ATBManager.instance.QueueSolo(new ATBManager.ATBAction() { Actor = Owner, Action = Cast, OnComplete = CastComplete });
