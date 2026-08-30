@@ -37,6 +37,8 @@ namespace ATB3
 
         [HideInInspector]
         public bool isCast; // Is the actor in cast sequence? Isn't unset until all chains are finished.
+        public Animator Animator => anim;
+        [SerializeField] private Animator anim;
 
         //----------------------------------------------------------------//
         // GENERIC ACTOR FUNCTIONS                                        //

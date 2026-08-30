@@ -24,15 +24,16 @@ namespace ATB3
             get => ph;
         }
 
-        public void OnPause(bool b)
+        public void OnPause(bool pause)
         {
-            enabled = !b;
-            var anim = Owner.GetComponent<Animator>();
-            if(anim != null)
+            enabled = !pause;
+            if(Owner.Animator != null)
             {
-                anim.enabled = !b;
+                Owner.Animator.enabled = !pause || EnableAnimationsWhilePaused;
             }
         }
+
+        private bool EnableAnimationsWhilePaused => CurrentStateID != ATBStateID.Charge && Owner.PH.PauseSources == PauseSources.ATB;
         #endregion
         //----------------------------------------------------------------//
         // PROPERTIES                                                     //
@@ -52,6 +53,12 @@ namespace ATB3
         public ATBState<T> CurrentState { get; private set; }
         public ATBStateID PreviousStateID { get; private set; }
         public ATBState<T> PreviousState { get; private set; }
+
+        public void SetAnimation(int trigger)
+        {
+            Owner.Animator.enabled = !PH.Paused || EnableAnimationsWhilePaused;
+            Owner.Animator.SetTrigger(trigger);
+        }
 
         //----------------------------------------------------------------//
         // RUNTIME FUNCTIONS                                              //

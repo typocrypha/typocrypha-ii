@@ -6,12 +6,13 @@ namespace ATB3
 {
     public class ATBStateEnemy_Charge : ATBState<ATBEnemy>
     {
+        private static readonly int idleHash = Animator.StringToHash("Idle");
 
         // Call upon entering given state
         public override void OnEnter()
         {
             //Debug.Log("ENEMY " + this.Owner.actorName + " has ENTERED the CHARGE state! (id: " + StateID.ToString() + ")");
-            Owner.GetComponent<Animator>().SetTrigger("Idle");
+            SetAnimation(idleHash);
             if (Source.PreviousStateID != ATBStateID.Stunned || Owner.Caster.Charge <= 0)
             {
                 Owner.StartCharge();
