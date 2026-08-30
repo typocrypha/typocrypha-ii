@@ -22,14 +22,15 @@ namespace ATB3
         // Call on fixed update while in given state
         public override void OnUpdate()
         {
-            timer += Time.fixedDeltaTime;
             var caster = Owner.Caster;
-            caster.StunProgress = timer / stuntime;
-            if (caster.BStatus == Caster.BattleStatus.Dead)
+            if (CheckDeathOrRun(caster))
             {
-                Source.PerformTransition(ATBStateID.Dead);
+                return;
             }
-            else if (timer >= stuntime || !Owner.Caster.Stunned)
+
+            timer += Time.fixedDeltaTime;
+            caster.StunProgress = timer / stuntime;
+            if (timer >= stuntime || !Owner.Caster.Stunned)
             {
                 // Interrupt if stunned in precast
                 if(Source.PreviousStateID == ATBStateID.PreCast || Source.PreviousStateID == ATBStateID.Cast)

@@ -42,16 +42,10 @@ namespace ATB3
         public override void OnUpdate()
         {
             var caster = Owner.Caster;
+            if (CheckDeathOrRun(caster))
+                return;
             Timer += Time.fixedDeltaTime * Settings.GameplaySpeed;
-            if(caster.BStatus == Caster.BattleStatus.Dead)
-            {
-                Source.PerformTransition(ATBStateID.Dead);
-            }
-            else if(caster.BStatus == Caster.BattleStatus.Fled)
-            {
-                Source.PerformTransition(ATBStateID.Fled);
-            }
-            else if (caster.Stunned)
+            if (caster.Stunned)
             {
                 Source.PerformTransition(ATBStateID.Stunned);
             }

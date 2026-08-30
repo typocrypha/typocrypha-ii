@@ -22,10 +22,10 @@ namespace ATB3
         // Call on fixed update while in given state
         public override void OnUpdate()
         {
-            if (Owner.Caster.BStatus == Caster.BattleStatus.Dead)
-                Source.PerformTransition(ATBStateID.Dead);
-            if (Owner.Caster.BStatus == Caster.BattleStatus.Fled)
-                Source.PerformTransition(ATBStateID.Fled);
+            if (CheckDeathOrRun(Owner.Caster))
+            {
+                return;
+            }
             // If stunned, go to stun state
             if (Owner.Caster.Stunned)
             {

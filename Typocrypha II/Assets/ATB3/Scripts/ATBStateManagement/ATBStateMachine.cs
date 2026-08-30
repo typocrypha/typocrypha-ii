@@ -33,7 +33,7 @@ namespace ATB3
             }
         }
 
-        private bool EnableAnimationsWhilePaused => CurrentStateID != ATBStateID.Charge && Owner.PH.PauseSources == PauseSources.ATB;
+        private bool EnableAnimationsWhilePaused => CurrentStateID != ATBStateID.Charge && !Owner.PH.PauseSources.HasFlag(PauseSources.PauseMenu);
         #endregion
         //----------------------------------------------------------------//
         // PROPERTIES                                                     //

@@ -72,6 +72,21 @@ namespace ATB3
             Source.SetAnimation(trigger);
         }
 
+        protected bool CheckDeathOrRun(Caster caster)
+        {
+            if (caster.BStatus == Caster.BattleStatus.Dead)
+            {
+                Source.PerformTransition(ATBStateID.Dead);
+                return true;
+            }
+            if (caster.BStatus == Caster.BattleStatus.Fled)
+            {
+                Source.PerformTransition(ATBStateID.Fled);
+                return true;
+            }
+            return false;
+        }
+
         // Call upon entering given state
         public abstract void OnEnter();
 

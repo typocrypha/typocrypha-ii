@@ -6,10 +6,11 @@ namespace ATB3
 {
     public class ATBStateEnemy_Fled : ATBState<ATBEnemy>
     {
+        private static readonly int runHash = Animator.StringToHash("Run");
         // Call upon entering given state
         public override void OnEnter()
         {
-
+            SetAnimation(runHash);
         }
 
         // Call on fixed update while in given state

@@ -83,15 +83,7 @@ namespace ATB3
         {
             if (Source.CurrentStateID != ATBStateID.Cast)
                 return;
-            if (Owner.Caster.BStatus == Caster.BattleStatus.Dead)
-            {
-                Source.PerformTransition(ATBStateID.Dead);
-            }
-            else if (Owner.Caster.BStatus == Caster.BattleStatus.Fled)
-            {
-                Source.PerformTransition(ATBStateID.Fled);
-            }
-            else
+            if (!CheckDeathOrRun(Owner.Caster))
             {
                 Source.PerformTransition(ATBStateID.Charge);
             }

@@ -130,7 +130,6 @@ public class Caster : MonoBehaviour
                     break;
                 case BattleStatus.Fled:
                     ui?.gameObject.SetActive(false);
-                    GetComponentInChildren<SpriteRenderer>().gameObject.SetActive(false);
                     break;
             }
             status = value;
