@@ -64,6 +64,11 @@ namespace ATB3
             //return currStateHash == Animator.StringToHash(stateName);
             return BaseStateMachine.CurrentStateID == stateID;
         }
+
+        public void TransitionState(ATBStateID stateID)
+        {
+            BaseStateMachine.PerformTransition(stateID);
+        }
     }
 }
 

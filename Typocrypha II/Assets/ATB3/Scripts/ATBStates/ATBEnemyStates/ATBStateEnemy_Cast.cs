@@ -49,7 +49,10 @@ namespace ATB3
                     caster.OnAfterCastResolved?.Invoke(caster.Spell, caster, false);
                     return null;
                 }
-                Source.SetAnimation(castHash);
+                if (caster.Spell.PlayCastAnimation)
+                {
+                    Source.SetAnimation(castHash); // TODO: maybe none state
+                }
                 return SpellManager.instance.Cast(caster.Spell, caster, targetPos, null, topLevel);
             }
             ATBManager.instance.QueueSolo(new ATBManager.ATBAction() { Actor = Owner, Action = Cast, OnComplete = CastComplete });

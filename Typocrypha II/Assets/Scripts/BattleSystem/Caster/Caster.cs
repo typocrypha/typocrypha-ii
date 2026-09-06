@@ -141,6 +141,8 @@ public class Caster : MonoBehaviour
     public bool IsSpiritMode => status == BattleStatus.SpiritMode;
     public Caster Protector { get; set; }
 
+    public ATB3.ATBActor actor;
+
     #endregion
 
     #region Health properties and UI functionality    
@@ -416,6 +418,13 @@ public class Caster : MonoBehaviour
 
     public Battlefield.Position TargetPos { get; set; } = new Battlefield.Position(0, 0);
     public CasterUI ui = null;
+
+    public void ShowUI(bool value)
+    {
+        if (ui == null)
+            return;
+        ui.ShowUI(value && !IsDeadOrFled);
+    }
 
     protected virtual void Awake()
     {

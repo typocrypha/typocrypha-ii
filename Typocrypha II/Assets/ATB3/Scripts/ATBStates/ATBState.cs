@@ -20,7 +20,7 @@ namespace ATB3
         PreviousState,
         // General States ∇ 
         Dead,
-        Fled,
+        Run,
         // Player-Specific States ∇ 
         Idle,
         // Non-Player General States ∇ 
@@ -81,7 +81,7 @@ namespace ATB3
             }
             if (caster.BStatus == Caster.BattleStatus.Fled)
             {
-                Source.PerformTransition(ATBStateID.Fled);
+                Source.PerformTransition(ATBStateID.Run);
                 return true;
             }
             return false;

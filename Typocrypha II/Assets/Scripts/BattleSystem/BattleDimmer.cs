@@ -12,7 +12,7 @@ public class BattleDimmer : MonoBehaviour
     [SerializeField] SpriteRenderer dimmerSprite;
     [SerializeField] TweenInfo info;
 
-    private readonly List<CasterUI> dimmedUIs = new List<CasterUI>();
+    private readonly List<Caster> dimmedCasters = new List<Caster>();
     private bool active = false;
     private Tween dimTween;
 
@@ -44,15 +44,16 @@ public class BattleDimmer : MonoBehaviour
     /// </summary>
     /// <param name="casters">A collection of casters to make dimmable.</param>
     /// <param name="showUI">Whether to hide caster UI.</param>
-    public void DimCasters(IEnumerable<Caster> casters, bool showUI)
+    public void DimCasters(IEnumerable<Caster> casters)
     {
         if (casters == null) return;
 
-        foreach (var c in casters)
+        foreach (var caster in casters)
         {
-            if (!c || !c.ui) continue;
-            dimmedUIs.Add(c.ui);
-            c.ui.SetDimmable(true);//.ShowUI(showUI);
+            if (!caster || !caster.ui) 
+                continue;
+            dimmedCasters.Add(caster);
+            caster.ui.SetDimmable(true);
         }
     }
 
@@ -64,11 +65,12 @@ public class BattleDimmer : MonoBehaviour
     {
         if (casters == null) return;
 
-        foreach (var c in casters)
+        foreach (var caster in casters)
         {
-            if (!c || !c.ui || c == except) continue;
-            dimmedUIs.Add(c.ui);
-            c.ui.SetDimmable(true);
+            if (!caster || !caster.ui || caster == except) 
+                continue;
+            dimmedCasters.Add(caster);
+            caster.ui.SetDimmable(true);
         }
     }
 
@@ -83,11 +85,12 @@ public class BattleDimmer : MonoBehaviour
         }
     }
 
-    public void UndimCaster(Caster c)
+    public void UndimCaster(Caster caster)
     {
-        if (!c || !c.ui) return;
-        c.ui.SetDimmable(false).ShowUI(true);
-        dimmedUIs.Remove(c.ui);
+        if (!caster || !caster.ui) return;
+        caster.ui.SetDimmable(false);
+        caster.ShowUI(true);
+        dimmedCasters.Remove(caster);
     }
 
     /// <summary>
@@ -95,11 +98,13 @@ public class BattleDimmer : MonoBehaviour
     /// </summary>
     public void UndimAllCasters()
     {
-        foreach (var ui in dimmedUIs)
+        foreach (var caster in dimmedCasters)
         {
-            if (!ui) continue;
-            ui.SetDimmable(false).ShowUI(true);
+            if (caster == null || caster.ui == null) 
+                continue;
+            caster.ui.SetDimmable(false);
+            caster.ShowUI(true);
         }
-        dimmedUIs.Clear();
+        dimmedCasters.Clear();
     }
 }

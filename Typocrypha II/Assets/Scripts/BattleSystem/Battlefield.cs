@@ -256,6 +256,11 @@ public class Battlefield : MonoBehaviour, IPausable
     {
         return CameraManager.instance.Camera.WorldToScreenPoint(GetSpace(pos));
     }
+    public bool TryGetCaster(Position pos, out Caster caster)
+    {
+        caster = field[pos];
+        return caster != null;
+    }
     /// <summary> Get the caster in a specific space. returns null if the space is empty or the object is not a caster </summary> 
     public Caster GetCaster(Position pos) => field[pos];
     public Caster GetCaster(string name, bool allowProxies)

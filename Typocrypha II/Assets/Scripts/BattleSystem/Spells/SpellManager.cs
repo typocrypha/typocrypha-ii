@@ -9,9 +9,10 @@ using UnityEngine;
 public class SpellManager : MonoBehaviour
 {
     private const float delayBetweenTargets = 0.1f;
-    private const float delayBeforeLog = 0.25f;
     private const float runLogTime = 0.5f;
     public static SpellManager instance;
+    private static readonly WaitForSeconds logDelayYielder = new WaitForSeconds(0.25f);
+    private static readonly WaitForSeconds runDelayYielder = new WaitForSeconds(0.35f);
     public SpellWord counterWord;
     public event Action OnAfterCastResolved;
     public event Action<Caster, Battlefield.Position> OnBeforeSpellTravelFx;
@@ -79,42 +80,21 @@ public class SpellManager : MonoBehaviour
         BattleDimmer.instance.DimCasters(Battlefield.instance.Casters, caster);
         BattleDimmer.instance.UndimCaster(caster);
         // Hide caster's UI
-        if(caster.ui != null)
-        {
-            caster.ui.ShowUI(false);
-        }
+        caster.ShowUI(false);
 
         // If the spell is restricted, break and do not cast
         if (SpellRestrictions.instance.IsRestricted(spell, caster, target, true))
         {
             if (SpellFxManager.instance.HasMessages)
             {
-                yield return new WaitForSeconds(delayBeforeLog);
+                yield return logDelayYielder;
                 yield return SpellFxManager.instance.PlayMessages();
             }
             yield break;
         }
-        if(!caster.IsPlayer || !isTopLevel)
+        if((!caster.IsPlayer || !isTopLevel) && !string.IsNullOrEmpty(castMessage))
         {
-            if(spell.Count == 1 && SpellWord.CompareKeys(spell[0], runWord))
-            {
-                if(spell[0] is RootWord root && root.effects.Count > 0 && root.effects[0].pattern.Target(caster.FieldPos, target).Count() > 1)
-                {
-                    SpellFxManager.instance.LogMessage(castMessage ?? $"{caster.DisplayName} and crew ran away!", spell.Icon);
-                }
-                else
-                {
-                    SpellFxManager.instance.LogMessage(castMessage ?? $"{caster.DisplayName} ran away!", spell.Icon, runLogTime);
-                }
-            }
-            else if(spell.Count == 1 && SpellWord.CompareKeys(spell[0], runAllWord))
-            {
-                SpellFxManager.instance.LogMessage(castMessage ?? $"{caster.DisplayName} and crew ran away!", spell.Icon);
-            }
-            else if(!string.IsNullOrEmpty(castMessage))
-            {
-                SpellFxManager.instance.LogMessage(castMessage, spell.Icon);
-            }
+            SpellFxManager.instance.LogMessage(castMessage, spell.Icon);
             if (SpellFxManager.instance.HasMessages)
             {
                 yield return SpellFxManager.instance.PlayMessages();
@@ -180,10 +160,10 @@ public class SpellManager : MonoBehaviour
                 yield return StartCoroutine(PlayPrompts());
             }
         }
-
         var casterSpace = Battlefield.instance.GetSpaceScreenSpace(caster.FieldPos);
         bool hitTarget = false;
         var targets = new List<Battlefield.Position>(6);
+        int runTargets = 0;
         for (int rootIndex = 0; rootIndex < roots.Count; rootIndex++)
         {
             var root = roots[rootIndex];
@@ -208,6 +188,7 @@ public class SpellManager : MonoBehaviour
                 var effectResults = new List<CastResults>();
                 int completedEffects = 0;
                 int numEffects = 0;
+                bool runEffect = effect is RunEffect;
                 void OnEffectComplete()
                 {
                     completedEffects++;
@@ -215,7 +196,7 @@ public class SpellManager : MonoBehaviour
                 for (int targetIndex = 0; targetIndex < targets.Count; targetIndex++)
                 {
                     // Wait for delay between targets if applicable
-                    if (targetIndex > 0)
+                    if (targetIndex > 0 && !runEffect)
                     {
                         yield return new WaitForSeconds(delayBetweenTargets);
                     }
@@ -237,6 +218,10 @@ public class SpellManager : MonoBehaviour
                     else
                     {
                         hitTarget = true;
+                        if (runEffect)
+                        {
+                            runTargets++;
+                        }
                         if(targetCaster.Protector != null)
                         {
                             targetCaster = targetCaster.Protector;
@@ -287,7 +272,7 @@ public class SpellManager : MonoBehaviour
                 }
                 if (SpellFxManager.instance.HasMessages)
                 {
-                    yield return new WaitForSeconds(delayBeforeLog);
+                    yield return logDelayYielder;
                     yield return SpellFxManager.instance.PlayMessages();
                 }
                 if (HasInterrupts)
@@ -298,6 +283,19 @@ public class SpellManager : MonoBehaviour
                 rootResults.Add(effectResults);
             }
             TIPSManager.Instance.UnlockEntryIfApplicable(root.TIPsEntryId);
+        }
+        if(runTargets > 0)
+        {
+            if (runTargets > 1)
+            {
+                SpellFxManager.instance.LogMessage($"{caster.DisplayName} and crew ran away!", spell.Icon);
+            }
+            else
+            {
+                SpellFxManager.instance.LogMessage($"{caster.DisplayName} ran away!", spell.Icon, runLogTime);
+            }
+            yield return runDelayYielder;
+            yield return SpellFxManager.instance.PlayMessages();
         }
         if (HasPrompts)
         {

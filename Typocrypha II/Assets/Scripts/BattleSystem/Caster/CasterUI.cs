@@ -37,14 +37,12 @@ public class CasterUI : MonoBehaviour
         highlightCounterable.SetDefaultColor(color);
     }
 
-    public CasterUI SetDimmable(bool dimmable)
+    public void SetDimmable(bool dimmable)
     {
         if (sprite) sprite.sortingOrder = dimmable ? -1 : 1;
-        return this;
     }
-    public CasterUI ShowUI(bool show)
+    public void ShowUI(bool show)
     {
         if (ui) ui.alpha = show ? 1 : 0;
-        return this;
     }
 }

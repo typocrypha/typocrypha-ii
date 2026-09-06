@@ -52,6 +52,7 @@ public class Spell : IList<SpellWord>, IEquatable<Spell>
             return null;
         }
     }
+    public bool PlayCastAnimation => !IsRun;
 
     public bool Countered => items.Count == 1 && SpellWord.CompareKeys(items[0], SpellManager.instance.counterWord);
     public bool IsRun => items.Count == 1 && (SpellWord.CompareKeys(items[0], Lookup.GetSpellWord("run")) || SpellWord.CompareKeys(items[0], Lookup.GetSpellWord("runall")));
