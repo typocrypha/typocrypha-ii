@@ -28,10 +28,7 @@ public class SpellFxData
         if (effectType == EffectType.Single)
         {
             AudioManager.instance.PlaySFX(effectPackets[0].sfx);
-            if(effectPackets[0].clip != null)
-            {
-                yield return new WaitUntil(AnimationPlayer.instance.Play(effectPackets[0].clip, pos));
-            }
+            yield return new WaitUntil(AnimationPlayer.instance.Play(effectPackets[0].clip, pos));
         }           
         else if (effectType == EffectType.Sequence)
         {
