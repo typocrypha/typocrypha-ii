@@ -61,7 +61,14 @@ namespace ATB3
             }
             else if (Timer >= timeGoal)
             {
-                Source.PerformTransition(ATBStateID.Cast);
+                if (caster.Spell.IsRun)
+                {
+                    Source.PerformTransition(ATBStateID.Run);
+                }
+                else
+                {
+                    Source.PerformTransition(ATBStateID.Cast);
+                }
             }
         }
 

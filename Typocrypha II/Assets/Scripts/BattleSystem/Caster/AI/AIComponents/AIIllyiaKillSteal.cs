@@ -39,7 +39,7 @@ public class AIIllyiaKillSteal : AIAllyRandomTimer
             return;
         foreach(var enemy in Battlefield.instance.Enemies)
         {
-            if (enemy.IsDeadOrFled)
+            if (enemy.IsInactive)
                 continue;
             if (enemy.BStatus == Caster.BattleStatus.SpiritMode && (firstKillSteal || RandomUtils.RandomU.instance.RollSuccess(spiritModeIgnoreChance)))
                 continue;

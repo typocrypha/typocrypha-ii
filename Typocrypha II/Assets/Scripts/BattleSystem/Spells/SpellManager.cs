@@ -12,7 +12,7 @@ public class SpellManager : MonoBehaviour
     private const float runLogTime = 0.5f;
     public static SpellManager instance;
     private static readonly WaitForSeconds logDelayYielder = new WaitForSeconds(0.25f);
-    private static readonly WaitForSeconds runDelayYielder = new WaitForSeconds(0.35f);
+    private static readonly WaitForSeconds runDelayYielder = new WaitForSeconds(0.6f);
     public SpellWord counterWord;
     public event Action OnAfterCastResolved;
     public event Action<Caster, Battlefield.Position> OnBeforeSpellTravelFx;
@@ -203,7 +203,7 @@ public class SpellManager : MonoBehaviour
                     Battlefield.Position t = targets[targetIndex];
                     var targetCaster = Battlefield.instance.GetCaster(t);
                     var targetSpace = Battlefield.instance.GetSpaceScreenSpace(t);
-                    if (targetCaster == null || targetCaster.IsDeadOrFled)
+                    if (targetCaster == null || targetCaster.IsInactive)
                     {
                         caster.OnNoTargetHit?.Invoke(t);
                         float time = SpellFxManager.instance.NoTargetFx(targetSpace);
@@ -288,14 +288,14 @@ public class SpellManager : MonoBehaviour
         {
             if (runTargets > 1)
             {
-                SpellFxManager.instance.LogMessage($"{caster.DisplayName} and crew ran away!", spell.Icon);
+                //SpellFxManager.instance.LogMessage($"{caster.DisplayName} and crew ran away!", spell.Icon);
             }
             else
             {
-                SpellFxManager.instance.LogMessage($"{caster.DisplayName} ran away!", spell.Icon, runLogTime);
+                //SpellFxManager.instance.LogMessage($"{caster.DisplayName} ran away!", spell.Icon, runLogTime);
             }
             yield return runDelayYielder;
-            yield return SpellFxManager.instance.PlayMessages();
+            //yield return SpellFxManager.instance.PlayMessages();
         }
         if (HasPrompts)
         {
@@ -401,7 +401,7 @@ public class SpellManager : MonoBehaviour
         while (HasInterrupts)
         {
             var interrupt = interrupts.Dequeue();
-            if (interrupt.caster == null || interrupt.caster.IsDeadOrFled)
+            if (interrupt.caster == null || interrupt.caster.IsInactive)
                 continue;
             if (interrupt.canCounter)
             {

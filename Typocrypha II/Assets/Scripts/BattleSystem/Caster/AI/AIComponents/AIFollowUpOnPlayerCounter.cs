@@ -22,7 +22,7 @@ public class AIFollowUpOnPlayerCounter : AIComponent
 
     private void FollowUp(Caster counterCaster, Caster countered, bool fullCounter)
     {
-        if (!fullCounter || caster.IsDeadOrFled || !PassesFilter(countered))
+        if (!fullCounter || caster.IsInactive|| !PassesFilter(countered))
             return;
         AllyBattleBoxManager.instance.ShakeBattleBox();
         InsertCast(countered.FieldPos, followUpSpell, canCounter, null, string.Empty);

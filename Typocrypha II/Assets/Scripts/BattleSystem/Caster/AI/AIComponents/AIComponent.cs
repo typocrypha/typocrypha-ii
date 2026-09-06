@@ -67,7 +67,7 @@ public abstract class AIComponent : MonoBehaviour
 
     protected virtual bool IsNotValidTarget(Caster caster)
     {
-        return caster.IsDeadOrFled || caster.BStatus == Caster.BattleStatus.SpiritMode;
+        return caster.IsInactive || caster.BStatus == Caster.BattleStatus.SpiritMode;
     }
 
     protected void InsertCast(Battlefield.Position spellTargetPosition, Spell spellToCast, bool canCounter = false, System.Action onComplete = null, string messageOverride = null)
@@ -91,7 +91,7 @@ public abstract class AIComponent : MonoBehaviour
         Coroutine CastFn()
         {
             // Cancel if stunned, dead/fled, or countered
-            if (caster.Stunned || caster.IsDeadOrFled)
+            if (caster.Stunned || caster.IsInactive)
                 return null;
             var actor = caster.GetComponent<ATBActor>();
             if (actor != null)

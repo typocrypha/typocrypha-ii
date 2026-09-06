@@ -80,7 +80,7 @@ public abstract class SpawnBattleWordEffect : RootWordEffect
                     word.SetTarget();
                 }
                 yield return new WaitWhile(() => word.isActiveAndEnabled);
-                if(Battlefield.instance.Player.IsDeadOrFled || Battlefield.instance.Player.IsSpiritMode)
+                if(Battlefield.instance.Player.IsInactive || Battlefield.instance.Player.IsSpiritMode)
                 {
                     for (int j = i + 1; j < focusedWords.Count; ++j)
                     {

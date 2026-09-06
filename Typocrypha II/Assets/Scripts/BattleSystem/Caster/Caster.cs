@@ -25,6 +25,7 @@ public class Caster : MonoBehaviour
         SpiritMode,
         Dead,
         Fled,
+        Leaving,
     }
     [System.Flags]
     public enum ActiveAbilities
@@ -128,6 +129,7 @@ public class Caster : MonoBehaviour
                     ui?.gameObject.SetActive(false);
                     OnDeath?.Invoke(this);
                     break;
+                case BattleStatus.Leaving:
                 case BattleStatus.Fled:
                     ui?.gameObject.SetActive(false);
                     break;
@@ -138,6 +140,7 @@ public class Caster : MonoBehaviour
     private BattleStatus status = BattleStatus.Normal;
 
     public bool IsDeadOrFled => status == BattleStatus.Dead || status == BattleStatus.Fled;
+    public bool IsInactive => IsDeadOrFled || status == BattleStatus.Leaving;
     public bool IsSpiritMode => status == BattleStatus.SpiritMode;
     public Caster Protector { get; set; }
 
@@ -423,7 +426,7 @@ public class Caster : MonoBehaviour
     {
         if (ui == null)
             return;
-        ui.ShowUI(value && !IsDeadOrFled);
+        ui.ShowUI(value && !IsInactive);
     }
 
     protected virtual void Awake()

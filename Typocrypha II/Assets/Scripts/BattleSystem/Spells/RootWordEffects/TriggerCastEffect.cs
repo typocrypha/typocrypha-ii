@@ -7,7 +7,7 @@ public class TriggerCastEffect : RootWordEffect
     [SerializeField] private string id;
     public override CastResults Cast(Caster caster, Caster target, RootCastData spellData, Damage.DamageModifier mod, RootCastResults prevResults = null)
     {
-        if(target.Spell == null || target.Stunned || target.Countered || target.IsDeadOrFled)
+        if(target.Spell == null || target.Stunned || target.Countered || target.IsInactive)
         {
             var missResults = InitializeCastResults(caster, target, mod);
             missResults.Miss = true;

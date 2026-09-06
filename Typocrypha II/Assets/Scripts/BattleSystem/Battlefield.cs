@@ -55,7 +55,7 @@ public class Battlefield : MonoBehaviour, IPausable
         {
             foreach (var caster in Casters)
             {
-                if (caster.CasterState == Caster.State.Hostile && !caster.IsDeadOrFled)
+                if (caster.CasterState == Caster.State.Hostile && !caster.IsInactive)
                 {
                     yield return caster;
                 }
@@ -69,7 +69,7 @@ public class Battlefield : MonoBehaviour, IPausable
         {
             foreach (var caster in Casters)
             {
-                if (caster.CasterState == Caster.State.Hostile && !caster.IsDeadOrFled && !caster.IsSpiritMode)
+                if (caster.CasterState == Caster.State.Hostile && !caster.IsInactive && !caster.IsSpiritMode)
                 {
                     yield return caster;
                 }
@@ -84,7 +84,7 @@ public class Battlefield : MonoBehaviour, IPausable
             for (int col = 0; col < field.Columns; col++)
             {
                 var caster = GetCaster(new Position(0, col));
-                if (caster != null && !caster.IsDeadOrFled)
+                if (caster != null && !caster.IsInactive)
                 {
                     yield return caster;
                 }
@@ -99,7 +99,7 @@ public class Battlefield : MonoBehaviour, IPausable
         {
             foreach (var enemy in Enemies)
             {
-                if (enemy.IsDeadOrFled || (filter != null && !filter(enemy)))
+                if (enemy.IsInactive || (filter != null && !filter(enemy)))
                     continue;
                 yield return enemy;
             }
@@ -110,7 +110,7 @@ public class Battlefield : MonoBehaviour, IPausable
             {
                 if (enemy.CasterState == Caster.State.Hostile)
                     continue;
-                if (enemy.IsDeadOrFled || (filter != null && !filter(enemy)))
+                if (enemy.IsInactive || (filter != null && !filter(enemy)))
                     continue;
                 yield return enemy;
             }
@@ -126,7 +126,7 @@ public class Battlefield : MonoBehaviour, IPausable
             {
                 if (ally.CasterState != Caster.State.Ally)
                     continue;
-                if (ally.IsDeadOrFled || (filter != null && !filter(ally)))
+                if (ally.IsInactive || (filter != null && !filter(ally)))
                     continue;
                 yield return ally;
             }
@@ -138,7 +138,7 @@ public class Battlefield : MonoBehaviour, IPausable
             {
                 if (ally.CasterState != Caster.State.Ally)
                     continue;
-                if (ally.IsDeadOrFled || ally.FieldPos == casterPos || (filter != null && !filter(ally)))
+                if (ally.IsInactive || ally.FieldPos == casterPos || (filter != null && !filter(ally)))
                     continue;
                 yield return ally;
             }
@@ -149,7 +149,7 @@ public class Battlefield : MonoBehaviour, IPausable
             {
                 if (enemy.CasterState != Caster.State.Hostile)
                     continue;
-                if (enemy.IsDeadOrFled || enemy.FieldPos == casterPos || (filter != null && !filter(enemy)))
+                if (enemy.IsInactive || enemy.FieldPos == casterPos || (filter != null && !filter(enemy)))
                     continue;
                 yield return enemy;
             }

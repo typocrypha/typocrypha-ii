@@ -35,7 +35,7 @@ namespace ATB3
                     caster.Charge = 0;
                     return null;
                 }
-                if (caster.IsDeadOrFled)
+                if (caster.IsInactive)
                 {
                     return null;
                 }
@@ -62,7 +62,7 @@ namespace ATB3
                 var precastEnemies = new List<ATBEnemy>(Battlefield.instance.Columns);
                 foreach (var actor in Battlefield.instance.Actors)
                 {
-                    if (actor.IsCurrentState(ATBStateID.PreCast) && actor is ATBEnemy atbEnemy)
+                    if (actor.IsCurrentState(ATBStateID.PreCast) && actor is ATBEnemy atbEnemy && !atbEnemy.Caster.Spell.IsRun)
                     {
                         precastEnemies.Add(atbEnemy);
                     }

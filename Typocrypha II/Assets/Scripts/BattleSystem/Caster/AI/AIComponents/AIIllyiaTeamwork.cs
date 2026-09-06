@@ -22,7 +22,7 @@ public class AIIllyiaTeamwork : AIAllyRandomTimer
     {
         foreach (var enemy in Battlefield.instance.Enemies)
         {
-            if (enemy.IsDeadOrFled || enemy.IsSpiritMode)
+            if (enemy.IsInactive || enemy.IsSpiritMode)
                 continue;
             if (enemy.FieldPos == Battlefield.instance.Player.TargetPos)
                 continue;

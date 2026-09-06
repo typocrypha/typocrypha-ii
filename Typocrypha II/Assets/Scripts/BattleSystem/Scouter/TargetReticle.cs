@@ -80,7 +80,7 @@ public class TargetReticle : MonoBehaviour, IPausable
                 if (newPos.Col >= field.Columns)
                     newPos.Col = 0;
                 var caster = field.GetCaster(newPos);
-                if (caster != null && !caster.IsDeadOrFled && caster.BStatus != Caster.BattleStatus.SpiritMode)
+                if (caster != null && !caster.IsInactive && caster.BStatus != Caster.BattleStatus.SpiritMode)
                     break;
             }
             while (newPos.Col != TargetPos.Col);

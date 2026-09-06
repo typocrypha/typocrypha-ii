@@ -120,7 +120,7 @@ public class TargetData
         else if (type == Type.SmartTarget)
         {
             var targetCaster = Battlefield.instance.GetCaster(targetPos);
-            if(targetCaster != null && !targetCaster.IsDeadOrFled && !targetCaster.IsSpiritMode)
+            if(targetCaster != null && !targetCaster.IsInactive && !targetCaster.IsSpiritMode)
             {
                 yield return targetPos;
                 yield break;
