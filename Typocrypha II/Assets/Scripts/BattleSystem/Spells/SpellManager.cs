@@ -18,6 +18,7 @@ public class SpellManager : MonoBehaviour
     public event Action<Caster, Battlefield.Position> OnBeforeSpellTravelFx;
     [SerializeField] private SpellWord runWord;
     [SerializeField] private SpellWord runAllWord;
+    [SerializeField] private AudioClip runSfx;
 
     [Header("Interactive Popups")]
     [SerializeField] private InteractivePopup critPopup;
@@ -189,6 +190,10 @@ public class SpellManager : MonoBehaviour
                 int completedEffects = 0;
                 int numEffects = 0;
                 bool runEffect = effect is RunEffect;
+                if (runEffect)
+                {
+                    AudioManager.instance.PlaySFX(runSfx);
+                }
                 void OnEffectComplete()
                 {
                     completedEffects++;
