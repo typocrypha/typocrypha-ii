@@ -116,7 +116,6 @@ public class TransitionManager : MonoBehaviour
     private void PlayLoadingScreen(LoadingScreen loadingScreenOverride, SceneData data, string sceneName)
     {
         PauseManager.instance.PH.Pause(PauseSources.Loading);
-        PauseManager.instance.Cleanup();
         StartCoroutine(PlayLoadingScreenCR(loadingScreenOverride, data, sceneName));
     }
 
@@ -136,6 +135,7 @@ public class TransitionManager : MonoBehaviour
         // (if new scene) actually load scene
         if(sceneName != string.Empty)
         {
+            PauseManager.instance.Cleanup();
             AsyncOperation loadOp = SceneManager.LoadSceneAsync(sceneName);
             loadOp.allowSceneActivation = true;
             // Internal progress will stop at 0.9 when done loading
