@@ -105,6 +105,7 @@ public class DialogManager : MonoBehaviour, IPausable
         {
             view.Initialize();
         }
+        ph.Pause(PauseSources.Self);
     }
 
 #if DEBUG
@@ -187,6 +188,7 @@ public class DialogManager : MonoBehaviour, IPausable
     private void StartDialog(bool reset)
     {
         PH.Unpause(PauseSources.Self);
+        TIPSManager.Instance.PH.Unpause(PauseSources.Dialog);
         if (isBattle && !Auto)
         {
             BattleManager.instance.PH.Pause(PauseSources.Dialog);
@@ -310,9 +312,11 @@ public class DialogManager : MonoBehaviour, IPausable
 
     public void Hide(EndType endType, System.Action onComplete)
     {
+        TIPSManager.Instance.PH.Pause(PauseSources.Dialog);
+        PH.Pause(PauseSources.Self);
         if (DialogView == null || DialogView.IsHidden)
         {
-            PH.Pause(PauseSources.Self);
+
             onComplete?.Invoke();
             OnHideComplete?.Invoke();
             OnHideComplete = null;
@@ -354,7 +358,6 @@ public class DialogManager : MonoBehaviour, IPausable
             }
         }
         ReadyToContinue = true;
-        PH.Pause(PauseSources.Self);
         onComplete?.Invoke();
         OnHideComplete?.Invoke();
         OnHideComplete = null;
