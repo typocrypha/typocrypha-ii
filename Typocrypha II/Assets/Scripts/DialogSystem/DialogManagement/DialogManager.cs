@@ -356,7 +356,6 @@ public class DialogManager : MonoBehaviour, IPausable
                 BattleManager.instance.PH.Unpause(PauseSources.Dialog);
             }
         }
-        ReadyToContinue = true;
         onComplete?.Invoke();
         OnHideComplete?.Invoke();
         OnHideComplete = null;
