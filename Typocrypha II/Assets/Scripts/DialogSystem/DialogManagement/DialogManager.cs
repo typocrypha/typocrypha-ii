@@ -316,7 +316,6 @@ public class DialogManager : MonoBehaviour, IPausable
         PH.Pause(PauseSources.Self);
         if (DialogView == null || DialogView.IsHidden)
         {
-
             onComplete?.Invoke();
             OnHideComplete?.Invoke();
             OnHideComplete = null;
