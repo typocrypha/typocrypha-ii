@@ -168,5 +168,5 @@ public class PauseManager : MonoBehaviour, IPausable
         AllPausable.RemoveAll(IsNotPersistent);
     }
 
-    private static bool IsNotPersistent(PauseHandle ph) => !ph.Persistent;
+    private static bool IsNotPersistent(PauseHandle ph) => ph == null || !ph.Persistent;
 }
