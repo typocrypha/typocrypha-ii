@@ -15,8 +15,11 @@ namespace Gameflow
         public override string Title { get { return "Play BGM"; } }
         public override Vector2 MinSize { get { return new Vector2(250, 60); } }
 
-        public AudioClip bgm;
-        public string eventRef;
+        #region FMOD
+        public string BGMEvent;
+        public float attack;
+        #endregion
+
         public AnimationCurve fadeCurve = AnimationCurve.Linear(0,0,1,1);
 
         #region Tooltip Strings
@@ -34,8 +37,8 @@ namespace Gameflow
             #region BGM
             GUILayout.BeginVertical("Box");
             EditorGUIUtility.labelWidth = 65f;
-            bgm = EditorGUILayout.ObjectField(new GUIContent("BGM", tooltipBgm), bgm, typeof(AudioClip), false) as AudioClip;
-            eventRef = EditorGUILayout.DelayedTextField(eventRef);
+            BGMEvent = EditorGUILayout.DelayedTextField(BGMEvent);
+            attack = EditorGUILayout.DelayedFloatField(attack);
             GUILayout.EndVertical();
             #endregion
 

@@ -122,19 +122,20 @@ public abstract class GraphParser : MonoBehaviour
         {
             if (node is PlayBgm playBgmNode)
             {
-                AudioManager.instance.PlayBGM(playBgmNode.bgm, playBgmNode.fadeCurve);
+                AudioManager.instance.PlayBGMEvent(playBgmNode.BGMEvent, playBgmNode.attack);
             }
             else if (node is StopBgm stopBgmNode)
             {
-                AudioManager.instance.StopBGM(stopBgmNode.fadeCurve);
+                AudioManager.instance.StopBGMEvent(stopBgmNode.release);
             }
             else if (node is PauseBgm pauseBgmNode)
             {
-                AudioManager.instance.PauseBGM(pauseBgmNode.pause);
+                AudioManager.instance.PauseBGMEvent(pauseBgmNode.pause);
             }
             else if (node is CrossfadeBgm crossfadeNode)
             {
-                AudioManager.instance.CrossfadeBGM(crossfadeNode.bgm, crossfadeNode.fadeCurveIn, crossfadeNode.fadeCurveOut);
+                //AudioManager.instance.CrossfadeBGM(crossfadeNode.bgm, crossfadeNode.fadeCurveIn, crossfadeNode.fadeCurveOut);
+                AudioManager.instance.CrossfadeBGMEvent(crossfadeNode.BGMEvent, crossfadeNode.attack, crossfadeNode.release);
             }
             else if (node is PlaySfx playSfxNode)
             {

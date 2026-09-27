@@ -19,6 +19,12 @@ namespace Gameflow
         public AnimationCurve fadeCurveIn = AnimationCurve.Linear(0,0,1,1);
         public AnimationCurve fadeCurveOut = AnimationCurve.Linear(0,1,1,0);
 
+        #region FMOD
+        public string BGMEvent;
+        public float attack;
+        public float release;
+        #endregion
+
         #region Tooltip Strings
         const string tooltipBgm = "AudioClip to fade in as bgm.";
         const string tooltipFadeIn = "Volume curve over which new audio clip fades in.";

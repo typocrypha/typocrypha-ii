@@ -412,8 +412,10 @@ public class DialogScriptParser
         else if (nodeType == typeof(PlayBgm))
         {
             var gnode = CreateNode(canvas, PlayBgm.ID) as PlayBgm;
-            gnode.bgm = LoadAsset<AudioClip>(args[1], "Assets/Audio/Clips/BGM");
-            // If there aren't enough args to contain a fade curve or the curve parse fails, use the default
+            gnode.BGMEvent = args[1];
+            gnode.attack = (args.Length >= 4) ? float.Parse(args[3]) : 0f;
+            /*
+            // If there aren't enough args to contain a fade curve or the curve parse fails, use the 
             if (args.Length == 3)
             {
                 if (!TryParseFadeCurve(args[2], defaultBgmFadeLength, true, out gnode.fadeCurve))
@@ -432,11 +434,14 @@ public class DialogScriptParser
             {
                 gnode.fadeCurve = bgmFadeInDefault;
             }
+            */
             nodes.Add(gnode);
         }
         else if (nodeType == typeof(StopBgm))
         {
             var gnode = CreateNode(canvas, StopBgm.ID) as StopBgm;
+            gnode.release = (args.Length >= 3) ? float.Parse(args[2]) : defaultBgmFadeLength;
+            /*
             // If there aren't enough args to contain a fade curve or the curve parse fails, use the default
             if (args.Length == 2)
             {
@@ -456,6 +461,7 @@ public class DialogScriptParser
             {
                 gnode.fadeCurve = bgmFadeOutDefault;
             }
+            */
             nodes.Add(gnode);
         }
         else if (nodeType == typeof(PauseBgm))
@@ -467,43 +473,58 @@ public class DialogScriptParser
         else if (nodeType == typeof(CrossfadeBgm))
         {
             var node = CreateNode(canvas, CrossfadeBgm.ID) as CrossfadeBgm;
-            node.bgm = LoadAsset<AudioClip>(args[1], "Assets/Audio/Clips/BGM");
+            node.BGMEvent = args[1];
+            node.attack = node.release = defaultBgmFadeLength;
             switch (args.Length)
             {
                 case 3:
-                    if (float.TryParse(args[2], out float time))
+                    if (float.TryParse(args[2], out float time)) //crossfadebgm, bgm, time
                     {
-                        node.fadeCurveIn = AnimationCurve.Linear(0, 0, time, 1);
-                        node.fadeCurveOut = AnimationCurve.Linear(0, 1, time, 0);
+                        node.attack = node.release = time;
                     }
-                    else
+                    else //crossfadebgm, bgm, ease
                     {
-                        TryParseFadeCurve(args[2], defaultBgmFadeLength, true, out node.fadeCurveIn);
-                        TryParseFadeCurve(args[2], defaultBgmFadeLength, false, out node.fadeCurveOut);
+                        //ease not supported since FMOD integration
+                        Debug.Log("crossfadebgm, bgm, ease");
+                        //TryParseFadeCurve(args[2], defaultBgmFadeLength, true, out node.fadeCurveIn);
+                        //TryParseFadeCurve(args[2], defaultBgmFadeLength, false, out node.fadeCurveOut);
                     }
                     break;
-                case 4:
+                case 4: //crossfadebgm, bgm, timein, timeout
                     var arg2IsTime = float.TryParse(args[2], out float time1);
                     var arg3IsTime = float.TryParse(args[3], out float time2);
                     if (arg2IsTime && arg3IsTime)
                     {
-                        node.fadeCurveIn = AnimationCurve.Linear(0, 0, time1, 1);
-                        node.fadeCurveOut = AnimationCurve.Linear(0, 1, time2, 0);
+                        node.attack = time1;
+                        node.release = time2;
                     }
-                    else if (!arg2IsTime && arg3IsTime)
+                    else if (!arg2IsTime && arg3IsTime) //crossfadebgm, bgm, ease, time
                     {
-                        TryParseFadeCurve(args[2], time2, true, out node.fadeCurveIn);
-                        TryParseFadeCurve(args[2], time2, false, out node.fadeCurveOut);
+                        //ease not supported since FMOD integration
+                        Debug.Log("crossfadebgm, bgm, ease, time");
+                        //TryParseFadeCurve(args[2], time2, true, out node.fadeCurveIn);
+                        //TryParseFadeCurve(args[2], time2, false, out node.fadeCurveOut);
                     }
-                    else if (!arg2IsTime && !arg3IsTime)
+                    else if (!arg2IsTime && !arg3IsTime) //crossfadebgm, bgm, easein, easeout
                     {
-                        TryParseFadeCurve(args[2], defaultBgmFadeLength, true, out node.fadeCurveIn);
-                        TryParseFadeCurve(args[3], defaultBgmFadeLength, false, out node.fadeCurveOut);
+                        //ease not supported since FMOD integration
+                        Debug.Log("crossfadebgm, bgm, easein, easeout");
+                        //TryParseFadeCurve(args[2], defaultBgmFadeLength, true, out node.fadeCurveIn);
+                        //TryParseFadeCurve(args[3], defaultBgmFadeLength, false, out node.fadeCurveOut);
                     }
                     break;
-                case 6:
-                    TryParseFadeCurve(args[2], float.TryParse(args[4], out time1) ? time1 : defaultBgmFadeLength, true, out node.fadeCurveIn);
-                    TryParseFadeCurve(args[3], float.TryParse(args[5], out time2) ? time2 : defaultBgmFadeLength, false, out node.fadeCurveOut);
+                case 6: //crossfade, bgm, easein, easeout, timein, timeout
+                    arg2IsTime = float.TryParse(args[4], out time1);
+                    arg3IsTime = float.TryParse(args[5], out time2);
+                    if (arg2IsTime && arg3IsTime)
+                    {
+                        node.attack = time1;
+                        node.release = time2;
+                    }
+                    //ease not supported since FMOD integration
+                    Debug.Log("crossfadebgm, bgm, easein, easeout, timein, timeout");
+                    //TryParseFadeCurve(args[2], float.TryParse(args[4], out time1) ? time1 : defaultBgmFadeLength, true, out node.fadeCurveIn);
+                    //TryParseFadeCurve(args[3], float.TryParse(args[5], out time2) ? time2 : defaultBgmFadeLength, false, out node.fadeCurveOut);
                     break;
             }
             nodes.Add(node);

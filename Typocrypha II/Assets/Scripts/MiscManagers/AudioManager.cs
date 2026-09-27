@@ -2,6 +2,8 @@
 using System;
 using System.IO;
 using System.Collections;
+using FMODUnity;
+using FMOD.Studio;
 // using System.Collections.Generic;
 // using System.Linq;
 // using UnityEngine.Audio;
@@ -15,16 +17,18 @@ using System.Collections;
 /// <c>AudioManager.instance["clip name"]</c>
 /// </example>
 public class AudioManager : MonoBehaviour
-{    
+{
     public static AudioManager instance = null; // Global static instance.
+    [SerializeField] private StudioEventEmitter bgmEmitter; // FMOD event emitter for bgm
     [SerializeField] private AudioSource[] bgm; // Audio sources for playing bgms. Should have 2 audio sources (for crossfading).
     [SerializeField] private AudioSource sfx; // Audio source for playing simple sfx.
     [SerializeField] private AudioSource[] textBlips; // Audio sources for playing text blip sfx. Number or sources should be divisible by 2
     [SerializeField] AudioClipBundle sfxBundle; // Better bundle containing sfx clips.
-    
+
     int bgmInd; // Index of in use bgm audio source.
     private Coroutine routineFadeIn;
     private Coroutine routineFadeOut;
+    private EventInstance eventInstance;
 
     public float BGMVolume
     {
@@ -39,11 +43,18 @@ public class AudioManager : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(gameObject);
             bgmInd = 0;
-        } 
-        else 
+        }
+        else
         {
             Destroy(gameObject);
         }
+    }
+
+    private void Start()
+    {
+        eventInstance = RuntimeManager.CreateInstance(bgmEmitter.EventReference);
+        eventInstance.start();
+        bgmEmitter.Play();
     }
 
     private void StopFades()
@@ -58,6 +69,27 @@ public class AudioManager : MonoBehaviour
             StopCoroutine(routineFadeIn);
             routineFadeIn = null;
         }
+    }
+
+    private float ScaleToFMOD(float seconds)
+    {
+        if (seconds < 0f || seconds > 10f) throw new ArgumentOutOfRangeException();
+        return (seconds <= 1f) ? seconds : (seconds / 10f) + 1f;
+    }
+
+    public void PlayBGMEvent(string FMODEventPath, float attack = 0f)
+    {
+        eventInstance.setParameterByName("Attack", ScaleToFMOD(attack));
+        eventInstance.setParameterByName("Release", ScaleToFMOD(0f));
+        eventInstance.setParameterByNameWithLabel("BGM", FMODEventPath);
+        eventInstance.getPlaybackState(out var state);
+        if (state != PLAYBACK_STATE.PLAYING) eventInstance.start();
+    }
+
+    public void StopBGMEvent(float release = 0f)
+    {
+        eventInstance.setParameterByName("Release", ScaleToFMOD(release));
+        eventInstance.setParameterByName("BGM", 0);
     }
 
     /// <summary>
@@ -160,6 +192,11 @@ public class AudioManager : MonoBehaviour
         else bgm[bgmInd].UnPause();
     }
 
+    public void PauseBGMEvent(bool pause)
+    {
+        eventInstance.setPaused(pause);
+    }
+
     /// <summary>
     /// Starts playing audio clip, crossfading over previous one.
     /// </summary>
@@ -174,6 +211,13 @@ public class AudioManager : MonoBehaviour
         StopBGMInternal(fadeCurveOut);
         bgmInd = 1 - bgmInd; //switch active track
         PlayBGMInternal(clip, fadeCurveIn);
+    }
+
+    public void CrossfadeBGMEvent(string FMODEventPath, float attack = 1f, float release = 1f)
+    {
+        eventInstance.setParameterByName("Attack", ScaleToFMOD(attack));
+        eventInstance.setParameterByName("Release", ScaleToFMOD(release));
+        eventInstance.setParameterByNameWithLabel("BGM", FMODEventPath);
     }
 
     /// <summary>

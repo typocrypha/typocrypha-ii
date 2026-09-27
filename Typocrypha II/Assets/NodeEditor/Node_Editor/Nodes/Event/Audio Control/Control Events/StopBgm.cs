@@ -14,7 +14,11 @@ namespace Gameflow
 
         public override string Title { get { return "Stop BGM"; } }
         public override Vector2 MinSize { get { return new Vector2(250, 60); } }
-        
+
+        #region FMOD
+        public float release;
+        #endregion
+
         public AnimationCurve fadeCurve = AnimationCurve.Linear(0,1,1,0);
 
         #region Tooltip Strings
@@ -27,8 +31,10 @@ namespace Gameflow
         {
             GUILayout.BeginVertical(new GUIStyle());
 
+            release = EditorGUILayout.DelayedFloatField(release);
+
             #region FadeIn
-            if(fadeCurve != null)
+            if (fadeCurve != null)
             {
                 GUILayout.BeginVertical();
                 GUILayout.Label(new GUIContent("Fade Curve", tooltipFade), NodeEditorGUI.nodeLabelBoldCentered);
