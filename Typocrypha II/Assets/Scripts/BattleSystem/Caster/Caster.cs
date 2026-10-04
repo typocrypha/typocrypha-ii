@@ -120,6 +120,8 @@ public class Caster : MonoBehaviour
                     break;
                 case BattleStatus.SpiritMode:
                     ui?.onSpiritForm.Invoke();
+                    actor.Animator.SetTrigger("SpiritForm");
+                    ui?.PlaySpiritModeAnimation();
                     ui?.onSpChanged.Invoke((float)sp / Stats.MaxSP);
                     TIPSManager.Instance.UnlockEntryIfApplicable(DisplayName);
                     OnSpiritMode?.Invoke();
@@ -424,6 +426,13 @@ public class Caster : MonoBehaviour
         if (ui == null)
             return;
         ui.ShowUI(value && !IsDeadOrFled);
+    }
+
+    public void SwapToSpiritFormSprite()
+    {
+        if (ui == null)
+            return;
+        ui.SwapToSpiritSprite();
     }
 
     protected virtual void Awake()
