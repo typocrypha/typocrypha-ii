@@ -24,6 +24,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioSource sfx; // Audio source for playing simple sfx.
     [SerializeField] private AudioSource[] textBlips; // Audio sources for playing text blip sfx. Number or sources should be divisible by 2
     [SerializeField] AudioClipBundle sfxBundle; // Better bundle containing sfx clips.
+    [SerializeField] private FMODEvents eventManager; // FMOD event reference utility
 
     int bgmInd; // Index of in use bgm audio source.
     private Coroutine routineFadeIn;
@@ -226,9 +227,13 @@ public class AudioManager : MonoBehaviour
     /// <param name="clip">Clip to play.</param>
     public void PlaySFX(AudioClip clip)
     {
-        if (clip == null)
-            return;
-        sfx.PlayOneShot(clip);
+        if (clip == null) return;
+        PlaySFX(FMODEvents.ClipToRef(clip));
+    }
+
+    public void PlaySFX(EventReference reference)
+    {
+        RuntimeManager.PlayOneShot(reference);
     }
 
     /// <summary>
@@ -237,17 +242,7 @@ public class AudioManager : MonoBehaviour
     /// <param name="clipName">Name of clip in sfx asset bundle to play.</param>
     public void PlaySFX(string clipName)
     {
-        if (string.IsNullOrEmpty(clipName))
-            return;
-
-        if (sfxBundle.clips.TryGetValue(clipName, out var clip))
-        {
-            sfx.PlayOneShot(clip);
-        }
-        else
-        {
-            Debug.LogWarning($"Clip named \"{clipName}\" not found.");
-        }
+        PlaySFX(FMODEvents.NameToRef(clipName));
     }
 
     public void PlayTextScrollSfx(AudioClip clip)
