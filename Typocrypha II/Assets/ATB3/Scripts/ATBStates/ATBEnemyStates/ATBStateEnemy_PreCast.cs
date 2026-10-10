@@ -7,6 +7,7 @@ namespace ATB3
     public class ATBStateEnemy_PreCast : ATBState<ATBEnemy>
     {
         public const float time = 1;
+        private static readonly int preCastHash = Animator.StringToHash("PreCast");
         public float Timer { get; private set; } = 0.0f;
 
         private float timeGoal = time;
@@ -24,8 +25,7 @@ namespace ATB3
             }
             else
             {
-                Owner.GetComponent<Animator>().SetTrigger("PreCast");
-
+                SetAnimation(preCastHash);
             }
             Timer = 0.0f;
             if(PlayerDataManager.Equipment.TryGetEquippedBadgeEffect<BadgeEffectExtendPrecast>(out var extenstionEffect))
@@ -42,16 +42,10 @@ namespace ATB3
         public override void OnUpdate()
         {
             var caster = Owner.Caster;
+            if (CheckDeathOrRun(caster))
+                return;
             Timer += Time.fixedDeltaTime * Settings.GameplaySpeed;
-            if(caster.BStatus == Caster.BattleStatus.Dead)
-            {
-                Source.PerformTransition(ATBStateID.Dead);
-            }
-            else if(caster.BStatus == Caster.BattleStatus.Fled)
-            {
-                Source.PerformTransition(ATBStateID.Fled);
-            }
-            else if (caster.Stunned)
+            if (caster.Stunned)
             {
                 Source.PerformTransition(ATBStateID.Stunned);
             }

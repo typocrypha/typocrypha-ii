@@ -29,6 +29,7 @@ public class CasterInspector : Editor
         #region Unity GUI
         EditorUtils.Separator();
         data.ui = EditorUtils.ObjectField(data.ui, true);
+        data.actor = EditorUtils.ObjectField(data.actor, true);
         EditorUtils.Separator();
         #endregion
 

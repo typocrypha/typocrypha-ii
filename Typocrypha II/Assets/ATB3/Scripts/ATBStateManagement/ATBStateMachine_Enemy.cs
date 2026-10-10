@@ -29,7 +29,7 @@ namespace ATB3
             AddState(new ATBStateEnemy_Cast() { Owner = Owner, Source = this }, ATBStateID.Cast);
             AddState(new ATBStateEnemy_Stunned() { Owner = Owner, Source = this }, ATBStateID.Stunned);
             AddState(new ATBStateEnemy_Dead() { Owner = Owner, Source = this }, ATBStateID.Dead);
-            AddState(new ATBStateEnemy_Fled() { Owner = Owner, Source = this }, ATBStateID.Fled);
+            AddState(new ATBStateEnemy_Run() { Owner = Owner, Source = this }, ATBStateID.Run);
         }
     }
 }

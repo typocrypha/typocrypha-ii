@@ -39,6 +39,7 @@ public class TIPSManager : MonoBehaviour, IPausable
         }
         currentEventSystem = EventSystem.current;
         PH = new PauseHandle(OnPause, true);
+        PH.Pause(PauseSources.Dialog);
     }
 
     private void OnPause(bool pause)

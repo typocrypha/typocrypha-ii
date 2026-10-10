@@ -151,10 +151,7 @@ namespace ATB3
         {
             foreach (var caster in Battlefield.instance.Casters)
             {
-                if (caster.ui != null)
-                {
-                    caster.ui.ShowUI(true);
-                }
+                caster.ShowUI(true);
             }
             BattleDimmer.instance.SetDimmer(false); // Dim End
         }

@@ -14,31 +14,6 @@ public class Battlefield : MonoBehaviour, IPausable
     /// </summary>
     public PauseHandle PH { get; private set; }
 
-    /// <summary>
-    /// Pauses all actors and keyboard.
-    /// </summary>
-    /// <param name="b">Whether to pause or not.</param>
-    public void OnPause(bool b)
-    {
-        //Typocrypha.Keyboard.instance.CastingEnabled = !b;
-        //SpellCooldownManager.instance.PH.Pause = b
-        foreach (var actor in Actors)
-        {
-            if (actor == null)
-            {
-                continue;
-            }
-            if (b)
-            {
-                actor.PH.Pause(PauseSources.Parent);
-            }
-            else
-            {
-                actor.PH.Unpause(PauseSources.Parent);
-            }
-        }
-    }
-
     #endregion
 
     public enum MoveOption
@@ -229,7 +204,7 @@ public class Battlefield : MonoBehaviour, IPausable
             Destroy(gameObject);
             return;
         }
-        PH = new PauseHandle(OnPause);
+        PH = new PauseHandle();
         spaces = new SpaceMatrix(Rows, Columns);
         field = new FieldMatrix(Rows, Columns);
         var spaceTransforms = GetComponentsInChildren<Transform>();
@@ -254,11 +229,9 @@ public class Battlefield : MonoBehaviour, IPausable
         if (actor != null)
         {
             Actors.Add(actor);
-            if (PH.Paused)
-            {
-                actor.PH.Pause(PauseSources.Parent);
-            }
-            else if (ATBManager.instance.ProcessingActions)
+            actor.PH.SetParent(PH);
+            actor.PH.PauseIfParentPaused();
+            if (ATBManager.instance.ProcessingActions)
             {
                 actor.PH.Pause(PauseSources.ATB);
             }
@@ -282,6 +255,11 @@ public class Battlefield : MonoBehaviour, IPausable
     public Vector2 GetSpaceScreenSpace(Position pos)
     {
         return CameraManager.instance.Camera.WorldToScreenPoint(GetSpace(pos));
+    }
+    public bool TryGetCaster(Position pos, out Caster caster)
+    {
+        caster = field[pos];
+        return caster != null;
     }
     /// <summary> Get the caster in a specific space. returns null if the space is empty or the object is not a caster </summary> 
     public Caster GetCaster(Position pos) => field[pos];

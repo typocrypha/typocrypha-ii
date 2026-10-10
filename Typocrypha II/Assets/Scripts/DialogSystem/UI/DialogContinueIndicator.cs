@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using System;
 
-
-public class DialogContinueIndicator : MonoBehaviour
+public class DialogContinueIndicator : MonoBehaviour, IPausable
 {
     [SerializeField] private Image continueIndicator;
     [SerializeField] private float moveYDistance = 5;
@@ -20,6 +20,9 @@ public class DialogContinueIndicator : MonoBehaviour
     private Coroutine activeCoroutine = null;
     private Tween activeMoveTween = null;
     private Tween activeScaleTween = null;
+    private PauseHandle ph;
+
+    public PauseHandle PH { get => ph; }
 
     public void Activate()
     {
@@ -32,6 +35,21 @@ public class DialogContinueIndicator : MonoBehaviour
         indicatorDelaySeconds = new WaitForSeconds(indicatorDelay);
         originalIndicatorPosition = continueIndicator.rectTransform.localPosition;
         originalIndicatorScale = continueIndicator.rectTransform.localScale;
+        ph = new PauseHandle(PauseAnimation);
+    }
+
+    private void PauseAnimation(bool pause)
+    {
+        if (pause)
+        {
+            activeMoveTween.Pause();
+            activeScaleTween.Pause();
+        }
+        else
+        {
+            activeMoveTween.Play();
+            activeScaleTween.Play();
+        }
     }
 
     private void OnDestroy()

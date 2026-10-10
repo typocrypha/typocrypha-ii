@@ -6,6 +6,7 @@ namespace ATB3
 {
     public class ATBStateEnemy_Stunned : ATBState<ATBEnemy>
     {
+        private static readonly int stunHash = Animator.StringToHash("Stun");
         private float timer = 0.0f;
         private float stuntime = 5;
 
@@ -13,8 +14,7 @@ namespace ATB3
         public override void OnEnter()
         {
             stuntime = Owner.Caster.Stats.StaggerTime;
-            //Debug.Log("ENEMY " + this.Owner.actorName + " has ENTERED the STUNNED state!");
-            Owner.GetComponent<Animator>().SetTrigger("Stun");
+            SetAnimation(stunHash);
             Owner.Caster.StunProgress = 0;
             timer = 0.0f;
         }
@@ -22,14 +22,15 @@ namespace ATB3
         // Call on fixed update while in given state
         public override void OnUpdate()
         {
-            timer += Time.fixedDeltaTime;
             var caster = Owner.Caster;
-            caster.StunProgress = timer / stuntime;
-            if (caster.BStatus == Caster.BattleStatus.Dead)
+            if (CheckDeathOrRun(caster))
             {
-                Source.PerformTransition(ATBStateID.Dead);
+                return;
             }
-            else if (timer >= stuntime || !Owner.Caster.Stunned)
+
+            timer += Time.fixedDeltaTime;
+            caster.StunProgress = timer / stuntime;
+            if (timer >= stuntime || !Owner.Caster.Stunned)
             {
                 // Interrupt if stunned in precast
                 if(Source.PreviousStateID == ATBStateID.PreCast || Source.PreviousStateID == ATBStateID.Cast)

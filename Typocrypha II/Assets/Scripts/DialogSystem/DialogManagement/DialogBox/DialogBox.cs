@@ -38,10 +38,24 @@ public class DialogBox : MonoBehaviour, IPausable
     public bool PlaySpeechOnSpaces { get; set; } = defaultPlaySpeechOnSpaces;
 
     public CanvasGroup CanvasGroup => canvasGroup;
-    public DialogContinueIndicator ContinueIndicator 
+    public DialogContinueIndicator ContinueIndicator
     {
         get => continueIndicator;
-        set => continueIndicator = value;
+        set
+        {
+            if (continueIndicator != null)
+            {
+                continueIndicator.PH.FreeFromParent();
+            }
+
+            continueIndicator = value;
+
+            if (continueIndicator != null && ph != null)
+            {
+                continueIndicator.PH.SetParent(ph);
+                continueIndicator.PH.PauseIfParentPaused();
+            }
+        }
     }
 
     public TextMeshProUGUI DialogText => dialogText;
@@ -88,6 +102,11 @@ public class DialogBox : MonoBehaviour, IPausable
         ph = new PauseHandle(OnPause);
         ph.SetParent(DialogManager.instance);
         ph.PauseIfParentPaused();
+        if (continueIndicator != null)
+        {
+            continueIndicator.PH.SetParent(ph);
+            continueIndicator.PH.PauseIfParentPaused();
+        }
         if (textHolder != null)
         {
             defaultWidth = textHolder.sizeDelta.x;
@@ -208,10 +227,14 @@ public class DialogBox : MonoBehaviour, IPausable
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(dialogText.rectTransform);
         float preferredHeight = dialogText.preferredHeight - 5;
-        float lineWidth = textHolder.sizeDelta.x - 20;
-        if (resolveContinueIndicatorConflicts && dialogText.preferredWidth % lineWidth >= lineWidth - 40)
+        if (resolveContinueIndicatorConflicts)
         {
-            preferredHeight += 30.45f;
+            float lineWidth = textHolder.sizeDelta.x - 20;
+            dialogText.ForceMeshUpdate(ignoreActiveState: true);
+            if(GetLastLineWidth(dialogText) >= lineWidth - 40) // 40 is continue indicator padding
+            {
+                  preferredHeight += 30.45f;
+            }
         }
         textHolder.sizeDelta = new Vector2(textHolder.sizeDelta.x, preferredHeight);
         RectTransform rectTr = GetComponent<RectTransform>();
@@ -219,6 +242,19 @@ public class DialogBox : MonoBehaviour, IPausable
         {
             rectTr.sizeDelta = new Vector2(rectTr.sizeDelta.x, preferredHeight + textPad);
         }
+    }
+
+    private float GetLastLineWidth(TextMeshProUGUI textMesh)
+    {
+        for(int i = textMesh.textInfo.lineInfo.Length - 1; i > 0; --i)
+        {
+            float maxAdvance = textMesh.textInfo.lineInfo[i].maxAdvance;
+            if (maxAdvance > 0)
+            {
+                return maxAdvance;
+            }
+        }
+        return 0;
     }
 
     /// <summary>

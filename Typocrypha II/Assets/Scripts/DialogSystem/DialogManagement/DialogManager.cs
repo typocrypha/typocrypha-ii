@@ -87,7 +87,7 @@ public class DialogManager : MonoBehaviour, IPausable
 
     private DialogView dialogView; // Currently displayed dialog view.
     private DialogView lastView; // Previously displayed dialog view.
-    private int skipCount;
+    private float skipTime;
 
     void Awake()
     {
@@ -105,6 +105,7 @@ public class DialogManager : MonoBehaviour, IPausable
         {
             view.Initialize();
         }
+        ph.Pause(PauseSources.Self);
     }
 
 #if DEBUG
@@ -127,9 +128,10 @@ public class DialogManager : MonoBehaviour, IPausable
             return;
         if (Input.GetKey(KeyCode.Space) && (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))) // Fast-forward
         {
-            if(++skipCount > 5)
+            skipTime += Time.deltaTime;
+            if(skipTime > 0.033f)
             {
-                skipCount = 0;
+                skipTime = 0;
                 if (ActiveDialogBox.IsDone)
                 {
                     NextDialog(true); // If dialog is done, go to next dialog
@@ -143,7 +145,7 @@ public class DialogManager : MonoBehaviour, IPausable
         }
         else if ((Input.GetKeyDown(KeyCode.Space) || Settings.AutoContinue)) // Normal continue
         {
-            skipCount = 0;
+            skipTime = 0;
             if (ActiveDialogBox.IsDone)
             {
                 NextDialog(true); // If dialog is done, go to next dialog
@@ -186,6 +188,7 @@ public class DialogManager : MonoBehaviour, IPausable
     private void StartDialog(bool reset)
     {
         PH.Unpause(PauseSources.Self);
+        TIPSManager.Instance.PH.Unpause(PauseSources.Dialog);
         if (isBattle && !Auto)
         {
             BattleManager.instance.PH.Pause(PauseSources.Dialog);
@@ -309,9 +312,10 @@ public class DialogManager : MonoBehaviour, IPausable
 
     public void Hide(EndType endType, System.Action onComplete)
     {
+        TIPSManager.Instance.PH.Pause(PauseSources.Dialog);
+        PH.Pause(PauseSources.Self);
         if (DialogView == null || DialogView.IsHidden)
         {
-            PH.Pause(PauseSources.Self);
             onComplete?.Invoke();
             OnHideComplete?.Invoke();
             OnHideComplete = null;
@@ -352,8 +356,6 @@ public class DialogManager : MonoBehaviour, IPausable
                 BattleManager.instance.PH.Unpause(PauseSources.Dialog);
             }
         }
-        ReadyToContinue = true;
-        PH.Pause(PauseSources.Self);
         onComplete?.Invoke();
         OnHideComplete?.Invoke();
         OnHideComplete = null;

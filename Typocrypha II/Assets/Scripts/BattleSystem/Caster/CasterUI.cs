@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using DG.Tweening;
 
 /// <summary>
 /// Manages UI for a caster.
@@ -29,22 +30,52 @@ public class CasterUI : MonoBehaviour
     public UnityEvent onDamageReceived;
 
     [SerializeField] private SpriteRenderer sprite;
+    [SerializeField] private Sprite spiritSprite;
     [SerializeField] private CanvasGroup ui;
     [SerializeField] private HighlightCounterable highlightCounterable;
+    [SerializeField] private int numParticles;
+    [SerializeField] private GameObject particlePrefab;
 
     public void SetTextColor(Color color)
     {
         highlightCounterable.SetDefaultColor(color);
     }
 
-    public CasterUI SetDimmable(bool dimmable)
+    public void SetDimmable(bool dimmable)
     {
-        if (sprite) sprite.sortingOrder = dimmable ? -1 : 1;
-        return this;
+        if (sprite)
+        {
+            int order = dimmable ? -1 : 1;
+            sprite.sortingOrder = order;
+        }
     }
-    public CasterUI ShowUI(bool show)
+    public void ShowUI(bool show)
     {
         if (ui) ui.alpha = show ? 1 : 0;
-        return this;
+    }
+
+
+    private const float t1 = 0.75f;
+    private const float t2 = t1 * 0.75f;
+    private const float staggerTime = 0.025f * 25;
+    public void PlaySpiritModeAnimation()
+    {
+        float staggerScaled = staggerTime / numParticles;
+        for (int i = 0; i < numParticles; i++)
+        {
+            var target = (Vector2)sprite.transform.position + (Random.onUnitSphere * new Vector2(2, 2));
+            var particle = Instantiate(particlePrefab, sprite.transform);
+            var particleSprite = particle.GetComponent<SpriteRenderer>();
+            var sequence = DOTween.Sequence();
+            sequence.Append(particle.transform.DOMove(target, t1 * 0.5f).SetEase(Ease.OutQuad));
+            sequence.Join(particleSprite.DOFade(0.75f, t1 * 0.25f));
+            sequence.AppendInterval(staggerScaled * i);
+            sequence.Append(particle.transform.DOMove(sprite.transform.position, t2).SetEase(Ease.InOutExpo));
+            sequence.Join(particleSprite.DOFade(0, t2 * 0.25f).SetDelay(t2 / 2));
+        }
+    }
+    public void SwapToSpiritSprite()
+    {
+        sprite.sprite = spiritSprite;
     }
 }
