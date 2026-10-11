@@ -17,6 +17,7 @@ namespace ATB3
     [DisallowMultipleComponent]
     public abstract class ATBStateMachine<T> : MonoBehaviour, IPausable, IATBStateMachine where T : ATBActor
     {
+        private static readonly int idleSpeedHash = Animator.StringToHash("IdleSpeed");
         #region IPausable
         PauseHandle ph;
         public PauseHandle PH
@@ -30,10 +31,11 @@ namespace ATB3
             if(Owner.Animator != null)
             {
                 Owner.Animator.enabled = !pause || EnableAnimationsWhilePaused;
+                Owner.Animator.SetFloat(idleSpeedHash, pause ? 0 : 1);
             }
         }
 
-        private bool EnableAnimationsWhilePaused => CurrentStateID != ATBStateID.Charge && !Owner.PH.PauseSources.HasFlag(PauseSources.PauseMenu);
+        private bool EnableAnimationsWhilePaused => !Owner.PH.PauseSources.HasFlag(PauseSources.PauseMenu);
         #endregion
         //----------------------------------------------------------------//
         // PROPERTIES                                                     //

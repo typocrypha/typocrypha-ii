@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Caster : MonoBehaviour
 {
+    private static readonly int spiritModeTriggerHash = Animator.StringToHash("SpiritForm");
     public enum Class
     {
         None = -1,
@@ -120,7 +121,7 @@ public class Caster : MonoBehaviour
                     break;
                 case BattleStatus.SpiritMode:
                     ui?.onSpiritForm.Invoke();
-                    actor.Animator.SetTrigger("SpiritForm");
+                    actor.BaseStateMachine.SetAnimation(spiritModeTriggerHash);
                     ui?.PlaySpiritModeAnimation();
                     ui?.onSpChanged.Invoke((float)sp / Stats.MaxSP);
                     TIPSManager.Instance.UnlockEntryIfApplicable(DisplayName);

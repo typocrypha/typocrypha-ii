@@ -10,5 +10,6 @@ namespace ATB3
         IATBState CurrentATBState { get; }
 
         void PerformTransition(ATBStateID transitionTo);
+        void SetAnimation(int trigger);
     }
 }
