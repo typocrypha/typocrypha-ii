@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using TMPro;
@@ -8,8 +9,12 @@ using UnityEngine.Events;
 public class BadgeSelectorMenu : MonoBehaviour
 {
     [SerializeField] private MenuButton[] buttons;
+    [SerializeField] private TextMeshProUGUI slotNameText;
     [SerializeField] private TextMeshProUGUI descriptionText;
+    [SerializeField] private TextMeshProUGUI badgeNameText;
     [SerializeField] private UnityEvent onClose;
+    [SerializeField] private RectTransform purchaseContainerRT;
+    [SerializeField] private float purchaseContainerOffsetY = -470f;
 
     private readonly List<BadgeWord> unlockedBadges = new List<BadgeWord>();
     private int selectedBadgeIndex;
@@ -99,6 +104,8 @@ public class BadgeSelectorMenu : MonoBehaviour
         }
         buttons[selectedButtonIndex].InitializeSelection();
         UpdateDescription();
+
+        slotNameText.text = slot.ToString();
     }
 
     public void Close()
@@ -162,6 +169,7 @@ public class BadgeSelectorMenu : MonoBehaviour
     private void UpdateDescription()
     {
         descriptionText.text = selectedBadgeIndex < 0 ? string.Empty : unlockedBadges[selectedBadgeIndex].Description;
+        badgeNameText.text = selectedBadgeIndex < 0 ? string.Empty : unlockedBadges[selectedBadgeIndex].DisplayName;
     }
 
     private void SetButtonText(MenuButton button, int badgeIndex)
@@ -175,11 +183,11 @@ public class BadgeSelectorMenu : MonoBehaviour
         {
             int badgeIndex = selectedBadgeIndex + i;
             SetButtonText(buttons[i], badgeIndex);
+            buttons[i].onSelect.RemoveAllListeners();
+            buttons[i].onSelect.AddListener(() => ScrollToButton(buttons[i].transform as RectTransform));
         }
         buttons[0].OnSelect(null);
     }
-
-
 
     private void ScrollDown()
     {
@@ -190,6 +198,16 @@ public class BadgeSelectorMenu : MonoBehaviour
         }
         buttons[buttons.Length - 1].OnSelect(null);
     }
+
+    private void ScrollToButton(RectTransform buttonRect, bool immediate = false)
+    {
+        var newAnchorY = purchaseContainerOffsetY - 0.5f * buttonRect.rect.height - buttonRect.anchoredPosition.y;
+
+        DOTween.Kill("ScrollBadgeSelection");
+        purchaseContainerRT.DOAnchorPosY(newAnchorY, 0.1f).SetId("ScrollBadgeSelection");
+        if (immediate) DOTween.Complete("ScrollBadgeSelection");
+    }
+
 
     private static int WordComparer(BadgeWord w1, BadgeWord w2)
     {

@@ -33,13 +33,14 @@ public class EquipmentMenu : MonoBehaviour, IPausable
         inMenuSlot = null;
         menuObject.SetActive(true);
         equipmentNotice.SetActive(false);
-        first.InitializeSelection();
         foreach(var slot in slots)
         {
             SetSlotText(slot);
         }
         Typocrypha.Keyboard.instance.DisableInactiveSfx = true;
         PauseManager.instance.PauseAll(true, PauseSources.Equipment, true, PH);
+        shopTransition.gameObject.SetActive(true);
+        first.InitializeSelection();
     }
 
     public void Close()
