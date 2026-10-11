@@ -17,6 +17,7 @@ public class EquipmentMenu : MonoBehaviour, IPausable
     [SerializeField] private BadgeSelectorMenu badgeSelector;
     [SerializeField] private ShopMenu shopMenu;
     [SerializeField] private ClarkeShopTransition shopTransition;
+    [SerializeField] private EquipmentMenuTypoDiagram typoDiagram;
 
     private EquipmentMenuSlot inMenuSlot;
     private bool skipFrame = false;
@@ -41,6 +42,7 @@ public class EquipmentMenu : MonoBehaviour, IPausable
         PauseManager.instance.PauseAll(true, PauseSources.Equipment, true, PH);
         shopTransition.gameObject.SetActive(true);
         first.InitializeSelection();
+        typoDiagram.Deselect();
     }
 
     public void Close()
@@ -63,6 +65,7 @@ public class EquipmentMenu : MonoBehaviour, IPausable
     {
         inMenuSlot = slots[slotIndex];
         badgeSelector.Open(inMenuSlot.Slot);
+        typoDiagram.Select(inMenuSlot.Slot);
     }
 
     public void CloseBadgeSelector()
@@ -73,6 +76,7 @@ public class EquipmentMenu : MonoBehaviour, IPausable
             SetSlotText(inMenuSlot);
         }
         inMenuSlot = null;
+        typoDiagram.Deselect();
     }
 
     public void OpenShopMenu()
