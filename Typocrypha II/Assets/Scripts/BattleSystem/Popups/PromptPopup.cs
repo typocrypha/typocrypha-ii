@@ -7,8 +7,8 @@ using TMPro;
 public class PromptPopup : InteractivePopup
 {
     [SerializeField] private TextMeshProUGUI headerText;
-    [SerializeField] private AudioClip successSfx;
-    [SerializeField] private AudioClip failSfx;
+    [SerializeField] private FMODUnity.EventReference successSfx;
+    [SerializeField] private FMODUnity.EventReference failSfx;
     [SerializeField] CastBarResizer resizer;
 
     public override void Submit()

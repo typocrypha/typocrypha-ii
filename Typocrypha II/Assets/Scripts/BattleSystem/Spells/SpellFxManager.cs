@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
@@ -49,7 +50,7 @@ public class SpellFxManager : MonoBehaviour
     [SerializeField] private GameObject wordFxPrefab;
     [SerializeField] private Transform wordFxContainer;
     [Header("Cast Fx")]
-    [SerializeField] private AudioClip castFailureSfx;
+    [SerializeField] private FMODUnity.EventReference castFailureSfx;
 
     private PrefabPool<TextPopup> textPopupPool;
     private PrefabPool<TextPopup> damagePopupPool;

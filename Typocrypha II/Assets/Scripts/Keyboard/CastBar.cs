@@ -21,7 +21,7 @@ namespace Typocrypha
 
         [SerializeField] private CastBarCursor cursor; // Cursor for keeping track of position.
         [SerializeField] private TextMeshProUGUI[] letters; // Array of single letter rects.
-        [SerializeField] protected AudioClip backspaceSfx;
+        [SerializeField] protected FMODUnity.EventReference backspaceSfx;
 
 
         protected List<TextMeshProUGUI> ActiveLetters { get; } = new List<TextMeshProUGUI>(maxLetters);

@@ -9,9 +9,9 @@ public class MenuSlider : Selectable
 {
     private static readonly char[] trim = new char[] { '>', ' ', ' ', '<', '-' };
     public static readonly Color selectedColor = new Color(219f / 255f, 56f / 255f, 202f / 255f);
-    [SerializeField] private AudioClip selectSFX;
-    [SerializeField] private AudioClip adjustSfx;
-    [SerializeField] private AudioClip adjustFailedSfx;
+    [SerializeField] private FMODUnity.EventReference selectSFX;
+    [SerializeField] private FMODUnity.EventReference adjustSfx;
+    [SerializeField] private FMODUnity.EventReference adjustFailedSfx;
     [SerializeField] private TextMeshProUGUI text;
     [SerializeField] private Image selectorImage;
     [SerializeField] private Sprite selectedSprite;

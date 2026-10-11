@@ -18,7 +18,7 @@ public class SpellManager : MonoBehaviour
     public event Action<Caster, Battlefield.Position> OnBeforeSpellTravelFx;
     [SerializeField] private SpellWord runWord;
     [SerializeField] private SpellWord runAllWord;
-    [SerializeField] private AudioClip runSfx;
+    [SerializeField] private FMODUnity.EventReference runSfx;
 
     [Header("Interactive Popups")]
     [SerializeField] private InteractivePopup critPopup;

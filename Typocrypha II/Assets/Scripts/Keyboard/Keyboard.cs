@@ -62,8 +62,8 @@ namespace Typocrypha
             {'8', KeyCode.Keypad8 }, {'9', KeyCode.Keypad9 },
         };
         [SerializeField] private Transform pauseUI;
-        [SerializeField] private AudioClip pausedCastSfx;
-        [SerializeField] private AudioClip noInputSfx;
+        [SerializeField] private FMODUnity.EventReference pausedCastSfx;
+        [SerializeField] private FMODUnity.EventReference noInputSfx;
 
         private int disableInactiveSfxCount = 0;
         public bool DisableInactiveSfx

@@ -35,9 +35,9 @@ public class BattleWord : MonoBehaviour, IInputHandler
     [SerializeField] protected FXText.TMProColor colorEffect;
     [SerializeField] protected FXText.TMProShake shakeEffect;
 
-    [SerializeField] private AudioClip successClip;
-    [SerializeField] private AudioClip failClip;
-    [SerializeField] private AudioClip focusClip;
+    [SerializeField] private FMODUnity.EventReference successClip;
+    [SerializeField] private FMODUnity.EventReference failClip;
+    [SerializeField] private FMODUnity.EventReference focusClip;
     [SerializeField] private AnimationCurve scaleEasing;
 
     protected readonly List<Tween> activeTweens = new List<Tween>();

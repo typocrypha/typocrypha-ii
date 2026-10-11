@@ -7,8 +7,8 @@ using TMPro;
 public class CastPopup : InteractivePopup
 {
     [SerializeField] private TextMeshProUGUI headerText;
-    [SerializeField] private AudioClip successSfx;
-    [SerializeField] private AudioClip failSfx;
+    [SerializeField] private FMODUnity.EventReference successSfx;
+    [SerializeField] private FMODUnity.EventReference failSfx;
     [SerializeField] CastBarResizer resizer;
 
     public Spell Spell => lastSpell;

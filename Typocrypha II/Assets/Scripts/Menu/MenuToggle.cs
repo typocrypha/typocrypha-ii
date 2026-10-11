@@ -7,8 +7,8 @@ public class MenuToggle : MonoBehaviour, ISelectHandler, IDeselectHandler, ISubm
 {
     private static readonly char[] trim = new char[] { '>', ' ', ' ', '<', '-' };
     public static readonly Color selectedColor = new Color(219f / 255f, 56f / 255f, 202f / 255f);
-    [SerializeField] private AudioClip selectSFX;
-    [SerializeField] private AudioClip enterSFX;
+    [SerializeField] private FMODUnity.EventReference selectSFX;
+    [SerializeField] private FMODUnity.EventReference enterSFX;
     [SerializeField] private TextMeshProUGUI selectorText;
     [SerializeField] private TextMeshProUGUI numberText;
     [SerializeField] private Button button;

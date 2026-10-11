@@ -13,8 +13,8 @@ public class ShopMenu : MonoBehaviour
 {
     [Header("Settings")]
     [SerializeField] private bool openOnStart;
-    [SerializeField] private AudioClip purchaseValidSFX;
-    [SerializeField] private AudioClip purchaseInvalidSFX;
+    [SerializeField] private FMODUnity.EventReference purchaseValidSFX;
+    [SerializeField] private FMODUnity.EventReference purchaseInvalidSFX;
     [SerializeField] private Color purchaseValidColor;
     [SerializeField] private Color purchaseInvalidColor;
     [SerializeField] private Color purchaseValidSelectColor;

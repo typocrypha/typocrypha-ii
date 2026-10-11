@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class TIPSCastBar : CastBar
 {
     public UnityEvent_string OnSearchCast;
-    [SerializeField] AudioClip typeSfx;
+    [SerializeField] FMODUnity.EventReference typeSfx;
     [SerializeField] Image frame;
 
     [SerializeField] Color colorDefault;

@@ -228,6 +228,7 @@ public class AudioManager : MonoBehaviour
     public void PlaySFX(AudioClip clip)
     {
         if (clip == null) return;
+        Debug.Log("PlaySFX by audio clip will be deprecated soon.");
         PlaySFX(FMODEvents.ClipToRef(clip));
     }
 

@@ -12,8 +12,8 @@ public class OverheatManager : Typocrypha.CastBar
     [SerializeField] private Canvas ui;
     [SerializeField] private CastBarResizer resizer;
     [Header("SFX")]
-    [SerializeField] private AudioClip successSFX;
-    [SerializeField] private AudioClip failSFX;
+    [SerializeField] private FMODUnity.EventReference successSFX;
+    [SerializeField] private FMODUnity.EventReference failSFX;
 
     private WordListSelector wordSelector;
 

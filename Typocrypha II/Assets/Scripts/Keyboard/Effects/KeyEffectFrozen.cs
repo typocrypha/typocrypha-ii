@@ -15,7 +15,7 @@ namespace Typocrypha
         const int minHealth = 2;
         const int maxHealth = 2;
 
-        [SerializeField] private AudioClip breakSfx;
+        [SerializeField] private FMODUnity.EventReference breakSfx;
 
         public override EffectType EffectID => EffectType.Frozen;
 

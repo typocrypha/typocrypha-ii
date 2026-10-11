@@ -21,7 +21,7 @@ public class AIAdrestiaTutorial : AIComponent
     [SerializeField] private Spell clearAndCallAlliesSpell;
     [SerializeField] private Spell enrageAlliesSpell;
     [SerializeField] private SpellList normalSpells;
-    [SerializeField] private AudioClip warningSfx;
+    [SerializeField] private FMODUnity.EventReference warningSfx;
 
 
     private Spell tempSpell;

@@ -13,8 +13,8 @@ public class TIPSNavigator : MonoBehaviour
     [SerializeField] TIPSCastBar searchbar;
     [SerializeField] TIPSTopicStack topicStack;
     [SerializeField] TIPSEntryPanel entryPanel;
-    [SerializeField] AudioClip sfxSearchBad;
-    [SerializeField] AudioClip sfxSearchGood;
+    [SerializeField] FMODUnity.EventReference sfxSearchBad;
+    [SerializeField] FMODUnity.EventReference sfxSearchGood;
     [SerializeField] TIPSControlGuideSetter controlGuide;
     [SerializeField] TIPSEntryData welcomeEntry;
 
