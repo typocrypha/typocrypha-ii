@@ -31,13 +31,13 @@ public enum PauseSources
 public class PauseHandle
 {
     public bool Persistent { get; }
-    OnPauseDel onPause; // Function called when paused/unpaused.
-    private PauseSources pauseSources;
+    public PauseSources PauseSources { get; private set; }
+    private OnPauseDel onPause; // Function called when paused/unpaused.
     private PauseHandle parent;
 
     public bool Paused
     {
-        get => pauseSources != PauseSources.None;
+        get => PauseSources != PauseSources.None;
     }
 
     public bool IsPaused() => Paused;
@@ -45,7 +45,7 @@ public class PauseHandle
     public void Pause(PauseSources sources)
     {
         bool wasPaused = Paused;
-        pauseSources |= sources;
+        PauseSources |= sources;
         if(!wasPaused && Paused)
         {
             onPause?.Invoke(true);
@@ -55,17 +55,25 @@ public class PauseHandle
     public void Unpause(PauseSources sources)
     {
         bool wasPaused = Paused;
-        pauseSources &= ~sources;
+        PauseSources &= ~sources;
         if (wasPaused && !Paused)
         {
             onPause?.Invoke(false);
         }
     }
 
+    public void Unpause()
+    {
+        if (!Paused)
+            return;
+        PauseSources = PauseSources.None;
+        onPause?.Invoke(false);
+    }
+
     public PauseSources UnpauseOverride()
     {
-        var temp = pauseSources;
-        Unpause(pauseSources);
+        var temp = PauseSources;
+        Unpause(PauseSources);
         return temp;
     }
 
@@ -93,7 +101,7 @@ public class PauseHandle
     {
         if (parent == null || !parent.Paused)
             return;
-        Pause(parent.pauseSources);
+        Pause(parent.PauseSources);
     }
 
     public void SimpleParentPause(bool value)

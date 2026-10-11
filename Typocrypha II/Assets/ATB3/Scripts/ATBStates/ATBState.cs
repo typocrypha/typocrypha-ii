@@ -20,7 +20,7 @@ namespace ATB3
         PreviousState,
         // General States ∇ 
         Dead,
-        Fled,
+        Run,
         // Player-Specific States ∇ 
         Idle,
         // Non-Player General States ∇ 
@@ -45,27 +45,46 @@ namespace ATB3
     public abstract class ATBState<T> : IATBState where T : ATBActor
     {
         public ATBStateID StateID { get; set; } = ATBStateID.NullATBStateID; 
-        private T owner; 
-        public T Owner { get { return owner; } set { owner = value; } }
+        public T Owner { get; set; }
         public ATBStateMachine<T> Source { get; set; }
 
         // Constructor for ATBState
         // (assigns an ATBActor as an owner for the State to run functions)
         public ATBState()
         {
-            owner = null;
+            Owner = null;
             Source = null;
         }
         public ATBState(T actor, ATBStateMachine<T> machine)
         {
-            owner = actor;
+            Owner = actor;
             Source = machine;
         }
 
         // set owner for the ATBState
         public void SetOwner(T actor)
         {
-            owner = actor;
+            Owner = actor;
+        }
+
+        protected void SetAnimation(int trigger)
+        {
+            Source.SetAnimation(trigger);
+        }
+
+        protected bool CheckDeathOrRun(Caster caster)
+        {
+            if (caster.BStatus == Caster.BattleStatus.Dead)
+            {
+                Source.PerformTransition(ATBStateID.Dead);
+                return true;
+            }
+            if (caster.BStatus == Caster.BattleStatus.Fled)
+            {
+                Source.PerformTransition(ATBStateID.Run);
+                return true;
+            }
+            return false;
         }
 
         // Call upon entering given state

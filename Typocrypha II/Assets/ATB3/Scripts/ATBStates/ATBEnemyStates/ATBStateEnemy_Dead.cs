@@ -6,10 +6,11 @@ namespace ATB3
 {
     public class ATBStateEnemy_Dead : ATBState<ATBEnemy>
     {
+        private static readonly int deathHash = Animator.StringToHash("Death");
         // Call upon entering given state
         public override void OnEnter()
         {
-            Owner.GetComponent<Animator>().SetTrigger("Death");
+            SetAnimation(deathHash);
         }
 
         // Call on fixed update while in given state

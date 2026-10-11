@@ -16,6 +16,7 @@ public class TIPSNavigator : MonoBehaviour
     [SerializeField] AudioClip sfxSearchBad;
     [SerializeField] AudioClip sfxSearchGood;
     [SerializeField] TIPSControlGuideSetter controlGuide;
+    [SerializeField] TIPSEntryData welcomeEntry;
 
     public Action OnExit;
 
@@ -43,6 +44,10 @@ public class TIPSNavigator : MonoBehaviour
     {
         InitializeSearchbar();
         topicStack.RefreshCurrentFolder();
+        if(currentEntry == null)
+        {
+            DisplayEntry(entryPanel, currentEntry = welcomeEntry, 0);
+        }
     }
 
     /// <summary>

@@ -30,12 +30,6 @@ public class BattleDebug : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F1) && !DialogManager.instance.PH.Paused)
-        {
-            DialogManager.instance.StopAllCoroutines();
-            DialogManager.instance.Hide(DialogManager.EndType.DialogEnd, DialogManager.instance.CleanUp);
-        }
-
         debugButtonHeld = Input.GetKey(KeyCode.LeftAlt);
         var debugButtonPressed = Input.GetKeyDown(KeyCode.LeftAlt);
         Time.timeScale = Mathf.Pow(10, gameSpeed);

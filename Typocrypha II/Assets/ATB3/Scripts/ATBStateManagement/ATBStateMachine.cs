@@ -17,6 +17,7 @@ namespace ATB3
     [DisallowMultipleComponent]
     public abstract class ATBStateMachine<T> : MonoBehaviour, IPausable, IATBStateMachine where T : ATBActor
     {
+        private static readonly int idleSpeedHash = Animator.StringToHash("IdleSpeed");
         #region IPausable
         PauseHandle ph;
         public PauseHandle PH
@@ -24,15 +25,17 @@ namespace ATB3
             get => ph;
         }
 
-        public void OnPause(bool b)
+        public void OnPause(bool pause)
         {
-            enabled = !b;
-            var anim = Owner.GetComponent<Animator>();
-            if(anim != null)
+            enabled = !pause;
+            if(Owner.Animator != null)
             {
-                anim.enabled = !b;
+                Owner.Animator.enabled = !pause || EnableAnimationsWhilePaused;
+                Owner.Animator.SetFloat(idleSpeedHash, pause ? 0 : 1);
             }
         }
+
+        private bool EnableAnimationsWhilePaused => !Owner.PH.PauseSources.HasFlag(PauseSources.PauseMenu);
         #endregion
         //----------------------------------------------------------------//
         // PROPERTIES                                                     //
@@ -52,6 +55,12 @@ namespace ATB3
         public ATBState<T> CurrentState { get; private set; }
         public ATBStateID PreviousStateID { get; private set; }
         public ATBState<T> PreviousState { get; private set; }
+
+        public void SetAnimation(int trigger)
+        {
+            Owner.Animator.enabled = !PH.Paused || EnableAnimationsWhilePaused;
+            Owner.Animator.SetTrigger(trigger);
+        }
 
         //----------------------------------------------------------------//
         // RUNTIME FUNCTIONS                                              //

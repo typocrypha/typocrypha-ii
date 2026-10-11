@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Caster : MonoBehaviour
 {
+    private static readonly int spiritModeTriggerHash = Animator.StringToHash("SpiritForm");
     public enum Class
     {
         None = -1,
@@ -120,6 +121,8 @@ public class Caster : MonoBehaviour
                     break;
                 case BattleStatus.SpiritMode:
                     ui?.onSpiritForm.Invoke();
+                    actor.BaseStateMachine.SetAnimation(spiritModeTriggerHash);
+                    ui?.PlaySpiritModeAnimation();
                     ui?.onSpChanged.Invoke((float)sp / Stats.MaxSP);
                     TIPSManager.Instance.UnlockEntryIfApplicable(DisplayName);
                     OnSpiritMode?.Invoke();
@@ -130,7 +133,6 @@ public class Caster : MonoBehaviour
                     break;
                 case BattleStatus.Fled:
                     ui?.gameObject.SetActive(false);
-                    GetComponentInChildren<SpriteRenderer>().gameObject.SetActive(false);
                     break;
             }
             status = value;
@@ -141,6 +143,8 @@ public class Caster : MonoBehaviour
     public bool IsDeadOrFled => status == BattleStatus.Dead || status == BattleStatus.Fled;
     public bool IsSpiritMode => status == BattleStatus.SpiritMode;
     public Caster Protector { get; set; }
+
+    public ATB3.ATBActor actor;
 
     #endregion
 
@@ -417,6 +421,20 @@ public class Caster : MonoBehaviour
 
     public Battlefield.Position TargetPos { get; set; } = new Battlefield.Position(0, 0);
     public CasterUI ui = null;
+
+    public void ShowUI(bool value)
+    {
+        if (ui == null)
+            return;
+        ui.ShowUI(value && !IsDeadOrFled);
+    }
+
+    public void SwapToSpiritFormSprite()
+    {
+        if (ui == null)
+            return;
+        ui.SwapToSpiritSprite();
+    }
 
     protected virtual void Awake()
     {

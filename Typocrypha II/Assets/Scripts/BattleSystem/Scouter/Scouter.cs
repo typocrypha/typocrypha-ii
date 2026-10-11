@@ -136,7 +136,7 @@ public class Scouter : MonoBehaviour, IPausable
         Battlefield.instance.PH.Pause(PauseSources.Scouter);
         InputManager.Instance.PH.Pause(PauseSources.Scouter);
         BattleDimmer.instance.SetDimmer(true);
-        BattleDimmer.instance.DimCasters(Battlefield.instance.Enemies, true);
+        BattleDimmer.instance.DimCasters(Battlefield.instance.Enemies);
         foreach (var c in Battlefield.instance.Enemies)
             if (c != null && c.ui != null)
                 c.ui.onScouterShow.Invoke();
