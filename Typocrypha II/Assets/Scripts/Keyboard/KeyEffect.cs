@@ -24,7 +24,7 @@ namespace Typocrypha
         public void OnPause(bool b) { }
         #endregion
 
-        [SerializeField] protected AudioClip sfxOverride;
+        [SerializeField] protected FMODUnity.EventReference sfxOverrideEvent;
         protected Key key; // Affected keyboard key.
         protected Caster caster; // Caster of effect, may be 
 
@@ -53,7 +53,7 @@ namespace Typocrypha
         public virtual void OnStart()
         {
             key.OnPress += OnPress;
-            key.SfxOverride = sfxOverride;
+            key.SfxOverrideEvent = sfxOverrideEvent;
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Typocrypha
         public virtual void ResetEffect()
         {
             key.OnPress -= OnPress;
-            key.SfxOverride = null;
+            key.SfxOverrideEvent = new FMODUnity.EventReference();
             key.ResetOutputAndDisplay();
         }
 

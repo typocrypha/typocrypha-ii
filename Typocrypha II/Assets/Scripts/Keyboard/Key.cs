@@ -28,10 +28,10 @@ namespace Typocrypha
 
         public System.Action OnPress { get; set; } // Delegate called when key is pressed.
 
-        [SerializeField] private AudioClip defaultKeySfx;
+        [SerializeField] private FMODUnity.EventReference defaultKeySfxEvent;
 
-        public AudioClip SfxOverride { get; set; }
-        
+        public FMODUnity.EventReference SfxOverrideEvent { get; set; }
+
         public bool Highlight // Key highlight (when pressed).
         {
             set
@@ -71,7 +71,7 @@ namespace Typocrypha
 
         public void PlaySfx()
         {
-            AudioManager.instance.PlaySFX(SfxOverride ?? defaultKeySfx);
+            AudioManager.instance.PlaySFX(SfxOverrideEvent.IsNull ? defaultKeySfxEvent : SfxOverrideEvent);
         }
 
         public virtual void SetLetter(char c)

@@ -35,9 +35,9 @@ namespace Typocrypha
 
         public override void OnPress() 
         {
-            if(sfxOverride != null)
+            if(!sfxOverrideEvent.IsNull)
             {
-                AudioManager.instance.PlaySFX(sfxOverride);
+                AudioManager.instance.PlaySFX(sfxOverrideEvent);
             }
         }
     }

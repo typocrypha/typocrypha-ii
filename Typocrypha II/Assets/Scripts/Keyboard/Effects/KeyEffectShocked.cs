@@ -45,7 +45,7 @@ namespace Typocrypha
             // Set the output of the key we swapped with
             Key swappedKey = Keyboard.instance.keyMap[swappedWith];
             swappedKey.SetOutputAndDisplay(key.Letter);
-            swappedKey.SfxOverride = sfxOverride;
+            swappedKey.SfxOverrideEvent = sfxOverrideEvent;
             // Create the visuals for the other key
             swappedKeyEffect = Instantiate(swappedKeyEffectPrefab, swappedKey.KeyEffectContainer);
             swappedShockEffect = swappedKeyEffect.GetComponent<KeyEffectShockedSub>();
@@ -74,7 +74,7 @@ namespace Typocrypha
             // Revert swapped key output
             Key swappedKey = Keyboard.instance.keyMap[swappedWith];
             swappedKey.SetOutputAndDisplay(swappedWith);
-            swappedKey.SfxOverride = null;
+            swappedKey.SfxOverrideEvent = new FMODUnity.EventReference();
             // Destroy Swapped key effect graphics
             Destroy(swappedKeyEffect);
             // Mark swapped key unaffected
