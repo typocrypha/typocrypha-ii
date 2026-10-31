@@ -78,7 +78,6 @@ public class DialogManager : MonoBehaviour, IPausable
     public bool Loading { get; set; } = false;
     public bool IsLoading() => Loading;
 
-    [SerializeField] private bool startOnStart = true; // Should dialog start when scene starts up? (should generally only be true for debugging)
     [SerializeField] private bool isBattle = false; // Is this a battle scene?
     [SerializeField] private List<DialogView> allViews; // All dialog views (VN, CHAT, etc)
     [SerializeField] private UnityEvent onNextDialog; // Event called when a new dialog line is started.
@@ -107,16 +106,6 @@ public class DialogManager : MonoBehaviour, IPausable
         }
         ph.Pause(PauseSources.Self);
     }
-
-#if DEBUG
-    void Start()
-    {
-        if (startOnStart)
-        {
-            StartDialog(false);
-        }
-    }
-#endif
 
     void Update()
     {
@@ -185,7 +174,7 @@ public class DialogManager : MonoBehaviour, IPausable
     /// <summary>
     /// Start new dialog graph. Implicitly uses graph already in parser.
     /// </summary>
-    private void StartDialog(bool reset)
+    public void StartDialog(bool reset)
     {
         PH.Unpause(PauseSources.Self);
         TIPSManager.Instance.PH.Unpause(PauseSources.Dialog);

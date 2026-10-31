@@ -36,6 +36,8 @@ public class CasterUI : MonoBehaviour
     [SerializeField] private int numParticles;
     [SerializeField] private GameObject particlePrefab;
 
+    private readonly List<SpriteRenderer> dynamicSprites = new List<SpriteRenderer>();
+
     public void SetTextColor(Color color)
     {
         highlightCounterable.SetDefaultColor(color);
@@ -43,17 +45,26 @@ public class CasterUI : MonoBehaviour
 
     public void SetDimmable(bool dimmable)
     {
+        int order = dimmable ? -1 : 1;
         if (sprite)
         {
-            int order = dimmable ? -1 : 1;
             sprite.sortingOrder = order;
         }
+        SyncSortingOrders(order);
     }
+
+    private void SyncSortingOrders(int order)
+    {
+        foreach (var sr in dynamicSprites)
+        {
+            sr.sortingOrder = order;
+        }
+    }
+
     public void ShowUI(bool show)
     {
         if (ui) ui.alpha = show ? 1 : 0;
     }
-
 
     private const float t1 = 0.75f;
     private const float t2 = t1 * 0.75f;
@@ -66,13 +77,16 @@ public class CasterUI : MonoBehaviour
             var target = (Vector2)sprite.transform.position + (Random.onUnitSphere * new Vector2(2, 2));
             var particle = Instantiate(particlePrefab, sprite.transform);
             var particleSprite = particle.GetComponent<SpriteRenderer>();
+            dynamicSprites.Add(particleSprite);
             var sequence = DOTween.Sequence();
             sequence.Append(particle.transform.DOMove(target, t1 * 0.5f).SetEase(Ease.OutQuad));
             sequence.Join(particleSprite.DOFade(0.75f, t1 * 0.25f));
             sequence.AppendInterval(staggerScaled * i);
             sequence.Append(particle.transform.DOMove(sprite.transform.position, t2).SetEase(Ease.InOutExpo));
             sequence.Join(particleSprite.DOFade(0, t2 * 0.25f).SetDelay(t2 / 2));
+            dynamicSprites.Add(particleSprite);
         }
+        SyncSortingOrders(sprite.sortingOrder);
     }
     public void SwapToSpiritSprite()
     {
