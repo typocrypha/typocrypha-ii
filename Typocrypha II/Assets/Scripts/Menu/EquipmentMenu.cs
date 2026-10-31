@@ -93,7 +93,8 @@ public class EquipmentMenu : MonoBehaviour, IPausable
     private static void SetSlotText(EquipmentMenuSlot slot)
     {
         var equippedBadges = Equipment.EquippedBadgeWords;
-        slot.Button.SetText(equippedBadges.ContainsKey(slot.Slot) ? equippedBadges[slot.Slot].DisplayName : noBadgeText);
+        var buttonText = slot.Slot.ToString().Substring(0, 1) + " - " + (equippedBadges.ContainsKey(slot.Slot) ? equippedBadges[slot.Slot].DisplayName : noBadgeText);
+        slot.Button.SetText(buttonText);
     }
 
     private void Start()
