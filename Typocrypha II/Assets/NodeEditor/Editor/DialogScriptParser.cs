@@ -532,7 +532,7 @@ public class DialogScriptParser
         else if (nodeType == typeof(PlaySfx))
         {
             var playSfxNode = CreateNode(canvas, PlaySfx.ID) as PlaySfx;
-            playSfxNode.sfx = LoadAsset<AudioClip>(args[1], "Assets/Audio/Clips/SFX");
+            playSfxNode.sfxEvent = args[1];
             nodes.Add(playSfxNode);
         }
         else if (nodeType == typeof(SetBackgroundNode))

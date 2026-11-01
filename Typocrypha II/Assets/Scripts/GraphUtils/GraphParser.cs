@@ -139,7 +139,7 @@ public abstract class GraphParser : MonoBehaviour
             }
             else if (node is PlaySfx playSfxNode)
             {
-                AudioManager.instance.PlaySFX(playSfxNode.sfx);
+                AudioManager.instance.PlaySFX(playSfxNode.sfxEvent);
             }
             return true;
         }

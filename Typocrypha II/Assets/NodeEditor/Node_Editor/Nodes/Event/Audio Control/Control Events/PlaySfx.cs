@@ -13,7 +13,7 @@ namespace Gameflow
         public override string Title { get { return "Play SFX"; } }
         public override Vector2 MinSize { get { return new Vector2(250, 60); } }
 
-        public AudioClip sfx;
+        public string sfxEvent;
 
         #region Tooltip Strings
         const string tooltipSfx = "AudioClip to play as sfx.";
@@ -26,7 +26,8 @@ namespace Gameflow
             GUILayout.BeginVertical("Box");
             GUILayout.BeginHorizontal();
             GUILayout.Label(new GUIContent("SFX", tooltipSfx), NodeEditorGUI.nodeLabel, GUILayout.Width(65f));
-            sfx = RTEditorGUI.ObjectField(sfx, false, GUILayout.Width(MinSize.x - 100f));
+            //sfx = RTEditorGUI.ObjectField(sfx, false, GUILayout.Width(MinSize.x - 100f));
+            GUILayout.TextField(sfxEvent, GUILayout.Width(MinSize.x - 100f));
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
             #endregion
