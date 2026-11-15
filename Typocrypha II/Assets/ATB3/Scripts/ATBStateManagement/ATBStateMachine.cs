@@ -58,6 +58,8 @@ namespace ATB3
 
         public void SetAnimation(int trigger)
         {
+            if (Owner.Animator == null)
+                return;
             Owner.Animator.enabled = !PH.Paused || EnableAnimationsWhilePaused;
             Owner.Animator.SetTrigger(trigger);
         }

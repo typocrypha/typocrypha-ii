@@ -71,6 +71,8 @@ public class CasterUI : MonoBehaviour
     private const float staggerTime = 0.025f * 25;
     public void PlaySpiritModeAnimation()
     {
+        if (sprite == null)
+            return;
         float staggerScaled = staggerTime / numParticles;
         for (int i = 0; i < numParticles; i++)
         {
