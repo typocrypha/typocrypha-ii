@@ -7,7 +7,7 @@ using DG.Tweening;
 public class GameOverMenu : MonoBehaviour
 {
     [SerializeField] private MenuButton firstButton;
-    [SerializeField] AudioClip GameOverAudioClip = default;
+    [SerializeField] string GameOverBGM;
     [SerializeField] CanvasGroup backgroundGroup;
     [SerializeField] CanvasGroup foregroundGroup;
     [SerializeField] AnimationCurve backgroundFadeCurve;
@@ -49,7 +49,7 @@ public class GameOverMenu : MonoBehaviour
             .Join(blurController.GetTween())
             .Join(backgroundTween)
             .AppendInterval(0.5f)
-            .AppendCallback(() => AudioManager.instance.PlayBGM(GameOverAudioClip))
+            .AppendCallback(() => AudioManager.instance.PlayBGM(GameOverBGM))
             .Append(foregroundTween)
             .OnComplete(() => {
                 if (firstButton) firstButton.InitializeSelection();

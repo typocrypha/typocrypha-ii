@@ -16,7 +16,7 @@ namespace Gameflow
         public override Vector2 MinSize { get { return new Vector2(250, 60); } }
 
         #region FMOD
-        public string BGMEvent;
+        public string TrackName;
         public float attack;
         #endregion
 
@@ -37,7 +37,7 @@ namespace Gameflow
             #region BGM
             GUILayout.BeginVertical("Box");
             EditorGUIUtility.labelWidth = 65f;
-            BGMEvent = EditorGUILayout.DelayedTextField(BGMEvent);
+            TrackName = EditorGUILayout.DelayedTextField(TrackName);
             attack = EditorGUILayout.DelayedFloatField(attack);
             GUILayout.EndVertical();
             #endregion

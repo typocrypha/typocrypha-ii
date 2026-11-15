@@ -122,7 +122,7 @@ public abstract class GraphParser : MonoBehaviour
         {
             if (node is PlayBgm playBgmNode)
             {
-                AudioManager.instance.PlayBGMEvent(playBgmNode.BGMEvent, playBgmNode.attack);
+                AudioManager.instance.PlayBGM(playBgmNode.TrackName, playBgmNode.attack);
             }
             else if (node is StopBgm stopBgmNode)
             {

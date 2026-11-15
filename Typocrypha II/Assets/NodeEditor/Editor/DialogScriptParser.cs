@@ -412,7 +412,7 @@ public class DialogScriptParser
         else if (nodeType == typeof(PlayBgm))
         {
             var gnode = CreateNode(canvas, PlayBgm.ID) as PlayBgm;
-            gnode.BGMEvent = args[1];
+            gnode.TrackName = args[1];
             gnode.attack = (args.Length >= 4) ? float.Parse(args[3]) : 0f;
             /*
             // If there aren't enough args to contain a fade curve or the curve parse fails, use the 

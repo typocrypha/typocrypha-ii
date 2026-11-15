@@ -72,17 +72,29 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Converts between seconds and FMOD AHDSR envelope scale
+    /// [0,1] seconds -> [0,1] ahdsr value
+    /// (1,10] seconds -> (1,2] ahdsr value
+    /// </summary>
+    /// <param name="seconds"></param>
+    /// <returns> AHDSR param value between 0 and 2 </returns>
     private float ScaleToFMOD(float seconds)
     {
         if (seconds < 0f || seconds > 10f) throw new ArgumentOutOfRangeException();
         return (seconds <= 1f) ? seconds : (seconds / 10f) + 1f;
     }
 
-    public void PlayBGMEvent(string FMODEventPath, float attack = 0f)
+    /// <summary>
+    /// Play BGM track via FMOD
+    /// </summary>
+    /// <param name="trackName"> BGM parameter label</param>
+    /// <param name="attack"> Fade in time between 0 and 10 seconds. </param>
+    public void PlayBGM(string trackName, float attack = 0f)
     {
         eventInstance.setParameterByName("Attack", ScaleToFMOD(attack));
         eventInstance.setParameterByName("Release", ScaleToFMOD(0f));
-        eventInstance.setParameterByNameWithLabel("BGM", FMODEventPath);
+        eventInstance.setParameterByNameWithLabel("BGM", trackName);
         eventInstance.getPlaybackState(out var state);
         if (state != PLAYBACK_STATE.PLAYING) eventInstance.start();
     }
@@ -90,7 +102,7 @@ public class AudioManager : MonoBehaviour
     public void StopBGMEvent(float release = 0f)
     {
         eventInstance.setParameterByName("Release", ScaleToFMOD(release));
-        eventInstance.setParameterByName("BGM", 0);
+        eventInstance.setParameterByNameWithLabel("BGM", "Stop");
     }
 
     /// <summary>
@@ -100,6 +112,7 @@ public class AudioManager : MonoBehaviour
     /// <param name="fadeCurve">Volume curve to fade in with.</param>
     public void PlayBGM(AudioClip clip, AnimationCurve fadeCurve = null)
     {
+        Debug.Log("PlayBGM by audio clip will be deprecated soon.");
         if (bgm[bgmInd].clip == clip && bgm[bgmInd].isPlaying)
             return;
         StopFades();
