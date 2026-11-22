@@ -18,7 +18,7 @@ public class VictoryResultsScreen : MonoBehaviour
     [SerializeField] private CharacterData clarkeData;
     [SerializeField] private RectTransform tallyView;
     [SerializeField] private VerticalLayoutGroup bonusView;
-    [SerializeField] private AudioClip victoryBGM;
+    [SerializeField] private string victoryBGM;
 
     [Header("Display Text")]
     [SerializeField] private TextMeshProUGUI header;
