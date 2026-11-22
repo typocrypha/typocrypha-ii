@@ -44,7 +44,7 @@ public class GameOverMenu : MonoBehaviour
         gameoverSequence = DOTween.Sequence()
             .SetAutoKill(false)
             .SetRecyclable(true)
-            .AppendCallback(()=> AudioManager.instance.StopBGM(AnimationCurve.Linear(0, AudioManager.instance.BGMVolume, slowdownDuration, 0)))
+            .AppendCallback(() => AudioManager.instance.StopBGMEvent(slowdownDuration))
             .Append(slowTween)
             .Join(blurController.GetTween())
             .Join(backgroundTween)

@@ -260,9 +260,9 @@ public class BattleManager : MonoBehaviour, IPausable
         yield return StartCoroutine(WaveTransition(waveData));
         // Set and pause the battle events
         SetBattleEvents(waveData.battleEvents, waveData.useStdEvents);
-        if (waveData.music != null)
+        if (!string.IsNullOrEmpty(waveData.bgmTrackName))
         {
-            AudioManager.instance.PlayBGM(waveData.music);
+            AudioManager.instance.PlayBGM(waveData.bgmTrackName);
         }
         if (waveData.openingScene != null)
         {

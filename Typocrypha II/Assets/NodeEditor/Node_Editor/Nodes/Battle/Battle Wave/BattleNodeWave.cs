@@ -19,7 +19,7 @@ namespace Gameflow
         public Battlefield.ClearOptions clearFieldOptions;
         public string waveTitle;
         public string waveNumberOverride;
-        public AudioClip music;
+        public string bgmTrackName;
         public GOMatrix2D battleField;
         public DialogCanvas openingScene;
 
@@ -60,8 +60,8 @@ namespace Gameflow
             waveNumberOverride = GUILayout.TextField(waveNumberOverride);
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            GUILayout.Label(new GUIContent("Music", tooltip_music), GUI.skin.label, GUILayout.Width(50));
-            music = RTEditorGUI.ObjectField(music, false);
+            GUILayout.Label(new GUIContent("BGMTrackName", tooltip_music), GUI.skin.label, GUILayout.Width(100));
+            bgmTrackName = RTEditorGUI.TextField(bgmTrackName);
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             GUILayout.Label(new GUIContent("Opening Scene"), GUI.skin.label, GUILayout.Width(90));

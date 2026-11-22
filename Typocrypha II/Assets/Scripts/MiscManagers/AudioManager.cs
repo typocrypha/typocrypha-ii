@@ -99,6 +99,10 @@ public class AudioManager : MonoBehaviour
         if (state != PLAYBACK_STATE.PLAYING) eventInstance.start();
     }
 
+    /// <summary>
+    /// Stop BGM track via FMOD
+    /// </summary>
+    /// <param name="release"> Fade out time between 0 and 10 seconds. </param>
     public void StopBGMEvent(float release = 0f)
     {
         eventInstance.setParameterByName("Release", ScaleToFMOD(release));

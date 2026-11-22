@@ -55,7 +55,7 @@ public class BattleGraphParser : GraphParser
             {
                 waveTitle = waveNode.waveTitle,
                 waveNumberOverride = waveNode.waveNumberOverride,
-                music = waveNode.music,
+                bgmTrackName = waveNode.bgmTrackName,
                 battleField = new GOMatrix2D(waveNode.battleField),
                 battleEvents = new List<GameObject>(waveNode.battleEvents),
                 fieldOptions = waveNode.clearFieldOptions,
