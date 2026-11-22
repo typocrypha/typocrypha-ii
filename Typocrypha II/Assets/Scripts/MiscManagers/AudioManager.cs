@@ -29,7 +29,7 @@ public class AudioManager : MonoBehaviour
     int bgmInd; // Index of in use bgm audio source.
     private Coroutine routineFadeIn;
     private Coroutine routineFadeOut;
-    private EventInstance eventInstance;
+    private EventInstance bgmEventInstance;
 
     public float BGMVolume
     {
@@ -44,18 +44,15 @@ public class AudioManager : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(gameObject);
             bgmInd = 0;
+
+            bgmEventInstance = RuntimeManager.CreateInstance(bgmEmitter.EventReference);
+            bgmEventInstance.start();
+            bgmEmitter.Play();
         }
         else
         {
             Destroy(gameObject);
         }
-    }
-
-    private void Start()
-    {
-        eventInstance = RuntimeManager.CreateInstance(bgmEmitter.EventReference);
-        eventInstance.start();
-        bgmEmitter.Play();
     }
 
     private void StopFades()
@@ -92,11 +89,11 @@ public class AudioManager : MonoBehaviour
     /// <param name="attack"> Fade in time between 0 and 10 seconds. </param>
     public void PlayBGM(string trackName, float attack = 0f)
     {
-        eventInstance.setParameterByName("Attack", ScaleToFMOD(attack));
-        eventInstance.setParameterByName("Release", ScaleToFMOD(0f));
-        eventInstance.setParameterByNameWithLabel("BGM", trackName);
-        eventInstance.getPlaybackState(out var state);
-        if (state != PLAYBACK_STATE.PLAYING) eventInstance.start();
+        bgmEventInstance.setParameterByName("Attack", ScaleToFMOD(attack));
+        bgmEventInstance.setParameterByName("Release", ScaleToFMOD(0f));
+        bgmEventInstance.setParameterByNameWithLabel("BGM", trackName);
+        bgmEventInstance.getPlaybackState(out var state);
+        if (state != PLAYBACK_STATE.PLAYING) bgmEventInstance.start();
     }
 
     /// <summary>
@@ -105,8 +102,8 @@ public class AudioManager : MonoBehaviour
     /// <param name="release"> Fade out time between 0 and 10 seconds. </param>
     public void StopBGMEvent(float release = 0f)
     {
-        eventInstance.setParameterByName("Release", ScaleToFMOD(release));
-        eventInstance.setParameterByNameWithLabel("BGM", "Stop");
+        bgmEventInstance.setParameterByName("Release", ScaleToFMOD(release));
+        bgmEventInstance.setParameterByNameWithLabel("BGM", "Stop");
     }
 
     /// <summary>
@@ -212,7 +209,7 @@ public class AudioManager : MonoBehaviour
 
     public void PauseBGMEvent(bool pause)
     {
-        eventInstance.setPaused(pause);
+        bgmEventInstance.setPaused(pause);
     }
 
     /// <summary>
@@ -233,9 +230,9 @@ public class AudioManager : MonoBehaviour
 
     public void CrossfadeBGMEvent(string FMODEventPath, float attack = 1f, float release = 1f)
     {
-        eventInstance.setParameterByName("Attack", ScaleToFMOD(attack));
-        eventInstance.setParameterByName("Release", ScaleToFMOD(release));
-        eventInstance.setParameterByNameWithLabel("BGM", FMODEventPath);
+        bgmEventInstance.setParameterByName("Attack", ScaleToFMOD(attack));
+        bgmEventInstance.setParameterByName("Release", ScaleToFMOD(release));
+        bgmEventInstance.setParameterByNameWithLabel("BGM", FMODEventPath);
     }
 
     /// <summary>

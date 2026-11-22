@@ -6,7 +6,7 @@ using Utilities.Unity;
 
 public class TitleMenu : MonoBehaviour
 {
-    [SerializeField] private AudioClip titleBGM;
+    [SerializeField] private string bgmTitle;
     [SerializeField] private MenuButton continueButton;
     [SerializeField] private MenuButton newGameButton;
     [SerializeField] private SettingsMenu settings;
@@ -16,7 +16,7 @@ public class TitleMenu : MonoBehaviour
 
     private void Start()
     {
-        AudioManager.instance.PlayBGM(titleBGM);
+        AudioManager.instance.PlayBGM(bgmTitle);
         PauseManager.instance.PH.Pause(PauseSources.Title);
         settings.OnClose += Initialize;
         Initialize();
